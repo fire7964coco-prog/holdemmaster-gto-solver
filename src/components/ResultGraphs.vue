@@ -32,7 +32,7 @@
     </div>
 
     <div v-else class="flex h-full items-center justify-center" style="flex: 4">
-      Graphs not available
+      그래프를 표시할 수 없습니다
     </div>
 
     <ResultTable
@@ -237,7 +237,7 @@ export default defineComponent({
       if (playerIndex.value === 0) oopLabel = "★ ";
       if (playerIndex.value === 1) ipLabel = "★ ";
 
-      const contentText = content === "eq" ? "Equity" : content.toUpperCase();
+      const contentText = content === "eq" ? "에퀴티" : content.toUpperCase();
       oopLabel += `OOP ${contentText}`;
       ipLabel += `IP ${contentText}`;
 
@@ -284,7 +284,8 @@ export default defineComponent({
         scales: {
           x: {
             type: "linear",
-            ticks: { format: formatX },
+            ticks: { format: formatX, color: "#a3a3a3" },
+            grid: { color: "#404040" },
             afterFit(axis) {
               chartWidth.value = axis.width;
             },
@@ -295,7 +296,9 @@ export default defineComponent({
             suggestedMin: content === "ev" ? 0 : undefined,
             ticks: {
               format: formatY,
+              color: "#a3a3a3",
             },
+            grid: { color: "#404040" },
             afterFit(axis) {
               axis.width = 52;
             },
@@ -309,7 +312,7 @@ export default defineComponent({
           legend: {
             labels: {
               font: { size: 16 },
-              color: "rgba(0, 0, 0, 0.9)",
+              color: "#e5e5e5",
               boxHeight: 12,
             },
           },
@@ -373,7 +376,7 @@ export default defineComponent({
         ctx.moveTo(x, chart.scales.y.top);
         ctx.lineTo(x, chart.scales.y.bottom);
         ctx.lineWidth = 1;
-        ctx.strokeStyle = "rgba(0, 0, 0, 0.9)";
+        ctx.strokeStyle = "rgba(229, 229, 229, 0.9)";
         ctx.stroke();
         ctx.restore();
       },

@@ -1,6 +1,6 @@
 <template>
   <div class="flex my-1 items-center">
-    Number of threads:
+    스레드 수:
     <input
       v-model="numThreads"
       type="number"
@@ -27,15 +27,15 @@
       "
       @click="buildTree"
     >
-      Build New Tree
+      새 트리 만들기
     </button>
   </div>
 
-  <div class="my-1">Status: {{ treeStatus }}</div>
+  <div class="my-1">상태: {{ treeStatus }}</div>
 
   <div v-if="isTreeBuilt" class="mt-3">
     <div>
-      Precision mode:
+      정밀도 모드:
       <Tippy
         class="inline-block cursor-help"
         max-width="500px"
@@ -44,23 +44,20 @@
         :delay="[200, 0]"
         :interactive="true"
       >
-        <QuestionMarkCircleIcon class="w-5 h-5 text-gray-600" />
+        <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
         <template #content>
           <div class="px-1 py-0.5 text-justify">
-            Precision mode mainly affects memory usage, but it also has several
-            other effects.
+            정밀도 모드는 주로 메모리 사용량에 영향을 주며, 그 외 몇 가지
+            차이가 있습니다.
             <ul class="pl-6 list-disc">
               <li class="mt-1">
-                32-bit FP (floating-point): This is recommended if the memory
-                usage is below the limit (= 3.9GB). It has about 7 significant
-                digits and better performance.
+                32비트 부동소수점(FP): 메모리 사용량이 한도(3.9GB) 이하라면 이
+                모드를 권장합니다. 유효숫자 약 7자리에 성능도 더 좋습니다.
               </li>
               <li class="mt-1">
-                16-bit integer: This setting can help to avoid the memory limit
-                if the 32-bit FP mode is not usable. Since the significant
-                digits are about 4 digits, it is not suitable for satisfying an
-                exploitability target below 0.1%. Performance is also worse than
-                in 32-bit FP mode.
+                16비트 정수: 32비트 FP 모드로는 메모리 한도를 넘는 경우의
+                대안입니다. 유효숫자가 약 4자리라 목표 오차 0.1% 미만에는
+                적합하지 않고, 성능도 32비트 FP보다 떨어집니다.
               </li>
             </ul>
           </div>
@@ -77,15 +74,15 @@
           :value="false"
           :disabled="store.hasSolverRun"
         />
-        <span class="inline-block w-[6.75rem] ml-1">32-bit FP:</span>
-        needs
+        <span class="inline-block w-[6.75rem] ml-1">32비트 FP:</span>
+        RAM
         {{
           memoryUsage >= 1023.5 * 1024 * 1024
             ? (memoryUsage / (1024 * 1024 * 1024)).toFixed(2) + "GB"
             : (memoryUsage / (1024 * 1024)).toFixed(0) + "MB"
         }}
-        RAM
-        {{ memoryUsage > maxMemoryUsage ? "(limit exceeded)" : "" }}
+        필요
+        {{ memoryUsage > maxMemoryUsage ? "(한도 초과)" : "" }}
       </label>
     </div>
     <div class="ml-2">
@@ -98,23 +95,23 @@
           :value="true"
           :disabled="store.hasSolverRun"
         />
-        <span class="inline-block w-[6.75rem] ml-1">16-bit integer:</span>
-        needs
+        <span class="inline-block w-[6.75rem] ml-1">16비트 정수:</span>
+        RAM
         {{
           memoryUsageCompressed >= 1023.5 * 1024 * 1024
             ? (memoryUsageCompressed / (1024 * 1024 * 1024)).toFixed(2) + "GB"
             : (memoryUsageCompressed / (1024 * 1024)).toFixed(0) + "MB"
         }}
-        RAM
-        {{ memoryUsageCompressed > maxMemoryUsage ? "(limit exceeded)" : "" }}
+        필요
+        {{ memoryUsageCompressed > maxMemoryUsage ? "(한도 초과)" : "" }}
       </label>
     </div>
     <div v-if="memoryUsage > maxMemoryUsage" class="mt-1.5">
-      RAM limit: 3.9GB (= 4GB Wasm limit - 0.1GB margin)
+      RAM 한도: 3.9GB (= Wasm 한계 4GB - 여유분 0.1GB)
     </div>
 
     <div class="mt-4">
-      Target exploitability:
+      목표 오차(exploitability):
       <Tippy
         class="inline-block cursor-help"
         max-width="500px"
@@ -123,28 +120,26 @@
         :delay="[200, 0]"
         :interactive="true"
       >
-        <QuestionMarkCircleIcon class="w-5 h-5 text-gray-600" />
+        <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
         <template #content>
           <div class="px-1 py-0.5 text-justify">
             <div>
-              Specifies the acceptable distance to the Nash equilibrium. A lower
-              value gives more accurate results, but also requires more
-              computation time.
+              내시 균형까지 허용할 오차를 지정합니다. 값이 낮을수록 더 정확한
+              결과가 나오지만 계산 시간이 길어집니다.
             </div>
             <div class="mt-3">
-              <span class="underline">A more detailed description:</span>
-              When a Nash equilibrium solution is obtained, the strategies of
-              both players become MESs (Maximally Exploitative Strategies) to
-              each other. Using this property, we define the distance to the
-              Nash equilibrium of the obtained strategy as follows:
+              <span class="underline">자세한 설명:</span>
+              내시 균형 해에서는 양쪽 플레이어의 전략이 서로에 대한
+              MES(최대 익스플로잇 전략)가 됩니다. 이 성질을 이용해, 구한 전략과
+              내시 균형 사이의 거리를 다음과 같이 정의합니다:
             </div>
             <div class="my-1 text-center">
-              Distance = (Opponent's MES EV) - (Opponent's obtained EV).
+              거리 = (상대의 MES EV) - (상대의 실제 EV)
             </div>
             <div>
-              This distance is always non-negative and is zero if and only if
-              the obtained strategy is a part of a particular Nash equilibrium.
-              Exploitability is defined as the average distance of both players.
+              이 거리는 항상 0 이상이며, 구한 전략이 내시 균형의 일부일 때만
+              0이 됩니다. 익스플로잇 가능성(exploitability)은 양쪽 플레이어의
+              평균 거리로 정의됩니다.
             </div>
           </div>
         </template>
@@ -164,7 +159,7 @@
     </div>
 
     <div class="mt-1">
-      Maximum number of iterations:
+      최대 반복 횟수:
       <input
         v-model="maxIterations"
         type="number"
@@ -195,14 +190,14 @@
         "
         @click="runSolver"
       >
-        Run Solver
+        솔버 실행
       </button>
       <button
         class="button-base button-red"
         :disabled="!store.isSolverRunning"
         @click="() => (terminateFlag = true)"
       >
-        Stop
+        중지
       </button>
       <button
         v-if="!store.isSolverPaused"
@@ -210,7 +205,7 @@
         :disabled="!store.isSolverRunning"
         @click="() => (pauseFlag = true)"
       >
-        Pause
+        일시정지
       </button>
       <button
         v-else
@@ -223,7 +218,7 @@
         "
         @click="resumeSolver"
       >
-        Resume
+        재개
       </button>
     </div>
 
@@ -235,12 +230,12 @@
         ></span>
         {{
           store.isSolverRunning
-            ? "Solver running..."
+            ? "솔버 계산 중..."
             : store.isFinalizing
-            ? "Finalizing..."
+            ? "마무리 중..."
             : store.isSolverPaused
-            ? "Solver paused."
-            : "Solver finished."
+            ? "일시정지됨."
+            : "계산 완료!"
         }}
       </div>
       {{ iterationText }}
@@ -282,46 +277,46 @@ const checkConfig = (
   config: ReturnType<typeof useConfigStore>
 ): string | null => {
   if (config.board.length < 3) {
-    return "Board must consist of at least three cards";
+    return "보드에는 최소 3장의 카드가 필요합니다";
   }
 
   if (config.startingPot <= 0) {
-    return "Starting pot must be positive";
+    return "시작 팟은 0보다 커야 합니다";
   }
 
   if (config.startingPot > MAX_AMOUNT) {
-    return "Starting pot is too large";
+    return "시작 팟이 너무 큽니다";
   }
 
   if (config.startingPot % 1 !== 0) {
-    return "Starting pot must be an integer";
+    return "시작 팟은 정수여야 합니다";
   }
 
   if (config.effectiveStack <= 0) {
-    return "Effective stack must be positive";
+    return "유효 스택은 0보다 커야 합니다";
   }
 
   if (config.effectiveStack > MAX_AMOUNT) {
-    return "Effective stack is too large";
+    return "유효 스택이 너무 큽니다";
   }
 
   if (config.effectiveStack % 1 !== 0) {
-    return "Effective stack is be an integer";
+    return "유효 스택은 정수여야 합니다";
   }
 
   const betConfig = [
-    { s: config.oopFlopBetSanitized, kind: "OOP flop bet" },
-    { s: config.oopFlopRaiseSanitized, kind: "OOP flop raise" },
-    { s: config.oopTurnBetSanitized, kind: "OOP turn bet" },
-    { s: config.oopTurnRaiseSanitized, kind: "OOP turn raise" },
-    { s: config.oopRiverBetSanitized, kind: "OOP river bet" },
-    { s: config.oopRiverRaiseSanitized, kind: "OOP river raise" },
-    { s: config.ipFlopBetSanitized, kind: "IP flop bet" },
-    { s: config.ipFlopRaiseSanitized, kind: "IP flop raise" },
-    { s: config.ipTurnBetSanitized, kind: "IP turn bet" },
-    { s: config.ipTurnRaiseSanitized, kind: "IP turn raise" },
-    { s: config.ipRiverBetSanitized, kind: "IP river bet" },
-    { s: config.ipRiverRaiseSanitized, kind: "IP river raise" },
+    { s: config.oopFlopBetSanitized, kind: "OOP 플랍 벳" },
+    { s: config.oopFlopRaiseSanitized, kind: "OOP 플랍 레이즈" },
+    { s: config.oopTurnBetSanitized, kind: "OOP 턴 벳" },
+    { s: config.oopTurnRaiseSanitized, kind: "OOP 턴 레이즈" },
+    { s: config.oopRiverBetSanitized, kind: "OOP 리버 벳" },
+    { s: config.oopRiverRaiseSanitized, kind: "OOP 리버 레이즈" },
+    { s: config.ipFlopBetSanitized, kind: "IP 플랍 벳" },
+    { s: config.ipFlopRaiseSanitized, kind: "IP 플랍 레이즈" },
+    { s: config.ipTurnBetSanitized, kind: "IP 턴 벳" },
+    { s: config.ipTurnRaiseSanitized, kind: "IP 턴 레이즈" },
+    { s: config.ipRiverBetSanitized, kind: "IP 리버 벳" },
+    { s: config.ipRiverRaiseSanitized, kind: "IP 리버 레이즈" },
   ];
 
   for (const { s, kind } of betConfig) {
@@ -332,30 +327,30 @@ const checkConfig = (
 
   if (config.donkOption) {
     if (!config.oopTurnDonkSanitized.valid) {
-      return `OOP turn donk: ${config.oopTurnDonkSanitized.s}`;
+      return `OOP 턴 덩크: ${config.oopTurnDonkSanitized.s}`;
     }
     if (!config.oopRiverDonkSanitized.valid) {
-      return `OOP river donk: ${config.oopRiverDonkSanitized.s}`;
+      return `OOP 리버 덩크: ${config.oopRiverDonkSanitized.s}`;
     }
   }
 
   if (config.addAllInThreshold < 0) {
-    return "Invalid add all-in threshold";
+    return "올인 추가 기준값이 잘못되었습니다";
   }
 
   if (config.forceAllInThreshold < 0) {
-    return "Invalid force all-in threshold";
+    return "강제 올인 기준값이 잘못되었습니다";
   }
 
   if (config.mergingThreshold < 0) {
-    return "Invalid merging threshold";
+    return "병합 기준값이 잘못되었습니다";
   }
 
   if (
     config.expectedBoardLength > 0 &&
     config.board.length !== config.expectedBoardLength
   ) {
-    return `Invalid board (expected ${config.expectedBoardLength} cards)`;
+    return `보드가 잘못되었습니다 (${config.expectedBoardLength}장이 필요합니다)`;
   }
 
   const addedLinesArray =
@@ -374,7 +369,7 @@ const checkConfig = (
     removedLinesArray.includes(ROOT_LINE_STRING) ||
     removedLinesArray.includes(INVALID_LINE_STRING)
   ) {
-    return "Invalid line found (loaded broken configurations?)";
+    return "잘못된 라인이 있습니다 (손상된 설정을 불러왔나요?)";
   }
 
   if (
@@ -385,7 +380,7 @@ const checkConfig = (
       addedLinesArray.length === 0 &&
       removedLinesArray.length === 0)
   ) {
-    return "Invalid configurations (loaded broken configurations?)";
+    return "설정이 잘못되었습니다 (손상된 설정을 불러왔나요?)";
   }
 
   return null;
@@ -408,7 +403,7 @@ export default defineComponent({
 
     const isTreeBuilding = ref(false);
     const isTreeBuilt = ref(false);
-    const treeStatus = ref("Module not loaded");
+    const treeStatus = ref("모듈이 아직 로드되지 않았습니다");
     const memoryUsage = ref(0);
     const memoryUsageCompressed = ref(0);
     const isCompressionEnabled = ref(false);
@@ -431,9 +426,9 @@ export default defineComponent({
 
     const iterationText = computed(() => {
       if (currentIteration.value === -1) {
-        return "Allocating memory...";
+        return "메모리 할당 중...";
       } else {
-        return `Iteration: ${currentIteration.value}`;
+        return `반복: ${currentIteration.value}회`;
       }
     });
 
@@ -444,7 +439,7 @@ export default defineComponent({
         const valueText = exploitability.value.toFixed(2);
         const percent = (exploitability.value * 100) / config.startingPot;
         const percentText = `${percent.toFixed(2)}%`;
-        return `Exploitability: ${valueText} (${percentText})`;
+        return `오차(exploitability): ${valueText} (${percentText})`;
       }
     });
 
@@ -452,7 +447,7 @@ export default defineComponent({
       if (elapsedTimeMs.value === -1 || !store.isSolverFinished) {
         return "";
       } else {
-        return `Time: ${(elapsedTimeMs.value / 1000).toFixed(2)}s`;
+        return `소요 시간: ${(elapsedTimeMs.value / 1000).toFixed(2)}초`;
       }
     });
 
@@ -461,7 +456,7 @@ export default defineComponent({
 
       const configError = checkConfig(config);
       if (configError !== null) {
-        treeStatus.value = `Error: ${configError}`;
+        treeStatus.value = `오류: ${configError}`;
         return;
       }
 
@@ -469,7 +464,7 @@ export default defineComponent({
       isTreeBuilding.value = true;
       store.isSolverPaused = false;
       store.isSolverFinished = false;
-      treeStatus.value = "Building tree...";
+      treeStatus.value = "트리 생성 중...";
 
       await init(numThreads.value);
       if (!handler) return;
@@ -506,7 +501,7 @@ export default defineComponent({
 
       if (errorString) {
         isTreeBuilding.value = false;
-        treeStatus.value = "Error: " + errorString;
+        treeStatus.value = "오류: " + errorString;
         return;
       }
 
@@ -522,13 +517,9 @@ export default defineComponent({
         isCompressionEnabled.value = true;
       }
 
-      const threadText = `${numThreads.value} thread${
-        numThreads.value === 1 ? "" : "s"
-      }`;
-
       isTreeBuilding.value = false;
       isTreeBuilt.value = true;
-      treeStatus.value = `Successfully built tree (${threadText})`;
+      treeStatus.value = `트리 생성 완료 (스레드 ${numThreads.value}개)`;
     };
 
     const runSolver = async () => {

@@ -1,13 +1,17 @@
 <template>
   <div
-    class="w-full h-[22.5rem] px-1 border border-gray-500 rounded-md shadow text-sm overflow-x-auto overflow-y-scroll select-none"
+    class="w-full h-[22.5rem] px-1 border border-neutral-600 rounded-md shadow shadow-black/40 text-sm overflow-x-auto overflow-y-scroll select-none"
     @click="unselect"
     @keydown.f2="renameItem()"
     @keydown.delete="deleteItem(true)"
   >
     <!-- No saved items -->
     <div v-if="data.length === 0" class="item-toplevel">
-      <span class="inline-block px-1">(No saved {{ storeName }})</span>
+      <span class="inline-block px-1"
+        >(저장된
+        {{ storeName === "ranges" ? "레인지" : "설정" }}
+        없음)</span
+      >
     </div>
 
     <!-- Depth 0 -->
@@ -68,7 +72,7 @@
         >
           <!-- Empty group -->
           <div v-if="item0.items.length === 0" class="item-inside">
-            <span class="inline-block px-1">(Empty group)</span>
+            <span class="inline-block px-1">(빈 그룹)</span>
           </div>
 
           <!-- Depth 1 -->
@@ -133,7 +137,7 @@
               >
                 <!-- Empty group -->
                 <div v-if="item1.items.length === 0" class="item-inside">
-                  <span class="inline-block px-1">(Empty group)</span>
+                  <span class="inline-block px-1">(빈 그룹)</span>
                 </div>
 
                 <!-- Depth 2 -->
@@ -199,7 +203,7 @@
                     >
                       <!-- Empty group -->
                       <div v-if="item2.items.length === 0" class="item-inside">
-                        <span class="inline-block px-1">(Empty group)</span>
+                        <span class="inline-block px-1">(빈 그룹)</span>
                       </div>
 
                       <!-- Depth 3 -->
@@ -372,8 +376,8 @@
     </div>
   </div>
 
-  <div v-if="errorOccured" class="mt-3 text-red-500 font-bold">
-    Something went wrong. Please reload the page.
+  <div v-if="errorOccured" class="mt-3 text-red-400 font-bold">
+    문제가 발생했습니다. 페이지를 새로고침해 주세요.
   </div>
 
   <div class="flex flex-col mt-4 gap-3">
@@ -383,7 +387,7 @@
         :disabled="selectedItem?.item?.isGroup ?? true"
         @click="loadItem()"
       >
-        Load
+        불러오기
       </button>
 
       <button
@@ -391,7 +395,7 @@
         :disabled="errorOccured || !allowSave || isEditing"
         @click="addOrOverwriteItem()"
       >
-        {{ selectedItem?.item?.isGroup === false ? "Overwrite" : "Save" }}
+        {{ selectedItem?.item?.isGroup === false ? "덮어쓰기" : "저장" }}
       </button>
 
       <button
@@ -399,7 +403,7 @@
         :disabled="errorOccured || selectedValue === false"
         @click="renameItem()"
       >
-        Rename
+        이름 변경
       </button>
     </div>
 
@@ -415,7 +419,7 @@
         "
         @click="addGroup()"
       >
-        Add Group
+        그룹 추가
       </button>
 
       <button
@@ -423,7 +427,7 @@
         :disabled="errorOccured || selectedValue === false"
         @click="deleteItem(true)"
       >
-        Delete
+        삭제
       </button>
 
       <input
@@ -438,7 +442,7 @@
         :disabled="errorOccured || isEditing"
         @click="importJsonInput?.click()"
       >
-        Import JSON
+        JSON 가져오기
       </button>
 
       <a
@@ -452,19 +456,19 @@
         :download="storeName + '.json'"
         @click="exportJson"
       >
-        Export JSON
+        JSON 내보내기
       </a>
     </div>
   </div>
 
   <div
     v-if="importError !== ''"
-    class="flex flex-col mt-4 px-2 py-1 text-red-500 bg-red-50 border-2 border-red-600 rounded-md font-semibold"
+    class="flex flex-col mt-4 px-2 py-1 text-red-400 bg-red-950 border-2 border-red-600 rounded-md font-semibold"
   >
     <div class="flex">
-      Error: Import failed.
+      오류: 가져오기에 실패했습니다.
       <button
-        class="w-6 h-6 ml-auto text-gray-700 opacity-70 hover:opacity-100"
+        class="w-6 h-6 ml-auto text-neutral-200 opacity-70 hover:opacity-100"
         @click="importError = ''"
       >
         <XMarkIcon class="w-full h-full" />
@@ -927,8 +931,10 @@ export default defineComponent({
         .map((item) => item.path[item.path.length - 1])
         .filter((name) => name !== editingName.value);
       const defaultName = item.isGroup
-        ? "New group"
-        : `New ${props.storeName.slice(0, -1)}`; // remove "s" hack
+        ? "새 그룹"
+        : props.storeName === "ranges"
+        ? "새 레인지"
+        : "새 설정";
       if (editingName.value === "") {
         let i = 2;
         let newName = defaultName;
@@ -1268,28 +1274,28 @@ export default defineComponent({
       try {
         obj = JSON.parse(text);
       } catch (e) {
-        importError.value = "Parse error (invalid JSON)";
+        importError.value = "파싱 오류 (잘못된 JSON 형식)";
         return;
       }
 
       if (obj.name !== props.storeName) {
-        importError.value = "Data type mismatch";
+        importError.value = "데이터 종류가 일치하지 않습니다";
         return;
       }
 
       if (obj.version !== 2) {
-        importError.value = "Version mismatch";
+        importError.value = "버전이 일치하지 않습니다";
         return;
       }
 
       if (!checkJson(obj.data)) {
-        importError.value = "Invalid data";
+        importError.value = "잘못된 데이터입니다";
         return;
       }
 
       const itemsToAdd = await getItemsToAdd(obj.data);
       if (typeof itemsToAdd === "string") {
-        importError.value = `Cannot create group "${itemsToAdd}" because the item already exists`;
+        importError.value = `같은 이름의 항목이 이미 존재하여 "${itemsToAdd}" 그룹을 만들 수 없습니다`;
         return;
       }
 
@@ -1360,7 +1366,7 @@ export default defineComponent({
 
 <style scoped>
 input.input-error {
-  @apply ring-1 ring-red-600 border-red-600 bg-red-50;
+  @apply ring-1 ring-red-600 border-red-600 bg-red-950;
 }
 
 .group {
@@ -1370,7 +1376,7 @@ input.input-error {
 .group::before {
   content: "";
   height: calc(100% - 1.4rem * var(--guide-decrease) - 0.825rem);
-  @apply absolute top-0.5 left-2.5 border-l border-dotted border-gray-500;
+  @apply absolute top-0.5 left-2.5 border-l border-dotted border-neutral-600;
 }
 
 .group-inside {
@@ -1379,7 +1385,7 @@ input.input-error {
 
 .group-inside::before {
   content: "";
-  @apply absolute top-[0.7rem] -left-[0.5625rem] w-2.5 border-t border-dotted border-gray-500;
+  @apply absolute top-[0.7rem] -left-[0.5625rem] w-2.5 border-t border-dotted border-neutral-600;
 }
 
 .item-toplevel {
@@ -1388,7 +1394,7 @@ input.input-error {
 
 .item-toplevel::before {
   content: "";
-  @apply absolute top-1/2 left-[0.0625rem] w-2.5 border-t border-dotted border-gray-500;
+  @apply absolute top-1/2 left-[0.0625rem] w-2.5 border-t border-dotted border-neutral-600;
 }
 
 .item-inside {
@@ -1397,7 +1403,7 @@ input.input-error {
 
 .item-inside::before {
   content: "";
-  @apply absolute top-1/2 -left-[0.5625rem] w-5 border-t border-dotted border-gray-500;
+  @apply absolute top-1/2 -left-[0.5625rem] w-5 border-t border-dotted border-neutral-600;
 }
 
 .right-arrow,
@@ -1407,12 +1413,12 @@ input.input-error {
 
 .right-arrow::before {
   content: "";
-  @apply absolute w-1.5 h-1.5 -mt-0.5 top-1/2 left-1.5 border-t-2 border-r-2 border-gray-500 rotate-45;
+  @apply absolute w-1.5 h-1.5 -mt-0.5 top-1/2 left-1.5 border-t-2 border-r-2 border-neutral-400 rotate-45;
 }
 
 .bottom-arrow::before {
   content: "";
-  @apply absolute w-1.5 h-1.5 -mt-[0.1875rem] top-1/2 left-[0.4375rem] border-r-2 border-b-2 border-gray-500 rotate-45;
+  @apply absolute w-1.5 h-1.5 -mt-[0.1875rem] top-1/2 left-[0.4375rem] border-r-2 border-b-2 border-neutral-400 rotate-45;
 }
 
 .button-overrides {

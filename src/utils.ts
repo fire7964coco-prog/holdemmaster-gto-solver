@@ -20,11 +20,12 @@ export const suitLetters = ["c", "d", "h", "s"];
 export const rankPat = "[AaKkQqJjTt2-9]";
 const cardRegex = new RegExp(`^(${rankPat})([cdhs])$`);
 
+// 다크 테마 4색 덱: ♣초록 ♦파랑 ♥빨강 ♠밝은회색 (GTO Wizard 관행)
 const suitClasses = [
-  "text-green-600",
-  "text-blue-600",
-  "text-pink-600",
-  "text-black",
+  "text-green-500",
+  "text-blue-400",
+  "text-red-400",
+  "text-neutral-100",
 ];
 
 export const cardText = (card: number) => {

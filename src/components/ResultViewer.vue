@@ -7,12 +7,12 @@
       ></span>
       {{
         !store.hasSolverRun
-          ? "Solver has not run."
+          ? "솔버가 실행되지 않았습니다."
           : store.isSolverRunning
-          ? "Solver running..."
+          ? "솔버 실행 중..."
           : store.isFinalizing
-          ? "Finalizing..."
-          : "Solver paused."
+          ? "마무리 중..."
+          : "솔버가 일시정지되었습니다."
       }}
     </div>
   </div>
@@ -42,11 +42,11 @@
 
     <div
       v-if="store.navView === 'results' && selectedSpot && results"
-      class="flex flex-grow min-h-0"
+      class="flex flex-col md:flex-row flex-grow min-h-0 overflow-y-auto md:overflow-y-visible"
     >
       <template v-if="displayMode === 'basics'">
         <ResultBasics
-          style="flex: 4"
+          class="shrink-0 h-[24rem] md:h-auto md:shrink md:[flex:11]"
           :cards="cards"
           :selected-spot="selectedSpot"
           :selected-chance="selectedChance"
@@ -59,15 +59,31 @@
           @update-hover-content="onUpdateHoverContent"
         />
 
-        <ResultTable
-          style="flex: 3"
-          table-mode="basics"
-          :cards="cards"
-          :selected-spot="selectedSpot"
-          :results="results"
-          :display-player="displayPlayerBasics"
-          :hover-content="basicsHoverContent"
-        />
+        <!-- GTO Wizard식 우측 스택: 액션 빈도 타일 → 핸드/드로우 분류 → 상세 표 -->
+        <div class="flex flex-col shrink-0 md:shrink md:[flex:9] md:min-h-0 min-w-0 my-2 mx-2 md:ml-0 gap-2">
+          <ActionSummary
+            :results="results"
+            :selected-spot="selectedSpot"
+            :display-player="displayPlayerBasics"
+          />
+
+          <HandBreakdown
+            class="shrink-0"
+            :cards="cards[displayPlayerBasics === 'oop' ? 0 : 1]"
+            :weights="results.weights[displayPlayerBasics === 'oop' ? 0 : 1]"
+            :board="currentBoard"
+          />
+
+          <ResultTable
+            class="flex-grow min-h-[20rem] md:min-h-0"
+            table-mode="basics"
+            :cards="cards"
+            :selected-spot="selectedSpot"
+            :results="results"
+            :display-player="displayPlayerBasics"
+            :hover-content="basicsHoverContent"
+          />
+        </div>
       </template>
 
       <template v-else-if="displayMode === 'graphs'">
@@ -84,7 +100,7 @@
 
       <template v-else-if="displayMode === 'compare'">
         <ResultBasics
-          style="flex: 5"
+          class="shrink-0 h-[24rem] md:h-auto md:shrink md:[flex:5]"
           :cards="cards"
           :selected-spot="selectedSpot"
           :selected-chance="selectedChance"
@@ -97,14 +113,14 @@
         />
 
         <ResultCompare
-          style="flex: 2"
+          class="shrink-0 md:shrink md:[flex:2]"
           :selected-spot="selectedSpot"
           :selected-chance="selectedChance"
           :results="results"
         />
 
         <ResultBasics
-          style="flex: 5"
+          class="shrink-0 h-[24rem] md:h-auto md:shrink md:[flex:5]"
           :cards="cards"
           :selected-spot="selectedSpot"
           :selected-chance="selectedChance"
@@ -154,6 +170,8 @@ import ResultTable from "./ResultTable.vue";
 import ResultCompare from "./ResultCompare.vue";
 import ResultGraphs from "./ResultGraphs.vue";
 import ResultChance from "./ResultChance.vue";
+import HandBreakdown from "./HandBreakdown.vue";
+import ActionSummary from "./ActionSummary.vue";
 
 export default defineComponent({
   components: {
@@ -164,6 +182,8 @@ export default defineComponent({
     ResultCompare,
     ResultGraphs,
     ResultChance,
+    HandBreakdown,
+    ActionSummary,
   },
 
   setup() {
@@ -217,6 +237,17 @@ export default defineComponent({
       results.value = null;
       chanceReports.value = null;
     };
+
+    // 프리셋 미리보기 데이터 추출용 훅 (도구/e2e/preset-export.js가 사용).
+    // 결과 화면의 현재 노드 표시 데이터를 JSON으로 직렬화한다.
+    (window as unknown as Record<string, unknown>).__exportPreview = () =>
+      JSON.stringify({
+        cards: cards.value,
+        selectedSpot: selectedSpot.value,
+        currentBoard: currentBoard.value,
+        results: results.value,
+        totalBetAmount: totalBetAmount.value,
+      });
 
     const onUpdateSpot = (
       newSelectedSpot: Spot | null,

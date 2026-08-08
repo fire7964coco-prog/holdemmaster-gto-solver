@@ -1,0 +1,175 @@
+<template>
+  <div>
+    <!-- 상단 바: 돌아가기 + 스팟 정보 + 직접 계산 -->
+    <div class="flex flex-wrap items-center gap-2">
+      <button class="button-base button-blue" @click="$emit('close')">
+        ← 목록
+      </button>
+      <span class="font-bold text-lg ml-1">{{ preset.title }}</span>
+      <span class="font-bold tracking-wide">
+        <span
+          v-for="(c, i) in boardTexts"
+          :key="i"
+          :class="'mr-0.5 ' + c.colorClass"
+        >
+          {{ c.rank }}{{ c.suit }}
+        </span>
+      </span>
+      <span class="text-sm text-neutral-400">
+        팟 {{ preset.startingPot / 10 }}bb · 스택
+        {{ preset.effectiveStack / 10 }}bb
+      </span>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-sm">
+      <span class="text-neutral-400">
+        플랍 전략입니다. 턴·리버까지 눌러보며 탐색하려면 →
+      </span>
+      <button
+        class="button-base button-green shrink-0"
+        @click="$emit('load')"
+      >
+        이 스팟 직접 계산하기
+      </button>
+    </div>
+
+    <div v-if="error" class="mt-4 text-red-400">
+      미리 계산된 결과를 불러오지 못했습니다: {{ error }}
+    </div>
+    <div v-else-if="!data" class="mt-4">
+      <span class="spinner inline-block mr-3"></span>결과 불러오는 중...
+    </div>
+
+    <template v-else>
+      <!-- 플레이어 전환 -->
+      <div class="flex items-center gap-2 mt-3">
+        <span class="text-sm">플레이어:</span>
+        <select v-model="displayPlayer" class="w-28 px-2 py-1 rounded-lg text-sm">
+          <option value="oop">OOP ({{ preset.oopLabel }})</option>
+          <option value="ip">IP ({{ preset.ipLabel }})</option>
+        </select>
+        <span v-if="displayPlayer === 'oop'" class="text-xs text-neutral-400">
+          첫 액션 차례인 플레이어의 전략입니다
+        </span>
+      </div>
+
+      <!-- 본문: 결과 화면과 동일한 구도 (모바일 세로 스택 / 데스크톱 좌우) -->
+      <div class="flex flex-col md:flex-row mt-3 gap-2">
+        <!-- ResultBasics 루트가 h-full이라 높이는 래퍼에서 지정해야 함 -->
+        <div class="shrink-0 h-[24rem] md:h-[36rem] md:[flex:11]">
+          <ResultBasics
+            :cards="data.cards"
+            :selected-spot="data.selectedSpot"
+            :selected-chance="null"
+            :current-board="data.currentBoard"
+            :total-bet-amount="data.totalBetAmount"
+            :results="data.results"
+            :display-options="displayOptions"
+            :display-player="displayPlayer"
+            :is-compare-mode="false"
+          />
+        </div>
+
+        <div class="flex flex-col md:[flex:9] min-w-0 gap-2">
+          <ActionSummary
+            :results="data.results"
+            :selected-spot="data.selectedSpot"
+            :display-player="displayPlayer"
+          />
+
+          <HandBreakdown
+            class="shrink-0"
+            :cards="data.cards[displayPlayer === 'oop' ? 0 : 1]"
+            :weights="data.results.weights[displayPlayer === 'oop' ? 0 : 1]"
+            :board="data.currentBoard"
+          />
+
+          <ResultTable
+            class="h-[24rem] md:h-[24rem]"
+            table-mode="basics"
+            :cards="data.cards"
+            :selected-spot="data.selectedSpot"
+            :results="data.results"
+            :display-player="displayPlayer"
+          />
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, ref, watch } from "vue";
+import { Preset } from "../presets";
+import { Results, Spot, DisplayOptions } from "../result-types";
+import { cardText, parseCardString } from "../utils";
+
+import ResultBasics from "./ResultBasics.vue";
+import ResultTable from "./ResultTable.vue";
+import HandBreakdown from "./HandBreakdown.vue";
+import ActionSummary from "./ActionSummary.vue";
+
+type PreviewData = {
+  cards: number[][];
+  selectedSpot: Spot;
+  currentBoard: number[];
+  results: Results;
+  totalBetAmount: number[];
+};
+
+export default defineComponent({
+  components: { ResultBasics, ResultTable, HandBreakdown, ActionSummary },
+
+  props: {
+    preset: {
+      type: Object as () => Preset,
+      required: true,
+    },
+  },
+
+  emits: ["close", "load"],
+
+  setup(props) {
+    const data = ref<PreviewData | null>(null);
+    const error = ref("");
+    const displayPlayer = ref<"oop" | "ip">("oop");
+
+    const displayOptions = ref<DisplayOptions>({
+      playerBasics: "oop",
+      playerChance: "auto",
+      barHeight: "normalized",
+      suit: "grouped",
+      strategy: "show",
+      contentBasics: "default",
+      contentGraphs: "eq",
+      chartChance: "strategy-combos",
+    });
+
+    const fetchData = async () => {
+      data.value = null;
+      error.value = "";
+      displayPlayer.value = "oop";
+      try {
+        const res = await fetch(`preset-results/${props.preset.id}.json`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        data.value = await res.json();
+      } catch (e) {
+        error.value = e instanceof Error ? e.message : String(e);
+      }
+    };
+
+    fetchData();
+    watch(() => props.preset.id, fetchData);
+
+    const boardTexts = computed(() =>
+      props.preset.board
+        .split(" ")
+        .map(parseCardString)
+        .filter((c): c is number => c !== null)
+        .map(cardText)
+    );
+
+    return { data, error, displayPlayer, displayOptions, boardTexts };
+  },
+});
+</script>

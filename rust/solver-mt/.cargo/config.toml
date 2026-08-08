@@ -1,6 +1,8 @@
 [build]
 target = "wasm32-unknown-unknown"
-rustflags = "-C target-feature=+atomics,+bulk-memory,+mutable-globals,+simd128 -C link-arg=--max-memory=4294967296"
+# 최신 nightly(rust-lang/rust#147225 이후)는 +atomics가 shared memory를 자동 활성화하지 않음
+# → shared-memory/import-memory/TLS export를 전부 명시해야 함
+rustflags = "-C target-feature=+atomics,+bulk-memory,+mutable-globals,+simd128 -C link-arg=--shared-memory -C link-arg=--import-memory -C link-arg=--export=__wasm_init_tls -C link-arg=--export=__tls_size -C link-arg=--export=__tls_align -C link-arg=--export=__tls_base -C link-arg=--export=__heap_base -C link-arg=--max-memory=4294967296"
 
 [unstable]
 build-std = ["panic_abort", "std"]

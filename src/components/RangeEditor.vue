@@ -1,12 +1,12 @@
 <template>
-  <div class="flex mt-1">
-    <div class="shrink-0 ml-1">
-      <table class="shadow-md select-none snug" @mouseleave="dragEnd">
-        <tr v-for="row in 13" :key="row" class="h-9">
+  <div class="flex flex-col md:flex-row mt-1">
+    <div class="shrink-0 ml-0 md:ml-1 max-w-full">
+      <table class="shadow-md shadow-black/40 select-none snug" @mouseleave="dragEnd">
+        <tr v-for="row in 13" :key="row" class="h-7 md:h-9">
           <td
             v-for="col in 13"
             :key="col"
-            class="relative w-[2.625rem] border border-black"
+            class="relative w-7 md:w-[2.625rem] border border-neutral-700"
             @mousedown="dragStart(row, col)"
             @mouseup="dragEnd"
             @mouseenter="mouseEnter(row, col)"
@@ -27,14 +27,14 @@
             </div>
             <div
               :class="
-                'absolute -top-px left-[0.1875rem] z-10 text-shadow ' +
+                'absolute -top-px left-[0.1875rem] z-10 text-shadow text-xs md:text-base ' +
                 (cellValue(row, col) > 0 ? 'text-white' : 'text-neutral-500')
               "
             >
               {{ cellText(row, col) }}
             </div>
             <div
-              class="absolute bottom-px right-1 z-10 text-sm text-shadow text-white"
+              class="hidden md:block absolute bottom-px right-1 z-10 text-sm text-shadow text-white"
             >
               {{
                 cellValue(row, col) > 0 && cellValue(row, col) < 100
@@ -60,18 +60,18 @@
           />
 
           <button class="button-base button-blue" @click="clearRange">
-            Clear
+            초기화
           </button>
         </div>
 
-        <div v-if="rangeTextError" class="mt-1 text-red-500">
-          Error: {{ rangeTextError }}
+        <div v-if="rangeTextError" class="mt-1 text-red-400">
+          오류: {{ rangeTextError }}
         </div>
       </div>
 
       <div class="flex mt-3.5 items-center">
         <div>
-          Weight:
+          비중:
           <input
             v-model="weight"
             type="range"
@@ -97,14 +97,14 @@
         </div>
 
         <span class="inline-block ml-auto">
-          {{ numCombos.toFixed(1) }} combos ({{
+          {{ numCombos.toFixed(1) }} 콤보 ({{
             ((numCombos * 100) / ((52 * 51) / 2)).toFixed(1)
           }}%)
         </span>
       </div>
     </div>
 
-    <div class="flex-grow max-w-[18rem] ml-6">
+    <div class="flex-grow max-w-full md:max-w-[18rem] ml-0 md:ml-6 mt-4 md:mt-0">
       <DbItemPicker
         store-name="ranges"
         :index="player"
@@ -117,8 +117,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import { useConfigStore } from "../store";
+import { defineComponent, ref, watch } from "vue";
+import { useStore, useConfigStore } from "../store";
 import { ranks, rankPat } from "../utils";
 import { RangeManager } from "../../pkg/range/range";
 
@@ -148,6 +148,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const appStore = useStore();
     const config = useConfigStore();
 
     const range = RangeManager.new();
@@ -198,8 +199,8 @@ export default defineComponent({
 
       for (const range of ranges) {
         if (!rangeRegex.test(range)) {
-          rangeTextError.value = `Failed to parse range: ${
-            range || "(empty string)"
+          rangeTextError.value = `레인지를 해석할 수 없습니다: ${
+            range || "(빈 문자열)"
           }`;
           return;
         }
@@ -260,6 +261,17 @@ export default defineComponent({
       rangeText.value = String(rangeStr);
       onRangeTextChange();
     };
+
+    // 프리셋 로더가 넘긴 레인지 텍스트를 기존 파이프라인으로 적용
+    watch(
+      () => appStore.pendingRangeText[props.player],
+      (v) => {
+        if (v) {
+          loadRange(v);
+          appStore.pendingRangeText[props.player] = "";
+        }
+      }
+    );
 
     return {
       yellow500,

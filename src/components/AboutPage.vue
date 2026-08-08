@@ -1,114 +1,137 @@
 <template>
-  <div class="flex">
-    <div
-      class="flex pl-2.5 pr-3 py-1 text-cyan-600 bg-cyan-50 border-2 border-cyan-600 rounded-md font-semibold"
-    >
-      <InformationCircleIcon class="inline w-5 h-5 mt-[0.1875rem] mr-1.5" />
-      <div>
-        This website will no longer be updated. Please see
-        <a
-          href="https://github.com/b-inary/postflop-solver/issues/46"
-          class="link"
-          target="_blank"
-          >this GitHub issue</a
+  <div class="max-w-3xl">
+    <!-- 히어로 -->
+    <div>
+      <!-- 은색 스페이드 심볼 -->
+      <div
+        class="silver-text text-6xl md:text-7xl leading-none select-none"
+        aria-hidden="true"
+      >
+        ♠
+      </div>
+      <div class="mt-4 text-sm font-semibold text-neutral-500 tracking-wide">
+        홀덤마스터 커뮤니티
+      </div>
+      <h1
+        class="silver-text mt-1.5 text-4xl md:text-5xl font-bold tracking-tight leading-[1.15]"
+      >
+        GTO 전략,<br />
+        브라우저에서 바로.
+      </h1>
+      <p class="mt-4 text-base md:text-lg text-neutral-400 leading-relaxed">
+        설치도, 결제도 없습니다. 레인지와 보드를 넣으면<br
+          class="hidden md:block"
+        />
+        상황별 최적 전략을 내 컴퓨터에서 직접 계산합니다.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-3 mt-7">
+        <button
+          class="px-5 py-2.5 rounded-full bg-white text-neutral-900 text-sm font-semibold transition hover:bg-neutral-200"
+          @click="store.sideView = 'presets'"
         >
-        for more information.<br />
-        If you try to find similar tools, please beware of malicious fake sites.
+          예제 결과 바로 보기
+        </button>
+        <button
+          class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5"
+          @click="store.sideView = 'guide'"
+        >
+          사용법 보기
+        </button>
       </div>
     </div>
+
+    <!-- 특징 -->
+    <div
+      class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 mt-12 md:mt-16"
+    >
+      <div v-for="f in features" :key="f.title" class="pt-4 border-t border-white/10">
+        <div class="text-sm font-semibold text-white">{{ f.title }}</div>
+        <div class="mt-1 text-[0.8125rem] leading-relaxed text-neutral-500">
+          {{ f.desc }}
+        </div>
+      </div>
+    </div>
+
+    <!-- 시작 안내 -->
+    <div class="mt-12 md:mt-16 rounded-2xl bg-white/[0.04] border border-white/10 p-6">
+      <div class="text-sm font-semibold text-white">처음이라면</div>
+      <div class="mt-4 space-y-3">
+        <div v-for="(s, i) in steps" :key="i" class="flex items-baseline gap-3">
+          <span
+            class="shrink-0 w-5 text-right text-sm font-semibold text-yellow-300/90 tabular-nums"
+            >{{ i + 1 }}</span
+          >
+          <span class="text-sm text-neutral-300">{{ s }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 알아둘 점 + 크레딧 -->
+    <div class="mt-12 pt-5 border-t border-white/10 text-[0.8125rem] leading-relaxed text-neutral-500">
+      <p>
+        iOS·Safari에서는 브라우저 제약으로 단일 스레드로 동작해 계산이
+        느립니다 — macOS에서는 Chrome을 권장합니다. 사용 가능한 메모리는
+        4GB로 제한되며(WebAssembly 한계), 큰 스팟의 직접 계산은 PC에서 더
+        쾌적합니다.
+      </p>
+      <p class="mt-3">
+        이 프로그램은
+        <a
+          href="https://github.com/b-inary/wasm-postflop"
+          class="text-neutral-400 underline decoration-neutral-600 underline-offset-2 hover:text-neutral-200"
+          target="_blank"
+          >WASM Postflop</a
+        >
+        (Wataru Inariba 작, AGPL-3.0)을 기반으로
+        <a
+          href="https://www.holdemmaster.com"
+          class="text-neutral-400 underline decoration-neutral-600 underline-offset-2 hover:text-neutral-200"
+          target="_blank"
+          >홀덤마스터</a
+        >가 한국어화·개선한 버전이며, 수정된 전체 소스코드는 동일한
+        라이선스로 공개되어 있습니다.
+      </p>
+    </div>
   </div>
-
-  <p class="mt-4">
-    <span class="font-bold">WASM Postflop</span> is a free, open-source
-    <span class="font-bold">GTO solver</span> that works on web browsers.<br />
-    <span class="font-bold">WASM</span> stands for
-    <a href="https://webassembly.org/" class="font-bold link" target="_blank"
-      >WebAssembly</a
-    >. It is a modern technology that allows us to distribute a fast, portable,
-    and secure program across the web.
-  </p>
-
-  <ul class="mt-4 ml-8 list-disc">
-    <li><span class="font-bold">Free to use</span></li>
-    <li>
-      <span class="font-bold">Open source</span>: anyone can examine the whole
-      program
-    </li>
-    <li>
-      <span class="font-bold">Works on web browsers</span>: no need to install
-      anything
-    </li>
-    <li>
-      <span class="font-bold">Sufficiently fast</span>: supports multithreading
-    </li>
-  </ul>
-
-  <p class="mt-4">
-    For more detailed information about this project, please see
-    <a
-      href="https://github.com/b-inary/wasm-postflop"
-      class="link"
-      target="_blank"
-      >GitHub</a
-    >.
-  </p>
-
-  <p class="mt-4 underline">See also:</p>
-
-  <ul class="mt-4 ml-8 list-disc">
-    <li>
-      <a
-        href="https://github.com/b-inary/desktop-postflop"
-        class="font-bold link"
-        target="_blank"
-        >Desktop Postflop</a
-      >: A native desktop application for Windows and Linux. Faster and no
-      memory limitations.
-    </li>
-  </ul>
-
-  <p class="mt-4 underline">Limitations:</p>
-
-  <ul class="mt-4 ml-8 list-disc">
-    <li>
-      <span class="font-bold underline"
-        >Multithreading is not supported on iOS and Safari</span
-      >
-      because nested workers are
-      <a
-        href="https://bugs.webkit.org/show_bug.cgi?id=22723"
-        class="link"
-        target="_blank"
-        >not implemented</a
-      >
-      <ul class="ml-8" style="list-style-type: circle">
-        <li>
-          If you are using macOS, please use other browsers such as Google
-          Chrome instead
-        </li>
-      </ul>
-    </li>
-    <li>
-      <span class="font-bold underline"
-        >Available memory is limited to 4GB</span
-      >
-      due to the technical limitation of WebAssembly
-    </li>
-    <li>Mobile use is not considered</li>
-  </ul>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { InformationCircleIcon } from "@heroicons/vue/20/solid";
+import { useStore } from "../store";
 
 export default defineComponent({
-  components: { InformationCircleIcon },
+  setup() {
+    const features = [
+      { title: "무료", desc: "횟수 제한 없이 모든 기능을 그대로" },
+      { title: "설치 없음", desc: "웹 브라우저만 있으면 어디서든" },
+      { title: "빠른 계산", desc: "멀티스레드로 데스크톱 솔버 수준" },
+      { title: "오픈소스", desc: "전체 코드가 공개되어 있습니다" },
+    ];
+
+    const steps = [
+      "교육 예제에서 아무 스팟이나 [결과 바로 보기] — 기다림 없이 결과가 나옵니다",
+      "사용법에서 결과 화면 읽는 법을 확인하세요",
+      "익숙해지면 커스텀 스팟(①~⑤)으로 내 핸드를 직접 계산해보세요",
+    ];
+
+    return { store: useStore(), features, steps };
+  },
 });
 </script>
 
 <style scoped>
-.link {
-  @apply text-blue-500 hover:underline;
+/* 애플식 메탈릭 실버 — 위에서 아래로 밝은 은색 → 어두운 은색 */
+.silver-text {
+  background-image: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #e5e5e5 35%,
+    #a3a3a3 75%,
+    #8a8a8a 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 </style>

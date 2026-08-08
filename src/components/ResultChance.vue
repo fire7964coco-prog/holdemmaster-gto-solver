@@ -94,8 +94,22 @@ const labels = [...ranks].reverse();
 const green600 = "#16a34a";
 const blue600 = "#2563eb";
 const pink600 = "#db2777";
-const black = "#000000";
+const black = "#d4d4d4"; // 다크 배경용 스페이드 막대색 (원래 검정)
 const suitColor = [green600, blue600, pink600, black];
+
+// display-only label map (data values remain in English)
+const actionLabels: Record<string, string> = {
+  Fold: "폴드",
+  Check: "체크",
+  Call: "콜",
+  Bet: "벳",
+  Raise: "레이즈",
+  "All-in": "올인",
+};
+
+const actionLabel = (name: string) => {
+  return actionLabels[name] ?? name;
+};
 
 export default defineComponent({
   components: {
@@ -166,7 +180,7 @@ export default defineComponent({
             const actionIndex = i >> 2;
             const suit = i & 3;
             const action = spot.actions[actionIndex];
-            let label = action.name;
+            let label = actionLabel(action.name);
             if (action.amount !== "0") label += ` ${action.amount}`;
             return {
               data: Array.from({ length: 13 }, (_, rank) => {
@@ -225,9 +239,9 @@ export default defineComponent({
         props.displayPlayer.toUpperCase() +
         " " +
         {
-          "strategy-combos": "Strategy (Combos)",
-          strategy: "Strategy",
-          eq: "Equity",
+          "strategy-combos": "전략 (콤보)",
+          strategy: "전략",
+          eq: "에퀴티",
           ev: "EV",
           eqr: "EQR",
         }[option];
@@ -238,11 +252,16 @@ export default defineComponent({
         animation: false,
         normalized: true,
         scales: {
+          x: {
+            ticks: { color: "#a3a3a3" },
+            grid: { color: "#404040" },
+          },
           y: {
             stacked: true,
             min: ["ev", "eqr"].includes(option) ? undefined : 0,
             max: option === "strategy" ? 1 : undefined,
-            ticks: { format },
+            ticks: { format, color: "#a3a3a3" },
+            grid: { color: "#404040" },
             afterFit(axis) {
               axis.width = 52;
             },
@@ -253,7 +272,7 @@ export default defineComponent({
             display: true,
             text: titleText,
             font: { size: 16, weight: "normal" },
-            color: "rgba(0, 0, 0, 0.9)",
+            color: "#e5e5e5",
           },
           legend: {
             display: false,

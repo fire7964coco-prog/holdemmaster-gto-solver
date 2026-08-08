@@ -36,6 +36,13 @@ module.exports = {
         test: /\.png$/,
         loader: "url-loader",
       },
+      {
+        // wasm-bindgen 스레드 스니펫(workerHelpers.js)의 '../..' import가
+        // strict ESM의 fully-specified 규칙에 걸리므로 완화
+        test: /\.js$/,
+        include: path.resolve(__dirname, "pkg"),
+        resolve: { fullySpecified: false },
+      },
     ],
   },
   resolve: { extensions: [".js", ".ts", ".vue"] },

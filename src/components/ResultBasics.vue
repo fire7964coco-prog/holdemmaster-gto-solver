@@ -16,7 +16,7 @@
           v-for="col in 13"
           :key="col"
           :class="
-            'relative border border-black ' +
+            'relative border border-neutral-700 ' +
             (clickedCellIndex === cellIndex(row, col) ? 'clicked-cell' : '')
           "
           @click="onClickCell(row, col)"

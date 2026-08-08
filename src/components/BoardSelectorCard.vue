@@ -3,8 +3,8 @@
     :class="
       'relative rounded-lg border select-none enabled:shadow ' +
       (isSelected
-        ? 'bg-yellow-300 ring-1 ring-red-600 border-red-600'
-        : 'bg-white border-black')
+        ? 'bg-neutral-700 ring-2 ring-yellow-400 border-yellow-400'
+        : 'bg-neutral-800 border-neutral-600 hover:bg-neutral-700')
     "
     :style="{
       '--width': width,

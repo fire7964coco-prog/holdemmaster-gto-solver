@@ -1,31 +1,31 @@
 <template>
-  <div class="flex shrink-0 h-12 border-y border-gray-500">
+  <div class="flex shrink-0 h-12 border-y border-neutral-600 overflow-x-auto">
     <button
       v-for="mode in ['basics', 'graphs', 'compare'] as const"
       :key="mode"
       :class="
-        'flex w-[9%] h-full items-center justify-center font-semibold text-lg transition ' +
+        'flex shrink-0 w-16 md:w-[9%] h-full items-center justify-center font-semibold text-sm md:text-lg transition ' +
         (chanceMode === ''
           ? displayMode === mode
-            ? 'bg-blue-100 underline'
-            : 'hover:bg-blue-100'
+            ? 'bg-neutral-700 text-blue-300 underline'
+            : 'hover:bg-neutral-700'
           : displayMode === mode
-          ? 'bg-red-100 underline'
-          : 'hover:bg-red-100')
+          ? 'bg-red-950 underline'
+          : 'hover:bg-red-950')
       "
       @click="updateDisplayMode(mode)"
     >
-      {{ capitalize(mode) }}
+      {{ modeLabels[mode] }}
     </button>
     <button
       :class="
-        'flex w-[9%] h-full items-center justify-center font-semibold text-lg transition enabled:hover:bg-blue-100 ' +
-        (displayMode === 'chance' ? 'bg-blue-100 underline' : '')
+        'flex shrink-0 w-16 md:w-[9%] h-full items-center justify-center font-semibold text-sm md:text-lg transition enabled:hover:bg-neutral-700 ' +
+        (displayMode === 'chance' ? 'bg-neutral-700 text-blue-300 underline' : '')
       "
       :disabled="chanceMode === ''"
       @click="updateDisplayMode('chance')"
     >
-      {{ capitalize(chanceMode) }}
+      {{ chanceMode ? modeLabels[chanceMode] : "" }}
     </button>
 
     <div
@@ -35,14 +35,14 @@
         v-if="['basics', 'graphs'].includes(displayMode)"
         class="flex flex-col items-start justify-center h-full"
       >
-        <div class="text-sm">Player:</div>
+        <div class="text-sm">플레이어:</div>
         <select
           v-model="displayOptions.playerBasics"
-          class="w-28 px-1 py-0.5 border-gray-600 bg-gray-200 rounded-lg shadow cursor-pointer bg-right"
+          class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
           @change="updateDisplayOptions"
         >
           <option value="auto">
-            Auto ({{ autoPlayerBasics.toUpperCase() }})
+            자동 ({{ autoPlayerBasics.toUpperCase() }})
           </option>
           <option value="oop">OOP</option>
           <option value="ip">IP</option>
@@ -53,14 +53,14 @@
         v-if="displayMode === 'chance'"
         class="flex flex-col items-start justify-center h-full"
       >
-        <div class="text-sm">Player:</div>
+        <div class="text-sm">플레이어:</div>
         <select
           v-model="displayOptions.playerChance"
-          class="w-28 px-1 py-0.5 border-gray-600 bg-gray-200 rounded-lg shadow cursor-pointer bg-right"
+          class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
           @change="updateDisplayOptions"
         >
           <option value="auto">
-            Auto ({{ autoPlayerChance.toUpperCase() }})
+            자동 ({{ autoPlayerChance.toUpperCase() }})
           </option>
           <option value="oop">OOP</option>
           <option value="ip">IP</option>
@@ -71,15 +71,15 @@
         v-if="['basics', 'compare'].includes(displayMode)"
         class="flex flex-col items-start justify-center h-full"
       >
-        <div class="text-sm">Bar Height:</div>
+        <div class="text-sm">바 높이:</div>
         <select
           v-model="displayOptions.barHeight"
-          class="w-28 px-1 py-0.5 border-gray-600 bg-gray-200 rounded-lg shadow cursor-pointer bg-right"
+          class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
           @change="updateDisplayOptions"
         >
-          <option value="normalized">Normalized</option>
-          <option value="absolute">Absolute</option>
-          <option value="full">Full</option>
+          <option value="normalized">정규화</option>
+          <option value="absolute">절대값</option>
+          <option value="full">전체</option>
         </select>
       </div>
 
@@ -87,14 +87,14 @@
         v-if="['basics', 'compare'].includes(displayMode)"
         class="flex flex-col items-start justify-center h-full"
       >
-        <div class="text-sm">Suit:</div>
+        <div class="text-sm">수트:</div>
         <select
           v-model="displayOptions.suit"
-          class="w-[6.25rem] px-1 py-0.5 border-gray-600 bg-gray-200 rounded-lg shadow cursor-pointer bg-right"
+          class="w-[6.25rem] px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
           @change="updateDisplayOptions"
         >
-          <option value="grouped">Grouped</option>
-          <option value="individual">Individual</option>
+          <option value="grouped">그룹</option>
+          <option value="individual">개별</option>
         </select>
       </div>
 
@@ -102,17 +102,17 @@
         v-if="['basics', 'compare'].includes(displayMode)"
         class="flex flex-col items-start justify-center h-full"
       >
-        <div class="text-sm">Display:</div>
+        <div class="text-sm">표시:</div>
         <select
           v-model="strategyContentPair"
-          class="w-[8.75rem] px-1 py-0.5 border-gray-600 bg-gray-200 rounded-lg shadow cursor-pointer bg-right"
+          class="w-[8.75rem] px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
           @change="updateDisplayOptions"
         >
-          <option value="show,default">Strategy</option>
-          <option value="show,eq">Strategy + EQ</option>
-          <option value="show,ev">Strategy + EV</option>
-          <option value="show,eqr">Strategy + EQR</option>
-          <option value="none,default">Weight</option>
+          <option value="show,default">전략</option>
+          <option value="show,eq">전략 + EQ</option>
+          <option value="show,ev">전략 + EV</option>
+          <option value="show,eqr">전략 + EQR</option>
+          <option value="none,default">비중</option>
           <option value="none,eq">EQ</option>
           <option value="none,ev">EV</option>
           <option value="none,eqr">EQR</option>
@@ -123,10 +123,10 @@
         v-if="displayMode === 'graphs'"
         class="flex flex-col items-start justify-center h-full"
       >
-        <div class="text-sm">Display:</div>
+        <div class="text-sm">표시:</div>
         <select
           v-model="displayOptions.contentGraphs"
-          class="w-20 px-1 py-0.5 border-gray-600 bg-gray-200 rounded-lg shadow cursor-pointer bg-right"
+          class="w-20 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
           @change="updateDisplayOptions"
         >
           <option value="eq">EQ</option>
@@ -139,15 +139,15 @@
         v-if="displayMode === 'chance'"
         class="flex flex-col items-start justify-center h-full"
       >
-        <div class="text-sm">Chart:</div>
+        <div class="text-sm">차트:</div>
         <select
           v-model="displayOptions.chartChance"
-          class="w-[10.25rem] px-1 py-0.5 border-gray-600 bg-gray-200 rounded-lg shadow cursor-pointer bg-right"
+          class="w-[10.25rem] px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
           @change="updateDisplayOptions"
         >
-          <option value="strategy-combos">Strategy (Combos)</option>
-          <option value="strategy">Strategy (%)</option>
-          <option value="eq">Equity</option>
+          <option value="strategy-combos">전략 (콤보)</option>
+          <option value="strategy">전략 (%)</option>
+          <option value="eq">에퀴티</option>
           <option value="ev">EV</option>
           <option value="eqr">EQR</option>
         </select>
@@ -196,6 +196,15 @@
 import { defineComponent, reactive, ref, toRefs, watch } from "vue";
 import { capitalize } from "../utils";
 import * as Types from "../result-types";
+
+// display-only label map (internal mode values remain in English)
+const modeLabels: Record<string, string> = {
+  basics: "기본",
+  graphs: "그래프",
+  compare: "비교",
+  turn: "턴",
+  river: "리버",
+};
 
 // import { Tippy } from "vue-tippy";
 // import { ComputerDesktopIcon } from "@heroicons/vue/24/solid";
@@ -326,6 +335,7 @@ export default defineComponent({
 
     return {
       capitalize,
+      modeLabels,
       displayOptions,
       strategyContentPair,
       updateDisplayMode,

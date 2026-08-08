@@ -2,7 +2,7 @@
   <!-- Error -->
 
   <div v-if="isTreeError">
-    Error: Failed to build tree (loaded broken tree?)
+    오류: 트리 생성에 실패했습니다 (손상된 트리를 불러왔나요?)
   </div>
 
   <!-- Navigation -->
@@ -17,13 +17,13 @@
       :key="spot.index"
       :class="
         'flex flex-col h-full px-1 py-0.5 justify-start ' +
-        'rounded-lg shadow-md border-[3px] transition group ' +
+        'rounded-lg shadow-md shadow-black/40 border-[3px] transition group ' +
         (spot.type === 'chance'
           ? 'hover:border-red-600 '
           : 'hover:border-blue-600 ') +
         (spot.index === selectedSpotIndex
           ? 'border-blue-600 cursor-default'
-          : 'border-gray-400 cursor-pointer')
+          : 'border-neutral-600 cursor-pointer')
       "
       @click="selectSpot(spot.index, false, false, true)"
     >
@@ -38,8 +38,8 @@
           class="flex flex-col flex-grow px-3 items-center justify-evenly font-semibold"
         >
           <div class="group-hover:opacity-100 opacity-70">
-            <div>Pot {{ spot.pot }}</div>
-            <div>Stack {{ spot.stack }}</div>
+            <div>팟 {{ spot.pot }}</div>
+            <div>스택 {{ spot.stack }}</div>
           </div>
         </div>
       </template>
@@ -59,8 +59,8 @@
             v-for="action of spot.actions"
             :key="action.index"
             :class="
-              'flex w-full px-1.5 rounded-md transition-colors hover:bg-blue-100 ' +
-              (action.isSelected ? 'bg-blue-100 ' : '')
+              'flex w-full px-1.5 rounded-md transition-colors hover:bg-neutral-700 ' +
+              (action.isSelected ? 'bg-neutral-700 text-blue-300 ' : '')
             "
             @click.stop="play(spot.index, action.index)"
           >
@@ -88,7 +88,7 @@
               (spot.index === selectedSpotIndex ? '' : 'opacity-70')
             "
           >
-            (No actions)
+            (액션 없음)
           </div>
         </div>
       </template>
@@ -110,9 +110,9 @@
           "
         >
           <div v-if="spot.equityOop === 0 || spot.equityOop === 1" class="px-3">
-            {{ ["IP", "OOP"][spot.equityOop] }} Wins
+            {{ ["IP", "OOP"][spot.equityOop] }} 승리
           </div>
-          <div class="px-3">Pot {{ spot.pot }}</div>
+          <div class="px-3">팟 {{ spot.pot }}</div>
         </div>
       </template>
     </div>
@@ -122,10 +122,10 @@
 
   <div
     v-if="!isTreeError && invalidLinesArray.length > 0"
-    class="flex mt-4 font-semibold text-red-500"
+    class="flex mt-4 font-semibold text-red-400"
   >
     <div class="underline">
-      Invalid Terminal{{ invalidLinesArray.length > 1 ? "s" : "" }}:
+      잘못된 터미널 노드:
     </div>
     <div class="ml-2">
       <div v-for="invalidLine in invalidLinesArray" :key="invalidLine">
@@ -135,7 +135,7 @@
   </div>
 
   <div v-if="!isTreeError" class="flex mx-6 my-6 justify-center">
-    <hr class="border-gray-400 w-full" />
+    <hr class="border-neutral-700 w-full" />
   </div>
 
   <!-- Edit -->
@@ -153,7 +153,7 @@
       "
       @click="addBetAction"
     >
-      Add Bet Action
+      벳 액션 추가
     </button>
 
     <button
@@ -161,11 +161,11 @@
       :disabled="selectedSpotIndex === 1"
       @click="removeSelectedNode"
     >
-      Remove Selected Node
+      선택한 노드 제거
     </button>
 
     <div class="pl-3">
-      Bet amount:
+      벳 금액:
       <input
         v-model="betAmount"
         type="number"
@@ -180,13 +180,13 @@
         @keydown.enter="addBetAction"
       />
       <span v-if="!isSelectedTerminal && !isAfterAllin" class="ml-2">
-        ({{ (amountRate * 100).toFixed(1) }}% of the pot)
+        (팟의 {{ (amountRate * 100).toFixed(1) }}%)
       </span>
     </div>
   </div>
 
   <div class="flex mx-6 my-6 justify-center">
-    <hr class="border-gray-400 w-full" />
+    <hr class="border-neutral-700 w-full" />
   </div>
 
   <!-- Save/Cancel -->
@@ -197,11 +197,11 @@
       :disabled="isTreeError || invalidLinesArray.length > 0"
       @click="saveEdit"
     >
-      Save Edit
+      편집 저장
     </button>
 
     <button class="button-base button-red" @click="cancelEdit">
-      Cancel Edit
+      편집 취소
     </button>
   </div>
 
@@ -215,7 +215,7 @@
   >
     <div v-if="addedLinesArray.length > 0" class="flex">
       <div class="font-semibold underline w-[7.75rem]">
-        Added line{{ addedLinesArray.length > 1 ? "s" : "" }}:
+        추가된 라인:
       </div>
       <div class="flex flex-col">
         <div
@@ -224,7 +224,7 @@
           class="flex items-center"
         >
           <button class="mr-2" @click="deleteAddedLine(index)">
-            <TrashIcon class="w-5 h-5 text-gray-600" />
+            <TrashIcon class="w-5 h-5 text-neutral-400" />
           </button>
           <span>{{ addedLine }}</span>
         </div>
@@ -233,7 +233,7 @@
 
     <div v-if="removedLinesArray.length > 0" class="flex mt-2">
       <div class="font-semibold underline w-[7.75rem]">
-        Removed line{{ removedLinesArray.length > 1 ? "s" : "" }}:
+        제거된 라인:
       </div>
       <div class="flex flex-col">
         <div
@@ -242,7 +242,7 @@
           class="flex items-center"
         >
           <button class="mr-2" @click="deleteRemovedLine(index)">
-            <TrashIcon class="w-5 h-5 text-gray-600" />
+            <TrashIcon class="w-5 h-5 text-neutral-400" />
           </button>
           <span>{{ removedLine }}</span>
         </div>

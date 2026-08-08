@@ -11,8 +11,26 @@
 }
 
 body {
-  @apply bg-gray-50;
+  @apply bg-neutral-900 text-neutral-200;
   font-family: system-ui, "Noto Sans", "Open Sans", Roboto, sans-serif;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  @apply bg-neutral-800 border border-neutral-600 text-neutral-100;
+  @apply placeholder-neutral-500;
+}
+
+input[type="radio"],
+input[type="checkbox"],
+input[type="range"] {
+  accent-color: #3b82f6;
+}
+
+option {
+  @apply bg-neutral-800 text-neutral-100;
 }
 
 .button-base {
@@ -33,7 +51,7 @@ body {
 }
 
 input.input-error {
-  @apply !ring-1 !ring-red-600 !border-red-600 !bg-red-50;
+  @apply !ring-1 !ring-red-500 !border-red-500 !bg-red-950;
 }
 
 .text-shadow {
@@ -62,7 +80,7 @@ input.input-error {
 }
 
 .spinner::after {
-  @apply bg-gray-50;
+  @apply bg-neutral-900;
   width: 75%;
   height: 75%;
   border-radius: 50%;

@@ -5,6 +5,8 @@ export type NavView = "solver" | "results";
 
 export type SideView =
   | "about"
+  | "guide"
+  | "presets"
   | "oop-range"
   | "ip-range"
   | "board"
@@ -90,17 +92,21 @@ export const useStore = defineStore("app", {
     navView: "solver" as NavView,
     sideView: "about" as SideView,
     headers: {
-      about: ["Welcome to WASM Postflop!"],
-      "oop-range": ["OOP Range"],
-      "ip-range": ["IP Range"],
-      board: ["Board"],
-      "tree-config": ["Tree Configuration"],
-      "run-solver": ["Run Solver"],
+      about: ["소개"],
+      guide: ["사용법 — 순서대로 따라하기"],
+      presets: ["교육 예제 — 원클릭 스팟"],
+      "oop-range": ["OOP 레인지"],
+      "ip-range": ["IP 레인지"],
+      board: ["보드"],
+      "tree-config": ["트리 설정"],
+      "run-solver": ["솔버 실행"],
     },
     isSolverRunning: false,
     isFinalizing: false,
     isSolverPaused: false,
     isSolverFinished: false,
+    // 프리셋 로더 → RangeEditor로 레인지 텍스트를 전달하는 채널 (적용 후 비워짐)
+    pendingRangeText: ["", ""] as [string, string],
   }),
 
   getters: {

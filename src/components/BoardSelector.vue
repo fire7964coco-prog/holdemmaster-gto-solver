@@ -1,16 +1,18 @@
 <template>
-  <div v-for="suit in 4" :key="suit" class="flex">
-    <BoardSelectorCard
-      v-for="rank in 13"
-      :key="rank"
-      class="m-1"
-      :card-id="56 - 4 * rank - suit"
-      :is-selected="config.board.includes(56 - 4 * rank - suit)"
-      @click="toggleCard(56 - 4 * rank - suit)"
-    />
+  <div class="overflow-x-auto max-w-full">
+    <div v-for="suit in 4" :key="suit" class="flex min-w-max">
+      <BoardSelectorCard
+        v-for="rank in 13"
+        :key="rank"
+        class="m-1"
+        :card-id="56 - 4 * rank - suit"
+        :is-selected="config.board.includes(56 - 4 * rank - suit)"
+        @click="toggleCard(56 - 4 * rank - suit)"
+      />
+    </div>
   </div>
 
-  <div class="flex mt-4 mx-1 gap-3">
+  <div class="flex flex-wrap mt-4 mx-1 gap-3">
     <input
       v-model="boardText"
       type="text"
@@ -18,9 +20,9 @@
       @focus="($event.target as HTMLInputElement).select()"
       @change="onBoardTextChange"
     />
-    <button class="button-base button-blue" @click="clearBoard">Clear</button>
+    <button class="button-base button-blue" @click="clearBoard">초기화</button>
     <button class="button-base button-blue" @click="generateRandomBoard">
-      Random Flop
+      랜덤 플랍
     </button>
   </div>
 
@@ -30,10 +32,10 @@
       config.expectedBoardLength > 0 &&
       config.board.length !== config.expectedBoardLength
     "
-    class="mt-5 text-orange-500 font-semibold"
+    class="mt-5 text-orange-400 font-semibold"
   >
-    <span class="underline">Warning:</span>
-    The edited tree assumes a {{ config.expectedBoardLength }}-card board.
+    <span class="underline">주의:</span>
+    편집된 트리는 보드 카드 {{ config.expectedBoardLength }}장을 전제로 합니다.
   </div>
 </template>
 

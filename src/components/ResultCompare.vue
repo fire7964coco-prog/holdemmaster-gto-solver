@@ -27,7 +27,7 @@
             'font-semibold': combos[0] && combos[0] >= (1 - EPS) * combos[1],
           }"
         />
-        <div class="flex-grow text-center underline">Combos</div>
+        <div class="flex-grow text-center underline">콤보</div>
         <Adaptive
           :value="combos[1]"
           :class="{
@@ -50,7 +50,7 @@
               !isNaN(equity[0]) && equity[0] >= (1 - EPS) * equity[1],
           }"
         />
-        <div class="flex-grow text-center underline">Equity</div>
+        <div class="flex-grow text-center underline">에퀴티</div>
         <Percentage
           :value="equity[1]"
           :class="{
@@ -156,7 +156,7 @@ const BarChart = (props: { values: number[] }) => {
     isNaN(props.values[0]) ||
     isNaN(props.values[1])
   ) {
-    return h("div", { class: "h-4 rounded-lg bg-neutral-400" });
+    return h("div", { class: "h-4 rounded-lg bg-neutral-600" });
   }
   const total = props.values[0] + props.values[1];
   const sep = `${(props.values[0] * 100) / total}%`;

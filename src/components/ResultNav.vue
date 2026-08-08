@@ -8,7 +8,7 @@
       :key="spot.index"
       :class="
         'flex flex-col relative h-full px-1 py-0.5 justify-start ' +
-        'rounded-lg shadow-md border-[3px] transition group ' +
+        'rounded-lg bg-neutral-800 shadow-md shadow-black/40 border-[3px] transition group ' +
         (spot.type === 'chance'
           ? isSelectedChanceSkipped && spot.index > selectedChanceIndex
             ? ''
@@ -21,8 +21,8 @@
           : spot.type === 'chance' &&
             isSelectedChanceSkipped &&
             spot.index > selectedChanceIndex
-          ? 'border-gray-400 cursor-default'
-          : 'border-gray-400 cursor-pointer')
+          ? 'border-neutral-600 cursor-default'
+          : 'border-neutral-600 cursor-pointer')
       "
       @click="selectSpot(spot.index, false)"
     >
@@ -38,7 +38,7 @@
               : 'group-hover:opacity-100 opacity-70')
           "
         >
-          {{ spot.player.toUpperCase() }}
+          {{ spotPlayerLabel(spot.player) }}
         </div>
         <div
           class="flex flex-col flex-grow px-3 items-center justify-evenly font-semibold"
@@ -62,7 +62,7 @@
                 :class="
                   'absolute -top-[1.375rem] left-1/2 -ml-3 w-6 h-6 ' +
                   (isCardAvailable(spot, 0, 1)
-                    ? 'opacity-70 hover:opacity-100 text-gray-700'
+                    ? 'opacity-70 hover:opacity-100 text-neutral-200'
                     : 'text-red-300')
                 "
                 @click.stop="
@@ -75,7 +75,7 @@
                 :class="
                   'absolute -left-[1.375rem] top-1/2 -mt-3 w-6 h-6 ' +
                   (isCardAvailable(spot, 1, 0)
-                    ? 'opacity-70 hover:opacity-100 text-gray-700'
+                    ? 'opacity-70 hover:opacity-100 text-neutral-200'
                     : 'text-red-300')
                 "
                 @click.stop="
@@ -88,7 +88,7 @@
                 :class="
                   'absolute -right-[1.375rem] top-1/2 -mt-3 w-6 h-6 ' +
                   (isCardAvailable(spot, -1, 0)
-                    ? 'opacity-70 hover:opacity-100 text-gray-700'
+                    ? 'opacity-70 hover:opacity-100 text-neutral-200'
                     : 'text-red-300')
                 "
                 @click.stop="
@@ -101,7 +101,7 @@
                 :class="
                   'absolute -bottom-[1.375rem] left-1/2 -ml-3 w-6 h-6 ' +
                   (isCardAvailable(spot, 0, -1)
-                    ? 'opacity-70 hover:opacity-100 text-gray-700'
+                    ? 'opacity-70 hover:opacity-100 text-neutral-200'
                     : 'text-red-300')
                 "
                 @click.stop="
@@ -121,8 +121,8 @@
                 : 'group-hover:opacity-100 opacity-70'
             "
           >
-            <div>Pot {{ spot.pot }}</div>
-            <div>Stack {{ spot.stack }}</div>
+            <div>팟 {{ spot.pot }}</div>
+            <div>스택 {{ spot.stack }}</div>
           </div>
         </div>
 
@@ -132,7 +132,7 @@
             spot.selectedIndex !== -1 &&
             !isDealing
           "
-          class="absolute top-1.5 right-1.5 opacity-70 hover:opacity-100 text-gray-700"
+          class="absolute top-1.5 right-1.5 opacity-70 hover:opacity-100 text-neutral-200"
           @click="deal(spot.selectedIndex)"
         >
           <XMarkIcon class="w-6 h-6" />
@@ -147,15 +147,15 @@
             (spot.index === selectedSpotIndex ? '' : 'opacity-70')
           "
         >
-          {{ spot.player.toUpperCase() }}
+          {{ spotPlayerLabel(spot.player) }}
         </div>
         <div class="flex-grow overflow-y-auto">
           <button
             v-for="action of spot.actions"
             :key="action.index"
             :class="
-              'flex w-full px-1.5 rounded-md transition-colors hover:bg-blue-100 ' +
-              (action.isSelected ? 'bg-blue-100 ' : '')
+              'flex w-full px-1.5 rounded-md transition-colors hover:bg-neutral-700 ' +
+              (action.isSelected ? 'bg-neutral-700 ' : '')
             "
             @click.stop="play(spot.index, action.index)"
           >
@@ -180,7 +180,7 @@
                   : 'opacity-70')
               "
             >
-              {{ action.name }}
+              {{ actionLabel(action.name) }}
               {{ action.amount === "0" ? "" : action.amount }}
             </span>
             <span
@@ -206,7 +206,7 @@
             (spot.index === selectedSpotIndex ? '' : 'opacity-70')
           "
         >
-          {{ spot.player.toUpperCase() }}
+          {{ spotPlayerLabel(spot.player) }}
         </div>
         <div
           :class="
@@ -215,10 +215,10 @@
           "
         >
           <div v-if="spot.equityOop === 0 || spot.equityOop === 1" class="px-3">
-            {{ ["IP", "OOP"][spot.equityOop] }} Wins
+            {{ ["IP", "OOP"][spot.equityOop] }} 승리
           </div>
           <div v-else-if="spot.equityOop !== -1" class="px-1.5">
-            <div class="mb-0.5">Equity</div>
+            <div class="mb-0.5">에퀴티</div>
             <div class="flex w-full px-1.5">
               <span>OOP</span>
               <span class="ml-auto pl-2">
@@ -232,7 +232,7 @@
               </span>
             </div>
           </div>
-          <div class="px-3">Pot {{ spot.pot }}</div>
+          <div class="px-3">팟 {{ spot.pot }}</div>
         </div>
       </template>
     </div>
@@ -309,6 +309,31 @@ const actionColor = (
   }
 
   return colorString(retColor);
+};
+
+// display-only label maps (data values remain in English)
+const spotPlayerLabels: Record<string, string> = {
+  flop: "플랍",
+  turn: "턴",
+  river: "리버",
+  end: "종료",
+};
+
+const spotPlayerLabel = (player: string) => {
+  return spotPlayerLabels[player] ?? player.toUpperCase();
+};
+
+const actionLabels: Record<string, string> = {
+  Fold: "폴드",
+  Check: "체크",
+  Call: "콜",
+  Bet: "벳",
+  Raise: "레이즈",
+  "All-in": "올인",
+};
+
+const actionLabel = (name: string) => {
+  return actionLabels[name] ?? name;
 };
 
 export default defineComponent({
@@ -1025,7 +1050,7 @@ export default defineComponent({
       if (spot.type === "root") {
         return spot.board.map((card) => cardText(card));
       } else if (spot.selectedIndex === -1) {
-        return [{ rank: "?", suit: "", colorClass: "text-black" }];
+        return [{ rank: "?", suit: "", colorClass: "text-neutral-200" }];
       } else {
         return [cardText(spot.selectedIndex)];
       }
@@ -1046,6 +1071,8 @@ export default defineComponent({
       dealArrow,
       isCardAvailable,
       spotCards,
+      spotPlayerLabel,
+      actionLabel,
     };
   },
 });

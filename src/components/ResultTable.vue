@@ -1,23 +1,23 @@
 <template>
-  <div class="flex flex-col w-full border-l border-gray-500 overflow-x-auto">
-    <div class="flex shrink-0 h-12 border-b border-gray-500">
+  <div class="flex flex-col w-full border-l border-neutral-600 overflow-x-auto">
+    <div class="flex shrink-0 h-12 border-b border-neutral-600">
       <div class="flex h-full px-4 items-center text-lg font-semibold">
-        Summary
+        요약
       </div>
 
       <div class="flex h-full ml-auto pr-4 items-center gap-4 snug">
         <div class="flex flex-col items-start justify-center h-full">
-          <div class="text-sm">Bar width:</div>
+          <div class="text-sm">바 너비:</div>
           <select
             v-model="displayOptions.barWidth"
-            class="w-28 px-1 py-0.5 border-gray-600 bg-gray-200 rounded-lg shadow cursor-pointer bg-right"
+            class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
             @change="updateDisplayOptions"
           >
-            <option value="normalized">Normalized</option>
+            <option value="normalized">정규화</option>
             <option v-if="tableMode !== 'chance'" value="absolute">
-              Absolute
+              절대값
             </option>
-            <option value="full">Full</option>
+            <option value="full">전체</option>
           </select>
         </div>
 
@@ -25,23 +25,23 @@
           v-if="tableMode !== 'chance'"
           class="flex flex-col items-start justify-center h-full"
         >
-          <div class="text-sm">Display:</div>
+          <div class="text-sm">표시:</div>
           <select
             v-model="(displayOptions as DisplayOptionsBasics).content"
-            class="w-28 px-1 py-0.5 border-gray-600 bg-gray-200 rounded-lg shadow cursor-pointer bg-right"
+            class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
             @change="updateDisplayOptions"
           >
-            <option value="percentage">Action %</option>
-            <option value="ev">Action EV</option>
+            <option value="percentage">액션 %</option>
+            <option value="ev">액션 EV</option>
           </select>
         </div>
 
-        <Tippy content="Export summary to CSV file">
+        <Tippy content="요약을 CSV 파일로 내보내기">
           <a
             ref="exportSummaryButton"
             :class="
-              'flex w-8 h-8 items-center justify-center border border-gray-600 bg-gray-200 ' +
-              'rounded-lg shadow cursor-pointer transition-colors active:bg-gray-300'
+              'flex w-8 h-8 items-center justify-center border border-neutral-600 bg-neutral-700 ' +
+              'rounded-lg shadow cursor-pointer transition-colors active:bg-neutral-600'
             "
             download="summary.csv"
             @click="exportSummary"
@@ -58,7 +58,7 @@
       @scroll.passive="onTableScroll"
     >
       <table class="w-full h-full text-sm text-center align-middle">
-        <thead class="sticky top-0 z-30 bg-gray-100 shadow">
+        <thead class="sticky top-0 z-30 bg-neutral-800 shadow">
           <tr style="height: calc(1.9rem + 1px)">
             <th
               v-for="column in columns"
@@ -67,7 +67,7 @@
               :class="
                 'whitespace-nowrap select-none ' +
                 (column.type === 'card'
-                  ? 'sticky left-0 z-40 bg-gray-100 '
+                  ? 'sticky left-0 z-40 bg-neutral-800 '
                   : '') +
                 (column.type !== 'bar' ? 'cursor-pointer ' : '') +
                 (tableMode === 'chance' ? 'header-divider' : '')
@@ -100,7 +100,7 @@
               :class="
                 'header-divider ' +
                 (column.type === 'card'
-                  ? 'sticky left-0 z-40 underline bg-gray-100 '
+                  ? 'sticky left-0 z-40 underline bg-neutral-800 '
                   : 'relative ') +
                 (column.type === 'bar'
                   ? 'pt-[0.3125rem] pb-1 px-1'
@@ -112,12 +112,12 @@
               @click="column.type !== 'bar' && sortBy(columnIndex(column))"
             >
               <template v-if="column.type === 'card'">
-                <span>{{ hoverContent?.name ?? "Total" }}</span>
+                <span>{{ hoverContent?.name ?? "전체" }}</span>
               </template>
 
               <template v-else-if="column.type === 'bar'">
                 <div
-                  v-if="summary && column.label === 'Strategy'"
+                  v-if="summary && column.label === '전략'"
                   class="w-full h-full bg-neutral-800 bg-left bg-no-repeat"
                   :style="{
                     'background-image': strategyBarBgImage(summary),
@@ -214,7 +214,7 @@
             :key="item[0]"
             :class="
               'relative ' +
-              (item[0] === scrollTarget ? 'bg-yellow-200' : 'bg-gray-50')
+              (item[0] === scrollTarget ? 'bg-yellow-900' : 'bg-neutral-900')
             "
             style="height: calc(1.9rem + 1px)"
           >
@@ -226,8 +226,8 @@
                 (column.type === 'card'
                   ? 'sticky left-0 z-10 ' +
                     (item[0] === scrollTarget
-                      ? 'bg-yellow-200 '
-                      : 'bg-gray-50 ')
+                      ? 'bg-yellow-900 '
+                      : 'bg-neutral-900 ')
                   : 'relative ') +
                 (column.type === 'bar' ? 'pt-[0.3125rem] pb-1 px-1' : 'pt-0.5')
               "
@@ -314,14 +314,14 @@
           <!-- No results -->
           <tr v-if="resultsRendered.length === 0">
             <td
-              class="relative bg-gray-50 row-divider"
+              class="relative bg-neutral-900 row-divider"
               style="height: calc(1.9rem + 1px)"
               :colspan="columns.length"
             >
               {{
                 tableMode === "chance"
-                  ? `${capitalize(chanceType)} reports not available`
-                  : "No results"
+                  ? `${chanceType === "turn" ? "턴" : "리버"} 리포트가 없습니다`
+                  : "결과 없음"
               }}
             </td>
           </tr>
@@ -467,6 +467,20 @@ const cardStr = (card: number) => {
   const rank = ranks[card >>> 2];
   const suit = suitLetters[card & 3];
   return rank + suit;
+};
+
+// display-only label map (data values remain in English)
+const actionLabels: Record<string, string> = {
+  Fold: "폴드",
+  Check: "체크",
+  Call: "콜",
+  Bet: "벳",
+  Raise: "레이즈",
+  "All-in": "올인",
+};
+
+const actionLabel = (name: string) => {
+  return actionLabels[name] ?? name;
 };
 
 export default defineComponent({
@@ -671,13 +685,13 @@ export default defineComponent({
       const ret: Column[] = [];
 
       if (props.tableMode !== "chance") {
-        ret.push({ label: "Hand", type: "card" });
+        ret.push({ label: "핸드", type: "card" });
         ret.push({
-          label: numActions.value > 0 ? "Strategy" : "Weight (Bar)",
+          label: numActions.value > 0 ? "전략" : "비중 (바)",
           type: "bar",
         });
 
-        ret.push({ label: "Weight", type: "weight" });
+        ret.push({ label: "비중", type: "weight" });
         ret.push({ label: "EQ", type: "percentage", index: INDEX_EQUITY });
         ret.push({ label: "EV", type: "ev" });
         ret.push({ label: "EQR", type: "percentage", index: INDEX_EQR });
@@ -691,7 +705,7 @@ export default defineComponent({
             const action = spot.actions[j];
             const label =
               action.amount === "0"
-                ? action.name
+                ? actionLabel(action.name)
                 : `${action.name[0]} ${action.amount}`;
             if (options.content === "percentage") {
               ret.push({ label, type: "action", index: i });
@@ -701,13 +715,16 @@ export default defineComponent({
           }
         }
       } else {
-        ret.push({ label: capitalize(props.chanceType), type: "card" });
         ret.push({
-          label: numActions.value > 0 ? "Strategy" : "Combos (Bar)",
+          label: props.chanceType === "turn" ? "턴" : "리버",
+          type: "card",
+        });
+        ret.push({
+          label: numActions.value > 0 ? "전략" : "콤보 (바)",
           type: "bar",
         });
 
-        ret.push({ label: "Combos", type: "weight" });
+        ret.push({ label: "콤보", type: "weight" });
         ret.push({ label: "EQ", type: "percentage", index: INDEX_EQUITY });
         ret.push({ label: "EV", type: "ev" });
         ret.push({ label: "EQR", type: "percentage", index: INDEX_EQR });
@@ -719,7 +736,7 @@ export default defineComponent({
             const action = spot.actions[j];
             const label =
               action.amount === "0"
-                ? action.name
+                ? actionLabel(action.name)
                 : `${action.name[0]} ${action.amount}`;
             ret.push({ label, type: "action", index: i });
           }
@@ -1098,11 +1115,11 @@ export default defineComponent({
 <style scoped>
 .header-divider::before {
   content: "";
-  @apply absolute left-0 -bottom-px w-full border-b border-gray-300;
+  @apply absolute left-0 -bottom-px w-full border-b border-neutral-700;
 }
 
 .row-divider::before {
   content: "";
-  @apply absolute left-0 top-0 w-full border-t border-gray-300;
+  @apply absolute left-0 top-0 w-full border-t border-neutral-700;
 }
 </style>

@@ -1,17 +1,16 @@
 <template>
-  <div class="min-w-[1080px]" :style="{ height: clientHeight + 'px' }">
+  <div class="md:min-w-[1080px]" :style="{ height: clientHeight + 'px' }">
     <NavBar />
 
     <div
       v-show="store.navView === 'solver'"
-      class="flex w-full mx-auto max-w-screen-xl"
+      class="flex flex-col md:flex-row w-full mx-auto max-w-screen-xl"
       style="height: calc(100% - 2.5rem)"
     >
-      <SideBar style="height: calc(100% - 2rem)" />
+      <SideBar class="md:h-[calc(100%-2rem)]" />
 
       <div
-        class="flex-grow my-4 px-6 pt-2 overflow-y-auto"
-        style="height: calc(100% - 2rem)"
+        class="flex-grow min-h-0 my-2 md:my-4 px-3 md:px-6 pt-2 overflow-y-auto md:h-[calc(100%-2rem)]"
       >
         <div class="flex">
           <div
@@ -26,6 +25,12 @@
 
         <div v-if="store.sideView === 'about'">
           <AboutPage />
+        </div>
+        <div v-if="store.sideView === 'guide'">
+          <GuidePage />
+        </div>
+        <div v-if="store.sideView === 'presets'">
+          <PresetsPage />
         </div>
         <div v-show="store.sideView === 'oop-range'">
           <RangeEditor :player="0" />
@@ -62,6 +67,8 @@ import { useStore } from "../store";
 import NavBar from "./NavBar.vue";
 import SideBar from "./SideBar.vue";
 import AboutPage from "./AboutPage.vue";
+import GuidePage from "./GuidePage.vue";
+import PresetsPage from "./PresetsPage.vue";
 import RangeEditor from "./RangeEditor.vue";
 import BoardSelector from "./BoardSelector.vue";
 import TreeConfig from "./TreeConfig.vue";
@@ -73,6 +80,8 @@ export default defineComponent({
     NavBar,
     SideBar,
     AboutPage,
+    GuidePage,
+    PresetsPage,
     RangeEditor,
     BoardSelector,
     TreeConfig,
