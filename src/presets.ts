@@ -19,10 +19,21 @@ export type Preset = {
   articleUrl?: string; // 본체 사이트의 해설 포스팅 URL (있으면 "해설 보기" 링크 표시)
 };
 
-// 본체 블로그에 해설 포스팅이 발행되면 여기에 id → URL을 채우고 재배포할 것.
-// 빈 문자열/미등록이면 해설 링크가 렌더링되지 않는다.
+// 본체 블로그의 해설 포스팅 URL (2026-08-08 발행분). 수정 시 재배포 필요.
 export const ARTICLE_URLS: Record<string, string> = {
-  // "srp-dry-ace": "https://www.holdemmaster.com/블로그주소",
+  "srp-dry-ace": "https://www.holdemmaster.com/blog/a-high-board-cbet",
+  "srp-dry-king": "https://www.holdemmaster.com/blog/k-high-board-cbet",
+  "srp-broadway": "https://www.holdemmaster.com/blog/broadway-board-strategy",
+  "srp-middle-connected": "https://www.holdemmaster.com/blog/donk-bet-strategy",
+  "srp-monotone": "https://www.holdemmaster.com/blog/monotone-board-strategy",
+  "srp-paired": "https://www.holdemmaster.com/blog/paired-board-strategy",
+  "srp-low-rainbow": "https://www.holdemmaster.com/blog/low-board-check-raise",
+  "3bp-ace-king": "https://www.holdemmaster.com/blog/3bet-pot-cbet",
+  "3bp-dynamic": "https://www.holdemmaster.com/blog/3bet-pot-bet-sizing",
+  "3bp-low": "https://www.holdemmaster.com/blog/3bet-pot-low-board",
+  "sb-king-mid": "https://www.holdemmaster.com/blog/blind-battle-cbet",
+  "sb-connected": "https://www.holdemmaster.com/blog/blind-battle-connected-board",
+  "sb-paired-ace": "https://www.holdemmaster.com/blog/ace-paired-board-strategy",
 };
 
 const BTN_OPEN =
