@@ -3,3 +3,5 @@
 /pkg/
 /public/google*.html
 /rust/**/target/
+/.vercel/
+.vercel
