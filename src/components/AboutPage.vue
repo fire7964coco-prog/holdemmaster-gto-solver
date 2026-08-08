@@ -89,8 +89,13 @@
           class="text-neutral-400 underline decoration-neutral-600 underline-offset-2 hover:text-neutral-200"
           target="_blank"
           >홀덤마스터</a
-        >가 한국어화·개선한 버전이며, 수정된 전체 소스코드는 동일한
-        라이선스로 공개되어 있습니다.
+        >가 한국어화·개선한 버전이며, 수정된 전체 소스코드는
+        <a
+          href="https://github.com/fire7964coco-prog/holdemmaster-gto-solver"
+          class="text-neutral-400 underline decoration-neutral-600 underline-offset-2 hover:text-neutral-200"
+          target="_blank"
+          >GitHub</a
+        >에 동일한 라이선스로 공개되어 있습니다.
       </p>
     </div>
   </div>
