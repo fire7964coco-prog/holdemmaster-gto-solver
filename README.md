@@ -1,14 +1,21 @@
 # 홀덤마스터 GTO 솔버 (Holdemmaster GTO Solver)
 
+**▶ 바로 사용하기: https://solver.holdemmaster.com**
+**📖 소개·사용법·전략 가이드: https://www.holdemmaster.com/solver**
+
 [홀덤마스터](https://www.holdemmaster.com) 커뮤니티가 제공하는 **무료 브라우저 GTO 솔버**입니다.
-설치 없이 웹 브라우저에서 텍사스 홀덤 포스트플랍 전략을 계산합니다.
+설치 없이 웹 브라우저에서 텍사스 홀덤 포스트플랍 전략을 계산합니다. 모바일도 지원합니다.
 
 이 프로젝트는 [WASM Postflop](https://github.com/b-inary/wasm-postflop) (Copyright © Wataru Inariba, AGPL-3.0)의 포크이며,
 동일하게 **AGPL-3.0-or-later** 라이선스로 공개됩니다. 전체 라이선스 전문은 [LICENSE](LICENSE)를 참조하세요.
 
 ## 원본 대비 수정 사항
 - UI 전체 한국어화 (포커 용어는 한국 홀덤 커뮤니티 음차 관행 적용)
-- 홀덤마스터 브랜딩 및 커뮤니티 링크 추가
+- 다크 테마 및 결과 화면 재구성 (핸드/드로우 분류 패널, 액션 빈도 타일)
+- 교육 프리셋 13종 + 사전 계산 결과 미리보기 (원클릭 열람)
+- 모바일 반응형 UI, 사용법 가이드 페이지
+- 엔진(postflop-solver) 버그 수정: 16비트 정수 모드의 float→int 변환 트랩으로
+  워커가 전멸해 계산이 멈추던 문제 (`rust/postflop-solver/src/utility.rs`, vendored)
 - 빌드 도구 현행화: webpack 5.109, wasm-bindgen 0.2.126 (최신 Rust nightly 호환)
 - Vercel 배포 설정(`vercel.json`) 추가 (COOP/COEP 헤더 — SharedArrayBuffer/멀티스레드용)
 
