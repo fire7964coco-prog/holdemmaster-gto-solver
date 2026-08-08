@@ -16,6 +16,13 @@ export type Preset = {
   betFlop: string; // 플랍 벳 사이즈 (핵심 교육 지점이라 2종 유지)
   betTurnRiver: string; // 턴·리버 벳 사이즈 (트리 크기 절약을 위해 1종)
   raise: string; // 레이즈 사이즈 (전 스트리트 공통)
+  articleUrl?: string; // 본체 사이트의 해설 포스팅 URL (있으면 "해설 보기" 링크 표시)
+};
+
+// 본체 블로그에 해설 포스팅이 발행되면 여기에 id → URL을 채우고 재배포할 것.
+// 빈 문자열/미등록이면 해설 링크가 렌더링되지 않는다.
+export const ARTICLE_URLS: Record<string, string> = {
+  // "srp-dry-ace": "https://www.holdemmaster.com/블로그주소",
 };
 
 const BTN_OPEN =

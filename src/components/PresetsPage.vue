@@ -45,7 +45,15 @@
               {{ c.rank }}{{ c.suit }}
             </span>
           </span>
-          <span class="ml-auto flex gap-1.5 shrink-0">
+          <span class="ml-auto flex items-center gap-1.5 shrink-0">
+            <a
+              v-if="articleUrl(p)"
+              :href="articleUrl(p)"
+              target="_blank"
+              class="px-2 text-sm text-blue-400 hover:underline"
+            >
+              해설 보기
+            </a>
             <button
               class="button-base button-green"
               @click="previewPreset = p"
@@ -72,7 +80,7 @@
 import { computed, defineComponent, ref } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { cardText, parseCardString } from "../utils";
-import { PRESETS, Preset } from "../presets";
+import { PRESETS, ARTICLE_URLS, Preset } from "../presets";
 
 import { InformationCircleIcon } from "@heroicons/vue/20/solid";
 import PresetPreview from "./PresetPreview.vue";
@@ -149,7 +157,9 @@ export default defineComponent({
       previewPreset.value = null;
     };
 
-    return { grouped, boardCards, load, previewPreset, loadFromPreview };
+    const articleUrl = (p: Preset) => ARTICLE_URLS[p.id] ?? "";
+
+    return { grouped, boardCards, load, previewPreset, loadFromPreview, articleUrl };
   },
 });
 </script>

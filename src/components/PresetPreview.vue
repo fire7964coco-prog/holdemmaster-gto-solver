@@ -31,6 +31,14 @@
       >
         이 스팟 직접 계산하기
       </button>
+      <a
+        v-if="articleUrl"
+        :href="articleUrl"
+        target="_blank"
+        class="px-1 text-blue-400 hover:underline shrink-0"
+      >
+        이 스팟 해설 읽기
+      </a>
     </div>
 
     <div v-if="error" class="mt-4 text-red-400">
@@ -100,7 +108,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from "vue";
-import { Preset } from "../presets";
+import { ARTICLE_URLS, Preset } from "../presets";
 import { Results, Spot, DisplayOptions } from "../result-types";
 import { cardText, parseCardString } from "../utils";
 
@@ -169,7 +177,9 @@ export default defineComponent({
         .map(cardText)
     );
 
-    return { data, error, displayPlayer, displayOptions, boardTexts };
+    const articleUrl = computed(() => ARTICLE_URLS[props.preset.id] ?? "");
+
+    return { data, error, displayPlayer, displayOptions, boardTexts, articleUrl };
   },
 });
 </script>
