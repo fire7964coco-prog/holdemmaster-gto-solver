@@ -107,6 +107,10 @@ export const useStore = defineStore("app", {
     isSolverFinished: false,
     // 프리셋 로더 → RangeEditor로 레인지 텍스트를 전달하는 채널 (적용 후 비워짐)
     pendingRangeText: ["", ""] as [string, string],
+    // RangeEditor가 최신 레인지 텍스트를 미러링 (스팟 공유 링크용)
+    rangeText: ["", ""] as [string, string],
+    // 공유 링크로 들어와 설정이 적용됐음을 알리는 플래그 (RunSolver 안내 배너)
+    sharedSpotLoaded: false,
   }),
 
   getters: {

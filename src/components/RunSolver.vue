@@ -1,4 +1,18 @@
 <template>
+  <div
+    v-if="store.sharedSpotLoaded"
+    class="flex items-center gap-2 mb-3 pl-2.5 pr-3 py-1.5 text-emerald-300 bg-emerald-950 border border-emerald-700 rounded-md text-sm"
+  >
+    공유된 스팟을 불러왔습니다 — [새 트리 만들기] → [솔버 실행]을 누르면
+    계산됩니다.
+    <button
+      class="ml-auto px-1 text-emerald-500 hover:text-emerald-300"
+      @click="store.sharedSpotLoaded = false"
+    >
+      ✕
+    </button>
+  </div>
+
   <div class="flex my-1 items-center">
     스레드 수:
     <input
@@ -29,6 +43,17 @@
     >
       새 트리 만들기
     </button>
+
+    <button
+      class="ml-2 button-base button-green"
+      @click="copySpotUrl"
+    >
+      {{ shareCopied ? "복사됨!" : "🔗 스팟 공유" }}
+    </button>
+  </div>
+
+  <div v-if="shareError" class="my-1 text-sm text-orange-400">
+    {{ shareError }}
   </div>
 
   <div class="my-1">상태: {{ treeStatus }}</div>
@@ -250,6 +275,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
 import { init, handler } from "../global-worker";
+import { encodeSpotUrl } from "../spot-share";
 import {
   useStore,
   useConfigStore,
@@ -597,11 +623,40 @@ export default defineComponent({
       elapsedTimeMs.value += end - startTime;
     };
 
+    /* 스팟 공유 링크 */
+    const shareCopied = ref(false);
+    const shareError = ref("");
+
+    const copySpotUrl = async () => {
+      shareError.value = "";
+      const url = encodeSpotUrl();
+      if (!url) {
+        shareError.value =
+          "공유하려면 OOP·IP 레인지와 보드 3장을 먼저 입력하세요.";
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch {
+        const ta = document.createElement("textarea");
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      shareCopied.value = true;
+      setTimeout(() => (shareCopied.value = false), 1500);
+    };
+
     return {
       store,
       numThreads,
       isSafari,
       targetExploitability,
+      shareCopied,
+      shareError,
+      copySpotUrl,
       maxIterations,
       isTreeBuilding,
       isTreeBuilt,

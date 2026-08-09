@@ -180,6 +180,7 @@ export default defineComponent({
       rangeText.value = range.to_string();
       rangeTextError.value = "";
       numCombos.value = rangeStoreRaw.reduce((acc, cur) => acc + cur, 0);
+      appStore.rangeText[props.player] = rangeText.value; // 스팟 공유용 미러
     };
 
     const update = (row: number, col: number, weight: number) => {
@@ -255,6 +256,7 @@ export default defineComponent({
       rangeTextError.value = "";
       weight.value = 100;
       numCombos.value = 0;
+      appStore.rangeText[props.player] = "";
     };
 
     const loadRange = (rangeStr: unknown) => {
@@ -262,7 +264,8 @@ export default defineComponent({
       onRangeTextChange();
     };
 
-    // 프리셋 로더가 넘긴 레인지 텍스트를 기존 파이프라인으로 적용
+    // 프리셋 로더/공유 링크가 넘긴 레인지 텍스트를 기존 파이프라인으로 적용
+    // immediate: 공유 링크는 컴포넌트 마운트 전에 값을 넣으므로 초기값도 처리
     watch(
       () => appStore.pendingRangeText[props.player],
       (v) => {
@@ -270,7 +273,8 @@ export default defineComponent({
           loadRange(v);
           appStore.pendingRangeText[props.player] = "";
         }
-      }
+      },
+      { immediate: true }
     );
 
     return {

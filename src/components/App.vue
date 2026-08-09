@@ -63,6 +63,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
 import { useStore } from "../store";
+import { applySpotFromUrl } from "../spot-share";
 
 import NavBar from "./NavBar.vue";
 import SideBar from "./SideBar.vue";
@@ -92,6 +93,13 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const header = computed(() => store.headers[store.sideView].join(" > "));
+
+    // 공유 링크(?spot=)로 들어온 경우 설정을 적용하고 실행 화면으로
+    if (applySpotFromUrl()) {
+      store.sideView = "run-solver";
+      store.sharedSpotLoaded = true;
+      history.replaceState(null, "", location.pathname);
+    }
 
     const clientHeight = ref(0);
 
