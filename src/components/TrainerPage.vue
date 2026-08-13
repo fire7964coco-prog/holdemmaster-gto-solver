@@ -94,6 +94,49 @@
         </div>
       </div>
 
+      <!-- 계정 보관 (선택) — 로그인 전엔 아무것도 전송되지 않는다 -->
+      <div
+        v-if="accountEnabled"
+        class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-neutral-700 bg-neutral-900/50 px-3 py-2.5 text-xs"
+      >
+        <template v-if="account">
+          <span class="text-neutral-300">
+            <b class="text-emerald-300">{{ account.nickname }}</b> 님의 계정에
+            보관 중
+          </span>
+          <span v-if="syncMessage" class="text-neutral-500">{{ syncMessage }}</span>
+          <span class="ml-auto flex items-center gap-3">
+            <button
+              class="link-like"
+              :disabled="syncing"
+              @click="runSync"
+            >
+              {{ syncing ? "동기화 중..." : "지금 동기화" }}
+            </button>
+            <button class="text-neutral-500 hover:text-neutral-300" @click="doSignOut">
+              로그아웃
+            </button>
+          </span>
+        </template>
+        <template v-else>
+          <span class="text-neutral-400">
+            학습 기록이 <b class="text-neutral-200">이 기기에만</b> 저장됩니다.
+            홀덤마스터 계정에 보관하면 다른 기기에서도 이어서 풀 수 있어요.
+          </span>
+          <span class="ml-auto flex items-center gap-2">
+            <button class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1" @click="doSignIn('google')">
+              구글로 계속하기
+            </button>
+            <button class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1" @click="doSignIn('kakao')">
+              카카오
+            </button>
+          </span>
+        </template>
+        <div v-if="accountError" class="w-full text-red-300">
+          {{ accountError }}
+        </div>
+      </div>
+
       <p class="mt-2 text-right text-xs text-neutral-500">
         13개 교육 프리셋 · {{ decisionCount }}개 결정 노드 · 계산 목표 오차
         {{ bank.targetExploitabilityPct }}%
@@ -266,13 +309,27 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
 import {
   clearTrainerAttempts,
   addTrainerAttempt,
   getTrainerAttempts,
+  mergeTrainerAttempts,
+  newClientId,
   TrainerAttempt,
 } from "../db";
+import {
+  AccountUser,
+  getCurrentUser,
+  isAccountEnabled,
+  onAuthChange,
+  signIn,
+  signOut,
+  syncAttempts,
+  cleanAuthParams,
+  hasStoredSession,
+  isReturningFromAuth,
+} from "../account";
 import { ARTICLE_URLS, PRESETS } from "../presets";
 import { trackOutbound } from "../outbound";
 import { useStore } from "../store";
@@ -299,6 +356,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const categories: TrainerCategory[] = ["all", "srp", "3bp", "blind"];
+    let unsubscribeAuth: () => void = () => undefined;
     const category = ref<TrainerCategory>("all");
     const bank = ref<TrainerBank | null>(null);
     const question = ref<TrainerQuestion | null>(null);
@@ -395,6 +453,7 @@ export default defineComponent({
       evaluation.value = evaluateTrainerAction(question.value, actionIndex);
       const result = evaluation.value;
       await addTrainerAttempt({
+        clientId: newClientId(),
         timestamp: Date.now(),
         questionId: question.value.id,
         presetId: question.value.presetId,
@@ -405,6 +464,8 @@ export default defineComponent({
         evLossBb: result.evLossBb,
       });
       attempts.value = await getTrainerAttempts();
+      // 로그인 상태면 조용히 올린다 (실패해도 풀이 흐름을 막지 않음)
+      if (account.value) void runSync(true);
     };
 
     const changeCategory = (value: TrainerCategory) => {
@@ -424,6 +485,55 @@ export default defineComponent({
       reviewMode.value = false;
     };
 
+    /* 계정 보관 (선택 기능) */
+
+    const account = ref<AccountUser | null>(null);
+    const syncing = ref(false);
+    const syncMessage = ref("");
+    const accountError = ref("");
+
+    const runSync = async (silent = false) => {
+      if (syncing.value || !account.value) return;
+      syncing.value = true;
+      accountError.value = "";
+      try {
+        const local = await getTrainerAttempts();
+        const { result, missingLocally } = await syncAttempts(local);
+        const merged = await mergeTrainerAttempts(missingLocally);
+        if (merged) attempts.value = await getTrainerAttempts();
+        if (!silent) {
+          syncMessage.value =
+            merged > 0
+              ? `${result.uploaded}개 보관 · 다른 기기 기록 ${merged}개 가져옴`
+              : `${result.uploaded}개 보관됨`;
+        }
+      } catch (error) {
+        accountError.value = `동기화 실패: ${
+          error instanceof Error ? error.message : String(error)
+        }`;
+      } finally {
+        syncing.value = false;
+      }
+    };
+
+    const doSignIn = async (provider: "google" | "kakao") => {
+      accountError.value = "";
+      try {
+        await signIn(provider);
+      } catch (error) {
+        accountError.value = `로그인 실패: ${
+          error instanceof Error ? error.message : String(error)
+        }`;
+      }
+    };
+
+    const doSignOut = async () => {
+      await signOut();
+      account.value = null;
+      syncMessage.value = "";
+      // 기기 기록은 남긴다 — 계정에서 뺐다고 지금까지 푼 게 사라지면 곤란
+    };
+
     onMounted(async () => {
       try {
         const response = await fetch("trainer-decisions.json");
@@ -437,7 +547,22 @@ export default defineComponent({
       } catch (error) {
         loadError.value = error instanceof Error ? error.message : String(error);
       }
+
+      if (!isAccountEnabled) return;
+      // 로그인 이력이 없으면 supabase 라이브러리를 아예 내려받지 않는다
+      if (!hasStoredSession() && !isReturningFromAuth()) return;
+      cleanAuthParams();
+      account.value = await getCurrentUser();
+      if (account.value) void runSync(true);
+      unsubscribeAuth = onAuthChange((user) => {
+        const wasLoggedOut = !account.value;
+        account.value = user;
+        // 로그인한 순간, 기기에 쌓여 있던 기록을 계정으로 올린다
+        if (user && wasLoggedOut) void runSync();
+      });
     });
+
+    onUnmounted(() => unsubscribeAuth());
 
     const boardCards = computed(
       () => question.value?.node.currentBoard.map(cardText) ?? []
@@ -516,6 +641,14 @@ export default defineComponent({
       amountBb,
       historyLabel,
       historyPlayerLabel,
+      accountEnabled: isAccountEnabled,
+      account,
+      syncing,
+      syncMessage,
+      accountError,
+      runSync,
+      doSignIn,
+      doSignOut,
       choose,
       nextQuestion,
       changeCategory,

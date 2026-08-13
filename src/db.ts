@@ -22,6 +22,8 @@ export type DbGroup = {
 
 export type TrainerAttempt = {
   id?: number;
+  /** 기기에서 만든 고유값 — 계정 동기화 시 같은 기록을 중복 저장하지 않기 위한 열쇠 */
+  clientId: string;
   timestamp: number;
   questionId: string;
   presetId: string;
@@ -66,8 +68,33 @@ class WASMPostflopDB extends Dexie {
       configurations: "++id, [name0+name1+name2+name3+isGroup]",
       trainerAttempts: "++id, timestamp, category, presetId, evLossBb",
     });
+
+    // v4: 계정 동기화용 clientId 추가. 이전 버전에서 쌓인 기록에도 값을 채워
+    // 로그인 시 그대로 올라가게 한다(지금까지 푼 기록이 사라지지 않도록).
+    this.version(4)
+      .stores({
+        ranges: "++id, [name0+name1+name2+name3+isGroup]",
+        configurations: "++id, [name0+name1+name2+name3+isGroup]",
+        trainerAttempts: "++id, timestamp, category, presetId, evLossBb, &clientId",
+      })
+      .upgrade((tx) => {
+        return tx
+          .table("trainerAttempts")
+          .toCollection()
+          .modify((item: TrainerAttempt) => {
+            if (!item.clientId) item.clientId = newClientId();
+          });
+      });
   }
 }
+
+/** 브라우저가 randomUUID를 지원하지 않는 경우까지 대비한 고유값 생성 */
+export const newClientId = () => {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+};
 
 const db = new WASMPostflopDB();
 
@@ -321,4 +348,19 @@ export const getTrainerAttempts = async (limit = 500) => {
 
 export const clearTrainerAttempts = async () => {
   await db.trainerAttempts.clear();
+};
+
+/**
+ * 계정에서 내려받은 기록 중 기기에 없는 것만 넣는다.
+ * clientId가 겹치면(이미 있는 기록) 조용히 건너뛴다.
+ */
+export const mergeTrainerAttempts = async (attempts: TrainerAttempt[]) => {
+  if (!attempts.length) return 0;
+  const existing = new Set(
+    (await db.trainerAttempts.toArray()).map((item) => item.clientId)
+  );
+  const fresh = attempts.filter((item) => !existing.has(item.clientId));
+  if (!fresh.length) return 0;
+  await db.trainerAttempts.bulkPut(fresh);
+  return fresh.length;
 };
