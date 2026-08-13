@@ -112,6 +112,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from "vue";
 import { ARTICLE_URLS, Preset } from "../presets";
+import { trackOutbound } from "../outbound";
 import { Results, Spot, DisplayOptions } from "../result-types";
 import { cardText, parseCardString } from "../utils";
 
@@ -180,7 +181,9 @@ export default defineComponent({
         .map(cardText)
     );
 
-    const articleUrl = computed(() => ARTICLE_URLS[props.preset.id] ?? "");
+    const articleUrl = computed(() =>
+      trackOutbound(ARTICLE_URLS[props.preset.id] ?? "", "preset-preview")
+    );
 
     return { data, error, displayPlayer, displayOptions, boardTexts, articleUrl };
   },

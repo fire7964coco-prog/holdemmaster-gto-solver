@@ -274,6 +274,7 @@ import {
   TrainerAttempt,
 } from "../db";
 import { ARTICLE_URLS, PRESETS } from "../presets";
+import { trackOutbound } from "../outbound";
 import { useStore } from "../store";
 import { cardText, formatBb } from "../utils";
 import {
@@ -453,7 +454,12 @@ export default defineComponent({
         : { made: "", draw: "" }
     );
     const articleUrl = computed(() =>
-      question.value ? ARTICLE_URLS[question.value.presetId] ?? "" : ""
+      question.value
+        ? trackOutbound(
+            ARTICLE_URLS[question.value.presetId] ?? "",
+            "trainer-feedback"
+          )
+        : ""
     );
     const openSpot = () => {
       if (!question.value) return;

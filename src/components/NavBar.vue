@@ -40,7 +40,7 @@
 
       <div class="flex ml-auto h-full items-center z-10">
         <a
-          href="https://www.holdemmaster.com"
+          :href="communityUrl"
           class="flex px-2 md:px-4 h-full items-center font-semibold hover:bg-neutral-700 text-yellow-300 text-sm md:text-base"
           target="_blank"
         >
@@ -57,6 +57,7 @@ import { defineComponent } from "vue";
 import { useStore } from "../store";
 
 import { ComputerDesktopIcon, ChartBarIcon } from "@heroicons/vue/24/solid";
+import { mainSiteUrl } from "../outbound";
 
 export default defineComponent({
   components: {
@@ -66,6 +67,7 @@ export default defineComponent({
   setup() {
     return {
       store: useStore(),
+      communityUrl: mainSiteUrl("", "navbar"),
     };
   },
 });

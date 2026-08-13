@@ -81,6 +81,7 @@ import { computed, defineComponent, ref, watch } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { cardText, parseCardString } from "../utils";
 import { PRESETS, ARTICLE_URLS, Preset } from "../presets";
+import { trackOutbound } from "../outbound";
 
 import { InformationCircleIcon } from "@heroicons/vue/20/solid";
 import PresetPreview from "./PresetPreview.vue";
@@ -170,7 +171,8 @@ export default defineComponent({
       previewPreset.value = null;
     };
 
-    const articleUrl = (p: Preset) => ARTICLE_URLS[p.id] ?? "";
+    const articleUrl = (p: Preset) =>
+      trackOutbound(ARTICLE_URLS[p.id] ?? "", "preset-card");
 
     return { grouped, boardCards, load, previewPreset, loadFromPreview, articleUrl };
   },

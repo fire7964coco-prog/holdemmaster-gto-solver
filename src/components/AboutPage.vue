@@ -71,6 +71,16 @@
           <span class="text-sm text-neutral-300">{{ s }}</span>
         </div>
       </div>
+      <!-- 본체 랜딩(정보형 콘텐츠)으로 연결 — 앱은 도구, 랜딩은 설명 역할 분담 -->
+      <div class="mt-5 pt-4 border-t border-white/10 text-[0.8125rem] text-neutral-500">
+        GTO 솔버가 무엇인지, 결과를 어떻게 읽는지 글로 먼저 보고 싶다면
+        <a
+          :href="landingUrl"
+          class="text-neutral-300 underline decoration-neutral-600 underline-offset-2 hover:text-white"
+          target="_blank"
+          >홀덤마스터 솔버 소개·사용법</a
+        >을 참고하세요.
+      </div>
     </div>
 
     <!-- 알아둘 점 + 크레딧 -->
@@ -91,7 +101,7 @@
         >
         (Wataru Inariba 작, AGPL-3.0)을 기반으로
         <a
-          href="https://www.holdemmaster.com"
+          :href="creditUrl"
           class="text-neutral-400 underline decoration-neutral-600 underline-offset-2 hover:text-neutral-200"
           target="_blank"
           >홀덤마스터</a
@@ -110,6 +120,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useStore } from "../store";
+import { mainSiteUrl } from "../outbound";
 
 export default defineComponent({
   setup() {
@@ -127,7 +138,13 @@ export default defineComponent({
       "익숙해지면 커스텀 스팟(①~⑤)으로 내 핸드를 직접 계산해보세요",
     ];
 
-    return { store: useStore(), features, steps };
+    return {
+      store: useStore(),
+      features,
+      steps,
+      landingUrl: mainSiteUrl("/solver", "about-landing"),
+      creditUrl: mainSiteUrl("", "about-credit"),
+    };
   },
 });
 </script>
