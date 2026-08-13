@@ -16,8 +16,8 @@
         </span>
       </span>
       <span class="text-sm text-neutral-400">
-        팟 {{ preset.startingPot / 10 }}bb · 스택
-        {{ preset.effectiveStack / 10 }}bb
+        팟 {{ preset.startingPot / preset.unitScale }}bb · 스택
+        {{ preset.effectiveStack / preset.unitScale }}bb
       </span>
     </div>
 
@@ -83,6 +83,8 @@
             :results="data.results"
             :selected-spot="data.selectedSpot"
             :display-player="displayPlayer"
+            :unit-scale="preset.unitScale"
+            :pot="preset.startingPot"
           />
 
           <HandBreakdown
@@ -99,6 +101,7 @@
             :selected-spot="data.selectedSpot"
             :results="data.results"
             :display-player="displayPlayer"
+            :unit-scale="preset.unitScale"
           />
         </div>
       </div>

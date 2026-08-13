@@ -34,6 +34,12 @@
         </button>
         <button
           class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5"
+          @click="store.sideView = 'trainer'"
+        >
+          GTO 트레이너
+        </button>
+        <button
+          class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5"
           @click="store.sideView = 'guide'"
         >
           사용법 보기
@@ -111,12 +117,13 @@ export default defineComponent({
       { title: "무료", desc: "횟수 제한 없이 모든 기능을 그대로" },
       { title: "설치 없음", desc: "웹 브라우저만 있으면 어디서든" },
       { title: "빠른 계산", desc: "멀티스레드로 데스크톱 솔버 수준" },
-      { title: "오픈소스", desc: "전체 코드가 공개되어 있습니다" },
+      { title: "GTO 트레이너", desc: "문제를 풀고 EV 손실로 채점받기" },
     ];
 
     const steps = [
       "교육 예제에서 아무 스팟이나 [결과 바로 보기] — 기다림 없이 결과가 나옵니다",
       "사용법에서 결과 화면 읽는 법을 확인하세요",
+      "GTO 트레이너에서 문제를 풀어보세요 — 내 선택이 몇 bb 손해인지 알려줍니다",
       "익숙해지면 커스텀 스팟(①~⑤)으로 내 핸드를 직접 계산해보세요",
     ];
 

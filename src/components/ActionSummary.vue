@@ -24,8 +24,15 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { Results, Spot, SpotPlayer } from "../result-types";
+import { useStore } from "../store";
+import { formatAmount } from "../utils";
 
-const actionLabel = (name: string, amount: string) => {
+const actionLabel = (
+  name: string,
+  amount: string,
+  unitScale: number,
+  pot: number
+) => {
   const map: Record<string, string> = {
     Fold: "폴드",
     Check: "체크",
@@ -36,7 +43,13 @@ const actionLabel = (name: string, amount: string) => {
     "All-in": "올인",
   };
   const label = map[name] ?? name;
-  return amount && amount !== "0" ? `${label} ${amount}` : label;
+  if (!amount || amount === "0") return label;
+  const value = Number(amount);
+  const shown = `${formatAmount(value, unitScale)}${unitScale === 10 ? "bb" : ""}`;
+  if (name === "Bet" && pot > 0) {
+    return `${label} ${shown} (${Math.round((value * 100) / pot)}% 팟)`;
+  }
+  return `${label} ${shown}`;
 };
 
 // 타일 배경: 액션 색을 어두운 배경 위 타일 톤으로 (원색 그대로는 눈부심 → 70% 어둡게 혼합)
@@ -70,9 +83,18 @@ export default defineComponent({
       type: String as () => "oop" | "ip",
       required: true,
     },
+    unitScale: {
+      type: Number,
+      default: 0,
+    },
+    pot: {
+      type: Number,
+      default: 0,
+    },
   },
 
   setup(props) {
+    const store = useStore();
     const tiles = computed(() => {
       const spot = props.selectedSpot;
       const results = props.results;
@@ -104,7 +126,12 @@ export default defineComponent({
         }
         return {
           index: action.index,
-          label: actionLabel(action.name, action.amount),
+          label: actionLabel(
+            action.name,
+            action.amount,
+            props.unitScale || store.displayUnitScale,
+            props.pot || (spot as SpotPlayer).pot || 0
+          ),
           freq: (freqSum * 100) / normalizerSum,
           combos,
           bg: dimColor(action.color),

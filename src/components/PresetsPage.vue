@@ -25,8 +25,8 @@
       </div>
       <div class="mt-0.5 text-xs text-neutral-500">
         OOP: {{ group.items[0].oopLabel }} · IP: {{ group.items[0].ipLabel }} ·
-        팟 {{ group.items[0].startingPot / 10 }}bb · 스택
-        {{ group.items[0].effectiveStack / 10 }}bb (0.1bb 단위 환산)
+        팟 {{ group.items[0].startingPot / group.items[0].unitScale }}bb · 스택
+        {{ group.items[0].effectiveStack / group.items[0].unitScale }}bb
       </div>
 
       <div
@@ -77,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { cardText, parseCardString } from "../utils";
 import { PRESETS, ARTICLE_URLS, Preset } from "../presets";
@@ -93,6 +93,18 @@ export default defineComponent({
     const config = useConfigStore();
 
     const previewPreset = ref<Preset | null>(null);
+
+    // 트레이너에서 "이 스팟 결과 전체 보기"로 넘어온 경우 해당 미리보기를 바로 연다
+    watch(
+      () => store.sideView,
+      () => {
+        if (store.sideView !== "presets" || !store.pendingPresetPreview) return;
+        previewPreset.value =
+          PRESETS.find((p) => p.id === store.pendingPresetPreview) ?? null;
+        store.pendingPresetPreview = "";
+      },
+      { immediate: true }
+    );
 
     const grouped = computed(() => {
       const map = new Map<string, Preset[]>();
@@ -138,6 +150,7 @@ export default defineComponent({
       config.ipTurnRaise = p.raise;
       config.ipRiverBet = p.betTurnRiver;
       config.ipRiverRaise = p.raise;
+      store.displayUnitScale = p.unitScale;
 
       // 편집된 트리 흔적 초기화
       config.expectedBoardLength = 0;

@@ -77,7 +77,7 @@ import {
   onUnmounted,
   watch,
 } from "vue";
-import { useSavedConfigStore } from "../store";
+import { useSavedConfigStore, useStore } from "../store";
 import {
   ranks,
   cardPairCellIndex,
@@ -188,6 +188,7 @@ export default defineComponent({
 
   setup(props, context) {
     const config = useSavedConfigStore();
+    const store = useStore();
 
     const clickedCellIndex = ref(-1);
 
@@ -195,7 +196,8 @@ export default defineComponent({
       const results = props.results;
       if (results.isEmpty) return 3;
       const playerIndex = props.displayPlayer === "oop" ? 0 : 1;
-      const maxEv = Math.max(...results.ev[playerIndex]);
+      const maxEv =
+        Math.max(...results.ev[playerIndex]) / store.displayUnitScale;
       return maxEv < 9.9995 ? 3 : maxEv < 99.995 ? 2 : 1;
     });
 
@@ -462,7 +464,7 @@ export default defineComponent({
         } else if (displayOptions.contentBasics === "eq") {
           value = equitySum / normalizerSum;
         } else if (displayOptions.contentBasics === "ev") {
-          value = evSum / normalizerSum;
+          value = evSum / normalizerSum / store.displayUnitScale;
         } else {
           const playerIndex = props.displayPlayer === "oop" ? 0 : 1;
           const eqrBase = props.results.eqrBase[playerIndex];

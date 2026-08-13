@@ -16,6 +16,7 @@ export type Preset = {
   betFlop: string; // 플랍 벳 사이즈 (핵심 교육 지점이라 2종 유지)
   betTurnRiver: string; // 턴·리버 벳 사이즈 (트리 크기 절약을 위해 1종)
   raise: string; // 레이즈 사이즈 (전 스트리트 공통)
+  unitScale: number; // 화면 환산 단위 (10 = 엔진 10칩을 1bb로 표시)
   articleUrl?: string; // 본체 사이트의 해설 포스팅 URL (있으면 "해설 보기" 링크 표시)
 };
 
@@ -58,6 +59,7 @@ const SRP = {
   betFlop: "33,75",
   betTurnRiver: "60",
   raise: "60",
+  unitScale: 10,
 };
 
 const TBP = {
@@ -71,6 +73,7 @@ const TBP = {
   betFlop: "33,66",
   betTurnRiver: "66",
   raise: "60",
+  unitScale: 10,
 };
 
 const SBBB = {
@@ -84,6 +87,7 @@ const SBBB = {
   betFlop: "33,75",
   betTurnRiver: "60",
   raise: "60",
+  unitScale: 10,
 };
 
 export const PRESETS: Preset[] = [

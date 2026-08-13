@@ -20,9 +20,22 @@ export type DbGroup = {
   isGroup: 1;
 };
 
+export type TrainerAttempt = {
+  id?: number;
+  timestamp: number;
+  questionId: string;
+  presetId: string;
+  category: "srp" | "3bp" | "blind";
+  handPair: number;
+  selectedAction: number;
+  bestAction: number;
+  evLossBb: number;
+};
+
 class WASMPostflopDB extends Dexie {
   public ranges!: Table<DbItem | DbGroup, number>;
   public configurations!: Table<DbItem | DbGroup, number>;
+  public trainerAttempts!: Table<TrainerAttempt, number>;
 
   public constructor() {
     super("WASMPostflopDB");
@@ -47,6 +60,12 @@ class WASMPostflopDB extends Dexie {
             }
           });
       });
+
+    this.version(3).stores({
+      ranges: "++id, [name0+name1+name2+name3+isGroup]",
+      configurations: "++id, [name0+name1+name2+name3+isGroup]",
+      trainerAttempts: "++id, timestamp, category, presetId, evLossBb",
+    });
   }
 }
 
@@ -281,4 +300,25 @@ export const bulkAdd = async (store: string, items: (DbItem | DbGroup)[]) => {
   } catch {
     return false;
   }
+};
+
+export const addTrainerAttempt = async (attempt: TrainerAttempt) => {
+  const id = await db.trainerAttempts.add(attempt);
+  const count = await db.trainerAttempts.count();
+  if (count > 500) {
+    const oldest = await db.trainerAttempts
+      .orderBy("timestamp")
+      .limit(count - 500)
+      .primaryKeys();
+    await db.trainerAttempts.bulkDelete(oldest);
+  }
+  return id;
+};
+
+export const getTrainerAttempts = async (limit = 500) => {
+  return db.trainerAttempts.orderBy("timestamp").reverse().limit(limit).toArray();
+};
+
+export const clearTrainerAttempts = async () => {
+  await db.trainerAttempts.clear();
 };

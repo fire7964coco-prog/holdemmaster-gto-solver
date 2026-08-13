@@ -6,7 +6,7 @@ import { cardText, parseCardString } from "./utils";
 // 페이로드(키 축약): o/i=레인지, b=보드, sp/es=팟·스택, rp/rc=레이크,
 // d=동크 허용, bt=벳 문자열 14개, th=올인·머징 임계값 3개
 type SharedSpot = {
-  v: 1;
+  v: 1 | 2;
   o: string;
   i: string;
   b: string;
@@ -17,6 +17,7 @@ type SharedSpot = {
   d: boolean;
   bt: string[];
   th: [number, number, number];
+  u?: number;
 };
 
 const betFields = [
@@ -58,7 +59,7 @@ export const encodeSpotUrl = (): string | null => {
   if (!oop || !ip || config.board.length < 3) return null;
 
   const spot: SharedSpot = {
-    v: 1,
+    v: 2,
     o: oop,
     i: ip,
     b: config.board
@@ -78,6 +79,7 @@ export const encodeSpotUrl = (): string | null => {
       config.forceAllInThreshold,
       config.mergingThreshold,
     ],
+    u: store.displayUnitScale,
   };
 
   const encoded = toBase64Url(JSON.stringify(spot));
@@ -92,7 +94,7 @@ export const applySpotFromUrl = (): boolean => {
   let spot: SharedSpot;
   try {
     spot = JSON.parse(fromBase64Url(param));
-    if (spot.v !== 1 || !spot.o || !spot.i || !spot.b) return false;
+    if (![1, 2].includes(spot.v) || !spot.o || !spot.i || !spot.b) return false;
   } catch {
     return false;
   }
@@ -118,6 +120,7 @@ export const applySpotFromUrl = (): boolean => {
   config.addAllInThreshold = Number(spot.th?.[0] ?? 150);
   config.forceAllInThreshold = Number(spot.th?.[1] ?? 20);
   config.mergingThreshold = Number(spot.th?.[2] ?? 10);
+  store.displayUnitScale = spot.u === 10 ? 10 : 1;
 
   // 편집 트리 흔적 초기화 (프리셋 로드와 동일)
   config.expectedBoardLength = 0;

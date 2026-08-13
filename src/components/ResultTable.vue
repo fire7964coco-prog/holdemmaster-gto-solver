@@ -172,7 +172,7 @@
                     v-else-if="column.type === 'ev'"
                     :data-set="
                       (strTmp = toFixed[evDigits - 1](
-                        summary[columnIndex(column)]
+                        displayEv(summary[columnIndex(column)])
                       ))
                     "
                   >
@@ -291,7 +291,7 @@
                     "
                     :data-set="
                       (strTmp = toFixed[evDigits - 1](
-                        item[columnIndex(column)]
+                        displayEv(item[columnIndex(column)])
                       ))
                     "
                   >
@@ -359,7 +359,9 @@ import {
   toFixed,
   toFixedAdaptive,
   capitalize,
+  formatAmount,
 } from "../utils";
+import { useStore } from "../store";
 
 import {
   Results,
@@ -530,9 +532,16 @@ export default defineComponent({
       type: Number as () => number | null,
       default: null,
     },
+    unitScale: {
+      type: Number,
+      default: 0,
+    },
   },
 
   setup(props) {
+    const store = useStore();
+    const evScale = computed(() => props.unitScale || store.displayUnitScale);
+    const displayEv = (value: number) => value / evScale.value;
     const displayOptions =
       props.tableMode !== "chance"
         ? reactive<DisplayOptionsBasics>({
@@ -651,11 +660,15 @@ export default defineComponent({
       if (props.tableMode !== "chance") {
         const results = props.results;
         if (!results || results.isEmpty) return 0;
-        return Math.max(...results.ev[playerIndex].map((v) => Math.abs(v)));
+        return Math.max(
+          ...results.ev[playerIndex].map((v) => Math.abs(displayEv(v)))
+        );
       } else {
         const reports = props.chanceReports;
         if (!reports || reports.status.every((s) => s <= 1)) return 0;
-        return Math.max(...reports.ev[playerIndex].map((v) => Math.abs(v)));
+        return Math.max(
+          ...reports.ev[playerIndex].map((v) => Math.abs(displayEv(v)))
+        );
       }
     });
 
@@ -693,7 +706,7 @@ export default defineComponent({
 
         ret.push({ label: "비중", type: "weight" });
         ret.push({ label: "EQ", type: "percentage", index: INDEX_EQUITY });
-        ret.push({ label: "EV", type: "ev" });
+        ret.push({ label: evScale.value === 10 ? "EV (bb)" : "EV", type: "ev" });
         ret.push({ label: "EQR", type: "percentage", index: INDEX_EQR });
 
         const options = displayOptions as DisplayOptionsBasics;
@@ -706,7 +719,10 @@ export default defineComponent({
             const label =
               action.amount === "0"
                 ? actionLabel(action.name)
-                : `${action.name[0]} ${action.amount}`;
+                : `${action.name[0]} ${formatAmount(
+                    Number(action.amount),
+                    evScale.value
+                  )}${evScale.value === 10 ? "bb" : ""}`;
             if (options.content === "percentage") {
               ret.push({ label, type: "action", index: i });
             } else {
@@ -726,7 +742,7 @@ export default defineComponent({
 
         ret.push({ label: "콤보", type: "weight" });
         ret.push({ label: "EQ", type: "percentage", index: INDEX_EQUITY });
-        ret.push({ label: "EV", type: "ev" });
+        ret.push({ label: evScale.value === 10 ? "EV (bb)" : "EV", type: "ev" });
         ret.push({ label: "EQR", type: "percentage", index: INDEX_EQR });
 
         if (numActions.value > 0) {
@@ -737,7 +753,10 @@ export default defineComponent({
             const label =
               action.amount === "0"
                 ? actionLabel(action.name)
-                : `${action.name[0]} ${action.amount}`;
+                : `${action.name[0]} ${formatAmount(
+                    Number(action.amount),
+                    evScale.value
+                  )}${evScale.value === 10 ? "bb" : ""}`;
             ret.push({ label, type: "action", index: i });
           }
         }
@@ -1024,7 +1043,12 @@ export default defineComponent({
           const actions = (props.selectedSpot as SpotPlayer).actions;
           for (let i = actions.length - 1; i >= 0; --i) {
             const action = actions[i];
-            const amount = action.amount === "0" ? "" : ` ${action.amount}`;
+            const amount =
+              action.amount === "0"
+                ? ""
+                : ` ${formatAmount(Number(action.amount), evScale.value)}${
+                    evScale.value === 10 ? "bb" : ""
+                  }`;
             ary.push(`${action.name}${amount} %`);
             ary.push(`${action.name}${amount} EV`);
           }
@@ -1040,11 +1064,20 @@ export default defineComponent({
           const card1 = row[0] & 0xff;
           const card2 = row[0] >>> 8;
           const pairStr = cardStr(card2) + cardStr(card1);
+          const rowData = [...row.slice(startIndex)];
+          if (!props.results.isEmpty) {
+            rowData[INDEX_EV - startIndex] = displayEv(row[INDEX_EV]);
+            for (let i = 1; i < numActions.value * 2; i += 2) {
+              rowData[INDEX_STRATEGY_BASE + i - startIndex] = displayEv(
+                row[INDEX_STRATEGY_BASE + i]
+              );
+            }
+          }
           const ary = [
             pairStr,
             row[INDEX_WEIGHT],
             row[INDEX_NORMALIZER],
-            ...row.slice(startIndex),
+            ...rowData,
           ];
           data.push(ary.join(","));
         }
@@ -1057,7 +1090,12 @@ export default defineComponent({
           const actions = (props.selectedSpot as SpotPlayer).actions;
           for (let i = actions.length - 1; i >= 0; --i) {
             const action = actions[i];
-            const amount = action.amount === "0" ? "" : ` ${action.amount}`;
+            const amount =
+              action.amount === "0"
+                ? ""
+                : ` ${formatAmount(Number(action.amount), evScale.value)}${
+                    evScale.value === 10 ? "bb" : ""
+                  }`;
             ary.push(`${action.name}${amount} %`);
           }
         }
@@ -1069,7 +1107,7 @@ export default defineComponent({
             cardStr(row[0] & 0xff),
             row[INDEX_WEIGHT],
             isNaN(row[INDEX_EQUITY]) ? "-" : row[INDEX_EQUITY],
-            isNaN(row[INDEX_EV]) ? "-" : row[INDEX_EV],
+            isNaN(row[INDEX_EV]) ? "-" : displayEv(row[INDEX_EV]),
             isNaN(row[INDEX_EQR]) ? "-" : row[INDEX_EQR],
             ...row.slice(INDEX_STRATEGY_BASE).filter((_, i) => i % 2 === 0),
           ];
@@ -1095,6 +1133,7 @@ export default defineComponent({
       sortKey,
       sortBy,
       evDigits,
+      displayEv,
       columns,
       onTableScroll,
       resultsRendered,

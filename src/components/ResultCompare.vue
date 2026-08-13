@@ -67,16 +67,18 @@
     <div class="flex flex-col gap-0.5">
       <div class="flex">
         <Ev
-          :value="ev[0]"
+          :value="evDisplay[0]"
           :digits="evDigits"
           :class="{
             'w-14': true,
             'font-semibold': !isNaN(ev[0]) && ev[0] >= (1 - EPS) * ev[1],
           }"
         />
-        <div class="flex-grow text-center underline">EV</div>
+        <div class="flex-grow text-center underline">
+          {{ store.displayUnitScale === 10 ? "EV (bb)" : "EV" }}
+        </div>
         <Ev
-          :value="ev[1]"
+          :value="evDisplay[1]"
           :digits="evDigits"
           :class="{
             'w-14': true,
@@ -85,7 +87,7 @@
           }"
         />
       </div>
-      <BarChart :values="ev" />
+      <BarChart :values="evDisplay" />
     </div>
 
     <div class="flex flex-col gap-0.5">
@@ -116,6 +118,7 @@
 import { computed, defineComponent, h } from "vue";
 import { average, toFixed1, toFixed, toFixedAdaptive } from "../utils";
 import { Results, Spot, SpotChance } from "../result-types";
+import { useStore } from "../store";
 
 import { StarIcon } from "@heroicons/vue/24/solid";
 
@@ -180,6 +183,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const store = useStore();
     const player = computed(() => {
       if (props.selectedChance) return "chance";
       return props.selectedSpot.player;
@@ -220,6 +224,9 @@ export default defineComponent({
         average(results.ev[1], results.normalizer[1]),
       ];
     });
+    const evDisplay = computed(() =>
+      ev.value.map((value) => value / store.displayUnitScale)
+    );
 
     const eqr = computed(() => {
       const results = props.results;
@@ -236,7 +243,7 @@ export default defineComponent({
     const evDigits = computed(() => {
       const results = props.results;
       if (results.isEmpty) return 3;
-      const maxEv = Math.max(...ev.value.map((x) => Math.abs(x)));
+      const maxEv = Math.max(...evDisplay.value.map((x) => Math.abs(x)));
       return maxEv < 9.9995 ? 3 : maxEv < 99.995 ? 2 : 1;
     });
 
@@ -246,6 +253,8 @@ export default defineComponent({
       combos,
       equity,
       ev,
+      evDisplay,
+      store,
       eqr,
       evDigits,
     };

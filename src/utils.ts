@@ -118,6 +118,21 @@ export const toFixedAdaptive = (value: number) => {
   return toFixed1(value);
 };
 
+/** 엔진의 정수 칩 값을 화면 단위로 변환한다 (교육 프리셋은 10 = 1bb). */
+export const scaleAmount = (value: number, unitScale = 1) => {
+  return value / Math.max(1, unitScale);
+};
+
+export const formatAmount = (value: number, unitScale = 1) => {
+  const scaled = scaleAmount(value, unitScale);
+  if (Number.isInteger(scaled)) return String(scaled);
+  return scaled.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+};
+
+export const formatBb = (value: number, unitScale = 10) => {
+  return `${formatAmount(value, unitScale)}bb`;
+};
+
 export const capitalize = (s: string) => {
   return (s && s[0].toUpperCase() + s.slice(1)) || "";
 };

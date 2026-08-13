@@ -51,6 +51,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
 import { cardText, cardPairOrder, toFixed1, toFixedAdaptive } from "../utils";
+import { useStore } from "../store";
 import {
   Results,
   Spot,
@@ -129,6 +130,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const store = useStore();
     const chartWidth = ref(0);
     const tableScrollTarget = ref<number | null>(null);
 
@@ -159,7 +161,9 @@ export default defineComponent({
         if (content === "eq") {
           values = results.equity[player];
         } else if (content === "ev") {
-          values = results.ev[player];
+          values = results.ev[player].map(
+            (value) => value / store.displayUnitScale
+          );
         } else {
           values = results.eqr[player]
             .map((x) => x ?? Number.NaN)
@@ -237,7 +241,12 @@ export default defineComponent({
       if (playerIndex.value === 0) oopLabel = "★ ";
       if (playerIndex.value === 1) ipLabel = "★ ";
 
-      const contentText = content === "eq" ? "에퀴티" : content.toUpperCase();
+      const contentText =
+        content === "eq"
+          ? "에퀴티"
+          : content === "ev" && store.displayUnitScale === 10
+          ? "EV (bb)"
+          : content.toUpperCase();
       oopLabel += `OOP ${contentText}`;
       ipLabel += `IP ${contentText}`;
 

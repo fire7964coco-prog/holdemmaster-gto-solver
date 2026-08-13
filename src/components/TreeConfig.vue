@@ -2,6 +2,9 @@
   <div v-if="!isEditMode">
     <div class="flex flex-col md:flex-row">
       <div class="shrink-0">
+        <div class="mb-2 text-xs text-neutral-500">
+          정수 칩 단위로 입력합니다. bb 환산이 필요하면 10칩=1bb 사용을 권장합니다.
+        </div>
         <div class="flex flex-col sm:flex-row my-1 gap-0 sm:gap-8">
           <div>
             <div class="my-1">
@@ -9,6 +12,7 @@
               <input
                 v-model="config.startingPot"
                 type="number"
+                @input="onAmountEdit"
                 :class="
                   'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
                   (config.startingPot <= 0 ||
@@ -28,6 +32,7 @@
               <input
                 v-model="config.effectiveStack"
                 type="number"
+                @input="onAmountEdit"
                 :class="
                   'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
                   (config.effectiveStack <= 0 ||
@@ -1075,9 +1080,16 @@ export default defineComponent({
       store.headers["tree-config"].pop();
     };
 
+    // 팟·스택을 직접 고치면 더 이상 교육 프리셋 스팟이 아니므로 bb 환산을 끈다
+    // (프리셋 로드는 코드에서 값을 넣으므로 이 핸들러가 호출되지 않음)
+    const onAmountEdit = () => {
+      store.displayUnitScale = 1;
+    };
+
     return {
       MAX_AMOUNT,
       config,
+      onAmountEdit,
       isEditMode,
       addedLinesArray,
       removedLinesArray,

@@ -121,8 +121,8 @@
                 : 'group-hover:opacity-100 opacity-70'
             "
           >
-            <div>팟 {{ spot.pot }}</div>
-            <div>스택 {{ spot.stack }}</div>
+            <div>팟 {{ amountText(spot.pot) }}</div>
+            <div>스택 {{ amountText(spot.stack) }}</div>
           </div>
         </div>
 
@@ -180,8 +180,7 @@
                   : 'opacity-70')
               "
             >
-              {{ actionLabel(action.name) }}
-              {{ action.amount === "0" ? "" : action.amount }}
+              {{ actionText(spot, action.name, action.amount) }}
             </span>
             <span
               v-if="spot.index === selectedSpotIndex && rates != null"
@@ -232,7 +231,7 @@
               </span>
             </div>
           </div>
-          <div class="px-3">팟 {{ spot.pot }}</div>
+          <div class="px-3">팟 {{ amountText(spot.pot) }}</div>
         </div>
       </template>
     </div>
@@ -242,7 +241,8 @@
 <script lang="ts">
 import { computed, defineComponent, nextTick, toRefs, ref, watch } from "vue";
 import { useSavedConfigStore } from "../store";
-import { cardText, average, colorString } from "../utils";
+import { useStore } from "../store";
+import { cardText, average, colorString, formatAmount } from "../utils";
 import { handler } from "../global-worker";
 import {
   Results,
@@ -379,6 +379,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const store = useStore();
     const navDiv = ref<HTMLDivElement | null>(null);
 
     const config = useSavedConfigStore();
@@ -423,6 +424,23 @@ export default defineComponent({
       }
       return board;
     });
+
+    const amountText = (value: number) => {
+      const amount = formatAmount(value, store.displayUnitScale);
+      return store.displayUnitScale === 10 ? `${amount}bb` : amount;
+    };
+
+    const actionText = (spot: SpotPlayer, name: string, amount: string) => {
+      const label = actionLabel(name);
+      if (amount === "0") return label;
+      const value = Number(amount);
+      const formatted = amountText(value);
+      if (name === "Bet" && spot.pot) {
+        const percent = Math.round((value * 100) / spot.pot);
+        return `${label} ${formatted} (${percent}% 팟)`;
+      }
+      return `${label} ${formatted}`;
+    };
 
     let selectedSpotIndexTmp = -1;
     let selectedChanceIndexTmp = -1;
@@ -943,6 +961,10 @@ export default defineComponent({
         index: spotIndex,
         player,
         selectedIndex: -1,
+        pot: config.startingPot + totalBetAmountAppended[0] + totalBetAmountAppended[1],
+        stack:
+          config.effectiveStack -
+          totalBetAmountAppended[player === "oop" ? 0 : 1],
         actions: actions.map((action, i) => {
           const [name, amount] = action.split(":");
           return {
@@ -966,6 +988,17 @@ export default defineComponent({
       spot.selectedIndex = actionIndex;
 
       await selectSpot(spotIndex + 1, true);
+    };
+
+    // 프리셋 트레이너 데이터 추출용: 루트부터 지정한 액션 경로를 재생한다.
+    const playPath = async (actionIndices: number[]) => {
+      await selectSpot(1, true);
+      for (const actionIndex of actionIndices) {
+        const spot = spots.value[selectedSpotIndex.value];
+        if (spot?.type !== "player" || !spot.actions[actionIndex]) return false;
+        await play(selectedSpotIndex.value, actionIndex);
+      }
+      return spots.value[selectedSpotIndex.value]?.type === "player";
     };
 
     const deal = async (card: number) => {
@@ -1046,6 +1079,8 @@ export default defineComponent({
       await deal(card);
     });
 
+    context.expose({ playPath });
+
     const spotCards = (spot: SpotRoot | SpotChance) => {
       if (spot.type === "root") {
         return spot.board.map((card) => cardText(card));
@@ -1073,6 +1108,8 @@ export default defineComponent({
       spotCards,
       spotPlayerLabel,
       actionLabel,
+      amountText,
+      actionText,
     };
   },
 });

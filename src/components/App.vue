@@ -32,6 +32,9 @@
         <div v-if="store.sideView === 'presets'">
           <PresetsPage />
         </div>
+        <div v-if="store.sideView === 'trainer'">
+          <TrainerPage />
+        </div>
         <div v-show="store.sideView === 'oop-range'">
           <RangeEditor :player="0" />
         </div>
@@ -70,6 +73,7 @@ import SideBar from "./SideBar.vue";
 import AboutPage from "./AboutPage.vue";
 import GuidePage from "./GuidePage.vue";
 import PresetsPage from "./PresetsPage.vue";
+import TrainerPage from "./TrainerPage.vue";
 import RangeEditor from "./RangeEditor.vue";
 import BoardSelector from "./BoardSelector.vue";
 import TreeConfig from "./TreeConfig.vue";
@@ -83,6 +87,7 @@ export default defineComponent({
     AboutPage,
     GuidePage,
     PresetsPage,
+    TrainerPage,
     RangeEditor,
     BoardSelector,
     TreeConfig,

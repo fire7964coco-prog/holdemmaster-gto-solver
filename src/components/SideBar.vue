@@ -20,6 +20,13 @@
       <span class="md:hidden text-emerald-400">⚡</span>
     </button>
 
+    <button :class="itemStyle('trainer')" @click="store.sideView = 'trainer'">
+      GTO 트레이너
+      <span class="hidden md:block mt-0.5 text-xs font-semibold text-blue-400">
+        액션 선택 · EV 손실
+      </span>
+    </button>
+
     <div class="side-bar-label">
       커스텀 스팟<span class="hidden md:inline"> — 직접 입력해서 계산</span>
     </div>

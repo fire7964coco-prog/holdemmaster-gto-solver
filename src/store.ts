@@ -7,6 +7,7 @@ export type SideView =
   | "about"
   | "guide"
   | "presets"
+  | "trainer"
   | "oop-range"
   | "ip-range"
   | "board"
@@ -95,6 +96,7 @@ export const useStore = defineStore("app", {
       about: ["소개"],
       guide: ["사용법 — 순서대로 따라하기"],
       presets: ["교육 예제 — 원클릭 스팟"],
+      trainer: ["GTO 트레이너 — 선택의 EV를 확인하세요"],
       "oop-range": ["OOP 레인지"],
       "ip-range": ["IP 레인지"],
       board: ["보드"],
@@ -111,6 +113,10 @@ export const useStore = defineStore("app", {
     rangeText: ["", ""] as [string, string],
     // 공유 링크로 들어와 설정이 적용됐음을 알리는 플래그 (RunSolver 안내 배너)
     sharedSpotLoaded: false,
+    // 1 = 임의 칩 단위, 10 = 교육 프리셋의 0.1bb 단위
+    displayUnitScale: 1,
+    // 교육 예제 화면 진입 시 곧바로 열 프리셋 id (트레이너 → 미리보기 이동용)
+    pendingPresetPreview: "",
   }),
 
   getters: {

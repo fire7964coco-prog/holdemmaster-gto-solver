@@ -51,7 +51,15 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from "vue";
-import { ranks, suits, cardId, toFixed1, toFixedAdaptive } from "../utils";
+import {
+  ranks,
+  suits,
+  cardId,
+  toFixed1,
+  toFixedAdaptive,
+  formatAmount,
+} from "../utils";
+import { useStore } from "../store";
 import {
   ChanceReports,
   Spot,
@@ -146,6 +154,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const store = useStore();
     const chartParentDiv = ref<HTMLDivElement | null>(null);
     const chartParentDivHeight = ref(0);
 
@@ -181,7 +190,12 @@ export default defineComponent({
             const suit = i & 3;
             const action = spot.actions[actionIndex];
             let label = actionLabel(action.name);
-            if (action.amount !== "0") label += ` ${action.amount}`;
+            if (action.amount !== "0") {
+              label += ` ${formatAmount(
+                Number(action.amount),
+                store.displayUnitScale
+              )}${store.displayUnitScale === 10 ? "bb" : ""}`;
+            }
             return {
               data: Array.from({ length: 13 }, (_, rank) => {
                 const card = cardId(rank, suit);
@@ -212,7 +226,9 @@ export default defineComponent({
           options.chartChance === "eq"
             ? reports.equity[playerIndex]
             : options.chartChance === "ev"
-            ? reports.ev[playerIndex]
+            ? reports.ev[playerIndex].map(
+                (value) => value / store.displayUnitScale
+              )
             : reports.eqr[playerIndex];
         datasets = Array.from({ length: 4 }, (_, suit) => ({
           data: Array.from(
@@ -242,7 +258,7 @@ export default defineComponent({
           "strategy-combos": "전략 (콤보)",
           strategy: "전략",
           eq: "에퀴티",
-          ev: "EV",
+          ev: store.displayUnitScale === 10 ? "EV (bb)" : "EV",
           eqr: "EQR",
         }[option];
 

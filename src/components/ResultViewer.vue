@@ -19,6 +19,7 @@
 
   <div v-else class="flex flex-col h-full">
     <ResultNav
+      ref="resultNav"
       :is-handler-updated="isHandlerUpdated"
       :is-locked="isLocked"
       :cards="cards"
@@ -148,8 +149,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
-import { useStore } from "../store";
+import { computed, defineComponent, nextTick, ref } from "vue";
+import { useSavedConfigStore, useStore } from "../store";
 import { handler } from "../global-worker";
 
 import {
@@ -188,6 +189,10 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
+    const savedConfig = useSavedConfigStore();
+    const resultNav = ref<{ playPath: (path: number[]) => Promise<boolean> } | null>(
+      null
+    );
 
     /* Navigation */
 
@@ -240,14 +245,24 @@ export default defineComponent({
 
     // 프리셋 미리보기 데이터 추출용 훅 (도구/e2e/preset-export.js가 사용).
     // 결과 화면의 현재 노드 표시 데이터를 JSON으로 직렬화한다.
-    (window as unknown as Record<string, unknown>).__exportPreview = () =>
+    const exportCurrent = () =>
       JSON.stringify({
         cards: cards.value,
         selectedSpot: selectedSpot.value,
         currentBoard: currentBoard.value,
         results: results.value,
         totalBetAmount: totalBetAmount.value,
+        startingPot: savedConfig.startingPot,
+        effectiveStack: savedConfig.effectiveStack,
+        unitScale: store.displayUnitScale,
       });
+    const exportHooks = window as unknown as Record<string, unknown>;
+    exportHooks.__exportPreview = exportCurrent;
+    exportHooks.__exportTrainerDecision = async (path: number[]) => {
+      if (!resultNav.value || !(await resultNav.value.playPath(path))) return null;
+      await nextTick();
+      return exportCurrent();
+    };
 
     const onUpdateSpot = (
       newSelectedSpot: Spot | null,
@@ -365,6 +380,7 @@ export default defineComponent({
 
     return {
       store,
+      resultNav,
       isHandlerUpdated,
       isLocked,
       cards,
