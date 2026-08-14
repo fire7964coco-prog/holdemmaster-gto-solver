@@ -125,7 +125,10 @@ export const signIn = async (provider: "google" | "kakao") => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${window.location.origin}${window.location.pathname}`,
+      // origin만 쓴다(뒤에 "/"를 붙이지 않음) — Supabase의 Redirect URLs 목록은
+      // 정확히 일치로 비교하므로, 등록값 "https://solver.holdemmaster.com"과
+      // 슬래시 하나만 달라도 로그인이 거부된다.
+      redirectTo: window.location.origin,
       scopes: provider === "kakao" ? "profile_nickname account_email" : undefined,
     },
   });
