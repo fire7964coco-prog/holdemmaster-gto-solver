@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl pb-10">
+  <div class="max-w-5xl pb-10">
     <div
       v-if="loadError"
       class="rounded-lg border border-red-700 bg-red-950 px-4 py-3 text-red-300"
@@ -35,27 +35,17 @@
         </button>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mt-4">
-        <div class="stat-card">
-          <span>풀이</span><b>{{ attempts.length }}</b>
-        </div>
-        <div class="stat-card">
-          <span>연속 정답</span>
-          <b :class="streak >= 3 ? 'text-emerald-300' : ''">
-            {{ streak }}<span v-if="bestStreak > 0" class="text-xs text-neutral-500">
-              / 최고 {{ bestStreak }}</span
-            >
-          </b>
-        </div>
-        <div class="stat-card">
-          <span>누적 EV 손실</span><b>{{ totalLoss.toFixed(3) }}bb</b>
-        </div>
-        <div class="stat-card">
-          <span>평균 EV 손실</span><b>{{ averageLoss.toFixed(3) }}bb</b>
-        </div>
-        <div class="stat-card">
-          <span>좋은 선택</span><b>{{ excellentRate.toFixed(0) }}%</b>
-        </div>
+      <!-- 통계는 칩으로 압축 — 위쪽 공간을 덜 먹어야 문제가 화면 중앙에 온다 -->
+      <div class="flex flex-wrap gap-1.5 mt-3">
+        <span class="stat-chip">풀이 <b>{{ attempts.length }}</b></span>
+        <span class="stat-chip">
+          연속 정답
+          <b :class="streak >= 3 ? 'text-emerald-300' : ''">{{ streak }}</b>
+          <span v-if="bestStreak > 0" class="text-neutral-600">/ 최고 {{ bestStreak }}</span>
+        </span>
+        <span class="stat-chip">누적 EV 손실 <b>{{ totalLoss.toFixed(3) }}</b>bb</span>
+        <span class="stat-chip">평균 EV 손실 <b>{{ averageLoss.toFixed(3) }}</b>bb</span>
+        <span class="stat-chip">좋은 선택 <b>{{ excellentRate.toFixed(0) }}</b>%</span>
       </div>
 
       <!-- 약점 분석: 카테고리별 평균 EV 손실 -->
@@ -142,10 +132,12 @@
         {{ bank.targetExploitabilityPct }}%
       </p>
 
+      <!-- 좌: 문제 / 우: 채점. 답을 봐도 문제가 화면에서 사라지지 않게 나란히 둔다 -->
       <div
         v-if="question"
-        class="mt-5 rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5"
+        class="mt-5 grid gap-4 lg:grid-cols-[1.15fr_1fr] items-start"
       >
+      <div class="rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5">
         <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span class="text-sm font-semibold text-blue-300">
             {{ question.presetTitle }}
@@ -173,7 +165,9 @@
           </span>
         </div>
 
-        <div class="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-10 mt-6">
+        <div
+          class="mt-4 rounded-lg border border-neutral-700/70 bg-neutral-900/50 py-4 flex flex-col md:flex-row items-center justify-center gap-5 md:gap-10"
+        >
           <div class="text-center">
             <div class="text-xs text-neutral-500 mb-1">보드</div>
             <div class="text-2xl font-bold tracking-wide">
@@ -211,34 +205,51 @@
           </div>
         </div>
 
-        <div class="mt-6 text-center font-semibold">어떤 액션을 선택하시겠습니까?</div>
-        <div class="flex flex-wrap justify-center gap-2 mt-3">
+        <div class="mt-5 text-sm font-semibold">
+          {{ evaluation ? "내 선택" : "어떤 액션을 선택하시겠습니까?" }}
+        </div>
+        <!-- 채점 전에는 액션 이름만. 채점 후에는 버튼 자체가 결과표가 된다 -->
+        <div class="grid gap-2 mt-2">
           <button
             v-for="(action, index) in question.node.selectedSpot.actions"
             :key="index"
             :disabled="!!evaluation"
             :class="
-              'min-w-28 rounded-lg border px-4 py-2 font-semibold transition ' +
+              'flex items-center justify-between rounded-lg border px-4 py-2.5 font-semibold transition ' +
               (evaluation && evaluation.selectedAction === index
                 ? 'border-yellow-400 bg-yellow-900/50 text-yellow-200'
+                : evaluation
+                ? 'border-neutral-700 bg-neutral-800 text-neutral-400'
                 : 'border-neutral-600 bg-neutral-700 hover:bg-neutral-600')
             "
             @click="choose(index)"
           >
-            {{
-              trainerActionLabel(
-                action,
-                question.node.selectedSpot.pot ?? question.node.startingPot,
-                question.node.unitScale
-              )
-            }}
+            <span>
+              {{
+                trainerActionLabel(
+                  action,
+                  question.node.selectedSpot.pot ?? question.node.startingPot,
+                  question.node.unitScale
+                )
+              }}
+            </span>
+            <span
+              v-if="evaluation"
+              class="text-xs font-semibold tabular-nums text-neutral-400"
+            >
+              {{ (evaluation.actions[index].frequency * 100).toFixed(1) }}%
+            </span>
           </button>
         </div>
 
-        <div v-if="evaluation" class="mt-6 border-t border-neutral-700 pt-4">
+      </div>
+
+      <!-- 오른쪽: 채점 결과. 아직 안 골랐으면 자리만 잡아둔다(레이아웃이 튀지 않게) -->
+      <div class="rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5">
+        <template v-if="evaluation">
           <div
             :class="
-              'text-center text-lg font-bold ' +
+              'text-lg font-bold ' +
               (evaluation.evLossBb <= 0.01
                 ? 'text-emerald-300'
                 : evaluation.evLossBb <= 0.05
@@ -253,27 +264,44 @@
                 ? "허용 가능한 선택"
                 : "다시 볼 스팟"
             }}
-            · EV 손실 {{ evaluation.evLossBb.toFixed(3) }}bb
           </div>
-          <p class="mt-1 text-center text-xs text-neutral-500">
+          <div class="mt-0.5 text-sm text-neutral-400">
+            EV 손실
+            <b class="tabular-nums text-neutral-200">
+              {{ evaluation.evLossBb.toFixed(3) }}bb
+            </b>
+          </div>
+          <p class="mt-1 text-xs text-neutral-500">
             혼합 전략은 단순 오답 처리하지 않고 액션 EV 차이로 평가합니다.
           </p>
 
-          <div class="mt-4 space-y-2">
-            <div
-              v-for="action in evaluation.actions"
-              :key="action.index"
-              class="grid grid-cols-[minmax(8rem,1fr)_5rem_6rem] items-center gap-2 rounded-lg bg-neutral-900/60 px-3 py-2 text-sm"
-            >
-              <span :class="{ 'font-bold text-emerald-300': action.isBest }">
-                {{ action.label }}{{ action.isBest ? " · 최고 EV" : "" }}
-              </span>
-              <span class="text-right">{{ (action.frequency * 100).toFixed(1) }}%</span>
-              <span class="text-right tabular-nums">EV {{ action.evBb.toFixed(3) }}bb</span>
+          <div class="mt-4 space-y-2.5">
+            <div v-for="action in evaluation.actions" :key="action.index">
+              <div class="flex items-baseline gap-2 text-sm">
+                <span :class="action.isBest ? 'font-bold text-emerald-300' : ''">
+                  {{ action.label }}{{ action.isBest ? " · 최고 EV" : "" }}
+                </span>
+                <span class="ml-auto tabular-nums text-xs text-neutral-500">
+                  {{ (action.frequency * 100).toFixed(1) }}%
+                </span>
+                <span class="w-16 text-right tabular-nums">
+                  {{ action.evBb.toFixed(3) }}
+                </span>
+              </div>
+              <!-- 숫자를 못 읽어도 차이가 보이게 -->
+              <div class="mt-1 h-1 rounded bg-neutral-900 overflow-hidden">
+                <div
+                  :class="
+                    'h-full rounded ' +
+                    (action.isBest ? 'bg-emerald-500' : 'bg-blue-600')
+                  "
+                  :style="{ width: evBarWidth(action.evBb) + '%' }"
+                ></div>
+              </div>
             </div>
           </div>
 
-          <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
+          <div class="mt-5 flex flex-wrap items-center gap-3">
             <button class="button-base button-green px-6" @click="nextQuestion">
               다음 문제
             </button>
@@ -289,10 +317,24 @@
               class="text-sm text-neutral-400 hover:text-neutral-200"
               @click="openSpot"
             >
-              이 스팟 결과 전체 보기
+              결과 전체 보기
             </button>
           </div>
-        </div>
+        </template>
+
+        <template v-else>
+          <div class="text-sm font-semibold text-neutral-300">채점 결과</div>
+          <p class="mt-2 text-sm leading-relaxed text-neutral-500">
+            액션을 고르면 여기에 <b class="text-neutral-400">각 액션의 빈도와 EV</b>,
+            그리고 내 선택이 몇 bb 손해였는지가 표시됩니다.
+          </p>
+          <p class="mt-3 text-xs leading-relaxed text-neutral-600">
+            GTO는 같은 핸드도 액션을 섞습니다. 빈도가 낮은 선택이 곧 오답은
+            아니며, 기준은 EV 손실입니다 —
+            0.01bb 이하 최적 · 0.05bb 이하 허용 · 그 이상 다시 볼 스팟.
+          </p>
+        </template>
+      </div>
       </div>
 
       <div class="mt-4 flex justify-end">
@@ -555,7 +597,9 @@ export default defineComponent({
         return;
       }
       account.value = await getCurrentUser();
-      if (account.value) void runSync(true);
+      // 화면에 들어온 시점엔 결과를 보여준다(몇 개 보관됐는지). 문제를 풀 때마다
+      // 도는 동기화만 조용히 처리한다.
+      if (account.value) void runSync();
       unsubscribeAuth = onAuthChange((user) => {
         const wasLoggedOut = !account.value;
         account.value = user;
@@ -572,6 +616,21 @@ export default defineComponent({
     const handCards = computed(() =>
       question.value ? trainerCardPair(question.value.handPair) : []
     );
+    /**
+     * EV 막대 길이. 액션 간 EV 차이가 0.03bb처럼 작아도 눈에 보이도록
+     * 최저~최고를 35~100% 구간에 펼친다(비율 그대로 그리면 전부 같아 보임).
+     */
+    const evBarWidth = (evBb: number) => {
+      const values = (evaluation.value?.actions ?? [])
+        .map((item) => item.evBb)
+        .filter((value) => Number.isFinite(value));
+      if (!values.length || !Number.isFinite(evBb)) return 0;
+      const max = Math.max(...values);
+      const min = Math.min(...values);
+      if (max === min) return 100;
+      return 35 + ((evBb - min) / (max - min)) * 65;
+    };
+
     const handLabels = computed(() =>
       question.value
         ? trainerHandLabels(
@@ -635,6 +694,7 @@ export default defineComponent({
       boardCards,
       handCards,
       handLabels,
+      evBarWidth,
       articleUrl,
       openSpot,
       positionLabel,
@@ -662,14 +722,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.stat-card {
-  @apply flex flex-col rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2;
+.stat-chip {
+  @apply inline-flex items-baseline gap-1 rounded-lg border border-neutral-700 bg-neutral-800;
+  @apply px-2.5 py-1 text-xs text-neutral-500;
 }
-.stat-card span {
-  @apply text-xs text-neutral-500;
-}
-.stat-card b {
-  @apply mt-0.5 text-lg text-neutral-200;
+.stat-chip b {
+  @apply text-sm font-semibold tabular-nums text-neutral-200;
 }
 .hand-tag {
   @apply rounded px-2 py-0.5 text-xs font-semibold;
