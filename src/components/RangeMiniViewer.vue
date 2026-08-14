@@ -1,10 +1,13 @@
 <template>
   <table class="shadow-md">
-    <tr v-for="row in 13" :key="row" class="h-2.5">
+    <tr v-for="row in 13" :key="row" :class="compact ? 'h-[6px]' : 'h-2.5'">
       <td
         v-for="col in 13"
         :key="col"
-        class="relative w-2.5 border-[0.5px] border-black"
+        :class="
+          'relative border-[0.5px] border-black ' +
+          (compact ? 'w-[6px]' : 'w-2.5')
+        "
       >
         <div
           :class="
@@ -36,6 +39,11 @@ export default defineComponent({
     player: {
       type: Number,
       required: true,
+    },
+    // 사이드바용 축소판 — ①~⑤가 스크롤 없이 한 화면에 들어와야 한다
+    compact: {
+      type: Boolean,
+      default: false,
     },
   },
 
