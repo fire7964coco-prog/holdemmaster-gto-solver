@@ -67,6 +67,7 @@
 import { computed, defineComponent, ref } from "vue";
 import { useStore } from "../store";
 import { applySpotFromUrl } from "../spot-share";
+import { bootstrapAccount } from "../account";
 
 import NavBar from "./NavBar.vue";
 import SideBar from "./SideBar.vue";
@@ -98,6 +99,12 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const header = computed(() => store.headers[store.sideView].join(" > "));
+
+    // 로그인에서 돌아온 경우: 세션을 먼저 회수하고 주소를 정리한 뒤 트레이너로 복귀.
+    // (앱 진입 화면은 소개라, 트레이너 화면에서만 처리하면 인증 코드를 놓친다)
+    void bootstrapAccount().then((returned) => {
+      if (returned) store.sideView = "trainer";
+    });
 
     // 공유 링크(?spot=)로 들어온 경우 설정을 적용하고 실행 화면으로
     if (applySpotFromUrl()) {

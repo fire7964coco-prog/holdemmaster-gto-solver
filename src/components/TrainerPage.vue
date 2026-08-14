@@ -326,9 +326,9 @@ import {
   signIn,
   signOut,
   syncAttempts,
-  cleanAuthParams,
   hasStoredSession,
   isReturningFromAuth,
+  isClientLoaded,
 } from "../account";
 import { ARTICLE_URLS, PRESETS } from "../presets";
 import { trackOutbound } from "../outbound";
@@ -549,9 +549,11 @@ export default defineComponent({
       }
 
       if (!isAccountEnabled) return;
-      // 로그인 이력이 없으면 supabase 라이브러리를 아예 내려받지 않는다
-      if (!hasStoredSession() && !isReturningFromAuth()) return;
-      cleanAuthParams();
+      // 로그인 이력이 없으면 supabase 라이브러리를 아예 내려받지 않는다.
+      // (App.vue가 이미 띄웠다면 그대로 이어 쓴다 — 인증 코드 처리는 거기서 끝냄)
+      if (!hasStoredSession() && !isReturningFromAuth() && !isClientLoaded()) {
+        return;
+      }
       account.value = await getCurrentUser();
       if (account.value) void runSync(true);
       unsubscribeAuth = onAuthChange((user) => {

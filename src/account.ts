@@ -70,6 +70,31 @@ export const isReturningFromAuth = () => {
   return params.has("code") || window.location.hash.includes("access_token");
 };
 
+/** supabase 클라이언트가 이미 만들어졌는지 (다른 화면이 먼저 띄운 경우) */
+export const isClientLoaded = () => clientPromise !== null;
+
+/**
+ * 앱 시작 시 한 번 호출한다.
+ *
+ * ⚠ 순서가 중요하다: 로그인에서 돌아오면 주소에 인증 코드가 붙어 오는데,
+ * supabase-js는 **클라이언트를 만드는 시점의 주소**에서 그 코드를 읽어 세션으로
+ * 바꾼다. 주소를 먼저 지우면 코드가 사라져 로그인이 영영 완료되지 않는다.
+ * 따라서 세션 회수(getCurrentUser) → 주소 정리(cleanAuthParams) 순서를 지킬 것.
+ *
+ * @returns 로그인에서 돌아온 흐름이면 true (호출한 쪽이 화면 복귀에 사용)
+ */
+export const bootstrapAccount = async () => {
+  if (!isAccountEnabled) return false;
+  const returning = isReturningFromAuth();
+  if (!returning && !hasStoredSession()) return false;
+  try {
+    await getCurrentUser();
+  } finally {
+    cleanAuthParams();
+  }
+  return returning;
+};
+
 export type AccountUser = {
   id: string;
   email: string;
