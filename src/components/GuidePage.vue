@@ -184,6 +184,12 @@
       설치하면 교육 예제 13종과 트레이너 문제가 기기에 저장돼
       <b class="text-neutral-200">인터넷이 없는 지하철에서도</b> 그대로 풀 수 있습니다.
     </p>
+    <p class="mt-1.5 text-xs text-neutral-500 leading-relaxed">
+      ※ 삼성 인터넷에서 설치하면 「안전하지 않은 앱 차단됨」 경고가 뜹니다. 이 브라우저가
+      만드는 설치 파일을 구글이 신뢰하지 않아 생기는 문제로, 앱과는 무관합니다.
+      <b class="text-neutral-300">크롬으로 열면</b> 경고 없이 설치되고, 그대로 설치하려면
+      경고창의 [세부정보 더보기] → [무시하고 설치]를 누르면 됩니다.
+    </p>
     <div
       class="mt-2 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm"
     >

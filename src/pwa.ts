@@ -32,6 +32,8 @@ export const pwa = reactive({
   canInstall: false,
   /** iOS 사파리 — 설치 버튼이 없어 «공유 → 홈 화면에 추가» 안내가 필요 */
   isIOS: false,
+  /** 삼성 인터넷 — 설치는 되지만 Play 프로텍트 경고가 뜬다(브라우저 쪽 문제) */
+  isSamsung: false,
   /** 배너 노출 여부 */
   showBanner: false,
   /** 오프라인 데이터 저장 상태 */
@@ -62,6 +64,15 @@ const detectStandalone = () =>
   window.matchMedia?.("(display-mode: standalone)").matches ||
   // iOS 사파리는 표준 미디어쿼리 대신 이 값을 쓴다
   (navigator as unknown as { standalone?: boolean }).standalone === true;
+
+/**
+ * 삼성 인터넷 감지.
+ * 이 브라우저가 만드는 WebAPK를 Google Play 프로텍트가 신뢰하지 않아
+ * 설치할 때 「안전하지 않은 앱 차단됨」 경고가 뜬다 (2026-08-15 실기기 확인).
+ * 우리 앱·manifest 문제가 아니고 고칠 방법도 없어서, 크롬으로 열도록 안내한다.
+ * 한국은 갤럭시 기본 브라우저라 그냥 두면 설치 시도가 그대로 막힌다.
+ */
+const detectSamsungInternet = () => /SamsungBrowser/i.test(navigator.userAgent);
 
 const detectIOS = () => {
   const ua = navigator.userAgent;
@@ -115,6 +126,15 @@ export const promptInstall = async () => {
   await event.prompt();
 };
 
+/** 삼성 인터넷에서 [크롬으로 열기] — 크롬이 없으면 그냥 현재 주소로 떨어진다 */
+export const openInChrome = () => {
+  const target = `${location.host}/?view=trainer`;
+  const fallback = encodeURIComponent(`${location.origin}/?view=trainer`);
+  location.href =
+    `intent://${target}#Intent;scheme=https;package=com.android.chrome;` +
+    `S.browser_fallback_url=${fallback};end`;
+};
+
 /** 배너의 [나중에] */
 export const dismissBanner = () => {
   writeValue(KEY_DISMISSED_AT, String(Date.now()));
@@ -166,6 +186,7 @@ export const viewFromUrl = (): SideView | null => {
 export const setupPwa = () => {
   pwa.standalone = detectStandalone();
   pwa.isIOS = detectIOS();
+  pwa.isSamsung = detectSamsungInternet();
   refreshBanner();
 
   window.addEventListener("beforeinstallprompt", (event) => {
