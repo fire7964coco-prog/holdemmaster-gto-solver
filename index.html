@@ -13,6 +13,16 @@
     -->
     <meta name="robots" content="noindex">
     <link rel="icon" type="image/png" href="/favicon.png">
+
+    <!-- PWA: 홈 화면 설치 (2026-08-15) -->
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#262626">
+    <!-- iOS 사파리는 manifest를 부분적으로만 읽는다 — 아래 3줄이 홈 화면 아이콘·전체화면을 담당 -->
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="GTO 솔버">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>홀덤마스터 GTO 솔버 — 무료 브라우저 GTO 솔버</title>
     <meta name="description" content="설치 없이 브라우저에서 실행하는 무료 GTO 솔버. 텍사스 홀덤 포스트플랍 전략을 레인지·보드·벳 사이즈별로 계산합니다. 홀덤마스터 커뮤니티 제공.">
   </head>

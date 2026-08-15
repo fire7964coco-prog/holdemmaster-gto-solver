@@ -352,6 +352,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
+import { noteTrainerSolved } from "../pwa";
 import {
   clearTrainerAttempts,
   addTrainerAttempt,
@@ -506,6 +507,7 @@ export default defineComponent({
         evLossBb: result.evLossBb,
       });
       attempts.value = await getTrainerAttempts();
+      noteTrainerSolved();
       // 로그인 상태면 조용히 올린다 (실패해도 풀이 흐름을 막지 않음)
       if (account.value) void runSync(true);
     };

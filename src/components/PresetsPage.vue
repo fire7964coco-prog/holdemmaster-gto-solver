@@ -56,7 +56,7 @@
             </a>
             <button
               class="button-base button-green"
-              @click="previewPreset = p"
+              @click="openPreview(p)"
             >
               ⚡ 결과 바로 보기
             </button>
@@ -82,6 +82,7 @@ import { useStore, useConfigStore } from "../store";
 import { cardText, parseCardString } from "../utils";
 import { PRESETS, ARTICLE_URLS, Preset } from "../presets";
 import { trackOutbound } from "../outbound";
+import { notePresetOpened } from "../pwa";
 
 import { InformationCircleIcon } from "@heroicons/vue/20/solid";
 import PresetPreview from "./PresetPreview.vue";
@@ -95,13 +96,20 @@ export default defineComponent({
 
     const previewPreset = ref<Preset | null>(null);
 
+    // 미리보기를 여는 유일한 통로. 열람 횟수는 PWA 설치 배너 조건으로도 쓰인다
+    // (2개 이상 본 사람에게만 «홈 화면에 추가»를 권한다)
+    const openPreview = (preset: Preset) => {
+      previewPreset.value = preset;
+      notePresetOpened();
+    };
+
     // 트레이너에서 "이 스팟 결과 전체 보기"로 넘어온 경우 해당 미리보기를 바로 연다
     watch(
       () => store.sideView,
       () => {
         if (store.sideView !== "presets" || !store.pendingPresetPreview) return;
-        previewPreset.value =
-          PRESETS.find((p) => p.id === store.pendingPresetPreview) ?? null;
+        const target = PRESETS.find((p) => p.id === store.pendingPresetPreview);
+        if (target) openPreview(target);
         store.pendingPresetPreview = "";
       },
       { immediate: true }
@@ -174,7 +182,15 @@ export default defineComponent({
     const articleUrl = (p: Preset) =>
       trackOutbound(ARTICLE_URLS[p.id] ?? "", "preset-card");
 
-    return { grouped, boardCards, load, previewPreset, loadFromPreview, articleUrl };
+    return {
+      grouped,
+      boardCards,
+      load,
+      previewPreset,
+      openPreview,
+      loadFromPreview,
+      articleUrl,
+    };
   },
 });
 </script>

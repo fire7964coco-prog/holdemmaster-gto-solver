@@ -23,6 +23,10 @@
   워커가 전멸해 계산이 멈추던 문제 (`rust/postflop-solver/src/utility.rs`, vendored)
 - 빌드 도구 현행화: webpack 5.109, wasm-bindgen 0.2.126 (최신 Rust nightly 호환)
 - Vercel 배포 설정(`vercel.json`) 추가 (COOP/COEP 헤더 — SharedArrayBuffer/멀티스레드용)
+- PWA: 홈 화면 설치(manifest) + 서비스워커. 앱 셸은 전원, 교육 예제 13종과 트레이너
+  데이터(약 2.3MB)는 설치했거나 직접 저장을 요청한 사용자에게만 캐시해 오프라인에서
+  공부할 수 있음. 서비스워커 원본은 `sw-template.js`이며 빌드 시 실제 자산 목록을
+  주입해 `dist/sw.js`로 생성됨(캐시 이름에 빌드 해시 → 배포마다 옛 캐시 자동 삭제)
 
 ## 빌드 방법 (Windows)
 필요: Node.js, Rust nightly (`rustup`, wasm32 타겟 + rust-src), wasm-pack

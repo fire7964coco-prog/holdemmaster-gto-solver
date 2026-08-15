@@ -53,6 +53,8 @@
       </div>
     </div>
 
+    <InstallBanner />
+
     <div
       v-show="store.navView === 'results'"
       class="overflow-y-auto"
@@ -67,6 +69,7 @@
 import { computed, defineComponent, ref } from "vue";
 import { useStore } from "../store";
 import { applySpotFromUrl } from "../spot-share";
+import { viewFromUrl } from "../pwa";
 import { bootstrapAccount } from "../account";
 
 import NavBar from "./NavBar.vue";
@@ -80,6 +83,7 @@ import BoardSelector from "./BoardSelector.vue";
 import TreeConfig from "./TreeConfig.vue";
 import RunSolver from "./RunSolver.vue";
 import ResultViewer from "./ResultViewer.vue";
+import InstallBanner from "./InstallBanner.vue";
 
 export default defineComponent({
   components: {
@@ -94,6 +98,7 @@ export default defineComponent({
     TreeConfig,
     RunSolver,
     ResultViewer,
+    InstallBanner,
   },
 
   setup() {
@@ -111,6 +116,14 @@ export default defineComponent({
       store.sideView = "run-solver";
       store.sharedSpotLoaded = true;
       history.replaceState(null, "", location.pathname);
+    } else {
+      // 홈 화면 아이콘·바로가기(?view=trainer 등)로 들어온 경우 그 화면부터 연다.
+      // 공유 링크가 우선이므로 없을 때만 본다.
+      const view = viewFromUrl();
+      if (view) {
+        store.sideView = view;
+        history.replaceState(null, "", location.pathname);
+      }
     }
 
     const clientHeight = ref(0);

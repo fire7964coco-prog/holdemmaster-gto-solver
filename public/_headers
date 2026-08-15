@@ -13,3 +13,6 @@
 
 /*.wasm
   Cache-Control: max-age=2592000, immutable
+
+/sw.js
+  Cache-Control: no-cache

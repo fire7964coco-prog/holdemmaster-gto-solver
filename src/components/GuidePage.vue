@@ -175,6 +175,41 @@
       </tr>
     </table>
 
+    <!-- 홈 화면 설치 · 오프라인 -->
+    <h3 class="guide-h">홈 화면에 설치하고 오프라인에서 공부하기</h3>
+    <p class="text-sm text-neutral-400 leading-relaxed">
+      이 솔버는 앱처럼 홈 화면에 설치할 수 있습니다(설치 파일 없음).
+      크롬·엣지는 주소창 오른쪽의 <b class="text-neutral-200">설치 아이콘</b>,
+      아이폰 사파리는 <b class="text-neutral-200">공유 → 홈 화면에 추가</b>입니다.
+      설치하면 교육 예제 13종과 트레이너 문제가 기기에 저장돼
+      <b class="text-neutral-200">인터넷이 없는 지하철에서도</b> 그대로 풀 수 있습니다.
+    </p>
+    <div
+      class="mt-2 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm"
+    >
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="font-semibold text-neutral-200">오프라인 학습 데이터</span>
+        <span v-if="pwa.offlineTotal && pwa.offlineHave >= pwa.offlineTotal" class="text-emerald-300">
+          저장 완료 — 인터넷 없이도 교육 예제·트레이너 사용 가능
+        </span>
+        <span v-else-if="pwa.offlineSaving" class="text-neutral-400">저장 중…</span>
+        <span v-else class="text-neutral-400">
+          저장 안 됨 ({{ pwa.offlineHave }}/{{ pwa.offlineTotal || 14 }})
+        </span>
+        <button
+          v-if="!pwa.offlineSaving && !(pwa.offlineTotal && pwa.offlineHave >= pwa.offlineTotal)"
+          class="button-base button-blue !px-2 !py-0.5 text-xs"
+          @click="saveOffline"
+        >
+          지금 저장 (약 2.3MB)
+        </button>
+      </div>
+      <div class="mt-1 text-xs text-neutral-500">
+        커스텀 스팟 «직접 계산»은 오프라인에서 한 번이라도 돌려본 뒤에만 됩니다 —
+        계산 엔진은 쓸 때 내려받기 때문입니다.
+      </div>
+    </div>
+
     <!-- 추천 공부법 -->
     <h3 class="guide-h">추천 공부법</h3>
     <ol class="guide-steps">
@@ -203,10 +238,14 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useStore } from "../store";
+import { pwa, saveOffline, checkOfflineStatus } from "../pwa";
 
 export default defineComponent({
   setup() {
     const copied = ref("");
+
+    // 사용법 화면을 열 때마다 실제 저장 상태를 서비스워커에 물어본다
+    checkOfflineStatus();
 
     // 교육 예제(BTN vs BB 싱글레이즈팟)와 동일한 100bb 표준 레인지 (presets.ts 참조)
     const exampleRanges = [
@@ -236,7 +275,7 @@ export default defineComponent({
       setTimeout(() => (copied.value = ""), 1500);
     };
 
-    return { store: useStore(), exampleRanges, copyRange, copied };
+    return { store: useStore(), exampleRanges, copyRange, copied, pwa, saveOffline };
   },
 });
 </script>
