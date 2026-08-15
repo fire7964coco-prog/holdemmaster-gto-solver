@@ -106,9 +106,9 @@
         </div>
 
         <div class="mt-6">
-          <div class="flex">
-            <span class="font-semibold">OOP 벳 사이즈</span>
-            <label class="inline-block ml-6">
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span class="font-semibold shrink-0">OOP 벳 사이즈</span>
+            <label class="inline-block shrink-0 ml-0 md:ml-2">
               <input
                 v-model="config.donkOption"
                 type="checkbox"
@@ -171,7 +171,7 @@
             </div>
           </div>
 
-          <div class="flex gap-5">
+          <div class="flex gap-5 bet-grid">
             <div>
               <div class="my-1 underline">플랍</div>
               <div class="my-1">
@@ -323,8 +323,8 @@
         </div>
 
         <div>
-          <div class="flex">
-            <div class="mt-6 font-semibold">IP 벳 사이즈</div>
+          <div class="flex flex-wrap items-center gap-x-4">
+            <div class="mt-6 font-semibold shrink-0">IP 벳 사이즈</div>
             <div class="flex flex-grow items-center justify-center gap-6">
               <button
                 class="mt-3 button-base button-blue button-arrow"
@@ -343,7 +343,7 @@
             </div>
           </div>
 
-          <div class="flex gap-5">
+          <div class="flex gap-5 bet-grid">
             <div>
               <div class="my-1 underline">플랍</div>
               <div class="my-1">
@@ -1118,6 +1118,47 @@ export default defineComponent({
 <style scoped>
 input {
   @apply disabled:cursor-not-allowed;
+}
+
+/*
+  벳 사이즈 입력: 데스크톱은 플랍·턴·리버 3단이지만, 390px에서는 한 칸이 110px로
+  눌려 입력칸이 손톱만해지고 «%»가 아래로 밀려 한 스트리트가 6줄을 먹었다.
+  모바일에서는 스트리트를 세로로 쌓고, 한 줄 안에 [스트리트] 벳 [__]% 레이즈 [__]% 를 넣는다.
+*/
+@media (max-width: 767px) {
+  .bet-grid {
+    display: block;
+  }
+  /* 스트리트 한 덩어리 */
+  .bet-grid > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    margin-top: 0.5rem;
+  }
+  /* 스트리트 이름 (플랍·턴·리버) */
+  .bet-grid > div > .underline {
+    width: 2.25rem;
+    flex: none;
+    margin: 0;
+  }
+  /* 벳·레이즈·덩크 한 칸 */
+  .bet-grid > div > .my-1:not(.underline) {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 1 1 8.5rem;
+    margin: 0;
+  }
+  .bet-grid > div > .my-1:not(.underline) > span {
+    width: auto;
+    flex: none;
+  }
+  .bet-grid > div > .my-1:not(.underline) > input {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 .button-arrow {

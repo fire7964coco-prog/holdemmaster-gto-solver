@@ -10,7 +10,7 @@
       '--width': width,
       '--font-size': fontSize,
       width: 'var(--width)',
-      'padding-top': 'calc(var(--width) * 1.4 - 2px)',
+      'padding-top': 'calc(var(--width) * ' + ratio + ' - 2px)',
     }"
   >
     <span
@@ -56,6 +56,12 @@ export default defineComponent({
     fontSize: {
       type: String,
       default: "1rem",
+    },
+    // 세로 비율. 모바일은 폭이 좁아 카드가 작아지므로 조금 길게 뽑아
+    // 손가락이 닿을 높이를 만든다
+    ratio: {
+      type: Number,
+      default: 1.4,
     },
   },
 

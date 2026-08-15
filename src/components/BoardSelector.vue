@@ -1,10 +1,17 @@
 <template>
-  <div class="overflow-x-auto max-w-full">
-    <div v-for="suit in 4" :key="suit" class="flex min-w-max">
+  <!--
+    모바일에서는 카드 폭을 화면에 맞춰 13열이 한 화면에 들어오게 한다.
+    고정 40px일 때는 판이 624px라 옆으로 스크롤해야 했다(아래는 400px가 비어 있는데도).
+  -->
+  <div class="max-w-full md:overflow-x-auto">
+    <div v-for="suit in 4" :key="suit" class="flex md:min-w-max">
       <BoardSelectorCard
         v-for="rank in 13"
         :key="rank"
-        class="m-1"
+        class="m-0.5 md:m-1"
+        :width="cardWidth"
+        :font-size="cardFontSize"
+        :ratio="cardRatio"
         :card-id="56 - 4 * rank - suit"
         :is-selected="config.board.includes(56 - 4 * rank - suit)"
         @click="toggleCard(56 - 4 * rank - suit)"
@@ -16,6 +23,7 @@
     <input
       v-model="boardText"
       type="text"
+      placeholder="예: AsKd7c"
       class="w-40 px-2 py-1 rounded-lg text-sm"
       @focus="($event.target as HTMLInputElement).select()"
       @change="onBoardTextChange"
@@ -40,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, onUnmounted, ref } from "vue";
 import { useConfigStore } from "../store";
 import { cardText, parseCardString } from "../utils";
 
@@ -54,6 +62,22 @@ export default defineComponent({
   setup() {
     const config = useConfigStore();
     const boardText = ref("");
+
+    // 좁은 화면이면 13열이 폭에 맞게 줄어든다 (데스크톱은 기존 40px 그대로)
+    const isNarrow = ref(false);
+    const updateNarrow = () => {
+      isNarrow.value = window.innerWidth < 768;
+    };
+    updateNarrow();
+    window.addEventListener("resize", updateNarrow);
+    onUnmounted(() => window.removeEventListener("resize", updateNarrow));
+
+    const cardWidth = computed(() =>
+      isNarrow.value ? "calc((100vw - 2rem) / 13 - 0.25rem)" : "40px"
+    );
+    const cardFontSize = computed(() => (isNarrow.value ? "0.6rem" : "1rem"));
+    // 폭이 좁아진 만큼 세로로 늘려 손가락이 닿는 높이를 확보한다
+    const cardRatio = computed(() => (isNarrow.value ? 1.9 : 1.4));
 
     const toggleCard = (cardId: number, updateText = true) => {
       if (config.board.includes(cardId)) {
@@ -115,6 +139,9 @@ export default defineComponent({
     return {
       config,
       boardText,
+      cardWidth,
+      cardFontSize,
+      cardRatio,
       toggleCard,
       onBoardTextChange,
       clearBoard,
