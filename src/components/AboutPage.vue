@@ -68,21 +68,23 @@
     </div>
 
     <!-- 특징 -->
-    <div
-      class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 mt-12 md:mt-16"
-    >
-      <div v-for="f in features" :key="f.title" class="pt-4 border-t border-white/10">
-        <div class="text-sm font-semibold text-white">{{ f.title }}</div>
-        <div class="mt-1 text-[0.8125rem] leading-relaxed text-neutral-500">
-          {{ f.desc }}
+    <!-- 특징: 헤어라인 나열 → 패널로 묶어 다른 화면(트레이너·사용법)과 결을 맞춤 -->
+    <div class="panel mt-10 md:mt-14">
+      <!-- 본문 폭이 48rem이라 4열은 «데스크톱 솔 / 버 수준»처럼 어색하게 끊긴다 -->
+      <div class="grid grid-cols-2 gap-x-8 gap-y-5">
+        <div v-for="f in features" :key="f.title">
+          <div class="text-sm font-semibold text-neutral-100">{{ f.title }}</div>
+          <div class="mt-1 text-[0.8125rem] leading-relaxed text-neutral-500">
+            {{ f.desc }}
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 시작 안내 -->
-    <div class="mt-12 md:mt-16 rounded-2xl bg-white/[0.04] border border-white/10 p-6">
-      <div class="text-sm font-semibold text-white">처음이라면</div>
-      <div class="mt-4 space-y-3">
+    <div class="panel mt-6">
+      <div class="section-title">처음이라면</div>
+      <div class="mt-3.5 space-y-3">
         <div v-for="(s, i) in steps" :key="i" class="flex items-baseline gap-3">
           <span
             class="shrink-0 w-5 text-right text-sm font-semibold text-yellow-300/90 tabular-nums"
@@ -92,7 +94,7 @@
         </div>
       </div>
       <!-- 본체 랜딩(정보형 콘텐츠)으로 연결 — 앱은 도구, 랜딩은 설명 역할 분담 -->
-      <div class="mt-5 pt-4 border-t border-white/10 text-[0.8125rem] text-neutral-500">
+      <div class="mt-5 pt-4 border-t border-neutral-700 text-[0.8125rem] text-neutral-500">
         GTO 솔버가 무엇인지, 결과를 어떻게 읽는지 글로 먼저 보고 싶다면
         <a
           :href="landingUrl"

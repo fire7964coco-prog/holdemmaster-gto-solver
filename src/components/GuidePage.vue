@@ -2,7 +2,7 @@
   <div class="max-w-3xl pb-8">
     <!-- 빠른 시작 -->
     <div
-      class="px-4 py-3 rounded-lg bg-emerald-950 border border-emerald-700"
+      class="px-4 py-3.5 rounded-xl bg-emerald-950 border border-emerald-800"
     >
       <div class="font-bold text-emerald-300">
         1분 시작 — 처음이라면 이것부터
@@ -401,17 +401,28 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/*
+ * 톤 정리 (2026-08-15) — 트레이너에서 확정된 원칙을 사용법에도 적용.
+ * 제목 색을 파랑에서 흰색으로 바꾸고 강조는 왼쪽 막대에만 남긴다.
+ * 파란 글씨가 페이지마다 반복되면 «링크인가?» 싶어 위계가 흐려진다.
+ */
 .guide-h {
-  @apply mt-6 mb-2 text-base font-bold text-blue-300 border-l-4 border-blue-600 pl-2.5;
+  @apply mt-7 mb-2.5 text-base font-bold text-neutral-100;
+  @apply border-l-4 border-blue-600 pl-2.5;
 }
+/* 표를 «카드»로 만들어 문단과 구분한다 (전부 같은 회색 평면이 문제였다) */
 .guide-table {
-  @apply w-full text-sm;
+  @apply w-full text-sm overflow-hidden rounded-xl border border-neutral-700;
 }
 .guide-table td {
-  @apply border border-neutral-700 px-3 py-1.5 align-top;
+  @apply border-t border-neutral-700 px-3 py-2 align-top;
+}
+.guide-table tr:first-child td {
+  @apply border-t-0;
 }
 .guide-table .term {
-  @apply font-semibold text-neutral-200 whitespace-nowrap bg-neutral-800;
+  @apply font-semibold text-neutral-200 whitespace-nowrap bg-neutral-800/70;
+  @apply border-r border-neutral-700;
 }
 .guide-steps {
   @apply ml-5 list-none space-y-2.5 text-sm;

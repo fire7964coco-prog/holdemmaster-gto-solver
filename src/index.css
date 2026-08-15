@@ -33,6 +33,32 @@ option {
   @apply bg-neutral-800 text-neutral-100;
 }
 
+/*
+ * 화면 공통 톤 (2026-08-14 트레이너에서 확정, 2026-08-15 전역 승격).
+ * 원칙 ① 통계는 큰 카드 대신 칩으로 압축해 본문이 화면 가운데 오게
+ *      ② 전부 같은 회색 카드를 피하고 위계를 만들 것
+ *      ③ 핵심 대상은 «안쪽 패널»로 한 번 더 감싸 시선을 모을 것
+ */
+.panel {
+  @apply rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5;
+}
+/** 패널 안에서 한 단계 더 들어간 영역 — 보드·핸드처럼 시선을 모을 대상 */
+.panel-inner {
+  @apply rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2.5;
+}
+/** 섹션 제목 — 왼쪽 파란 막대 (사이드바·결과 화면과 같은 강조색) */
+.section-title {
+  @apply flex items-center gap-2 text-base font-bold text-neutral-100;
+  @apply border-l-4 border-blue-600 pl-2.5;
+}
+.stat-chip {
+  @apply inline-flex items-baseline gap-1 rounded-lg border border-neutral-700 bg-neutral-800;
+  @apply px-2.5 py-1 text-xs text-neutral-500;
+}
+.stat-chip b {
+  @apply text-sm font-semibold tabular-nums text-neutral-200;
+}
+
 .button-base {
   @apply rounded-lg shadow px-3.5 py-1.5 text-white text-sm font-semibold;
   @apply transition-colors disabled:opacity-40;

@@ -734,13 +734,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.stat-chip {
-  @apply inline-flex items-baseline gap-1 rounded-lg border border-neutral-700 bg-neutral-800;
-  @apply px-2.5 py-1 text-xs text-neutral-500;
-}
-.stat-chip b {
-  @apply text-sm font-semibold tabular-nums text-neutral-200;
-}
+/* .stat-chip은 index.css로 옮겼다 — 다른 화면도 같은 칩을 쓴다 */
 .hand-tag {
   @apply rounded px-2 py-0.5 text-xs font-semibold;
 }

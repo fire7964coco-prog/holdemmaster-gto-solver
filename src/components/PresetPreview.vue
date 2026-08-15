@@ -15,9 +15,12 @@
           {{ c.rank }}{{ c.suit }}
         </span>
       </span>
-      <span class="text-sm text-neutral-400">
-        팟 {{ preset.startingPot / preset.unitScale }}bb · 스택
-        {{ preset.effectiveStack / preset.unitScale }}bb
+      <!-- 스팟 정보는 칩으로 — 트레이너와 같은 눈금을 쓴다 -->
+      <span class="stat-chip">
+        팟 <b>{{ preset.startingPot / preset.unitScale }}</b>bb
+      </span>
+      <span class="stat-chip">
+        스택 <b>{{ preset.effectiveStack / preset.unitScale }}</b>bb
       </span>
     </div>
 
