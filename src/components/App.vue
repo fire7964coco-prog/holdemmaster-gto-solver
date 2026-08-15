@@ -55,6 +55,7 @@
 
     <InstallBanner />
     <LaunchScreen />
+    <ErrorToast />
 
     <div
       v-show="store.navView === 'results'"
@@ -86,6 +87,7 @@ import RunSolver from "./RunSolver.vue";
 import ResultViewer from "./ResultViewer.vue";
 import InstallBanner from "./InstallBanner.vue";
 import LaunchScreen from "./LaunchScreen.vue";
+import ErrorToast from "./ErrorToast.vue";
 
 export default defineComponent({
   components: {
@@ -102,6 +104,7 @@ export default defineComponent({
     ResultViewer,
     InstallBanner,
     LaunchScreen,
+    ErrorToast,
   },
 
   setup() {

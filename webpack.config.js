@@ -163,6 +163,10 @@ module.exports = {
     new webpack.DefinePlugin({
       __SUPABASE_URL__: JSON.stringify(env.SUPABASE_URL ?? ""),
       __SUPABASE_ANON_KEY__: JSON.stringify(env.SUPABASE_ANON_KEY ?? ""),
+      // 오류 신고에 찍히는 빌드 번호 — 어느 배포에서 난 문제인지 구분한다
+      __BUILD_ID__: JSON.stringify(
+        new Date().toISOString().slice(0, 16).replace("T", " ")
+      ),
     }),
     new CopyWebpackPlugin({ patterns: [{ from: "public" }] }),
     new HTMLWebpackPlugin({ template: "index.html" }),

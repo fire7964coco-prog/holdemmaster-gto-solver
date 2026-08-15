@@ -296,6 +296,40 @@
       <tr><td class="term">메모리 한도 초과</td><td>16비트 정수 모드 선택, 또는 벳 사이즈 수 줄이기</td></tr>
       <tr><td class="term">매트릭스가 회색뿐</td><td>상대 차례의 스팟을 보는 중 — 상단 스트립에서 다른 장면 클릭</td></tr>
     </table>
+
+    <!-- 오류 신고 — 지금은 유저 화면의 문제를 알 수 있는 유일한 통로다 -->
+    <h3 class="guide-h">고쳐야 할 문제를 발견하셨다면</h3>
+    <p class="text-sm text-neutral-400 leading-relaxed">
+      화면이 깨지거나 계산이 멈추면 이 기기에 오류 내용이 자동으로 기록됩니다.
+      <b class="text-neutral-200">기록은 기기 밖으로 나가지 않습니다</b> — 아래에서 복사해
+      커뮤니티에 올려주시면 그때 저희가 보게 됩니다. 레인지·학습 기록 같은 내용은 담기지
+      않고, 오류 메시지와 브라우저 종류만 들어갑니다.
+    </p>
+    <div class="mt-2 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm">
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="font-semibold text-neutral-200">기록된 오류</span>
+        <span :class="errorState.count ? 'text-orange-300' : 'text-neutral-500'">
+          {{ errorState.count }}건
+        </span>
+        <button
+          v-if="errorState.count"
+          class="button-base button-blue !px-2 !py-0.5 text-xs"
+          @click="copyErrors"
+        >
+          {{ errorsCopied ? "복사됨" : "오류 내용 복사" }}
+        </button>
+        <button
+          v-if="errorState.count"
+          class="button-base !px-2 !py-0.5 text-xs"
+          @click="clearErrors"
+        >
+          기록 지우기
+        </button>
+      </div>
+      <div v-if="!errorState.count" class="mt-1 text-xs text-neutral-500">
+        아직 기록된 오류가 없습니다.
+      </div>
+    </div>
   </div>
 </template>
 
@@ -303,6 +337,7 @@
 import { defineComponent, ref } from "vue";
 import { useStore } from "../store";
 import { pwa, saveOffline, checkOfflineStatus } from "../pwa";
+import { errorState, errorReportText, clearErrors } from "../errors";
 
 export default defineComponent({
   setup() {
@@ -310,6 +345,16 @@ export default defineComponent({
 
     // 사용법 화면을 열 때마다 실제 저장 상태를 서비스워커에 물어본다
     checkOfflineStatus();
+
+    const errorsCopied = ref(false);
+    const copyErrors = async () => {
+      try {
+        await navigator.clipboard.writeText(errorReportText());
+        errorsCopied.value = true;
+      } catch {
+        window.prompt("아래 내용을 복사해 주세요", errorReportText());
+      }
+    };
 
     // 교육 예제(BTN vs BB 싱글레이즈팟)와 동일한 100bb 표준 레인지 (presets.ts 참조)
     const exampleRanges = [
@@ -339,7 +384,18 @@ export default defineComponent({
       setTimeout(() => (copied.value = ""), 1500);
     };
 
-    return { store: useStore(), exampleRanges, copyRange, copied, pwa, saveOffline };
+    return {
+      store: useStore(),
+      exampleRanges,
+      copyRange,
+      copied,
+      pwa,
+      saveOffline,
+      errorState,
+      errorsCopied,
+      copyErrors,
+      clearErrors,
+    };
   },
 });
 </script>
