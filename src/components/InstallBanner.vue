@@ -55,6 +55,11 @@
         <p v-if="pwa.isSamsung" class="mt-1.5 text-xs text-neutral-500 leading-relaxed">
           여기서 그대로 설치하려면 경고창의 [세부정보 더보기] → [무시하고 설치]를 누르면 됩니다.
         </p>
+        <!-- 설치를 꺼리는 가장 큰 이유는 «뭐가 깔리는 거지?»다 -->
+        <p class="mt-1.5 text-xs text-neutral-500 leading-relaxed">
+          프로그램이 깔리는 게 아니라 브라우저 바로가기입니다. 권한을 요구하지 않고,
+          지울 때도 앱처럼 길게 눌러 삭제하면 끝입니다.
+        </p>
       </div>
 
       <button

@@ -60,6 +60,10 @@
       </div>
       <p v-if="canShowInstallButton()" class="mt-2.5 text-xs text-neutral-500">
         설치하면 교육 예제와 트레이너가 기기에 저장돼 인터넷이 끊겨도 문제를 풀 수 있습니다.
+        프로그램이 아니라 브라우저 바로가기라 권한을 요구하지 않습니다 —
+        <button class="underline hover:text-neutral-300" @click="store.sideView = 'guide'">
+          안전한가요?
+        </button>
       </p>
     </div>
 

@@ -66,7 +66,8 @@
           >
             {{ row.label }}
             <template v-if="row.count">
-              평균 {{ row.averageLossBb.toFixed(3) }}bb
+              평균 팟의 {{ row.averageLossPct.toFixed(2) }}%
+              <span class="text-neutral-600">({{ row.averageLossBb.toFixed(3) }}bb)</span>
               <span class="text-neutral-600">({{ row.count }}문제)</span>
             </template>
             <span v-else class="text-neutral-600">미풀이</span>
@@ -250,17 +251,17 @@
           <div
             :class="
               'text-lg font-bold ' +
-              (evaluation.evLossBb <= 0.01
+              (evaluation.evLossBb <= limits.bestBb
                 ? 'text-emerald-300'
-                : evaluation.evLossBb <= 0.05
+                : evaluation.evLossBb <= limits.goodBb
                 ? 'text-blue-300'
                 : 'text-orange-300')
             "
           >
             {{
-              evaluation.evLossBb <= 0.01
+              evaluation.evLossBb <= limits.bestBb
                 ? "최적 선택"
-                : evaluation.evLossBb <= 0.05
+                : evaluation.evLossBb <= limits.goodBb
                 ? "허용 가능한 선택"
                 : "다시 볼 스팟"
             }}
@@ -330,8 +331,12 @@
           </p>
           <p class="mt-3 text-xs leading-relaxed text-neutral-600">
             GTO는 같은 핸드도 액션을 섞습니다. 빈도가 낮은 선택이 곧 오답은
-            아니며, 기준은 EV 손실입니다 —
-            0.01bb 이하 최적 · 0.05bb 이하 허용 · 그 이상 다시 볼 스팟.
+            아니며, 기준은 EV 손실입니다 — <b class="text-neutral-400">팟 대비</b>
+            0.35% 이하 최적 · 1% 이하 허용 · 그 이상 다시 볼 스팟.
+            <template v-if="question">
+              이 스팟(팟 {{ limits.potBb.toFixed(1) }}bb)에서는
+              {{ limits.bestBb.toFixed(2) }}bb · {{ limits.goodBb.toFixed(2) }}bb입니다.
+            </template>
           </p>
         </template>
       </div>
@@ -380,7 +385,8 @@ import { cardText, formatBb } from "../utils";
 import {
   evaluateTrainerAction,
   makeTrainerQuestion,
-  GOOD_LOSS_BB,
+  isAcceptable,
+  lossLimits,
   TrainerBank,
   TrainerCategory,
   TrainerEvaluation,
@@ -423,19 +429,22 @@ export default defineComponent({
     );
     const excellentRate = computed(() =>
       attempts.value.length
-        ? (attempts.value.filter((item) => item.evLossBb <= GOOD_LOSS_BB)
-            .length *
-            100) /
+        ? (attempts.value.filter(isAcceptable).length * 100) /
           attempts.value.length
         : 0
     );
+    // 판정 경계는 스팟마다 다르다 (팟이 크면 허용 폭도 커진다)
+    const limits = computed(() =>
+      lossLimits(question.value?.presetId ?? "srp-dry-ace")
+    );
+
     // attempts는 최신순 — 앞에서부터 세면 현재 연속 기록이 된다
     const streak = computed(() => trainerStreak(attempts.value));
     const bestStreak = computed(() => {
       let best = 0;
       let current = 0;
       for (const attempt of attempts.value) {
-        if (attempt.evLossBb <= GOOD_LOSS_BB) {
+        if (isAcceptable(attempt)) {
           current++;
           best = Math.max(best, current);
         } else {
@@ -690,6 +699,7 @@ export default defineComponent({
       totalLoss,
       excellentRate,
       reviewAttempts,
+      limits,
       streak,
       bestStreak,
       weakness,

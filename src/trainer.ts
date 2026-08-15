@@ -223,16 +223,55 @@ export const evaluateTrainerAction = (
   };
 };
 
-/** EV 손실 판정 경계 (사용법 페이지에도 같은 값이 적혀 있음) */
-export const BEST_LOSS_BB = 0.01;
-export const GOOD_LOSS_BB = 0.05;
+/*
+ * EV 손실 판정 경계 — 2026-08-15에 «절대 bb»에서 «팟 대비»로 바꿨다.
+ *
+ * 왜: 같은 0.05bb라도 팟 5.5bb인 싱글레이즈팟에서는 팟의 0.9%지만
+ *     팟 22.5bb인 3벳팟에서는 0.22%다. 절대값으로 재면 큰 팟일수록 4배 가혹해져,
+ *     3벳팟이 실제보다 훨씬 못하는 것처럼 보였다.
+ *
+ * 하한을 둔 이유: 계산을 목표 오차 0.5%까지만 수렴시키므로 EV에 잔여 노이즈가 있다
+ *     (교차검증 실측 최대 격차 0.014bb). 경계가 그보다 아래로 내려가면 판정이
+ *     노이즈로 뒤집힌다 — 그래서 «최적» 하한을 0.02bb로 잡았다.
+ */
+export const BEST_LOSS_RATIO = 0.0035; // 팟의 0.35%
+export const GOOD_LOSS_RATIO = 0.01; // 팟의 1%
+export const BEST_LOSS_FLOOR_BB = 0.02;
+export const GOOD_LOSS_FLOOR_BB = 0.05;
 const MIN_WEAKNESS_SAMPLES = 3;
 
-/** 최근 풀이부터 거슬러 올라가며 "허용 가능(0.05bb 이하)"이 몇 번 이어졌는지. */
-export const trainerStreak = (attempts: { evLossBb: number }[]) => {
+/** 프리셋의 시작 팟(bb). 기록에는 presetId만 있으므로 여기서 되찾는다 */
+export const presetPotBb = (presetId: string) => {
+  const preset = PRESETS.find((item) => item.id === presetId);
+  if (!preset) return 5.5;
+  return preset.startingPot / (preset.unitScale || 1);
+};
+
+/** 그 스팟에서 «최적»·«허용»으로 볼 EV 손실 경계(bb) */
+export const lossLimits = (presetId: string) => {
+  const pot = presetPotBb(presetId);
+  return {
+    potBb: pot,
+    bestBb: Math.max(pot * BEST_LOSS_RATIO, BEST_LOSS_FLOOR_BB),
+    goodBb: Math.max(pot * GOOD_LOSS_RATIO, GOOD_LOSS_FLOOR_BB),
+  };
+};
+
+/** 이 풀이가 «허용 가능» 안에 드는가 (정답 판정의 단일 기준) */
+export const isAcceptable = (attempt: { presetId: string; evLossBb: number }) =>
+  attempt.evLossBb <= lossLimits(attempt.presetId).goodBb;
+
+/** EV 손실을 팟 대비 %로 — 스팟 크기가 달라도 비교할 수 있는 눈금 */
+export const lossPercentOfPot = (attempt: { presetId: string; evLossBb: number }) =>
+  (attempt.evLossBb / presetPotBb(attempt.presetId)) * 100;
+
+/** 최근 풀이부터 거슬러 올라가며 "허용 가능"이 몇 번 이어졌는지. */
+export const trainerStreak = (
+  attempts: { presetId: string; evLossBb: number }[]
+) => {
   let streak = 0;
   for (const attempt of attempts) {
-    if (attempt.evLossBb > GOOD_LOSS_BB) break;
+    if (!isAcceptable(attempt)) break;
     streak++;
   }
   return streak;
@@ -243,6 +282,8 @@ export type TrainerWeakness = {
   label: string;
   count: number;
   averageLossBb: number;
+  /** 팟 대비 평균 손실(%) — 팟 크기가 다른 카테고리를 견주는 기준 */
+  averageLossPct: number;
 };
 
 /**
@@ -250,24 +291,32 @@ export type TrainerWeakness = {
  * 약점 판정에서 제외한다(목록에는 표시하되 "표본 부족"으로 둠).
  */
 export const trainerWeakness = (
-  attempts: { category: Exclude<TrainerCategory, "all">; evLossBb: number }[]
+  attempts: {
+    category: Exclude<TrainerCategory, "all">;
+    presetId: string;
+    evLossBb: number;
+  }[]
 ): { rows: TrainerWeakness[]; weakest: TrainerWeakness | null } => {
   const categories: Exclude<TrainerCategory, "all">[] = ["srp", "3bp", "blind"];
   const rows = categories.map((category) => {
     const target = attempts.filter((item) => item.category === category);
     const sum = target.reduce((total, item) => total + item.evLossBb, 0);
+    // 카테고리끼리는 팟 크기가 달라서 절대 bb로 견주면 3벳팟이 부당하게 나쁘게 나온다
+    const sumPct = target.reduce((total, item) => total + lossPercentOfPot(item), 0);
     return {
       category,
       label: trainerCategoryLabel(category),
       count: target.length,
       averageLossBb: target.length ? sum / target.length : 0,
+      averageLossPct: target.length ? sumPct / target.length : 0,
     };
   });
   const eligible = rows.filter((row) => row.count >= MIN_WEAKNESS_SAMPLES);
+  // 순위도 팟 대비로 매긴다 (절대 bb로 매기면 팟이 큰 3벳팟이 항상 1등이 된다)
   const weakest = eligible.length
-    ? eligible.reduce((a, b) => (b.averageLossBb > a.averageLossBb ? b : a))
+    ? eligible.reduce((a, b) => (b.averageLossPct > a.averageLossPct ? b : a))
     : null;
-  return { rows, weakest: weakest && weakest.averageLossBb > 0 ? weakest : null };
+  return { rows, weakest: weakest && weakest.averageLossPct > 0 ? weakest : null };
 };
 
 export const validateTrainerBank = (bank: TrainerBank) => {
