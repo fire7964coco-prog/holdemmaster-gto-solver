@@ -54,6 +54,7 @@
     </div>
 
     <InstallBanner />
+    <LaunchScreen />
 
     <div
       v-show="store.navView === 'results'"
@@ -84,6 +85,7 @@ import TreeConfig from "./TreeConfig.vue";
 import RunSolver from "./RunSolver.vue";
 import ResultViewer from "./ResultViewer.vue";
 import InstallBanner from "./InstallBanner.vue";
+import LaunchScreen from "./LaunchScreen.vue";
 
 export default defineComponent({
   components: {
@@ -99,6 +101,7 @@ export default defineComponent({
     RunSolver,
     ResultViewer,
     InstallBanner,
+    LaunchScreen,
   },
 
   setup() {

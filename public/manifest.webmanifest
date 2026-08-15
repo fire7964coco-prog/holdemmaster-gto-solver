@@ -9,7 +9,7 @@
   "id": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#171717",
+  "background_color": "#DFAC2A",
   "theme_color": "#262626",
   "categories": ["education", "games"],
   "icons": [

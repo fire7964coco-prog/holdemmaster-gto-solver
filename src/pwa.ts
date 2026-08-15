@@ -36,6 +36,8 @@ export const pwa = reactive({
   isSamsung: false,
   /** 배너 노출 여부 */
   showBanner: false,
+  /** 실행 인사 화면(설치해서 연 경우에만) 표시 여부 */
+  showLaunch: false,
   /** 오프라인 데이터 저장 상태 */
   offlineSaving: false,
   offlineHave: 0,
@@ -135,6 +137,24 @@ export const openInChrome = () => {
     `S.browser_fallback_url=${fallback};end`;
 };
 
+/**
+ * 소개 화면의 [홈 화면에 설치] 버튼.
+ * 크롬 계열이면 바로 설치창을 띄우고, iOS·삼성 인터넷처럼 그럴 수 없는 환경에서는
+ * 안내가 들어 있는 배너를 대신 연다(빈손으로 아무 일도 안 일어나면 안 된다).
+ */
+export const requestInstall = async () => {
+  if (deferredPrompt) {
+    await promptInstall();
+    return;
+  }
+  writeValue(KEY_DISMISSED_AT, "0");
+  pwa.showBanner = true;
+};
+
+/** 소개 화면에 설치 버튼을 보여줄 상황인가 */
+export const canShowInstallButton = () =>
+  !pwa.standalone && (pwa.canInstall || pwa.isIOS || pwa.isSamsung);
+
 /** 배너의 [나중에] */
 export const dismissBanner = () => {
   writeValue(KEY_DISMISSED_AT, String(Date.now()));
@@ -183,10 +203,22 @@ export const viewFromUrl = (): SideView | null => {
 
 /* ── 초기화 ────────────────────────────────────────────── */
 
+/** 인사 화면 닫기 (탭하면 즉시) */
+export const closeLaunch = () => {
+  pwa.showLaunch = false;
+};
+
 export const setupPwa = () => {
   pwa.standalone = detectStandalone();
   pwa.isIOS = detectIOS();
   pwa.isSamsung = detectSamsungInternet();
+
+  // 홈 화면 아이콘으로 연 경우에만 인사 화면을 띄운다.
+  // 검색으로 들어온 웹 방문자에게는 지연일 뿐이라 보여주지 않는다.
+  if (pwa.standalone) {
+    pwa.showLaunch = true;
+    setTimeout(closeLaunch, 1400);
+  }
   refreshBanner();
 
   window.addEventListener("beforeinstallprompt", (event) => {

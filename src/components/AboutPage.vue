@@ -19,7 +19,8 @@
         브라우저에서 바로.
       </h1>
       <p class="mt-4 text-base md:text-lg text-neutral-400 leading-relaxed">
-        설치도, 결제도 없습니다. 레인지와 보드를 넣으면<br
+        <!-- 아래에 «홈 화면에 설치» 버튼이 붙으므로 «설치 파일»이라고 못박는다 -->
+        설치 파일도, 결제도 없습니다. 레인지와 보드를 넣으면<br
           class="hidden md:block"
         />
         상황별 최적 전략을 내 컴퓨터에서 직접 계산합니다.
@@ -44,7 +45,22 @@
         >
           사용법 보기
         </button>
+        <!-- 설치 가능한 환경에서만 노출 (이미 설치해서 실행 중이면 숨김) -->
+        <button
+          v-if="canShowInstallButton()"
+          :class="
+            'px-5 py-2.5 rounded-full text-sm font-semibold transition ' +
+            'text-[#04160C] bg-[#DFAC2A] hover:bg-[#e8bb4a] flex items-center gap-2'
+          "
+          @click="requestInstall"
+        >
+          <span aria-hidden="true">&#9824;</span>
+          홈 화면에 설치
+        </button>
       </div>
+      <p v-if="canShowInstallButton()" class="mt-2.5 text-xs text-neutral-500">
+        설치하면 교육 예제와 트레이너가 기기에 저장돼 인터넷이 끊겨도 문제를 풀 수 있습니다.
+      </p>
     </div>
 
     <!-- 특징 -->
@@ -119,6 +135,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { requestInstall, canShowInstallButton } from "../pwa";
 import { useStore } from "../store";
 import { mainSiteUrl } from "../outbound";
 
@@ -126,7 +143,8 @@ export default defineComponent({
   setup() {
     const features = [
       { title: "무료", desc: "횟수 제한 없이 모든 기능을 그대로" },
-      { title: "설치 없음", desc: "웹 브라우저만 있으면 어디서든" },
+      // 「설치 없음」은 홈 화면 설치를 넣은 뒤로 앞뒤가 안 맞아 뺐다 (2026-08-15)
+      { title: "오프라인 학습", desc: "홈 화면에 설치하면 인터넷 없이도" },
       { title: "빠른 계산", desc: "멀티스레드로 데스크톱 솔버 수준" },
       { title: "GTO 트레이너", desc: "문제를 풀고 EV 손실로 채점받기" },
     ];
@@ -142,6 +160,8 @@ export default defineComponent({
       store: useStore(),
       features,
       steps,
+      requestInstall,
+      canShowInstallButton,
       landingUrl: mainSiteUrl("/solver", "about-landing"),
       creditUrl: mainSiteUrl("", "about-credit"),
     };

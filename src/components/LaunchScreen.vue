@@ -1,0 +1,74 @@
+<template>
+  <!--
+    실행 인사 화면 — 홈 화면 아이콘으로 열었을 때만 잠깐 뜬다.
+    브라우저가 manifest로 만드는 기본 스플래시(같은 앰버 배경)에 곧바로 이어지도록
+    배경색을 맞춰서, 두 화면이 하나처럼 보이게 했다.
+    검색으로 들어온 웹 방문자에게는 지연일 뿐이라 띄우지 않는다.
+  -->
+  <Transition name="launch">
+    <div
+      v-if="pwa.showLaunch"
+      class="launch-screen"
+      role="presentation"
+      @click="closeLaunch"
+    >
+      <div class="px-8 pt-24 text-left w-full max-w-md mx-auto">
+        <div class="text-3xl font-bold text-[#04160C]/70 leading-tight">안녕하세요</div>
+        <div class="mt-1 text-[2rem] md:text-4xl font-extrabold text-[#04160C] leading-tight">
+          홀덤마스터<br />GTO 솔버입니다.
+        </div>
+      </div>
+
+      <div class="flex-grow flex items-center justify-center">
+        <!-- 아이콘 판(앰버)이 배경과 겹치므로 스페이드만 그린다 -->
+        <svg
+          viewBox="0 0 180 180"
+          class="w-28 h-28"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M90 22 C 90 22, 36 56, 36 88 C 36 112, 60 122, 90 110
+               C 77 124, 74 142, 70 154 L110 154 C 106 142, 103 124, 90 110
+               C 120 122, 144 112, 144 88 C 144 56, 90 22, 90 22 Z"
+            fill="#04160C"
+          />
+        </svg>
+      </div>
+
+      <div class="pb-14 text-center text-sm font-semibold text-[#04160C]/60">
+        무료 GTO 솔버 · 오프라인 학습
+      </div>
+    </div>
+  </Transition>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import { pwa, closeLaunch } from "../pwa";
+
+export default defineComponent({
+  setup() {
+    return { pwa, closeLaunch };
+  },
+});
+</script>
+
+<style scoped>
+.launch-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  /* manifest의 background_color와 같은 값 — 기본 스플래시와 이어 붙이기 위함 */
+  background-color: #dfac2a;
+}
+
+.launch-leave-active {
+  transition: opacity 0.35s ease;
+}
+.launch-leave-to {
+  opacity: 0;
+}
+</style>
