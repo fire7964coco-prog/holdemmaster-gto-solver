@@ -339,9 +339,23 @@
             <div class="mt-1 text-xs text-neutral-400 leading-relaxed">
               오늘은 모두 같은 문제를 풉니다. 결과를 올리면 다른 사람 선택과 비교할 수 있습니다.
             </div>
-            <button class="button-base button-blue !px-2.5 !py-1 text-xs mt-2" @click="copyDaily">
-              {{ dailyCopied ? "복사됨 — 커뮤니티에 붙여넣기" : "결과 문구 복사" }}
-            </button>
+            <div class="mt-2 flex flex-wrap items-center gap-2">
+              <button class="button-base button-blue !px-2.5 !py-1 text-xs" @click="copyDaily">
+                {{ dailyCopied ? "복사 완료" : "결과 문구 복사" }}
+              </button>
+              <!-- 복사만 시키고 갈 곳을 안 주면 아무도 안 올린다 -->
+              <a
+                :href="communityUrl"
+                target="_blank"
+                rel="noopener"
+                class="button-base bg-neutral-700 hover:bg-neutral-600 !px-2.5 !py-1 text-xs"
+              >
+                커뮤니티 열기 →
+              </a>
+            </div>
+            <div v-if="dailyCopied" class="mt-1.5 text-xs text-neutral-500 leading-relaxed">
+              커뮤니티에서 <b class="text-neutral-300">[✏️ 글 쓰기]</b>를 누르고 붙여넣으면 됩니다.
+            </div>
           </div>
 
           <div class="mt-5 flex flex-wrap items-center gap-3">
@@ -439,7 +453,7 @@ import {
   isClientLoaded,
 } from "../account";
 import { ARTICLE_URLS, PRESETS } from "../presets";
-import { trackOutbound } from "../outbound";
+import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
 import { cardText, formatBb } from "../utils";
 import {
@@ -791,6 +805,7 @@ export default defineComponent({
       reviewAttempts,
       limits,
       dailyState,
+      communityUrl: mainSiteUrl("/community", "daily-share"),
       dailyMode,
       dailyCopied,
       toggleDaily,

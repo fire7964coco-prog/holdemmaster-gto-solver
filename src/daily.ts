@@ -143,6 +143,7 @@ export const dailyShareText = (verdict: string) => {
     dailyState.streak > 1 ? `${dailyState.streak}일 연속 풀이 중` : "",
     "",
     "같은 문제 풀어보기 → https://solver.holdemmaster.com/?view=trainer",
+    "(홀덤마스터 GTO 솔버 · 매일 1문제)",
   ]
     .filter(Boolean)
     .join("\n");

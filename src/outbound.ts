@@ -19,7 +19,8 @@ export type OutboundPlacement =
   | "about-landing" // 소개 화면의 솔버 랜딩 안내
   | "preset-card" // 교육 예제 목록 카드의 해설 보기
   | "preset-preview" // 미리보기 화면의 해설 읽기
-  | "trainer-feedback"; // 트레이너 채점 후 해설 읽기
+  | "trainer-feedback" // 트레이너 채점 후 해설 읽기
+  | "daily-share"; // 오늘의 문제 결과를 커뮤니티에 올리러 갈 때
 
 const CAMPAIGN: Record<OutboundPlacement, string> = {
   navbar: "community",
@@ -28,6 +29,7 @@ const CAMPAIGN: Record<OutboundPlacement, string> = {
   "preset-card": "article",
   "preset-preview": "article",
   "trainer-feedback": "article",
+  "daily-share": "community",
 };
 
 /**
