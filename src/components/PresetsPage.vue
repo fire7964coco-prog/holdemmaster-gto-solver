@@ -34,18 +34,24 @@
         :key="p.id"
         class="mt-2 px-4 py-3 rounded-lg bg-neutral-800 border border-neutral-700"
       >
-        <div class="flex items-center gap-3">
-          <span class="font-semibold">{{ p.title }}</span>
-          <span class="font-bold tracking-wide">
-            <span
-              v-for="(c, i) in boardCards(p.board)"
-              :key="i"
-              :class="'mr-0.5 ' + c.colorClass"
-            >
-              {{ c.rank }}{{ c.suit }}
+        <!--
+          모바일에서는 세로로 쌓는다. 버튼 3개가 shrink-0이라 좁은 화면에서
+          제목이 최소 폭까지 눌려 «드/라/이/A/하/이/보/드»처럼 한 글자씩 세로로 깨졌다.
+        -->
+        <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="font-semibold">{{ p.title }}</span>
+            <span class="font-bold tracking-wide shrink-0">
+              <span
+                v-for="(c, i) in boardCards(p.board)"
+                :key="i"
+                :class="'mr-0.5 ' + c.colorClass"
+              >
+                {{ c.rank }}{{ c.suit }}
+              </span>
             </span>
-          </span>
-          <span class="ml-auto flex items-center gap-1.5 shrink-0">
+          </div>
+          <span class="md:ml-auto flex items-center gap-1.5 shrink-0">
             <a
               v-if="articleUrl(p)"
               :href="articleUrl(p)"

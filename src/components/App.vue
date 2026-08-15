@@ -15,7 +15,7 @@
         <div class="flex">
           <div
             :class="
-              'mb-5 pl-2 pr-3 pb-0.5 text-lg font-bold border-l-8 border-b-2 ' +
+              'mb-3 md:mb-5 pl-2 pr-3 pb-0.5 text-base md:text-lg font-bold border-l-8 border-b-2 ' +
               'border-blue-600 rounded rounded-br-none'
             "
           >

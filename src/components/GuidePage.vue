@@ -9,7 +9,8 @@
       </div>
       <ol class="mt-1.5 ml-5 list-decimal space-y-1 text-sm">
         <li>
-          왼쪽에서
+          <span class="hidden md:inline">왼쪽에서</span>
+          <span class="md:hidden">위쪽 탭에서</span>
           <button
             class="link-like"
             @click="store.sideView = 'presets'"
@@ -49,7 +50,7 @@
     </table>
 
     <!-- 커스텀 계산 순서 -->
-    <h3 class="guide-h">커스텀 스팟 계산 — 사이드바 번호 ①→⑤ 순서 그대로</h3>
+    <h3 class="guide-h">커스텀 스팟 계산 — <span class="hidden md:inline">사이드바</span><span class="md:hidden">위쪽 탭</span> 번호 ①→⑤ 순서 그대로</h3>
     <ol class="guide-steps">
       <li>
         <b>① OOP 레인지 / ② IP 레인지</b> — 13×13 표를 클릭·드래그로

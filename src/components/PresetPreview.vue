@@ -53,13 +53,20 @@
 
     <template v-else>
       <!-- 플레이어 전환 -->
-      <div class="flex items-center gap-2 mt-3">
+      <!-- 모바일에서는 선택 상자가 눌려 «OOP (BB (클러...»로 잘렸다 -->
+      <div class="flex flex-wrap items-center gap-2 mt-3">
         <span class="text-sm">플레이어:</span>
-        <select v-model="displayPlayer" class="w-28 px-2 py-1 rounded-lg text-sm">
+        <select
+          v-model="displayPlayer"
+          class="w-40 md:w-28 px-2 py-1 rounded-lg text-sm"
+        >
           <option value="oop">OOP ({{ preset.oopLabel }})</option>
           <option value="ip">IP ({{ preset.ipLabel }})</option>
         </select>
-        <span v-if="displayPlayer === 'oop'" class="text-xs text-neutral-400">
+        <span
+          v-if="displayPlayer === 'oop'"
+          class="basis-full md:basis-auto text-xs text-neutral-400"
+        >
           첫 액션 차례인 플레이어의 전략입니다
         </span>
       </div>

@@ -1,5 +1,8 @@
 <template>
-  <div class="max-w-5xl pb-10">
+  <div
+    id="trainer-top"
+    :class="'max-w-5xl flex flex-col ' + (evaluation ? 'pb-24 md:pb-10' : 'pb-10')"
+  >
     <div
       v-if="loadError"
       class="rounded-lg border border-red-700 bg-red-950 px-4 py-3 text-red-300"
@@ -11,12 +14,18 @@
     </div>
 
     <template v-else>
-      <div class="flex flex-wrap items-center gap-2">
+      <!--
+        모바일에서 한 줄 고정: 버튼이 늘고 줄어도 아래 문제가 움직이지 않아야 한다.
+        (오답이 생기면 [복습 N개]가 나타나 두 줄이 되면서 문제를 30px 밀어냈다)
+      -->
+      <div
+        class="order-1 filter-row flex flex-nowrap md:flex-wrap items-center gap-1.5 md:gap-2 overflow-x-auto md:overflow-x-visible"
+      >
         <button
           v-for="item in categories"
           :key="item"
           :class="
-            'button-base ' +
+            'button-base filter-btn ' +
             (category === item ? 'button-blue' : 'bg-neutral-700 hover:bg-neutral-600')
           "
           @click="changeCategory(item)"
@@ -26,7 +35,7 @@
         <button
           v-if="reviewAttempts.length"
           :class="
-            'button-base ml-0 md:ml-2 ' +
+            'button-base filter-btn ml-0 md:ml-2 ' +
             (reviewMode ? 'button-green' : 'bg-neutral-700 hover:bg-neutral-600')
           "
           @click="toggleReview"
@@ -36,7 +45,7 @@
         <!-- 오늘의 문제: 날짜가 씨앗이라 모두 같은 문제를 받는다 -->
         <button
           :class="
-            'button-base ml-0 md:ml-2 flex items-center gap-1.5 ' +
+            'button-base filter-btn ml-0 md:ml-2 flex items-center gap-1.5 ' +
             (dailyMode
               ? 'bg-[#DFAC2A] text-[#04160C] hover:bg-[#e8bb4a]'
               : 'bg-neutral-700 hover:bg-neutral-600')
@@ -49,7 +58,7 @@
       </div>
 
       <!-- 통계는 칩으로 압축 — 위쪽 공간을 덜 먹어야 문제가 화면 중앙에 온다 -->
-      <div class="flex flex-wrap gap-1.5 mt-3">
+      <div id="trainer-stats" class="order-4 md:order-2 flex flex-wrap gap-1.5 mt-3">
         <span class="stat-chip">풀이 <b>{{ attempts.length }}</b></span>
         <span v-if="dailyState.streak" class="stat-chip">
           오늘의 문제 <b>{{ dailyState.streak }}</b>일 연속
@@ -70,7 +79,7 @@
       <!-- 약점 분석: 카테고리별 평균 EV 손실 -->
       <div
         v-if="weakness.rows.some((row) => row.count > 0)"
-        class="mt-3 rounded-lg border border-neutral-700 bg-neutral-900/50 px-3 py-2.5"
+        class="order-4 md:order-2 mt-3 rounded-lg border border-neutral-700 bg-neutral-900/50 px-3 py-2.5"
       >
         <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
           <span class="font-semibold text-neutral-300">약점 분석</span>
@@ -107,7 +116,7 @@
       <!-- 계정 보관 (선택) — 로그인 전엔 아무것도 전송되지 않는다 -->
       <div
         v-if="accountEnabled"
-        class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-neutral-700 bg-neutral-900/50 px-3 py-2.5 text-xs"
+        class="order-4 md:order-2 mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-neutral-700 bg-neutral-900/50 px-3 py-2.5 text-xs"
       >
         <template v-if="account">
           <span class="text-neutral-300">
@@ -147,15 +156,37 @@
         </div>
       </div>
 
-      <p class="mt-2 text-right text-xs text-neutral-500">
+      <p class="order-4 md:order-2 mt-2 text-right text-xs text-neutral-500">
         13개 교육 프리셋 · {{ decisionCount }}개 결정 노드 · 계산 목표 오차
         {{ bank.targetExploitabilityPct }}%
       </p>
 
+      <!--
+        모바일: 성적 한 줄 요약만 위에 남기고 자세한 통계·약점 분석·계정 안내는
+        문제 아래로 내렸다. 위쪽 군더더기가 250px를 먹어 액션 버튼이 첫 화면 밖으로
+        밀려 있었다(390x844에서 y=848).
+      -->
+      <div
+        class="order-2 md:hidden mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-400"
+      >
+        <span>풀이 <b class="text-neutral-200">{{ attempts.length }}</b></span>
+        <span>
+          연속 정답
+          <b :class="streak >= 3 ? 'text-emerald-300' : 'text-neutral-200'">{{ streak }}</b>
+        </span>
+        <span v-if="attempts.length">
+          좋은 선택 <b class="text-neutral-200">{{ excellentRate.toFixed(0) }}</b>%
+        </span>
+        <span v-if="dailyState.streak">
+          오늘의 문제 <b class="text-[#DFAC2A]">{{ dailyState.streak }}</b>일 연속
+        </span>
+        <button class="ml-auto link-like" @click="scrollToStats">자세히 ↓</button>
+      </div>
+
       <!-- 좌: 문제 / 우: 채점. 답을 봐도 문제가 화면에서 사라지지 않게 나란히 둔다 -->
       <div
         v-if="question"
-        class="mt-5 grid gap-4 lg:grid-cols-[1.15fr_1fr] items-start"
+        class="order-3 md:order-4 mt-3 md:mt-5 grid gap-4 lg:grid-cols-[1.15fr_1fr] items-start"
       >
       <div class="rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5">
         <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -186,11 +217,11 @@
         </div>
 
         <div
-          class="mt-4 rounded-lg border border-neutral-700/70 bg-neutral-900/50 py-4 flex flex-col md:flex-row items-center justify-center gap-5 md:gap-10"
+          class="mt-3 md:mt-4 rounded-lg border border-neutral-700/70 bg-neutral-900/50 py-3 md:py-4 flex flex-row items-start md:items-center justify-center gap-6 md:gap-10"
         >
           <div class="text-center">
             <div class="text-xs text-neutral-500 mb-1">보드</div>
-            <div class="text-2xl font-bold tracking-wide">
+            <div class="text-xl md:text-2xl font-bold tracking-wide">
               <span
                 v-for="(card, index) in boardCards"
                 :key="index"
@@ -202,7 +233,7 @@
           </div>
           <div class="text-center">
             <div class="text-xs text-neutral-500 mb-1">내 핸드</div>
-            <div class="text-3xl font-bold tracking-wide">
+            <div class="text-2xl md:text-3xl font-bold tracking-wide">
               <span
                 v-for="(card, index) in handCards"
                 :key="index"
@@ -265,31 +296,23 @@
       </div>
 
       <!-- 오른쪽: 채점 결과. 아직 안 골랐으면 자리만 잡아둔다(레이아웃이 튀지 않게) -->
-      <div class="rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5">
+      <div
+        id="trainer-detail"
+        class="rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5"
+      >
         <template v-if="evaluation">
-          <div
-            :class="
-              'text-lg font-bold ' +
-              (evaluation.evLossBb <= limits.bestBb
-                ? 'text-emerald-300'
-                : evaluation.evLossBb <= limits.goodBb
-                ? 'text-blue-300'
-                : 'text-orange-300')
-            "
-          >
-            {{
-              evaluation.evLossBb <= limits.bestBb
-                ? "최적 선택"
-                : evaluation.evLossBb <= limits.goodBb
-                ? "허용 가능한 선택"
-                : "다시 볼 스팟"
-            }}
+          <!-- 모바일은 하단 고정 바가 같은 내용을 이고 있어 여기선 감춘다 -->
+          <div :class="'hidden md:block text-lg font-bold ' + verdict.className">
+            {{ verdict.text }}
           </div>
-          <div class="mt-0.5 text-sm text-neutral-400">
+          <div class="hidden md:block mt-0.5 text-sm text-neutral-400">
             EV 손실
             <b class="tabular-nums text-neutral-200">
               {{ evaluation.evLossBb.toFixed(3) }}bb
             </b>
+          </div>
+          <div class="md:hidden text-sm font-semibold text-neutral-300">
+            액션별 빈도와 EV
           </div>
           <p class="mt-1 text-xs text-neutral-500">
             혼합 전략은 단순 오답 처리하지 않고 액션 EV 차이로 평가합니다.
@@ -359,19 +382,8 @@
           </div>
 
           <div class="mt-5 flex flex-wrap items-center gap-3">
-            <button
-              v-if="!(dailyMode && dailyState.done)"
-              class="button-base button-green px-6"
-              @click="nextQuestion"
-            >
-              다음 문제
-            </button>
-            <button
-              v-else
-              class="button-base button-green px-6"
-              @click="toggleDaily"
-            >
-              계속 연습하기
+            <button class="button-base button-green px-6" @click="goNext">
+              {{ dailyMode && dailyState.done ? "계속 연습하기" : "다음 문제" }}
             </button>
             <a
               v-if="articleUrl"
@@ -409,13 +421,37 @@
       </div>
       </div>
 
-      <div class="mt-4 flex justify-end">
+      <div class="order-5 mt-4 flex justify-end">
         <button
           v-if="attempts.length"
           class="text-xs text-neutral-500 hover:text-red-300"
           @click="resetHistory"
         >
           학습 기록 초기화
+        </button>
+      </div>
+
+      <!--
+        모바일 채점 바: 판정·EV 손실·[다음 문제]를 화면 하단에 붙여 둔다.
+        이게 없으면 답을 고른 뒤 판정(y=1156)과 다음 문제(y=1391)를 보려고
+        두 번 더 내렸다가 새 문제를 보려고 다시 올려야 했다.
+      -->
+      <div
+        v-if="evaluation"
+        class="md:hidden fixed inset-x-0 bottom-0 z-20 flex items-center gap-3 border-t border-neutral-700 bg-neutral-900/95 px-3 py-2 backdrop-blur"
+      >
+        <div class="min-w-0">
+          <div :class="'text-sm font-bold ' + verdict.className">{{ verdict.text }}</div>
+          <div class="text-xs text-neutral-400">
+            EV 손실
+            <b class="tabular-nums text-neutral-200">
+              {{ evaluation.evLossBb.toFixed(3) }}bb
+            </b>
+            <button class="link-like ml-2" @click="scrollToDetail">자세히 ↓</button>
+          </div>
+        </div>
+        <button class="button-base button-green ml-auto shrink-0 px-5" @click="goNext">
+          {{ dailyMode && dailyState.done ? "계속 연습하기" : "다음 문제" }}
         </button>
       </div>
     </template>
@@ -565,6 +601,24 @@ export default defineComponent({
       } as TrainerQuestion;
     };
 
+    // 판정 문구·색은 세 곳(데스크톱 패널·모바일 바·공유 문구)에서 쓴다
+    const verdict = computed(() => {
+      const result = evaluation.value;
+      if (!result) return { text: "", className: "" };
+      if (result.evLossBb <= limits.value.bestBb)
+        return { text: "최적 선택", className: "text-emerald-300" };
+      if (result.evLossBb <= limits.value.goodBb)
+        return { text: "허용 가능한 선택", className: "text-blue-300" };
+      return { text: "다시 볼 스팟", className: "text-orange-300" };
+    });
+
+    // 모바일에서 아래를 읽고 있었더라도 다음 문제는 «위»에서 시작해야 한다
+    const scrollToId = (id: string) => {
+      document.getElementById(id)?.scrollIntoView({ block: "start", behavior: "smooth" });
+    };
+    const scrollToStats = () => scrollToId("trainer-stats");
+    const scrollToDetail = () => scrollToId("trainer-detail");
+
     const nextQuestion = () => {
       evaluation.value = null;
       if (!bank.value) return;
@@ -601,6 +655,13 @@ export default defineComponent({
       if (account.value) void runSync(true);
     };
 
+    // 하단 바와 데스크톱 버튼이 같이 쓴다. 오늘의 문제를 끝냈으면 일반 연습으로 돌아간다.
+    const goNext = () => {
+      if (dailyMode.value && dailyState.done) toggleDaily();
+      else nextQuestion();
+      scrollToId("trainer-top");
+    };
+
     const changeCategory = (value: TrainerCategory) => {
       category.value = value;
       reviewMode.value = false;
@@ -620,14 +681,7 @@ export default defineComponent({
       nextQuestion();
     };
     const copyDaily = async () => {
-      const verdict = evaluation.value
-        ? evaluation.value.evLossBb <= limits.value.bestBb
-          ? "최적 선택"
-          : evaluation.value.evLossBb <= limits.value.goodBb
-          ? "허용 가능한 선택"
-          : "다시 볼 스팟"
-        : "";
-      const text = dailyShareText(verdict);
+      const text = dailyShareText(verdict.value.text);
       try {
         await navigator.clipboard.writeText(text);
         dailyCopied.value = true;
@@ -810,6 +864,10 @@ export default defineComponent({
       dailyCopied,
       toggleDaily,
       copyDaily,
+      verdict,
+      goNext,
+      scrollToStats,
+      scrollToDetail,
       streak,
       bestStreak,
       weakness,
@@ -850,5 +908,16 @@ export default defineComponent({
 }
 .link-like {
   @apply text-blue-400 underline font-semibold;
+}
+/* 모바일에서 필터가 두 줄로 76px를 먹어 문제를 아래로 밀었다 */
+.filter-btn {
+  @apply shrink-0 px-2 py-1 text-xs md:px-3.5 md:py-1.5 md:text-sm;
+}
+/* 가로 스크롤 막대가 줄 높이를 바꾸지 않게 */
+.filter-row {
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar {
+  display: none;
 }
 </style>
