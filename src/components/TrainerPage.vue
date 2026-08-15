@@ -33,11 +33,30 @@
         >
           복습 {{ reviewAttempts.length }}개
         </button>
+        <!-- 오늘의 문제: 날짜가 씨앗이라 모두 같은 문제를 받는다 -->
+        <button
+          :class="
+            'button-base ml-0 md:ml-2 flex items-center gap-1.5 ' +
+            (dailyMode
+              ? 'bg-[#DFAC2A] text-[#04160C] hover:bg-[#e8bb4a]'
+              : 'bg-neutral-700 hover:bg-neutral-600')
+          "
+          @click="toggleDaily"
+        >
+          오늘의 문제
+          <span v-if="dailyState.done" aria-label="완료">✓</span>
+        </button>
       </div>
 
       <!-- 통계는 칩으로 압축 — 위쪽 공간을 덜 먹어야 문제가 화면 중앙에 온다 -->
       <div class="flex flex-wrap gap-1.5 mt-3">
         <span class="stat-chip">풀이 <b>{{ attempts.length }}</b></span>
+        <span v-if="dailyState.streak" class="stat-chip">
+          오늘의 문제 <b>{{ dailyState.streak }}</b>일 연속
+          <span v-if="dailyState.bestStreak > dailyState.streak" class="text-neutral-600">
+            / 최고 {{ dailyState.bestStreak }}
+          </span>
+        </span>
         <span class="stat-chip">
           연속 정답
           <b :class="streak >= 3 ? 'text-emerald-300' : ''">{{ streak }}</b>
@@ -302,9 +321,43 @@
             </div>
           </div>
 
+          <!--
+            오늘의 문제를 푼 뒤: 결과를 커뮤니티에 올리기 쉽게 만든다.
+            같은 날 모두가 같은 문제를 받으므로 서로 답을 견줄 수 있고, 그게 글감이 된다.
+            정답 자체는 문구에 넣지 않는다 — 아직 안 푼 사람의 재미를 없애면 글이 안 퍼진다.
+          -->
+          <div
+            v-if="dailyMode && dailyState.done"
+            class="mt-4 panel-inner border-[#DFAC2A]/40"
+          >
+            <div class="text-sm font-semibold text-[#DFAC2A]">
+              오늘의 문제 완료
+              <span v-if="dailyState.streak > 1" class="text-neutral-300">
+                · {{ dailyState.streak }}일 연속
+              </span>
+            </div>
+            <div class="mt-1 text-xs text-neutral-400 leading-relaxed">
+              오늘은 모두 같은 문제를 풉니다. 결과를 올리면 다른 사람 선택과 비교할 수 있습니다.
+            </div>
+            <button class="button-base button-blue !px-2.5 !py-1 text-xs mt-2" @click="copyDaily">
+              {{ dailyCopied ? "복사됨 — 커뮤니티에 붙여넣기" : "결과 문구 복사" }}
+            </button>
+          </div>
+
           <div class="mt-5 flex flex-wrap items-center gap-3">
-            <button class="button-base button-green px-6" @click="nextQuestion">
+            <button
+              v-if="!(dailyMode && dailyState.done)"
+              class="button-base button-green px-6"
+              @click="nextQuestion"
+            >
               다음 문제
+            </button>
+            <button
+              v-else
+              class="button-base button-green px-6"
+              @click="toggleDaily"
+            >
+              계속 연습하기
             </button>
             <a
               v-if="articleUrl"
@@ -358,6 +411,13 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
 import { noteTrainerSolved } from "../pwa";
+import {
+  dailyState,
+  dailyShareText,
+  loadDailyState,
+  makeDailyQuestion,
+  recordDaily,
+} from "../daily";
 import {
   clearTrainerAttempts,
   addTrainerAttempt,
@@ -413,6 +473,9 @@ export default defineComponent({
     const attempts = ref<TrainerAttempt[]>([]);
     const loadError = ref("");
     const reviewMode = ref(false);
+    const dailyMode = ref(false);
+    const dailyCopied = ref(false);
+    loadDailyState();
     let reviewIndex = 0;
 
     const decisionCount = computed(
@@ -491,7 +554,9 @@ export default defineComponent({
     const nextQuestion = () => {
       evaluation.value = null;
       if (!bank.value) return;
-      if (reviewMode.value && reviewAttempts.value.length) {
+      if (dailyMode.value) {
+        question.value = makeDailyQuestion(bank.value);
+      } else if (reviewMode.value && reviewAttempts.value.length) {
         const attempt = reviewAttempts.value[reviewIndex % reviewAttempts.value.length];
         reviewIndex++;
         question.value = restoreQuestion(attempt);
@@ -516,6 +581,7 @@ export default defineComponent({
         evLossBb: result.evLossBb,
       });
       attempts.value = await getTrainerAttempts();
+      if (dailyMode.value) recordDaily(result.evLossBb);
       noteTrainerSolved();
       // 로그인 상태면 조용히 올린다 (실패해도 풀이 흐름을 막지 않음)
       if (account.value) void runSync(true);
@@ -524,12 +590,36 @@ export default defineComponent({
     const changeCategory = (value: TrainerCategory) => {
       category.value = value;
       reviewMode.value = false;
+      dailyMode.value = false;
       nextQuestion();
     };
     const toggleReview = () => {
       reviewMode.value = !reviewMode.value;
+      dailyMode.value = false;
       reviewIndex = 0;
       nextQuestion();
+    };
+    const toggleDaily = () => {
+      dailyMode.value = !dailyMode.value;
+      reviewMode.value = false;
+      dailyCopied.value = false;
+      nextQuestion();
+    };
+    const copyDaily = async () => {
+      const verdict = evaluation.value
+        ? evaluation.value.evLossBb <= limits.value.bestBb
+          ? "최적 선택"
+          : evaluation.value.evLossBb <= limits.value.goodBb
+          ? "허용 가능한 선택"
+          : "다시 볼 스팟"
+        : "";
+      const text = dailyShareText(verdict);
+      try {
+        await navigator.clipboard.writeText(text);
+        dailyCopied.value = true;
+      } catch {
+        window.prompt("아래 내용을 복사해 주세요", text);
+      }
     };
     const resetHistory = async () => {
       if (!confirm("이 기기의 트레이너 학습 기록을 모두 지울까요?")) return;
@@ -700,6 +790,11 @@ export default defineComponent({
       excellentRate,
       reviewAttempts,
       limits,
+      dailyState,
+      dailyMode,
+      dailyCopied,
+      toggleDaily,
+      copyDaily,
       streak,
       bestStreak,
       weakness,

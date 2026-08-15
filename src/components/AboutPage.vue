@@ -39,6 +39,15 @@
         >
           GTO 트레이너
         </button>
+        <!-- 매일 하나뿐이라 «오늘 건 풀었나»가 돌아올 이유가 된다 -->
+        <button
+          class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5 flex items-center gap-2"
+          @click="store.sideView = 'trainer'"
+        >
+          오늘의 문제
+          <span v-if="dailyState.done" class="text-emerald-400" aria-label="완료">✓</span>
+          <span v-else class="text-[#DFAC2A]">●</span>
+        </button>
         <button
           class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5"
           @click="store.sideView = 'guide'"
@@ -142,6 +151,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { requestInstall, canShowInstallButton } from "../pwa";
+import { dailyState, loadDailyState } from "../daily";
 import { useStore } from "../store";
 import { mainSiteUrl } from "../outbound";
 
@@ -162,8 +172,11 @@ export default defineComponent({
       "익숙해지면 커스텀 스팟(①~⑤)으로 내 핸드를 직접 계산해보세요",
     ];
 
+    loadDailyState();
+
     return {
       store: useStore(),
+      dailyState,
       features,
       steps,
       requestInstall,
