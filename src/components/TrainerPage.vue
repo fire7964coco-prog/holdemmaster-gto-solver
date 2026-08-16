@@ -382,6 +382,48 @@
             <div v-if="dailyCopied" class="mt-1.5 text-xs text-neutral-500 leading-relaxed">
               {{ L.pasteHintBefore }}<b class="text-neutral-300">{{ L.pasteHintBold }}</b>{{ L.pasteHintAfter }}
             </div>
+
+            <!-- 오늘의 순위 — 구경은 로그인 없이, 이름 올리기만 로그인 (허들 최소화, 2026-08-17) -->
+            <div v-if="accountEnabled" class="mt-3 border-t border-neutral-700/60 pt-2">
+              <div class="flex items-center gap-2">
+                <button class="link-like text-xs" @click="toggleBoard">
+                  {{ boardOpen ? L.boardHide : L.boardShow }}
+                </button>
+                <span v-if="boardLoading" class="text-xs text-neutral-500">
+                  {{ L.boardLoading }}
+                </span>
+              </div>
+              <template v-if="boardOpen && board">
+                <div class="mt-1.5 text-xs text-neutral-400">
+                  {{ L.boardCount(board.total) }}
+                  <template v-if="board.myRank"> · {{ L.boardMyRank(board.myRank) }}</template>
+                </div>
+                <ol class="mt-1 space-y-0.5 text-xs">
+                  <li
+                    v-for="(row, index) in board.rows"
+                    :key="index"
+                    :class="row.isMine ? 'text-[#DFAC2A] font-semibold' : 'text-neutral-300'"
+                  >
+                    <span class="inline-block w-6 text-right tabular-nums text-neutral-500">
+                      {{ index + 1 }}
+                    </span>
+                    <span class="ml-2">{{ row.nickname }}</span>
+                    <span class="ml-2 tabular-nums text-neutral-500">
+                      {{ row.lossBb.toFixed(3) }}bb
+                    </span>
+                  </li>
+                </ol>
+                <div v-if="!account" class="mt-1.5 text-xs text-neutral-500">
+                  {{ L.boardLoginHint }}
+                </div>
+              </template>
+              <div
+                v-else-if="boardOpen && !boardLoading"
+                class="mt-1.5 text-xs text-neutral-500"
+              >
+                {{ L.boardUnavailable }}
+              </div>
+            </div>
           </div>
 
           <div class="mt-5 flex flex-wrap items-center gap-3">
@@ -505,6 +547,7 @@ import {
   todayKey,
 } from "../daily";
 import { canShareCard, drawDailyCard, saveCard, shareCard } from "../share-card";
+import { fetchLeaderboard, submitDailyResult, Leaderboard } from "../leaderboard";
 import {
   clearTrainerAttempts,
   addTrainerAttempt,
@@ -541,6 +584,7 @@ import {
   makeTrainerQuestion,
   isAcceptable,
   lossLimits,
+  lossPercentOfPot,
   TrainerBank,
   TrainerCategory,
   TrainerEvaluation,
@@ -607,6 +651,14 @@ const M = {
     dailyDoneDesc:
       "오늘은 모두 같은 문제를 풉니다. 결과를 올리면 다른 사람 선택과 비교할 수 있습니다.",
     makeCard: "성적 카드 만들기",
+    boardShow: "오늘의 순위 보기",
+    boardHide: "순위 접기",
+    boardLoading: "불러오는 중...",
+    boardCount: (n: number) => `오늘 ${n}명 참여`,
+    boardMyRank: (r: number) => `내 순위 ${r}위`,
+    boardLoginHint:
+      "로그인하면 내 닉네임도 순위에 올라갑니다. 구경은 로그인 없이 가능합니다.",
+    boardUnavailable: "순위표를 아직 열 수 없습니다.",
     copied: "복사 완료",
     copyResult: "결과 문구 복사",
     openCommunity: "커뮤니티 열기 →",
@@ -700,6 +752,14 @@ const M = {
     dailyDoneDesc:
       "Everyone gets the same puzzle today. Post your result to compare with other players.",
     makeCard: "Create result card",
+    boardShow: "View today's leaderboard",
+    boardHide: "Hide leaderboard",
+    boardLoading: "Loading...",
+    boardCount: (n: number) => `${n} players today`,
+    boardMyRank: (r: number) => `my rank #${r}`,
+    boardLoginHint:
+      "Sign in to put your name on the board — viewing is open to everyone.",
+    boardUnavailable: "The leaderboard isn't available yet.",
     copied: "Copied",
     copyResult: "Copy result text",
     openCommunity: "Open community →",
@@ -883,10 +943,43 @@ export default defineComponent({
         evLossBb: result.evLossBb,
       });
       attempts.value = await getTrainerAttempts();
-      if (dailyMode.value) recordDaily(result.evLossBb);
+      if (dailyMode.value) {
+        recordDaily(result.evLossBb);
+        // 로그인 상태면 오늘의 순위에도 올린다 (첫 기록만 유효 — 서버가 중복 무시)
+        if (account.value) void submitToBoard();
+      }
       noteTrainerSolved();
       // 로그인 상태면 조용히 올린다 (실패해도 풀이 흐름을 막지 않음)
       if (account.value) void runSync(true);
+    };
+
+    /* 오늘의 순위 (리더보드) — 구경은 비로그인 허용, 등록만 로그인 */
+    const board = ref<Leaderboard | null>(null);
+    const boardOpen = ref(false);
+    const boardLoading = ref(false);
+    const submitToBoard = async () => {
+      if (!dailyState.done || !bank.value) return;
+      // 오늘의 문제 스팟은 날짜로 정해지므로 여기서 되찾는다 (팟 대비 % 계산용)
+      const dailyQuestion = makeDailyQuestion(bank.value);
+      if (!dailyQuestion) return;
+      const ok = await submitDailyResult(
+        todayKey(),
+        dailyState.lossBb,
+        lossPercentOfPot({
+          presetId: dailyQuestion.presetId,
+          evLossBb: dailyState.lossBb,
+        })
+      );
+      if (ok) board.value = null; // 다음 열람 때 새로 읽는다
+    };
+    const loadBoard = async () => {
+      boardLoading.value = true;
+      board.value = await fetchLeaderboard(todayKey());
+      boardLoading.value = false;
+    };
+    const toggleBoard = () => {
+      boardOpen.value = !boardOpen.value;
+      if (boardOpen.value && !board.value) void loadBoard();
     };
 
     // 하단 바와 데스크톱 버튼이 같이 쓴다. 오늘의 문제를 끝냈으면 일반 연습으로 돌아간다.
@@ -1056,8 +1149,12 @@ export default defineComponent({
       unsubscribeAuth = onAuthChange((user) => {
         const wasLoggedOut = !account.value;
         account.value = user;
-        // 로그인한 순간, 기기에 쌓여 있던 기록을 계정으로 올린다
-        if (user && wasLoggedOut) void runSync();
+        // 로그인한 순간, 기기에 쌓여 있던 기록을 계정으로 올린다.
+        // 오늘의 문제를 이미 풀었다면 순위에도 뒤늦게 올린다.
+        if (user && wasLoggedOut) {
+          void runSync();
+          void submitToBoard();
+        }
       });
     });
 
@@ -1154,6 +1251,10 @@ export default defineComponent({
       dailyCopied,
       toggleDaily,
       copyDaily,
+      board,
+      boardOpen,
+      boardLoading,
+      toggleBoard,
       cardUrl,
       cardShareable,
       openCard,
