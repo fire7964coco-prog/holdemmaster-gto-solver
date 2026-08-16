@@ -121,8 +121,8 @@
                 : 'group-hover:opacity-100 opacity-70'
             "
           >
-            <div>팟 {{ amountText(spot.pot) }}</div>
-            <div>스택 {{ amountText(spot.stack) }}</div>
+            <div>{{ L.pot }} {{ amountText(spot.pot) }}</div>
+            <div>{{ L.stack }} {{ amountText(spot.stack) }}</div>
           </div>
         </div>
 
@@ -214,10 +214,10 @@
           "
         >
           <div v-if="spot.equityOop === 0 || spot.equityOop === 1" class="px-3">
-            {{ ["IP", "OOP"][spot.equityOop] }} 승리
+            {{ L.win(["IP", "OOP"][spot.equityOop]) }}
           </div>
           <div v-else-if="spot.equityOop !== -1" class="px-1.5">
-            <div class="mb-0.5">에퀴티</div>
+            <div class="mb-0.5">{{ L.equity }}</div>
             <div class="flex w-full px-1.5">
               <span>OOP</span>
               <span class="ml-auto pl-2">
@@ -231,7 +231,7 @@
               </span>
             </div>
           </div>
-          <div class="px-3">팟 {{ amountText(spot.pot) }}</div>
+          <div class="px-3">{{ L.pot }} {{ amountText(spot.pot) }}</div>
         </div>
       </template>
     </div>
@@ -242,6 +242,7 @@
 import { computed, defineComponent, nextTick, toRefs, ref, watch } from "vue";
 import { useSavedConfigStore } from "../store";
 import { useStore } from "../store";
+import { i18n } from "../i18n";
 import { cardText, average, colorString, formatAmount } from "../utils";
 import { handler } from "../global-worker";
 import {
@@ -312,29 +313,54 @@ const actionColor = (
 };
 
 // display-only label maps (data values remain in English)
-const spotPlayerLabels: Record<string, string> = {
-  flop: "플랍",
-  turn: "턴",
-  river: "리버",
-  end: "종료",
-};
-
-const spotPlayerLabel = (player: string) => {
-  return spotPlayerLabels[player] ?? player.toUpperCase();
-};
-
-const actionLabels: Record<string, string> = {
-  Fold: "폴드",
-  Check: "체크",
-  Call: "콜",
-  Bet: "벳",
-  Raise: "레이즈",
-  "All-in": "올인",
-};
-
-const actionLabel = (name: string) => {
-  return actionLabels[name] ?? name;
-};
+const M = {
+  ko: {
+    pot: "팟",
+    stack: "스택",
+    equity: "에퀴티",
+    win: (player: string) => `${player} 승리`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "플랍",
+          turn: "턴",
+          river: "리버",
+          end: "종료",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      (
+        {
+          Fold: "폴드",
+          Check: "체크",
+          Call: "콜",
+          Bet: "벳",
+          Raise: "레이즈",
+          "All-in": "올인",
+        } as Record<string, string>
+      )[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% 팟)`,
+  },
+  en: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} Wins`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "End",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string => name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% pot)`,
+  },
+} as const;
 
 export default defineComponent({
   components: {
@@ -380,6 +406,7 @@ export default defineComponent({
 
   setup(props, context) {
     const store = useStore();
+    const L = computed(() => M[i18n.locale]);
     const navDiv = ref<HTMLDivElement | null>(null);
 
     const config = useSavedConfigStore();
@@ -430,14 +457,16 @@ export default defineComponent({
       return store.displayUnitScale === 10 ? `${amount}bb` : amount;
     };
 
+    const spotPlayerLabel = (player: string) => L.value.spotPlayer(player);
+
     const actionText = (spot: SpotPlayer, name: string, amount: string) => {
-      const label = actionLabel(name);
+      const label = L.value.action(name);
       if (amount === "0") return label;
       const value = Number(amount);
       const formatted = amountText(value);
       if (name === "Bet" && spot.pot) {
         const percent = Math.round((value * 100) / spot.pot);
-        return `${label} ${formatted} (${percent}% 팟)`;
+        return L.value.betPot(label, formatted, percent);
       }
       return `${label} ${formatted}`;
     };
@@ -1107,7 +1136,7 @@ export default defineComponent({
       isCardAvailable,
       spotCards,
       spotPlayerLabel,
-      actionLabel,
+      L,
       amountText,
       actionText,
     };

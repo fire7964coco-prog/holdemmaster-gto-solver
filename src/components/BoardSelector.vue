@@ -23,14 +23,16 @@
     <input
       v-model="boardText"
       type="text"
-      placeholder="예: AsKd7c"
+      :placeholder="L.placeholder"
       class="w-40 px-2 py-1 rounded-lg text-sm"
       @focus="($event.target as HTMLInputElement).select()"
       @change="onBoardTextChange"
     />
-    <button class="button-base button-blue" @click="clearBoard">초기화</button>
+    <button class="button-base button-blue" @click="clearBoard">
+      {{ L.clear }}
+    </button>
     <button class="button-base button-blue" @click="generateRandomBoard">
-      랜덤 플랍
+      {{ L.randomFlop }}
     </button>
   </div>
 
@@ -42,8 +44,8 @@
     "
     class="mt-5 text-orange-400 font-semibold"
   >
-    <span class="underline">주의:</span>
-    편집된 트리는 보드 카드 {{ config.expectedBoardLength }}장을 전제로 합니다.
+    <span class="underline">{{ L.warnLabel }}</span>
+    {{ L.warnBody(config.expectedBoardLength) }}
   </div>
 </template>
 
@@ -51,8 +53,28 @@
 import { computed, defineComponent, onUnmounted, ref } from "vue";
 import { useConfigStore } from "../store";
 import { cardText, parseCardString } from "../utils";
+import { i18n } from "../i18n";
 
 import BoardSelectorCard from "./BoardSelectorCard.vue";
+
+const M = {
+  ko: {
+    placeholder: "예: AsKd7c",
+    clear: "초기화",
+    randomFlop: "랜덤 플랍",
+    warnLabel: "주의:",
+    warnBody: (n: number) =>
+      `편집된 트리는 보드 카드 ${n}장을 전제로 합니다.`,
+  },
+  en: {
+    placeholder: "e.g. AsKd7c",
+    clear: "Clear",
+    randomFlop: "Random Flop",
+    warnLabel: "Warning:",
+    warnBody: (n: number) =>
+      `The edited tree assumes a ${n}-card board.`,
+  },
+} as const;
 
 export default defineComponent({
   components: {
@@ -62,6 +84,7 @@ export default defineComponent({
   setup() {
     const config = useConfigStore();
     const boardText = ref("");
+    const L = computed(() => M[i18n.locale]);
 
     // 좁은 화면이면 13열이 폭에 맞게 줄어든다 (데스크톱은 기존 40px 그대로)
     const isNarrow = ref(false);
@@ -137,6 +160,7 @@ export default defineComponent({
     };
 
     return {
+      L,
       config,
       boardText,
       cardWidth,

@@ -9,6 +9,33 @@
  * 정답(어떤 액션이 최적인지)은 카드에 넣지 않는다 — 아직 안 푼 사람의 재미를 지킨다.
  */
 import { cardText } from "./utils";
+import { i18n } from "./i18n";
+
+// 카드에 그려 넣는 고정 문구 — 카드 언어는 현재 화면 언어를 따른다
+const CARD_TEXT = {
+  ko: {
+    brand: "홀덤마스터 GTO 트레이너",
+    tagline: "매일 1문제 · 모두 같은 문제",
+    heading: "오늘의 GTO 문제",
+    board: "보드",
+    hand: "내 핸드",
+    result: (verdict: string) => `내 결과: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `EV 손실 ${bb}bb${streak > 1 ? ` · ${streak}일 연속 풀이 중` : ""}`,
+    invite: "나도 같은 문제 풀어보기",
+  },
+  en: {
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "One puzzle a day · same for everyone",
+    heading: "Daily GTO Puzzle",
+    board: "Board",
+    hand: "My Hand",
+    result: (verdict: string) => `My result: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `EV loss ${bb}bb${streak > 1 ? ` · ${streak}-day streak` : ""}`,
+    invite: "Try the same puzzle",
+  },
+} as const;
 
 export type DailyCardInput = {
   dateLabel: string; // "2026.08.16"
@@ -135,6 +162,8 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
+  const T = CARD_TEXT[i18n.locale];
+
   // 상단 브랜드 줄: 앰버 배지(스페이드) + 서비스명
   roundedRect(ctx, 72, 72, 92, 92, 24);
   ctx.fillStyle = AMBER;
@@ -143,15 +172,15 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   ctx.textAlign = "left";
   ctx.fillStyle = TEXT;
   ctx.font = `700 44px ${FONT}`;
-  ctx.fillText("홀덤마스터 GTO 트레이너", 192, 112);
+  ctx.fillText(T.brand, 192, 112);
   ctx.fillStyle = TEXT_DIM;
   ctx.font = `400 32px ${FONT}`;
-  ctx.fillText("매일 1문제 · 모두 같은 문제", 192, 156);
+  ctx.fillText(T.tagline, 192, 156);
 
   // 제목 + 날짜
   ctx.fillStyle = AMBER;
   ctx.font = `800 76px ${FONT}`;
-  ctx.fillText("오늘의 GTO 문제", 72, 292);
+  ctx.fillText(T.heading, 72, 292);
   ctx.fillStyle = TEXT_DIM;
   ctx.font = `600 40px ${FONT}`;
   ctx.fillText(input.dateLabel, 72, 352);
@@ -180,19 +209,19 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
 
   ctx.fillStyle = TEXT_FAINT;
   ctx.font = `600 28px ${FONT}`;
-  ctx.fillText("보드", WIDTH / 2, panelY + 190);
+  ctx.fillText(T.board, WIDTH / 2, panelY + 190);
   drawCardRow(ctx, input.board, WIDTH / 2, panelY + 212, 118, 18);
 
   ctx.fillStyle = TEXT_FAINT;
   ctx.font = `600 28px ${FONT}`;
-  ctx.fillText("내 핸드", WIDTH / 2, panelY + 430 - 22);
+  ctx.fillText(T.hand, WIDTH / 2, panelY + 430 - 22);
   drawCardRow(ctx, input.hand, WIDTH / 2, panelY + 430, 118, 18);
 
   // 판정 — 문구가 길면(«허용 가능한 선택») 폭을 넘치므로 크기를 맞춰 줄인다
   const verdictY = 1122;
   ctx.textAlign = "center";
   ctx.fillStyle = TONE_COLORS[input.verdictTone];
-  const verdictLine = `내 결과: ${input.verdictText}`;
+  const verdictLine = T.result(input.verdictText);
   let verdictSize = 84;
   ctx.font = `800 ${verdictSize}px ${FONT}`;
   while (verdictSize > 48 && ctx.measureText(verdictLine).width > WIDTH - 144) {
@@ -202,9 +231,8 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   ctx.fillText(verdictLine, WIDTH / 2, verdictY);
   ctx.fillStyle = TEXT_DIM;
   ctx.font = `500 36px ${FONT}`;
-  const streakPart = input.streak > 1 ? ` · ${input.streak}일 연속 풀이 중` : "";
   ctx.fillText(
-    `EV 손실 ${input.evLossBb.toFixed(3)}bb${streakPart}`,
+    T.evLine(input.evLossBb.toFixed(3), input.streak),
     WIDTH / 2,
     verdictY + 60
   );
@@ -215,7 +243,7 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   ctx.fillRect(0, barY, WIDTH, 120);
   ctx.fillStyle = DARK_GREEN;
   ctx.font = `700 38px ${FONT}`;
-  ctx.fillText("나도 같은 문제 풀어보기", WIDTH / 2, barY + 52);
+  ctx.fillText(T.invite, WIDTH / 2, barY + 52);
   ctx.font = `600 32px ${FONT}`;
   ctx.fillText("solver.holdemmaster.com", WIDTH / 2, barY + 96);
 

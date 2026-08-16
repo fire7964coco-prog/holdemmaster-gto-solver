@@ -7,12 +7,12 @@
       ></span>
       {{
         !store.hasSolverRun
-          ? "솔버가 실행되지 않았습니다."
+          ? L.notRun
           : store.isSolverRunning
-          ? "솔버 실행 중..."
+          ? L.running
           : store.isFinalizing
-          ? "마무리 중..."
-          : "솔버가 일시정지되었습니다."
+          ? L.finalizing
+          : L.paused
       }}
     </div>
   </div>
@@ -152,6 +152,7 @@
 import { computed, defineComponent, nextTick, ref } from "vue";
 import { useSavedConfigStore, useStore } from "../store";
 import { handler } from "../global-worker";
+import { i18n } from "../i18n";
 
 import {
   Results,
@@ -174,6 +175,21 @@ import ResultChance from "./ResultChance.vue";
 import HandBreakdown from "./HandBreakdown.vue";
 import ActionSummary from "./ActionSummary.vue";
 
+const M = {
+  ko: {
+    notRun: "솔버가 실행되지 않았습니다.",
+    running: "솔버 실행 중...",
+    finalizing: "마무리 중...",
+    paused: "솔버가 일시정지되었습니다.",
+  },
+  en: {
+    notRun: "The solver has not been run.",
+    running: "Running the solver...",
+    finalizing: "Finalizing...",
+    paused: "The solver has been paused.",
+  },
+} as const;
+
 export default defineComponent({
   components: {
     ResultNav,
@@ -190,6 +206,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const savedConfig = useSavedConfigStore();
+    const L = computed(() => M[i18n.locale]);
     const resultNav = ref<{ playPath: (path: number[]) => Promise<boolean> } | null>(
       null
     );
@@ -380,6 +397,7 @@ export default defineComponent({
 
     return {
       store,
+      L,
       resultNav,
       isHandlerUpdated,
       isLocked,

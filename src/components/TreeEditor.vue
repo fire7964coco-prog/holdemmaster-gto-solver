@@ -2,7 +2,7 @@
   <!-- Error -->
 
   <div v-if="isTreeError">
-    오류: 트리 생성에 실패했습니다 (손상된 트리를 불러왔나요?)
+    {{ L.treeError }}
   </div>
 
   <!-- Navigation -->
@@ -38,8 +38,8 @@
           class="flex flex-col flex-grow px-3 items-center justify-evenly font-semibold"
         >
           <div class="group-hover:opacity-100 opacity-70">
-            <div>팟 {{ spot.pot }}</div>
-            <div>스택 {{ spot.stack }}</div>
+            <div>{{ L.pot }} {{ spot.pot }}</div>
+            <div>{{ L.stack }} {{ spot.stack }}</div>
           </div>
         </div>
       </template>
@@ -88,7 +88,7 @@
               (spot.index === selectedSpotIndex ? '' : 'opacity-70')
             "
           >
-            (액션 없음)
+            {{ L.noActions }}
           </div>
         </div>
       </template>
@@ -110,9 +110,9 @@
           "
         >
           <div v-if="spot.equityOop === 0 || spot.equityOop === 1" class="px-3">
-            {{ ["IP", "OOP"][spot.equityOop] }} 승리
+            {{ ["IP", "OOP"][spot.equityOop] }} {{ L.wins }}
           </div>
-          <div class="px-3">팟 {{ spot.pot }}</div>
+          <div class="px-3">{{ L.pot }} {{ spot.pot }}</div>
         </div>
       </template>
     </div>
@@ -125,7 +125,7 @@
     class="flex mt-4 font-semibold text-red-400"
   >
     <div class="underline">
-      잘못된 터미널 노드:
+      {{ L.invalidTerminals }}
     </div>
     <div class="ml-2">
       <div v-for="invalidLine in invalidLinesArray" :key="invalidLine">
@@ -153,7 +153,7 @@
       "
       @click="addBetAction"
     >
-      벳 액션 추가
+      {{ L.addBetAction }}
     </button>
 
     <button
@@ -161,11 +161,11 @@
       :disabled="selectedSpotIndex === 1"
       @click="removeSelectedNode"
     >
-      선택한 노드 제거
+      {{ L.removeNode }}
     </button>
 
     <div class="pl-3">
-      벳 금액:
+      {{ L.betAmount }}
       <input
         v-model="betAmount"
         type="number"
@@ -180,7 +180,7 @@
         @keydown.enter="addBetAction"
       />
       <span v-if="!isSelectedTerminal && !isAfterAllin" class="ml-2">
-        (팟의 {{ (amountRate * 100).toFixed(1) }}%)
+        {{ L.potRate((amountRate * 100).toFixed(1)) }}
       </span>
     </div>
   </div>
@@ -197,11 +197,11 @@
       :disabled="isTreeError || invalidLinesArray.length > 0"
       @click="saveEdit"
     >
-      편집 저장
+      {{ L.saveEdits }}
     </button>
 
     <button class="button-base button-red" @click="cancelEdit">
-      편집 취소
+      {{ L.cancelEdits }}
     </button>
   </div>
 
@@ -215,7 +215,7 @@
   >
     <div v-if="addedLinesArray.length > 0" class="flex">
       <div class="font-semibold underline w-[7.75rem]">
-        추가된 라인:
+        {{ L.addedLines }}
       </div>
       <div class="flex flex-col">
         <div
@@ -233,7 +233,7 @@
 
     <div v-if="removedLinesArray.length > 0" class="flex mt-2">
       <div class="font-semibold underline w-[7.75rem]">
-        제거된 라인:
+        {{ L.removedLines }}
       </div>
       <div class="flex flex-col">
         <div
@@ -260,6 +260,42 @@ import { TreeManager } from "../../pkg/tree/tree";
 
 import { CheckIcon } from "@heroicons/vue/20/solid";
 import { TrashIcon } from "@heroicons/vue/24/outline";
+import { i18n } from "../i18n";
+
+const M = {
+  ko: {
+    treeError: "오류: 트리 생성에 실패했습니다 (손상된 트리를 불러왔나요?)",
+    pot: "팟",
+    stack: "스택",
+    noActions: "(액션 없음)",
+    wins: "승리",
+    invalidTerminals: "잘못된 터미널 노드:",
+    addBetAction: "벳 액션 추가",
+    removeNode: "선택한 노드 제거",
+    betAmount: "벳 금액:",
+    potRate: (pct: string) => `(팟의 ${pct}%)`,
+    saveEdits: "편집 저장",
+    cancelEdits: "편집 취소",
+    addedLines: "추가된 라인:",
+    removedLines: "제거된 라인:",
+  },
+  en: {
+    treeError: "Error: Failed to build the tree (loaded a broken tree?)",
+    pot: "Pot",
+    stack: "Stack",
+    noActions: "(No actions)",
+    wins: "wins",
+    invalidTerminals: "Invalid terminal nodes:",
+    addBetAction: "Add Bet Action",
+    removeNode: "Remove Selected Node",
+    betAmount: "Bet Amount:",
+    potRate: (pct: string) => `(${pct}% of the pot)`,
+    saveEdits: "Save Edits",
+    cancelEdits: "Cancel Edits",
+    addedLines: "Added lines:",
+    removedLines: "Removed lines:",
+  },
+} as const;
 
 export default defineComponent({
   components: {
@@ -274,6 +310,7 @@ export default defineComponent({
 
   setup(_, context) {
     const navDiv = ref(null as HTMLDivElement | null);
+    const L = computed(() => M[i18n.locale]);
 
     const config = useConfigStore();
 
@@ -680,6 +717,7 @@ export default defineComponent({
 
     return {
       navDiv,
+      L,
       isTreeError,
       spots,
       selectedSpotIndex,

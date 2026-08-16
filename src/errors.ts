@@ -12,6 +12,7 @@
  *   입력한 레인지나 학습 기록 같은 내용은 담지 않는다.
  */
 import { reactive } from "vue";
+import { pick } from "./i18n";
 
 /** 빌드 시각 (webpack DefinePlugin이 채운다) — 어느 버전에서 난 오류인지 구분용 */
 declare const __BUILD_ID__: string;
@@ -54,12 +55,13 @@ const write = (records: ErrorRecord[]) => {
 
 const shortBrowser = () => {
   const ua = navigator.userAgent;
-  if (/SamsungBrowser\/([\d.]+)/.test(ua)) return "삼성 인터넷 " + RegExp.$1;
-  if (/Edg\/([\d.]+)/.test(ua)) return "엣지 " + RegExp.$1;
-  if (/Chrome\/([\d.]+)/.test(ua)) return "크롬 " + RegExp.$1;
-  if (/Firefox\/([\d.]+)/.test(ua)) return "파이어폭스 " + RegExp.$1;
-  if (/Version\/([\d.]+).*Safari/.test(ua)) return "사파리 " + RegExp.$1;
-  return "기타 브라우저";
+  if (/SamsungBrowser\/([\d.]+)/.test(ua))
+    return pick("삼성 인터넷 ", "Samsung Internet ") + RegExp.$1;
+  if (/Edg\/([\d.]+)/.test(ua)) return pick("엣지 ", "Edge ") + RegExp.$1;
+  if (/Chrome\/([\d.]+)/.test(ua)) return pick("크롬 ", "Chrome ") + RegExp.$1;
+  if (/Firefox\/([\d.]+)/.test(ua)) return pick("파이어폭스 ", "Firefox ") + RegExp.$1;
+  if (/Version\/([\d.]+).*Safari/.test(ua)) return pick("사파리 ", "Safari ") + RegExp.$1;
+  return pick("기타 브라우저", "Other browser");
 };
 
 const record = (msg: string, stack: string) => {
@@ -82,19 +84,18 @@ const record = (msg: string, stack: string) => {
 export const errorReportText = () => {
   const records = read();
   if (!records.length) return "";
+  const standalone = window.matchMedia?.("(display-mode: standalone)").matches;
   const head = [
-    "홀덤마스터 GTO 솔버 오류 기록",
-    `빌드 ${__BUILD_ID__} · ${shortBrowser()} · 화면 ${window.innerWidth}x${window.innerHeight}`,
-    `설치 실행: ${
-      window.matchMedia?.("(display-mode: standalone)").matches ? "예" : "아니오"
-    }`,
+    pick("홀덤마스터 GTO 솔버 오류 기록", "HoldemMaster GTO Solver error log"),
+    `${pick("빌드", "Build")} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen")} ${window.innerWidth}x${window.innerHeight}`,
+    `${pick("설치 실행", "Installed app")}: ${standalone ? pick("예", "yes") : pick("아니오", "no")}`,
     "",
   ].join("\n");
   const body = records
     .slice()
     .reverse()
     .map((item, index) => {
-      const time = new Date(item.t).toLocaleString("ko-KR");
+      const time = new Date(item.t).toLocaleString(pick("ko-KR", "en-US"));
       return `[${index + 1}] ${time} (${item.where})\n${item.msg}\n${item.stack}`;
     })
     .join("\n\n");
@@ -124,7 +125,10 @@ export const setupErrorCapture = () => {
       record(String(event.message || event.error), String(event.error.stack || ""));
     } else if (target && target.tagName) {
       // 이미지·스크립트 로딩 실패는 error 객체가 없다
-      record(`${target.tagName} 로딩 실패`, String(target.src || target.href || ""));
+      record(
+        `${target.tagName} ${pick("로딩 실패", "failed to load")}`,
+        String(target.src || target.href || "")
+      );
     } else if (event.message) {
       // 다른 출처의 스크립트에서 난 오류는 브라우저가 내용을 가린다("Script error.").
       // 스택은 못 받지만 «어디서 몇 번째 줄» 정도는 남겨야 단서가 된다.
@@ -141,7 +145,7 @@ export const setupErrorCapture = () => {
   window.addEventListener("unhandledrejection", (event) => {
     const reason = event.reason;
     record(
-      "처리되지 않은 오류: " + String(reason?.message ?? reason),
+      pick("처리되지 않은 오류: ", "Unhandled rejection: ") + String(reason?.message ?? reason),
       String(reason?.stack ?? "")
     );
   });

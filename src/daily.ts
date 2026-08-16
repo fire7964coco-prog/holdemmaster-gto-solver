@@ -9,6 +9,7 @@
  * 데이터는 새로 만들지 않는다. 기존 문제 은행에 날짜 기반 난수를 넣을 뿐이다.
  */
 import { reactive } from "vue";
+import { i18n } from "./i18n";
 import { makeTrainerQuestion, TrainerBank, TrainerQuestion } from "./trainer";
 
 const KEY_LAST = "daily.lastDate";
@@ -137,6 +138,18 @@ export const recordDaily = (lossBb: number) => {
  */
 export const dailyShareText = (verdict: string) => {
   const date = todayKey().replace(/-/g, ".").slice(2);
+  if (i18n.locale === "en") {
+    return [
+      `[Daily GTO Puzzle · ${date}]`,
+      `My result: ${verdict} (EV loss ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak}-day streak` : "",
+      "",
+      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&lang=en",
+      "(HoldemMaster GTO Solver · one puzzle a day)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
   return [
     `[${date} 오늘의 GTO 문제]`,
     `내 결과: ${verdict} (EV 손실 ${dailyState.lossBb.toFixed(3)}bb)`,

@@ -12,20 +12,22 @@
     >
       <InformationCircleIcon class="inline w-5 h-5 mt-[0.1875rem] mr-1.5 shrink-0" />
       <div>
-        <span class="font-semibold text-emerald-300">[⚡ 결과 바로 보기]</span>를
-        누르면 결과가 바로 나옵니다. 레인지를 바꿔보거나 턴·리버까지
-        탐색하고 싶을 때만 <span class="font-semibold">[직접 계산]</span>을
-        쓰세요.
+        <span class="font-semibold text-emerald-300">{{ L.infoBtn1 }}</span
+        >{{ L.infoText1
+        }}<span class="font-semibold">{{ L.infoBtn2 }}</span
+        >{{ L.infoText2 }}
       </div>
     </div>
 
     <div v-for="group in grouped" :key="group.category" class="mt-6">
       <div class="text-base font-bold text-neutral-200">
-        {{ group.category }}
+        {{ presetCategoryOf(group.items[0]) }}
       </div>
       <div class="mt-0.5 text-xs text-neutral-500">
-        OOP: {{ group.items[0].oopLabel }} · IP: {{ group.items[0].ipLabel }} ·
-        팟 {{ group.items[0].startingPot / group.items[0].unitScale }}bb · 스택
+        OOP: {{ oopLabelOf(group.items[0]) }} · IP:
+        {{ ipLabelOf(group.items[0]) }} · {{ L.pot }}
+        {{ group.items[0].startingPot / group.items[0].unitScale }}bb ·
+        {{ L.stack }}
         {{ group.items[0].effectiveStack / group.items[0].unitScale }}bb
       </div>
 
@@ -40,7 +42,7 @@
         -->
         <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
           <div class="flex items-center gap-3 min-w-0">
-            <span class="font-semibold">{{ p.title }}</span>
+            <span class="font-semibold">{{ presetTitleOf(p) }}</span>
             <span class="font-bold tracking-wide shrink-0">
               <span
                 v-for="(c, i) in boardCards(p.board)"
@@ -58,26 +60,27 @@
               target="_blank"
               class="px-2 text-sm text-blue-400 hover:underline"
             >
-              해설 보기
+              {{ L.articleLink }}
             </a>
             <button
               class="button-base button-green"
               @click="openPreview(p)"
             >
-              ⚡ 결과 바로 보기
+              ⚡ {{ L.viewResults }}
             </button>
             <button class="button-base button-blue" @click="load(p)">
-              직접 계산
+              {{ L.solveYourself }}
             </button>
           </span>
         </div>
-        <div class="mt-1.5 text-sm text-neutral-400">{{ p.lesson }}</div>
+        <div class="mt-1.5 text-sm text-neutral-400">
+          {{ presetLessonOf(p) }}
+        </div>
       </div>
     </div>
 
     <p class="mt-6 text-xs text-neutral-500">
-      레인지는 100bb 온라인 표준의 근사치입니다. 불러온 뒤 자유롭게 수정해서
-      비교해보는 것도 좋은 공부예요.
+      {{ L.footnote }}
     </p>
   </div>
 </template>
@@ -86,12 +89,54 @@
 import { computed, defineComponent, ref, watch } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { cardText, parseCardString } from "../utils";
-import { PRESETS, ARTICLE_URLS, Preset } from "../presets";
+import {
+  PRESETS,
+  ARTICLE_URLS,
+  Preset,
+  presetTitleOf,
+  presetLessonOf,
+  presetCategoryOf,
+  oopLabelOf,
+  ipLabelOf,
+} from "../presets";
 import { trackOutbound } from "../outbound";
 import { notePresetOpened } from "../pwa";
+import { i18n } from "../i18n";
 
 import { InformationCircleIcon } from "@heroicons/vue/20/solid";
 import PresetPreview from "./PresetPreview.vue";
+
+const M = {
+  ko: {
+    infoBtn1: "[⚡ 결과 바로 보기]",
+    infoText1:
+      "를 누르면 결과가 바로 나옵니다. 레인지를 바꿔보거나 턴·리버까지 탐색하고 싶을 때만 ",
+    infoBtn2: "[직접 계산]",
+    infoText2: "을 쓰세요.",
+    pot: "팟",
+    stack: "스택",
+    articleLink: "해설 보기",
+    viewResults: "결과 바로 보기",
+    solveYourself: "직접 계산",
+    footnote:
+      "레인지는 100bb 온라인 표준의 근사치입니다. 불러온 뒤 자유롭게 수정해서 비교해보는 것도 좋은 공부예요.",
+  },
+  en: {
+    infoBtn1: "[⚡ View results]",
+    infoText1:
+      " shows the solved strategy instantly. Use ",
+    infoBtn2: "[Solve it yourself]",
+    infoText2:
+      " only when you want to tweak the ranges or explore turn and river play.",
+    pot: "Pot",
+    stack: "Stack",
+    articleLink: "Read article",
+    viewResults: "View results",
+    solveYourself: "Solve it yourself",
+    footnote:
+      "Ranges are approximations of standard 100bb online play. Load a spot, tweak the ranges, and compare — a great way to study.",
+  },
+} as const;
 
 export default defineComponent({
   components: { InformationCircleIcon, PresetPreview },
@@ -185,8 +230,13 @@ export default defineComponent({
       previewPreset.value = null;
     };
 
+    // EN posts don't exist yet — return "" so the v-if hides the link in English
     const articleUrl = (p: Preset) =>
-      trackOutbound(ARTICLE_URLS[p.id] ?? "", "preset-card");
+      i18n.locale === "en"
+        ? ""
+        : trackOutbound(ARTICLE_URLS[p.id] ?? "", "preset-card");
+
+    const L = computed(() => M[i18n.locale]);
 
     return {
       grouped,
@@ -196,6 +246,12 @@ export default defineComponent({
       openPreview,
       loadFromPreview,
       articleUrl,
+      L,
+      presetTitleOf,
+      presetLessonOf,
+      presetCategoryOf,
+      oopLabelOf,
+      ipLabelOf,
     };
   },
 });

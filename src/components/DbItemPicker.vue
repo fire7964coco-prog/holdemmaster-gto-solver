@@ -7,11 +7,9 @@
   >
     <!-- No saved items -->
     <div v-if="data.length === 0" class="item-toplevel">
-      <span class="inline-block px-1"
-        >(저장된
-        {{ storeName === "ranges" ? "레인지" : "설정" }}
-        없음)</span
-      >
+      <span class="inline-block px-1">{{
+        storeName === "ranges" ? L.noSavedRanges : L.noSavedConfigs
+      }}</span>
     </div>
 
     <!-- Depth 0 -->
@@ -72,7 +70,7 @@
         >
           <!-- Empty group -->
           <div v-if="item0.items.length === 0" class="item-inside">
-            <span class="inline-block px-1">(빈 그룹)</span>
+            <span class="inline-block px-1">{{ L.emptyGroup }}</span>
           </div>
 
           <!-- Depth 1 -->
@@ -137,7 +135,7 @@
               >
                 <!-- Empty group -->
                 <div v-if="item1.items.length === 0" class="item-inside">
-                  <span class="inline-block px-1">(빈 그룹)</span>
+                  <span class="inline-block px-1">{{ L.emptyGroup }}</span>
                 </div>
 
                 <!-- Depth 2 -->
@@ -203,7 +201,7 @@
                     >
                       <!-- Empty group -->
                       <div v-if="item2.items.length === 0" class="item-inside">
-                        <span class="inline-block px-1">(빈 그룹)</span>
+                        <span class="inline-block px-1">{{ L.emptyGroup }}</span>
                       </div>
 
                       <!-- Depth 3 -->
@@ -377,7 +375,7 @@
   </div>
 
   <div v-if="errorOccured" class="mt-3 text-red-400 font-bold">
-    문제가 발생했습니다. 페이지를 새로고침해 주세요.
+    {{ L.errorReload }}
   </div>
 
   <div class="flex flex-col mt-4 gap-3">
@@ -387,7 +385,7 @@
         :disabled="selectedItem?.item?.isGroup ?? true"
         @click="loadItem()"
       >
-        불러오기
+        {{ L.load }}
       </button>
 
       <button
@@ -395,7 +393,7 @@
         :disabled="errorOccured || !allowSave || isEditing"
         @click="addOrOverwriteItem()"
       >
-        {{ selectedItem?.item?.isGroup === false ? "덮어쓰기" : "저장" }}
+        {{ selectedItem?.item?.isGroup === false ? L.overwrite : L.save }}
       </button>
 
       <button
@@ -403,7 +401,7 @@
         :disabled="errorOccured || selectedValue === false"
         @click="renameItem()"
       >
-        이름 변경
+        {{ L.rename }}
       </button>
     </div>
 
@@ -419,7 +417,7 @@
         "
         @click="addGroup()"
       >
-        그룹 추가
+        {{ L.addGroup }}
       </button>
 
       <button
@@ -427,7 +425,7 @@
         :disabled="errorOccured || selectedValue === false"
         @click="deleteItem(true)"
       >
-        삭제
+        {{ L.deleteLabel }}
       </button>
 
       <input
@@ -442,7 +440,7 @@
         :disabled="errorOccured || isEditing"
         @click="importJsonInput?.click()"
       >
-        JSON 가져오기
+        {{ L.importJsonLabel }}
       </button>
 
       <a
@@ -456,7 +454,7 @@
         :download="storeName + '.json'"
         @click="exportJson"
       >
-        JSON 내보내기
+        {{ L.exportJsonLabel }}
       </a>
     </div>
   </div>
@@ -466,7 +464,7 @@
     class="flex flex-col mt-4 px-2 py-1 text-red-400 bg-red-950 border-2 border-red-600 rounded-md font-semibold"
   >
     <div class="flex">
-      오류: 가져오기에 실패했습니다.
+      {{ L.importFailed }}
       <button
         class="w-6 h-6 ml-auto text-neutral-200 opacity-70 hover:opacity-100"
         @click="importError = ''"
@@ -481,8 +479,42 @@
 <script lang="ts">
 import { computed, defineComponent, nextTick, ref } from "vue";
 import * as Db from "../db";
+import { i18n, pick } from "../i18n";
 
 import { XMarkIcon } from "@heroicons/vue/20/solid";
+
+const M = {
+  ko: {
+    noSavedRanges: "(저장된 레인지 없음)",
+    noSavedConfigs: "(저장된 설정 없음)",
+    emptyGroup: "(빈 그룹)",
+    errorReload: "문제가 발생했습니다. 페이지를 새로고침해 주세요.",
+    load: "불러오기",
+    overwrite: "덮어쓰기",
+    save: "저장",
+    rename: "이름 변경",
+    addGroup: "그룹 추가",
+    deleteLabel: "삭제",
+    importJsonLabel: "JSON 가져오기",
+    exportJsonLabel: "JSON 내보내기",
+    importFailed: "오류: 가져오기에 실패했습니다.",
+  },
+  en: {
+    noSavedRanges: "(No saved ranges)",
+    noSavedConfigs: "(No saved configurations)",
+    emptyGroup: "(Empty group)",
+    errorReload: "An error occurred. Please reload the page.",
+    load: "Load",
+    overwrite: "Overwrite",
+    save: "Save",
+    rename: "Rename",
+    addGroup: "Add Group",
+    deleteLabel: "Delete",
+    importJsonLabel: "Import JSON",
+    exportJsonLabel: "Export JSON",
+    importFailed: "Error: Import failed.",
+  },
+} as const;
 
 type Item = {
   isGroup: false;
@@ -618,6 +650,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const L = computed(() => M[i18n.locale]);
     const data = ref<(Item | Group)[]>([]);
     const selectedValue = ref(false as false | string);
 
@@ -931,10 +964,10 @@ export default defineComponent({
         .map((item) => item.path[item.path.length - 1])
         .filter((name) => name !== editingName.value);
       const defaultName = item.isGroup
-        ? "새 그룹"
+        ? pick("새 그룹", "New group")
         : props.storeName === "ranges"
-        ? "새 레인지"
-        : "새 설정";
+        ? pick("새 레인지", "New range")
+        : pick("새 설정", "New configuration");
       if (editingName.value === "") {
         let i = 2;
         let newName = defaultName;
@@ -1274,28 +1307,40 @@ export default defineComponent({
       try {
         obj = JSON.parse(text);
       } catch (e) {
-        importError.value = "파싱 오류 (잘못된 JSON 형식)";
+        importError.value = pick(
+          "파싱 오류 (잘못된 JSON 형식)",
+          "Parse error (invalid JSON format)"
+        );
         return;
       }
 
       if (obj.name !== props.storeName) {
-        importError.value = "데이터 종류가 일치하지 않습니다";
+        importError.value = pick(
+          "데이터 종류가 일치하지 않습니다",
+          "Data type mismatch"
+        );
         return;
       }
 
       if (obj.version !== 2) {
-        importError.value = "버전이 일치하지 않습니다";
+        importError.value = pick(
+          "버전이 일치하지 않습니다",
+          "Version mismatch"
+        );
         return;
       }
 
       if (!checkJson(obj.data)) {
-        importError.value = "잘못된 데이터입니다";
+        importError.value = pick("잘못된 데이터입니다", "Invalid data");
         return;
       }
 
       const itemsToAdd = await getItemsToAdd(obj.data);
       if (typeof itemsToAdd === "string") {
-        importError.value = `같은 이름의 항목이 이미 존재하여 "${itemsToAdd}" 그룹을 만들 수 없습니다`;
+        importError.value = pick(
+          `같은 이름의 항목이 이미 존재하여 "${itemsToAdd}" 그룹을 만들 수 없습니다`,
+          `Cannot create group "${itemsToAdd}" because an item with the same name already exists`
+        );
         return;
       }
 
@@ -1336,6 +1381,7 @@ export default defineComponent({
     };
 
     return {
+      L,
       data,
       selectedValue,
       selectedItem,

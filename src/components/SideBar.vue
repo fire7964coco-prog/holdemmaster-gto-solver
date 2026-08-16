@@ -3,57 +3,57 @@
     class="flex flex-row md:flex-col shrink-0 w-full md:w-56 my-0 md:my-4 overflow-x-auto md:overflow-x-visible md:overflow-y-auto border-b md:border-b-0 md:border-r-2 border-neutral-700"
   >
     <div class="side-bar-label">
-      둘러보기<span class="hidden md:inline"> · 학습</span>
+      {{ L.exploreLabel }}<span class="hidden md:inline">{{ L.exploreLabelSuffix }}</span>
     </div>
 
     <button :class="itemStyle('about')" @click="store.sideView = 'about'">
-      소개
+      {{ L.about }}
     </button>
 
     <button :class="itemStyle('guide')" @click="store.sideView = 'guide'">
-      사용법
+      {{ L.guide }}
     </button>
 
     <button :class="itemStyle('presets')" @click="store.sideView = 'presets'">
-      교육 예제
+      {{ L.presets }}
       <span class="hidden md:inline text-xs font-semibold text-emerald-400">
-        ⚡ 바로 보기
+        ⚡ {{ L.presetsBadge }}
       </span>
       <span class="md:hidden text-emerald-400">⚡</span>
     </button>
 
     <button :class="itemStyle('trainer')" @click="store.sideView = 'trainer'">
-      GTO 트레이너
+      {{ L.trainer }}
       <span class="hidden md:inline text-xs font-semibold text-blue-400">
-        EV 채점
+        {{ L.trainerBadge }}
       </span>
     </button>
 
     <div class="side-bar-divider"></div>
 
     <div class="side-bar-label">
-      커스텀 스팟<span class="hidden md:inline"> — 직접 계산</span>
+      {{ L.customLabel }}<span class="hidden md:inline">{{ L.customLabelSuffix }}</span>
     </div>
 
     <button
       :class="itemStyle('oop-range')"
       @click="store.sideView = 'oop-range'"
     >
-      ① OOP 레인지
+      ① {{ L.oopRange }}
       <span class="hidden md:flex mt-1 justify-center">
         <RangeMiniViewer :player="0" compact />
       </span>
     </button>
 
     <button :class="itemStyle('ip-range')" @click="store.sideView = 'ip-range'">
-      ② IP 레인지
+      ② {{ L.ipRange }}
       <span class="hidden md:flex mt-1 justify-center">
         <RangeMiniViewer :player="1" compact />
       </span>
     </button>
 
     <button :class="itemStyle('board')" @click="store.sideView = 'board'">
-      ③ 보드
+      ③ {{ L.board }}
       <span class="hidden md:flex mt-1 justify-center font-semibold">
         <span
           v-for="(item, i) in boardTexts"
@@ -71,15 +71,15 @@
       :class="itemStyle('tree-config')"
       @click="store.sideView = 'tree-config'"
     >
-      ④ 벳 사이즈
-      <span class="hidden md:inline text-xs text-neutral-500">트리 설정</span>
+      ④ {{ L.betSize }}
+      <span class="hidden md:inline text-xs text-neutral-500">{{ L.betSizeSub }}</span>
     </button>
 
     <button
       :class="itemStyle('run-solver')"
       @click="store.sideView = 'run-solver'"
     >
-      ⑤ 계산 실행
+      ⑤ {{ L.run }}
     </button>
   </aside>
 </template>
@@ -88,8 +88,48 @@
 import { computed, defineComponent } from "vue";
 import { SideView, useStore, useConfigStore } from "../store";
 import { cardText } from "../utils";
+import { i18n } from "../i18n";
 
 import RangeMiniViewer from "./RangeMiniViewer.vue";
+
+const M = {
+  ko: {
+    exploreLabel: "둘러보기",
+    exploreLabelSuffix: " · 학습",
+    about: "소개",
+    guide: "사용법",
+    presets: "교육 예제",
+    presetsBadge: "바로 보기",
+    trainer: "GTO 트레이너",
+    trainerBadge: "EV 채점",
+    customLabel: "커스텀 스팟",
+    customLabelSuffix: " — 직접 계산",
+    oopRange: "OOP 레인지",
+    ipRange: "IP 레인지",
+    board: "보드",
+    betSize: "벳 사이즈",
+    betSizeSub: "트리 설정",
+    run: "계산 실행",
+  },
+  en: {
+    exploreLabel: "Explore",
+    exploreLabelSuffix: " & Study",
+    about: "About",
+    guide: "How to Use",
+    presets: "Study Spots",
+    presetsBadge: "Instant",
+    trainer: "GTO Trainer",
+    trainerBadge: "EV Grading",
+    customLabel: "Custom Spot",
+    customLabelSuffix: " — Solve Yourself",
+    oopRange: "OOP Range",
+    ipRange: "IP Range",
+    board: "Board",
+    betSize: "Bet Sizes",
+    betSizeSub: "Tree Settings",
+    run: "Run Solver",
+  },
+} as const;
 
 export default defineComponent({
   components: {
@@ -99,6 +139,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const config = useConfigStore();
+    const L = computed(() => M[i18n.locale]);
 
     const boardTexts = computed(() => {
       if (config.board.length === 0) {
@@ -111,6 +152,7 @@ export default defineComponent({
     return {
       store,
       boardTexts,
+      L,
       itemStyle: (view: SideView) => {
         return (
           "side-bar-item " +

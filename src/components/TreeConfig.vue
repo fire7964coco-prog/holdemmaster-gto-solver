@@ -3,12 +3,12 @@
     <div class="flex flex-col md:flex-row">
       <div class="shrink-0">
         <div class="mb-2 text-xs text-neutral-500">
-          정수 칩 단위로 입력합니다. bb 환산이 필요하면 10칩=1bb 사용을 권장합니다.
+          {{ L.chipNote }}
         </div>
         <div class="flex flex-col sm:flex-row my-1 gap-0 sm:gap-8">
           <div>
             <div class="my-1">
-              <span class="inline-block w-[7.5rem]">스타팅 팟:</span>
+              <span class="inline-block w-[7.5rem]">{{ L.startingPot }}</span>
               <input
                 v-model="config.startingPot"
                 type="number"
@@ -28,7 +28,7 @@
             </div>
 
             <div class="my-1">
-              <span class="inline-block w-[7.5rem]">유효 스택:</span>
+              <span class="inline-block w-[7.5rem]">{{ L.effectiveStack }}</span>
               <input
                 v-model="config.effectiveStack"
                 type="number"
@@ -50,7 +50,7 @@
 
           <div>
             <div class="my-1">
-              <span class="inline-block w-20">레이크:</span>
+              <span class="inline-block w-20">{{ L.rake }}</span>
               <input
                 v-model="config.rakePercent"
                 type="number"
@@ -69,7 +69,7 @@
             </div>
 
             <div class="my-1">
-              <span class="inline-block w-20">레이크 캡:</span>
+              <span class="inline-block w-20">{{ L.rakeCap }}</span>
               <input
                 v-model="config.rakeCap"
                 type="number"
@@ -88,7 +88,7 @@
 
           <div class="ml-auto p-1">
             <button class="button-base button-blue" @click="clearConfig">
-              초기화
+              {{ L.reset }}
             </button>
           </div>
         </div>
@@ -97,7 +97,7 @@
           v-if="errorBasics.length > 0"
           class="flex font-semibold text-red-400"
         >
-          <div class="underline">오류:</div>
+          <div class="underline">{{ L.error }}</div>
           <div class="ml-2">
             <div v-for="error in errorBasics" :key="error">
               {{ error }}
@@ -107,7 +107,7 @@
 
         <div class="mt-6">
           <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
-            <span class="font-semibold shrink-0">OOP 벳 사이즈</span>
+            <span class="font-semibold shrink-0">{{ L.oopBetSizes }}</span>
             <label class="inline-block shrink-0 ml-0 md:ml-2">
               <input
                 v-model="config.donkOption"
@@ -116,7 +116,7 @@
                 :disabled="hasEdit"
               />
               <span class="cursor-pointer peer-disabled:cursor-not-allowed">
-                덩크 벳에 다른 사이즈 사용
+                {{ L.donkOption }}
               </span>
             </label>
             <div class="flex flex-grow justify-center">
@@ -130,40 +130,17 @@
               >
                 <QuestionMarkCircleIcon class="inline w-5 h-5" />
                 <div class="inline-block ml-0.5 text-sm underline">
-                  입력 방법
+                  {{ L.howToInput }}
                 </div>
                 <template #content>
                   <div class="px-1 py-0.5 text-justify">
-                    여러 개의 벳 사이즈를 쉼표 또는 공백으로 구분하여 아래
-                    형식 중 어느 것으로든 입력할 수 있습니다. 비워 두면 벳이나
-                    레이즈를 하지 않습니다.
+                    {{ L.inputHelpIntro }}
                     <ul class="pl-6 list-disc">
-                      <li class="mt-1">
-                        팟 대비 퍼센트를 나타내는 숫자 (예: "50"). 레이즈의
-                        경우, 먼저 콜을 한 뒤 지정한 퍼센트만큼의 벳을 더하는
-                        방식으로 사이즈가 계산됩니다. 예를 들어 벳 전 팟이
-                        100이고 상대가 75를 벳했다면, 50% 레이즈는 75 + (100 +
-                        75 + 75) * 50% = 200이 됩니다.
-                      </li>
-                      <li class="mt-1">
-                        이전 벳 사이즈의 배수 (예: "2.5x"). 레이즈에만 사용할
-                        수 있습니다.
-                      </li>
-                      <li class="mt-1">올인 (예: "a").</li>
-                      <li class="mt-1">
-                        고정 금액 추가 (예: "100c"). 레이즈의 경우 레이즈 횟수
-                        상한도 지정할 수 있습니다 (예: "20c3r").
-                      </li>
-                      <li class="mt-1">
-                        지오메트릭 사이즈, 즉 남은 스택을 지정한 횟수의 동일
-                        퍼센트 벳으로 나누는 방식 (예: "3e"). 예를 들어 현재
-                        팟이 100이고 유효 스택이 400이면 "2e"는 100 벳이
-                        됩니다. "e" 앞의 숫자를 생략하면 남은 스트리트 수가
-                        사용됩니다 (플랍=3, 턴=2, 리버=1). 레이즈의 경우 지정한
-                        숫자에서 이전 레이즈 횟수를 뺍니다. 예를 들어 "3e"는
-                        리레이즈 시 "2e"로 바뀝니다. "e" 뒤에 숫자를 붙여 최대
-                        퍼센트 한도를 지정할 수도 있습니다 (예: "2e200").
-                      </li>
+                      <li class="mt-1">{{ L.inputHelpPercent }}</li>
+                      <li class="mt-1">{{ L.inputHelpMultiple }}</li>
+                      <li class="mt-1">{{ L.inputHelpAllin }}</li>
+                      <li class="mt-1">{{ L.inputHelpFixed }}</li>
+                      <li class="mt-1">{{ L.inputHelpGeometric }}</li>
                     </ul>
                   </div>
                 </template>
@@ -173,9 +150,9 @@
 
           <div class="flex gap-5 bet-grid">
             <div>
-              <div class="my-1 underline">플랍</div>
+              <div class="my-1 underline">{{ L.flop }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">벳:</span>
+                <span class="inline-block w-14">{{ L.bet }}</span>
                 <input
                   v-model="config.oopFlopBet"
                   type="text"
@@ -192,7 +169,7 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">레이즈:</span>
+                <span class="inline-block w-14">{{ L.raise }}</span>
                 <input
                   v-model="config.oopFlopRaise"
                   type="text"
@@ -211,9 +188,9 @@
             </div>
 
             <div>
-              <div class="my-1 underline">턴</div>
+              <div class="my-1 underline">{{ L.turn }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">벳:</span>
+                <span class="inline-block w-14">{{ L.bet }}</span>
                 <input
                   v-model="config.oopTurnBet"
                   type="text"
@@ -230,7 +207,7 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">레이즈:</span>
+                <span class="inline-block w-14">{{ L.raise }}</span>
                 <input
                   v-model="config.oopTurnRaise"
                   type="text"
@@ -247,7 +224,7 @@
                 %
               </div>
               <div v-if="config.donkOption" class="my-1">
-                <span class="inline-block w-14">덩크:</span>
+                <span class="inline-block w-14">{{ L.donk }}</span>
                 <input
                   v-model="config.oopTurnDonk"
                   type="text"
@@ -266,9 +243,9 @@
             </div>
 
             <div>
-              <div class="my-1 underline">리버</div>
+              <div class="my-1 underline">{{ L.river }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">벳:</span>
+                <span class="inline-block w-14">{{ L.bet }}</span>
                 <input
                   v-model="config.oopRiverBet"
                   type="text"
@@ -285,7 +262,7 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">레이즈:</span>
+                <span class="inline-block w-14">{{ L.raise }}</span>
                 <input
                   v-model="config.oopRiverRaise"
                   type="text"
@@ -302,7 +279,7 @@
                 %
               </div>
               <div v-if="config.donkOption" class="my-1">
-                <span class="inline-block w-14">덩크:</span>
+                <span class="inline-block w-14">{{ L.donk }}</span>
                 <input
                   v-model="config.oopRiverDonk"
                   type="text"
@@ -324,7 +301,7 @@
 
         <div>
           <div class="flex flex-wrap items-center gap-x-4">
-            <div class="mt-6 font-semibold shrink-0">IP 벳 사이즈</div>
+            <div class="mt-6 font-semibold shrink-0">{{ L.ipBetSizes }}</div>
             <div class="flex flex-grow items-center justify-center gap-6">
               <button
                 class="mt-3 button-base button-blue button-arrow"
@@ -345,9 +322,9 @@
 
           <div class="flex gap-5 bet-grid">
             <div>
-              <div class="my-1 underline">플랍</div>
+              <div class="my-1 underline">{{ L.flop }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">벳:</span>
+                <span class="inline-block w-14">{{ L.bet }}</span>
                 <input
                   v-model="config.ipFlopBet"
                   type="text"
@@ -364,7 +341,7 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">레이즈:</span>
+                <span class="inline-block w-14">{{ L.raise }}</span>
                 <input
                   v-model="config.ipFlopRaise"
                   type="text"
@@ -383,9 +360,9 @@
             </div>
 
             <div>
-              <div class="my-1 underline">턴</div>
+              <div class="my-1 underline">{{ L.turn }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">벳:</span>
+                <span class="inline-block w-14">{{ L.bet }}</span>
                 <input
                   v-model="config.ipTurnBet"
                   type="text"
@@ -402,7 +379,7 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">레이즈:</span>
+                <span class="inline-block w-14">{{ L.raise }}</span>
                 <input
                   v-model="config.ipTurnRaise"
                   type="text"
@@ -421,9 +398,9 @@
             </div>
 
             <div>
-              <div class="my-1 underline">리버</div>
+              <div class="my-1 underline">{{ L.river }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">벳:</span>
+                <span class="inline-block w-14">{{ L.bet }}</span>
                 <input
                   v-model="config.ipRiverBet"
                   type="text"
@@ -440,7 +417,7 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">레이즈:</span>
+                <span class="inline-block w-14">{{ L.raise }}</span>
                 <input
                   v-model="config.ipRiverRaise"
                   type="text"
@@ -464,7 +441,7 @@
           v-if="errorOop.length > 0 || errorIp.length > 0"
           class="flex mt-1 font-semibold text-red-400"
         >
-          <div class="underline">오류:</div>
+          <div class="underline">{{ L.error }}</div>
           <div class="ml-2">
             <div v-for="error in errorOop" :key="error">
               {{ error }}
@@ -479,7 +456,7 @@
           <div>
             <div class="my-1">
               <div class="inline-block w-48">
-                올인 추가 임계값:
+                {{ L.addAllInLabel }}
                 <Tippy
                   class="inline-block cursor-help"
                   max-width="420px"
@@ -490,8 +467,7 @@
                   <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
                   <template #content>
                     <div class="px-1 py-0.5 text-justify">
-                      가능한 최대 벳 사이즈와 팟의 비율이 이 임계값보다 작은
-                      모든 지점에 올인 액션을 추가합니다.
+                      {{ L.addAllInHelp }}
                     </div>
                   </template>
                 </Tippy>
@@ -512,7 +488,7 @@
 
             <div class="my-1">
               <div class="inline-block w-48">
-                강제 올인 임계값:
+                {{ L.forceAllInLabel }}
                 <Tippy
                   class="inline-block cursor-help"
                   max-width="500px"
@@ -524,21 +500,16 @@
                   <template #content>
                     <div class="px-1 py-0.5 text-justify">
                       <div>
-                        상대가 벳 액션을 콜한 후의 SPR (스택/팟 비율)이 이
-                        임계값보다 낮으면 해당 벳 액션을 올인 액션으로
-                        대체합니다. 권장 값은 15% - 20% 정도입니다.
+                        {{ L.forceAllInHelp1 }}
                       </div>
                       <div class="mt-3">
-                        이 옵션은 PioSOLVER의 "all-in threshold"와 유사합니다.
-                        PioSOLVER는 초기 스택 대비 팟에 투입한 금액의 비율이
-                        임계값을 초과하면 벳 액션을 올인으로 대체합니다.
+                        {{ L.forceAllInHelp2 }}
                       </div>
                       <div class="mt-3">
-                        소수점 반올림을 무시할 때 변환 공식은 다음과 같습니다
-                        (s = 초기 SPR, r = PioSOLVER의 임계값):
+                        {{ L.forceAllInHelp3 }}
                       </div>
                       <div class="mt-1 text-center">
-                        임계값 = s * (1 - r) / (1 + 2 * s * r).
+                        {{ L.forceAllInFormula }}
                       </div>
                     </div>
                   </template>
@@ -560,7 +531,7 @@
 
             <div class="my-1">
               <div class="inline-block w-48">
-                병합 임계값:
+                {{ L.mergingLabel }}
                 <Tippy
                   class="inline-block cursor-help"
                   max-width="500px"
@@ -572,19 +543,16 @@
                   <template #content>
                     <div class="px-1 py-0.5 text-justify">
                       <div>
-                        비슷한 사이즈의 벳 액션이 있으면 하나로 병합합니다.
+                        {{ L.mergingHelp1 }}
                       </div>
                       <div class="mt-3">
-                        알고리즘은 PioSOLVER와 동일합니다. 즉, 가장 큰 벳
-                        사이즈(= 팟의 X%)를 선택하고, 다음 부등식을 만족하는
-                        사이즈(= 팟의 Y%)의 다른 벳 액션을 모두 제거합니다:
+                        {{ L.mergingHelp2 }}
                       </div>
                       <div class="my-1 text-center">
-                        (100 + X) / (100 + Y) &lt; 1.0 + 임계값.
+                        {{ L.mergingFormula }}
                       </div>
                       <div>
-                        남은 벳 중 다음으로 큰 벳 사이즈로 이 과정을
-                        반복합니다.
+                        {{ L.mergingHelp3 }}
                       </div>
                     </div>
                   </template>
@@ -612,7 +580,7 @@
                 :disabled="!isInputValid"
                 @click="startEdit"
               >
-                트리 미리보기 & 편집
+                {{ L.treePreviewEdit }}
               </button>
 
               <button
@@ -620,7 +588,7 @@
                 class="button-base button-red"
                 @click="clearEdit"
               >
-                편집 초기화 & 잠금 해제
+                {{ L.clearEditUnlock }}
               </button>
             </div>
           </div>
@@ -630,7 +598,7 @@
           v-if="errorMisc.length > 0"
           class="flex mt-1 font-semibold text-red-400"
         >
-          <div class="underline">오류:</div>
+          <div class="underline">{{ L.error }}</div>
           <div class="ml-2">
             <div v-for="error in errorMisc" :key="error">
               {{ error }}
@@ -642,7 +610,7 @@
           v-if="warningMisc.length > 0"
           class="flex mt-1 font-semibold text-orange-400"
         >
-          <div class="underline">경고:</div>
+          <div class="underline">{{ L.warning }}</div>
           <div class="ml-2">
             <div
               v-for="warning in warningMisc"
@@ -671,7 +639,7 @@
     >
       <div v-if="addedLinesArray.length > 0" class="flex">
         <div class="font-semibold underline w-[7.75rem]">
-          추가된 라인:
+          {{ L.addedLines }}
         </div>
         <div class="flex flex-col">
           <div v-for="addedLine in addedLinesArray" :key="addedLine">
@@ -682,7 +650,7 @@
 
       <div v-if="removedLinesArray.length > 0" class="flex mt-2">
         <div class="font-semibold underline w-[7.75rem]">
-          제거된 라인:
+          {{ L.removedLines }}
         </div>
         <div class="flex flex-col">
           <div v-for="removedLine in removedLinesArray" :key="removedLine">
@@ -699,14 +667,11 @@
         "
         class="flex mt-2 font-semibold text-orange-400"
       >
-        <div class="underline">경고:</div>
+        <div class="underline">{{ L.warning }}</div>
         <div class="ml-2">
-          편집된 트리는 {{ config.expectedBoardLength }}장의 보드를
-          가정하지만, 현재 보드는 {{ config.board.length }}장으로 구성되어
-          있습니다.
+          {{ L.boardMismatch(config.expectedBoardLength, config.board.length) }}
           <br />
-          편집된 트리를 초기화하려면 "편집 초기화 & 잠금 해제" 버튼을
-          클릭하세요.
+          {{ L.boardMismatchHint }}
         </div>
       </div>
     </div>
@@ -715,7 +680,7 @@
       v-if="errorLines.length > 0"
       class="flex mt-2 font-semibold text-red-400"
     >
-      <div class="underline">오류:</div>
+      <div class="underline">{{ L.error }}</div>
       <div class="ml-2">
         <div v-for="error in errorLines" :key="error">
           {{ error }}
@@ -744,6 +709,124 @@ import DbItemPicker from "./DbItemPicker.vue";
 import TreeEditor from "./TreeEditor.vue";
 import { Tippy } from "vue-tippy";
 import { QuestionMarkCircleIcon } from "@heroicons/vue/20/solid";
+import { i18n, pick } from "../i18n";
+
+const M = {
+  ko: {
+    chipNote:
+      "정수 칩 단위로 입력합니다. bb 환산이 필요하면 10칩=1bb 사용을 권장합니다.",
+    startingPot: "스타팅 팟:",
+    effectiveStack: "유효 스택:",
+    rake: "레이크:",
+    rakeCap: "레이크 캡:",
+    reset: "초기화",
+    error: "오류:",
+    warning: "경고:",
+    oopBetSizes: "OOP 벳 사이즈",
+    donkOption: "덩크 벳에 다른 사이즈 사용",
+    howToInput: "입력 방법",
+    inputHelpIntro:
+      "여러 개의 벳 사이즈를 쉼표 또는 공백으로 구분하여 아래 형식 중 어느 것으로든 입력할 수 있습니다. 비워 두면 벳이나 레이즈를 하지 않습니다.",
+    inputHelpPercent:
+      '팟 대비 퍼센트를 나타내는 숫자 (예: "50"). 레이즈의 경우, 먼저 콜을 한 뒤 지정한 퍼센트만큼의 벳을 더하는 방식으로 사이즈가 계산됩니다. 예를 들어 벳 전 팟이 100이고 상대가 75를 벳했다면, 50% 레이즈는 75 + (100 + 75 + 75) * 50% = 200이 됩니다.',
+    inputHelpMultiple:
+      '이전 벳 사이즈의 배수 (예: "2.5x"). 레이즈에만 사용할 수 있습니다.',
+    inputHelpAllin: '올인 (예: "a").',
+    inputHelpFixed:
+      '고정 금액 추가 (예: "100c"). 레이즈의 경우 레이즈 횟수 상한도 지정할 수 있습니다 (예: "20c3r").',
+    inputHelpGeometric:
+      '지오메트릭 사이즈, 즉 남은 스택을 지정한 횟수의 동일 퍼센트 벳으로 나누는 방식 (예: "3e"). 예를 들어 현재 팟이 100이고 유효 스택이 400이면 "2e"는 100 벳이 됩니다. "e" 앞의 숫자를 생략하면 남은 스트리트 수가 사용됩니다 (플랍=3, 턴=2, 리버=1). 레이즈의 경우 지정한 숫자에서 이전 레이즈 횟수를 뺍니다. 예를 들어 "3e"는 리레이즈 시 "2e"로 바뀝니다. "e" 뒤에 숫자를 붙여 최대 퍼센트 한도를 지정할 수도 있습니다 (예: "2e200").',
+    flop: "플랍",
+    turn: "턴",
+    river: "리버",
+    bet: "벳:",
+    raise: "레이즈:",
+    donk: "덩크:",
+    ipBetSizes: "IP 벳 사이즈",
+    addAllInLabel: "올인 추가 임계값:",
+    addAllInHelp:
+      "가능한 최대 벳 사이즈와 팟의 비율이 이 임계값보다 작은 모든 지점에 올인 액션을 추가합니다.",
+    forceAllInLabel: "강제 올인 임계값:",
+    forceAllInHelp1:
+      "상대가 벳 액션을 콜한 후의 SPR (스택/팟 비율)이 이 임계값보다 낮으면 해당 벳 액션을 올인 액션으로 대체합니다. 권장 값은 15% - 20% 정도입니다.",
+    forceAllInHelp2:
+      '이 옵션은 PioSOLVER의 "all-in threshold"와 유사합니다. PioSOLVER는 초기 스택 대비 팟에 투입한 금액의 비율이 임계값을 초과하면 벳 액션을 올인으로 대체합니다.',
+    forceAllInHelp3:
+      "소수점 반올림을 무시할 때 변환 공식은 다음과 같습니다 (s = 초기 SPR, r = PioSOLVER의 임계값):",
+    forceAllInFormula: "임계값 = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "병합 임계값:",
+    mergingHelp1: "비슷한 사이즈의 벳 액션이 있으면 하나로 병합합니다.",
+    mergingHelp2:
+      "알고리즘은 PioSOLVER와 동일합니다. 즉, 가장 큰 벳 사이즈(= 팟의 X%)를 선택하고, 다음 부등식을 만족하는 사이즈(= 팟의 Y%)의 다른 벳 액션을 모두 제거합니다:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + 임계값.",
+    mergingHelp3: "남은 벳 중 다음으로 큰 벳 사이즈로 이 과정을 반복합니다.",
+    treePreviewEdit: "트리 미리보기 & 편집",
+    clearEditUnlock: "편집 초기화 & 잠금 해제",
+    addedLines: "추가된 라인:",
+    removedLines: "제거된 라인:",
+    boardMismatch: (expected: number, actual: number) =>
+      `편집된 트리는 ${expected}장의 보드를 가정하지만, 현재 보드는 ${actual}장으로 구성되어 있습니다.`,
+    boardMismatchHint:
+      '편집된 트리를 초기화하려면 "편집 초기화 & 잠금 해제" 버튼을 클릭하세요.',
+  },
+  en: {
+    chipNote:
+      "Enter amounts in integer chips (custom spots use arbitrary chip units). To think in big blinds, we recommend 10 chips = 1bb.",
+    startingPot: "Starting Pot:",
+    effectiveStack: "Effective Stack:",
+    rake: "Rake:",
+    rakeCap: "Rake Cap:",
+    reset: "Clear",
+    error: "Error:",
+    warning: "Warning:",
+    oopBetSizes: "OOP Bet Sizes",
+    donkOption: "Use different sizes for Donk Bets",
+    howToInput: "How to input",
+    inputHelpIntro:
+      "You can enter multiple bet sizes separated by commas or spaces, in any of the following formats. If left empty, no bet or raise is made.",
+    inputHelpPercent:
+      'A number representing the percentage of the pot (e.g., "50"). For raises, the size is computed by first calling and then adding the specified percentage of the resulting pot. For example, if the pot before the bet is 100 and the opponent bets 75, a 50% raise is 75 + (100 + 75 + 75) * 50% = 200.',
+    inputHelpMultiple:
+      'A multiple of the previous bet size (e.g., "2.5x"). Only available for raises.',
+    inputHelpAllin: 'All-in (e.g., "a").',
+    inputHelpFixed:
+      'Adding a fixed amount (e.g., "100c"). For raises, you can also cap the number of raises (e.g., "20c3r").',
+    inputHelpGeometric:
+      'Geometric size, i.e., splitting the remaining stack into the specified number of equal-percentage bets (e.g., "3e"). For example, if the current pot is 100 and the effective stack is 400, "2e" is a bet of 100. If the number before "e" is omitted, the number of remaining streets is used (Flop=3, Turn=2, River=1). For raises, the number of previous raises is subtracted from the specified number; e.g., "3e" becomes "2e" when re-raising. You can also append a number after "e" to set a maximum percentage limit (e.g., "2e200").',
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "IP Bet Sizes",
+    addAllInLabel: "Add All-In Threshold:",
+    addAllInHelp:
+      "Adds an all-in action to every node where the ratio of the maximum possible bet size to the pot is below this threshold.",
+    forceAllInLabel: "Force All-In Threshold:",
+    forceAllInHelp1:
+      "If the SPR (stack-to-pot ratio) after the opponent calls a bet action is below this threshold, that bet action is replaced with an all-in action. A recommended value is around 15% - 20%.",
+    forceAllInHelp2:
+      'This option is similar to PioSOLVER\'s "all-in threshold". PioSOLVER replaces a bet action with an all-in when the ratio of the amount put into the pot to the initial stack exceeds the threshold.',
+    forceAllInHelp3:
+      "Ignoring rounding, the conversion formula is as follows (s = initial SPR, r = PioSOLVER's threshold):",
+    forceAllInFormula: "Threshold = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Merging Threshold:",
+    mergingHelp1: "Merges bet actions of similar sizes into one.",
+    mergingHelp2:
+      "The algorithm is the same as PioSOLVER's: pick the largest bet size (= X% of the pot) and remove every other bet action whose size (= Y% of the pot) satisfies the following inequality:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + threshold.",
+    mergingHelp3: "Repeat this process with the next largest remaining bet size.",
+    treePreviewEdit: "Tree Preview & Edit",
+    clearEditUnlock: "Clear Edits & Unlock",
+    addedLines: "Added lines:",
+    removedLines: "Removed lines:",
+    boardMismatch: (expected: number, actual: number) =>
+      `The edited tree assumes a ${expected}-card board, but the current board has ${actual} cards.`,
+    boardMismatchHint:
+      'To discard the edited tree, click the "Clear Edits & Unlock" button.',
+  },
+} as const;
 
 type ConfigValue = {
   startingPot: number;
@@ -784,6 +867,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const config = useConfigStore();
+    const L = computed(() => M[i18n.locale]);
 
     const isEditMode = ref(false);
 
@@ -806,34 +890,69 @@ export default defineComponent({
     const errorBasics = computed(() => {
       const errors: string[] = [];
       if (config.startingPot <= 0) {
-        errors.push("스타팅 팟은 양수여야 합니다");
+        errors.push(
+          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive")
+        );
       }
       if (config.startingPot > MAX_AMOUNT) {
-        errors.push(`스타팅 팟은 ${MAX_AMOUNT} 이하여야 합니다`);
+        errors.push(
+          pick(
+            `스타팅 팟은 ${MAX_AMOUNT} 이하여야 합니다`,
+            `Starting pot must not exceed ${MAX_AMOUNT}`
+          )
+        );
       }
       if (config.startingPot % 1 !== 0) {
-        errors.push("스타팅 팟은 정수여야 합니다");
+        errors.push(
+          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer")
+        );
       }
       if (config.effectiveStack <= 0) {
-        errors.push("유효 스택은 양수여야 합니다");
+        errors.push(
+          pick(
+            "유효 스택은 양수여야 합니다",
+            "Effective stack must be positive"
+          )
+        );
       }
       if (config.effectiveStack > MAX_AMOUNT) {
-        errors.push(`유효 스택은 ${MAX_AMOUNT} 이하여야 합니다`);
+        errors.push(
+          pick(
+            `유효 스택은 ${MAX_AMOUNT} 이하여야 합니다`,
+            `Effective stack must not exceed ${MAX_AMOUNT}`
+          )
+        );
       }
       if (config.effectiveStack % 1 !== 0) {
-        errors.push("유효 스택은 정수여야 합니다");
+        errors.push(
+          pick(
+            "유효 스택은 정수여야 합니다",
+            "Effective stack must be an integer"
+          )
+        );
       }
       if (config.rakePercent < 0) {
-        errors.push("레이크는 음수일 수 없습니다");
+        errors.push(
+          pick("레이크는 음수일 수 없습니다", "Rake must not be negative")
+        );
       }
       if (config.rakePercent > 100) {
-        errors.push("레이크는 100%를 초과할 수 없습니다");
+        errors.push(
+          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%")
+        );
       }
       if (config.rakeCap < 0) {
-        errors.push("레이크 캡은 음수일 수 없습니다");
+        errors.push(
+          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative")
+        );
       }
       if (config.rakeCap > 3 * MAX_AMOUNT) {
-        errors.push(`레이크 캡은 ${3 * MAX_AMOUNT} 이하여야 합니다`);
+        errors.push(
+          pick<string>(
+            `레이크 캡은 ${3 * MAX_AMOUNT} 이하여야 합니다`,
+            `Rake cap must not exceed ${3 * MAX_AMOUNT}`
+          )
+        );
       }
       return errors;
     });
@@ -842,14 +961,40 @@ export default defineComponent({
       const errors: string[] = [];
       const isDonk = true;
       const betConfig = [
-        { name: "OOP 플랍 벳", res: config.oopFlopBetSanitized },
-        { name: "OOP 플랍 레이즈", res: config.oopFlopRaiseSanitized },
-        { name: "OOP 턴 벳", res: config.oopTurnBetSanitized },
-        { name: "OOP 턴 레이즈", res: config.oopTurnRaiseSanitized },
-        { name: "OOP 턴 덩크", res: config.oopTurnDonkSanitized, isDonk },
-        { name: "OOP 리버 벳", res: config.oopRiverBetSanitized },
-        { name: "OOP 리버 레이즈", res: config.oopRiverRaiseSanitized },
-        { name: "OOP 리버 덩크", res: config.oopRiverDonkSanitized, isDonk },
+        {
+          name: pick("OOP 플랍 벳", "OOP flop bet"),
+          res: config.oopFlopBetSanitized,
+        },
+        {
+          name: pick("OOP 플랍 레이즈", "OOP flop raise"),
+          res: config.oopFlopRaiseSanitized,
+        },
+        {
+          name: pick("OOP 턴 벳", "OOP turn bet"),
+          res: config.oopTurnBetSanitized,
+        },
+        {
+          name: pick("OOP 턴 레이즈", "OOP turn raise"),
+          res: config.oopTurnRaiseSanitized,
+        },
+        {
+          name: pick("OOP 턴 덩크", "OOP turn donk"),
+          res: config.oopTurnDonkSanitized,
+          isDonk,
+        },
+        {
+          name: pick("OOP 리버 벳", "OOP river bet"),
+          res: config.oopRiverBetSanitized,
+        },
+        {
+          name: pick("OOP 리버 레이즈", "OOP river raise"),
+          res: config.oopRiverRaiseSanitized,
+        },
+        {
+          name: pick("OOP 리버 덩크", "OOP river donk"),
+          res: config.oopRiverDonkSanitized,
+          isDonk,
+        },
       ];
       for (const { name, res, isDonk } of betConfig) {
         if (!res.valid && (!isDonk || config.donkOption)) {
@@ -862,12 +1007,30 @@ export default defineComponent({
     const errorIp = computed(() => {
       const errors: string[] = [];
       const betConfig = [
-        { name: "IP 플랍 벳", res: config.ipFlopBetSanitized },
-        { name: "IP 플랍 레이즈", res: config.ipFlopRaiseSanitized },
-        { name: "IP 턴 벳", res: config.ipTurnBetSanitized },
-        { name: "IP 턴 레이즈", res: config.ipTurnRaiseSanitized },
-        { name: "IP 리버 벳", res: config.ipRiverBetSanitized },
-        { name: "IP 리버 레이즈", res: config.ipRiverRaiseSanitized },
+        {
+          name: pick("IP 플랍 벳", "IP flop bet"),
+          res: config.ipFlopBetSanitized,
+        },
+        {
+          name: pick("IP 플랍 레이즈", "IP flop raise"),
+          res: config.ipFlopRaiseSanitized,
+        },
+        {
+          name: pick("IP 턴 벳", "IP turn bet"),
+          res: config.ipTurnBetSanitized,
+        },
+        {
+          name: pick("IP 턴 레이즈", "IP turn raise"),
+          res: config.ipTurnRaiseSanitized,
+        },
+        {
+          name: pick("IP 리버 벳", "IP river bet"),
+          res: config.ipRiverBetSanitized,
+        },
+        {
+          name: pick("IP 리버 레이즈", "IP river raise"),
+          res: config.ipRiverRaiseSanitized,
+        },
       ];
       for (const { name, res } of betConfig) {
         if (!res.valid) {
@@ -880,13 +1043,28 @@ export default defineComponent({
     const errorMisc = computed(() => {
       const errors: string[] = [];
       if (config.addAllInThreshold < 0) {
-        errors.push("올인 추가 임계값은 음수일 수 없습니다");
+        errors.push(
+          pick(
+            "올인 추가 임계값은 음수일 수 없습니다",
+            "Add all-in threshold must not be negative"
+          )
+        );
       }
       if (config.forceAllInThreshold < 0) {
-        errors.push("강제 올인 임계값은 음수일 수 없습니다");
+        errors.push(
+          pick(
+            "강제 올인 임계값은 음수일 수 없습니다",
+            "Force all-in threshold must not be negative"
+          )
+        );
       }
       if (config.mergingThreshold < 0) {
-        errors.push("병합 임계값은 음수일 수 없습니다");
+        errors.push(
+          pick(
+            "병합 임계값은 음수일 수 없습니다",
+            "Merging threshold must not be negative"
+          )
+        );
       }
       return errors;
     });
@@ -895,7 +1073,10 @@ export default defineComponent({
       const warnings: string[] = [];
       if (config.forceAllInThreshold > 30) {
         warnings.push(
-          "강제 올인 임계값을 30%보다 높게 설정하는 것은 권장되지 않습니다.\n의미는 도움말을 참고해 주세요."
+          pick(
+            "강제 올인 임계값을 30%보다 높게 설정하는 것은 권장되지 않습니다.\n의미는 도움말을 참고해 주세요.",
+            "Setting the force all-in threshold higher than 30% is not recommended.\nPlease see the help for what it means."
+          )
         );
       }
       return warnings;
@@ -909,7 +1090,12 @@ export default defineComponent({
         removedLinesArray.value.includes(ROOT_LINE_STRING) ||
         removedLinesArray.value.includes(INVALID_LINE_STRING)
       ) {
-        errors.push("잘못된 라인이 발견되었습니다 (손상된 설정을 불러왔나요?)");
+        errors.push(
+          pick(
+            "잘못된 라인이 발견되었습니다 (손상된 설정을 불러왔나요?)",
+            "Invalid line found (loaded a broken configuration?)"
+          )
+        );
       }
       if (
         ![0, 3, 4, 5].includes(config.expectedBoardLength) ||
@@ -920,7 +1106,12 @@ export default defineComponent({
           addedLinesArray.value.length === 0 &&
           removedLinesArray.value.length === 0)
       ) {
-        errors.push("잘못된 설정입니다 (손상된 설정을 불러왔나요?)");
+        errors.push(
+          pick(
+            "잘못된 설정입니다 (손상된 설정을 불러왔나요?)",
+            "Invalid configuration (loaded a broken configuration?)"
+          )
+        );
       }
       return errors;
     });
@@ -1053,7 +1244,7 @@ export default defineComponent({
       if (config.expectedBoardLength === 0) {
         config.expectedBoardLength = Math.max(config.board.length, 3);
       }
-      store.headers["tree-config"].push("트리 미리보기 & 편집");
+      store.treeEditOpen = true;
     };
 
     const clearEdit = () => {
@@ -1069,7 +1260,7 @@ export default defineComponent({
       if (config.addedLines === "" && config.removedLines === "") {
         config.expectedBoardLength = 0;
       }
-      store.headers["tree-config"].pop();
+      store.treeEditOpen = false;
     };
 
     const cancelEdit = () => {
@@ -1077,7 +1268,7 @@ export default defineComponent({
       if (config.addedLines === "" && config.removedLines === "") {
         config.expectedBoardLength = 0;
       }
-      store.headers["tree-config"].pop();
+      store.treeEditOpen = false;
     };
 
     // 팟·스택을 직접 고치면 더 이상 교육 프리셋 스팟이 아니므로 bb 환산을 끈다
@@ -1089,6 +1280,7 @@ export default defineComponent({
     return {
       MAX_AMOUNT,
       config,
+      L,
       onAmountEdit,
       isEditMode,
       addedLinesArray,

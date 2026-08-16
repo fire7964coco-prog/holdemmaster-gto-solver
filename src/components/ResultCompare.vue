@@ -27,7 +27,7 @@
             'font-semibold': combos[0] && combos[0] >= (1 - EPS) * combos[1],
           }"
         />
-        <div class="flex-grow text-center underline">콤보</div>
+        <div class="flex-grow text-center underline">{{ L.combos }}</div>
         <Adaptive
           :value="combos[1]"
           :class="{
@@ -50,7 +50,7 @@
               !isNaN(equity[0]) && equity[0] >= (1 - EPS) * equity[1],
           }"
         />
-        <div class="flex-grow text-center underline">에퀴티</div>
+        <div class="flex-grow text-center underline">{{ L.equity }}</div>
         <Percentage
           :value="equity[1]"
           :class="{
@@ -119,8 +119,20 @@ import { computed, defineComponent, h } from "vue";
 import { average, toFixed1, toFixed, toFixedAdaptive } from "../utils";
 import { Results, Spot, SpotChance } from "../result-types";
 import { useStore } from "../store";
+import { i18n } from "../i18n";
 
 import { StarIcon } from "@heroicons/vue/24/solid";
+
+const M = {
+  ko: {
+    combos: "콤보",
+    equity: "에퀴티",
+  },
+  en: {
+    combos: "Combos",
+    equity: "Equity",
+  },
+} as const;
 
 const EPS = 2e-6;
 const sky500 = "#0ea5e9";
@@ -184,6 +196,7 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
+    const L = computed(() => M[i18n.locale]);
     const player = computed(() => {
       if (props.selectedChance) return "chance";
       return props.selectedSpot.player;
@@ -249,6 +262,7 @@ export default defineComponent({
 
     return {
       EPS,
+      L,
       player,
       combos,
       equity,

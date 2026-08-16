@@ -92,17 +92,9 @@ export const useStore = defineStore("app", {
   state: () => ({
     navView: "solver" as NavView,
     sideView: "about" as SideView,
-    headers: {
-      about: ["소개"],
-      guide: ["사용법 — 순서대로 따라하기"],
-      presets: ["교육 예제 — 원클릭 스팟"],
-      trainer: ["GTO 트레이너 — 선택의 EV를 확인하세요"],
-      "oop-range": ["OOP 레인지"],
-      "ip-range": ["IP 레인지"],
-      board: ["보드"],
-      "tree-config": ["트리 설정"],
-      "run-solver": ["솔버 실행"],
-    },
+    // 트리 편집기가 열려 있는가 — 화면 제목의 «> 트리 미리보기 & 편집» 표시용
+    // (제목 문구 자체는 언어별이라 App.vue가 갖는다)
+    treeEditOpen: false,
     isSolverRunning: false,
     isFinalizing: false,
     isSolverPaused: false,

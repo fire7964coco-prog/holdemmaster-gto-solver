@@ -1,5 +1,6 @@
 // 핸드 분류(오버페어/탑페어/드로우 등) — GTO Wizard식 브레이크다운 패널용
 // 카드 인코딩: id = 4*rank + suit (rank 0=2 .. 12=A, suit 0=♣ 1=♦ 2=♥ 3=♠)
+import { i18n } from "./i18n";
 
 export type MadeKey =
   | "straight_flush"
@@ -52,6 +53,39 @@ export const DRAW_LABELS: Record<DrawKey, string> = {
   backdoor_fd: "백도어 플러시",
   no_draw: "드로우 없음",
 };
+
+export const MADE_LABELS_EN: Record<MadeKey, string> = {
+  straight_flush: "Straight Flush",
+  quads: "Quads",
+  full_house: "Full House",
+  flush: "Flush",
+  straight: "Straight",
+  trips: "Trips",
+  two_pair: "Two Pair",
+  overpair: "Overpair",
+  top_pair: "Top Pair",
+  second_pair: "Second Pair",
+  weak_pair: "Weak Pair",
+  underpair: "Underpair",
+  ace_high: "Ace High",
+  king_high: "King High",
+  nothing: "No Made Hand",
+};
+
+export const DRAW_LABELS_EN: Record<DrawKey, string> = {
+  combo_draw: "Combo Draw",
+  flush_draw: "Flush Draw",
+  oesd: "Open-Ended Straight Draw",
+  gutshot: "Gutshot",
+  backdoor_fd: "Backdoor Flush Draw",
+  no_draw: "No Draw",
+};
+
+/* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
+export const madeLabels = () =>
+  i18n.locale === "ko" ? MADE_LABELS : MADE_LABELS_EN;
+export const drawLabels = () =>
+  i18n.locale === "ko" ? DRAW_LABELS : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [
   "straight_flush",
@@ -280,7 +314,7 @@ export const aggregateBreakdown = (
       .filter((row) => row.pct > 0.05);
 
   return {
-    made: toRows(MADE_ORDER, MADE_LABELS, madeSum),
-    draws: toRows(DRAW_ORDER, DRAW_LABELS, drawSum),
+    made: toRows(MADE_ORDER, madeLabels(), madeSum),
+    draws: toRows(DRAW_ORDER, drawLabels(), drawSum),
   };
 };

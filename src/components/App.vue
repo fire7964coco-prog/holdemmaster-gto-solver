@@ -73,6 +73,7 @@ import { useStore } from "../store";
 import { applySpotFromUrl } from "../spot-share";
 import { viewFromUrl } from "../pwa";
 import { bootstrapAccount } from "../account";
+import { i18n } from "../i18n";
 
 import NavBar from "./NavBar.vue";
 import SideBar from "./SideBar.vue";
@@ -109,7 +110,39 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
-    const header = computed(() => store.headers[store.sideView].join(" > "));
+    const HEADERS = {
+      ko: {
+        about: "소개",
+        guide: "사용법 — 순서대로 따라하기",
+        presets: "교육 예제 — 원클릭 스팟",
+        trainer: "GTO 트레이너 — 선택의 EV를 확인하세요",
+        "oop-range": "OOP 레인지",
+        "ip-range": "IP 레인지",
+        board: "보드",
+        "tree-config": "트리 설정",
+        "run-solver": "솔버 실행",
+        treeEdit: "트리 미리보기 & 편집",
+      },
+      en: {
+        about: "About",
+        guide: "How to Use — Step by Step",
+        presets: "Study Spots — One-Click Examples",
+        trainer: "GTO Trainer — See the EV of Every Decision",
+        "oop-range": "OOP Range",
+        "ip-range": "IP Range",
+        board: "Board",
+        "tree-config": "Tree Settings",
+        "run-solver": "Run Solver",
+        treeEdit: "Tree Preview & Edit",
+      },
+    } as const;
+    const header = computed(() => {
+      const messages = HEADERS[i18n.locale];
+      const base = messages[store.sideView];
+      return store.sideView === "tree-config" && store.treeEditOpen
+        ? `${base} > ${messages.treeEdit}`
+        : base;
+    });
 
     // 로그인에서 돌아온 경우: 세션을 먼저 회수하고 주소를 정리한 뒤 트레이너로 복귀.
     // (앱 진입 화면은 소개라, 트레이너 화면에서만 처리하면 인증 코드를 놓친다)
@@ -128,6 +161,9 @@ export default defineComponent({
       const view = viewFromUrl();
       if (view) {
         store.sideView = view;
+        history.replaceState(null, "", location.pathname);
+      } else if (new URLSearchParams(location.search).has("lang")) {
+        // ?lang=은 i18n.ts가 이미 읽어 저장했다 — 주소만 정리
         history.replaceState(null, "", location.pathname);
       }
     }

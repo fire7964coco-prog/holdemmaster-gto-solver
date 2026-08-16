@@ -2,22 +2,22 @@
   <div class="flex flex-col w-full border-l border-neutral-600 overflow-x-auto">
     <div class="flex shrink-0 h-12 border-b border-neutral-600">
       <div class="flex h-full px-4 items-center text-lg font-semibold">
-        요약
+        {{ L.summary }}
       </div>
 
       <div class="flex h-full ml-auto pr-4 items-center gap-4 snug">
         <div class="flex flex-col items-start justify-center h-full">
-          <div class="text-sm">바 너비:</div>
+          <div class="text-sm">{{ L.barWidth }}</div>
           <select
             v-model="displayOptions.barWidth"
             class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
             @change="updateDisplayOptions"
           >
-            <option value="normalized">정규화</option>
+            <option value="normalized">{{ L.normalized }}</option>
             <option v-if="tableMode !== 'chance'" value="absolute">
-              절대값
+              {{ L.absolute }}
             </option>
-            <option value="full">전체</option>
+            <option value="full">{{ L.full }}</option>
           </select>
         </div>
 
@@ -25,18 +25,18 @@
           v-if="tableMode !== 'chance'"
           class="flex flex-col items-start justify-center h-full"
         >
-          <div class="text-sm">표시:</div>
+          <div class="text-sm">{{ L.display }}</div>
           <select
             v-model="(displayOptions as DisplayOptionsBasics).content"
             class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
             @change="updateDisplayOptions"
           >
-            <option value="percentage">액션 %</option>
-            <option value="ev">액션 EV</option>
+            <option value="percentage">{{ L.actionPct }}</option>
+            <option value="ev">{{ L.actionEv }}</option>
           </select>
         </div>
 
-        <Tippy content="요약을 CSV 파일로 내보내기">
+        <Tippy :content="L.exportCsv">
           <a
             ref="exportSummaryButton"
             :class="
@@ -112,12 +112,12 @@
               @click="column.type !== 'bar' && sortBy(columnIndex(column))"
             >
               <template v-if="column.type === 'card'">
-                <span>{{ hoverContent?.name ?? "전체" }}</span>
+                <span>{{ hoverContent?.name ?? L.all }}</span>
               </template>
 
               <template v-else-if="column.type === 'bar'">
                 <div
-                  v-if="summary && column.label === '전략'"
+                  v-if="summary && column.label === L.strategy"
                   class="w-full h-full bg-neutral-800 bg-left bg-no-repeat"
                   :style="{
                     'background-image': strategyBarBgImage(summary),
@@ -319,9 +319,7 @@
               :colspan="columns.length"
             >
               {{
-                tableMode === "chance"
-                  ? `${chanceType === "turn" ? "턴" : "리버"} 리포트가 없습니다`
-                  : "결과 없음"
+                tableMode === "chance" ? L.noReport(chanceType) : L.noResults
               }}
             </td>
           </tr>
@@ -362,6 +360,7 @@ import {
   formatAmount,
 } from "../utils";
 import { useStore } from "../store";
+import { i18n } from "../i18n";
 
 import {
   Results,
@@ -471,19 +470,67 @@ const cardStr = (card: number) => {
   return rank + suit;
 };
 
-// display-only label map (data values remain in English)
-const actionLabels: Record<string, string> = {
-  Fold: "폴드",
-  Check: "체크",
-  Call: "콜",
-  Bet: "벳",
-  Raise: "레이즈",
-  "All-in": "올인",
-};
-
-const actionLabel = (name: string) => {
-  return actionLabels[name] ?? name;
-};
+// display-only label maps (data values remain in English)
+const M = {
+  ko: {
+    summary: "요약",
+    barWidth: "바 너비:",
+    normalized: "정규화",
+    absolute: "절대값",
+    full: "전체",
+    display: "표시:",
+    actionPct: "액션 %",
+    actionEv: "액션 EV",
+    exportCsv: "요약을 CSV 파일로 내보내기",
+    all: "전체",
+    hand: "핸드",
+    strategy: "전략",
+    weightBar: "비중 (바)",
+    weight: "비중",
+    turn: "턴",
+    river: "리버",
+    comboBar: "콤보 (바)",
+    combos: "콤보",
+    noReport: (chanceType: string) =>
+      `${chanceType === "turn" ? "턴" : "리버"} 리포트가 없습니다`,
+    noResults: "결과 없음",
+    action: (name: string): string =>
+      (
+        {
+          Fold: "폴드",
+          Check: "체크",
+          Call: "콜",
+          Bet: "벳",
+          Raise: "레이즈",
+          "All-in": "올인",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
+  en: {
+    summary: "Summary",
+    barWidth: "Bar Width:",
+    normalized: "Normalized",
+    absolute: "Absolute",
+    full: "Full",
+    display: "Display:",
+    actionPct: "Action %",
+    actionEv: "Action EV",
+    exportCsv: "Export summary as CSV file",
+    all: "All",
+    hand: "Hand",
+    strategy: "Strategy",
+    weightBar: "Weight (Bar)",
+    weight: "Weight",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (Bar)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `${chanceType === "turn" ? "Turn" : "River"} report is not available`,
+    noResults: "No results",
+    action: (name: string): string => name,
+  },
+} as const;
 
 export default defineComponent({
   components: {
@@ -540,6 +587,7 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
+    const L = computed(() => M[i18n.locale]);
     const evScale = computed(() => props.unitScale || store.displayUnitScale);
     const displayEv = (value: number) => value / evScale.value;
     const displayOptions =
@@ -698,13 +746,13 @@ export default defineComponent({
       const ret: Column[] = [];
 
       if (props.tableMode !== "chance") {
-        ret.push({ label: "핸드", type: "card" });
+        ret.push({ label: L.value.hand, type: "card" });
         ret.push({
-          label: numActions.value > 0 ? "전략" : "비중 (바)",
+          label: numActions.value > 0 ? L.value.strategy : L.value.weightBar,
           type: "bar",
         });
 
-        ret.push({ label: "비중", type: "weight" });
+        ret.push({ label: L.value.weight, type: "weight" });
         ret.push({ label: "EQ", type: "percentage", index: INDEX_EQUITY });
         ret.push({ label: evScale.value === 10 ? "EV (bb)" : "EV", type: "ev" });
         ret.push({ label: "EQR", type: "percentage", index: INDEX_EQR });
@@ -718,7 +766,7 @@ export default defineComponent({
             const action = spot.actions[j];
             const label =
               action.amount === "0"
-                ? actionLabel(action.name)
+                ? L.value.action(action.name)
                 : `${action.name[0]} ${formatAmount(
                     Number(action.amount),
                     evScale.value
@@ -732,15 +780,15 @@ export default defineComponent({
         }
       } else {
         ret.push({
-          label: props.chanceType === "turn" ? "턴" : "리버",
+          label: props.chanceType === "turn" ? L.value.turn : L.value.river,
           type: "card",
         });
         ret.push({
-          label: numActions.value > 0 ? "전략" : "콤보 (바)",
+          label: numActions.value > 0 ? L.value.strategy : L.value.comboBar,
           type: "bar",
         });
 
-        ret.push({ label: "콤보", type: "weight" });
+        ret.push({ label: L.value.combos, type: "weight" });
         ret.push({ label: "EQ", type: "percentage", index: INDEX_EQUITY });
         ret.push({ label: evScale.value === 10 ? "EV (bb)" : "EV", type: "ev" });
         ret.push({ label: "EQR", type: "percentage", index: INDEX_EQR });
@@ -752,7 +800,7 @@ export default defineComponent({
             const action = spot.actions[j];
             const label =
               action.amount === "0"
-                ? actionLabel(action.name)
+                ? L.value.action(action.name)
                 : `${action.name[0]} ${formatAmount(
                     Number(action.amount),
                     evScale.value
@@ -1125,6 +1173,7 @@ export default defineComponent({
       toFixed,
       toFixedAdaptive,
       capitalize,
+      L,
       columnIndex,
       displayOptions,
       updateDisplayOptions,

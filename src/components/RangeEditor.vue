@@ -60,18 +60,18 @@
           />
 
           <button class="button-base button-blue" @click="clearRange">
-            초기화
+            {{ L.clear }}
           </button>
         </div>
 
         <div v-if="rangeTextError" class="mt-1 text-red-400">
-          오류: {{ rangeTextError }}
+          {{ L.errorPrefix }} {{ rangeTextError }}
         </div>
       </div>
 
       <div class="flex mt-3.5 items-center">
         <div>
-          비중:
+          {{ L.weight }}
           <input
             v-model="weight"
             type="range"
@@ -97,7 +97,7 @@
         </div>
 
         <span class="inline-block ml-auto">
-          {{ numCombos.toFixed(1) }} 콤보 ({{
+          {{ numCombos.toFixed(1) }} {{ L.combos }} ({{
             ((numCombos * 100) / ((52 * 51) / 2)).toFixed(1)
           }}%)
         </span>
@@ -117,12 +117,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { ranks, rankPat } from "../utils";
 import { RangeManager } from "../../pkg/range/range";
+import { i18n } from "../i18n";
 
 import DbItemPicker from "./DbItemPicker.vue";
+
+const M = {
+  ko: {
+    clear: "초기화",
+    errorPrefix: "오류:",
+    weight: "비중:",
+    combos: "콤보",
+    parseError: (range: string) =>
+      `레인지를 해석할 수 없습니다: ${range || "(빈 문자열)"}`,
+  },
+  en: {
+    clear: "Clear",
+    errorPrefix: "Error:",
+    weight: "Weight:",
+    combos: "combos",
+    parseError: (range: string) =>
+      `Failed to parse range: ${range || "(empty string)"}`,
+  },
+} as const;
 
 const yellow500 = "#eab308";
 
@@ -150,6 +170,7 @@ export default defineComponent({
   setup(props) {
     const appStore = useStore();
     const config = useConfigStore();
+    const L = computed(() => M[i18n.locale]);
 
     const range = RangeManager.new();
     const rangeStore = config.range[props.player];
@@ -200,9 +221,7 @@ export default defineComponent({
 
       for (const range of ranges) {
         if (!rangeRegex.test(range)) {
-          rangeTextError.value = `레인지를 해석할 수 없습니다: ${
-            range || "(빈 문자열)"
-          }`;
+          rangeTextError.value = L.value.parseError(range);
           return;
         }
       }
@@ -278,6 +297,7 @@ export default defineComponent({
     );
 
     return {
+      L,
       yellow500,
       cellText,
       cellValue,

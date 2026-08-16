@@ -32,7 +32,7 @@
     </div>
 
     <div v-else class="flex h-full items-center justify-center" style="flex: 4">
-      그래프를 표시할 수 없습니다
+      {{ L.noGraph }}
     </div>
 
     <ResultTable
@@ -52,6 +52,7 @@
 import { computed, defineComponent, ref } from "vue";
 import { cardText, cardPairOrder, toFixed1, toFixedAdaptive } from "../utils";
 import { useStore } from "../store";
+import { i18n } from "../i18n";
 import {
   Results,
   Spot,
@@ -96,6 +97,17 @@ const sky500 = "#0ea5e9";
 const lime500 = "#84cc16";
 const xTicks = 10000;
 
+const M = {
+  ko: {
+    noGraph: "그래프를 표시할 수 없습니다",
+    equity: "에퀴티",
+  },
+  en: {
+    noGraph: "Graph is not available",
+    equity: "Equity",
+  },
+} as const;
+
 export default defineComponent({
   components: {
     LineChart,
@@ -131,6 +143,7 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
+    const L = computed(() => M[i18n.locale]);
     const chartWidth = ref(0);
     const tableScrollTarget = ref<number | null>(null);
 
@@ -243,7 +256,7 @@ export default defineComponent({
 
       const contentText =
         content === "eq"
-          ? "에퀴티"
+          ? L.value.equity
           : content === "ev" && store.displayUnitScale === 10
           ? "EV (bb)"
           : content.toUpperCase();
@@ -414,6 +427,7 @@ export default defineComponent({
     });
 
     return {
+      L,
       chartWidth,
       tableScrollTarget,
       playerIndex,

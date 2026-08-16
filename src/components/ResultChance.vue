@@ -60,6 +60,7 @@ import {
   formatAmount,
 } from "../utils";
 import { useStore } from "../store";
+import { i18n } from "../i18n";
 import {
   ChanceReports,
   Spot,
@@ -105,19 +106,31 @@ const pink600 = "#db2777";
 const black = "#d4d4d4"; // 다크 배경용 스페이드 막대색 (원래 검정)
 const suitColor = [green600, blue600, pink600, black];
 
-// display-only label map (data values remain in English)
-const actionLabels: Record<string, string> = {
-  Fold: "폴드",
-  Check: "체크",
-  Call: "콜",
-  Bet: "벳",
-  Raise: "레이즈",
-  "All-in": "올인",
-};
-
-const actionLabel = (name: string) => {
-  return actionLabels[name] ?? name;
-};
+// display-only label maps (data values remain in English)
+const M = {
+  ko: {
+    strategyCombos: "전략 (콤보)",
+    strategy: "전략",
+    equity: "에퀴티",
+    action: (name: string): string =>
+      (
+        {
+          Fold: "폴드",
+          Check: "체크",
+          Call: "콜",
+          Bet: "벳",
+          Raise: "레이즈",
+          "All-in": "올인",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
+  en: {
+    strategyCombos: "Strategy (Combos)",
+    strategy: "Strategy",
+    equity: "Equity",
+    action: (name: string): string => name,
+  },
+} as const;
 
 export default defineComponent({
   components: {
@@ -155,6 +168,7 @@ export default defineComponent({
 
   setup(props, context) {
     const store = useStore();
+    const L = computed(() => M[i18n.locale]);
     const chartParentDiv = ref<HTMLDivElement | null>(null);
     const chartParentDivHeight = ref(0);
 
@@ -189,7 +203,7 @@ export default defineComponent({
             const actionIndex = i >> 2;
             const suit = i & 3;
             const action = spot.actions[actionIndex];
-            let label = actionLabel(action.name);
+            let label = L.value.action(action.name);
             if (action.amount !== "0") {
               label += ` ${formatAmount(
                 Number(action.amount),
@@ -255,9 +269,9 @@ export default defineComponent({
         props.displayPlayer.toUpperCase() +
         " " +
         {
-          "strategy-combos": "전략 (콤보)",
-          strategy: "전략",
-          eq: "에퀴티",
+          "strategy-combos": L.value.strategyCombos,
+          strategy: L.value.strategy,
+          eq: L.value.equity,
           ev: store.displayUnitScale === 10 ? "EV (bb)" : "EV",
           eqr: "EQR",
         }[option];
@@ -322,6 +336,7 @@ export default defineComponent({
     };
 
     return {
+      L,
       chartParentDiv,
       chartParentDivHeight,
       chartData,

@@ -13,9 +13,11 @@
       @click="closeLaunch"
     >
       <div class="px-8 pt-24 text-left w-full max-w-md mx-auto">
-        <div class="text-3xl font-bold text-[#04160C]/70 leading-tight">안녕하세요</div>
+        <div class="text-3xl font-bold text-[#04160C]/70 leading-tight">
+          {{ L.greeting }}
+        </div>
         <div class="mt-1 text-[2rem] md:text-4xl font-extrabold text-[#04160C] leading-tight">
-          홀덤마스터<br />GTO 솔버입니다.
+          {{ L.titleLine1 }}<br />{{ L.titleLine2 }}
         </div>
       </div>
 
@@ -37,19 +39,36 @@
       </div>
 
       <div class="pb-14 text-center text-sm font-semibold text-[#04160C]/60">
-        무료 GTO 솔버 · 오프라인 학습
+        {{ L.footer }}
       </div>
     </div>
   </Transition>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { pwa, closeLaunch } from "../pwa";
+import { i18n } from "../i18n";
+
+const M = {
+  ko: {
+    greeting: "안녕하세요",
+    titleLine1: "홀덤마스터",
+    titleLine2: "GTO 솔버입니다.",
+    footer: "무료 GTO 솔버 · 오프라인 학습",
+  },
+  en: {
+    greeting: "Welcome to",
+    titleLine1: "HoldemMaster",
+    titleLine2: "GTO Solver.",
+    footer: "Free GTO Solver · Works Offline",
+  },
+} as const;
 
 export default defineComponent({
   setup() {
-    return { pwa, closeLaunch };
+    const L = computed(() => M[i18n.locale]);
+    return { pwa, closeLaunch, L };
   },
 });
 </script>

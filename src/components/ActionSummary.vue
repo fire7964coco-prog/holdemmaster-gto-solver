@@ -14,7 +14,7 @@
           {{ tile.freq.toFixed(1) }}%
         </span>
         <span class="text-[0.65rem] text-white/70 tabular-nums">
-          {{ tile.combos.toFixed(1) }}<br />콤보
+          {{ tile.combos.toFixed(1) }}<br />{{ L.combos }}
         </span>
       </div>
     </div>
@@ -26,6 +26,16 @@ import { computed, defineComponent } from "vue";
 import { Results, Spot, SpotPlayer } from "../result-types";
 import { useStore } from "../store";
 import { formatAmount } from "../utils";
+import { i18n, pick } from "../i18n";
+
+const M = {
+  ko: {
+    combos: "콤보",
+  },
+  en: {
+    combos: "combos",
+  },
+} as const;
 
 const actionLabel = (
   name: string,
@@ -33,21 +43,35 @@ const actionLabel = (
   unitScale: number,
   pot: number
 ) => {
-  const map: Record<string, string> = {
-    Fold: "폴드",
-    Check: "체크",
-    Call: "콜",
-    Bet: "벳",
-    Raise: "레이즈",
-    Allin: "올인",
-    "All-in": "올인",
-  };
+  const map: Record<string, string> = pick(
+    {
+      Fold: "폴드",
+      Check: "체크",
+      Call: "콜",
+      Bet: "벳",
+      Raise: "레이즈",
+      Allin: "올인",
+      "All-in": "올인",
+    },
+    {
+      Fold: "Fold",
+      Check: "Check",
+      Call: "Call",
+      Bet: "Bet",
+      Raise: "Raise",
+      Allin: "All-in",
+      "All-in": "All-in",
+    }
+  );
   const label = map[name] ?? name;
   if (!amount || amount === "0") return label;
   const value = Number(amount);
   const shown = `${formatAmount(value, unitScale)}${unitScale === 10 ? "bb" : ""}`;
   if (name === "Bet" && pot > 0) {
-    return `${label} ${shown} (${Math.round((value * 100) / pot)}% 팟)`;
+    return `${label} ${shown} (${Math.round((value * 100) / pot)}% ${pick(
+      "팟",
+      "pot"
+    )})`;
   }
   return `${label} ${shown}`;
 };
@@ -95,6 +119,7 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
+    const L = computed(() => M[i18n.locale]);
     const tiles = computed(() => {
       const spot = props.selectedSpot;
       const results = props.results;
@@ -142,7 +167,7 @@ export default defineComponent({
       return ret.reverse();
     });
 
-    return { tiles };
+    return { tiles, L };
   },
 });
 </script>

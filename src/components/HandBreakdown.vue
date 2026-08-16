@@ -4,9 +4,9 @@
   >
     <div class="grid grid-cols-2 gap-x-6">
       <div>
-        <div class="font-semibold text-neutral-300">핸드</div>
+        <div class="font-semibold text-neutral-300">{{ L.hands }}</div>
         <div v-if="breakdown.made.length === 0" class="mt-1 text-neutral-500">
-          표시할 핸드가 없습니다
+          {{ L.noHands }}
         </div>
         <div
           v-for="(row, i) in breakdown.made"
@@ -32,9 +32,9 @@
       </div>
 
       <div>
-        <div class="font-semibold text-neutral-300">드로우</div>
+        <div class="font-semibold text-neutral-300">{{ L.draws }}</div>
         <div v-if="breakdown.draws.length === 0" class="mt-1 text-neutral-500">
-          드로우 정보 없음
+          {{ L.noDraws }}
         </div>
         <div
           v-for="(row, i) in breakdown.draws"
@@ -65,6 +65,22 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { aggregateBreakdown } from "../hand-categories";
+import { i18n } from "../i18n";
+
+const M = {
+  ko: {
+    hands: "핸드",
+    noHands: "표시할 핸드가 없습니다",
+    draws: "드로우",
+    noDraws: "드로우 정보 없음",
+  },
+  en: {
+    hands: "Hands",
+    noHands: "No hands to display",
+    draws: "Draws",
+    noDraws: "No draw info",
+  },
+} as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)
 const MADE_PALETTE = [
@@ -111,11 +127,13 @@ export default defineComponent({
   },
 
   setup(props) {
+    const L = computed(() => M[i18n.locale]);
     const breakdown = computed(() =>
       aggregateBreakdown(props.cards, props.weights, props.board)
     );
 
     return {
+      L,
       breakdown,
       madeColor: (i: number) => MADE_PALETTE[i % MADE_PALETTE.length],
       drawColor: (i: number) => DRAW_PALETTE[i % DRAW_PALETTE.length],

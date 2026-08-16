@@ -3,9 +3,9 @@
     <!-- 상단 바: 돌아가기 + 스팟 정보 + 직접 계산 -->
     <div class="flex flex-wrap items-center gap-2">
       <button class="button-base button-blue" @click="$emit('close')">
-        ← 목록
+        {{ L.backToList }}
       </button>
-      <span class="font-bold text-lg ml-1">{{ preset.title }}</span>
+      <span class="font-bold text-lg ml-1">{{ presetTitleOf(preset) }}</span>
       <span class="font-bold tracking-wide">
         <span
           v-for="(c, i) in boardTexts"
@@ -17,22 +17,22 @@
       </span>
       <!-- 스팟 정보는 칩으로 — 트레이너와 같은 눈금을 쓴다 -->
       <span class="stat-chip">
-        팟 <b>{{ preset.startingPot / preset.unitScale }}</b>bb
+        {{ L.pot }} <b>{{ preset.startingPot / preset.unitScale }}</b>bb
       </span>
       <span class="stat-chip">
-        스택 <b>{{ preset.effectiveStack / preset.unitScale }}</b>bb
+        {{ L.stack }} <b>{{ preset.effectiveStack / preset.unitScale }}</b>bb
       </span>
     </div>
 
     <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-sm">
       <span class="text-neutral-400">
-        플랍 전략입니다. 턴·리버까지 눌러보며 탐색하려면 →
+        {{ L.flopOnlyNote }}
       </span>
       <button
         class="button-base button-green shrink-0"
         @click="$emit('load')"
       >
-        이 스팟 직접 계산하기
+        {{ L.solveThisSpot }}
       </button>
       <a
         v-if="articleUrl"
@@ -40,34 +40,34 @@
         target="_blank"
         class="px-1 text-blue-400 hover:underline shrink-0"
       >
-        이 스팟 해설 읽기
+        {{ L.readArticle }}
       </a>
     </div>
 
     <div v-if="error" class="mt-4 text-red-400">
-      미리 계산된 결과를 불러오지 못했습니다: {{ error }}
+      {{ L.loadError(error) }}
     </div>
     <div v-else-if="!data" class="mt-4">
-      <span class="spinner inline-block mr-3"></span>결과 불러오는 중...
+      <span class="spinner inline-block mr-3"></span>{{ L.loading }}
     </div>
 
     <template v-else>
       <!-- 플레이어 전환 -->
       <!-- 모바일에서는 선택 상자가 눌려 «OOP (BB (클러...»로 잘렸다 -->
       <div class="flex flex-wrap items-center gap-2 mt-3">
-        <span class="text-sm">플레이어:</span>
+        <span class="text-sm">{{ L.playerLabel }}</span>
         <select
           v-model="displayPlayer"
           class="w-40 md:w-28 px-2 py-1 rounded-lg text-sm"
         >
-          <option value="oop">OOP ({{ preset.oopLabel }})</option>
-          <option value="ip">IP ({{ preset.ipLabel }})</option>
+          <option value="oop">OOP ({{ oopLabelOf(preset) }})</option>
+          <option value="ip">IP ({{ ipLabelOf(preset) }})</option>
         </select>
         <span
           v-if="displayPlayer === 'oop'"
           class="basis-full md:basis-auto text-xs text-neutral-400"
         >
-          첫 액션 차례인 플레이어의 전략입니다
+          {{ L.oopHint }}
         </span>
       </div>
 
@@ -121,15 +121,49 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from "vue";
-import { ARTICLE_URLS, Preset } from "../presets";
+import {
+  ARTICLE_URLS,
+  Preset,
+  presetTitleOf,
+  oopLabelOf,
+  ipLabelOf,
+} from "../presets";
 import { trackOutbound } from "../outbound";
 import { Results, Spot, DisplayOptions } from "../result-types";
 import { cardText, parseCardString } from "../utils";
+import { i18n } from "../i18n";
 
 import ResultBasics from "./ResultBasics.vue";
 import ResultTable from "./ResultTable.vue";
 import HandBreakdown from "./HandBreakdown.vue";
 import ActionSummary from "./ActionSummary.vue";
+
+const M = {
+  ko: {
+    backToList: "← 목록",
+    pot: "팟",
+    stack: "스택",
+    flopOnlyNote: "플랍 전략입니다. 턴·리버까지 눌러보며 탐색하려면 →",
+    solveThisSpot: "이 스팟 직접 계산하기",
+    readArticle: "이 스팟 해설 읽기",
+    loadError: (e: string) => `미리 계산된 결과를 불러오지 못했습니다: ${e}`,
+    loading: "결과 불러오는 중...",
+    playerLabel: "플레이어:",
+    oopHint: "첫 액션 차례인 플레이어의 전략입니다",
+  },
+  en: {
+    backToList: "← Back",
+    pot: "Pot",
+    stack: "Stack",
+    flopOnlyNote: "Flop strategy only. Want to click through turn and river? →",
+    solveThisSpot: "Solve this spot yourself",
+    readArticle: "Read the article",
+    loadError: (e: string) => `Couldn't load the precomputed results: ${e}`,
+    loading: "Loading results...",
+    playerLabel: "Player:",
+    oopHint: "Strategy for the player who acts first",
+  },
+} as const;
 
 type PreviewData = {
   cards: number[][];
@@ -191,11 +225,27 @@ export default defineComponent({
         .map(cardText)
     );
 
+    // EN posts don't exist yet — return "" so the v-if hides the link in English
     const articleUrl = computed(() =>
-      trackOutbound(ARTICLE_URLS[props.preset.id] ?? "", "preset-preview")
+      i18n.locale === "en"
+        ? ""
+        : trackOutbound(ARTICLE_URLS[props.preset.id] ?? "", "preset-preview")
     );
 
-    return { data, error, displayPlayer, displayOptions, boardTexts, articleUrl };
+    const L = computed(() => M[i18n.locale]);
+
+    return {
+      data,
+      error,
+      displayPlayer,
+      displayOptions,
+      boardTexts,
+      articleUrl,
+      L,
+      presetTitleOf,
+      oopLabelOf,
+      ipLabelOf,
+    };
   },
 });
 </script>

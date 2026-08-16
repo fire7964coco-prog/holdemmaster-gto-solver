@@ -1,11 +1,12 @@
-import { PRESETS } from "./presets";
+import { PRESETS, presetTitleOf } from "./presets";
 import { Results, SpotPlayer } from "./result-types";
 import { cardText, formatAmount } from "./utils";
+import { i18n } from "./i18n";
 import {
   classifyMade,
   classifyDraw,
-  MADE_LABELS,
-  DRAW_LABELS,
+  madeLabels,
+  drawLabels,
 } from "./hand-categories";
 
 export type TrainerHistoryAction = {
@@ -66,7 +67,8 @@ export type TrainerEvaluation = {
   }[];
 };
 
-const actionLabels: Record<string, string> = {
+// 엔진 액션 이름은 원래 영어("Fold" 등) — 한국어일 때만 바꿔 붙인다
+const actionLabelsKo: Record<string, string> = {
   Fold: "폴드",
   Check: "체크",
   Call: "콜",
@@ -75,6 +77,14 @@ const actionLabels: Record<string, string> = {
   Allin: "올인",
   "All-in": "올인",
 };
+const actionLabelsEn: Record<string, string> = {
+  Allin: "All-In",
+  "All-in": "All-In",
+};
+const actionName = (name: string) =>
+  i18n.locale === "ko"
+    ? actionLabelsKo[name] ?? name
+    : actionLabelsEn[name] ?? name;
 
 export const trainerCategory = (
   presetId: string
@@ -85,13 +95,21 @@ export const trainerCategory = (
 };
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
-  const labels: Record<TrainerCategory, string> = {
-    all: "전체",
-    srp: "싱글레이즈팟",
-    "3bp": "3벳팟",
-    blind: "블라인드전",
+  const labels: Record<"ko" | "en", Record<TrainerCategory, string>> = {
+    ko: {
+      all: "전체",
+      srp: "싱글레이즈팟",
+      "3bp": "3벳팟",
+      blind: "블라인드전",
+    },
+    en: {
+      all: "All",
+      srp: "Single Raised",
+      "3bp": "3-Bet Pot",
+      blind: "Blind vs Blind",
+    },
   };
-  return labels[category];
+  return labels[i18n.locale][category];
 };
 
 export const trainerActionLabel = (
@@ -99,14 +117,17 @@ export const trainerActionLabel = (
   pot: number,
   unitScale: number
 ) => {
-  const label = actionLabels[action.name] ?? action.name;
+  const label = actionName(action.name);
   if (!action.amount || action.amount === "0") return label;
   const value = Number(action.amount);
   const amount = `${formatAmount(value, unitScale)}${
     unitScale === 10 ? "bb" : ""
   }`;
   if (action.name === "Bet" && pot > 0) {
-    return `${label} ${amount} (${Math.round((value * 100) / pot)}% 팟)`;
+    const pct = Math.round((value * 100) / pot);
+    return i18n.locale === "ko"
+      ? `${label} ${amount} (${pct}% 팟)`
+      : `${label} ${amount} (${pct}% pot)`;
   }
   return `${label} ${amount}`;
 };
@@ -120,9 +141,9 @@ export const trainerCardPair = (pair: number) => {
 /** 내 핸드가 보드에 무엇을 맞췄는지 (메이드 + 드로우) 라벨로 돌려준다. */
 export const trainerHandLabels = (pair: number, board: number[]) => {
   const hole: [number, number] = [pair & 0xff, pair >>> 8];
-  const made = MADE_LABELS[classifyMade(hole, board)];
+  const made = madeLabels()[classifyMade(hole, board)];
   const drawKey = classifyDraw(hole, board);
-  const draw = drawKey === "no_draw" ? "" : DRAW_LABELS[drawKey];
+  const draw = drawKey === "no_draw" ? "" : drawLabels()[drawKey];
   return { made, draw };
 };
 
@@ -179,7 +200,7 @@ export const makeTrainerQuestion = (
     return {
       id: `${candidate.presetId}:${candidate.node.nodeId}:${handPair}`,
       presetId: candidate.presetId,
-      presetTitle: preset?.title ?? candidate.presetId,
+      presetTitle: preset ? presetTitleOf(preset) : candidate.presetId,
       category: trainerCategory(candidate.presetId),
       node: candidate.node,
       handIndex,

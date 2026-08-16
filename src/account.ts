@@ -10,6 +10,7 @@
  */
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { TrainerAttempt } from "./db";
+import { pick } from "./i18n";
 
 declare const __SUPABASE_URL__: string;
 declare const __SUPABASE_ANON_KEY__: string;
@@ -45,6 +46,9 @@ const getClient = async (): Promise<SupabaseClient | null> => {
   }
   return clientPromise;
 };
+
+/** 리더보드 등 다른 모듈이 같은 클라이언트를 재사용할 수 있게 노출 */
+export const getSupabase = getClient;
 
 /**
  * 이미 로그인한 흔적이 있는지 저장소만 훑어본다(supabase-js를 내려받지 않고).
@@ -112,7 +116,7 @@ const toUser = (session: Session | null): AccountUser | null => {
       (meta.full_name as string) ||
       (meta.name as string) ||
       session.user.email?.split("@")[0] ||
-      "회원",
+      pick("회원", "player"),
   };
 };
 
@@ -146,7 +150,7 @@ export const onAuthChange = (handler: (user: AccountUser | null) => void) => {
  */
 export const signIn = async (provider: "google" | "kakao") => {
   const supabase = await getClient();
-  if (!supabase) throw new Error("계정 기능이 꺼져 있습니다");
+  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build"));
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
@@ -232,10 +236,10 @@ export const syncAttempts = async (
   localAttempts: TrainerAttempt[]
 ): Promise<{ result: SyncResult; missingLocally: TrainerAttempt[] }> => {
   const supabase = await getClient();
-  if (!supabase) throw new Error("계정 기능이 꺼져 있습니다");
+  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build"));
   const { data: sessionData } = await supabase.auth.getSession();
   const userId = sessionData.session?.user.id;
-  if (!userId) throw new Error("로그인이 필요합니다");
+  if (!userId) throw new Error(pick("로그인이 필요합니다", "Please sign in first"));
 
   const uploadable = localAttempts.filter((item) => item.clientId);
   if (uploadable.length) {

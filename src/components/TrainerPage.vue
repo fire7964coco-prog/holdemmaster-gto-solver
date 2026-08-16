@@ -7,10 +7,10 @@
       v-if="loadError"
       class="rounded-lg border border-red-700 bg-red-950 px-4 py-3 text-red-300"
     >
-      트레이너 데이터를 불러오지 못했습니다: {{ loadError }}
+      {{ L.loadFailed }} {{ loadError }}
     </div>
     <div v-else-if="!bank" class="py-8">
-      <span class="spinner inline-block mr-3"></span>트레이너 준비 중...
+      <span class="spinner inline-block mr-3"></span>{{ L.loading }}
     </div>
 
     <template v-else>
@@ -40,7 +40,7 @@
           "
           @click="toggleReview"
         >
-          복습 {{ reviewAttempts.length }}개
+          {{ L.review(reviewAttempts.length) }}
         </button>
         <!-- 오늘의 문제: 날짜가 씨앗이라 모두 같은 문제를 받는다 -->
         <button
@@ -52,28 +52,28 @@
           "
           @click="toggleDaily"
         >
-          오늘의 문제
-          <span v-if="dailyState.done" aria-label="완료">✓</span>
+          {{ L.daily }}
+          <span v-if="dailyState.done" :aria-label="L.done">✓</span>
         </button>
       </div>
 
       <!-- 통계는 칩으로 압축 — 위쪽 공간을 덜 먹어야 문제가 화면 중앙에 온다 -->
       <div id="trainer-stats" class="order-4 md:order-2 flex flex-wrap gap-1.5 mt-3">
-        <span class="stat-chip">풀이 <b>{{ attempts.length }}</b></span>
+        <span class="stat-chip">{{ L.solved }} <b>{{ attempts.length }}</b></span>
         <span v-if="dailyState.streak" class="stat-chip">
-          오늘의 문제 <b>{{ dailyState.streak }}</b>일 연속
+          {{ L.daily }} <b>{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
           <span v-if="dailyState.bestStreak > dailyState.streak" class="text-neutral-600">
-            / 최고 {{ dailyState.bestStreak }}
+            {{ L.bestPrefix }} {{ dailyState.bestStreak }}
           </span>
         </span>
         <span class="stat-chip">
-          연속 정답
+          {{ L.streakLabel }}
           <b :class="streak >= 3 ? 'text-emerald-300' : ''">{{ streak }}</b>
-          <span v-if="bestStreak > 0" class="text-neutral-600">/ 최고 {{ bestStreak }}</span>
+          <span v-if="bestStreak > 0" class="text-neutral-600">{{ L.bestPrefix }} {{ bestStreak }}</span>
         </span>
-        <span class="stat-chip">누적 EV 손실 <b>{{ totalLoss.toFixed(3) }}</b>bb</span>
-        <span class="stat-chip">평균 EV 손실 <b>{{ averageLoss.toFixed(3) }}</b>bb</span>
-        <span class="stat-chip">좋은 선택 <b>{{ excellentRate.toFixed(0) }}</b>%</span>
+        <span class="stat-chip">{{ L.totalLossLabel }} <b>{{ totalLoss.toFixed(3) }}</b>bb</span>
+        <span class="stat-chip">{{ L.avgLossLabel }} <b>{{ averageLoss.toFixed(3) }}</b>bb</span>
+        <span class="stat-chip">{{ L.goodRateLabel }} <b>{{ excellentRate.toFixed(0) }}</b>%</span>
       </div>
 
       <!-- 약점 분석: 카테고리별 평균 EV 손실 -->
@@ -82,7 +82,7 @@
         class="order-4 md:order-2 mt-3 rounded-lg border border-neutral-700 bg-neutral-900/50 px-3 py-2.5"
       >
         <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-          <span class="font-semibold text-neutral-300">약점 분석</span>
+          <span class="font-semibold text-neutral-300">{{ L.weaknessTitle }}</span>
           <span
             v-for="row in weakness.rows"
             :key="row.category"
@@ -94,22 +94,21 @@
           >
             {{ row.label }}
             <template v-if="row.count">
-              평균 팟의 {{ row.averageLossPct.toFixed(2) }}%
+              {{ L.avgOfPot(row.averageLossPct.toFixed(2)) }}
               <span class="text-neutral-600">({{ row.averageLossBb.toFixed(3) }}bb)</span>
-              <span class="text-neutral-600">({{ row.count }}문제)</span>
+              <span class="text-neutral-600">{{ L.handCount(row.count) }}</span>
             </template>
-            <span v-else class="text-neutral-600">미풀이</span>
+            <span v-else class="text-neutral-600">{{ L.notSolved }}</span>
           </span>
         </div>
         <div v-if="weakness.weakest" class="mt-1.5 text-xs text-neutral-400">
-          <b class="text-orange-300">{{ weakness.weakest.label }}</b>
-          에서 손실이 가장 큽니다 —
+          {{ L.weakestBefore }}<b class="text-orange-300">{{ weakness.weakest.label }}</b>{{ L.weakestAfter }}
           <button class="link-like" @click="changeCategory(weakness.weakest.category)">
-            이 상황만 연습하기
+            {{ L.practiceThis }}
           </button>
         </div>
         <div v-else class="mt-1.5 text-xs text-neutral-500">
-          상황별로 3문제 이상 풀면 어디가 약한지 알려드립니다.
+          {{ L.weaknessHint }}
         </div>
       </div>
 
@@ -120,8 +119,7 @@
       >
         <template v-if="account">
           <span class="text-neutral-300">
-            <b class="text-emerald-300">{{ account.nickname }}</b> 님의 계정에
-            보관 중
+            {{ L.accountBefore }}<b class="text-emerald-300">{{ account.nickname }}</b>{{ L.accountAfter }}
           </span>
           <span v-if="syncMessage" class="text-neutral-500">{{ syncMessage }}</span>
           <span class="ml-auto flex items-center gap-3">
@@ -130,24 +128,23 @@
               :disabled="syncing"
               @click="runSync"
             >
-              {{ syncing ? "동기화 중..." : "지금 동기화" }}
+              {{ syncing ? L.syncingNow : L.syncNow }}
             </button>
             <button class="text-neutral-500 hover:text-neutral-300" @click="doSignOut">
-              로그아웃
+              {{ L.signOutLabel }}
             </button>
           </span>
         </template>
         <template v-else>
           <span class="text-neutral-400">
-            학습 기록이 <b class="text-neutral-200">이 기기에만</b> 저장됩니다.
-            홀덤마스터 계정에 보관하면 다른 기기에서도 이어서 풀 수 있어요.
+            {{ L.localOnlyBefore }}<b class="text-neutral-200">{{ L.localOnlyBold }}</b>{{ L.localOnlyAfter }}
           </span>
           <span class="ml-auto flex items-center gap-2">
             <button class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1" @click="doSignIn('google')">
-              구글로 계속하기
+              {{ L.googleSignIn }}
             </button>
             <button class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1" @click="doSignIn('kakao')">
-              카카오
+              {{ L.kakaoSignIn }}
             </button>
           </span>
         </template>
@@ -157,8 +154,7 @@
       </div>
 
       <p class="order-4 md:order-2 mt-2 text-right text-xs text-neutral-500">
-        13개 교육 프리셋 · {{ decisionCount }}개 결정 노드 · 계산 목표 오차
-        {{ bank.targetExploitabilityPct }}%
+        {{ L.footerLine(decisionCount, bank.targetExploitabilityPct) }}
       </p>
 
       <!--
@@ -169,18 +165,18 @@
       <div
         class="order-2 md:hidden mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-400"
       >
-        <span>풀이 <b class="text-neutral-200">{{ attempts.length }}</b></span>
+        <span>{{ L.solved }} <b class="text-neutral-200">{{ attempts.length }}</b></span>
         <span>
-          연속 정답
+          {{ L.streakLabel }}
           <b :class="streak >= 3 ? 'text-emerald-300' : 'text-neutral-200'">{{ streak }}</b>
         </span>
         <span v-if="attempts.length">
-          좋은 선택 <b class="text-neutral-200">{{ excellentRate.toFixed(0) }}</b>%
+          {{ L.goodRateLabel }} <b class="text-neutral-200">{{ excellentRate.toFixed(0) }}</b>%
         </span>
         <span v-if="dailyState.streak">
-          오늘의 문제 <b class="text-[#DFAC2A]">{{ dailyState.streak }}</b>일 연속
+          {{ L.daily }} <b class="text-[#DFAC2A]">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
         </span>
-        <button class="ml-auto link-like" @click="scrollToStats">자세히 ↓</button>
+        <button class="ml-auto link-like" @click="scrollToStats">{{ L.details }}</button>
       </div>
 
       <!-- 좌: 문제 / 우: 채점. 답을 봐도 문제가 화면에서 사라지지 않게 나란히 둔다 -->
@@ -191,21 +187,21 @@
       <div class="rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5">
         <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span class="text-sm font-semibold text-blue-300">
-            {{ question.presetTitle }}
+            {{ presetTitle }}
           </span>
           <span class="text-xs text-neutral-500">
             {{ positionLabel }} ({{ question.node.selectedSpot.player.toUpperCase() }})
-            차례
+            {{ L.toAct }}
           </span>
           <span class="ml-auto text-xs text-neutral-400">
-            팟 {{ amountBb(question.node.selectedSpot.pot ?? question.node.startingPot) }}
-            · 스택
+            {{ L.potLabel }} {{ amountBb(question.node.selectedSpot.pot ?? question.node.startingPot) }}
+            · {{ L.stackLabel }}
             {{ amountBb(question.node.selectedSpot.stack ?? question.node.effectiveStack) }}
           </span>
         </div>
 
         <div v-if="question.node.history.length" class="mt-3 text-sm text-neutral-400">
-          진행:
+          {{ L.lineLabel }}
           <span
             v-for="(action, index) in question.node.history"
             :key="index"
@@ -220,7 +216,7 @@
           class="mt-3 md:mt-4 rounded-lg border border-neutral-700/70 bg-neutral-900/50 py-3 md:py-4 flex flex-row items-start md:items-center justify-center gap-6 md:gap-10"
         >
           <div class="text-center">
-            <div class="text-xs text-neutral-500 mb-1">보드</div>
+            <div class="text-xs text-neutral-500 mb-1">{{ L.boardLabel }}</div>
             <div class="text-xl md:text-2xl font-bold tracking-wide">
               <span
                 v-for="(card, index) in boardCards"
@@ -232,7 +228,7 @@
             </div>
           </div>
           <div class="text-center">
-            <div class="text-xs text-neutral-500 mb-1">내 핸드</div>
+            <div class="text-xs text-neutral-500 mb-1">{{ L.myHand }}</div>
             <div class="text-2xl md:text-3xl font-bold tracking-wide">
               <span
                 v-for="(card, index) in handCards"
@@ -257,7 +253,7 @@
         </div>
 
         <div class="mt-5 text-sm font-semibold">
-          {{ evaluation ? "내 선택" : "어떤 액션을 선택하시겠습니까?" }}
+          {{ evaluation ? L.yourChoice : L.prompt }}
         </div>
         <!-- 채점 전에는 액션 이름만. 채점 후에는 버튼 자체가 결과표가 된다 -->
         <div class="grid gap-2 mt-2">
@@ -306,23 +302,23 @@
             {{ verdict.text }}
           </div>
           <div class="hidden md:block mt-0.5 text-sm text-neutral-400">
-            EV 손실
+            {{ L.evLoss }}
             <b class="tabular-nums text-neutral-200">
               {{ evaluation.evLossBb.toFixed(3) }}bb
             </b>
           </div>
           <div class="md:hidden text-sm font-semibold text-neutral-300">
-            액션별 빈도와 EV
+            {{ L.mobileDetailTitle }}
           </div>
           <p class="mt-1 text-xs text-neutral-500">
-            혼합 전략은 단순 오답 처리하지 않고 액션 EV 차이로 평가합니다.
+            {{ L.mixedNote }}
           </p>
 
           <div class="mt-4 space-y-2.5">
             <div v-for="action in evaluation.actions" :key="action.index">
               <div class="flex items-baseline gap-2 text-sm">
                 <span :class="action.isBest ? 'font-bold text-emerald-300' : ''">
-                  {{ action.label }}{{ action.isBest ? " · 최고 EV" : "" }}
+                  {{ action.label }}{{ action.isBest ? L.bestEvTag : "" }}
                 </span>
                 <span class="ml-auto tabular-nums text-xs text-neutral-500">
                   {{ (action.frequency * 100).toFixed(1) }}%
@@ -354,13 +350,13 @@
             class="mt-4 panel-inner border-[#DFAC2A]/40"
           >
             <div class="text-sm font-semibold text-[#DFAC2A]">
-              오늘의 문제 완료
+              {{ L.dailyDone }}
               <span v-if="dailyState.streak > 1" class="text-neutral-300">
-                · {{ dailyState.streak }}일 연속
+                · {{ dailyState.streak }}{{ L.dayStreakSuffix }}
               </span>
             </div>
             <div class="mt-1 text-xs text-neutral-400 leading-relaxed">
-              오늘은 모두 같은 문제를 풉니다. 결과를 올리면 다른 사람 선택과 비교할 수 있습니다.
+              {{ L.dailyDoneDesc }}
             </div>
             <div class="mt-2 flex flex-wrap items-center gap-2">
               <!-- 커뮤니티보다 단톡방·SNS가 먼저다 — 회원이 적어도 작동하는 유입 장치 -->
@@ -368,10 +364,10 @@
                 class="button-base !px-2.5 !py-1 text-xs bg-[#DFAC2A] text-[#04160C] hover:bg-[#e8bb4a]"
                 @click="openCard"
               >
-                성적 카드 만들기
+                {{ L.makeCard }}
               </button>
               <button class="button-base button-blue !px-2.5 !py-1 text-xs" @click="copyDaily">
-                {{ dailyCopied ? "복사 완료" : "결과 문구 복사" }}
+                {{ dailyCopied ? L.copied : L.copyResult }}
               </button>
               <!-- 복사만 시키고 갈 곳을 안 주면 아무도 안 올린다 -->
               <a
@@ -380,17 +376,17 @@
                 rel="noopener"
                 class="button-base bg-neutral-700 hover:bg-neutral-600 !px-2.5 !py-1 text-xs"
               >
-                커뮤니티 열기 →
+                {{ L.openCommunity }}
               </a>
             </div>
             <div v-if="dailyCopied" class="mt-1.5 text-xs text-neutral-500 leading-relaxed">
-              커뮤니티에서 <b class="text-neutral-300">[✏️ 글 쓰기]</b>를 누르고 붙여넣으면 됩니다.
+              {{ L.pasteHintBefore }}<b class="text-neutral-300">{{ L.pasteHintBold }}</b>{{ L.pasteHintAfter }}
             </div>
           </div>
 
           <div class="mt-5 flex flex-wrap items-center gap-3">
             <button class="button-base button-green px-6" @click="goNext">
-              {{ dailyMode && dailyState.done ? "계속 연습하기" : "다음 문제" }}
+              {{ dailyMode && dailyState.done ? L.keepPracticing : L.nextHand }}
             </button>
             <a
               v-if="articleUrl"
@@ -398,30 +394,26 @@
               target="_blank"
               class="text-sm text-blue-400 hover:underline"
             >
-              이 스팟 해설 읽기 →
+              {{ L.readArticle }}
             </a>
             <button
               class="text-sm text-neutral-400 hover:text-neutral-200"
               @click="openSpot"
             >
-              결과 전체 보기
+              {{ L.viewFull }}
             </button>
           </div>
         </template>
 
         <template v-else>
-          <div class="text-sm font-semibold text-neutral-300">채점 결과</div>
+          <div class="text-sm font-semibold text-neutral-300">{{ L.resultTitle }}</div>
           <p class="mt-2 text-sm leading-relaxed text-neutral-500">
-            액션을 고르면 여기에 <b class="text-neutral-400">각 액션의 빈도와 EV</b>,
-            그리고 내 선택이 몇 bb 손해였는지가 표시됩니다.
+            {{ L.resultHintBefore }}<b class="text-neutral-400">{{ L.resultHintBold }}</b>{{ L.resultHintAfter }}
           </p>
           <p class="mt-3 text-xs leading-relaxed text-neutral-600">
-            GTO는 같은 핸드도 액션을 섞습니다. 빈도가 낮은 선택이 곧 오답은
-            아니며, 기준은 EV 손실입니다 — <b class="text-neutral-400">팟 대비</b>
-            0.35% 이하 최적 · 1% 이하 허용 · 그 이상 다시 볼 스팟.
+            {{ L.gtoNoteBefore }}<b class="text-neutral-400">{{ L.gtoNoteBold }}</b>{{ L.gtoNoteAfter }}
             <template v-if="question">
-              이 스팟(팟 {{ limits.potBb.toFixed(1) }}bb)에서는
-              {{ limits.bestBb.toFixed(2) }}bb · {{ limits.goodBb.toFixed(2) }}bb입니다.
+              {{ L.spotLimits(limits.potBb.toFixed(1), limits.bestBb.toFixed(2), limits.goodBb.toFixed(2)) }}
             </template>
           </p>
         </template>
@@ -434,7 +426,7 @@
           class="text-xs text-neutral-500 hover:text-red-300"
           @click="resetHistory"
         >
-          학습 기록 초기화
+          {{ L.resetHistoryLabel }}
         </button>
       </div>
 
@@ -450,15 +442,15 @@
         <div class="min-w-0">
           <div :class="'text-sm font-bold ' + verdict.className">{{ verdict.text }}</div>
           <div class="text-xs text-neutral-400">
-            EV 손실
+            {{ L.evLoss }}
             <b class="tabular-nums text-neutral-200">
               {{ evaluation.evLossBb.toFixed(3) }}bb
             </b>
-            <button class="link-like ml-2" @click="scrollToDetail">자세히 ↓</button>
+            <button class="link-like ml-2" @click="scrollToDetail">{{ L.details }}</button>
           </div>
         </div>
         <button class="button-base button-green ml-auto shrink-0 px-5" @click="goNext">
-          {{ dailyMode && dailyState.done ? "계속 연습하기" : "다음 문제" }}
+          {{ dailyMode && dailyState.done ? L.keepPracticing : L.nextHand }}
         </button>
       </div>
 
@@ -471,7 +463,7 @@
         <div class="w-full max-w-sm rounded-xl border border-neutral-700 bg-neutral-900 p-4">
           <img
             :src="cardUrl"
-            alt="오늘의 문제 성적 카드"
+            :alt="L.cardAlt"
             class="w-full max-h-[62vh] object-contain rounded-lg border border-neutral-700"
           />
           <div class="mt-3 flex flex-wrap items-center gap-2">
@@ -480,22 +472,20 @@
               class="button-base bg-[#DFAC2A] text-[#04160C] hover:bg-[#e8bb4a] !px-3 !py-1.5 text-sm"
               @click="shareCardNow"
             >
-              카카오톡·SNS로 공유
+              {{ L.shareApps }}
             </button>
             <button class="button-base button-blue !px-3 !py-1.5 text-sm" @click="saveCardNow">
-              이미지 저장
+              {{ L.saveImage }}
             </button>
             <button
               class="ml-auto text-sm text-neutral-400 hover:text-neutral-200"
               @click="closeCard"
             >
-              닫기
+              {{ L.close }}
             </button>
           </div>
           <p class="mt-2 text-xs text-neutral-500 leading-relaxed">
-            저장한 카드를 단톡방이나 SNS에 올려보세요.
-            받은 사람도 오늘은 <b class="text-neutral-300">같은 문제</b>를 풉니다.
-            카드에 정답은 담기지 않습니다.
+            {{ L.cardHintBefore }}<b class="text-neutral-300">{{ L.cardHintBold }}</b>{{ L.cardHintAfter }}
           </p>
         </div>
       </div>
@@ -535,7 +525,14 @@ import {
   isReturningFromAuth,
   isClientLoaded,
 } from "../account";
-import { ARTICLE_URLS, PRESETS } from "../presets";
+import {
+  ARTICLE_URLS,
+  PRESETS,
+  ipLabelOf,
+  oopLabelOf,
+  presetTitleById,
+} from "../presets";
+import { i18n } from "../i18n";
 import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
 import { cardText, formatBb } from "../utils";
@@ -558,9 +555,199 @@ import {
   validateTrainerBank,
 } from "../trainer";
 
+const M = {
+  ko: {
+    loadFailed: "트레이너 데이터를 불러오지 못했습니다:",
+    loading: "트레이너 준비 중...",
+    review: (n: number) => `복습 ${n}개`,
+    daily: "오늘의 문제",
+    done: "완료",
+    solved: "풀이",
+    dayStreakSuffix: "일 연속",
+    bestPrefix: "/ 최고",
+    streakLabel: "연속 정답",
+    totalLossLabel: "누적 EV 손실",
+    avgLossLabel: "평균 EV 손실",
+    goodRateLabel: "좋은 선택",
+    weaknessTitle: "약점 분석",
+    avgOfPot: (pct: string) => `평균 팟의 ${pct}%`,
+    handCount: (n: number) => `(${n}문제)`,
+    notSolved: "미풀이",
+    weakestBefore: "",
+    weakestAfter: " 에서 손실이 가장 큽니다 —",
+    practiceThis: "이 상황만 연습하기",
+    weaknessHint: "상황별로 3문제 이상 풀면 어디가 약한지 알려드립니다.",
+    accountBefore: "",
+    accountAfter: " 님의 계정에 보관 중",
+    syncingNow: "동기화 중...",
+    syncNow: "지금 동기화",
+    signOutLabel: "로그아웃",
+    localOnlyBefore: "학습 기록이 ",
+    localOnlyBold: "이 기기에만",
+    localOnlyAfter:
+      " 저장됩니다. 홀덤마스터 계정에 보관하면 다른 기기에서도 이어서 풀 수 있어요.",
+    googleSignIn: "구글로 계속하기",
+    kakaoSignIn: "카카오",
+    footerLine: (nodes: number, pct: number) =>
+      `13개 교육 프리셋 · ${nodes}개 결정 노드 · 계산 목표 오차 ${pct}%`,
+    details: "자세히 ↓",
+    toAct: "차례",
+    potLabel: "팟",
+    stackLabel: "스택",
+    lineLabel: "진행:",
+    boardLabel: "보드",
+    myHand: "내 핸드",
+    yourChoice: "내 선택",
+    prompt: "어떤 액션을 선택하시겠습니까?",
+    bestEvTag: " · 최고 EV",
+    evLoss: "EV 손실",
+    mobileDetailTitle: "액션별 빈도와 EV",
+    mixedNote: "혼합 전략은 단순 오답 처리하지 않고 액션 EV 차이로 평가합니다.",
+    dailyDone: "오늘의 문제 완료",
+    dailyDoneDesc:
+      "오늘은 모두 같은 문제를 풉니다. 결과를 올리면 다른 사람 선택과 비교할 수 있습니다.",
+    makeCard: "성적 카드 만들기",
+    copied: "복사 완료",
+    copyResult: "결과 문구 복사",
+    openCommunity: "커뮤니티 열기 →",
+    pasteHintBefore: "커뮤니티에서 ",
+    pasteHintBold: "[✏️ 글 쓰기]",
+    pasteHintAfter: "를 누르고 붙여넣으면 됩니다.",
+    keepPracticing: "계속 연습하기",
+    nextHand: "다음 문제",
+    readArticle: "이 스팟 해설 읽기 →",
+    viewFull: "결과 전체 보기",
+    resultTitle: "채점 결과",
+    resultHintBefore: "액션을 고르면 여기에 ",
+    resultHintBold: "각 액션의 빈도와 EV",
+    resultHintAfter: ", 그리고 내 선택이 몇 bb 손해였는지가 표시됩니다.",
+    gtoNoteBefore:
+      "GTO는 같은 핸드도 액션을 섞습니다. 빈도가 낮은 선택이 곧 오답은 아니며, 기준은 EV 손실입니다 — ",
+    gtoNoteBold: "팟 대비",
+    gtoNoteAfter: " 0.35% 이하 최적 · 1% 이하 허용 · 그 이상 다시 볼 스팟.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `이 스팟(팟 ${pot}bb)에서는 ${best}bb · ${good}bb입니다.`,
+    resetHistoryLabel: "학습 기록 초기화",
+    cardAlt: "오늘의 문제 성적 카드",
+    shareApps: "카카오톡·SNS로 공유",
+    saveImage: "이미지 저장",
+    close: "닫기",
+    cardHintBefore: "저장한 카드를 단톡방이나 SNS에 올려보세요. 받은 사람도 오늘은 ",
+    cardHintBold: "같은 문제",
+    cardHintAfter: "를 풉니다. 카드에 정답은 담기지 않습니다.",
+    verdictBest: "최적 선택",
+    verdictGood: "허용 가능한 선택",
+    verdictMiss: "다시 볼 스팟",
+    promptCopy: "아래 내용을 복사해 주세요",
+    shareText:
+      "오늘의 GTO 문제 — 나도 풀어보기: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "이 기기의 트레이너 학습 기록을 모두 지울까요?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded}개 보관 · 다른 기기 기록 ${merged}개 가져옴`,
+    syncSaved: (uploaded: number) => `${uploaded}개 보관됨`,
+    syncFailed: (msg: string) => `동기화 실패: ${msg}`,
+    signInFailed: (msg: string) => `로그인 실패: ${msg}`,
+  },
+  en: {
+    loadFailed: "Failed to load trainer data:",
+    loading: "Loading trainer...",
+    review: (n: number) => `Review ${n}`,
+    daily: "Daily Puzzle",
+    done: "Done",
+    solved: "Solved",
+    dayStreakSuffix: "-day streak",
+    bestPrefix: "/ best",
+    streakLabel: "Streak",
+    totalLossLabel: "Total EV loss",
+    avgLossLabel: "Avg EV loss",
+    goodRateLabel: "Good plays",
+    weaknessTitle: "Leak finder",
+    avgOfPot: (pct: string) => `avg ${pct}% of pot`,
+    handCount: (n: number) => `(${n} hands)`,
+    notSolved: "not tried",
+    weakestBefore: "Biggest losses in ",
+    weakestAfter: " —",
+    practiceThis: "Drill this spot type",
+    weaknessHint: "Solve 3+ hands in each category to see where you're leaking.",
+    accountBefore: "Saved to ",
+    accountAfter: "'s account",
+    syncingNow: "Syncing...",
+    syncNow: "Sync now",
+    signOutLabel: "Sign out",
+    localOnlyBefore: "Your progress is saved ",
+    localOnlyBold: "on this device only",
+    localOnlyAfter:
+      ". Link a HoldemMaster account to pick up where you left off on any device.",
+    googleSignIn: "Continue with Google",
+    kakaoSignIn: "Kakao",
+    footerLine: (nodes: number, pct: number) =>
+      `13 study presets · ${nodes} decision nodes · target exploitability ${pct}%`,
+    details: "Details ↓",
+    toAct: "to act",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Line:",
+    boardLabel: "Board",
+    myHand: "Your hand",
+    yourChoice: "Your choice",
+    prompt: "What's your play?",
+    bestEvTag: " · Highest EV",
+    evLoss: "EV loss",
+    mobileDetailTitle: "Frequency & EV by action",
+    mixedNote:
+      "Mixed strategies aren't marked wrong — grading is based on the EV difference between actions.",
+    dailyDone: "Daily Puzzle complete",
+    dailyDoneDesc:
+      "Everyone gets the same puzzle today. Post your result to compare with other players.",
+    makeCard: "Create result card",
+    copied: "Copied",
+    copyResult: "Copy result text",
+    openCommunity: "Open community →",
+    pasteHintBefore: "In the community, hit ",
+    pasteHintBold: "[✏️ New post]",
+    pasteHintAfter: " and paste.",
+    keepPracticing: "Keep practicing",
+    nextHand: "Next hand",
+    readArticle: "Read the spot breakdown →",
+    viewFull: "View full solution",
+    resultTitle: "Results",
+    resultHintBefore: "Pick an action and you'll see ",
+    resultHintBold: "each action's frequency and EV",
+    resultHintAfter: ", plus how many bb your choice cost.",
+    gtoNoteBefore:
+      "GTO mixes actions with the same hand — a low-frequency choice isn't automatically a mistake. The measure is EV loss ",
+    gtoNoteBold: "relative to the pot",
+    gtoNoteAfter: ": ≤0.35% best · ≤1% acceptable · above that, review the spot.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `For this spot (${pot}bb pot) that's ${best}bb · ${good}bb.`,
+    resetHistoryLabel: "Reset history",
+    cardAlt: "Daily Puzzle result card",
+    shareApps: "Share to apps",
+    saveImage: "Save image",
+    close: "Close",
+    cardHintBefore:
+      "Post your card to a group chat or socials — anyone who sees it plays the ",
+    cardHintBold: "same puzzle",
+    cardHintAfter: " today. The card never spoils the answer.",
+    verdictBest: "Best play",
+    verdictGood: "Acceptable",
+    verdictMiss: "Review this spot",
+    promptCopy: "Copy the text below",
+    shareText:
+      "Today's GTO puzzle — try it yourself: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "Clear all trainer history on this device?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} saved · pulled ${merged} from other devices`,
+    syncSaved: (uploaded: number) => `${uploaded} saved`,
+    syncFailed: (msg: string) => `Sync failed: ${msg}`,
+    signInFailed: (msg: string) => `Sign-in failed: ${msg}`,
+  },
+} as const;
+
 export default defineComponent({
   setup() {
     const store = useStore();
+    const L = computed(() => M[i18n.locale]);
     const categories: TrainerCategory[] = ["all", "srp", "3bp", "blind"];
     let unsubscribeAuth: () => void = () => undefined;
     const category = ref<TrainerCategory>("all");
@@ -653,10 +840,10 @@ export default defineComponent({
       const result = evaluation.value;
       if (!result) return { text: "", className: "" };
       if (result.evLossBb <= limits.value.bestBb)
-        return { text: "최적 선택", className: "text-emerald-300" };
+        return { text: L.value.verdictBest, className: "text-emerald-300" };
       if (result.evLossBb <= limits.value.goodBb)
-        return { text: "허용 가능한 선택", className: "text-blue-300" };
-      return { text: "다시 볼 스팟", className: "text-orange-300" };
+        return { text: L.value.verdictGood, className: "text-blue-300" };
+      return { text: L.value.verdictMiss, className: "text-orange-300" };
     });
 
     // 모바일에서 아래를 읽고 있었더라도 다음 문제는 «위»에서 시작해야 한다
@@ -733,7 +920,7 @@ export default defineComponent({
         await navigator.clipboard.writeText(text);
         dailyCopied.value = true;
       } catch {
-        window.prompt("아래 내용을 복사해 주세요", text);
+        window.prompt(L.value.promptCopy, text);
       }
     };
 
@@ -755,16 +942,16 @@ export default defineComponent({
           : "miss";
       const toneText =
         tone === "best"
-          ? "최적 선택"
+          ? L.value.verdictBest
           : tone === "good"
-          ? "허용 가능한 선택"
-          : "다시 볼 스팟";
+          ? L.value.verdictGood
+          : L.value.verdictMiss;
       const node = question.value.node;
       cardCanvas = drawDailyCard({
         dateLabel: todayKey().replace(/-/g, "."),
-        spotTitle: question.value.presetTitle,
-        positionLabel: `${positionLabel.value} (${node.selectedSpot.player.toUpperCase()}) 차례`,
-        potLabel: `팟 ${amountBb(node.selectedSpot.pot ?? node.startingPot)}`,
+        spotTitle: presetTitleById(question.value.presetId),
+        positionLabel: `${positionLabel.value} (${node.selectedSpot.player.toUpperCase()}) ${L.value.toAct}`,
+        potLabel: `${L.value.potLabel} ${amountBb(node.selectedSpot.pot ?? node.startingPot)}`,
         board: node.currentBoard,
         hand: [question.value.handPair >>> 8, question.value.handPair & 0xff],
         verdictText: toneText,
@@ -777,11 +964,7 @@ export default defineComponent({
     };
     const shareCardNow = async () => {
       if (!cardCanvas) return;
-      await shareCard(
-        cardCanvas,
-        cardFileName(),
-        "오늘의 GTO 문제 — 나도 풀어보기: https://solver.holdemmaster.com/?view=trainer"
-      );
+      await shareCard(cardCanvas, cardFileName(), L.value.shareText);
     };
     const saveCardNow = async () => {
       if (cardCanvas) await saveCard(cardCanvas, cardFileName());
@@ -791,7 +974,7 @@ export default defineComponent({
       cardCanvas = null;
     };
     const resetHistory = async () => {
-      if (!confirm("이 기기의 트레이너 학습 기록을 모두 지울까요?")) return;
+      if (!confirm(L.value.confirmReset)) return;
       await clearTrainerAttempts();
       attempts.value = [];
       reviewMode.value = false;
@@ -816,13 +999,13 @@ export default defineComponent({
         if (!silent) {
           syncMessage.value =
             merged > 0
-              ? `${result.uploaded}개 보관 · 다른 기기 기록 ${merged}개 가져옴`
-              : `${result.uploaded}개 보관됨`;
+              ? L.value.syncMerged(result.uploaded, merged)
+              : L.value.syncSaved(result.uploaded);
         }
       } catch (error) {
-        accountError.value = `동기화 실패: ${
+        accountError.value = L.value.syncFailed(
           error instanceof Error ? error.message : String(error)
-        }`;
+        );
       } finally {
         syncing.value = false;
       }
@@ -833,9 +1016,9 @@ export default defineComponent({
       try {
         await signIn(provider);
       } catch (error) {
-        accountError.value = `로그인 실패: ${
+        accountError.value = L.value.signInFailed(
           error instanceof Error ? error.message : String(error)
-        }`;
+        );
       }
     };
 
@@ -909,25 +1092,31 @@ export default defineComponent({
           )
         : { made: "", draw: "" }
     );
-    const articleUrl = computed(() =>
-      question.value
+    const articleUrl = computed(() => {
+      // 해설 포스팅은 한국어 블로그뿐이라 EN에서는 링크를 숨긴다 (EN posts don't exist yet)
+      if (i18n.locale === "en") return "";
+      return question.value
         ? trackOutbound(
             ARTICLE_URLS[question.value.presetId] ?? "",
             "trainer-feedback"
           )
-        : ""
-    );
+        : "";
+    });
     const openSpot = () => {
       if (!question.value) return;
       store.pendingPresetPreview = question.value.presetId;
       store.sideView = "presets";
     };
+    // presetTitle은 문제 생성 시점에 고정되므로 표시용은 locale 반응형으로 다시 계산
+    const presetTitle = computed(() =>
+      question.value ? presetTitleById(question.value.presetId) : ""
+    );
     const positionLabel = computed(() => {
       if (!question.value) return "";
       const preset = PRESETS.find((item) => item.id === question.value?.presetId);
       return question.value.player === "oop"
-        ? preset?.oopLabel ?? "OOP"
-        : preset?.ipLabel ?? "IP";
+        ? (preset && oopLabelOf(preset)) || "OOP"
+        : (preset && ipLabelOf(preset)) || "IP";
     });
     const amountBb = (value: number) =>
       formatBb(value, question.value?.node.unitScale || 10);
@@ -940,8 +1129,8 @@ export default defineComponent({
     const historyPlayerLabel = (player: "oop" | "ip") => {
       const preset = PRESETS.find((item) => item.id === question.value?.presetId);
       return player === "oop"
-        ? preset?.oopLabel ?? "OOP"
-        : preset?.ipLabel ?? "IP";
+        ? (preset && oopLabelOf(preset)) || "OOP"
+        : (preset && ipLabelOf(preset)) || "IP";
     };
 
     return {
@@ -984,7 +1173,9 @@ export default defineComponent({
       evBarWidth,
       articleUrl,
       openSpot,
+      presetTitle,
       positionLabel,
+      L,
       trainerCategoryLabel,
       trainerActionLabel,
       amountBb,
