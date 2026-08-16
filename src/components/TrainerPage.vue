@@ -113,7 +113,7 @@
         </div>
       </div>
 
-      <!-- 계정 보관 (선택) — 로그인 전엔 아무것도 전송되지 않는다 -->
+      <!-- 계정 보관 (선택) -->
       <div
         v-if="accountEnabled"
         class="order-4 md:order-2 mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-neutral-700 bg-neutral-900/50 px-3 py-2.5 text-xs"
