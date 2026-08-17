@@ -67,8 +67,10 @@ const RFI: Record<Position, TierMap> = {
 // 앵커·출처·대조 결과는 참고자료/프리플랍차트_출처검증.md 2단계 절 참조.
 
 export type ScenarioId =
-  | "bb-vs-btn"
+  | "bb-vs-utg"
+  | "bb-vs-hj"
   | "bb-vs-co"
+  | "bb-vs-btn"
   | "bb-vs-sb"
   | "btn-vs-co"
   | "sb-vs-btn";
@@ -82,8 +84,10 @@ export type Scenario = {
 };
 
 export const SCENARIOS: Scenario[] = [
-  { id: "bb-vs-btn", hero: "BB", villain: "BTN" },
+  { id: "bb-vs-utg", hero: "BB", villain: "UTG" },
+  { id: "bb-vs-hj", hero: "BB", villain: "HJ" },
   { id: "bb-vs-co", hero: "BB", villain: "CO" },
+  { id: "bb-vs-btn", hero: "BB", villain: "BTN" },
   { id: "bb-vs-sb", hero: "BB", villain: "SB" },
   { id: "btn-vs-co", hero: "BTN", villain: "CO" },
   { id: "sb-vs-btn", hero: "SB", villain: "BTN" },
@@ -92,6 +96,40 @@ export const SCENARIOS: Scenario[] = [
 type DefendTiers = { threeBet: TierMap; call: TierMap };
 
 const VS_OPEN: Record<ScenarioId, DefendTiers> = {
+  // BB가 UTG 2.5bb 오픈을 수비 — 가장 타이트한 수비. 3벳 밸류는 QQ+/AK 중심
+  "bb-vs-utg": {
+    threeBet: {
+      100: "QQ+,AKs,AKo",
+      75: "JJ,AQs",
+      50: "TT,AQo,A5s-A4s",
+      25: "99,AJs,KQs,76s,65s",
+    },
+    call: {
+      100: "88-22,ATs,A9s-A6s,KTs-K8s,QJs-QTs,JTs,T9s,98s,87s,AJo,KQo",
+      75: "99,AJs,KQs,KJs,76s,65s,Q9s,J9s,T8s,54s,ATo,KJo,QJo",
+      50: "TT,AQo,A5s-A4s,A3s-A2s,K7s-K6s,Q8s,J8s,75s,64s,KTo,QTo,JTo",
+      25: "JJ,AQs,K5s,T7s,97s,86s,96s,85s,53s,A9o-A8o,T9o",
+    },
+  },
+  // BB가 HJ 2.5bb 오픈을 수비 — UTG보다 넓고 CO보다 좁다
+  "bb-vs-hj": {
+    threeBet: {
+      100: "JJ+,AQs+,AKo",
+      75: "TT,AQo",
+      50: "99,AJs,A5s-A4s,KQs",
+      25: "ATs,A3s-A2s,KJs,76s,65s",
+    },
+    call: {
+      100:
+        "88-22,A9s-A6s,KTs,K9s-K6s,QJs-Q9s,JTs-J9s,T9s-T8s,98s,87s,54s," +
+        "AJo-ATo,KQo-KJo,QJo",
+      75: "ATs,A3s-A2s,KJs,76s,65s",
+      50:
+        "99,AJs,KQs,A5s-A4s,K5s-K3s,Q8s-Q6s,J8s-J6s,T7s-T6s,96s,85s,75s," +
+        "64s,53s,KTo,QTo,JTo,A9o",
+      25: "TT,AQo,K2s,Q5s-Q4s,J5s,97s,86s,74s,43s,A8o,K9o,Q9o,J9o,T9o",
+    },
+  },
   // BB가 BTN 2.5bb 오픈을 수비 — 3벳은 폴라(프리미엄 + 휠 에이스·수딧 커넥터 블러프).
   // 혼합 핸드는 콜 티어가 3벳의 나머지(100−3벳)를 채워 «수비는 전량» 원칙을 지킨다
   "bb-vs-btn": {
@@ -120,7 +158,7 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
     },
     call: {
       100:
-        "88-22,A9s-A6s,K9s-K5s,QJs-Q8s,JTs-J8s,T9s-T8s,98s,87s,54s," +
+        "88-22,A9s-A6s,KTs,K9s-K5s,QJs-Q8s,JTs-J8s,T9s-T8s,98s,87s,54s," +
         "AJo-ATo,KQo-KTo,QJo-QTo,JTo",
       75: "ATs,A3s-A2s,KJs,76s,65s",
       50:
