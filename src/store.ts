@@ -8,6 +8,7 @@ export type SideView =
   | "guide"
   | "presets"
   | "trainer"
+  | "preflop"
   | "oop-range"
   | "ip-range"
   | "board"

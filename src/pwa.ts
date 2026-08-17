@@ -183,6 +183,7 @@ const VIEWS: SideView[] = [
   "guide",
   "presets",
   "trainer",
+  "preflop",
   "oop-range",
   "ip-range",
   "board",

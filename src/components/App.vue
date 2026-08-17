@@ -35,6 +35,9 @@
         <div v-if="store.sideView === 'trainer'">
           <TrainerPage />
         </div>
+        <div v-if="store.sideView === 'preflop'">
+          <PreflopChartPage />
+        </div>
         <div v-show="store.sideView === 'oop-range'">
           <RangeEditor :player="0" />
         </div>
@@ -81,6 +84,7 @@ import AboutPage from "./AboutPage.vue";
 import GuidePage from "./GuidePage.vue";
 import PresetsPage from "./PresetsPage.vue";
 import TrainerPage from "./TrainerPage.vue";
+import PreflopChartPage from "./PreflopChartPage.vue";
 import RangeEditor from "./RangeEditor.vue";
 import BoardSelector from "./BoardSelector.vue";
 import TreeConfig from "./TreeConfig.vue";
@@ -98,6 +102,7 @@ export default defineComponent({
     GuidePage,
     PresetsPage,
     TrainerPage,
+    PreflopChartPage,
     RangeEditor,
     BoardSelector,
     TreeConfig,
@@ -116,6 +121,7 @@ export default defineComponent({
         guide: "사용법 — 순서대로 따라하기",
         presets: "교육 예제 — 원클릭 스팟",
         trainer: "GTO 트레이너 — 선택의 EV를 확인하세요",
+        preflop: "프리플랍 차트 — 포지션별 오픈 레인지",
         "oop-range": "OOP 레인지",
         "ip-range": "IP 레인지",
         board: "보드",
@@ -128,6 +134,7 @@ export default defineComponent({
         guide: "How to Use — Step by Step",
         presets: "Study Spots — One-Click Examples",
         trainer: "GTO Trainer — See the EV of Every Decision",
+        preflop: "Preflop Charts — Opening Ranges by Position",
         "oop-range": "OOP Range",
         "ip-range": "IP Range",
         board: "Board",

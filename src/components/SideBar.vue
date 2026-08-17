@@ -29,6 +29,13 @@
       </span>
     </button>
 
+    <button :class="itemStyle('preflop')" @click="store.sideView = 'preflop'">
+      {{ L.preflop }}
+      <span class="hidden md:inline text-xs font-semibold text-yellow-500">
+        {{ L.preflopBadge }}
+      </span>
+    </button>
+
     <div class="side-bar-divider"></div>
 
     <div class="side-bar-label">
@@ -102,6 +109,8 @@ const M = {
     presetsBadge: "바로 보기",
     trainer: "GTO 트레이너",
     trainerBadge: "EV 채점",
+    preflop: "프리플랍 차트",
+    preflopBadge: "오픈 레인지",
     customLabel: "커스텀 스팟",
     customLabelSuffix: " — 직접 계산",
     oopRange: "OOP 레인지",
@@ -120,6 +129,8 @@ const M = {
     presetsBadge: "Instant",
     trainer: "GTO Trainer",
     trainerBadge: "EV Grading",
+    preflop: "Preflop Charts",
+    preflopBadge: "Open Ranges",
     customLabel: "Custom Spot",
     customLabelSuffix: " — Solve Yourself",
     oopRange: "OOP Range",
@@ -174,14 +185,15 @@ export default defineComponent({
   @apply transition-colors hover:bg-neutral-700;
 }
 
+/* 항목이 하나 늘어(프리플랍 차트) 1280×720에서 ⑤가 밀렸다 — 라벨·구분선 여백을 더 조임 */
 .side-bar-label {
   @apply shrink-0 whitespace-nowrap self-center mx-1 px-2 text-xs font-semibold text-neutral-500 select-none;
-  @apply md:self-auto md:whitespace-normal md:mx-2 md:mt-1.5 md:mb-0.5 md:px-4;
+  @apply md:self-auto md:whitespace-normal md:mx-2 md:mt-1 md:mb-0.5 md:px-4;
   @apply md:text-[0.6875rem] md:uppercase md:tracking-wider;
 }
 
 /* 학습 영역과 커스텀 계산 영역을 눈으로 구분 (모바일은 가로 탭바라 생략) */
 .side-bar-divider {
-  @apply hidden md:block md:mx-4 md:mt-2 md:border-t md:border-neutral-700;
+  @apply hidden md:block md:mx-4 md:mt-1 md:border-t md:border-neutral-700;
 }
 </style>
