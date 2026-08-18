@@ -72,7 +72,11 @@ export type ScenarioId =
   | "bb-vs-co"
   | "bb-vs-btn"
   | "bb-vs-sb"
+  | "btn-vs-utg"
+  | "btn-vs-hj"
   | "btn-vs-co"
+  | "co-vs-utg"
+  | "co-vs-hj"
   | "sb-vs-btn";
 
 export type Scenario = {
@@ -89,7 +93,11 @@ export const SCENARIOS: Scenario[] = [
   { id: "bb-vs-co", hero: "BB", villain: "CO" },
   { id: "bb-vs-btn", hero: "BB", villain: "BTN" },
   { id: "bb-vs-sb", hero: "BB", villain: "SB" },
+  { id: "btn-vs-utg", hero: "BTN", villain: "UTG" },
+  { id: "btn-vs-hj", hero: "BTN", villain: "HJ" },
   { id: "btn-vs-co", hero: "BTN", villain: "CO" },
+  { id: "co-vs-utg", hero: "CO", villain: "UTG" },
+  { id: "co-vs-hj", hero: "CO", villain: "HJ" },
   { id: "sb-vs-btn", hero: "SB", villain: "BTN" },
 ];
 
@@ -184,6 +192,37 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
       25: "99,ATs,KJs,AJo",
     },
   },
+  // BTN이 UTG 오픈을 만남 (확장 ②) — 가장 강한 오픈 상대. 3벳 밸류는 QQ+/AK 코어,
+  // 콜은 셋마인 페어 + 최상위 수딧. IP 수비 사슬(vs UTG ⊆ vs HJ ⊆ vs CO)의 바닥
+  "btn-vs-utg": {
+    threeBet: {
+      100: "QQ+,AKs,AKo",
+      75: "JJ,AQs",
+      50: "A5s-A4s",
+      25: "TT,AQo,KQs,65s",
+    },
+    call: {
+      100: "88-44,ATs,JTs",
+      75: "TT,99,33-22,KQs,T9s",
+      50: "AJs,KJs,QJs,98s",
+      25: "JJ,AQs,AQo,KTs,QTs,87s,76s",
+    },
+  },
+  // BTN이 HJ 오픈을 만남 (확장 ②) — vs UTG보다 넓고 vs CO보다 좁다
+  "btn-vs-hj": {
+    threeBet: {
+      100: "JJ+,AQs+,AKo",
+      75: "TT",
+      50: "AQo,A5s-A4s",
+      25: "AJs,KQs,A3s-A2s,65s",
+    },
+    call: {
+      100: "99-22,ATs,JTs,T9s",
+      75: "KQs,KJs,QJs,98s",
+      50: "AJs,KTs,QTs,87s",
+      25: "TT,AQo,AJo,A9s,76s",
+    },
+  },
   // BTN이 CO 오픈을 만남 — 3벳 중심 + 포지션 프리미엄 콜 소량
   "btn-vs-co": {
     threeBet: {
@@ -197,6 +236,37 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
       75: "KQs,KJs,QJs,98s",
       50: "AJs,A9s,KTs,QTs,87s",
       25: "TT,AQo,ATo,AJo,QJo,76s,65s",
+    },
+  },
+  // CO가 UTG 오픈을 만남 (확장 ②) — 뒤에 3명이 남아 스퀴즈 위험까지 있어 가장 좁다.
+  // 3벳-오어-폴드 성향 + 프리미엄 페어·수딧만 소량 콜. 같은 상대의 BTN 수비보다 좁다(사슬 검증)
+  "co-vs-utg": {
+    threeBet: {
+      100: "QQ+,AKs,AKo",
+      75: "JJ,AQs",
+      50: "A5s-A4s",
+      25: "TT,AQo,KQs",
+    },
+    call: {
+      100: "88-77",
+      75: "99,ATs,JTs",
+      50: "66-55,KQs",
+      25: "JJ,TT,44,AQs,AJs,QJs,T9s,98s",
+    },
+  },
+  // CO가 HJ 오픈을 만남 (확장 ②) — vs UTG보다 넓지만 여전히 3벳 중심
+  "co-vs-hj": {
+    threeBet: {
+      100: "JJ+,AQs+,AKo",
+      75: "TT",
+      50: "AQo,A5s-A4s",
+      25: "KQs,AJs",
+    },
+    call: {
+      100: "99-77,ATs,JTs",
+      75: "66-55,KQs,T9s",
+      50: "44-22,AJs,QJs,98s",
+      25: "TT,KJs,KTs,QTs,87s",
     },
   },
   // SB가 BTN 오픈을 만남 — 사실상 3벳 아니면 폴드 (콜 없음)

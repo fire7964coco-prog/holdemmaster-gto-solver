@@ -209,6 +209,12 @@
         >
           {{ L.sbNote }}
         </p>
+        <p
+          v-else-if="mode === 'defend' && isIpScenario"
+          class="text-sm text-neutral-400 mb-4"
+        >
+          {{ L.ipNote }}
+        </p>
 
         <div v-if="mode === 'rfi'" class="flex flex-wrap gap-2 mb-5">
           <button class="button-base button-blue" @click="copyRange">
@@ -297,7 +303,7 @@ const M = {
       "레이즈해야 할까요? 6맥스 캐시 100bb, 오픈 2.5bb 기준입니다. " +
       "부분 채움은 혼합 빈도(가끔만 오픈)를 뜻합니다.",
     introDefend:
-      "상대가 먼저 오픈 레이즈했을 때의 대응 — 자주 나오는 5개 조합입니다. " +
+      "상대가 먼저 오픈 레이즈했을 때의 대응 — 자주 나오는 조합들입니다. " +
       "빨강은 3벳, 초록은 콜, 두 색이 쌓인 높이가 수비 빈도입니다. " +
       "6맥스 캐시 100bb, 오픈 2.5bb(SB 오픈은 3bb) 기준.",
     legendOpen: "오픈 (100%)",
@@ -314,6 +320,10 @@ const M = {
     sbNote:
       "SB는 BTN 오픈에 사실상 «3벳 아니면 폴드»로 대응합니다 — 포지션도 없고 " +
       "BB가 아직 뒤에 남아 있어, 콜은 두 가지 불리함을 동시에 안기 때문입니다.",
+    ipNote:
+      "포지션이 있어도 앞 포지션의 오픈은 레인지가 강하고, 콜하면 뒤에 남은 " +
+      "블라인드의 스퀴즈 위험까지 안습니다. 그래서 IP 수비는 3벳 중심의 좁은 " +
+      "레인지가 되고, 콜은 페어·최상위 수딧 위주로만 남습니다.",
     statPercent: "오픈 비율",
     statCombos: "오픈 콤보",
     statHands: "오픈 핸드",
@@ -339,8 +349,9 @@ const M = {
     sourceList:
       "교차 검증에 쓴 공개 자료: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt(about-poker.com) · BeyondGTO · ThinkGTO(BB vs SB 실측 빈도) · " +
-      "GTO Gecko·RiverOdds(수비 빈도 앵커) + 자체 교육 프리셋 레인지 (2026-08 수집)",
-    phase2: "더 많은 수비 조합(vs UTG·HJ, 스퀴즈 등)은 다음 단계에서 추가됩니다.",
+      "GTO Gecko·RiverOdds(수비 빈도 앵커) · GTO Wizard 블로그·FreeBetRange" +
+      "(IP 수비 빈도·구조) + 자체 교육 프리셋 레인지 (2026-08 수집)",
+    phase2: "스퀴즈·vs 3벳 대응 조합은 다음 단계에서 추가됩니다.",
   },
   en: {
     modeRfi: "Opening (RFI)",
@@ -350,7 +361,7 @@ const M = {
       "everyone folds to you? Based on 6-max cash, 100bb, 2.5bb open. " +
       "Partially filled cells are mixed-frequency opens.",
     introDefend:
-      "How to respond when someone open-raises before you — the five most " +
+      "How to respond when someone open-raises before you — the most " +
       "common matchups. Red is 3-bet, green is call, and the stacked height is " +
       "your total defend frequency. 6-max cash, 100bb, 2.5bb open (3bb for SB opens).",
     legendOpen: "Open (100%)",
@@ -368,6 +379,11 @@ const M = {
       "The SB plays essentially 3-bet-or-fold against a BTN open — you are out " +
       "of position with the BB still left to act, so calling takes on both " +
       "disadvantages at once.",
+    ipNote:
+      "Even with position, an early-position open is a strong range, and " +
+      "calling risks a squeeze from the blinds still left to act. In-position " +
+      "defense is therefore a narrow, 3-bet-centric range, with calls mostly " +
+      "limited to pairs and premium suited hands.",
     statPercent: "Open %",
     statCombos: "Combos opened",
     statHands: "Hands opened",
@@ -393,8 +409,9 @@ const M = {
     sourceList:
       "Public sources cross-checked: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB solved frequencies) · " +
-      "GTO Gecko · RiverOdds (defense anchors) + our own study-spot ranges (collected 2026-08)",
-    phase2: "More defense matchups (vs UTG/HJ, squeezes) are coming in a later phase.",
+      "GTO Gecko · RiverOdds (defense anchors) · GTO Wizard blog · FreeBetRange " +
+      "(IP defense frequencies) + our own study-spot ranges (collected 2026-08)",
+    phase2: "Squeeze and vs-3-bet matchups are coming in a later phase.",
   },
 } as const;
 
@@ -417,6 +434,13 @@ export default defineComponent({
     const percentOf = (pos: Position) => statsFor(pos).percent.toFixed(1);
     const defendPercentOf = (id: ScenarioId) =>
       defendStatsFor(id).totalPercent.toFixed(1);
+
+    // IP 수비 조합(BTN·CO가 히어로) — 3벳 중심으로 좁은 이유를 안내
+    const isIpScenario = computed(
+      () =>
+        selectedScenario.value.startsWith("btn-") ||
+        selectedScenario.value.startsWith("co-")
+    );
 
     // RangeEditor·RangeMiniViewer와 같은 격자 관례
     const cellFreq = (row: number, col: number) =>
@@ -484,6 +508,7 @@ export default defineComponent({
       modeStyle,
       selected,
       selectedScenario,
+      isIpScenario,
       copied,
       copiedAction,
       stats,
