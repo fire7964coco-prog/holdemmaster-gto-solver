@@ -14,10 +14,16 @@
       >
         {{ L.modeDefend }}
       </button>
+      <button
+        :class="modeStyle('vs3bet')"
+        @click="mode = 'vs3bet'"
+      >
+        {{ L.mode3bet }}
+      </button>
     </div>
 
     <p class="text-sm md:text-base text-neutral-400 mb-4">
-      {{ mode === "rfi" ? L.intro : L.introDefend }}
+      {{ mode === "rfi" ? L.intro : mode === "defend" ? L.introDefend : L.intro3bet }}
     </p>
 
     <!-- 포지션 탭 (오픈) -->
@@ -41,6 +47,31 @@
           "
         >
           {{ percentOf(pos) }}%
+        </span>
+      </button>
+    </div>
+
+    <!-- 조합 탭 (vs 3벳) -->
+    <div v-else-if="mode === 'vs3bet'" class="flex flex-wrap gap-1.5 md:gap-2 mb-4">
+      <button
+        v-for="sc in vs3betScenarios"
+        :key="sc.id"
+        :class="
+          'px-3 md:px-4 py-1.5 rounded-xl text-sm md:text-[0.9375rem] font-semibold transition-colors ' +
+          (sc.id === selectedVs3bet
+            ? 'bg-yellow-500 text-neutral-900'
+            : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700')
+        "
+        @click="selectedVs3bet = sc.id"
+      >
+        {{ sc.hero }} vs {{ sc.villain }}
+        <span
+          :class="
+            'ml-1 text-xs font-normal ' +
+            (sc.id === selectedVs3bet ? 'text-neutral-700' : 'text-neutral-500')
+          "
+        >
+          {{ vs3betPercentOf(sc.id) }}%
         </span>
       </button>
     </div>
@@ -162,7 +193,7 @@
         >
           <span class="flex items-center gap-1.5">
             <span class="inline-block w-3 h-3 rounded-sm" :style="{ background: red500 }"></span>
-            {{ L.legend3bet }}
+            {{ mode === "vs3bet" ? L.legend4bet : L.legend3bet }}
           </span>
           <span class="flex items-center gap-1.5">
             <span class="inline-block w-3 h-3 rounded-sm" :style="{ background: green500 }"></span>
@@ -172,7 +203,7 @@
             <span class="inline-block w-3 h-3 rounded-sm bg-neutral-800 border border-neutral-600"></span>
             {{ L.legendFold }}
           </span>
-          <span>{{ L.legendMixedDefend }}</span>
+          <span>{{ mode === "vs3bet" ? L.legendCond : L.legendMixedDefend }}</span>
         </div>
       </div>
 
@@ -188,7 +219,7 @@
           <div class="stat-chip">{{ L.statHands }} <b>{{ stats.hands }} / 169</b></div>
           <div class="stat-chip">{{ L.statMixed }} <b>{{ stats.mixedHands }}</b></div>
         </div>
-        <div v-else class="flex flex-wrap gap-2 mb-4">
+        <div v-else-if="mode === 'defend'" class="flex flex-wrap gap-2 mb-4">
           <div class="stat-chip">
             {{ L.stat3bet }}
             <b data-testid="preflop-3bet">{{ defendStats.threeBetPercent.toFixed(1) }}%</b>
@@ -202,6 +233,20 @@
           </div>
           <div class="stat-chip">{{ L.statMixed }} <b>{{ defendStats.mixedHands }}</b></div>
         </div>
+        <div v-else class="flex flex-wrap gap-2 mb-4">
+          <div class="stat-chip">
+            {{ L.stat4bet }}
+            <b data-testid="preflop-4bet">{{ vs3betStats.fourBetPercent.toFixed(1) }}%</b>
+          </div>
+          <div class="stat-chip">
+            {{ L.statCall }} <b>{{ vs3betStats.callPercent.toFixed(1) }}%</b>
+          </div>
+          <div class="stat-chip">
+            {{ L.statContinue }}
+            <b data-testid="preflop-continue">{{ vs3betStats.continuePercent.toFixed(1) }}%</b>
+          </div>
+          <div class="stat-chip">{{ L.statMixed }} <b>{{ vs3betStats.mixedHands }}</b></div>
+        </div>
 
         <p
           v-if="mode === 'defend' && selectedScenario === 'sb-vs-btn'"
@@ -210,10 +255,19 @@
           {{ L.sbNote }}
         </p>
         <p
+          v-else-if="mode === 'defend' && isSqueezeScenario"
+          class="text-sm text-neutral-400 mb-4"
+        >
+          {{ L.squeezeNote }}
+        </p>
+        <p
           v-else-if="mode === 'defend' && isIpScenario"
           class="text-sm text-neutral-400 mb-4"
         >
           {{ L.ipNote }}
+        </p>
+        <p v-else-if="mode === 'vs3bet'" class="text-sm text-neutral-400 mb-4">
+          {{ L.note3bet }}
         </p>
 
         <div v-if="mode === 'rfi'" class="flex flex-wrap gap-2 mb-5">
@@ -233,15 +287,23 @@
             {{ L.sendIp }}
           </button>
         </div>
-        <div v-else class="flex flex-wrap gap-2 mb-5">
+        <div v-else-if="mode === 'defend'" class="flex flex-wrap gap-2 mb-5">
           <button class="button-base button-red" @click="copyDefend('threeBet')">
             {{ copiedAction === "threeBet" ? L.copied : L.copy3bet }}
           </button>
           <button
             class="button-base button-green"
-            :disabled="selectedScenario === 'sb-vs-btn'"
+            :disabled="callEmpty"
             @click="copyDefend('call')"
           >
+            {{ copiedAction === "call" ? L.copied : L.copyCall }}
+          </button>
+        </div>
+        <div v-else class="flex flex-wrap gap-2 mb-5">
+          <button class="button-base button-red" @click="copyVs3bet('fourBet')">
+            {{ copiedAction === "fourBet" ? L.copied : L.copy4bet }}
+          </button>
+          <button class="button-base button-green" @click="copyVs3bet('call')">
             {{ copiedAction === "call" ? L.copied : L.copyCall }}
           </button>
         </div>
@@ -250,7 +312,7 @@
           <div class="section-title">{{ L.howTitle }}</div>
           <ul class="list-disc pl-5 text-sm text-neutral-300 space-y-1.5">
             <li>{{ L.how1 }}</li>
-            <li>{{ mode === "rfi" ? L.how2 : L.howDefend2 }}</li>
+            <li>{{ mode === "rfi" ? L.how2 : mode === "vs3bet" ? L.how3bet2 : L.howDefend2 }}</li>
             <li>{{ mode === "rfi" ? L.how3 : L.howDefend3 }}</li>
           </ul>
         </div>
@@ -281,12 +343,17 @@ import {
   Position,
   SCENARIOS,
   ScenarioId,
+  VS3BET_SCENARIOS,
+  Vs3BetId,
   gridFor,
   statsFor,
   rangeTextFor,
   defendGridsFor,
   defendStatsFor,
   defendRangeTextFor,
+  vs3betGridsFor,
+  vs3betStatsFor,
+  vs3betRangeTextFor,
 } from "../preflop-charts";
 import { ranks } from "../utils";
 
@@ -298,6 +365,27 @@ const M = {
   ko: {
     modeRfi: "오픈 (RFI)",
     modeDefend: "vs 오픈 (수비)",
+    mode3bet: "vs 3벳 (오픈 후)",
+    intro3bet:
+      "내가 오픈 레이즈했는데 3벳을 받았을 때의 대응 — 빨강은 4벳, 초록은 콜, " +
+      "나머지는 폴드입니다. 빈도는 «오픈했다면» 기준이라 오픈하지 않는 핸드는 " +
+      "비어 있습니다. 6맥스 캐시 100bb, 오픈 2.5bb, 3벳 약 10~11bb 기준.",
+    legend4bet: "4벳",
+    legendCond: "빈 칸 = 애초에 오픈 안 함",
+    stat4bet: "4벳 비율",
+    statContinue: "계속(오픈 대비)",
+    copy4bet: "4벳 레인지 복사",
+    note3bet:
+      "통계는 전체 핸드가 아니라 «오픈 레인지 대비» 비율입니다. 4벳 밸류는 " +
+      "QQ+/AK 중심이고, A5s-A4s 같은 블러프를 소량 섞습니다. 콜은 포지션이 " +
+      "있으니 페어·수딧 브로드웨이·커넥터까지 넓게 가져갑니다.",
+    squeezeNote:
+      "스퀴즈 = 오픈과 콜러가 모두 있는 상태에서의 3벳(여기서는 약 11~12bb). " +
+      "콜러가 있으면 헤즈업 수비보다 전체 수비는 좁아지고 3벳은 밸류 중심이 " +
+      "됩니다. 오버콜은 멀티웨이에서 너트를 만들 수 있는 수딧·커넥티드 핸드 위주입니다.",
+    how3bet2:
+      "빨강+초록이 칸을 다 채우지 못하면 그만큼 폴드입니다. 두 색이 함께면 4벳과 " +
+      "콜을 혼합합니다. 오픈 레인지에 없는 핸드는 이 상황 자체가 생기지 않아 비어 있습니다.",
     intro:
       "포지션별 오픈 레인지(RFI) — 앞 사람이 모두 폴드했을 때 어떤 핸드로 " +
       "레이즈해야 할까요? 6맥스 캐시 100bb, 오픈 2.5bb 기준입니다. " +
@@ -350,12 +438,36 @@ const M = {
       "교차 검증에 쓴 공개 자료: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt(about-poker.com) · BeyondGTO · ThinkGTO(BB vs SB 실측 빈도) · " +
       "GTO Gecko·RiverOdds(수비 빈도 앵커) · GTO Wizard 블로그·FreeBetRange" +
-      "(IP 수비 빈도·구조) + 자체 교육 프리셋 레인지 (2026-08 수집)",
-    phase2: "스퀴즈·vs 3벳 대응 조합은 다음 단계에서 추가됩니다.",
+      "(IP 수비·스퀴즈 원칙) · 888poker·Run It Once(vs 3벳 빈도) + " +
+      "자체 교육 프리셋 레인지 (2026-08 수집)",
+    phase2: "수비 조합과 시나리오는 계속 추가될 예정입니다.",
   },
   en: {
     modeRfi: "Opening (RFI)",
     modeDefend: "vs Open (Defense)",
+    mode3bet: "vs 3-bet (after opening)",
+    intro3bet:
+      "How to respond when your open-raise gets 3-bet — red is 4-bet, green is " +
+      "call, the rest folds. Frequencies are conditional on having opened, so " +
+      "hands you never open are blank. 6-max cash, 100bb, 2.5bb open, ~10-11bb 3-bet.",
+    legend4bet: "4-bet",
+    legendCond: "Blank = never opened in the first place",
+    stat4bet: "4-bet %",
+    statContinue: "Continue (of opens)",
+    copy4bet: "Copy 4-bet range",
+    note3bet:
+      "The stats are shares of your opening range, not of all hands. 4-bet value " +
+      "centers on QQ+/AK with a few bluffs like A5s-A4s mixed in. With position, " +
+      "the calling range stays wide: pairs, suited broadways, and connectors.",
+    squeezeNote:
+      "A squeeze is a 3-bet with both an opener and a caller in the pot (about " +
+      "11-12bb here). The caller makes total defense tighter than heads-up and " +
+      "pushes the 3-bet toward value. Overcalls favor suited, connected hands " +
+      "that can make the nuts multiway.",
+    how3bet2:
+      "If red + green don't fill the cell, the rest is folded. Cells with both " +
+      "colors mix 4-bets and calls. Hands outside the opening range never face " +
+      "this spot, so they are blank.",
     intro:
       "Opening ranges by position (RFI) — which hands should you raise when " +
       "everyone folds to you? Based on 6-max cash, 100bb, 2.5bb open. " +
@@ -410,8 +522,9 @@ const M = {
       "Public sources cross-checked: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB solved frequencies) · " +
       "GTO Gecko · RiverOdds (defense anchors) · GTO Wizard blog · FreeBetRange " +
-      "(IP defense frequencies) + our own study-spot ranges (collected 2026-08)",
-    phase2: "Squeeze and vs-3-bet matchups are coming in a later phase.",
+      "(IP defense & squeeze principles) · 888poker · Run It Once (vs 3-bet " +
+      "frequencies) + our own study-spot ranges (collected 2026-08)",
+    phase2: "More matchups and scenarios will keep being added.",
   },
 } as const;
 
@@ -420,20 +533,25 @@ export default defineComponent({
     const store = useStore();
     const L = computed(() => M[i18n.locale]);
 
-    const mode = ref<"rfi" | "defend">("rfi");
+    const mode = ref<"rfi" | "defend" | "vs3bet">("rfi");
     const selected = ref<Position>("UTG");
     const selectedScenario = ref<ScenarioId>("bb-vs-btn");
+    const selectedVs3bet = ref<Vs3BetId>("btn-vs-bb-3bet");
     const copied = ref(false);
-    const copiedAction = ref<"" | "threeBet" | "call">("");
+    const copiedAction = ref<"" | "threeBet" | "fourBet" | "call">("");
 
     const grid = computed(() => gridFor(selected.value));
     const stats = computed(() => statsFor(selected.value));
     const defendGrids = computed(() => defendGridsFor(selectedScenario.value));
     const defendStats = computed(() => defendStatsFor(selectedScenario.value));
+    const vs3Grids = computed(() => vs3betGridsFor(selectedVs3bet.value));
+    const vs3betStats = computed(() => vs3betStatsFor(selectedVs3bet.value));
 
     const percentOf = (pos: Position) => statsFor(pos).percent.toFixed(1);
     const defendPercentOf = (id: ScenarioId) =>
       defendStatsFor(id).totalPercent.toFixed(1);
+    const vs3betPercentOf = (id: Vs3BetId) =>
+      vs3betStatsFor(id).continuePercent.toFixed(1);
 
     // IP 수비 조합(BTN·CO가 히어로) — 3벳 중심으로 좁은 이유를 안내
     const isIpScenario = computed(
@@ -441,14 +559,26 @@ export default defineComponent({
         selectedScenario.value.startsWith("btn-") ||
         selectedScenario.value.startsWith("co-")
     );
+    const isSqueezeScenario = computed(() =>
+      selectedScenario.value.startsWith("sq-")
+    );
+    // 콜 레인지가 아예 없는 조합(SB 계열) — 복사 버튼 비활성
+    const callEmpty = computed(() =>
+      defendGrids.value.call.every((f) => f === 0)
+    );
 
     // RangeEditor·RangeMiniViewer와 같은 격자 관례
     const cellFreq = (row: number, col: number) =>
       grid.value[13 * (row - 1) + col - 1];
+    // 수비/vs3벳 모드 공용 — 빨강(3벳·4벳)과 초록(콜) 격자
     const cellThreeBet = (row: number, col: number) =>
-      defendGrids.value.threeBet[13 * (row - 1) + col - 1];
+      (mode.value === "vs3bet" ? vs3Grids.value.fourBet : defendGrids.value.threeBet)[
+        13 * (row - 1) + col - 1
+      ];
     const cellCall = (row: number, col: number) =>
-      defendGrids.value.call[13 * (row - 1) + col - 1];
+      (mode.value === "vs3bet" ? vs3Grids.value.call : defendGrids.value.call)[
+        13 * (row - 1) + col - 1
+      ];
     const cellActive = (row: number, col: number) =>
       mode.value === "rfi"
         ? cellFreq(row, col) > 0
@@ -486,13 +616,19 @@ export default defineComponent({
       setTimeout(() => (copiedAction.value = ""), 1500);
     };
 
+    const copyVs3bet = async (action: "fourBet" | "call") => {
+      await writeClipboard(vs3betRangeTextFor(selectedVs3bet.value, action));
+      copiedAction.value = action;
+      setTimeout(() => (copiedAction.value = ""), 1500);
+    };
+
     // 레인지를 커스텀 스팟 에디터로 — RangeEditor가 watch로 받아 적용한다
     const sendToEditor = (player: 0 | 1) => {
       store.pendingRangeText[player] = rangeTextFor(selected.value);
       store.sideView = player === 0 ? "oop-range" : "ip-range";
     };
 
-    const modeStyle = (value: "rfi" | "defend") =>
+    const modeStyle = (value: "rfi" | "defend" | "vs3bet") =>
       "px-3 py-1 rounded-lg text-sm font-semibold transition-colors " +
       (mode.value === value
         ? "bg-neutral-700 text-white"
@@ -504,18 +640,24 @@ export default defineComponent({
       green500,
       positions: POSITIONS,
       scenarios: SCENARIOS,
+      vs3betScenarios: VS3BET_SCENARIOS,
       mode,
       modeStyle,
       selected,
       selectedScenario,
+      selectedVs3bet,
       isIpScenario,
+      isSqueezeScenario,
+      callEmpty,
       copied,
       copiedAction,
       stats,
       defendStats,
+      vs3betStats,
       L,
       percentOf,
       defendPercentOf,
+      vs3betPercentOf,
       cellFreq,
       cellThreeBet,
       cellCall,
@@ -523,6 +665,7 @@ export default defineComponent({
       cellLabel,
       copyRange,
       copyDefend,
+      copyVs3bet,
       sendToEditor,
       Math,
     };

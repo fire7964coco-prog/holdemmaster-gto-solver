@@ -77,7 +77,9 @@ export type ScenarioId =
   | "btn-vs-co"
   | "co-vs-utg"
   | "co-vs-hj"
-  | "sb-vs-btn";
+  | "sb-vs-btn"
+  | "sq-bb-co-btn"
+  | "sq-sb-co-btn";
 
 export type Scenario = {
   id: ScenarioId;
@@ -99,6 +101,10 @@ export const SCENARIOS: Scenario[] = [
   { id: "co-vs-utg", hero: "CO", villain: "UTG" },
   { id: "co-vs-hj", hero: "CO", villain: "HJ" },
   { id: "sb-vs-btn", hero: "SB", villain: "BTN" },
+  // 스퀴즈 (확장 ③) — 오픈 + 콜러가 있는 상태에서의 3벳. 구조(3벳/콜/폴드)가
+  // 같아 수비 모드에 함께 싣는다. villain 표기 "CO+BTN" = CO 오픈 + BTN 콜
+  { id: "sq-bb-co-btn", hero: "BB", villain: "CO+BTN" },
+  { id: "sq-sb-co-btn", hero: "SB", villain: "CO+BTN" },
 ];
 
 type DefendTiers = { threeBet: TierMap; call: TierMap };
@@ -278,6 +284,92 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
       25: "66-55,A8s-A6s,J9s,65s,54s,QJo,KTo",
     },
     call: {},
+  },
+  // BB가 CO 오픈(2.5bb) + BTN 콜을 만남 (확장 ③ 스퀴즈, ~11-12bb) — 콜러가 있어
+  // 헤즈업(bb-vs-co)보다 전체 수비가 좁고(사슬 검증), 스퀴즈는 밸류 중심 리니어.
+  // 오버콜은 수딧·커넥티드(멀티웨이에서 너트를 만드는 핸드) 위주, 오프수트 정크는 폴드
+  "sq-bb-co-btn": {
+    threeBet: {
+      100: "TT+,AQs+,AKo",
+      75: "AQo,AJs",
+      50: "99,KQs,A5s-A4s",
+      25: "88,ATs,KJs,QJs,JTs",
+    },
+    call: {
+      100: "77-22,A9s-A6s,KTs,QTs,J9s,T9s,98s,87s,76s,65s,54s",
+      75: "88,ATs,KJs,QJs,JTs,K9s-K5s,Q9s,J8s,T8s,AJo,KQo",
+      50: "99,KQs,A5s-A4s,A3s-A2s,Q8s,ATo,KJo,QJo,JTo",
+      25: "AJs,K4s-K2s,Q7s-Q4s,J7s-J5s,T7s-T6s,97s,96s,86s,85s,75s,64s,53s,KTo,QTo",
+    },
+  },
+  // SB가 CO 오픈 + BTN 콜을 만남 (확장 ③ 스퀴즈) — SB 원칙 그대로 3벳 아니면 폴드.
+  // 두 레인지를 상대하므로 sb-vs-btn(13.5%)보다 훨씬 좁다(사슬 검증)
+  "sq-sb-co-btn": {
+    threeBet: {
+      100: "JJ+,AQs+,AKo",
+      75: "TT,AQo,AJs",
+      50: "99,ATs,KQs,A5s-A4s",
+      25: "88,A9s,KJs,QJs,JTs,T9s,98s,87s,AJo",
+    },
+    call: {},
+  },
+};
+
+// ─── 3단계: vs 3벳 (확장 ③) — 내가 오픈한 뒤 3벳을 받았을 때 ─────
+// 히어로의 레인지가 이미 오픈 레인지로 제한돼 있어 별도 모드로 표시한다.
+// 빈도는 «오픈했다면»의 조건부 — 오픈하지 않는 핸드는 응답이 없어야 하고(검증),
+// 통계는 전체 1326콤보가 아니라 «오픈 레인지 대비» %로 계산한다.
+// 전제: 오픈 2.5bb, 3벳 약 10~11bb. 내부 앵커: presets BTN_CALL_3BET(3벳팟 프리셋).
+
+export type Vs3BetId = "btn-vs-bb-3bet" | "btn-vs-sb-3bet";
+
+export type Vs3BetScenario = {
+  id: Vs3BetId;
+  /** 오픈한 내 포지션 */
+  hero: string;
+  /** 3벳한 상대 */
+  villain: string;
+};
+
+export const VS3BET_SCENARIOS: Vs3BetScenario[] = [
+  { id: "btn-vs-bb-3bet", hero: "BTN", villain: "BB" },
+  { id: "btn-vs-sb-3bet", hero: "BTN", villain: "SB" },
+];
+
+type Vs3BetTiers = { fourBet: TierMap; call: TierMap };
+
+const VS_3BET: Record<Vs3BetId, Vs3BetTiers> = {
+  // BTN 2.5bb 오픈 → BB ~11bb 3벳. 4벳 밸류는 QQ+/AK 중심 + A5s-A4s 블러프,
+  // 콜은 페어·수딧 브로드웨이·커넥터(BTN_CALL_3BET 전부 포함 — 검증)
+  "btn-vs-bb-3bet": {
+    fourBet: {
+      100: "KK+",
+      75: "QQ,AKs,AKo",
+      50: "JJ,AQs,A5s-A4s",
+      25: "TT,AQo,A3s-A2s,65s",
+    },
+    call: {
+      100: "99-44,AJs-A6s,KQs-KTs,QJs-QTs,JTs,J9s,T9s-T8s,98s,87s",
+      75: "TT,33-22,AJo,KQo,76s",
+      50: "JJ,AQs,AQo,A5s-A4s,A3s-A2s,ATo,KJo,K9s,Q9s,65s,54s",
+      25: "QQ,AKs,AKo,97s,86s",
+    },
+  },
+  // BTN 오픈 → SB ~10bb 3벳. SB의 3벳이 더 넓고(머지드) BTN이 포지션을 가지므로
+  // vs BB보다 조금 넓게 계속한다(사슬: vs BB ⊆ vs SB). 4벳도 약간 공격적
+  "btn-vs-sb-3bet": {
+    fourBet: {
+      100: "KK+",
+      75: "QQ,AKs,AKo",
+      50: "JJ,AQs,A5s-A4s",
+      25: "TT,AQo,A3s-A2s,KQs,76s,65s",
+    },
+    call: {
+      100: "99-22,AJs-A6s,KJs-KTs,QJs-QTs,JTs,J9s,T9s-T8s,98s,87s",
+      75: "TT,AJo,ATo,KQo,KJo,KQs,K9s,Q9s,76s,54s",
+      50: "JJ,AQs,AQo,A5s-A4s,A3s-A2s,97s,86s,65s",
+      25: "QQ,AKs,AKo,QJo",
+    },
   },
 };
 
@@ -480,6 +572,62 @@ export const rangeTextFor = (position: Position): string =>
 export const defendRangeTextFor = (id: ScenarioId, action: "threeBet" | "call"): string =>
   tiersToRangeText(VS_OPEN[id][action]);
 
+// ─── vs 3벳 접근자 ───────────────────────────────────────────
+
+const vs3betCache = new Map<Vs3BetId, { fourBet: number[]; call: number[] }>();
+
+/** vs 3벳 조합의 4벳·콜 빈도 격자 (오픈했다는 전제의 조건부, 각 0~100) */
+export const vs3betGridsFor = (id: Vs3BetId) => {
+  const cached = vs3betCache.get(id);
+  if (cached) return cached;
+  const grids = {
+    fourBet: gridOfTiers(VS_3BET[id].fourBet),
+    call: gridOfTiers(VS_3BET[id].call),
+  };
+  vs3betCache.set(id, grids);
+  return grids;
+};
+
+export type Vs3BetStats = {
+  /** 오픈 레인지 대비 % (히어로의 RFI 빈도로 가중) */
+  fourBetPercent: number;
+  callPercent: number;
+  continuePercent: number;
+  hands: number;
+  mixedHands: number;
+};
+
+/** 통계는 «오픈 레인지 대비» — 각 핸드를 히어로(BTN)의 RFI 빈도로 가중해 계산 */
+export const vs3betStatsFor = (id: Vs3BetId): Vs3BetStats => {
+  const { fourBet, call } = vs3betGridsFor(id);
+  const rfi = gridFor("BTN"); // 두 조합 모두 히어로가 BTN
+  let openCombos = 0;
+  let fourBetCombos = 0;
+  let callCombos = 0;
+  let hands = 0;
+  let mixedHands = 0;
+  for (let i = 0; i < 169; i++) {
+    const opened = (combosAt(i) * rfi[i]) / 100;
+    openCombos += opened;
+    const total = fourBet[i] + call[i];
+    if (total <= 0) continue;
+    fourBetCombos += (opened * fourBet[i]) / 100;
+    callCombos += (opened * call[i]) / 100;
+    hands += 1;
+    if (total < 100 || (fourBet[i] > 0 && call[i] > 0)) mixedHands += 1;
+  }
+  return {
+    fourBetPercent: (fourBetCombos / openCombos) * 100,
+    callPercent: (callCombos / openCombos) * 100,
+    continuePercent: ((fourBetCombos + callCombos) / openCombos) * 100,
+    hands,
+    mixedHands,
+  };
+};
+
+export const vs3betRangeTextFor = (id: Vs3BetId, action: "fourBet" | "call"): string =>
+  tiersToRangeText(VS_3BET[id][action]);
+
 /** 검증 스크립트용 훅 — preflop-verify.js가 데이터 무결성을 검사할 때 쓴다 */
 declare global {
   interface Window {
@@ -493,6 +641,10 @@ declare global {
       defendGridsFor: typeof defendGridsFor;
       defendStatsFor: typeof defendStatsFor;
       defendRangeTextFor: typeof defendRangeTextFor;
+      vs3betScenarios: Vs3BetScenario[];
+      vs3betGridsFor: typeof vs3betGridsFor;
+      vs3betStatsFor: typeof vs3betStatsFor;
+      vs3betRangeTextFor: typeof vs3betRangeTextFor;
     };
   }
 }
@@ -507,5 +659,9 @@ if (typeof window !== "undefined") {
     defendGridsFor,
     defendStatsFor,
     defendRangeTextFor,
+    vs3betScenarios: VS3BET_SCENARIOS,
+    vs3betGridsFor,
+    vs3betStatsFor,
+    vs3betRangeTextFor,
   };
 }
