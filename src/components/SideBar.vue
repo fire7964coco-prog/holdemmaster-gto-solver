@@ -36,6 +36,13 @@
       </span>
     </button>
 
+    <button :class="itemStyle('equity')" @click="store.sideView = 'equity'">
+      {{ L.equity }}
+      <span class="hidden md:inline text-xs font-semibold text-emerald-400">
+        {{ L.equityBadge }}
+      </span>
+    </button>
+
     <div class="side-bar-divider"></div>
 
     <div class="side-bar-label">
@@ -111,6 +118,8 @@ const M = {
     trainerBadge: "EV 채점",
     preflop: "프리플랍 차트",
     preflopBadge: "오픈·수비",
+    equity: "에퀴티 계산기",
+    equityBadge: "승률",
     customLabel: "커스텀 스팟",
     customLabelSuffix: " — 직접 계산",
     oopRange: "OOP 레인지",
@@ -130,9 +139,13 @@ const M = {
     trainer: "GTO Trainer",
     trainerBadge: "EV Grading",
     preflop: "Preflop Charts",
-    preflopBadge: "Open·Defend",
+    // 뱃지까지 한 줄에 들어와야 한다 — 「Open·Defend」는 1280×720에서 두 줄로 접혔다
+    preflopBadge: "Open·Def",
+    equity: "Equity Calculator",
+    equityBadge: "Win %",
     customLabel: "Custom Spot",
-    customLabelSuffix: " — Solve Yourself",
+    // ⚠ 이 라벨이 두 줄로 접히면 1280×720에서 ⑤가 화면 밖으로 밀린다 (한 줄로 유지할 것)
+    customLabelSuffix: " — Solve",
     oopRange: "OOP Range",
     ipRange: "IP Range",
     board: "Board",
@@ -176,24 +189,27 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* ①~⑤가 스크롤 없이 한 화면에 들어와야 하므로 데스크톱 높이를 조였다
-   (py-3 → py-2, 글자 1.0625rem → 0.9375rem, 항목 간격 my-1 → my-0.5) */
+/* ①~⑤가 스크롤 없이 한 화면에 들어와야 하므로 데스크톱 높이를 조였다.
+   기준 해상도는 1280×720 — 여기서 넘치면 ⑤ 계산 실행이 스크롤 뒤로 숨는다.
+   조인 이력: py-3 → py-2 → py-1.5, 글자 1.0625rem → 0.9375rem, 항목 간격 my-1 → my-0.5
+   (마지막 py-1.5는 2026-08-18 «에퀴티 계산기» 항목을 넣으며. 항목당 4px × 11개 = 44px 확보)
+   ⚠ 여기서 항목을 또 늘리면 여백으로는 더 못 짜낸다 — 다른 항목을 빼거나 구조를 바꿀 것 */
 .side-bar-item {
   @apply block shrink-0 whitespace-nowrap mx-1 my-1 px-3 py-2 rounded-xl text-sm;
-  @apply md:shrink md:whitespace-normal md:mx-2 md:my-0.5 md:px-4 md:py-2 md:rounded-2xl md:text-[0.9375rem];
+  @apply md:shrink md:whitespace-normal md:mx-2 md:my-0.5 md:px-4 md:py-1.5 md:rounded-2xl md:text-[0.9375rem];
   @apply text-left select-none;
   @apply transition-colors hover:bg-neutral-700;
 }
 
-/* 항목이 하나 늘어(프리플랍 차트) 1280×720에서 ⑤가 밀렸다 — 라벨·구분선 여백을 더 조임 */
+/* 항목이 늘 때마다(프리플랍 차트 → 에퀴티 계산기) 라벨·구분선 여백을 더 조였다 */
 .side-bar-label {
   @apply shrink-0 whitespace-nowrap self-center mx-1 px-2 text-xs font-semibold text-neutral-500 select-none;
-  @apply md:self-auto md:whitespace-normal md:mx-2 md:mt-1 md:mb-0.5 md:px-4;
+  @apply md:self-auto md:whitespace-normal md:mx-2 md:mt-0.5 md:mb-0.5 md:px-4;
   @apply md:text-[0.6875rem] md:uppercase md:tracking-wider;
 }
 
 /* 학습 영역과 커스텀 계산 영역을 눈으로 구분 (모바일은 가로 탭바라 생략) */
 .side-bar-divider {
-  @apply hidden md:block md:mx-4 md:mt-1 md:border-t md:border-neutral-700;
+  @apply hidden md:block md:mx-4 md:mt-0.5 md:border-t md:border-neutral-700;
 }
 </style>

@@ -38,6 +38,9 @@
         <div v-if="store.sideView === 'preflop'">
           <PreflopChartPage />
         </div>
+        <div v-if="store.sideView === 'equity'">
+          <EquityPage />
+        </div>
         <div v-show="store.sideView === 'oop-range'">
           <RangeEditor :player="0" />
         </div>
@@ -85,6 +88,7 @@ import GuidePage from "./GuidePage.vue";
 import PresetsPage from "./PresetsPage.vue";
 import TrainerPage from "./TrainerPage.vue";
 import PreflopChartPage from "./PreflopChartPage.vue";
+import EquityPage from "./EquityPage.vue";
 import RangeEditor from "./RangeEditor.vue";
 import BoardSelector from "./BoardSelector.vue";
 import TreeConfig from "./TreeConfig.vue";
@@ -103,6 +107,7 @@ export default defineComponent({
     PresetsPage,
     TrainerPage,
     PreflopChartPage,
+    EquityPage,
     RangeEditor,
     BoardSelector,
     TreeConfig,
@@ -122,6 +127,7 @@ export default defineComponent({
         presets: "교육 예제 — 원클릭 스팟",
         trainer: "GTO 트레이너 — 선택의 EV를 확인하세요",
         preflop: "프리플랍 차트 — 오픈 & 수비 레인지",
+        equity: "에퀴티 계산기 — 핸드·레인지 승률",
         "oop-range": "OOP 레인지",
         "ip-range": "IP 레인지",
         board: "보드",
@@ -135,6 +141,7 @@ export default defineComponent({
         presets: "Study Spots — One-Click Examples",
         trainer: "GTO Trainer — See the EV of Every Decision",
         preflop: "Preflop Charts — Opening & Defense Ranges",
+        equity: "Equity Calculator — Hand & Range Win Rates",
         "oop-range": "OOP Range",
         "ip-range": "IP Range",
         board: "Board",

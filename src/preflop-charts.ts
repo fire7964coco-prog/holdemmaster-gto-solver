@@ -387,8 +387,11 @@ const gridIndexOf = (hi: number, lo: number, suited: boolean) => {
   return (12 - rowRank) * 13 + (12 - colRank);
 };
 
-/** 한 클래스 표기("66+", "K8s-K5s", "AJo+", "54s")를 [hi, lo, suited][] 목록으로 */
-const expandClass = (cls: string): [number, number, boolean][] => {
+/**
+ * 한 클래스 표기("66+", "K8s-K5s", "AJo+", "54s")를 [hi, lo, suited][] 목록으로.
+ * 에퀴티 계산기(equity.ts)의 레인지 파서도 이 함수를 그대로 쓴다 — 문법이 한 곳에만 있어야 한다.
+ */
+export const expandClass = (cls: string): [number, number, boolean][] => {
   const out: [number, number, boolean][] = [];
   const m = cls.match(/^([2-9TJQKA])([2-9TJQKA])([so]?)(\+?)$/);
   const range = cls.match(/^([2-9TJQKA])([2-9TJQKA])([so]?)-([2-9TJQKA])([2-9TJQKA])([so]?)$/);
