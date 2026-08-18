@@ -54,10 +54,10 @@ const RFI: Record<Position, TierMap> = {
   SB: {
     100:
       "22+,A2s+,K2s+,Q4s+,J6s+,T6s+,96s+,86s+,75s+,64s+,54s," +
-      "A2o+,K8o+,Q9o+,J9o+,T9o,98o",
-    75: "85s",
-    50: "53s,87o,K7o,Q8o,J8o,T8o",
-    25: "43s",
+      "A2o+,K8o+,Q9o+,J9o+,T9o-T8o,98o",
+    75: "85s,53s",
+    50: "Q3s-Q2s,J5s,87o,K7o,Q8o,J8o",
+    25: "J4s,43s",
   },
 };
 
@@ -119,10 +119,10 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
       25: "99,AJs,KQs,76s,65s",
     },
     call: {
-      100: "88-22,ATs,A9s-A6s,KTs-K8s,QJs-QTs,JTs,T9s,98s,87s,AJo,KQo",
-      75: "99,AJs,KQs,KJs,76s,65s,Q9s,J9s,T8s,54s,ATo,KJo,QJo",
-      50: "TT,AQo,A5s-A4s,A3s-A2s,K7s-K6s,Q8s,J8s,75s,64s,KTo,QTo,JTo",
-      25: "JJ,AQs,K5s,T7s,97s,86s,96s,85s,53s,A9o-A8o,T9o",
+      100: "88-22,ATs,A9s-A6s,KTs-K8s,KJs,QJs-QTs,JTs,T9s,98s,87s,AJo,KQo",
+      75: "99,AJs,KQs,76s,65s,Q9s,J9s,T8s,54s,ATo,KJo,QJo",
+      50: "TT,AQo,A5s-A4s,A3s-A2s,K7s-K6s,Q8s,J8s,97s,86s,75s,64s,KTo,QTo,JTo",
+      25: "JJ,AQs,K5s,T7s,96s,85s,53s,A9o-A8o,T9o",
     },
   },
   // BB가 HJ 2.5bb 오픈을 수비 — UTG보다 넓고 CO보다 좁다
@@ -139,9 +139,9 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
         "AJo-ATo,KQo-KJo,QJo",
       75: "ATs,A3s-A2s,KJs,76s,65s",
       50:
-        "99,AJs,KQs,A5s-A4s,K5s-K3s,Q8s-Q6s,J8s-J6s,T7s-T6s,96s,85s,75s," +
+        "99,AJs,KQs,A5s-A4s,K5s-K3s,Q8s-Q6s,J8s-J6s,T7s-T6s,97s,86s,75s," +
         "64s,53s,KTo,QTo,JTo,A9o",
-      25: "TT,AQo,K2s,Q5s-Q4s,J5s,97s,86s,74s,43s,A8o,K9o,Q9o,J9o,T9o",
+      25: "TT,AQo,K2s,Q5s-Q4s,J5s,96s,85s,74s,43s,A8o,K9o,Q9o,J9o,T9o",
     },
   },
   // BB가 BTN 2.5bb 오픈을 수비 — 3벳은 폴라(프리미엄 + 휠 에이스·수딧 커넥터 블러프).
@@ -176,9 +176,9 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
         "AJo-ATo,KQo-KTo,QJo-QTo,JTo",
       75: "ATs,A3s-A2s,KJs,76s,65s",
       50:
-        "99,AJs,KQs,A5s-A4s,K4s-K2s,Q7s-Q4s,J7s-J5s,T7s-T6s,96s,85s,75s," +
+        "99,AJs,KQs,A5s-A4s,K4s-K2s,Q7s-Q4s,J7s-J5s,T7s-T6s,97s,86s,75s," +
         "64s,53s,A9o-A8o,K9o,Q9o,J9o,T9o",
-      25: "TT,AQo,97s,86s,74s,43s,A7o-A5o,T8o,98o,87o",
+      25: "TT,AQo,96s,85s,74s,43s,A7o-A5o,T8o,98o,87o",
     },
   },
   // BB가 SB 3bb 오픈을 수비 — 포지션이 있어 넓게 콜, 3벳은 머지드(밸류 중심)
@@ -192,7 +192,7 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
     call: {
       100:
         "55-22,A7s-A2s,K8s-K2s,Q9s-Q2s,J9s-J5s,T8s-T6s,97s-95s,87s-85s," +
-        "76s-74s,65s-64s,54s-53s,43s,A9o-A2o,KTo-K8o,QTo-Q8o,JTo-J8o,T9o-T7o,98o-97o,87o,76o",
+        "76s-74s,65s-64s,54s-53s,43s,A9o-A2o,KTo-K8o,QTo-Q8o,JTo-J7o,T9o-T7o,98o-97o,87o,76o",
       75: "66,A8s,K9s,QJo",
       50: "88-77,A9s,KTs,QTs,QJs,JTs,T9s,98s,ATo,KJo,KQo,J4s-J2s,T5s-T4s,84s,63s",
       25: "99,ATs,KJs,AJo",
@@ -208,9 +208,9 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
       25: "TT,AQo,KQs,65s",
     },
     call: {
-      100: "88-44,ATs,JTs",
-      75: "TT,99,33-22,KQs,T9s",
-      50: "AJs,KJs,QJs,98s",
+      100: "99-44,AJs-ATs,JTs",
+      75: "TT,33-22,KQs,T9s",
+      50: "KJs,QJs,98s",
       25: "JJ,AQs,AQo,KTs,QTs,87s,76s",
     },
   },
@@ -224,9 +224,9 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
     },
     call: {
       100: "99-22,ATs,JTs,T9s",
-      75: "KQs,KJs,QJs,98s",
-      50: "AJs,KTs,QTs,87s",
-      25: "TT,AQo,AJo,A9s,76s",
+      75: "AJs,KQs,KJs,QJs,98s",
+      50: "KTs,QTs,87s",
+      25: "TT,AQo,AJo,KQo,A9s,76s",
     },
   },
   // BTN이 CO 오픈을 만남 — 3벳 중심 + 포지션 프리미엄 콜 소량
@@ -240,8 +240,8 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
     call: {
       100: "99-22,ATs,JTs,T9s",
       75: "KQs,KJs,QJs,98s",
-      50: "AJs,A9s,KTs,QTs,87s",
-      25: "TT,AQo,ATo,AJo,QJo,76s,65s",
+      50: "AJs,A9s,KTs,QTs,KQo,87s",
+      25: "TT,AQo,ATo,AJo,KJo,QJo,76s,65s",
     },
   },
   // CO가 UTG 오픈을 만남 (확장 ②) — 뒤에 3명이 남아 스퀴즈 위험까지 있어 가장 좁다.
@@ -254,10 +254,10 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
       25: "TT,AQo,KQs",
     },
     call: {
-      100: "88-77",
-      75: "99,ATs,JTs",
+      100: "99-77",
+      75: "TT,ATs,AJs,JTs",
       50: "66-55,KQs",
-      25: "JJ,TT,44,AQs,AJs,QJs,T9s,98s",
+      25: "JJ,44,AQs,QJs,KJs,T9s,98s",
     },
   },
   // CO가 HJ 오픈을 만남 (확장 ②) — vs UTG보다 넓지만 여전히 3벳 중심
@@ -270,8 +270,8 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
     },
     call: {
       100: "99-77,ATs,JTs",
-      75: "66-55,KQs,T9s",
-      50: "44-22,AJs,QJs,98s",
+      75: "AJs,66-55,KQs,T9s",
+      50: "44-22,QJs,98s",
       25: "TT,KJs,KTs,QTs,87s",
     },
   },
@@ -280,8 +280,8 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
     threeBet: {
       100: "99+,ATs+,A5s-A4s,KQs,KJs,QJs,AJo+,KQo",
       75: "88,A9s,KTs,A3s-A2s",
-      50: "77,QTs,JTs,T9s,98s,87s,76s,ATo,KJo",
-      25: "66-55,A8s-A6s,J9s,65s,54s,QJo,KTo",
+      50: "77,K9s,QTs,JTs,T9s,98s,87s,76s,ATo,KJo",
+      25: "66-55,A8s-A6s,Q9s,J9s,65s,54s,QJo,KTo",
     },
     call: {},
   },
@@ -345,14 +345,14 @@ const VS_3BET: Record<Vs3BetId, Vs3BetTiers> = {
     fourBet: {
       100: "KK+",
       75: "QQ,AKs,AKo",
-      50: "JJ,AQs,A5s-A4s",
-      25: "TT,AQo,A3s-A2s,65s",
+      50: "JJ,AQs,A5s-A2s",
+      25: "TT,AQo",
     },
     call: {
-      100: "99-44,AJs-A6s,KQs-KTs,QJs-QTs,JTs,J9s,T9s-T8s,98s,87s",
-      75: "TT,33-22,AJo,KQo,76s",
-      50: "JJ,AQs,AQo,A5s-A4s,A3s-A2s,ATo,KJo,K9s,Q9s,65s,54s",
-      25: "QQ,AKs,AKo,97s,86s",
+      100: "99-44,AJs-A6s,KQs-KTs,QJs-QTs,JTs,J9s,T9s,98s,87s",
+      75: "TT,33-22,76s,65s,T8s",
+      50: "JJ,AQs,AQo,A5s-A4s,AJo,ATo,KQo,KJo,K9s,Q9s,54s",
+      25: "QQ,AKs,AKo,A3s-A2s,97s,86s",
     },
   },
   // BTN 오픈 → SB ~10bb 3벳. SB의 3벳이 더 넓고(머지드) BTN이 포지션을 가지므로
@@ -361,14 +361,14 @@ const VS_3BET: Record<Vs3BetId, Vs3BetTiers> = {
     fourBet: {
       100: "KK+",
       75: "QQ,AKs,AKo",
-      50: "JJ,AQs,A5s-A4s",
-      25: "TT,AQo,A3s-A2s,KQs,76s,65s",
+      50: "JJ,AQs,A5s-A2s",
+      25: "TT,AQo,KQs",
     },
     call: {
-      100: "99-22,AJs-A6s,KJs-KTs,QJs-QTs,JTs,J9s,T9s-T8s,98s,87s",
-      75: "TT,AJo,ATo,KQo,KJo,KQs,K9s,Q9s,76s,54s",
-      50: "JJ,AQs,AQo,A5s-A4s,A3s-A2s,97s,86s,65s",
-      25: "QQ,AKs,AKo,QJo",
+      100: "99-22,AJs-A6s,KJs-KTs,QJs-QTs,JTs,J9s,T9s-T8s,98s,87s,76s",
+      75: "TT,AJo,ATo,KQo,KJo,KQs,K9s,Q9s,54s,65s",
+      50: "JJ,AQs,AQo,A5s-A4s,97s,86s",
+      25: "QQ,AKs,AKo,QJo,A3s-A2s",
     },
   },
 };
