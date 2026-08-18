@@ -1,102 +1,44 @@
 <template>
   <div class="pb-6 max-w-5xl">
-    <!-- 모드: 오픈(RFI) / vs 오픈(수비) -->
+    <!--
+      모드별로 다른 것(탭·격자·범례·통계·안내문·버튼·설명)은 전부 script의 `modes`
+      서술자에 데이터로 들어 있다. 새 모드를 추가할 때 여기에 분기를 더하지 말고
+      서술자 배열에 항목을 하나 더할 것.
+    -->
     <div class="flex gap-1.5 mb-3">
       <button
-        :class="modeStyle('rfi')"
-        @click="mode = 'rfi'"
+        v-for="m in modes"
+        :key="m.key"
+        :class="modeStyle(m.key)"
+        @click="mode = m.key"
       >
-        {{ L.modeRfi }}
-      </button>
-      <button
-        :class="modeStyle('defend')"
-        @click="mode = 'defend'"
-      >
-        {{ L.modeDefend }}
-      </button>
-      <button
-        :class="modeStyle('vs3bet')"
-        @click="mode = 'vs3bet'"
-      >
-        {{ L.mode3bet }}
+        {{ m.label }}
       </button>
     </div>
 
-    <p class="text-sm md:text-base text-neutral-400 mb-4">
-      {{ mode === "rfi" ? L.intro : mode === "defend" ? L.introDefend : L.intro3bet }}
-    </p>
+    <p class="text-sm md:text-base text-neutral-400 mb-4">{{ active.intro }}</p>
 
-    <!-- 포지션 탭 (오픈) -->
-    <div v-if="mode === 'rfi'" class="flex flex-wrap gap-1.5 md:gap-2 mb-4">
+    <!-- 포지션 탭(오픈) / 조합 탭(수비·vs 3벳) -->
+    <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4">
       <button
-        v-for="pos in positions"
-        :key="pos"
+        v-for="tab in active.tabs"
+        :key="tab.key"
         :class="
           'px-3 md:px-4 py-1.5 rounded-xl text-sm md:text-[0.9375rem] font-semibold transition-colors ' +
-          (pos === selected
+          (tab.active
             ? 'bg-yellow-500 text-neutral-900'
             : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700')
         "
-        @click="selected = pos"
+        @click="tab.select()"
       >
-        {{ pos }}
+        {{ tab.label }}
         <span
           :class="
             'ml-1 text-xs font-normal ' +
-            (pos === selected ? 'text-neutral-700' : 'text-neutral-500')
+            (tab.active ? 'text-neutral-700' : 'text-neutral-500')
           "
         >
-          {{ percentOf(pos) }}%
-        </span>
-      </button>
-    </div>
-
-    <!-- 조합 탭 (vs 3벳) -->
-    <div v-else-if="mode === 'vs3bet'" class="flex flex-wrap gap-1.5 md:gap-2 mb-4">
-      <button
-        v-for="sc in vs3betScenarios"
-        :key="sc.id"
-        :class="
-          'px-3 md:px-4 py-1.5 rounded-xl text-sm md:text-[0.9375rem] font-semibold transition-colors ' +
-          (sc.id === selectedVs3bet
-            ? 'bg-yellow-500 text-neutral-900'
-            : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700')
-        "
-        @click="selectedVs3bet = sc.id"
-      >
-        {{ sc.hero }} vs {{ sc.villain }}
-        <span
-          :class="
-            'ml-1 text-xs font-normal ' +
-            (sc.id === selectedVs3bet ? 'text-neutral-700' : 'text-neutral-500')
-          "
-        >
-          {{ vs3betPercentOf(sc.id) }}%
-        </span>
-      </button>
-    </div>
-
-    <!-- 조합 탭 (수비) -->
-    <div v-else class="flex flex-wrap gap-1.5 md:gap-2 mb-4">
-      <button
-        v-for="sc in scenarios"
-        :key="sc.id"
-        :class="
-          'px-3 md:px-4 py-1.5 rounded-xl text-sm md:text-[0.9375rem] font-semibold transition-colors ' +
-          (sc.id === selectedScenario
-            ? 'bg-yellow-500 text-neutral-900'
-            : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700')
-        "
-        @click="selectedScenario = sc.id"
-      >
-        {{ sc.hero }} vs {{ sc.villain }}
-        <span
-          :class="
-            'ml-1 text-xs font-normal ' +
-            (sc.id === selectedScenario ? 'text-neutral-700' : 'text-neutral-500')
-          "
-        >
-          {{ defendPercentOf(sc.id) }}%
+          {{ tab.percent }}%
         </span>
       </button>
     </div>
@@ -122,7 +64,7 @@
                   (row === col ? 'bg-neutral-700' : 'bg-neutral-800')
                 "
               >
-                <template v-if="mode === 'rfi'">
+                <template v-if="!active.dual">
                   <div
                     class="absolute inset-0 bg-bottom bg-no-repeat"
                     :style="{
@@ -132,7 +74,7 @@
                   ></div>
                 </template>
                 <template v-else>
-                  <!-- 콜(초록)을 바닥에, 3벳(빨강)을 그 위에 쌓는다 — 전체 높이 = 수비 빈도 -->
+                  <!-- 콜(초록)을 바닥에, 레이즈(빨강)를 그 위에 쌓는다 — 전체 높이 = 계속 빈도 -->
                   <div
                     class="absolute left-0 w-full"
                     :style="{
@@ -145,7 +87,7 @@
                     class="absolute left-0 w-full"
                     :style="{
                       bottom: cellCall(row, col) + '%',
-                      height: cellThreeBet(row, col) + '%',
+                      height: cellRaise(row, col) + '%',
                       background: red500,
                     }"
                   ></div>
@@ -165,7 +107,7 @@
 
         <!-- 범례 -->
         <div
-          v-if="mode === 'rfi'"
+          v-if="!active.dual"
           class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-neutral-400"
         >
           <span class="flex items-center gap-1.5">
@@ -193,7 +135,7 @@
         >
           <span class="flex items-center gap-1.5">
             <span class="inline-block w-3 h-3 rounded-sm" :style="{ background: red500 }"></span>
-            {{ mode === "vs3bet" ? L.legend4bet : L.legend3bet }}
+            {{ active.legendRaise }}
           </span>
           <span class="flex items-center gap-1.5">
             <span class="inline-block w-3 h-3 rounded-sm" :style="{ background: green500 }"></span>
@@ -203,117 +145,38 @@
             <span class="inline-block w-3 h-3 rounded-sm bg-neutral-800 border border-neutral-600"></span>
             {{ L.legendFold }}
           </span>
-          <span>{{ mode === "vs3bet" ? L.legendCond : L.legendMixedDefend }}</span>
+          <span>{{ active.legendNote }}</span>
         </div>
       </div>
 
       <!-- 우측: 통계·동작·설명 -->
       <div class="flex-grow min-w-0">
-        <div v-if="mode === 'rfi'" class="flex flex-wrap gap-2 mb-4">
-          <div class="stat-chip">
-            {{ L.statPercent }} <b data-testid="preflop-percent">{{ percentOf(selected) }}%</b>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <div v-for="s in active.stats" :key="s.label" class="stat-chip">
+            {{ s.label }} <b :data-testid="s.testid">{{ s.value }}</b>
           </div>
-          <div class="stat-chip">
-            {{ L.statCombos }} <b>{{ Math.round(stats.combos) }} / 1326</b>
-          </div>
-          <div class="stat-chip">{{ L.statHands }} <b>{{ stats.hands }} / 169</b></div>
-          <div class="stat-chip">{{ L.statMixed }} <b>{{ stats.mixedHands }}</b></div>
-        </div>
-        <div v-else-if="mode === 'defend'" class="flex flex-wrap gap-2 mb-4">
-          <div class="stat-chip">
-            {{ L.stat3bet }}
-            <b data-testid="preflop-3bet">{{ defendStats.threeBetPercent.toFixed(1) }}%</b>
-          </div>
-          <div class="stat-chip">
-            {{ L.statCall }} <b>{{ defendStats.callPercent.toFixed(1) }}%</b>
-          </div>
-          <div class="stat-chip">
-            {{ L.statTotal }}
-            <b data-testid="preflop-percent">{{ defendStats.totalPercent.toFixed(1) }}%</b>
-          </div>
-          <div class="stat-chip">{{ L.statMixed }} <b>{{ defendStats.mixedHands }}</b></div>
-        </div>
-        <div v-else class="flex flex-wrap gap-2 mb-4">
-          <div class="stat-chip">
-            {{ L.stat4bet }}
-            <b data-testid="preflop-4bet">{{ vs3betStats.fourBetPercent.toFixed(1) }}%</b>
-          </div>
-          <div class="stat-chip">
-            {{ L.statCall }} <b>{{ vs3betStats.callPercent.toFixed(1) }}%</b>
-          </div>
-          <div class="stat-chip">
-            {{ L.statContinue }}
-            <b data-testid="preflop-continue">{{ vs3betStats.continuePercent.toFixed(1) }}%</b>
-          </div>
-          <div class="stat-chip">{{ L.statMixed }} <b>{{ vs3betStats.mixedHands }}</b></div>
         </div>
 
-        <p
-          v-if="mode === 'defend' && selectedScenario === 'sb-vs-btn'"
-          class="text-sm text-neutral-400 mb-4"
-        >
-          {{ L.sbNote }}
-        </p>
-        <p
-          v-else-if="mode === 'defend' && isSqueezeScenario"
-          class="text-sm text-neutral-400 mb-4"
-        >
-          {{ L.squeezeNote }}
-        </p>
-        <p
-          v-else-if="mode === 'defend' && isIpScenario"
-          class="text-sm text-neutral-400 mb-4"
-        >
-          {{ L.ipNote }}
-        </p>
-        <p v-else-if="mode === 'vs3bet'" class="text-sm text-neutral-400 mb-4">
-          {{ L.note3bet }}
+        <p v-if="active.note" class="text-sm text-neutral-400 mb-4">
+          {{ active.note }}
         </p>
 
-        <div v-if="mode === 'rfi'" class="flex flex-wrap gap-2 mb-5">
-          <button class="button-base button-blue" @click="copyRange">
-            {{ copied ? L.copied : L.copy }}
-          </button>
+        <div class="flex flex-wrap gap-2 mb-5">
           <button
-            class="button-base bg-neutral-700 hover:bg-neutral-600"
-            @click="sendToEditor(0)"
+            v-for="a in active.actions"
+            :key="a.key"
+            :class="a.cls"
+            :disabled="a.disabled"
+            @click="a.run()"
           >
-            {{ L.sendOop }}
-          </button>
-          <button
-            class="button-base bg-neutral-700 hover:bg-neutral-600"
-            @click="sendToEditor(1)"
-          >
-            {{ L.sendIp }}
-          </button>
-        </div>
-        <div v-else-if="mode === 'defend'" class="flex flex-wrap gap-2 mb-5">
-          <button class="button-base button-red" @click="copyDefend('threeBet')">
-            {{ copiedAction === "threeBet" ? L.copied : L.copy3bet }}
-          </button>
-          <button
-            class="button-base button-green"
-            :disabled="callEmpty"
-            @click="copyDefend('call')"
-          >
-            {{ copiedAction === "call" ? L.copied : L.copyCall }}
-          </button>
-        </div>
-        <div v-else class="flex flex-wrap gap-2 mb-5">
-          <button class="button-base button-red" @click="copyVs3bet('fourBet')">
-            {{ copiedAction === "fourBet" ? L.copied : L.copy4bet }}
-          </button>
-          <button class="button-base button-green" @click="copyVs3bet('call')">
-            {{ copiedAction === "call" ? L.copied : L.copyCall }}
+            {{ a.label }}
           </button>
         </div>
 
         <div class="panel mb-4">
           <div class="section-title">{{ L.howTitle }}</div>
           <ul class="list-disc pl-5 text-sm text-neutral-300 space-y-1.5">
-            <li>{{ L.how1 }}</li>
-            <li>{{ mode === "rfi" ? L.how2 : mode === "vs3bet" ? L.how3bet2 : L.howDefend2 }}</li>
-            <li>{{ mode === "rfi" ? L.how3 : L.howDefend3 }}</li>
+            <li v-for="(line, i) in active.how" :key="i">{{ line }}</li>
           </ul>
         </div>
 
@@ -528,12 +391,50 @@ const M = {
   },
 } as const;
 
+type ModeKey = "rfi" | "defend" | "vs3bet";
+
+/**
+ * 모드 서술자 — 모드마다 다른 것을 전부 여기 데이터로 모은다.
+ * 템플릿에는 `mode === "..."` 분기가 없다. 모드를 추가할 때는 이 배열에 항목 하나를 더한다.
+ *  - dual  : 격자가 두 겹(레이즈 빨강 + 콜 초록)인가. false면 단색 한 겹(오픈 빈도).
+ *  - single/raise/call : 격자 데이터. dual이면 raise·call, 아니면 single을 쓴다.
+ *  - testid: 검증 스크립트(preflop-verify.js)가 잡는 지점 — 바꾸면 검증이 깨진다.
+ */
+type ChartMode = {
+  key: ModeKey;
+  label: string;
+  intro: string;
+  dual: boolean;
+  tabs: {
+    key: string;
+    label: string;
+    percent: string;
+    active: boolean;
+    select: () => void;
+  }[];
+  legendRaise: string;
+  legendNote: string;
+  single: number[] | null;
+  raise: number[] | null;
+  call: number[] | null;
+  stats: { label: string; value: string; testid?: string }[];
+  note: string;
+  actions: {
+    key: string;
+    label: string;
+    cls: string;
+    disabled: boolean;
+    run: () => void;
+  }[];
+  how: string[];
+};
+
 export default defineComponent({
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale]);
 
-    const mode = ref<"rfi" | "defend" | "vs3bet">("rfi");
+    const mode = ref<ModeKey>("rfi");
     const selected = ref<Position>("UTG");
     const selectedScenario = ref<ScenarioId>("bb-vs-btn");
     const selectedVs3bet = ref<Vs3BetId>("btn-vs-bb-3bet");
@@ -567,27 +468,17 @@ export default defineComponent({
       defendGrids.value.call.every((f) => f === 0)
     );
 
-    // RangeEditor·RangeMiniViewer와 같은 격자 관례
-    const cellFreq = (row: number, col: number) =>
-      grid.value[13 * (row - 1) + col - 1];
-    // 수비/vs3벳 모드 공용 — 빨강(3벳·4벳)과 초록(콜) 격자
-    const cellThreeBet = (row: number, col: number) =>
-      (mode.value === "vs3bet" ? vs3Grids.value.fourBet : defendGrids.value.threeBet)[
-        13 * (row - 1) + col - 1
-      ];
-    const cellCall = (row: number, col: number) =>
-      (mode.value === "vs3bet" ? vs3Grids.value.call : defendGrids.value.call)[
-        13 * (row - 1) + col - 1
-      ];
-    const cellActive = (row: number, col: number) =>
-      mode.value === "rfi"
-        ? cellFreq(row, col) > 0
-        : cellThreeBet(row, col) + cellCall(row, col) > 0;
-
-    const cellLabel = (row: number, col: number) => {
-      const r1 = 13 - Math.min(row, col);
-      const r2 = 13 - Math.max(row, col);
-      return ranks[r1] + ranks[r2] + ["s", "", "o"][Math.sign(row - col) + 1];
+    // 수비 모드의 안내문. 원본 템플릿의 v-if 순서를 그대로 유지한다 — 세 조건은 서로
+    // 배타적이지만, 리팩터가 «동작 무변경»임을 눈으로 확인할 수 있게 순서를 보존.
+    const defendNote = (t: {
+      sbNote: string;
+      squeezeNote: string;
+      ipNote: string;
+    }) => {
+      if (selectedScenario.value === "sb-vs-btn") return t.sbNote;
+      if (isSqueezeScenario.value) return t.squeezeNote;
+      if (isIpScenario.value) return t.ipNote;
+      return "";
     };
 
     const writeClipboard = async (text: string) => {
@@ -628,7 +519,192 @@ export default defineComponent({
       store.sideView = player === 0 ? "oop-range" : "ip-range";
     };
 
-    const modeStyle = (value: "rfi" | "defend" | "vs3bet") =>
+    const modes = computed<ChartMode[]>(() => {
+      const t = L.value;
+      const s = stats.value;
+      const d = defendStats.value;
+      const v = vs3betStats.value;
+      return [
+        {
+          key: "rfi",
+          label: t.modeRfi,
+          intro: t.intro,
+          dual: false,
+          tabs: POSITIONS.map((pos) => ({
+            key: pos,
+            label: pos,
+            percent: percentOf(pos),
+            active: selected.value === pos,
+            select: () => (selected.value = pos),
+          })),
+          legendRaise: "",
+          legendNote: "",
+          single: grid.value,
+          raise: null,
+          call: null,
+          stats: [
+            {
+              label: t.statPercent,
+              value: `${percentOf(selected.value)}%`,
+              testid: "preflop-percent",
+            },
+            { label: t.statCombos, value: `${Math.round(s.combos)} / 1326` },
+            { label: t.statHands, value: `${s.hands} / 169` },
+            { label: t.statMixed, value: String(s.mixedHands) },
+          ],
+          note: "",
+          actions: [
+            {
+              key: "copy",
+              label: copied.value ? t.copied : t.copy,
+              cls: "button-base button-blue",
+              disabled: false,
+              run: copyRange,
+            },
+            {
+              key: "sendOop",
+              label: t.sendOop,
+              cls: "button-base bg-neutral-700 hover:bg-neutral-600",
+              disabled: false,
+              run: () => sendToEditor(0),
+            },
+            {
+              key: "sendIp",
+              label: t.sendIp,
+              cls: "button-base bg-neutral-700 hover:bg-neutral-600",
+              disabled: false,
+              run: () => sendToEditor(1),
+            },
+          ],
+          how: [t.how1, t.how2, t.how3],
+        },
+        {
+          key: "defend",
+          label: t.modeDefend,
+          intro: t.introDefend,
+          dual: true,
+          tabs: SCENARIOS.map((sc) => ({
+            key: sc.id,
+            label: `${sc.hero} vs ${sc.villain}`,
+            percent: defendPercentOf(sc.id),
+            active: selectedScenario.value === sc.id,
+            select: () => (selectedScenario.value = sc.id),
+          })),
+          legendRaise: t.legend3bet,
+          legendNote: t.legendMixedDefend,
+          single: null,
+          raise: defendGrids.value.threeBet,
+          call: defendGrids.value.call,
+          stats: [
+            {
+              label: t.stat3bet,
+              value: `${d.threeBetPercent.toFixed(1)}%`,
+              testid: "preflop-3bet",
+            },
+            { label: t.statCall, value: `${d.callPercent.toFixed(1)}%` },
+            {
+              label: t.statTotal,
+              value: `${d.totalPercent.toFixed(1)}%`,
+              testid: "preflop-percent",
+            },
+            { label: t.statMixed, value: String(d.mixedHands) },
+          ],
+          note: defendNote(t),
+          actions: [
+            {
+              key: "copy3bet",
+              label: copiedAction.value === "threeBet" ? t.copied : t.copy3bet,
+              cls: "button-base button-red",
+              disabled: false,
+              run: () => copyDefend("threeBet"),
+            },
+            {
+              key: "copyCall",
+              label: copiedAction.value === "call" ? t.copied : t.copyCall,
+              cls: "button-base button-green",
+              disabled: callEmpty.value,
+              run: () => copyDefend("call"),
+            },
+          ],
+          how: [t.how1, t.howDefend2, t.howDefend3],
+        },
+        {
+          key: "vs3bet",
+          label: t.mode3bet,
+          intro: t.intro3bet,
+          dual: true,
+          tabs: VS3BET_SCENARIOS.map((sc) => ({
+            key: sc.id,
+            label: `${sc.hero} vs ${sc.villain}`,
+            percent: vs3betPercentOf(sc.id),
+            active: selectedVs3bet.value === sc.id,
+            select: () => (selectedVs3bet.value = sc.id),
+          })),
+          legendRaise: t.legend4bet,
+          legendNote: t.legendCond,
+          single: null,
+          raise: vs3Grids.value.fourBet,
+          call: vs3Grids.value.call,
+          stats: [
+            {
+              label: t.stat4bet,
+              value: `${v.fourBetPercent.toFixed(1)}%`,
+              testid: "preflop-4bet",
+            },
+            { label: t.statCall, value: `${v.callPercent.toFixed(1)}%` },
+            {
+              label: t.statContinue,
+              value: `${v.continuePercent.toFixed(1)}%`,
+              testid: "preflop-continue",
+            },
+            { label: t.statMixed, value: String(v.mixedHands) },
+          ],
+          note: t.note3bet,
+          actions: [
+            {
+              key: "copy4bet",
+              label: copiedAction.value === "fourBet" ? t.copied : t.copy4bet,
+              cls: "button-base button-red",
+              disabled: false,
+              run: () => copyVs3bet("fourBet"),
+            },
+            {
+              key: "copyCall",
+              label: copiedAction.value === "call" ? t.copied : t.copyCall,
+              cls: "button-base button-green",
+              disabled: false,
+              run: () => copyVs3bet("call"),
+            },
+          ],
+          how: [t.how1, t.how3bet2, t.howDefend3],
+        },
+      ];
+    });
+
+    const active = computed(
+      () => modes.value.find((m) => m.key === mode.value) as ChartMode
+    );
+
+    // RangeEditor·RangeMiniViewer와 같은 격자 관례
+    const cellAt = (row: number, col: number) => 13 * (row - 1) + col - 1;
+    const cellFreq = (row: number, col: number) =>
+      active.value.single?.[cellAt(row, col)] ?? 0;
+    const cellRaise = (row: number, col: number) =>
+      active.value.raise?.[cellAt(row, col)] ?? 0;
+    const cellCall = (row: number, col: number) =>
+      active.value.call?.[cellAt(row, col)] ?? 0;
+    const cellActive = (row: number, col: number) =>
+      active.value.dual
+        ? cellRaise(row, col) + cellCall(row, col) > 0
+        : cellFreq(row, col) > 0;
+
+    const cellLabel = (row: number, col: number) => {
+      const r1 = 13 - Math.min(row, col);
+      const r2 = 13 - Math.max(row, col);
+      return ranks[r1] + ranks[r2] + ["s", "", "o"][Math.sign(row - col) + 1];
+    };
+
+    const modeStyle = (value: ModeKey) =>
       "px-3 py-1 rounded-lg text-sm font-semibold transition-colors " +
       (mode.value === value
         ? "bg-neutral-700 text-white"
@@ -638,36 +714,16 @@ export default defineComponent({
       yellow500,
       red500,
       green500,
-      positions: POSITIONS,
-      scenarios: SCENARIOS,
-      vs3betScenarios: VS3BET_SCENARIOS,
       mode,
+      modes,
+      active,
       modeStyle,
-      selected,
-      selectedScenario,
-      selectedVs3bet,
-      isIpScenario,
-      isSqueezeScenario,
-      callEmpty,
-      copied,
-      copiedAction,
-      stats,
-      defendStats,
-      vs3betStats,
-      L,
-      percentOf,
-      defendPercentOf,
-      vs3betPercentOf,
       cellFreq,
-      cellThreeBet,
+      cellRaise,
       cellCall,
       cellActive,
       cellLabel,
-      copyRange,
-      copyDefend,
-      copyVs3bet,
-      sendToEditor,
-      Math,
+      L,
     };
   },
 });
