@@ -5,7 +5,7 @@
       서술자에 데이터로 들어 있다. 새 모드를 추가할 때 여기에 분기를 더하지 말고
       서술자 배열에 항목을 하나 더할 것.
     -->
-    <div class="flex gap-1.5 mb-3">
+    <div class="flex flex-wrap gap-1.5 mb-3">
       <button
         v-for="m in modes"
         :key="m.key"
@@ -208,6 +208,8 @@ import {
   ScenarioId,
   VS3BET_SCENARIOS,
   Vs3BetId,
+  VS4BET_SCENARIOS,
+  Vs4BetId,
   gridFor,
   statsFor,
   rangeTextFor,
@@ -217,6 +219,9 @@ import {
   vs3betGridsFor,
   vs3betStatsFor,
   vs3betRangeTextFor,
+  vs4betGridsFor,
+  vs4betStatsFor,
+  vs4betRangeTextFor,
 } from "../preflop-charts";
 import { ranks } from "../utils";
 
@@ -229,6 +234,24 @@ const M = {
     modeRfi: "오픈 (RFI)",
     modeDefend: "vs 오픈 (수비)",
     mode3bet: "vs 3벳 (오픈 후)",
+    mode4bet: "vs 4벳 (3벳 후)",
+    intro4bet:
+      "내가 3벳했는데 4벳을 받았을 때의 대응 — 빨강은 5벳(올인), 초록은 콜, " +
+      "나머지는 폴드입니다. 빈도는 «3벳했다면» 기준이라 3벳하지 않는 핸드는 " +
+      "비어 있습니다. 6맥스 캐시 100bb, BB 3벳 11bb → 4벳 24bb / SB 3벳 10bb → 4벳 22bb 기준.",
+    legend5bet: "5벳 (올인)",
+    legendCond4bet: "빈 칸 = 애초에 3벳 안 함",
+    stat5bet: "5벳 비율",
+    statContinue4bet: "계속(3벳 대비)",
+    copy5bet: "5벳 레인지 복사",
+    note4bet:
+      "통계는 «3벳 레인지 대비» 비율입니다. 100bb에서 5벳은 사실상 올인 한 가지입니다 — " +
+      "밸류는 AA·KK 중심(가끔 콜로 트랩)이고 QQ·AK는 5벳과 콜을 섞습니다. 콜은 팟 오즈가 " +
+      "아니라 실현율이 기준입니다: 포지션 없이 낮은 SPR로 싸우므로 페어와 최상위 수딧만 " +
+      "남기되, 상대 4벳에 A5s-A4s 같은 블러프가 섞여 있어 전부 접지는 않습니다.",
+    how4bet2:
+      "빨강+초록이 칸을 다 채우지 못하면 그만큼 폴드입니다. 두 색이 함께면 5벳과 콜을 " +
+      "혼합합니다. 3벳 레인지에 없는 핸드는 이 상황 자체가 생기지 않아 비어 있습니다.",
     intro3bet:
       "내가 오픈 레이즈했는데 3벳을 받았을 때의 대응 — 빨강은 4벳, 초록은 콜, " +
       "나머지는 폴드입니다. 빈도는 «오픈했다면» 기준이라 오픈하지 않는 핸드는 " +
@@ -309,6 +332,28 @@ const M = {
     modeRfi: "Opening (RFI)",
     modeDefend: "vs Open (Defense)",
     mode3bet: "vs 3-bet (after opening)",
+    mode4bet: "vs 4-bet (after 3-betting)",
+    intro4bet:
+      "How to respond when your 3-bet gets 4-bet — red is 5-bet (all-in), green " +
+      "is call, the rest folds. Frequencies are conditional on having 3-bet, so " +
+      "hands you never 3-bet are blank. 6-max cash, 100bb; the BB 3-bets 11bb " +
+      "and faces a 24bb 4-bet, the SB 3-bets 10bb and faces 22bb.",
+    legend5bet: "5-bet (all-in)",
+    legendCond4bet: "Blank = never 3-bet in the first place",
+    stat5bet: "5-bet %",
+    statContinue4bet: "Continue (of 3-bets)",
+    copy5bet: "Copy 5-bet range",
+    note4bet:
+      "The stats are shares of your 3-betting range. At 100bb the 5-bet is " +
+      "effectively all-in — value centers on AA·KK (occasionally trapping with a " +
+      "call), and QQ·AK mix 5-bets with calls. Calls are driven by realization, " +
+      "not pot odds: you fight out of position at a low SPR, so only pairs and " +
+      "top suited hands continue — but never fold everything, since the 4-bet " +
+      "range mixes in bluffs like A5s-A4s.",
+    how4bet2:
+      "If red + green don't fill the cell, the rest is folded. Cells with both " +
+      "colors mix 5-bets and calls. Hands outside the 3-betting range never " +
+      "face this spot, so they are blank.",
     intro3bet:
       "How to respond when your open-raise gets 3-bet — red is 4-bet, green is " +
       "call, the rest folds. Frequencies are conditional on having opened, so " +
@@ -391,7 +436,7 @@ const M = {
   },
 } as const;
 
-type ModeKey = "rfi" | "defend" | "vs3bet";
+type ModeKey = "rfi" | "defend" | "vs3bet" | "vs4bet";
 
 /**
  * 모드 서술자 — 모드마다 다른 것을 전부 여기 데이터로 모은다.
@@ -438,8 +483,9 @@ export default defineComponent({
     const selected = ref<Position>("UTG");
     const selectedScenario = ref<ScenarioId>("bb-vs-btn");
     const selectedVs3bet = ref<Vs3BetId>("btn-vs-bb-3bet");
+    const selectedVs4bet = ref<Vs4BetId>("bb-vs-btn-4bet");
     const copied = ref(false);
-    const copiedAction = ref<"" | "threeBet" | "fourBet" | "call">("");
+    const copiedAction = ref<"" | "threeBet" | "fourBet" | "fiveBet" | "call">("");
 
     const grid = computed(() => gridFor(selected.value));
     const stats = computed(() => statsFor(selected.value));
@@ -447,12 +493,16 @@ export default defineComponent({
     const defendStats = computed(() => defendStatsFor(selectedScenario.value));
     const vs3Grids = computed(() => vs3betGridsFor(selectedVs3bet.value));
     const vs3betStats = computed(() => vs3betStatsFor(selectedVs3bet.value));
+    const vs4Grids = computed(() => vs4betGridsFor(selectedVs4bet.value));
+    const vs4betStats = computed(() => vs4betStatsFor(selectedVs4bet.value));
 
     const percentOf = (pos: Position) => statsFor(pos).percent.toFixed(1);
     const defendPercentOf = (id: ScenarioId) =>
       defendStatsFor(id).totalPercent.toFixed(1);
     const vs3betPercentOf = (id: Vs3BetId) =>
       vs3betStatsFor(id).continuePercent.toFixed(1);
+    const vs4betPercentOf = (id: Vs4BetId) =>
+      vs4betStatsFor(id).continuePercent.toFixed(1);
 
     // IP 수비 조합(BTN·CO가 히어로) — 3벳 중심으로 좁은 이유를 안내
     const isIpScenario = computed(
@@ -513,6 +563,12 @@ export default defineComponent({
       setTimeout(() => (copiedAction.value = ""), 1500);
     };
 
+    const copyVs4bet = async (action: "fiveBet" | "call") => {
+      await writeClipboard(vs4betRangeTextFor(selectedVs4bet.value, action));
+      copiedAction.value = action;
+      setTimeout(() => (copiedAction.value = ""), 1500);
+    };
+
     // 레인지를 커스텀 스팟 에디터로 — RangeEditor가 watch로 받아 적용한다
     const sendToEditor = (player: 0 | 1) => {
       store.pendingRangeText[player] = rangeTextFor(selected.value);
@@ -524,6 +580,7 @@ export default defineComponent({
       const s = stats.value;
       const d = defendStats.value;
       const v = vs3betStats.value;
+      const v4 = vs4betStats.value;
       return [
         {
           key: "rfi",
@@ -677,6 +734,56 @@ export default defineComponent({
             },
           ],
           how: [t.how1, t.how3bet2, t.howDefend3],
+        },
+        {
+          key: "vs4bet",
+          label: t.mode4bet,
+          intro: t.intro4bet,
+          dual: true,
+          tabs: VS4BET_SCENARIOS.map((sc) => ({
+            key: sc.id,
+            label: `${sc.hero} vs ${sc.villain}`,
+            percent: vs4betPercentOf(sc.id),
+            active: selectedVs4bet.value === sc.id,
+            select: () => (selectedVs4bet.value = sc.id),
+          })),
+          legendRaise: t.legend5bet,
+          legendNote: t.legendCond4bet,
+          single: null,
+          raise: vs4Grids.value.fiveBet,
+          call: vs4Grids.value.call,
+          stats: [
+            {
+              label: t.stat5bet,
+              value: `${v4.fiveBetPercent.toFixed(1)}%`,
+              testid: "preflop-5bet",
+            },
+            { label: t.statCall, value: `${v4.callPercent.toFixed(1)}%` },
+            {
+              label: t.statContinue4bet,
+              value: `${v4.continuePercent.toFixed(1)}%`,
+              testid: "preflop-continue",
+            },
+            { label: t.statMixed, value: String(v4.mixedHands) },
+          ],
+          note: t.note4bet,
+          actions: [
+            {
+              key: "copy5bet",
+              label: copiedAction.value === "fiveBet" ? t.copied : t.copy5bet,
+              cls: "button-base button-red",
+              disabled: false,
+              run: () => copyVs4bet("fiveBet"),
+            },
+            {
+              key: "copyCall",
+              label: copiedAction.value === "call" ? t.copied : t.copyCall,
+              cls: "button-base button-green",
+              disabled: false,
+              run: () => copyVs4bet("call"),
+            },
+          ],
+          how: [t.how1, t.how4bet2, t.howDefend3],
         },
       ];
     });

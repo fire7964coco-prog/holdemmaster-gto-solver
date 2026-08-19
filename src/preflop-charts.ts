@@ -373,6 +373,80 @@ const VS_3BET: Record<Vs3BetId, Vs3BetTiers> = {
   },
 };
 
+// ─── 4단계: vs 4벳 (확장 ④) — 내가 3벳한 뒤 4벳을 받았을 때 ─────
+// 히어로가 «3벳한 사람»(BB/SB)이라 조건부 모집단이 3벳 레인지다. 빈도는 «3벳했다면»
+// 기준이고, 통계도 전체 1326콤보가 아니라 «3벳 레인지 대비» %로 계산한다.
+// 액션은 5벳(올인)/콜 — 100bb에서 5벳은 사실상 올인 단일 사이즈(출처검증.md 8절 결정 2).
+// 전제: 오픈 2.5bb, BB 3벳 11bb → 4벳 24bb / SB 3벳 10bb → 4벳 22bb, 5벳 올인.
+// 값은 공개 출처가 얇아(핸드별 표는 유료 도구 안에만 있음) 내부 유도로 채웠다:
+// 에퀴티 실측(vs4벳_에퀴티실측표.md) + 팟 오즈 + 자동수익 하한(BB 39.4%/SB 40.9%) +
+// S17~S20 핸드군. 3인 페르소나 검수 완료 — 판정 전체는 출처검증.md 확장 4(10·11절).
+
+export type Vs4BetId = "bb-vs-btn-4bet" | "sb-vs-btn-4bet";
+
+export type Vs4BetScenario = {
+  id: Vs4BetId;
+  /** 3벳한 내 포지션 */
+  hero: string;
+  /** 4벳한 상대 */
+  villain: string;
+  /** 히어로의 3벳 레인지가 있는 수비 조합 (조건부 모집단) */
+  base: ScenarioId;
+};
+
+export const VS4BET_SCENARIOS: Vs4BetScenario[] = [
+  { id: "bb-vs-btn-4bet", hero: "BB", villain: "BTN", base: "bb-vs-btn" },
+  { id: "sb-vs-btn-4bet", hero: "SB", villain: "BTN", base: "sb-vs-btn" },
+];
+
+type Vs4BetTiers = { fiveBet: TierMap; call: TierMap };
+
+// 5벳 뼈대는 두 조합 공통 — 4벳 레인지 차이(SB 쪽 +KQs:25)가 에퀴티에 만드는 차이가
+// 티어 해상도(25%) 미만이라 단일 뼈대가 맞다(11절 검수 판정).
+// AA·KK 75 = 트랩 콜 25% (상대 4벳의 가중 8콤보 ≈ 17%가 블러프라 콜로 남기는 값이 있다).
+// AKo 75 > AKs 50: 콜당한 에퀴티는 비슷(43.4 vs 46.1)하지만 OOP 콜 플레이어빌리티가
+// 나빠 잼(폴드 에퀴티 ~30%) 쪽 값이 크다. A5s-A4s 25 = 블로커 잼(S20).
+// QQ·AKs·AKo의 5벳은 콜당한 에퀴티 50% 미달이지만 폴드 에퀴티가 근거 — 검증 화이트리스트.
+const VS_4BET: Record<Vs4BetId, Vs4BetTiers> = {
+  // BB 3벳 11bb → BTN 4벳 24bb. 모집단 94콤보(29핸드), 계속 55.25콤보 = 58.8%
+  // (하한 39.4% ✓, 창 50~62% ✓). 콜은 실현율(OOP·SPR 1.8)이 기준 — 팟 오즈(26.8%)는
+  // 전 핸드가 통과해 판별력이 없다. 88-77 콜 25는 99와 실측 에퀴티가 동일(40.3 안팎)해
+  // 절벽을 없앤 검수 반영(11절). 폴드: T8s·97s·86s·A3s-A2s·KQs·KJs·QJs·JTs·76s·65s·
+  // AJo·KQo — 필요 실현율 0.8+ 미달, 블로커·도미 근거 없음.
+  "bb-vs-btn-4bet": {
+    fiveBet: {
+      75: "AA,KK,AKo",
+      50: "QQ,AKs",
+      25: "JJ,TT,A5s-A4s",
+    },
+    call: {
+      100: "AQs",
+      75: "JJ",
+      50: "QQ,AKs,TT,99",
+      25: "AA,KK,AKo,88-77,AJs,AQo,ATs",
+    },
+  },
+  // SB 3벳 10bb → BTN 4벳 22bb. 모집단 181.5콤보(45핸드), 계속 76콤보 = 41.9%
+  // (하한 40.9% 턱걸이 — 의도된 타이트: 3벳-오어-폴드 레인지라 중간 핸드가 많다).
+  // 콜 티어가 존재하는 이유(8절 결정 1): 하한 74콤보를 잼만으로 못 채우고 잼 확장은
+  // −EV(AQs 잼 ≈ −3bb). 콜 코어 = JJ-99·AQs, QQ·AK는 잼/콜 혼합. 폴드: 오프수트
+  // 브로드웨이(KQo·KJo·KTo·QJo·ATo)와 약한 수딧(K9s·Q9s 이하)·A9s-A6s·A3s-A2s·
+  // KJs·QJs·66-55·커넥터 전부 — 필요 실현율 0.9 안팎이라 못 넘는다.
+  "sb-vs-btn-4bet": {
+    fiveBet: {
+      75: "AA,KK,AKo",
+      50: "QQ,AKs",
+      25: "JJ,TT,A5s-A4s",
+    },
+    call: {
+      100: "AQs,99",
+      75: "JJ,TT",
+      50: "QQ,AKs,88,AJs,AQo,A5s",
+      25: "AA,KK,AKo,77,ATs,KQs,AJo",
+    },
+  },
+};
+
 // ─── 레인지 문자열 → 169핸드 빈도 ────────────────────────────
 
 const RANKS = "23456789TJQKA"; // 인덱스 0=2 … 12=A (utils.ts의 ranks와 동일 순서)
@@ -631,6 +705,65 @@ export const vs3betStatsFor = (id: Vs3BetId): Vs3BetStats => {
 export const vs3betRangeTextFor = (id: Vs3BetId, action: "fourBet" | "call"): string =>
   tiersToRangeText(VS_3BET[id][action]);
 
+// ─── vs 4벳 접근자 (vs 3벳의 평행 복제 — 모집단만 오픈→3벳 레인지) ───
+
+const vs4betCache = new Map<Vs4BetId, { fiveBet: number[]; call: number[] }>();
+
+/** vs 4벳 조합의 5벳·콜 빈도 격자 (3벳했다는 전제의 조건부, 각 0~100) */
+export const vs4betGridsFor = (id: Vs4BetId) => {
+  const cached = vs4betCache.get(id);
+  if (cached) return cached;
+  const grids = {
+    fiveBet: gridOfTiers(VS_4BET[id].fiveBet),
+    call: gridOfTiers(VS_4BET[id].call),
+  };
+  vs4betCache.set(id, grids);
+  return grids;
+};
+
+export type Vs4BetStats = {
+  /** 3벳 레인지 대비 % (히어로의 3벳 빈도로 가중) */
+  fiveBetPercent: number;
+  callPercent: number;
+  continuePercent: number;
+  hands: number;
+  mixedHands: number;
+};
+
+/** 통계는 «3벳 레인지 대비» — 각 핸드를 히어로(BB/SB)의 3벳 빈도로 가중해 계산 */
+export const vs4betStatsFor = (id: Vs4BetId): Vs4BetStats => {
+  const { fiveBet, call } = vs4betGridsFor(id);
+  const scenario = VS4BET_SCENARIOS.find((s) => s.id === id) as Vs4BetScenario;
+  const threeBet = defendGridsFor(scenario.base).threeBet;
+  let threeBetCombos = 0;
+  let fiveBetCombos = 0;
+  let callCombos = 0;
+  let hands = 0;
+  let mixedHands = 0;
+  for (let i = 0; i < 169; i++) {
+    const threeBetted = (combosAt(i) * threeBet[i]) / 100;
+    threeBetCombos += threeBetted;
+    const total = fiveBet[i] + call[i];
+    if (total <= 0) continue;
+    fiveBetCombos += (threeBetted * fiveBet[i]) / 100;
+    callCombos += (threeBetted * call[i]) / 100;
+    hands += 1;
+    if (total < 100 || (fiveBet[i] > 0 && call[i] > 0)) mixedHands += 1;
+  }
+  return {
+    fiveBetPercent: (fiveBetCombos / threeBetCombos) * 100,
+    callPercent: (callCombos / threeBetCombos) * 100,
+    continuePercent: ((fiveBetCombos + callCombos) / threeBetCombos) * 100,
+    hands,
+    mixedHands,
+  };
+};
+
+export const vs4betRangeTextFor = (
+  id: Vs4BetId,
+  action: "fiveBet" | "call"
+): string => tiersToRangeText(VS_4BET[id][action]);
+
 /** 검증 스크립트용 훅 — preflop-verify.js가 데이터 무결성을 검사할 때 쓴다 */
 declare global {
   interface Window {
@@ -648,6 +781,10 @@ declare global {
       vs3betGridsFor: typeof vs3betGridsFor;
       vs3betStatsFor: typeof vs3betStatsFor;
       vs3betRangeTextFor: typeof vs3betRangeTextFor;
+      vs4betScenarios: Vs4BetScenario[];
+      vs4betGridsFor: typeof vs4betGridsFor;
+      vs4betStatsFor: typeof vs4betStatsFor;
+      vs4betRangeTextFor: typeof vs4betRangeTextFor;
     };
   }
 }
@@ -666,5 +803,9 @@ if (typeof window !== "undefined") {
     vs3betGridsFor,
     vs3betStatsFor,
     vs3betRangeTextFor,
+    vs4betScenarios: VS4BET_SCENARIOS,
+    vs4betGridsFor,
+    vs4betStatsFor,
+    vs4betRangeTextFor,
   };
 }
