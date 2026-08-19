@@ -6,7 +6,7 @@
  * 여기 없는 색(액션 빨강/초록, 핸드 분류 무지개, 차트 데이터 계열 색)은
  * «의미색»이라 테마가 바뀌어도 유지한다 — 각 컴포넌트에 그대로 둔다.
  */
-export const C = {
+const BASE = {
   /** 홀덤마스터 브랜드 앰버 (--c-brand) */
   brand: "#DFAC2A",
   /** 앰버 위 글자·도안색 (--c-brand-ink) */
@@ -23,4 +23,29 @@ export const C = {
   chartSpade: "#d4d4d4",
   /** 패널 배경 = neutral-800 */
   panelBg: "#262626",
-} as const;
+};
+
+/* T39 시안 미리보기(?t39=) — index.css의 [data-t39] 블록과 값이 짝.
+ * 시안이 확정되면 선택된 값을 BASE로 승격하고 이 표는 지운다. */
+const AB_NEUTRALS = {
+  chartTick: "#a8a8b0", // neutral-400
+  chartGrid: "#2a2a2e", // neutral-700
+  chartLegend: "#e2e2e7", // neutral-200
+  chartSpade: "#cacad0", // neutral-300
+  panelBg: "#1d1d20", // neutral-800
+};
+const T39_VARIANTS: Record<string, Partial<typeof BASE>> = {
+  a: { ...AB_NEUTRALS, accent: "#DFAC2A" },
+  b: { ...AB_NEUTRALS, accent: "#D4AF37", brand: "#D4AF37" },
+  c: {},
+};
+
+const t39 =
+  typeof location !== "undefined"
+    ? new URLSearchParams(location.search).get("t39")
+    : null;
+
+export const C: typeof BASE = {
+  ...BASE,
+  ...((t39 && T39_VARIANTS[t39]) || {}),
+};
