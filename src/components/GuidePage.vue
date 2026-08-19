@@ -425,8 +425,8 @@ const M = {
     airplaneBold: "기기 안에서 끝난다",
     airplaneAfter: "는 가장 확실한 증거입니다",
     openTerm: "소스가 공개돼 있습니다",
-    openBefore: "이 솔버는 AGPL-3.0 오픈소스라 코드 전체를 ",
-    openAfter: "에서 볼 수 있습니다. 숨겨둘 곳이 없습니다",
+    openBefore: "이 솔버는 AGPL-3.0 오픈소스입니다 (",
+    openAfter: ")",
     removeTerm: "깔끔하게 지워집니다",
     removeDef:
       "다른 앱처럼 길게 눌러 삭제하면 끝입니다. 배경에서 도는 것도, 남는 것도 없습니다",
@@ -602,9 +602,8 @@ const M = {
     airplaneBold: "happens entirely on your device",
     airplaneAfter: "",
     openTerm: "The source is public",
-    openBefore:
-      "This solver is AGPL-3.0 open source — the entire codebase is on ",
-    openAfter: ". There's nowhere to hide anything",
+    openBefore: "This solver is AGPL-3.0 open source (",
+    openAfter: ")",
     removeTerm: "Uninstalls cleanly",
     removeDef:
       "Long-press and delete like any other app, and it's gone. Nothing runs in the background, nothing is left behind",

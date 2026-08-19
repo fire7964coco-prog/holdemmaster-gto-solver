@@ -318,7 +318,7 @@ const M = {
       "[레인지 복사]로 얻은 텍스트를 커스텀 스팟의 ①/② 레인지 입력에 붙여넣으면 이 수비 레인지로 플랍 이후를 직접 계산할 수 있습니다.",
     sourceTitle: "이 차트는 어떻게 만들었나요?",
     sourceBody:
-      "특정 유료 솔버의 차트를 복제하지 않았습니다. 공개된 무료 GTO 자료 여러 개를 " +
+      "공개된 무료 GTO 자료 여러 개를 " +
       "핸드 단위로 교차 검증해 «합의 레인지»를 만들고, 자료마다 판단이 갈리는 경계 " +
       "핸드는 혼합 빈도로 표기했습니다. BTN·SB는 이 앱의 교육 예제에 쓰이는 " +
       "솔버 검증 레인지와도 대조했습니다.",
@@ -424,7 +424,7 @@ const M = {
       "Paste a copied range into the custom-spot range inputs (① / ②) to solve the postflop play with this defense range yourself.",
     sourceTitle: "How was this chart built?",
     sourceBody:
-      "It is not a copy of any paid solver's chart. We cross-checked several " +
+      "We cross-checked several " +
       "freely published GTO resources hand by hand to build a consensus range, " +
       "marking hands the sources disagree on as mixed frequencies. BTN and SB " +
       "were also checked against the solver-verified ranges used by this app's study spots.",
