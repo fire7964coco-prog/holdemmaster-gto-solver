@@ -100,10 +100,12 @@ Chart.defaults.font.family =
 
 const labels = [...ranks].reverse();
 
+import { C } from "../theme";
+
 const green600 = "#16a34a";
 const blue600 = "#2563eb";
 const pink600 = "#db2777";
-const black = "#d4d4d4"; // 다크 배경용 스페이드 막대색 (원래 검정)
+const black = C.chartSpade; // 다크 배경용 스페이드 막대색 (원래 검정)
 const suitColor = [green600, blue600, pink600, black];
 
 // display-only label maps (data values remain in English)
@@ -283,15 +285,15 @@ export default defineComponent({
         normalized: true,
         scales: {
           x: {
-            ticks: { color: "#a3a3a3" },
-            grid: { color: "#404040" },
+            ticks: { color: C.chartTick },
+            grid: { color: C.chartGrid },
           },
           y: {
             stacked: true,
             min: ["ev", "eqr"].includes(option) ? undefined : 0,
             max: option === "strategy" ? 1 : undefined,
-            ticks: { format, color: "#a3a3a3" },
-            grid: { color: "#404040" },
+            ticks: { format, color: C.chartTick },
+            grid: { color: C.chartGrid },
             afterFit(axis) {
               axis.width = 52;
             },
@@ -302,7 +304,7 @@ export default defineComponent({
             display: true,
             text: titleText,
             font: { size: 16, weight: "normal" },
-            color: "#e5e5e5",
+            color: C.chartLegend,
           },
           legend: {
             display: false,

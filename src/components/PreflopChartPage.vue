@@ -225,7 +225,9 @@ import {
 } from "../preflop-charts";
 import { ranks } from "../utils";
 
-const yellow500 = "#eab308";
+import { C } from "../theme";
+
+const yellow500 = C.accent;
 const red500 = "#ef4444"; // 3벳 (결과 매트릭스의 벳 색과 같은 계열)
 const green500 = "#22c55e"; // 콜
 

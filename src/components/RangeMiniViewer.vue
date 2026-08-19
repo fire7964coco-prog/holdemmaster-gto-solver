@@ -32,7 +32,9 @@
 import { defineComponent } from "vue";
 import { useConfigStore } from "../store";
 
-const yellow500 = "#eab308";
+import { C } from "../theme";
+
+const yellow500 = C.accent;
 
 export default defineComponent({
   props: {

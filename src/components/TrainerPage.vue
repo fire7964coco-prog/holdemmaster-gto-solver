@@ -47,7 +47,7 @@
           :class="
             'button-base filter-btn ml-0 md:ml-2 flex items-center gap-1.5 ' +
             (dailyMode
-              ? 'bg-[#DFAC2A] text-[#04160C] hover:bg-[#e8bb4a]'
+              ? 'bg-brand text-brand-ink hover:bg-brand-hover'
               : 'bg-neutral-700 hover:bg-neutral-600')
           "
           @click="toggleDaily"
@@ -174,7 +174,7 @@
           {{ L.goodRateLabel }} <b class="text-neutral-200">{{ excellentRate.toFixed(0) }}</b>%
         </span>
         <span v-if="dailyState.streak">
-          {{ L.daily }} <b class="text-[#DFAC2A]">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
+          {{ L.daily }} <b class="text-brand">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
         </span>
         <button class="ml-auto link-like" @click="scrollToStats">{{ L.details }}</button>
       </div>
@@ -347,9 +347,9 @@
           -->
           <div
             v-if="dailyMode && dailyState.done"
-            class="mt-4 panel-inner border-[#DFAC2A]/40"
+            class="mt-4 panel-inner border-brand/40"
           >
-            <div class="text-sm font-semibold text-[#DFAC2A]">
+            <div class="text-sm font-semibold text-brand">
               {{ L.dailyDone }}
               <span v-if="dailyState.streak > 1" class="text-neutral-300">
                 · {{ dailyState.streak }}{{ L.dayStreakSuffix }}
@@ -361,7 +361,7 @@
             <div class="mt-2 flex flex-wrap items-center gap-2">
               <!-- 커뮤니티보다 단톡방·SNS가 먼저다 — 회원이 적어도 작동하는 유입 장치 -->
               <button
-                class="button-base !px-2.5 !py-1 text-xs bg-[#DFAC2A] text-[#04160C] hover:bg-[#e8bb4a]"
+                class="button-base !px-2.5 !py-1 text-xs bg-brand text-brand-ink hover:bg-brand-hover"
                 @click="openCard"
               >
                 {{ L.makeCard }}
@@ -402,7 +402,7 @@
                   <li
                     v-for="(row, index) in board.rows"
                     :key="index"
-                    :class="row.isMine ? 'text-[#DFAC2A] font-semibold' : 'text-neutral-300'"
+                    :class="row.isMine ? 'text-brand font-semibold' : 'text-neutral-300'"
                   >
                     <span class="inline-block w-6 text-right tabular-nums text-neutral-500">
                       {{ index + 1 }}
@@ -511,7 +511,7 @@
           <div class="mt-3 flex flex-wrap items-center gap-2">
             <button
               v-if="cardShareable"
-              class="button-base bg-[#DFAC2A] text-[#04160C] hover:bg-[#e8bb4a] !px-3 !py-1.5 text-sm"
+              class="button-base bg-brand text-brand-ink hover:bg-brand-hover !px-3 !py-1.5 text-sm"
               @click="shareCardNow"
             >
               {{ L.shareApps }}

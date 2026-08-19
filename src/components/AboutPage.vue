@@ -44,7 +44,7 @@
         >
           {{ L.ctaDaily }}
           <span v-if="dailyState.done" class="text-emerald-400" :aria-label="L.dailyDone">✓</span>
-          <span v-else class="text-[#DFAC2A]">●</span>
+          <span v-else class="text-brand">●</span>
         </button>
         <button
           class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5"
@@ -57,7 +57,7 @@
           v-if="canShowInstallButton()"
           :class="
             'px-5 py-2.5 rounded-full text-sm font-semibold transition ' +
-            'text-[#04160C] bg-[#DFAC2A] hover:bg-[#e8bb4a] flex items-center gap-2'
+            'text-brand-ink bg-brand hover:bg-brand-hover flex items-center gap-2'
           "
           @click="requestInstall"
         >
@@ -256,10 +256,10 @@ export default defineComponent({
 .silver-text {
   background-image: linear-gradient(
     180deg,
-    #ffffff 0%,
-    #e5e5e5 35%,
-    #a3a3a3 75%,
-    #8a8a8a 100%
+    rgb(var(--c-metal-1)) 0%,
+    rgb(var(--c-metal-2)) 35%,
+    rgb(var(--c-metal-4)) 75%,
+    rgb(var(--c-metal-5)) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;

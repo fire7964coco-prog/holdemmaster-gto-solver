@@ -9,6 +9,7 @@
  * 정답(어떤 액션이 최적인지)은 카드에 넣지 않는다 — 아직 안 푼 사람의 재미를 지킨다.
  */
 import { cardText } from "./utils";
+import { C } from "./theme";
 import { i18n } from "./i18n";
 
 // 카드에 그려 넣는 고정 문구 — 카드 언어는 현재 화면 언어를 따른다
@@ -57,8 +58,8 @@ const HEIGHT = 1350;
 const BG = "#141414";
 const PANEL = "#232323";
 const PANEL_BORDER = "#3d3d3d";
-const AMBER = "#DFAC2A";
-const DARK_GREEN = "#04160C";
+const AMBER = C.brand;
+const DARK_GREEN = C.brandInk;
 const TEXT = "#f5f5f5";
 const TEXT_DIM = "#a3a3a3";
 const TEXT_FAINT = "#737373";

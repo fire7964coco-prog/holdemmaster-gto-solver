@@ -13,10 +13,10 @@
       @click="closeLaunch"
     >
       <div class="px-8 pt-24 text-left w-full max-w-md mx-auto">
-        <div class="text-3xl font-bold text-[#04160C]/70 leading-tight">
+        <div class="text-3xl font-bold text-brand-ink/70 leading-tight">
           {{ L.greeting }}
         </div>
-        <div class="mt-1 text-[2rem] md:text-4xl font-extrabold text-[#04160C] leading-tight">
+        <div class="mt-1 text-[2rem] md:text-4xl font-extrabold text-brand-ink leading-tight">
           {{ L.titleLine1 }}<br />{{ L.titleLine2 }}
         </div>
       </div>
@@ -33,12 +33,12 @@
             d="M90 22 C 90 22, 36 56, 36 88 C 36 112, 60 122, 90 110
                C 77 124, 74 142, 70 154 L110 154 C 106 142, 103 124, 90 110
                C 120 122, 144 112, 144 88 C 144 56, 90 22, 90 22 Z"
-            fill="#04160C"
+            class="fill-brand-ink"
           />
         </svg>
       </div>
 
-      <div class="pb-14 text-center text-sm font-semibold text-[#04160C]/60">
+      <div class="pb-14 text-center text-sm font-semibold text-brand-ink/60">
         {{ L.footer }}
       </div>
     </div>
@@ -81,7 +81,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   /* manifest의 background_color와 같은 값 — 기본 스플래시와 이어 붙이기 위함 */
-  background-color: #dfac2a;
+  background-color: rgb(var(--c-brand));
 }
 
 .launch-leave-active {

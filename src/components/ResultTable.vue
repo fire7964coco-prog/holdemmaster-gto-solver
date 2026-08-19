@@ -461,8 +461,10 @@ const columnIndex = (column: Column) => {
   }
 };
 
-const yellow500 = "#eab308";
-const neutral800 = "#262626";
+import { C } from "../theme";
+
+const yellow500 = C.accent;
+const neutral800 = C.panelBg;
 
 const cardStr = (card: number) => {
   const rank = ranks[card >>> 2];

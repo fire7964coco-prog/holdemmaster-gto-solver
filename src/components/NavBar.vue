@@ -109,7 +109,7 @@ export default defineComponent({
 
 <style scoped>
 .silver-spade {
-  background-image: linear-gradient(180deg, #ffffff 0%, #d4d4d4 45%, #8a8a8a 100%);
+  background-image: linear-gradient(180deg,rgb(var(--c-metal-1)) 0%,rgb(var(--c-metal-3)) 45%,rgb(var(--c-metal-5)) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

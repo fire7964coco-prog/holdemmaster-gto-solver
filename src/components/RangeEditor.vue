@@ -144,7 +144,9 @@ const M = {
   },
 } as const;
 
-const yellow500 = "#eab308";
+import { C } from "../theme";
+
+const yellow500 = C.accent;
 
 const comboPat = `(?:(?:${rankPat}{2}[os]?)|(?:(?:${rankPat}[cdhs]){2}))`;
 const weightPat = "(?:(?:[01](\\.\\d*)?)|(?:\\.\\d+))";

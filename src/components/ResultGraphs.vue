@@ -93,6 +93,8 @@ Chart.defaults.font.size = 14;
 Chart.defaults.font.family =
   "system-ui, 'Noto Sans', 'Open Sans', Roboto, sans-serif";
 
+import { C } from "../theme";
+
 const sky500 = "#0ea5e9";
 const lime500 = "#84cc16";
 const xTicks = 10000;
@@ -306,8 +308,8 @@ export default defineComponent({
         scales: {
           x: {
             type: "linear",
-            ticks: { format: formatX, color: "#a3a3a3" },
-            grid: { color: "#404040" },
+            ticks: { format: formatX, color: C.chartTick },
+            grid: { color: C.chartGrid },
             afterFit(axis) {
               chartWidth.value = axis.width;
             },
@@ -318,9 +320,9 @@ export default defineComponent({
             suggestedMin: content === "ev" ? 0 : undefined,
             ticks: {
               format: formatY,
-              color: "#a3a3a3",
+              color: C.chartTick,
             },
-            grid: { color: "#404040" },
+            grid: { color: C.chartGrid },
             afterFit(axis) {
               axis.width = 52;
             },
@@ -334,7 +336,7 @@ export default defineComponent({
           legend: {
             labels: {
               font: { size: 16 },
-              color: "#e5e5e5",
+              color: C.chartLegend,
               boxHeight: 12,
             },
           },

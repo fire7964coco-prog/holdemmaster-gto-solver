@@ -95,7 +95,9 @@ import {
   HoverContent,
 } from "../result-types";
 
-const yellow500 = "#eab308";
+import { C } from "../theme";
+
+const yellow500 = C.accent;
 const colorGradient = [
   { red: 0xef, green: 0x44, blue: 0x44 }, // red-500
   { red: 0xf9, green: 0x73, blue: 0x16 }, // orange-500
