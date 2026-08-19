@@ -1,7 +1,8 @@
 <template>
   <aside
-    class="flex flex-row md:flex-col shrink-0 w-full md:w-56 my-0 md:my-4 overflow-x-auto md:overflow-x-visible md:overflow-y-auto border-b md:border-b-0 md:border-r-2 border-neutral-700"
+    class="flex flex-row md:flex-col shrink-0 w-full md:w-56 my-0 md:my-2 overflow-x-auto md:overflow-x-visible md:overflow-y-auto border-b md:border-b-0 md:border-r-2 border-neutral-700"
   >
+    <div class="side-bar-group md:mb-1">
     <div class="side-bar-label">
       {{ L.exploreLabel }}<span class="hidden md:inline">{{ L.exploreLabelSuffix }}</span>
     </div>
@@ -43,8 +44,9 @@
       </span>
     </button>
 
-    <div class="side-bar-divider"></div>
+    </div>
 
+    <div class="side-bar-group">
     <div class="side-bar-label">
       {{ L.customLabel }}<span class="hidden md:inline">{{ L.customLabelSuffix }}</span>
     </div>
@@ -95,6 +97,7 @@
     >
       ⑤ {{ L.run }}
     </button>
+    </div>
   </aside>
 </template>
 
@@ -208,8 +211,13 @@ export default defineComponent({
   @apply md:text-[0.6875rem] md:uppercase md:tracking-wider;
 }
 
-/* 학습 영역과 커스텀 계산 영역을 눈으로 구분 (모바일은 가로 탭바라 생략) */
-.side-bar-divider {
-  @apply hidden md:block md:mx-4 md:mt-0.5 md:border-t md:border-neutral-700;
+/* 학습 영역과 커스텀 계산 영역을 블록(패널)으로 구분 (2026-08-19 사용자 요청).
+   모바일 가로 탭바에서는 display:contents로 상자를 없애 기존 한 줄 배치를 유지한다.
+   ⚠ 높이 예산: 테두리 4 + 패딩 8 + 간격 6 = +18px를 aside 여백 my-4→my-2(-16px)와
+   구분선 제거(-3px)로 회수 — 1280×720에서 ⑤가 보이는지는 sidebar-fit-verify가 판정 */
+.side-bar-group {
+  @apply contents;
+  @apply md:block md:mx-2 md:py-0.5 md:rounded-2xl;
+  @apply md:border md:border-neutral-700 md:bg-neutral-800/40;
 }
 </style>
