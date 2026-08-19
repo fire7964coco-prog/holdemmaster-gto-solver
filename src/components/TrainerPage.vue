@@ -369,8 +369,9 @@
               <button class="button-base button-blue !px-2.5 !py-1 text-xs" @click="copyDaily">
                 {{ dailyCopied ? L.copied : L.copyResult }}
               </button>
-              <!-- 복사만 시키고 갈 곳을 안 주면 아무도 안 올린다 -->
+              <!-- 복사만 시키고 갈 곳을 안 주면 아무도 안 올린다 (EN은 갈 곳이 없어 숨김) -->
               <a
+                v-if="communityUrl"
                 :href="communityUrl"
                 target="_blank"
                 rel="noopener"
@@ -1246,7 +1247,11 @@ export default defineComponent({
       reviewAttempts,
       limits,
       dailyState,
-      communityUrl: mainSiteUrl("/community", "daily-share"),
+      // 커뮤니티는 한국어 페이지뿐(/en/community 없음, 2026-08-19 실측 404)
+      // → EN에서는 빈 값을 줘서 버튼 자체를 숨긴다 (한국어 사이트로 보내지 않는다)
+      communityUrl: computed(() =>
+        i18n.locale === "ko" ? mainSiteUrl("/community", "daily-share") : ""
+      ),
       dailyMode,
       dailyCopied,
       toggleDaily,

@@ -9,6 +9,7 @@
  * (2026-08-13 확인) 중복 색인 문제는 생기지 않는다.
  */
 
+import { i18n } from "./i18n";
 const SOURCE = "solver";
 const MEDIUM = "referral";
 
@@ -51,6 +52,18 @@ export const trackOutbound = (url: string, placement: OutboundPlacement) => {
 /** 본체 사이트 주소 (경로는 "/solver"처럼 슬래시로 시작). */
 export const MAIN_SITE = "https://www.holdemmaster.com";
 
+/*
+ * 본체는 언어별 URL(hreflang)을 따로 둔다 — EN 화면에서 나가는 링크는 EN 페이지로만.
+ * (2026-08-19 사용자 지적 + 본체 회신 reply-to-solver-2026-08-19.md: /en/solver 오픈됨)
+ * EN 등가가 «실재하는» 경로만 등재한다. 없는 경로(/community, 블로그 글)는 여기서
+ * 바꿔치기하지 않는다 — 화면 쪽에서 링크 자체를 숨겨야 한다 (404로 보내면 안 되므로).
+ */
+const EN_PATHS: Record<string, string> = {
+  "": "/en",
+  "/solver": "/en/solver",
+};
+
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {
-  return trackOutbound(`${MAIN_SITE}${path}`, placement);
+  const localized = i18n.locale === "en" ? EN_PATHS[path] ?? path : path;
+  return trackOutbound(`${MAIN_SITE}${localized}`, placement);
 };

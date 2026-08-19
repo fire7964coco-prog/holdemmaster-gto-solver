@@ -42,12 +42,36 @@ const detect = (): Locale => {
   return navigator.language?.toLowerCase().startsWith("ko") ? "ko" : "en";
 };
 
+/* 문서 자체(탭 제목·메타 설명)도 언어를 따라간다 — index.html은 한국어로 배포되므로
+ * EN 진입 시 여기서 바꿔 준다 (탭에 한국어가 남아 있던 문제, 2026-08-19 사용자 발견).
+ * ko 값은 index.html의 <title>·description과 글자까지 같아야 한다. */
+const DOC_META: Record<Locale, { title: string; description: string }> = {
+  ko: {
+    title: "홀덤마스터 GTO 솔버 — 무료 브라우저 GTO 솔버",
+    description:
+      "설치 없이 브라우저에서 실행하는 무료 GTO 솔버. 텍사스 홀덤 포스트플랍 전략을 레인지·보드·벳 사이즈별로 계산합니다. 홀덤마스터 커뮤니티 제공.",
+  },
+  en: {
+    title: "HoldemMaster GTO Solver — Free Browser GTO Solver",
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
+  },
+};
+
+const applyDocumentLocale = (locale: Locale) => {
+  document.documentElement.lang = locale;
+  document.title = DOC_META[locale].title;
+  document
+    .querySelector('meta[name="description"]')
+    ?.setAttribute("content", DOC_META[locale].description);
+};
+
 export const i18n = reactive({ locale: detect() });
-document.documentElement.lang = i18n.locale;
+applyDocumentLocale(i18n.locale);
 
 export const setLocale = (locale: Locale) => {
   i18n.locale = locale;
-  document.documentElement.lang = locale;
+  applyDocumentLocale(locale);
   try {
     localStorage.setItem(KEY, locale);
   } catch {

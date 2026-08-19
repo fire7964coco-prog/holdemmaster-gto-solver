@@ -244,8 +244,9 @@ export default defineComponent({
       L,
       requestInstall,
       canShowInstallButton,
-      landingUrl: mainSiteUrl("/solver", "about-landing"),
-      creditUrl: mainSiteUrl("", "about-credit"),
+      // EN이면 /en/solver·/en으로 — 언어 전환에 따라가도록 computed
+      landingUrl: computed(() => mainSiteUrl("/solver", "about-landing")),
+      creditUrl: computed(() => mainSiteUrl("", "about-credit")),
     };
   },
 });

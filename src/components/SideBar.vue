@@ -17,7 +17,7 @@
 
     <button :class="itemStyle('presets')" @click="store.sideView = 'presets'">
       {{ L.presets }}
-      <span class="hidden md:inline text-xs font-semibold text-emerald-400">
+      <span class="badge hidden md:inline text-xs font-semibold text-emerald-400">
         ⚡ {{ L.presetsBadge }}
       </span>
       <span class="md:hidden text-emerald-400">⚡</span>
@@ -25,21 +25,21 @@
 
     <button :class="itemStyle('trainer')" @click="store.sideView = 'trainer'">
       {{ L.trainer }}
-      <span class="hidden md:inline text-xs font-semibold text-blue-400">
+      <span class="badge hidden md:inline text-xs font-semibold text-blue-400">
         {{ L.trainerBadge }}
       </span>
     </button>
 
     <button :class="itemStyle('preflop')" @click="store.sideView = 'preflop'">
       {{ L.preflop }}
-      <span class="hidden md:inline text-xs font-semibold text-yellow-500">
+      <span class="badge hidden md:inline text-xs font-semibold text-yellow-500">
         {{ L.preflopBadge }}
       </span>
     </button>
 
     <button :class="itemStyle('equity')" @click="store.sideView = 'equity'">
       {{ L.equity }}
-      <span class="hidden md:inline text-xs font-semibold text-emerald-400">
+      <span class="badge hidden md:inline text-xs font-semibold text-emerald-400">
         {{ L.equityBadge }}
       </span>
     </button>
@@ -145,7 +145,7 @@ const M = {
     // 뱃지까지 한 줄에 들어와야 한다 — 「Open·Defend」는 1280×720에서 두 줄로 접혔다
     preflopBadge: "Open·Def",
     equity: "Equity Calculator",
-    equityBadge: "Win %",
+    equityBadge: "Win%",
     customLabel: "Custom Spot",
     // ⚠ 이 라벨이 두 줄로 접히면 1280×720에서 ⑤가 화면 밖으로 밀린다 (한 줄로 유지할 것)
     customLabelSuffix: " — Solve",
@@ -217,7 +217,13 @@ export default defineComponent({
    구분선 제거(-3px)로 회수 — 1280×720에서 ⑤가 보이는지는 sidebar-fit-verify가 판정 */
 .side-bar-group {
   @apply contents;
-  @apply md:block md:mx-2 md:py-0.5 md:rounded-2xl;
+  @apply md:block md:mx-1 md:py-0.5 md:rounded-2xl;
   @apply md:border md:border-neutral-700 md:bg-neutral-800/40;
+}
+/* 패널 도입으로 항목 폭이 18px 줄어 EN «Equity Calculator Win %»가 두 줄로 접혔다
+   (2026-08-19 사용자 실기기에서 발견 — 125% 배율에서 접힘). 그룹 여백을 줄이고(mx-2→mx-1)
+   뱃지는 줄바꿈 금지 — 항목이 늘면 여기가 또 첫 파열점이다 */
+.side-bar-item .badge {
+  @apply whitespace-nowrap;
 }
 </style>

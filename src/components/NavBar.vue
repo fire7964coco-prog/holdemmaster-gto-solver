@@ -84,8 +84,9 @@ const M = {
     results: "Results",
     community: "HoldemMaster",
     communitySuffix: " Community",
-    langSwitch: "한국어",
-    langSwitchLabel: "한국어로 전환",
+    // 영어 화면에는 한글을 남기지 않는다 (2026-08-19 사용자 지적) — «한국어» 대신 KO
+    langSwitch: "KO",
+    langSwitchLabel: "Switch to Korean",
   },
 } as const;
 
@@ -99,7 +100,8 @@ export default defineComponent({
     const toggleLocale = () => setLocale(i18n.locale === "ko" ? "en" : "ko");
     return {
       store: useStore(),
-      communityUrl: mainSiteUrl("", "navbar"),
+      // 언어 전환 시 EN 홈(/en)으로 갈아타야 하므로 computed (정적이면 낡은 언어로 남는다)
+      communityUrl: computed(() => mainSiteUrl("", "navbar")),
       L,
       toggleLocale,
     };
