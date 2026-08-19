@@ -295,6 +295,23 @@ const M = {
     addedLines: "Added lines:",
     removedLines: "Removed lines:",
   },
+  ja: {
+    treeError:
+      "エラー: ツリーの作成に失敗しました(破損したツリーを読み込みましたか?)",
+    pot: "ポット",
+    stack: "スタック",
+    noActions: "(アクションなし)",
+    wins: "の勝ち",
+    invalidTerminals: "無効なターミナルノード:",
+    addBetAction: "ベットアクションを追加",
+    removeNode: "選択したノードを削除",
+    betAmount: "ベット額:",
+    potRate: (pct: string) => `(ポットの${pct}%)`,
+    saveEdits: "編集を保存",
+    cancelEdits: "編集をキャンセル",
+    addedLines: "追加されたライン:",
+    removedLines: "削除されたライン:",
+  },
 } as const;
 
 export default defineComponent({

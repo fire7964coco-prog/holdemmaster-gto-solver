@@ -130,6 +130,32 @@ const M = {
       "Nothing gets installed on your system — it's just a browser shortcut. It asks for no permissions, and you can remove it anytime by long-pressing the icon, just like an app.",
     close: "Close",
   },
+  ja: {
+    iconAlt: "HoldemMaster GTOソルバーのアイコン",
+    title: "ホーム画面に追加しますか？",
+    samsung1: "Samsungインターネットではインストール時に",
+    samsungB1: "「安全でないアプリをブロックしました」",
+    samsung2: "という警告が表示されます — ブラウザ側の問題で、本アプリとは無関係です。",
+    samsungB2: "Chromeで開くと",
+    samsung3: "警告なしでインストールできます。",
+    default1: "アイコン1つですぐ開けて、",
+    defaultB1: "学習スポット13種とトレーナーを端末に保存",
+    default2: "するので、インターネットのない場所でも学習できます。",
+    ios1: "下の",
+    iosB1: "「共有」ボタン",
+    ios2: "をタップし、",
+    iosB2: "「ホーム画面に追加」",
+    ios3: "を選んでください。アイコン1つですぐ開けて、学習スポットとトレーナーを保存するのでインターネットなしでも学習できます。",
+    openInChrome: "Chromeで開く",
+    install: "ホーム画面に追加",
+    gotIt: "わかりました",
+    later: "あとで",
+    samsungHint:
+      "このままインストールする場合は、警告ダイアログの[詳細を表示] → [無視してインストール]をタップしてください。",
+    safety:
+      "プログラムがインストールされるわけではなく、ブラウザのショートカットです。権限を要求せず、削除するときもアプリと同じようにアイコンを長押しして削除するだけです。",
+    close: "閉じる",
+  },
 } as const;
 
 export default defineComponent({

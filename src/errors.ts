@@ -56,12 +56,12 @@ const write = (records: ErrorRecord[]) => {
 const shortBrowser = () => {
   const ua = navigator.userAgent;
   if (/SamsungBrowser\/([\d.]+)/.test(ua))
-    return pick("삼성 인터넷 ", "Samsung Internet ") + RegExp.$1;
-  if (/Edg\/([\d.]+)/.test(ua)) return pick("엣지 ", "Edge ") + RegExp.$1;
-  if (/Chrome\/([\d.]+)/.test(ua)) return pick("크롬 ", "Chrome ") + RegExp.$1;
-  if (/Firefox\/([\d.]+)/.test(ua)) return pick("파이어폭스 ", "Firefox ") + RegExp.$1;
-  if (/Version\/([\d.]+).*Safari/.test(ua)) return pick("사파리 ", "Safari ") + RegExp.$1;
-  return pick("기타 브라우저", "Other browser");
+    return pick("삼성 인터넷 ", "Samsung Internet ", "Samsung Internet ") + RegExp.$1;
+  if (/Edg\/([\d.]+)/.test(ua)) return pick("엣지 ", "Edge ", "Edge ") + RegExp.$1;
+  if (/Chrome\/([\d.]+)/.test(ua)) return pick("크롬 ", "Chrome ", "Chrome ") + RegExp.$1;
+  if (/Firefox\/([\d.]+)/.test(ua)) return pick("파이어폭스 ", "Firefox ", "Firefox ") + RegExp.$1;
+  if (/Version\/([\d.]+).*Safari/.test(ua)) return pick("사파리 ", "Safari ", "Safari ") + RegExp.$1;
+  return pick("기타 브라우저", "Other browser", "その他のブラウザ");
 };
 
 const record = (msg: string, stack: string) => {
@@ -86,16 +86,16 @@ export const errorReportText = () => {
   if (!records.length) return "";
   const standalone = window.matchMedia?.("(display-mode: standalone)").matches;
   const head = [
-    pick("홀덤마스터 GTO 솔버 오류 기록", "HoldemMaster GTO Solver error log"),
-    `${pick("빌드", "Build")} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen")} ${window.innerWidth}x${window.innerHeight}`,
-    `${pick("설치 실행", "Installed app")}: ${standalone ? pick("예", "yes") : pick("아니오", "no")}`,
+    pick("홀덤마스터 GTO 솔버 오류 기록", "HoldemMaster GTO Solver error log", "HoldemMaster GTOソルバー エラーログ"),
+    `${pick("빌드", "Build", "ビルド")} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen", "画面")} ${window.innerWidth}x${window.innerHeight}`,
+    `${pick("설치 실행", "Installed app", "インストール版")}: ${standalone ? pick("예", "yes", "はい") : pick("아니오", "no", "いいえ")}`,
     "",
   ].join("\n");
   const body = records
     .slice()
     .reverse()
     .map((item, index) => {
-      const time = new Date(item.t).toLocaleString(pick("ko-KR", "en-US"));
+      const time = new Date(item.t).toLocaleString(pick("ko-KR", "en-US", "ja-JP"));
       return `[${index + 1}] ${time} (${item.where})\n${item.msg}\n${item.stack}`;
     })
     .join("\n\n");
@@ -126,7 +126,7 @@ export const setupErrorCapture = () => {
     } else if (target && target.tagName) {
       // 이미지·스크립트 로딩 실패는 error 객체가 없다
       record(
-        `${target.tagName} ${pick("로딩 실패", "failed to load")}`,
+        `${target.tagName} ${pick("로딩 실패", "failed to load", "読み込み失敗")}`,
         String(target.src || target.href || "")
       );
     } else if (event.message) {
@@ -145,7 +145,7 @@ export const setupErrorCapture = () => {
   window.addEventListener("unhandledrejection", (event) => {
     const reason = event.reason;
     record(
-      pick("처리되지 않은 오류: ", "Unhandled rejection: ") + String(reason?.message ?? reason),
+      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ") + String(reason?.message ?? reason),
       String(reason?.stack ?? "")
     );
   });

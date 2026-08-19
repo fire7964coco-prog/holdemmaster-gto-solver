@@ -35,6 +35,9 @@ const M = {
   en: {
     combos: "combos",
   },
+  ja: {
+    combos: "コンボ",
+  },
 } as const;
 
 const actionLabel = (
@@ -61,6 +64,15 @@ const actionLabel = (
       Raise: "Raise",
       Allin: "All-in",
       "All-in": "All-in",
+    },
+    {
+      Fold: "フォールド",
+      Check: "チェック",
+      Call: "コール",
+      Bet: "ベット",
+      Raise: "レイズ",
+      Allin: "オールイン",
+      "All-in": "オールイン",
     }
   );
   const label = map[name] ?? name;
@@ -70,7 +82,8 @@ const actionLabel = (
   if (name === "Bet" && pot > 0) {
     return `${label} ${shown} (${Math.round((value * 100) / pot)}% ${pick(
       "팟",
-      "pot"
+      "pot",
+      "ポット"
     )})`;
   }
   return `${label} ${shown}`;

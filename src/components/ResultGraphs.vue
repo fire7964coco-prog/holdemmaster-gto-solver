@@ -108,6 +108,10 @@ const M = {
     noGraph: "Graph is not available",
     equity: "Equity",
   },
+  ja: {
+    noGraph: "グラフを表示できません",
+    equity: "エクイティ",
+  },
 } as const;
 
 export default defineComponent({

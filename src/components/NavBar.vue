@@ -39,14 +39,18 @@
       </div>
 
       <div class="flex ml-auto h-full items-center z-10">
-        <!-- 언어 전환 — 현재 언어가 아닌 쪽을 보여준다 (누르면 그 언어로) -->
-        <button
-          class="flex px-2 md:px-3 h-full items-center text-sm font-semibold text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
+        <!-- 언어 선택 — 3개 언어(ko/en/ja)라 토글 대신 선택 상자.
+             닫힌 상태에는 현재 언어의 이름만 보이므로 화면에 외국어가 남지 않는다 -->
+        <select
+          class="lang-select"
           :aria-label="L.langSwitchLabel"
-          @click="toggleLocale"
+          :value="locale"
+          @change="onLocaleChange"
         >
-          {{ L.langSwitch }}
-        </button>
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+          <option value="ja">日本語</option>
+        </select>
         <a
           :href="communityUrl"
           class="flex px-2 md:px-4 h-full items-center font-semibold hover:bg-neutral-700 text-yellow-300 text-sm md:text-base"
@@ -75,8 +79,7 @@ const M = {
     results: "결과",
     community: "홀덤마스터",
     communitySuffix: " 커뮤니티",
-    langSwitch: "EN",
-    langSwitchLabel: "Switch to English",
+    langSwitchLabel: "언어 선택",
   },
   en: {
     brand: "HoldemMaster GTO Solver",
@@ -84,9 +87,15 @@ const M = {
     results: "Results",
     community: "HoldemMaster",
     communitySuffix: " Community",
-    // 영어 화면에는 한글을 남기지 않는다 (2026-08-19 사용자 지적) — «한국어» 대신 KO
-    langSwitch: "KO",
-    langSwitchLabel: "Switch to Korean",
+    langSwitchLabel: "Select language",
+  },
+  ja: {
+    brand: "HoldemMaster GTOソルバー",
+    solver: "ソルバー",
+    results: "結果",
+    community: "HoldemMaster",
+    communitySuffix: " コミュニティ",
+    langSwitchLabel: "言語を選択",
   },
 } as const;
 
@@ -97,19 +106,33 @@ export default defineComponent({
   },
   setup() {
     const L = computed(() => M[i18n.locale]);
-    const toggleLocale = () => setLocale(i18n.locale === "ko" ? "en" : "ko");
+    const onLocaleChange = (event: Event) => {
+      const value = (event.target as HTMLSelectElement).value;
+      if (value === "ko" || value === "en" || value === "ja") setLocale(value);
+    };
     return {
       store: useStore(),
-      // 언어 전환 시 EN 홈(/en)으로 갈아타야 하므로 computed (정적이면 낡은 언어로 남는다)
+      // 언어 전환 시 그 언어의 본체 홈(/en 등)으로 갈아타야 하므로 computed
       communityUrl: computed(() => mainSiteUrl("", "navbar")),
+      locale: computed(() => i18n.locale),
       L,
-      toggleLocale,
+      onLocaleChange,
     };
   },
 });
 </script>
 
 <style scoped>
+/* 전역 select 스타일(어두운 상자 + 테두리)을 네비바용으로 무력화 — 글자만 보이게 */
+.lang-select {
+  @apply h-full cursor-pointer text-sm font-semibold;
+  @apply !border-0 !bg-transparent text-neutral-400 hover:text-neutral-200;
+  @apply !py-0 !pl-2 !pr-7;
+}
+.lang-select:focus {
+  @apply !ring-0;
+}
+
 .silver-spade {
   background-image: linear-gradient(180deg,rgb(var(--c-metal-1)) 0%,rgb(var(--c-metal-3)) 45%,rgb(var(--c-metal-5)) 100%);
   -webkit-background-clip: text;

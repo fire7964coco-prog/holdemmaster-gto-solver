@@ -119,7 +119,7 @@ const toUser = (session: Session | null): AccountUser | null => {
       (meta.full_name as string) ||
       (meta.name as string) ||
       session.user.email?.split("@")[0] ||
-      pick("회원", "player"),
+      pick("회원", "player", "プレイヤー"),
   };
 };
 
@@ -153,7 +153,7 @@ export const onAuthChange = (handler: (user: AccountUser | null) => void) => {
  */
 export const signIn = async (provider: "google" | "kakao") => {
   const supabase = await getClient();
-  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build"));
+  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています"));
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
@@ -239,10 +239,10 @@ export const syncAttempts = async (
   localAttempts: TrainerAttempt[]
 ): Promise<{ result: SyncResult; missingLocally: TrainerAttempt[] }> => {
   const supabase = await getClient();
-  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build"));
+  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています"));
   const { data: sessionData } = await supabase.auth.getSession();
   const userId = sessionData.session?.user.id;
-  if (!userId) throw new Error(pick("로그인이 필요합니다", "Please sign in first"));
+  if (!userId) throw new Error(pick("로그인이 필요합니다", "Please sign in first", "ログインが必要です"));
 
   const uploadable = localAttempts.filter((item) => item.clientId);
   if (uploadable.length) {

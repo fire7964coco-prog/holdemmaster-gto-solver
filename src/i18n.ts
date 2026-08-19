@@ -13,14 +13,14 @@
  */
 import { reactive } from "vue";
 
-export type Locale = "ko" | "en";
+export type Locale = "ko" | "en" | "ja";
 
 const KEY = "solver.locale";
 
 const readStored = (): Locale | null => {
   try {
     const value = localStorage.getItem(KEY);
-    return value === "ko" || value === "en" ? value : null;
+    return value === "ko" || value === "en" || value === "ja" ? value : null;
   } catch {
     return null;
   }
@@ -29,7 +29,7 @@ const readStored = (): Locale | null => {
 const detect = (): Locale => {
   // 광고·공유 링크(?lang=en)가 최우선 — 명시적 의도이므로 저장까지 한다
   const fromUrl = new URLSearchParams(location.search).get("lang");
-  if (fromUrl === "ko" || fromUrl === "en") {
+  if (fromUrl === "ko" || fromUrl === "en" || fromUrl === "ja") {
     try {
       localStorage.setItem(KEY, fromUrl);
     } catch {
@@ -39,7 +39,10 @@ const detect = (): Locale => {
   }
   const stored = readStored();
   if (stored) return stored;
-  return navigator.language?.toLowerCase().startsWith("ko") ? "ko" : "en";
+  const lang = navigator.language?.toLowerCase() || "";
+  if (lang.startsWith("ko")) return "ko";
+  if (lang.startsWith("ja")) return "ja";
+  return "en";
 };
 
 /* 문서 자체(탭 제목·메타 설명)도 언어를 따라간다 — index.html은 한국어로 배포되므로
@@ -55,6 +58,11 @@ const DOC_META: Record<Locale, { title: string; description: string }> = {
     title: "HoldemMaster GTO Solver — Free Browser GTO Solver",
     description:
       "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
+  },
+  ja: {
+    title: "HoldemMaster GTOソルバー — 無料ブラウザGTOソルバー",
+    description:
+      "インストール不要、ブラウザで動く無料GTOソルバー。テキサスホールデムのポストフロップ戦略をレンジ・ボード・ベットサイズ別に計算します。HoldemMaster提供。",
   },
 };
 
@@ -79,5 +87,7 @@ export const setLocale = (locale: Locale) => {
   }
 };
 
-/** 언어별 값 중 현재 언어 것을 고른다 (문장 조립이 아닌 짧은 선택용) */
-export const pick = <T>(ko: T, en: T): T => (i18n.locale === "ko" ? ko : en);
+/** 언어별 값 중 현재 언어 것을 고른다 (문장 조립이 아닌 짧은 선택용).
+ * ja를 생략하면 영어로 폴백한다 — 새 문구는 반드시 ja까지 채울 것. */
+export const pick = <T>(ko: T, en: T, ja: T = en): T =>
+  i18n.locale === "ko" ? ko : i18n.locale === "ja" ? ja : en;

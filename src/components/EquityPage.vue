@@ -369,6 +369,62 @@ const M = {
       unknown: "Something went wrong during the calculation.",
     } as Record<string, string>,
   },
+  ja: {
+    intro:
+      "自分のハンドが相手のハンド（またはレンジ）に勝つ確率です。ボードを空のままにするとプリフロップ、" +
+      "3・4・5枚を選ぶとフロップ・ターン・リバー時点の勝率を計算します。",
+    heroTitle: "① 自分のハンド",
+    heroHint: "下のカード一覧から2枚選んでください",
+    fill: "ここに入力",
+    villainTitle: "② 相手",
+    modeHand: "ハンド",
+    modeRange: "レンジ",
+    rangePlaceholder: "例: 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "プリフロップレンジ表の[レンジをコピー]をそのまま貼り付けられます。" +
+      "「K8s:0.75」のようなウェイト付きの表記もそのまま反映されます。",
+    anyTwo: "すべて（ランダムハンド）",
+    rangeError: (token: string) => `解釈できない表記: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos}コンボ · 全体の${percent}%`,
+    boardTitle: "③ ボード",
+    boardHintEmpty: "空のままならプリフロップ（3・4・5枚も可）",
+    boardHintBad: "ボードは0・3・4・5枚のみ有効です",
+    boardHintOk: (n: number) => ["", "", "", "フロップ", "ターン", "リバー"][n],
+    compute: "計算",
+    computing: "計算中…",
+    stop: "中断",
+    clear: "すべてクリア",
+    resultTitle: "結果",
+    resultEmpty:
+      "自分のカード2枚と相手（ハンド2枚またはレンジ）を選んで[計算]を押してください。",
+    vsSide: (value: string) => `相手 ${value}%`,
+    win: "勝ち",
+    tie: "引き分け",
+    lose: "負け",
+    combos: "相手コンボ",
+    badgeExact: "全数計算",
+    badgeApprox: "近似 (±0.2%p)",
+    exactNote: (n: number) => `あり得る${n.toLocaleString()}通りをすべて数えました`,
+    approxNote: (n: number) =>
+      `場合の数が多すぎるため、ランダムな${n.toLocaleString()}回をサンプルにしました`,
+    howTitle: "読み方",
+    how1: "エクイティ（勝率）= 勝ち% + 引き分けの半分。今オールインした場合にポットから得られる期待シェアです。",
+    how2: "相手をレンジにすると、自分のカードやボードと重なるコンボは自動的に除外されます（カードリムーバル）。",
+    how3: "「全数計算」バッジはすべての場合を数えたという意味で、「近似」はランダムサンプルの結果です。",
+    limitTitle: "この計算機の範囲",
+    limitBody:
+      "2人のオールイン勝率のみを計算します。レンジ対レンジ、3人以上、ベットやフォールドが絡む状況の" +
+      "期待値はソルバー（カスタムスポット）が担当します。",
+    errors: {
+      "need-hero": "自分のハンド2枚を選んでください。",
+      "bad-board": "ボードは0・3・4・5枚のみ有効です。",
+      "bad-card": "カードの値が正しくありません。",
+      duplicate: "同じカードを2回使うことはできません。",
+      "empty-range": "相手のレンジが空です。",
+      "no-combos": "カードリムーバル後、相手に残るコンボがありません。",
+      unknown: "計算中にエラーが発生しました。",
+    } as Record<string, string>,
+  },
 } as const;
 
 const CAPACITY: Record<Target, number> = { hero: 2, villain: 2, board: 5 };

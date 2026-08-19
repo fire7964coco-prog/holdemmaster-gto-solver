@@ -156,6 +156,29 @@ const M = {
     betSizeSub: "Tree Settings",
     run: "Run Solver",
   },
+  // ⚠ ja도 ko/en과 같은 한 줄 제약 — 라벨을 늘리면 wrap 검사·sidebar-fit로 확인할 것
+  ja: {
+    exploreLabel: "スタディ",
+    exploreLabelSuffix: "・ツール",
+    about: "はじめに",
+    guide: "使い方",
+    presets: "学習スポット",
+    presetsBadge: "計算済み",
+    trainer: "GTOトレーナー",
+    trainerBadge: "EV採点",
+    preflop: "プリフロップ",
+    preflopBadge: "レンジ表",
+    equity: "エクイティ計算",
+    equityBadge: "勝率",
+    customLabel: "カスタムスポット",
+    customLabelSuffix: "・自分で計算",
+    oopRange: "OOPレンジ",
+    ipRange: "IPレンジ",
+    board: "ボード",
+    betSize: "ベットサイズ",
+    betSizeSub: "設定",
+    run: "計算を実行",
+  },
 } as const;
 
 export default defineComponent({

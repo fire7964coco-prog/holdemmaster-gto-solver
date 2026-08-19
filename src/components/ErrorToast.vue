@@ -66,6 +66,18 @@ const M = {
       "Paste it into a community post and we'll use it to fix the issue. It contains no personal information.",
     promptCopy: "Copy the text below",
   },
+  ja: {
+    title: "問題が1件記録されました",
+    body1: "画面の表示がおかしかった場合はお知らせください。内容は",
+    bodyB1: "この端末にのみ",
+    body2: "保存され、送るかどうかはご自身で決められます。",
+    copied: "コピーしました",
+    copyButton: "エラー内容をコピー",
+    close: "閉じる",
+    copiedHint:
+      "コミュニティの投稿に貼り付けていただければ、修正に役立てます。個人情報は含まれていません。",
+    promptCopy: "以下の内容をコピーしてください",
+  },
 } as const;
 
 export default defineComponent({

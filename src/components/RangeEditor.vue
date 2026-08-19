@@ -142,6 +142,14 @@ const M = {
     parseError: (range: string) =>
       `Failed to parse range: ${range || "(empty string)"}`,
   },
+  ja: {
+    clear: "クリア",
+    errorPrefix: "エラー:",
+    weight: "ウェイト:",
+    combos: "コンボ",
+    parseError: (range: string) =>
+      `レンジを解析できません: ${range || "(空の文字列)"}`,
+  },
 } as const;
 
 import { C } from "../theme";

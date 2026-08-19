@@ -80,6 +80,12 @@ const M = {
     draws: "Draws",
     noDraws: "No draw info",
   },
+  ja: {
+    hands: "ハンド",
+    noHands: "表示するハンドがありません",
+    draws: "ドロー",
+    noDraws: "ドロー情報なし",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)

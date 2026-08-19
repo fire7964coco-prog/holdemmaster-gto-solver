@@ -532,6 +532,40 @@ const M = {
     noResults: "No results",
     action: (name: string): string => name,
   },
+  ja: {
+    summary: "サマリー",
+    barWidth: "バーの幅:",
+    normalized: "正規化",
+    absolute: "絶対値",
+    full: "全体",
+    display: "表示:",
+    actionPct: "アクション %",
+    actionEv: "アクション EV",
+    exportCsv: "サマリーをCSVファイルにエクスポート",
+    all: "すべて",
+    hand: "ハンド",
+    strategy: "戦略",
+    weightBar: "ウェイト (バー)",
+    weight: "ウェイト",
+    turn: "ターン",
+    river: "リバー",
+    comboBar: "コンボ (バー)",
+    combos: "コンボ",
+    noReport: (chanceType: string) =>
+      `${chanceType === "turn" ? "ターン" : "リバー"}のレポートはありません`,
+    noResults: "結果がありません",
+    action: (name: string): string =>
+      (
+        {
+          Fold: "フォールド",
+          Check: "チェック",
+          Call: "コール",
+          Bet: "ベット",
+          Raise: "レイズ",
+          "All-in": "オールイン",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

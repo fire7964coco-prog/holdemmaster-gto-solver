@@ -53,17 +53,19 @@ export const trackOutbound = (url: string, placement: OutboundPlacement) => {
 export const MAIN_SITE = "https://www.holdemmaster.com";
 
 /*
- * 본체는 언어별 URL(hreflang)을 따로 둔다 — EN 화면에서 나가는 링크는 EN 페이지로만.
- * (2026-08-19 사용자 지적 + 본체 회신 reply-to-solver-2026-08-19.md: /en/solver 오픈됨)
- * EN 등가가 «실재하는» 경로만 등재한다. 없는 경로(/community, 블로그 글)는 여기서
- * 바꿔치기하지 않는다 — 화면 쪽에서 링크 자체를 숨겨야 한다 (404로 보내면 안 되므로).
+ * 본체는 언어별 URL(hreflang)을 따로 둔다 — 외국어 화면에서 나가는 링크는 그 언어
+ * 페이지로만. (2026-08-19 사용자 지적 + 본체 회신: /en/solver 오픈. /ja는 홈만 실재)
+ * 언어별로 «실재하는» 경로만 등재한다. 표에 없는 경로는 빈 문자열을 돌려주므로
+ * 화면 쪽에서 v-if로 링크 자체를 숨겨야 한다 (한국어 페이지나 404로 보내지 않는다).
  */
-const EN_PATHS: Record<string, string> = {
-  "": "/en",
-  "/solver": "/en/solver",
+const LOCALE_PATHS: Record<string, Record<string, string>> = {
+  en: { "": "/en", "/solver": "/en/solver" },
+  ja: { "": "/ja" }, // /ja/solver·/ja/community는 아직 없다 (2026-08-19 실측 404)
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {
-  const localized = i18n.locale === "en" ? EN_PATHS[path] ?? path : path;
+  const map = LOCALE_PATHS[i18n.locale];
+  const localized = map ? map[path] : path;
+  if (localized === undefined) return ""; // 이 언어에 등가 페이지 없음 → 링크 숨김
   return trackOutbound(`${MAIN_SITE}${localized}`, placement);
 };

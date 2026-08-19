@@ -132,6 +132,22 @@ const M = {
     equity: "Equity",
     action: (name: string): string => name,
   },
+  ja: {
+    strategyCombos: "戦略 (コンボ)",
+    strategy: "戦略",
+    equity: "エクイティ",
+    action: (name: string): string =>
+      (
+        {
+          Fold: "フォールド",
+          Check: "チェック",
+          Call: "コール",
+          Bet: "ベット",
+          Raise: "レイズ",
+          "All-in": "オールイン",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

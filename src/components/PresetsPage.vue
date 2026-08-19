@@ -136,6 +136,20 @@ const M = {
     footnote:
       "Ranges are approximations of standard 100bb online play. Load a spot, tweak the ranges, and compare — a great way to study.",
   },
+  ja: {
+    infoBtn1: "[⚡ 結果をすぐ見る]",
+    infoText1:
+      "を押すと結果がすぐに表示されます。レンジを変えたり、ターン・リバーまで探索したいときだけ",
+    infoBtn2: "[自分で計算]",
+    infoText2: "を使ってください。",
+    pot: "ポット",
+    stack: "スタック",
+    articleLink: "解説を見る",
+    viewResults: "結果をすぐ見る",
+    solveYourself: "自分で計算",
+    footnote:
+      "レンジは100bbオンライン標準の近似値です。読み込んだ後、自由に調整して比較してみるのも良い勉強になります。",
+  },
 } as const;
 
 export default defineComponent({
@@ -232,7 +246,7 @@ export default defineComponent({
 
     // EN posts don't exist yet — return "" so the v-if hides the link in English
     const articleUrl = (p: Preset) =>
-      i18n.locale === "en"
+      i18n.locale !== "ko"
         ? ""
         : trackOutbound(ARTICLE_URLS[p.id] ?? "", "preset-card");
 

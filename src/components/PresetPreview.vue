@@ -163,6 +163,18 @@ const M = {
     playerLabel: "Player:",
     oopHint: "Strategy for the player who acts first",
   },
+  ja: {
+    backToList: "← 一覧へ",
+    pot: "ポット",
+    stack: "スタック",
+    flopOnlyNote: "フロップ戦略です。ターン・リバーまでクリックして探索するには →",
+    solveThisSpot: "このスポットを自分で計算する",
+    readArticle: "このスポットの解説を読む",
+    loadError: (e: string) => `計算済みの結果を読み込めませんでした: ${e}`,
+    loading: "結果を読み込み中...",
+    playerLabel: "プレイヤー:",
+    oopHint: "最初にアクションするプレイヤーの戦略です",
+  },
 } as const;
 
 type PreviewData = {
@@ -227,7 +239,7 @@ export default defineComponent({
 
     // EN posts don't exist yet — return "" so the v-if hides the link in English
     const articleUrl = computed(() =>
-      i18n.locale === "en"
+      i18n.locale !== "ko"
         ? ""
         : trackOutbound(ARTICLE_URLS[props.preset.id] ?? "", "preset-preview")
     );

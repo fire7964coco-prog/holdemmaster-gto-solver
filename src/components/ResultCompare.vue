@@ -132,6 +132,10 @@ const M = {
     combos: "Combos",
     equity: "Equity",
   },
+  ja: {
+    combos: "コンボ",
+    equity: "エクイティ",
+  },
 } as const;
 
 const EPS = 2e-6;

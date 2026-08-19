@@ -149,6 +149,20 @@ export default defineComponent({
         "run-solver": "Run Solver",
         treeEdit: "Tree Preview & Edit",
       },
+      ja: {
+        about: "はじめに",
+        guide: "使い方 — 手順どおりに",
+        presets: "学習スポット — ワンクリック例題",
+        trainer: "GTOトレーナー — 選択のEVを確認",
+        preflop: "プリフロップレンジ表 — オープン & ディフェンス",
+        equity: "エクイティ計算 — ハンド・レンジの勝率",
+        "oop-range": "OOPレンジ",
+        "ip-range": "IPレンジ",
+        board: "ボード",
+        "tree-config": "ツリー設定",
+        "run-solver": "ソルバーを実行",
+        treeEdit: "ツリーのプレビュー & 編集",
+      },
     } as const;
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];

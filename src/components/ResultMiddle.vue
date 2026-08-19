@@ -248,6 +248,30 @@ const M = {
     strategyCombos: "Strategy (Combos)",
     equity: "Equity",
   },
+  ja: {
+    modeLabels: {
+      basics: "基本",
+      graphs: "グラフ",
+      compare: "比較",
+      turn: "ターン",
+      river: "リバー",
+    } as Record<string, string>,
+    player: "プレイヤー:",
+    auto: (player: string) => `自動 (${player})`,
+    barHeight: "バーの高さ:",
+    normalized: "正規化",
+    absolute: "絶対値",
+    full: "全体",
+    suit: "スート:",
+    grouped: "グループ",
+    individual: "個別",
+    display: "表示:",
+    strategy: "戦略",
+    weight: "ウェイト",
+    chart: "チャート:",
+    strategyCombos: "戦略 (コンボ)",
+    equity: "エクイティ",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

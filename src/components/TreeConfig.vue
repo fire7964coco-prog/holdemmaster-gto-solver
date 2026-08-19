@@ -826,6 +826,64 @@ const M = {
     boardMismatchHint:
       'To discard the edited tree, click the "Clear Edits & Unlock" button.',
   },
+  ja: {
+    chipNote:
+      "金額は整数チップ単位で入力します(カスタムスポットでは任意のチップ単位を使用)。bbで考える場合は10チップ=1bbを推奨します。",
+    startingPot: "スタートポット:",
+    effectiveStack: "有効スタック:",
+    rake: "レーキ:",
+    rakeCap: "レーキキャップ:",
+    reset: "クリア",
+    error: "エラー:",
+    warning: "警告:",
+    oopBetSizes: "OOP ベットサイズ",
+    donkOption: "ドンクベットに別のサイズを使用",
+    howToInput: "入力方法",
+    inputHelpIntro:
+      "複数のベットサイズをカンマまたはスペースで区切って、以下のいずれの形式でも入力できます。空欄の場合、ベットやレイズは行いません。",
+    inputHelpPercent:
+      'ポットに対するパーセントを表す数値(例: "50")。レイズの場合、まずコールし、その後のポットに対して指定したパーセント分を上乗せしてサイズを計算します。たとえばベット前のポットが100で相手が75をベットした場合、50%レイズは 75 + (100 + 75 + 75) * 50% = 200 になります。',
+    inputHelpMultiple:
+      '直前のベットサイズの倍数(例: "2.5x")。レイズでのみ使用できます。',
+    inputHelpAllin: 'オールイン(例: "a")。',
+    inputHelpFixed:
+      '固定額の上乗せ(例: "100c")。レイズの場合はレイズ回数の上限も指定できます(例: "20c3r")。',
+    inputHelpGeometric:
+      'ジオメトリックサイズ、つまり残りスタックを指定した回数の同一パーセントのベットに分割する方式です(例: "3e")。たとえば現在のポットが100で有効スタックが400の場合、"2e"は100のベットになります。"e"の前の数字を省略すると、残りのストリート数が使われます(フロップ=3、ターン=2、リバー=1)。レイズの場合は指定した数字からそれまでのレイズ回数を引きます。たとえば"3e"はリレイズ時に"2e"になります。"e"の後ろに数字を付けて最大パーセントの上限を指定することもできます(例: "2e200")。',
+    flop: "フロップ",
+    turn: "ターン",
+    river: "リバー",
+    bet: "ベット:",
+    raise: "レイズ:",
+    donk: "ドンク:",
+    ipBetSizes: "IP ベットサイズ",
+    addAllInLabel: "オールイン追加のしきい値:",
+    addAllInHelp:
+      "可能な最大ベットサイズとポットの比率がこのしきい値を下回るすべてのノードにオールインアクションを追加します。",
+    forceAllInLabel: "強制オールインのしきい値:",
+    forceAllInHelp1:
+      "相手がベットアクションをコールした後のSPR(スタック/ポット比)がこのしきい値を下回る場合、そのベットアクションをオールインアクションに置き換えます。推奨値は15%〜20%程度です。",
+    forceAllInHelp2:
+      "このオプションはPioSOLVERの「all-in threshold」に似ています。PioSOLVERは、ポットに投入した金額と初期スタックの比率がしきい値を超えると、ベットアクションをオールインに置き換えます。",
+    forceAllInHelp3:
+      "端数の丸めを無視すると、変換式は次のとおりです(s = 初期SPR、r = PioSOLVERのしきい値):",
+    forceAllInFormula: "しきい値 = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "マージのしきい値:",
+    mergingHelp1: "似たサイズのベットアクションを1つにマージします。",
+    mergingHelp2:
+      "アルゴリズムはPioSOLVERと同じです。つまり、最大のベットサイズ(= ポットのX%)を選び、次の不等式を満たすサイズ(= ポットのY%)の他のベットアクションをすべて削除します:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + しきい値.",
+    mergingHelp3:
+      "残ったベットのうち次に大きいベットサイズでこの処理を繰り返します。",
+    treePreviewEdit: "ツリーのプレビュー & 編集",
+    clearEditUnlock: "編集をクリア & ロック解除",
+    addedLines: "追加されたライン:",
+    removedLines: "削除されたライン:",
+    boardMismatch: (expected: number, actual: number) =>
+      `編集されたツリーは${expected}枚のボードを想定していますが、現在のボードは${actual}枚です。`,
+    boardMismatchHint:
+      "編集されたツリーを破棄するには「編集をクリア & ロック解除」ボタンをクリックしてください。",
+  },
 } as const;
 
 type ConfigValue = {
@@ -891,27 +949,29 @@ export default defineComponent({
       const errors: string[] = [];
       if (config.startingPot <= 0) {
         errors.push(
-          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive")
+          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スタートポットは正の値である必要があります")
         );
       }
       if (config.startingPot > MAX_AMOUNT) {
         errors.push(
           pick(
             `스타팅 팟은 ${MAX_AMOUNT} 이하여야 합니다`,
-            `Starting pot must not exceed ${MAX_AMOUNT}`
+            `Starting pot must not exceed ${MAX_AMOUNT}`,
+            `スタートポットは${MAX_AMOUNT}以下である必要があります`
           )
         );
       }
       if (config.startingPot % 1 !== 0) {
         errors.push(
-          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer")
+          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スタートポットは整数である必要があります")
         );
       }
       if (config.effectiveStack <= 0) {
         errors.push(
           pick(
             "유효 스택은 양수여야 합니다",
-            "Effective stack must be positive"
+            "Effective stack must be positive",
+            "有効スタックは正の値である必要があります"
           )
         );
       }
@@ -919,7 +979,8 @@ export default defineComponent({
         errors.push(
           pick(
             `유효 스택은 ${MAX_AMOUNT} 이하여야 합니다`,
-            `Effective stack must not exceed ${MAX_AMOUNT}`
+            `Effective stack must not exceed ${MAX_AMOUNT}`,
+            `有効スタックは${MAX_AMOUNT}以下である必要があります`
           )
         );
       }
@@ -927,30 +988,32 @@ export default defineComponent({
         errors.push(
           pick(
             "유효 스택은 정수여야 합니다",
-            "Effective stack must be an integer"
+            "Effective stack must be an integer",
+            "有効スタックは整数である必要があります"
           )
         );
       }
       if (config.rakePercent < 0) {
         errors.push(
-          pick("레이크는 음수일 수 없습니다", "Rake must not be negative")
+          pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません")
         );
       }
       if (config.rakePercent > 100) {
         errors.push(
-          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%")
+          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません")
         );
       }
       if (config.rakeCap < 0) {
         errors.push(
-          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative")
+          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません")
         );
       }
       if (config.rakeCap > 3 * MAX_AMOUNT) {
         errors.push(
           pick<string>(
             `레이크 캡은 ${3 * MAX_AMOUNT} 이하여야 합니다`,
-            `Rake cap must not exceed ${3 * MAX_AMOUNT}`
+            `Rake cap must not exceed ${3 * MAX_AMOUNT}`,
+            `レーキキャップは${3 * MAX_AMOUNT}以下である必要があります`
           )
         );
       }
@@ -962,36 +1025,36 @@ export default defineComponent({
       const isDonk = true;
       const betConfig = [
         {
-          name: pick("OOP 플랍 벳", "OOP flop bet"),
+          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット"),
           res: config.oopFlopBetSanitized,
         },
         {
-          name: pick("OOP 플랍 레이즈", "OOP flop raise"),
+          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ"),
           res: config.oopFlopRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 벳", "OOP turn bet"),
+          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット"),
           res: config.oopTurnBetSanitized,
         },
         {
-          name: pick("OOP 턴 레이즈", "OOP turn raise"),
+          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ"),
           res: config.oopTurnRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 덩크", "OOP turn donk"),
+          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク"),
           res: config.oopTurnDonkSanitized,
           isDonk,
         },
         {
-          name: pick("OOP 리버 벳", "OOP river bet"),
+          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット"),
           res: config.oopRiverBetSanitized,
         },
         {
-          name: pick("OOP 리버 레이즈", "OOP river raise"),
+          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ"),
           res: config.oopRiverRaiseSanitized,
         },
         {
-          name: pick("OOP 리버 덩크", "OOP river donk"),
+          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク"),
           res: config.oopRiverDonkSanitized,
           isDonk,
         },
@@ -1008,27 +1071,27 @@ export default defineComponent({
       const errors: string[] = [];
       const betConfig = [
         {
-          name: pick("IP 플랍 벳", "IP flop bet"),
+          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット"),
           res: config.ipFlopBetSanitized,
         },
         {
-          name: pick("IP 플랍 레이즈", "IP flop raise"),
+          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ"),
           res: config.ipFlopRaiseSanitized,
         },
         {
-          name: pick("IP 턴 벳", "IP turn bet"),
+          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット"),
           res: config.ipTurnBetSanitized,
         },
         {
-          name: pick("IP 턴 레이즈", "IP turn raise"),
+          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ"),
           res: config.ipTurnRaiseSanitized,
         },
         {
-          name: pick("IP 리버 벳", "IP river bet"),
+          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット"),
           res: config.ipRiverBetSanitized,
         },
         {
-          name: pick("IP 리버 레이즈", "IP river raise"),
+          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ"),
           res: config.ipRiverRaiseSanitized,
         },
       ];
@@ -1046,7 +1109,8 @@ export default defineComponent({
         errors.push(
           pick(
             "올인 추가 임계값은 음수일 수 없습니다",
-            "Add all-in threshold must not be negative"
+            "Add all-in threshold must not be negative",
+            "オールイン追加のしきい値は負の値にできません"
           )
         );
       }
@@ -1054,7 +1118,8 @@ export default defineComponent({
         errors.push(
           pick(
             "강제 올인 임계값은 음수일 수 없습니다",
-            "Force all-in threshold must not be negative"
+            "Force all-in threshold must not be negative",
+            "強制オールインのしきい値は負の値にできません"
           )
         );
       }
@@ -1062,7 +1127,8 @@ export default defineComponent({
         errors.push(
           pick(
             "병합 임계값은 음수일 수 없습니다",
-            "Merging threshold must not be negative"
+            "Merging threshold must not be negative",
+            "マージのしきい値は負の値にできません"
           )
         );
       }
@@ -1075,7 +1141,8 @@ export default defineComponent({
         warnings.push(
           pick(
             "강제 올인 임계값을 30%보다 높게 설정하는 것은 권장되지 않습니다.\n의미는 도움말을 참고해 주세요.",
-            "Setting the force all-in threshold higher than 30% is not recommended.\nPlease see the help for what it means."
+            "Setting the force all-in threshold higher than 30% is not recommended.\nPlease see the help for what it means.",
+            "強制オールインのしきい値を30%より高く設定することは推奨されません。\n詳しくはヘルプをご覧ください。"
           )
         );
       }
@@ -1093,7 +1160,8 @@ export default defineComponent({
         errors.push(
           pick(
             "잘못된 라인이 발견되었습니다 (손상된 설정을 불러왔나요?)",
-            "Invalid line found (loaded a broken configuration?)"
+            "Invalid line found (loaded a broken configuration?)",
+            "無効なラインが見つかりました(破損した設定を読み込みましたか?)"
           )
         );
       }
@@ -1109,7 +1177,8 @@ export default defineComponent({
         errors.push(
           pick(
             "잘못된 설정입니다 (손상된 설정을 불러왔나요?)",
-            "Invalid configuration (loaded a broken configuration?)"
+            "Invalid configuration (loaded a broken configuration?)",
+            "無効な設定です(破損した設定を読み込みましたか?)"
           )
         );
       }

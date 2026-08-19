@@ -81,9 +81,20 @@ const actionLabelsEn: Record<string, string> = {
   Allin: "All-In",
   "All-in": "All-In",
 };
+const actionLabelsJa: Record<string, string> = {
+  Fold: "フォールド",
+  Check: "チェック",
+  Call: "コール",
+  Bet: "ベット",
+  Raise: "レイズ",
+  Allin: "オールイン",
+  "All-in": "オールイン",
+};
 const actionName = (name: string) =>
   i18n.locale === "ko"
     ? actionLabelsKo[name] ?? name
+    : i18n.locale === "ja"
+    ? actionLabelsJa[name] ?? name
     : actionLabelsEn[name] ?? name;
 
 export const trainerCategory = (
@@ -95,7 +106,7 @@ export const trainerCategory = (
 };
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
-  const labels: Record<"ko" | "en", Record<TrainerCategory, string>> = {
+  const labels: Record<"ko" | "en" | "ja", Record<TrainerCategory, string>> = {
     ko: {
       all: "전체",
       srp: "싱글레이즈팟",
@@ -107,6 +118,12 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       srp: "Single Raised",
       "3bp": "3-Bet Pot",
       blind: "Blind vs Blind",
+    },
+    ja: {
+      all: "すべて",
+      srp: "シングルレイズポット",
+      "3bp": "3ベットポット",
+      blind: "ブラインドバトル",
     },
   };
   return labels[i18n.locale][category];
@@ -127,6 +144,8 @@ export const trainerActionLabel = (
     const pct = Math.round((value * 100) / pot);
     return i18n.locale === "ko"
       ? `${label} ${amount} (${pct}% 팟)`
+      : i18n.locale === "ja"
+      ? `${label} ${amount} (${pct}% ポット)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return `${label} ${amount}`;

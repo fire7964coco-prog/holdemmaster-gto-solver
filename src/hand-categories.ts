@@ -81,11 +81,46 @@ export const DRAW_LABELS_EN: Record<DrawKey, string> = {
   no_draw: "No Draw",
 };
 
+export const MADE_LABELS_JA: Record<MadeKey, string> = {
+  straight_flush: "ストレートフラッシュ",
+  quads: "クワッズ",
+  full_house: "フルハウス",
+  flush: "フラッシュ",
+  straight: "ストレート",
+  trips: "トリップス",
+  two_pair: "ツーペア",
+  overpair: "オーバーペア",
+  top_pair: "トップペア",
+  second_pair: "セカンドペア",
+  weak_pair: "ウィークペア",
+  underpair: "アンダーペア",
+  ace_high: "Aハイ",
+  king_high: "Kハイ",
+  nothing: "役なし",
+};
+
+export const DRAW_LABELS_JA: Record<DrawKey, string> = {
+  combo_draw: "コンボドロー",
+  flush_draw: "フラッシュドロー",
+  oesd: "オープンエンド",
+  gutshot: "ガットショット",
+  backdoor_fd: "バックドアフラッシュ",
+  no_draw: "ドローなし",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
-  i18n.locale === "ko" ? MADE_LABELS : MADE_LABELS_EN;
+  i18n.locale === "ko"
+    ? MADE_LABELS
+    : i18n.locale === "ja"
+    ? MADE_LABELS_JA
+    : MADE_LABELS_EN;
 export const drawLabels = () =>
-  i18n.locale === "ko" ? DRAW_LABELS : DRAW_LABELS_EN;
+  i18n.locale === "ko"
+    ? DRAW_LABELS
+    : i18n.locale === "ja"
+    ? DRAW_LABELS_JA
+    : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [
   "straight_flush",

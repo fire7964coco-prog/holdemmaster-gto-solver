@@ -74,6 +74,14 @@ const M = {
     warnBody: (n: number) =>
       `The edited tree assumes a ${n}-card board.`,
   },
+  ja: {
+    placeholder: "例: AsKd7c",
+    clear: "クリア",
+    randomFlop: "ランダムフロップ",
+    warnLabel: "注意:",
+    warnBody: (n: number) =>
+      `編集されたツリーはボードカード${n}枚を前提としています。`,
+  },
 } as const;
 
 export default defineComponent({

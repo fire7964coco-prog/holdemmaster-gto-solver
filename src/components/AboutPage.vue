@@ -100,7 +100,11 @@
         </div>
       </div>
       <!-- 본체 랜딩(정보형 콘텐츠)으로 연결 — 앱은 도구, 랜딩은 설명 역할 분담 -->
-      <div class="mt-5 pt-4 border-t border-neutral-700 text-[0.8125rem] text-neutral-500">
+      <!-- 그 언어의 랜딩이 본체에 없으면 문단째 숨긴다 (ja 등) -->
+      <div
+        v-if="landingUrl"
+        class="mt-5 pt-4 border-t border-neutral-700 text-[0.8125rem] text-neutral-500"
+      >
         {{ L.landingBefore }}
         <a
           :href="landingUrl"
@@ -229,6 +233,45 @@ const M = {
     creditBrand: "HoldemMaster",
     creditMid2: ". The full modified source code is published on",
     creditAfter: " under the same license.",
+  },
+  ja: {
+    community: "HoldemMaster コミュニティ",
+    heroTitle1: "GTO戦略を、",
+    heroTitle2: "ブラウザですぐに。",
+    heroSub1: "インストールも支払いも不要です。レンジとボードを入力すると、",
+    heroSub2: "状況ごとの最適戦略をお使いの端末上で直接計算します。",
+    ctaPresets: "例題の結果をすぐ見る",
+    ctaTrainer: "GTOトレーナー",
+    ctaDaily: "今日のGTO問題",
+    dailyDone: "完了",
+    ctaGuide: "使い方を見る",
+    ctaInstall: "ホーム画面に追加",
+    installNote:
+      "インストールすると学習スポットとトレーナーが端末に保存され、インターネットが切れても問題を解けます。プログラムではなくブラウザのショートカットなので、権限を要求しません —",
+    installSafe: "安全ですか？",
+    features: [
+      { title: "無料", desc: "回数制限なしで全機能をそのまま" },
+      { title: "オフライン学習", desc: "ホーム画面に追加すればインターネットなしでも" },
+      { title: "高速計算", desc: "マルチスレッドでデスクトップソルバー級" },
+      { title: "GTOトレーナー", desc: "問題を解いてEVロスで採点" },
+    ],
+    stepsTitle: "初めての方へ",
+    steps: [
+      "学習スポットで好きなスポットの[結果をすぐ見る]を押してください — 待ち時間なしで結果が表示されます",
+      "使い方で結果画面の読み方を確認しましょう",
+      "GTOトレーナーで問題を解いてみましょう — 自分の選択が何bbの損失かを教えてくれます",
+      "慣れてきたらカスタムスポット（①〜⑤）で自分のハンドを直接計算してみましょう",
+    ],
+    landingBefore: "GTOソルバーとは何か、結果をどう読むかを先に記事で読みたい方は",
+    landingLink: "HoldemMasterソルバーの紹介・使い方",
+    landingAfter: "をご覧ください。",
+    notes:
+      "iOS・Safariではブラウザの制約によりシングルスレッドで動作するため、計算が遅くなります — macOSではChromeを推奨します。使用可能なメモリは4GBに制限されており（WebAssemblyの上限）、大きなスポットの直接計算はPCの方が快適です。",
+    creditBefore: "本アプリは",
+    creditMid1: "（Wataru Inariba作、AGPL-3.0）をベースに",
+    creditBrand: "HoldemMaster",
+    creditMid2: "がローカライズ・改良したバージョンで、修正した全ソースコードは",
+    creditAfter: "に同じライセンスで公開されています。",
   },
 } as const;
 

@@ -385,6 +385,55 @@ const M = {
       `Exploitability: ${value} (${percent})`,
     timeLine: (seconds: string) => `Time elapsed: ${seconds} seconds`,
   },
+  ja: {
+    sharedSpotBanner:
+      "共有されたスポットを読み込みました — [ツリーを作成] → [ソルバーを実行] を押すと計算が始まります。",
+    numThreadsLabel: "スレッド数:",
+    buildTree: "ツリーを作成",
+    copied: "コピーしました!",
+    shareSpot: "🔗 スポットを共有",
+    statusLabel: "ステータス:",
+    statusNotLoaded: "モジュールがまだ読み込まれていません",
+    statusBuilding: "ツリーを作成中...",
+    statusError: (message: string) => `エラー: ${message}`,
+    statusBuilt: (threads: number) =>
+      `ツリーの作成が完了しました(スレッド${threads}個)`,
+    precisionMode: "精度モード:",
+    precisionTipIntro:
+      "精度モードは主にメモリ使用量に影響します。ほかにもいくつかの違いがあります。",
+    precisionTipFp:
+      "32ビット浮動小数点(FP): メモリ使用量が上限(3.9GB)以下であればこのモードを推奨します。有効数字は約7桁で、パフォーマンスも優れています。",
+    precisionTipInt:
+      "16ビット整数: 32ビットFPモードでメモリ上限を超える場合の代替手段です。有効数字が約4桁のため、目標誤差0.1%未満には適さず、パフォーマンスも32ビットFPより劣ります。",
+    fp32Label: "32ビットFP:",
+    int16Label: "16ビット整数:",
+    ramNeeded: (size: string) => `RAM ${size} が必要`,
+    limitExceeded: "(上限超過)",
+    ramLimit: "RAM上限: 3.9GB (= Wasmの上限4GB - 余裕分0.1GB)",
+    targetLabel: "目標誤差(exploitability):",
+    exploitTipIntro:
+      "ナッシュ均衡までの許容誤差を指定します。値が低いほど正確な結果になりますが、計算時間は長くなります。",
+    exploitTipDetailLabel: "詳細:",
+    exploitTipDetail:
+      "ナッシュ均衡の解では、両プレイヤーの戦略が互いに対するMES(最大限にエクスプロイトする戦略)になります。この性質を利用して、得られた戦略とナッシュ均衡との距離を次のように定義します:",
+    exploitTipFormula: "距離 = (相手のMESのEV) - (相手の実際のEV)",
+    exploitTipOutro:
+      "この距離は常に0以上で、得られた戦略がナッシュ均衡の一部である場合にのみ0になります。エクスプロイタビリティ(exploitability)は両プレイヤーの距離の平均として定義されます。",
+    maxIterationsLabel: "最大イテレーション数:",
+    runSolver: "ソルバーを実行",
+    stop: "停止",
+    pause: "一時停止",
+    resume: "再開",
+    solving: "計算中...",
+    finalizing: "仕上げ処理中...",
+    pausedStatus: "一時停止中。",
+    finished: "計算が完了しました!",
+    allocatingMemory: "メモリを割り当て中...",
+    iterations: (count: number) => `イテレーション: ${count}回`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `誤差(exploitability): ${value} (${percent})`,
+    timeLine: (seconds: string) => `所要時間: ${seconds}秒`,
+  },
 } as const;
 
 const maxMemoryUsage = 3.9 * 1024 * 1024 * 1024; // 3.9 GB
@@ -397,91 +446,95 @@ const checkConfig = (
   if (config.board.length < 3) {
     return pick(
       "보드에는 최소 3장의 카드가 필요합니다",
-      "The board must contain at least 3 cards"
+      "The board must contain at least 3 cards",
+      "ボードには少なくとも3枚のカードが必要です"
     );
   }
 
   if (config.startingPot <= 0) {
     return pick(
       "시작 팟은 0보다 커야 합니다",
-      "Starting pot must be positive"
+      "Starting pot must be positive",
+      "スタートポットは正の値である必要があります"
     );
   }
 
   if (config.startingPot > MAX_AMOUNT) {
-    return pick("시작 팟이 너무 큽니다", "Starting pot is too large");
+    return pick("시작 팟이 너무 큽니다", "Starting pot is too large", "スタートポットが大きすぎます");
   }
 
   if (config.startingPot % 1 !== 0) {
-    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer");
+    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スタートポットは整数である必要があります");
   }
 
   if (config.effectiveStack <= 0) {
     return pick(
       "유효 스택은 0보다 커야 합니다",
-      "Effective stack must be positive"
+      "Effective stack must be positive",
+      "有効スタックは正の値である必要があります"
     );
   }
 
   if (config.effectiveStack > MAX_AMOUNT) {
-    return pick("유효 스택이 너무 큽니다", "Effective stack is too large");
+    return pick("유효 스택이 너무 큽니다", "Effective stack is too large", "有効スタックが大きすぎます");
   }
 
   if (config.effectiveStack % 1 !== 0) {
     return pick(
       "유효 스택은 정수여야 합니다",
-      "Effective stack must be an integer"
+      "Effective stack must be an integer",
+      "有効スタックは整数である必要があります"
     );
   }
 
   const betConfig = [
     {
       s: config.oopFlopBetSanitized,
-      kind: pick("OOP 플랍 벳", "OOP flop bet"),
+      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット"),
     },
     {
       s: config.oopFlopRaiseSanitized,
-      kind: pick("OOP 플랍 레이즈", "OOP flop raise"),
+      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ"),
     },
     {
       s: config.oopTurnBetSanitized,
-      kind: pick("OOP 턴 벳", "OOP turn bet"),
+      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット"),
     },
     {
       s: config.oopTurnRaiseSanitized,
-      kind: pick("OOP 턴 레이즈", "OOP turn raise"),
+      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ"),
     },
     {
       s: config.oopRiverBetSanitized,
-      kind: pick("OOP 리버 벳", "OOP river bet"),
+      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット"),
     },
     {
       s: config.oopRiverRaiseSanitized,
-      kind: pick("OOP 리버 레이즈", "OOP river raise"),
+      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ"),
     },
     {
       s: config.ipFlopBetSanitized,
-      kind: pick("IP 플랍 벳", "IP flop bet"),
+      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット"),
     },
     {
       s: config.ipFlopRaiseSanitized,
-      kind: pick("IP 플랍 레이즈", "IP flop raise"),
+      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ"),
     },
     {
       s: config.ipTurnBetSanitized,
-      kind: pick("IP 턴 벳", "IP turn bet"),
+      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット"),
     },
     {
       s: config.ipTurnRaiseSanitized,
-      kind: pick("IP 턴 레이즈", "IP turn raise"),
+      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ"),
     },
     {
       s: config.ipRiverBetSanitized,
-      kind: pick("IP 리버 벳", "IP river bet"),
+      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット"),
     },
     {
       s: config.ipRiverRaiseSanitized,
-      kind: pick("IP 리버 레이즈", "IP river raise"),
+      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ"),
     },
   ];
 
@@ -493,12 +546,12 @@ const checkConfig = (
 
   if (config.donkOption) {
     if (!config.oopTurnDonkSanitized.valid) {
-      return `${pick("OOP 턴 덩크", "OOP turn donk")}: ${
+      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク")}: ${
         config.oopTurnDonkSanitized.s
       }`;
     }
     if (!config.oopRiverDonkSanitized.valid) {
-      return `${pick("OOP 리버 덩크", "OOP river donk")}: ${
+      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク")}: ${
         config.oopRiverDonkSanitized.s
       }`;
     }
@@ -507,21 +560,24 @@ const checkConfig = (
   if (config.addAllInThreshold < 0) {
     return pick(
       "올인 추가 기준값이 잘못되었습니다",
-      "Invalid add all-in threshold"
+      "Invalid add all-in threshold",
+      "オールイン追加のしきい値が無効です"
     );
   }
 
   if (config.forceAllInThreshold < 0) {
     return pick(
       "강제 올인 기준값이 잘못되었습니다",
-      "Invalid force all-in threshold"
+      "Invalid force all-in threshold",
+      "強制オールインのしきい値が無効です"
     );
   }
 
   if (config.mergingThreshold < 0) {
     return pick(
       "병합 기준값이 잘못되었습니다",
-      "Invalid merging threshold"
+      "Invalid merging threshold",
+      "マージのしきい値が無効です"
     );
   }
 
@@ -531,7 +587,8 @@ const checkConfig = (
   ) {
     return pick(
       `보드가 잘못되었습니다 (${config.expectedBoardLength}장이 필요합니다)`,
-      `Invalid board (${config.expectedBoardLength} cards required)`
+      `Invalid board (${config.expectedBoardLength} cards required)`,
+      `ボードが無効です(${config.expectedBoardLength}枚必要です)`
     );
   }
 
@@ -553,7 +610,8 @@ const checkConfig = (
   ) {
     return pick(
       "잘못된 라인이 있습니다 (손상된 설정을 불러왔나요?)",
-      "Invalid line found (loaded broken configurations?)"
+      "Invalid line found (loaded broken configurations?)",
+      "無効なラインが見つかりました(破損した設定を読み込みましたか?)"
     );
   }
 
@@ -567,7 +625,8 @@ const checkConfig = (
   ) {
     return pick(
       "설정이 잘못되었습니다 (손상된 설정을 불러왔나요?)",
-      "Invalid configurations (loaded broken configurations?)"
+      "Invalid configurations (loaded broken configurations?)",
+      "設定が無効です(破損した設定を読み込みましたか?)"
     );
   }
 
@@ -811,7 +870,8 @@ export default defineComponent({
       if (!url) {
         shareError.value = pick(
           "공유하려면 OOP·IP 레인지와 보드 3장을 먼저 입력하세요.",
-          "To share a spot, enter the OOP and IP ranges and at least 3 board cards first."
+          "To share a spot, enter the OOP and IP ranges and at least 3 board cards first.",
+          "スポットを共有するには、OOPとIPのレンジ、そしてボードのカード3枚以上を先に入力してください。"
         );
         return;
       }

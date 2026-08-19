@@ -803,6 +803,108 @@ const M = {
     syncFailed: (msg: string) => `Sync failed: ${msg}`,
     signInFailed: (msg: string) => `Sign-in failed: ${msg}`,
   },
+  ja: {
+    loadFailed: "トレーナーデータを読み込めませんでした:",
+    loading: "トレーナーを準備中...",
+    review: (n: number) => `復習 ${n}問`,
+    daily: "今日のGTO問題",
+    done: "完了",
+    solved: "解答数",
+    dayStreakSuffix: "日連続",
+    bestPrefix: "/ 最高",
+    streakLabel: "連続正解",
+    totalLossLabel: "累計EVロス",
+    avgLossLabel: "平均EVロス",
+    goodRateLabel: "良い選択",
+    weaknessTitle: "弱点分析",
+    avgOfPot: (pct: string) => `平均 ポットの${pct}%`,
+    handCount: (n: number) => `(${n}問)`,
+    notSolved: "未挑戦",
+    weakestBefore: "",
+    weakestAfter: " での損失が最も大きいです —",
+    practiceThis: "このスポットだけ練習する",
+    weaknessHint: "カテゴリごとに3問以上解くと、どこが弱いかをお知らせします。",
+    accountBefore: "",
+    accountAfter: " さんのアカウントに保存中",
+    syncingNow: "同期中...",
+    syncNow: "今すぐ同期",
+    signOutLabel: "ログアウト",
+    localOnlyBefore: "学習記録は",
+    localOnlyBold: "この端末にのみ",
+    localOnlyAfter:
+      "保存されます。HoldemMasterアカウントに保存すると、他の端末でも続きから解けます。",
+    googleSignIn: "Googleで続ける",
+    kakaoSignIn: "カカオ",
+    footerLine: (nodes: number, pct: number) =>
+      `13個の教育プリセット · ${nodes}個の決定ノード · 計算目標誤差 ${pct}%`,
+    details: "詳細 ↓",
+    toAct: "の番",
+    potLabel: "ポット",
+    stackLabel: "スタック",
+    lineLabel: "ライン:",
+    boardLabel: "ボード",
+    myHand: "マイハンド",
+    yourChoice: "あなたの選択",
+    prompt: "どのアクションを選びますか？",
+    bestEvTag: " · 最高EV",
+    evLoss: "EVロス",
+    mobileDetailTitle: "アクション別の頻度とEV",
+    mixedNote:
+      "ミックス戦略は単純に不正解とせず、アクション間のEV差で評価します。",
+    dailyDone: "今日のGTO問題 完了",
+    dailyDoneDesc:
+      "今日は全員が同じ問題を解きます。結果を投稿すると、他の人の選択と比較できます。",
+    makeCard: "リザルトカードを作る",
+    boardShow: "今日のランキングを見る",
+    boardHide: "ランキングを閉じる",
+    boardLoading: "読み込み中...",
+    boardCount: (n: number) => `今日 ${n}人参加`,
+    boardMyRank: (r: number) => `自分の順位 ${r}位`,
+    boardLoginHint:
+      "ログインすると自分のニックネームもランキングに載ります。閲覧はログインなしでも可能です。",
+    boardUnavailable: "ランキングはまだ利用できません。",
+    copied: "コピーしました",
+    copyResult: "結果テキストをコピー",
+    openCommunity: "コミュニティを開く →",
+    pasteHintBefore: "コミュニティで",
+    pasteHintBold: "[✏️ 投稿する]",
+    pasteHintAfter: "を押して貼り付けてください。",
+    keepPracticing: "練習を続ける",
+    nextHand: "次の問題",
+    readArticle: "このスポットの解説を読む →",
+    viewFull: "結果全体を見る",
+    resultTitle: "採点結果",
+    resultHintBefore: "アクションを選ぶと、ここに",
+    resultHintBold: "各アクションの頻度とEV",
+    resultHintAfter: "、そして自分の選択が何bbの損だったかが表示されます。",
+    gtoNoteBefore:
+      "GTOは同じハンドでもアクションをミックスします。頻度が低い選択が即不正解ではなく、基準はEVロスです — ",
+    gtoNoteBold: "ポット対比",
+    gtoNoteAfter: " 0.35%以下は最適 · 1%以下は許容 · それ以上は復習すべきスポット。",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `このスポット(ポット ${pot}bb)では ${best}bb · ${good}bb です。`,
+    resetHistoryLabel: "学習記録をリセット",
+    cardAlt: "今日のGTO問題のリザルトカード",
+    shareApps: "アプリでシェア",
+    saveImage: "画像を保存",
+    close: "閉じる",
+    cardHintBefore:
+      "保存したカードをグループチャットやSNSに投稿してみましょう。受け取った人も今日は",
+    cardHintBold: "同じ問題",
+    cardHintAfter: "を解きます。カードに正解は含まれません。",
+    verdictBest: "最適な選択",
+    verdictGood: "許容できる選択",
+    verdictMiss: "復習すべきスポット",
+    promptCopy: "以下の内容をコピーしてください",
+    shareText:
+      "今日のGTO問題 — 私も挑戦: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "この端末のトレーナー学習記録をすべて削除しますか？",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded}件保存 · 他端末の記録${merged}件を取得`,
+    syncSaved: (uploaded: number) => `${uploaded}件保存済み`,
+    syncFailed: (msg: string) => `同期失敗: ${msg}`,
+    signInFailed: (msg: string) => `ログイン失敗: ${msg}`,
+  },
 } as const;
 
 export default defineComponent({
@@ -1192,7 +1294,7 @@ export default defineComponent({
     );
     const articleUrl = computed(() => {
       // 해설 포스팅은 한국어 블로그뿐이라 EN에서는 링크를 숨긴다 (EN posts don't exist yet)
-      if (i18n.locale === "en") return "";
+      if (i18n.locale !== "ko") return "";
       return question.value
         ? trackOutbound(
             ARTICLE_URLS[question.value.presetId] ?? "",
