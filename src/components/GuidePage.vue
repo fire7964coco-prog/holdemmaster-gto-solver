@@ -477,16 +477,16 @@ const M = {
     quickStep2Btn: "[⚡ View results]",
     quickStep2After: "— the solution appears immediately",
     quickStep3:
-      'Then use "Reading the Results Screen" below to make sense of the numbers',
+      "Then use “Reading the results screen” below to make sense of the numbers",
 
     termsTitle: "Four terms are all you need",
     termRange: "Range",
     defRange:
-      "The set of hands a player could be holding (e.g. \"they've probably got AA, KK, or AK\")",
+      "The set of hands a player could be holding (e.g., “they've probably got AA, KK, or AK”)",
     defPos:
       "Out of position (acts first — a disadvantage) / in position (acts last — an advantage). In BTN vs BB, the BB is OOP",
     termEquity: "Equity",
-    defEquity: "Your share of the pot if all-in right now — your win chance (%)",
+    defEquity: "Your share of the pot if you were all in right now — win% plus half of the ties",
     defEv: "Expected value — how much an action wins on average. Bigger is better",
 
     customTitleBefore: "Solving a custom spot — follow the ",
@@ -500,29 +500,29 @@ const M = {
       "22+ = every pocket pair · A2s+ = A2s through AKs · KTo+ = KTo through KQo. On the grid: diagonal = pocket pairs, upper right = suited, lower left = offsuit",
     exampleHeader:
       "New here? Copy these and paste them into the range inputs (standard BTN vs BB 100bb — the same ranges the Study Spots use)",
-    exOopLabel: "OOP (BB caller)",
-    exIpLabel: "IP (BTN opener)",
+    exOopLabel: "OOP (BB Caller)",
+    exIpLabel: "IP (BTN Opener)",
     copiedLabel: "Copied!",
     copyLabel: "Copy",
     step3Bold: "③ Board",
-    step3After: ' — click three flop cards, or hit "Random Flop"',
+    step3After: " — click three flop cards, or hit “Random Flop”",
     step4Bold: "④ Bet Sizes (Tree Settings)",
     step4After:
       " — leave the defaults at first. Just check the starting pot and effective stack",
     step4Hint:
-      "Custom-spot inputs are in arbitrary integer chips. To think in bb, use 10 chips = 1bb (e.g. pot 55 = 5.5bb). The Study Spots and Trainer convert on this scale automatically.",
+      "Custom-spot inputs are in arbitrary integer chips. To think in bb, use 10 chips = 1bb (e.g., pot 55 = 5.5bb). The Study Spots and Trainer convert on this scale automatically.",
     step5Bold1: "⑤ Run Solver",
     step5Mid:
-      ' — hit "Build Tree", then "Run Solver" when it finishes. Once "Solver finished!" appears, open the ',
+      " — hit “Build Tree”, then “Run Solver” when it finishes. Once “Solver finished!” appears, open the ",
     step5Bold2: "[Results]",
     step5After: " tab at the top",
     step5Hint:
       "Solving runs on your own machine and takes a few seconds to a few minutes. Use [Share Spot] on screen ⑤ to copy a link to your spot and ask about it in the community",
 
-    resultsTitle: "Reading the Results Screen",
+    resultsTitle: "Reading the results screen",
     rTerm1: "Top strip",
     rDef1:
-      "A scene picker for the action line (flop → bet → call → turn...). Click a node to see the strategy at that point",
+      "A scene picker for the action line (flop → bet → call → turn…). Click a node to see the strategy at that point",
     rTerm2: "13×13 matrix (left)",
     rDef2:
       "Each cell is a hand; the color split inside it shows action frequencies. 🟥 bet/raise (darker = bigger bet) · 🟩 check/call · dimmed cell = not in the range. GTO plays the same hand as a mixed strategy — splitting actions by frequency so your pattern can't be read",
@@ -530,7 +530,7 @@ const M = {
     rDef3: "Action frequencies (%) and combo counts across the whole range",
     rTerm4: "Hand categories (middle right)",
     rDef4:
-      "How each range connects with the board (top pair, draws...) — a quick read on who this board favors",
+      "How each range connects with the board (top pair, draws…) — a quick read on who this board favors",
     rTerm5: "Table (bottom right)",
     rDef5:
       "Per-hand weight, equity, EV, and action % — click a column header to sort",
@@ -567,14 +567,14 @@ const M = {
     install1:
       "You can install this solver to your home screen like an app (no installer file). In Chrome or Edge, use the ",
     installBold1: "install icon",
-    install2: " at the right of the address bar; in Safari on iPhone, tap ",
+    install2: " to the right of the address bar; in Safari on iPhone, tap ",
     installBold2: "Share → Add to Home Screen",
     install3:
       ". Once installed, the 13 Study Spots and the Trainer drills are stored on your device, so you can keep studying ",
     installBold3: "even on the subway with no internet",
     install4: ".",
     samsung1:
-      '* Installing from Samsung Internet triggers an "Unsafe app blocked" warning. It appears because Google doesn\'t trust the install package that browser generates — it has nothing to do with this app. ',
+      "* Installing from Samsung Internet triggers an “Unsafe app blocked” warning. It appears because Google doesn't trust the install package that the browser generates — it has nothing to do with this app. ",
     samsungBold: "Open the site in Chrome",
     samsung2:
       " and it installs with no warning; or, to proceed anyway, tap [More details] → [Install anyway] on the warning dialog.",
@@ -588,7 +588,7 @@ const M = {
 
     safeTitle: "Is it safe to install?",
     safe1:
-      'Yes. "Installing" here doesn\'t mean downloading a program onto your device — it means ',
+      "Yes. “Installing” here doesn't mean downloading a program onto your device — it means ",
     safeBold: "creating a shortcut that runs inside your browser",
     safe2:
       ". On Android, only a thin wrapper pointing at this address gets registered; everything still runs inside the browser engine. If you're skeptical, check these four things yourself — verifying beats taking our word for it.",
@@ -609,16 +609,16 @@ const M = {
     removeDef:
       "Long-press and delete like any other app, and it's gone. Nothing runs in the background, nothing is left behind",
     samsungNote2:
-      '* The "Unsafe app blocked" warning in Samsung Internet is not malware detection — Google just hasn\'t added that browser\'s install packages to its trust list yet. It doesn\'t appear when you install from Chrome.',
+      "* The “Unsafe app blocked” warning in Samsung Internet is not malware detection — Google just hasn't added that browser's install packages to its trust list yet. It doesn't appear when you install from Chrome.",
 
     studyTitle: "Suggested study plan",
     study1:
       "Work through the 13 Study Spots in order — they're a curriculum that builds as a series",
     study2:
-      'Wondering "why does this hand mix in checks?" — compare per-action EVs in the detail table',
+      "If you're wondering “why does this hand mix in checks?”, compare per-action EVs in the detail table",
     study3:
       "Drill the same spots in the GTO Trainer to make them stick — the weakness report shows which situations cost you the most EV",
-    study4: "Keep the ranges, change only the board, and compare (e.g. A72 vs 974)",
+    study4: "Keep the ranges, change only the board, and compare (e.g., A72 vs 974)",
     study5:
       "Recreate hands that confused you in real games and review them here",
 
@@ -628,7 +628,7 @@ const M = {
     tTerm2: "Solving is slow",
     tDef2: "Raise the target exploitability to 0.5%",
     tTerm3: "Results tab is blank",
-    tDef3: 'Open it after "Solver finished!" appears',
+    tDef3: "Open it after “Solver finished!” appears",
     tTerm4: "Memory limit exceeded",
     tDef4: "Switch to 16-bit integer mode, or use fewer bet sizes",
     tTerm5: "Matrix is all gray",
@@ -654,7 +654,7 @@ const M = {
     quickStep1Mobile: "上のタブで",
     quickStep1Btn: "学習スポット",
     quickStep1After: "をクリック",
-    quickStep2Before: "どれか一つのスポットを開いて",
+    quickStep2Before: "スポットを一つ開いて",
     quickStep2Btn: "[⚡ 結果をすぐ見る]",
     quickStep2After: "をクリック — 結果がすぐに表示されます",
     quickStep3:
@@ -667,23 +667,23 @@ const M = {
     defPos:
       "先に行動する側（不利）／後に行動する側（有利）。BTN vs BB では BB が OOP",
     termEquity: "エクイティ",
-    defEquity: "エクイティ（勝率）— 今この時点で勝てる確率(%)",
-    defEv: "期待値 — このアクションで平均どれだけ勝てるか。大きいほど良い",
+    defEquity: "今この時点で勝てる確率（%）",
+    defEv: "期待値 — このアクションで平均してどれだけ得をするか。大きいほど良い",
 
     customTitleBefore: "カスタムスポットの計算 — ",
     customTitleDesktop: "サイドバー",
     customTitleMobile: "上のタブ",
-    customTitleAfter: "の番号 ①→⑤ の順にそのまま",
+    customTitleAfter: "の番号①→⑤の順に進めます",
     step1Bold: "① OOPレンジ / ② IPレンジ",
     step1After:
       " — 13×13の表をクリック・ドラッグで塗るか、テキストで入力: ",
     step1Hint:
-      "22+ = すべてのポケットペア · A2s+ = A2s〜AKs · KTo+ = KTo〜KQo。表では対角線=ポケットペア、右上=スーテッド、左下=オフスート",
+      "22+ = すべてのポケットペア・A2s+ = A2s〜AKs・KTo+ = KTo〜KQo。表では対角線=ポケットペア、右上=スーテッド、左下=オフスート",
     exampleHeader:
       "初めての方はこの例をコピーしてレンジ入力欄に貼り付けてください（BTN vs BB 100bb標準 — 学習スポットと同じレンジ）",
-    exOopLabel: "OOP (BBコーラー)",
-    exIpLabel: "IP (BTNオープン)",
-    copiedLabel: "コピーしました！",
+    exOopLabel: "OOP（BBコーラー）",
+    exIpLabel: "IP（BTNオープン）",
+    copiedLabel: "コピーしました",
     copyLabel: "コピー",
     step3Bold: "③ ボード",
     step3After: " — フロップ3枚をクリックするか「ランダムフロップ」",
@@ -692,29 +692,29 @@ const M = {
       " — 最初はデフォルトのままで。スターティングポットと有効スタックだけ確認",
     step4Hint:
       "カスタム計算の入力値は任意の整数チップ単位です。bbで考えるには10チップ=1bbとして入力してください（例: ポット55 = 5.5bb）。学習スポットとトレーナーはこの基準で自動換算して表示します。",
-    step5Bold1: "⑤ 計算実行",
+    step5Bold1: "⑤ ソルバーを実行",
     step5Mid:
-      " — 「新しいツリーを作成」→ 完了したら「ソルバー実行」→「計算完了！」が表示されたら上部の ",
+      " — 「ツリーを作成」→ 完了したら「ソルバーを実行」→「計算が完了しました！」が表示されたら上部の ",
     step5Bold2: "[結果]",
     step5After: " タブをクリック",
     step5Hint:
-      "計算はお使いの端末上で行われ、数秒〜数分かかります。作ったスポットは⑤画面の[スポット共有]でリンクをコピーして、コミュニティで質問できます",
+      "計算はお使いの端末上で行われ、数秒〜数分かかります。作ったスポットは⑤画面の[スポットを共有]でリンクをコピーして、コミュニティで質問できます",
 
     resultsTitle: "結果画面の読み方",
     rTerm1: "上部ストリップ",
     rDef1:
-      "アクションの流れ（フロップ→ベット→コール→ターン...）のシーン選択。クリックした時点の戦略を表示します",
+      "アクションの流れ（フロップ→ベット→コール→ターン…）のシーン選択。クリックした時点の戦略を表示します",
     rTerm2: "左の13×13マトリクス",
     rDef2:
-      "マス=ハンド、マスの中の色の比率=アクションの割合。🟥 ベット/レイズ（濃いほど大きなベット）· 🟩 チェック/コール · 暗いマス=レンジにない。GTOは同じハンドでもアクションを「頻度で混ぜます」— パターンを読まれないためです",
+      "マス=ハンド、マスの中の色の比率=アクションの割合。🟥 ベット/レイズ（濃いほど大きなベット）・🟩 チェック/コール・暗いマス=レンジにない。GTOは同じハンドでもアクションを「頻度で混ぜます」— パターンを読まれないためです",
     rTerm3: "右上のタイル",
     rDef3: "レンジ全体でのアクション頻度(%)とコンボ数",
-    rTerm4: "右中央の分類",
+    rTerm4: "右中央の分類パネル",
     rDef4:
-      "レンジがボードに何をヒットしているか（トップペア・ドローなど）—「このボードがどちらに有利か」が一目でわかります",
-    rTerm5: "右下の表",
+      "レンジがボードとどう噛み合っているか（トップペア・ドローなど）—「このボードがどちらに有利か」が一目でわかります",
+    rTerm5: "右下の詳細表",
     rDef5:
-      "ハンドごとの比重・エクイティ・EV・アクション%の数値。列見出しをクリックで並べ替え",
+      "ハンドごとのウェイト・エクイティ・EV・アクション%の数値。列見出しをクリックで並べ替え",
 
     trainerTitle: "GTOトレーナー — 見るだけから自分で解く段階へ",
     trainerIntroBefore: "結果画面の読み方に慣れてきたら",
@@ -730,9 +730,9 @@ const M = {
     verdictBefore: "",
     verdictBold: "ポット比",
     verdictAfter:
-      "で測ります — ポットの0.35%以下 = 最適 · 1%以下 = 許容範囲 · それ以上 = 復習すべきスポット。例えばポット5.5bbのシングルレイズポットでは0.02bb・0.06bb、ポット22.5bbの3ベットポットでは0.08bb・0.23bbが境界です。",
+      "で測ります — ポットの0.35%以下 = 最適な選択・1%以下 = 許容できる選択・それ以上 = 復習すべきスポット。例えばポット5.5bbのシングルレイズポットでは0.02bb・0.06bb、ポット22.5bbの3ベットポットでは0.08bb・0.23bbが境界です。",
     verdictHint:
-      "同じ0.05bbでも、小さいポットでは大きなミス、大きいポットでは些細な差です。絶対bbで測ると3ベットポットが実際より悪く見えるため、ポット比の採点に変更しました(2026-08-15)。境界には下限(0.02bb・0.05bb)があります。計算は目標誤差0.5%までしか収束させないため、それより小さい差は計算ノイズと区別できないからです。",
+      "同じ0.05bbでも、小さいポットでは大きなミス、大きいポットでは些細な差です。絶対bbで測ると3ベットポットが実際より悪く見えるため、ポット比の採点に変更しました(2026-08-15)。境界には下限(0.02bb・0.05bb)があります。計算を目標誤差0.5%までしか収束させていないため、それより小さい差は計算ノイズと区別できないからです。",
     reviewTerm: "復習",
     reviewBefore:
       "EVロスが大きかった問題は[復習]ボタンで再出題されます。記録はデフォルトで ",
@@ -741,7 +741,7 @@ const M = {
       " 保存されます。HoldemMasterアカウントでログインすると記録がアカウントに保管され、他の端末でも続きから解けます — ログインは任意で、すべての機能はログインなしで使えます",
     filterTerm: "フィルター",
     filterDef:
-      "シングルレイズポット / 3ベットポット / ブラインドバトルから、苦手な状況だけ選んで練習",
+      "シングルレイズポット / 3ベットポット / ブラインド戦から、苦手な状況だけ選んで練習",
 
     installTitle: "ホーム画面にインストールしてオフラインで学習",
     install1:
@@ -808,7 +808,7 @@ const M = {
     tTerm2: "計算が遅い",
     tDef2: "目標誤差を0.5%に上げる",
     tTerm3: "結果タブが真っ白",
-    tDef3: "「計算完了！」が表示されてからクリック",
+    tDef3: "「計算が完了しました！」が表示されてからクリック",
     tTerm4: "メモリ上限超過",
     tDef4: "16ビット整数モードを選ぶか、ベットサイズの数を減らす",
     tTerm5: "マトリクスが灰色だけ",
@@ -819,7 +819,7 @@ const M = {
     err1: "画面が崩れたり計算が止まったりすると、この端末にエラー内容が自動的に記録されます。",
     errBold: "記録が端末の外に出ることはありません",
     err2:
-      " — 下からコピーしてコミュニティに投稿していただければ、その時に私たちが確認します。レンジや学習記録などの内容は含まれず、エラーメッセージとブラウザの種類だけが入ります。",
+      " — 下からコピーしてコミュニティに投稿していただいて、はじめて私たちが確認できます。レンジや学習記録などの内容は含まれず、エラーメッセージとブラウザの種類だけが入ります。",
     errLoggedLabel: "記録されたエラー",
     errCount: (n: number) => `${n}件`,
     errCopied: "コピーしました",
@@ -829,7 +829,7 @@ const M = {
     errPrompt: "以下の内容をコピーしてください",
   },
   es: {
-    quickTitle: "Empieza en 1 minuto — si eres nuevo, comienza aquí",
+    quickTitle: "Empieza en 1 minuto — si eres nuevo, este es tu punto de partida",
     quickStep1Desktop: "A la izquierda, haz clic en ",
     quickStep1Mobile: "En las pestañas de arriba, toca ",
     quickStep1Btn: "Spots de estudio",
@@ -845,7 +845,7 @@ const M = {
     defRange:
       "El conjunto de manos que un jugador podría tener (ej. «seguro trae AA, KK o AK»)",
     defPos:
-      "Fuera de posición (actúa primero — desventaja) / en posición (actúa al final — ventaja). En BTN vs BB, el BB está OOP",
+      "Fuera de posición (actúa primero — desventaja) / en posición (actúa al final — ventaja). En BTN vs BB, la BB está OOP",
     termEquity: "Equity",
     defEquity: "Tu parte del bote si fueras all-in ahora mismo — tu probabilidad de ganar (%)",
     defEv: "Valor esperado — cuánto gana una acción en promedio. Mientras más grande, mejor",
@@ -862,7 +862,7 @@ const M = {
     exampleHeader:
       "¿Primera vez? Copia estos ejemplos y pégalos en los campos de rango (BTN vs BB 100bb estándar — los mismos rangos de los Spots de estudio)",
     exOopLabel: "OOP (BB caller)",
-    exIpLabel: "IP (BTN open)",
+    exIpLabel: "IP (BTN open-raiser)",
     copiedLabel: "¡Copiado!",
     copyLabel: "Copiar",
     step3Bold: "③ Board",
@@ -883,7 +883,7 @@ const M = {
     resultsTitle: "Cómo leer la pantalla de resultados",
     rTerm1: "Tira superior",
     rDef1:
-      "Un selector de escenas de la línea de acción (flop → bet → call → turn...). Haz clic en un nodo para ver la estrategia en ese punto",
+      "Un selector de escenas de la línea de acción (flop → bet → call → turn…). Haz clic en un nodo para ver la estrategia en ese punto",
     rTerm2: "Matriz 13×13 (izquierda)",
     rDef2:
       "Cada celda es una mano; la división de colores muestra las frecuencias de acción. 🟥 bet/raise (más oscuro = bet más grande) · 🟩 check/call · celda apagada = fuera del rango. El GTO juega la misma mano como estrategia mixta — reparte las acciones por frecuencia para que no puedan leer tu patrón",
@@ -891,7 +891,7 @@ const M = {
     rDef3: "Frecuencias de acción (%) y número de combos de todo el rango",
     rTerm4: "Clasificación (centro derecha)",
     rDef4:
-      "Qué conectó cada rango con el board (top pair, proyectos...) — una lectura rápida de a quién favorece este board",
+      "Qué tan bien conecta cada rango con el board (top pair, proyectos…) — una lectura rápida de a quién favorece este board",
     rTerm5: "Tabla (abajo a la derecha)",
     rDef5:
       "Peso, equity, EV y % de acción por mano — haz clic en el encabezado de una columna para ordenar",
@@ -911,9 +911,9 @@ const M = {
     verdictBefore: "Se mide ",
     verdictBold: "en relación al bote",
     verdictAfter:
-      " — hasta 0.35% del bote = Mejor jugada · hasta 1% = Aceptable · más allá = Repasa este spot. Por ejemplo, en un single raised pot de 5.5bb los cortes son 0.02bb y 0.06bb; en un bote de 3-bet de 22.5bb son 0.08bb y 0.23bb.",
+      " — hasta el 0.35% del bote = Mejor jugada · hasta el 1% = Aceptable · más allá = Repasa este spot. Por ejemplo, en un single raised pot de 5.5bb los umbrales son 0.02bb y 0.06bb; en un bote de 3-bet de 22.5bb son 0.08bb y 0.23bb.",
     verdictHint:
-      "Los mismos 0.05bb son un gran error en un bote chico y una diferencia trivial en uno grande. Calificar en bb absolutos hacía ver los botes de 3-bet peor de lo que son, así que cambiamos a la calificación relativa al bote (2026-08-15). Los cortes tienen pisos (0.02bb / 0.05bb): los cálculos solo convergen hasta un error objetivo de 0.5%, y diferencias menores no se distinguen del ruido del solver.",
+      "Los mismos 0.05bb son un gran error en un bote chico y una diferencia trivial en uno grande. Calificar en bb absolutos hacía que los botes de 3-bet se vieran peor de lo que son, así que cambiamos a la calificación relativa al bote (2026-08-15). Los umbrales tienen un mínimo (0.02bb / 0.05bb): los cálculos solo convergen hasta un error objetivo del 0.5%, y diferencias menores no se distinguen del ruido del solver.",
     reviewTerm: "Repaso",
     reviewBefore:
       "Las manos donde más EV perdiste vuelven con el botón [Repasar]. Por defecto, tu historial se guarda ",
@@ -922,20 +922,20 @@ const M = {
       ". Inicia sesión con una cuenta de HoldemMaster para guardarlo en tu cuenta y continuar en otros dispositivos — iniciar sesión es opcional y todas las funciones sirven sin hacerlo",
     filterTerm: "Filtros",
     filterDef:
-      "Practica solo tus puntos débiles: single raised pots, botes de 3-bet o ciega contra ciega",
+      "Practica solo tus puntos débiles: single raised pots, botes de 3-bet o guerra de ciegas",
 
     installTitle: "Instálalo en tu pantalla de inicio y estudia offline",
     install1:
       "Puedes instalar este solver en tu pantalla de inicio como una app (sin archivo de instalación). En Chrome o Edge usa el ",
     installBold1: "ícono de instalar",
     install2: " a la derecha de la barra de direcciones; en Safari de iPhone toca ",
-    installBold2: "Compartir → Agregar a inicio",
+    installBold2: "Compartir → Agregar a pantalla de inicio",
     install3:
-      ". Una vez instalado, los 13 Spots de estudio y los retos del Entrenador quedan guardados en tu dispositivo, así puedes seguir estudiando ",
+      ". Una vez instalado, los 13 Spots de estudio y los retos del Entrenador quedan guardados en tu dispositivo, para que puedas seguir estudiando ",
     installBold3: "incluso en el metro sin internet",
     install4: ".",
     samsung1:
-      "* Instalar desde Samsung Internet muestra la advertencia «Aplicación no segura bloqueada». Aparece porque Google no confía en el paquete de instalación que genera ese navegador — no tiene nada que ver con esta app. ",
+      "* Instalar desde Samsung Internet muestra una advertencia de aplicación no segura. Aparece porque Google no confía en el paquete de instalación que genera ese navegador — no tiene nada que ver con esta app. ",
     samsungBold: "Abre el sitio en Chrome",
     samsung2:
       " y se instala sin advertencia; o, para continuar de todos modos, toca [Más detalles] → [Instalar de todos modos] en el cuadro de advertencia.",
@@ -945,14 +945,14 @@ const M = {
     offlineNotSaved: "Sin guardar",
     offlineSaveBtn: "Guardar ahora (~2.3MB)",
     offlineFootnote:
-      "El «Resolver tú mismo» del spot personalizado solo funciona offline después de haberlo corrido en línea al menos una vez — el motor de cálculo se descarga en el primer uso.",
+      "El «Resolver tú mismo» del spot personalizado solo funciona sin conexión después de ejecutarlo en línea al menos una vez — el motor de cálculo se descarga en el primer uso.",
 
     safeTitle: "¿Es seguro instalarlo?",
     safe1:
       "Sí. «Instalar» aquí no significa descargar un programa a tu dispositivo — significa ",
     safeBold: "crear un acceso directo que corre dentro de tu navegador",
     safe2:
-      ". En Android solo se registra una envoltura delgada que apunta a esta dirección; todo sigue corriendo dentro del motor del navegador. Si tienes dudas, comprueba estas cuatro cosas tú mismo — verificar vale más que nuestra palabra.",
+      ". En Android solo se registra una capa ligera que apunta a esta dirección; todo sigue corriendo dentro del motor del navegador. Si tienes dudas, comprueba estas cuatro cosas tú mismo — verificar vale más que nuestra palabra.",
     permTerm: "No usa permisos",
     permBefore:
       "La instalación no pide ningún permiso — ni cámara, ni contactos, ni SMS, ni ubicación. Compruébalo tú mismo en ",
@@ -970,7 +970,7 @@ const M = {
     removeDef:
       "Mantén presionado y elimina como cualquier otra app, y listo. Nada corre en segundo plano, nada queda atrás",
     samsungNote2:
-      "* La advertencia «Aplicación no segura bloqueada» de Samsung Internet no es detección de malware — Google simplemente aún no agregó los paquetes de instalación de ese navegador a su lista de confianza. No aparece al instalar desde Chrome.",
+      "* La advertencia de aplicación no segura de Samsung Internet no es detección de malware — Google simplemente aún no agregó los paquetes de instalación de ese navegador a su lista de confianza. No aparece al instalar desde Chrome.",
 
     studyTitle: "Plan de estudio sugerido",
     study1:
@@ -987,14 +987,14 @@ const M = {
     tTerm1: "Error al crear el árbol",
     tDef1: "Verifica que estén las 3 cartas del board y ambos rangos",
     tTerm2: "El cálculo va lento",
-    tDef2: "Sube el error objetivo a 0.5%",
+    tDef2: "Sube el error objetivo al 0.5%",
     tTerm3: "La pestaña de resultados está en blanco",
     tDef3: "Ábrela después de que aparezca «¡Cálculo terminado!»",
     tTerm4: "Límite de memoria superado",
     tDef4: "Cambia al modo de enteros de 16 bits o usa menos bet sizes",
     tTerm5: "La matriz está toda gris",
     tDef5:
-      "Estás viendo el turno del rival — elige otra escena en la tira superior",
+      "Estás viendo el punto en el que le toca actuar al rival — elige otra escena en la tira superior",
 
     errTitle: "¿Encontraste algo que debamos corregir?",
     err1: "Si la pantalla se rompe o un cálculo se congela, los detalles del error se registran automáticamente en este dispositivo. ",

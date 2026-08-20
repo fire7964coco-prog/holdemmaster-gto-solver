@@ -78,7 +78,7 @@ const M = {
     hands: "Hands",
     noHands: "No hands to display",
     draws: "Draws",
-    noDraws: "No draw info",
+    noDraws: "No draw information",
   },
   ja: {
     hands: "ハンド",

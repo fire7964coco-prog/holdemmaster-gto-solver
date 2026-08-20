@@ -67,7 +67,7 @@ const M = {
     greeting: "ようこそ",
     titleLine1: "HoldemMaster",
     titleLine2: "GTOソルバーへ。",
-    footer: "無料GTOソルバー · オフライン学習",
+    footer: "無料GTOソルバー・オフライン学習",
   },
   es: {
     greeting: "Te damos la bienvenida a",

@@ -119,7 +119,7 @@ const toUser = (session: Session | null): AccountUser | null => {
       (meta.full_name as string) ||
       (meta.name as string) ||
       session.user.email?.split("@")[0] ||
-      pick("회원", "player", "プレイヤー", "jugador"),
+      pick("회원", "Player", "プレイヤー", "jugador"),
   };
 };
 

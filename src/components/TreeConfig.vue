@@ -780,19 +780,19 @@ const M = {
     error: "Error:",
     warning: "Warning:",
     oopBetSizes: "OOP Bet Sizes",
-    donkOption: "Use different sizes for Donk Bets",
+    donkOption: "Use different sizes for donk bets",
     howToInput: "How to input",
     inputHelpIntro:
       "You can enter multiple bet sizes separated by commas or spaces, in any of the following formats. If left empty, no bet or raise is made.",
     inputHelpPercent:
-      'A number representing the percentage of the pot (e.g., "50"). For raises, the size is computed by first calling and then adding the specified percentage of the resulting pot. For example, if the pot before the bet is 100 and the opponent bets 75, a 50% raise is 75 + (100 + 75 + 75) * 50% = 200.',
+      "A number representing the percentage of the pot (e.g., “50”). For raises, the size is computed by first calling and then adding the specified percentage of the resulting pot. For example, if the pot before the bet is 100 and the opponent bets 75, a 50% raise is 75 + (100 + 75 + 75) * 50% = 200.",
     inputHelpMultiple:
-      'A multiple of the previous bet size (e.g., "2.5x"). Only available for raises.',
-    inputHelpAllin: 'All-in (e.g., "a").',
+      "A multiple of the previous bet size (e.g., “2.5x”). Only available for raises.",
+    inputHelpAllin: "All-in (e.g., “a”).",
     inputHelpFixed:
-      'Adding a fixed amount (e.g., "100c"). For raises, you can also cap the number of raises (e.g., "20c3r").',
+      "Adding a fixed amount (e.g., “100c”). For raises, you can also cap the number of raises (e.g., “20c3r”).",
     inputHelpGeometric:
-      'Geometric size, i.e., splitting the remaining stack into the specified number of equal-percentage bets (e.g., "3e"). For example, if the current pot is 100 and the effective stack is 400, "2e" is a bet of 100. If the number before "e" is omitted, the number of remaining streets is used (Flop=3, Turn=2, River=1). For raises, the number of previous raises is subtracted from the specified number; e.g., "3e" becomes "2e" when re-raising. You can also append a number after "e" to set a maximum percentage limit (e.g., "2e200").',
+      "Geometric size, i.e., splitting the remaining stack into the specified number of equal-percentage bets (e.g., “3e”). For example, if the current pot is 100 and the effective stack is 400, “2e” is a bet of 100. If the number before “e” is omitted, the number of remaining streets is used (Flop=3, Turn=2, River=1). For raises, the number of previous raises is subtracted from the specified number; e.g., “3e” becomes “2e” when re-raising. You can also append a number after “e” to set a maximum percentage limit (e.g., “2e200”).",
     flop: "Flop",
     turn: "Turn",
     river: "River",
@@ -805,9 +805,9 @@ const M = {
       "Adds an all-in action to every node where the ratio of the maximum possible bet size to the pot is below this threshold.",
     forceAllInLabel: "Force All-In Threshold:",
     forceAllInHelp1:
-      "If the SPR (stack-to-pot ratio) after the opponent calls a bet action is below this threshold, that bet action is replaced with an all-in action. A recommended value is around 15% - 20%.",
+      "If the SPR (stack-to-pot ratio) after the opponent calls a bet action is below this threshold, that bet action is replaced with an all-in action. A recommended value is around 15–20%.",
     forceAllInHelp2:
-      'This option is similar to PioSOLVER\'s "all-in threshold". PioSOLVER replaces a bet action with an all-in when the ratio of the amount put into the pot to the initial stack exceeds the threshold.',
+      "This option is similar to PioSOLVER's “all-in threshold”. PioSOLVER replaces a bet action with an all-in when the ratio of the amount put into the pot to the initial stack exceeds the threshold.",
     forceAllInHelp3:
       "Ignoring rounding, the conversion formula is as follows (s = initial SPR, r = PioSOLVER's threshold):",
     forceAllInFormula: "Threshold = s * (1 - r) / (1 + 2 * s * r).",
@@ -822,14 +822,14 @@ const M = {
     addedLines: "Added lines:",
     removedLines: "Removed lines:",
     boardMismatch: (expected: number, actual: number) =>
-      `The edited tree assumes a ${expected}-card board, but the current board has ${actual} cards.`,
+      `The edited tree assumes a ${expected}-card board, but the current board has ${actual} card${actual === 1 ? "" : "s"}.`,
     boardMismatchHint:
-      'To discard the edited tree, click the "Clear Edits & Unlock" button.',
+      "To discard the edited tree, click the “Clear Edits & Unlock” button.",
   },
   ja: {
     chipNote:
       "金額は整数チップ単位で入力します(カスタムスポットでは任意のチップ単位を使用)。bbで考える場合は10チップ=1bbを推奨します。",
-    startingPot: "スタートポット:",
+    startingPot: "スターティングポット:",
     effectiveStack: "有効スタック:",
     rake: "レーキ:",
     rakeCap: "レーキキャップ:",
@@ -857,10 +857,10 @@ const M = {
     raise: "レイズ:",
     donk: "ドンク:",
     ipBetSizes: "IP ベットサイズ",
-    addAllInLabel: "オールイン追加のしきい値:",
+    addAllInLabel: "オールイン追加しきい値:",
     addAllInHelp:
       "可能な最大ベットサイズとポットの比率がこのしきい値を下回るすべてのノードにオールインアクションを追加します。",
-    forceAllInLabel: "強制オールインのしきい値:",
+    forceAllInLabel: "強制オールインしきい値:",
     forceAllInHelp1:
       "相手がベットアクションをコールした後のSPR(スタック/ポット比)がこのしきい値を下回る場合、そのベットアクションをオールインアクションに置き換えます。推奨値は15%〜20%程度です。",
     forceAllInHelp2:
@@ -868,7 +868,7 @@ const M = {
     forceAllInHelp3:
       "端数の丸めを無視すると、変換式は次のとおりです(s = 初期SPR、r = PioSOLVERのしきい値):",
     forceAllInFormula: "しきい値 = s * (1 - r) / (1 + 2 * s * r).",
-    mergingLabel: "マージのしきい値:",
+    mergingLabel: "マージしきい値:",
     mergingHelp1: "似たサイズのベットアクションを1つにマージします。",
     mergingHelp2:
       "アルゴリズムはPioSOLVERと同じです。つまり、最大のベットサイズ(= ポットのX%)を選び、次の不等式を満たすサイズ(= ポットのY%)の他のベットアクションをすべて削除します:",
@@ -900,14 +900,14 @@ const M = {
     inputHelpIntro:
       "Puedes ingresar varios bet sizes separados por comas o espacios, en cualquiera de los siguientes formatos. Si lo dejas vacío, no se hace bet ni raise.",
     inputHelpPercent:
-      'Un número que representa el porcentaje del bote (ej. "50"). Para los raises, el tamaño se calcula pagando primero y sumando después el porcentaje indicado del bote resultante. Por ejemplo, si el bote antes del bet es 100 y el rival apuesta 75, un raise del 50% es 75 + (100 + 75 + 75) * 50% = 200.',
+      'Un número que representa el porcentaje del bote (ej. «50»). Para los raises, el tamaño se calcula pagando primero y sumando después el porcentaje indicado del bote resultante. Por ejemplo, si el bote antes del bet es 100 y el rival apuesta 75, un raise del 50% es 75 + (100 + 75 + 75) * 50% = 200.',
     inputHelpMultiple:
-      'Un múltiplo del bet anterior (ej. "2.5x"). Solo disponible para raises.',
-    inputHelpAllin: 'All-in (ej. "a").',
+      'Un múltiplo del bet anterior (ej. «2.5x»). Solo disponible para raises.',
+    inputHelpAllin: 'All-in (ej. «a»).',
     inputHelpFixed:
-      'Suma de un monto fijo (ej. "100c"). Para los raises también puedes limitar el número de raises (ej. "20c3r").',
+      'Suma de un monto fijo (ej. «100c»). Para los raises también puedes limitar el número de raises (ej. «20c3r»).',
     inputHelpGeometric:
-      'Tamaño geométrico, es decir, dividir el stack restante en el número indicado de bets del mismo porcentaje (ej. "3e"). Por ejemplo, con un bote de 100 y stack efectivo de 400, "2e" es un bet de 100. Si omites el número antes de la "e", se usa el número de calles restantes (flop=3, turn=2, river=1). Para los raises se resta el número de raises previos; ej. "3e" pasa a "2e" al re-raisear. También puedes añadir un número después de la "e" para fijar un porcentaje máximo (ej. "2e200").',
+      'Tamaño geométrico, es decir, dividir el stack restante en el número indicado de bets del mismo porcentaje (ej. «3e»). Por ejemplo, con un bote de 100 y stack efectivo de 400, «2e» es un bet de 100. Si omites el número antes de la «e», se usa el número de calles restantes (flop=3, turn=2, river=1). Para los raises se resta el número de raises previos; ej. «3e» pasa a «2e» al re-raisear. También puedes añadir un número después de la «e» para fijar un porcentaje máximo (ej. «2e200»).',
     flop: "Flop",
     turn: "Turn",
     river: "River",
@@ -922,7 +922,7 @@ const M = {
     forceAllInHelp1:
       "Si el SPR (relación stack/bote) después de que el rival paga un bet queda por debajo de este umbral, ese bet se reemplaza por un all-in. Un valor recomendado ronda el 15% - 20%.",
     forceAllInHelp2:
-      'Esta opción es similar al "all-in threshold" de PioSOLVER. PioSOLVER reemplaza un bet por un all-in cuando la relación entre lo invertido en el bote y el stack inicial supera el umbral.',
+      'Esta opción es similar al «all-in threshold» de PioSOLVER. PioSOLVER reemplaza un bet por un all-in cuando la relación entre lo invertido en el bote y el stack inicial supera el umbral.',
     forceAllInHelp3:
       "Ignorando el redondeo, la fórmula de conversión es la siguiente (s = SPR inicial, r = umbral de PioSOLVER):",
     forceAllInFormula: "Umbral = s * (1 - r) / (1 + 2 * s * r).",
@@ -937,9 +937,9 @@ const M = {
     addedLines: "Líneas agregadas:",
     removedLines: "Líneas eliminadas:",
     boardMismatch: (expected: number, actual: number) =>
-      `El árbol editado asume un board de ${expected} cartas, pero el board actual tiene ${actual}.`,
+      `El árbol editado asume un board de ${expected} carta${expected === 1 ? "" : "s"}, pero el board actual tiene ${actual}.`,
     boardMismatchHint:
-      'Para descartar el árbol editado, haz clic en el botón "Borrar cambios y desbloquear".',
+      'Para descartar el árbol editado, haz clic en el botón «Borrar cambios y desbloquear».',
   },
 } as const;
 
@@ -1006,7 +1006,7 @@ export default defineComponent({
       const errors: string[] = [];
       if (config.startingPot <= 0) {
         errors.push(
-          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スタートポットは正の値である必要があります", "El bote inicial debe ser positivo")
+          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スターティングポットには正の数を入力してください", "El bote inicial debe ser positivo")
         );
       }
       if (config.startingPot > MAX_AMOUNT) {
@@ -1014,14 +1014,14 @@ export default defineComponent({
           pick(
             `스타팅 팟은 ${MAX_AMOUNT} 이하여야 합니다`,
             `Starting pot must not exceed ${MAX_AMOUNT}`,
-            `スタートポットは${MAX_AMOUNT}以下である必要があります`,
+            `スターティングポットは${MAX_AMOUNT}以下で入力してください`,
             `El bote inicial no debe exceder ${MAX_AMOUNT}`
           )
         );
       }
       if (config.startingPot % 1 !== 0) {
         errors.push(
-          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スタートポットは整数である必要があります", "El bote inicial debe ser un entero")
+          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero")
         );
       }
       if (config.effectiveStack <= 0) {
@@ -1029,7 +1029,7 @@ export default defineComponent({
           pick(
             "유효 스택은 양수여야 합니다",
             "Effective stack must be positive",
-            "有効スタックは正の値である必要があります",
+            "有効スタックには正の数を入力してください",
             "El stack efectivo debe ser positivo"
           )
         );
@@ -1039,7 +1039,7 @@ export default defineComponent({
           pick(
             `유효 스택은 ${MAX_AMOUNT} 이하여야 합니다`,
             `Effective stack must not exceed ${MAX_AMOUNT}`,
-            `有効スタックは${MAX_AMOUNT}以下である必要があります`,
+            `有効スタックは${MAX_AMOUNT}以下で入力してください`,
             `El stack efectivo no debe exceder ${MAX_AMOUNT}`
           )
         );
@@ -1049,7 +1049,7 @@ export default defineComponent({
           pick(
             "유효 스택은 정수여야 합니다",
             "Effective stack must be an integer",
-            "有効スタックは整数である必要があります",
+            "有効スタックは整数で入力してください",
             "El stack efectivo debe ser un entero"
           )
         );
@@ -1061,7 +1061,7 @@ export default defineComponent({
       }
       if (config.rakePercent > 100) {
         errors.push(
-          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder 100%")
+          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%")
         );
       }
       if (config.rakeCap < 0) {
@@ -1074,7 +1074,7 @@ export default defineComponent({
           pick<string>(
             `레이크 캡은 ${3 * MAX_AMOUNT} 이하여야 합니다`,
             `Rake cap must not exceed ${3 * MAX_AMOUNT}`,
-            `レーキキャップは${3 * MAX_AMOUNT}以下である必要があります`,
+            `レーキキャップは${3 * MAX_AMOUNT}以下で入力してください`,
             `El tope de rake no debe exceder ${3 * MAX_AMOUNT}`
           )
         );
@@ -1172,8 +1172,8 @@ export default defineComponent({
           pick(
             "올인 추가 임계값은 음수일 수 없습니다",
             "Add all-in threshold must not be negative",
-            "オールイン追加のしきい値は負の値にできません",
-            "El umbral de agregar all-in no puede ser negativo"
+            "オールイン追加しきい値は負の値にできません",
+            "El umbral para agregar all-in no puede ser negativo"
           )
         );
       }
@@ -1182,7 +1182,7 @@ export default defineComponent({
           pick(
             "강제 올인 임계값은 음수일 수 없습니다",
             "Force all-in threshold must not be negative",
-            "強制オールインのしきい値は負の値にできません",
+            "強制オールインしきい値は負の値にできません",
             "El umbral de all-in forzado no puede ser negativo"
           )
         );
@@ -1192,7 +1192,7 @@ export default defineComponent({
           pick(
             "병합 임계값은 음수일 수 없습니다",
             "Merging threshold must not be negative",
-            "マージのしきい値は負の値にできません",
+            "マージしきい値は負の値にできません",
             "El umbral de fusión no puede ser negativo"
           )
         );
@@ -1206,9 +1206,9 @@ export default defineComponent({
         warnings.push(
           pick(
             "강제 올인 임계값을 30%보다 높게 설정하는 것은 권장되지 않습니다.\n의미는 도움말을 참고해 주세요.",
-            "Setting the force all-in threshold higher than 30% is not recommended.\nPlease see the help for what it means.",
+            "Setting the force all-in threshold higher than 30% is not recommended.\nSee the help text for what this setting does.",
             "強制オールインのしきい値を30%より高く設定することは推奨されません。\n詳しくはヘルプをご覧ください。",
-            "No se recomienda fijar el umbral de all-in forzado por encima de 30%.\nConsulta la ayuda para ver qué significa."
+            "No se recomienda fijar el umbral de all-in forzado por encima del 30%.\nConsulta la ayuda para ver qué significa."
           )
         );
       }

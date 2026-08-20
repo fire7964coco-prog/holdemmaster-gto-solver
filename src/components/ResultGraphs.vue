@@ -105,7 +105,7 @@ const M = {
     equity: "에퀴티",
   },
   en: {
-    noGraph: "Graph is not available",
+    noGraph: "No graph available",
     equity: "Equity",
   },
   ja: {

@@ -140,12 +140,15 @@ const M = {
     presets: "Study Spots",
     presetsBadge: "Instant",
     trainer: "GTO Trainer",
-    trainerBadge: "EV Grading",
+    trainerBadge: "Graded",
     preflop: "Preflop Charts",
     // 뱃지까지 한 줄에 들어와야 한다 — 「Open·Defend」는 1280×720에서 두 줄로 접혔다
-    preflopBadge: "Open·Def",
+    preflopBadge: "Ranges",
     equity: "Equity Calculator",
-    equityBadge: "Win%",
+    // 뱃지는 «무엇을 내주는가»를 한 마디로 — 라벨과 같은 말(Equity)을 반복하면 오작동처럼 보인다.
+    // ko 승률 · ja 勝率 · es % victoria 와 같은 자리다. «Win %»는 퍼센트 기호가 있어
+    // bb/100을 뜻하는 «win rate»와 혼동되지 않는다 (2026-08-20 눈검수).
+    equityBadge: "Win %",
     customLabel: "Custom Spot",
     // ⚠ 이 라벨이 두 줄로 접히면 1280×720에서 ⑤가 화면 밖으로 밀린다 (한 줄로 유지할 것)
     customLabelSuffix: " — Solve",
@@ -158,7 +161,7 @@ const M = {
   },
   // ⚠ ja도 ko/en과 같은 한 줄 제약 — 라벨을 늘리면 wrap 검사·sidebar-fit로 확인할 것
   ja: {
-    exploreLabel: "スタディ",
+    exploreLabel: "学習",
     exploreLabelSuffix: "・ツール",
     about: "はじめに",
     guide: "使い方",
@@ -168,7 +171,7 @@ const M = {
     trainerBadge: "EV採点",
     preflop: "プリフロップ",
     preflopBadge: "レンジ表",
-    equity: "エクイティ計算",
+    equity: "エクイティ計算機",
     equityBadge: "勝率",
     customLabel: "カスタムスポット",
     customLabelSuffix: "・自分で計算",
@@ -177,7 +180,7 @@ const M = {
     board: "ボード",
     betSize: "ベットサイズ",
     betSizeSub: "設定",
-    run: "計算を実行",
+    run: "ソルバーを実行",
   },
   // ⚠ es도 같은 한 줄 제약 — 스페인어 라벨은 길어지기 쉬우니 늘리면 sidebar-fit로 확인할 것
   es: {
@@ -186,13 +189,13 @@ const M = {
     about: "Acerca de",
     guide: "Cómo usarlo",
     presets: "Spots de estudio",
-    presetsBadge: "Directo",
+    presetsBadge: "Al instante",
     trainer: "Entrenador GTO",
     trainerBadge: "Nota EV",
     preflop: "Tablas preflop",
     preflopBadge: "Rangos",
-    equity: "Calc. de equity",
-    equityBadge: "Victoria",
+    equity: "Equity",
+    equityBadge: "% victoria",
     customLabel: "Spot personalizado",
     // 한 줄 유지용 — 접미사를 비워 이름만 표시한다 (라벨이 길면 ⑤가 화면 밖으로 밀린다)
     customLabelSuffix: "",

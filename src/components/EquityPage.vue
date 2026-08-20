@@ -317,23 +317,23 @@ const M = {
   en: {
     intro:
       "Your chance of winning against a specific hand or an entire range. Leave the board empty " +
-      "for preflop, or pick 3/4/5 cards for flop, turn and river.",
+      "for preflop, or pick 3/4/5 cards for the flop, turn, or river.",
     heroTitle: "① Your Hand",
     heroHint: "Pick 2 cards below",
-    fill: "Fill here",
+    fill: "Fill from here",
     villainTitle: "② Opponent",
-    modeHand: "Hand",
+    modeHand: "vs Hand",
     modeRange: "vs Range",
-    rangePlaceholder: "e.g. 22+,AQs+,K8s:0.75",
+    rangePlaceholder: "e.g., 22+,AQs+,K8s:0.75",
     rangeNote:
-      "Paste the output of [Copy Range] from the preflop charts. Weighted notation such as " +
+      "Paste the output of [Copy range text] from the preflop charts. Weighted notation such as " +
       "“K8s:0.75” is applied as-is.",
     anyTwo: "Any two cards",
     rangeError: (token: string) => `Cannot parse: ${token}`,
-    rangeSummary: (combos: number, percent: string) => `${combos} combos · ${percent}% of all`,
+    rangeSummary: (combos: number, percent: string) => `${combos} combos · ${percent}% of all combos`,
     boardTitle: "③ Board",
     boardHintEmpty: "Empty = preflop (3/4/5 cards also allowed)",
-    boardHintBad: "The board must have 0, 3, 4 or 5 cards",
+    boardHintBad: "The board must have 0, 3, 4 or 5 cards.",
     boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
     compute: "Calculate",
     computing: "Calculating…",
@@ -345,17 +345,17 @@ const M = {
     win: "Win",
     tie: "Tie",
     lose: "Lose",
-    combos: "Opp. combos",
+    combos: "Opponent combos",
     badgeExact: "Exact",
-    badgeApprox: "Approx. (±0.2%p)",
+    badgeApprox: "Approx. (±0.2 pp)",
     exactNote: (n: number) => `Every one of ${n.toLocaleString()} cases was counted`,
     approxNote: (n: number) =>
       `Too many cases to enumerate — sampled ${n.toLocaleString()} random runouts`,
     howTitle: "How to read this",
-    how1: "Equity = win% + half of the ties. It is your share of the pot if all-in right now.",
+    how1: "Equity = win% + half of the ties. It is your share of the pot if you were all in right now.",
     how2: "Against a range, combos blocked by your cards or the board are removed automatically.",
     how3: "The “Exact” badge means every case was counted; “Approx.” is a random sample.",
-    limitTitle: "Scope",
+    limitTitle: "What this calculator covers",
     limitBody:
       "This tool computes all-in equity between two players only. Range vs range, multiway pots " +
       "and betting lines are handled by the solver (Custom Spot).",
@@ -381,18 +381,18 @@ const M = {
     modeRange: "レンジ",
     rangePlaceholder: "例: 22+,AQs+,K8s:0.75",
     rangeNote:
-      "プリフロップレンジ表の[レンジをコピー]をそのまま貼り付けられます。" +
+      "プリフロップレンジ表の[レンジテキストをコピー]をそのまま貼り付けられます。" +
       "「K8s:0.75」のようなウェイト付きの表記もそのまま反映されます。",
     anyTwo: "すべて（ランダムハンド）",
     rangeError: (token: string) => `解釈できない表記: ${token}`,
-    rangeSummary: (combos: number, percent: string) => `${combos}コンボ · 全体の${percent}%`,
+    rangeSummary: (combos: number, percent: string) => `${combos}コンボ・全体の${percent}%`,
     boardTitle: "③ ボード",
     boardHintEmpty: "空のままならプリフロップ（3・4・5枚も可）",
     boardHintBad: "ボードは0・3・4・5枚のみ有効です",
     boardHintOk: (n: number) => ["", "", "", "フロップ", "ターン", "リバー"][n],
     compute: "計算",
     computing: "計算中…",
-    stop: "中断",
+    stop: "停止",
     clear: "すべてクリア",
     resultTitle: "結果",
     resultEmpty:
@@ -402,15 +402,15 @@ const M = {
     tie: "引き分け",
     lose: "負け",
     combos: "相手コンボ",
-    badgeExact: "全数計算",
-    badgeApprox: "近似 (±0.2%p)",
+    badgeExact: "完全計算",
+    badgeApprox: "近似 (±0.2%ポイント)",
     exactNote: (n: number) => `あり得る${n.toLocaleString()}通りをすべて数えました`,
     approxNote: (n: number) =>
       `場合の数が多すぎるため、ランダムな${n.toLocaleString()}回をサンプルにしました`,
     howTitle: "読み方",
     how1: "エクイティ（勝率）= 勝ち% + 引き分けの半分。今オールインした場合にポットから得られる期待シェアです。",
     how2: "相手をレンジにすると、自分のカードやボードと重なるコンボは自動的に除外されます（カードリムーバル）。",
-    how3: "「全数計算」バッジはすべての場合を数えたという意味で、「近似」はランダムサンプルの結果です。",
+    how3: "「完全計算」バッジはすべての場合を数えたという意味で、「近似」はランダムサンプルの結果です。",
     limitTitle: "この計算機の範囲",
     limitBody:
       "2人のオールイン勝率のみを計算します。レンジ対レンジ、3人以上、ベットやフォールドが絡む状況の" +
@@ -427,7 +427,7 @@ const M = {
   },
   es: {
     intro:
-      "Tu probabilidad de ganar contra una mano concreta o contra un rango completo. Deja el board vacío " +
+      "Tu probabilidad de ganar contra una mano específica o contra un rango completo. Deja el board vacío " +
       "para preflop, o elige 3/4/5 cartas para flop, turn y river.",
     heroTitle: "① Tu mano",
     heroHint: "Elige 2 cartas abajo",
@@ -459,7 +459,7 @@ const M = {
     lose: "Derrota",
     combos: "Combos del rival",
     badgeExact: "Cálculo exacto",
-    badgeApprox: "Aprox. (±0.2%p)",
+    badgeApprox: "Aprox. (±0.2 pp)",
     exactNote: (n: number) => `Se contaron los ${n.toLocaleString()} casos posibles`,
     approxNote: (n: number) =>
       `Demasiados casos para enumerar — se muestrearon ${n.toLocaleString()} repartos al azar`,
@@ -470,7 +470,7 @@ const M = {
     limitTitle: "Alcance",
     limitBody:
       "Esta herramienta solo calcula equity de all-in entre dos jugadores. Rango contra rango, botes " +
-      "multiway y líneas de apuesta son trabajo del solver (Spot personalizado).",
+      "multiway y líneas de apuesta los maneja el solver (Spot personalizado).",
     errors: {
       "need-hero": "Primero elige tus dos cartas.",
       "bad-board": "El board debe tener 0, 3, 4 o 5 cartas.",

@@ -337,33 +337,33 @@ const M = {
     mode4bet: "vs 4-bet (after 3-betting)",
     intro4bet:
       "How to respond when your 3-bet gets 4-bet — red is 5-bet (all-in), green " +
-      "is call, the rest folds. Frequencies are conditional on having 3-bet, so " +
-      "hands you never 3-bet are blank. 6-max cash, 100bb; the BB 3-bets 11bb " +
-      "and faces a 24bb 4-bet, the SB 3-bets 10bb and faces 22bb.",
+      "is call, everything else is a fold. Frequencies are conditional on having 3-bet, so " +
+      "hands you never 3-bet are blank. 6-max cash, 100bb; BB 3-bets 11bb " +
+      "and faces a 24bb 4-bet; SB 3-bets 10bb and faces 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "Blank = never 3-bet in the first place",
     stat5bet: "5-bet %",
-    statContinue4bet: "Continue (of 3-bets)",
+    statContinue4bet: "Continue % (of 3-bets)",
     copy5bet: "Copy 5-bet range",
     note4bet:
       "The stats are shares of your 3-betting range. At 100bb the 5-bet is " +
       "effectively all-in — value centers on AA·KK (occasionally trapping with a " +
-      "call), and QQ·AK mix 5-bets with calls. Calls are driven by realization, " +
+      "call), and QQ·AK mix 5-bets with calls. Calls are driven by equity realization, " +
       "not pot odds: you fight out of position at a low SPR, so only pairs and " +
-      "top suited hands continue — but never fold everything, since the 4-bet " +
-      "range mixes in bluffs like A5s-A4s.",
+      "top suited hands continue — but don't fold everything, because their " +
+      "4-betting range mixes in bluffs like A5s–A4s.",
     how4bet2:
       "If red + green don't fill the cell, the rest is folded. Cells with both " +
       "colors mix 5-bets and calls. Hands outside the 3-betting range never " +
       "face this spot, so they are blank.",
     intro3bet:
       "How to respond when your open-raise gets 3-bet — red is 4-bet, green is " +
-      "call, the rest folds. Frequencies are conditional on having opened, so " +
+      "call, everything else is a fold. Frequencies are conditional on having opened, so " +
       "hands you never open are blank. 6-max cash, 100bb, 2.5bb open, ~10-11bb 3-bet.",
     legend4bet: "4-bet",
     legendCond: "Blank = never opened in the first place",
     stat4bet: "4-bet %",
-    statContinue: "Continue (of opens)",
+    statContinue: "Continue % (of opens)",
     copy4bet: "Copy 4-bet range",
     note3bet:
       "The stats are shares of your opening range, not of all hands. 4-bet value " +
@@ -398,11 +398,11 @@ const M = {
     copy3bet: "Copy 3-bet range",
     copyCall: "Copy call range",
     sbNote:
-      "The SB plays essentially 3-bet-or-fold against a BTN open — you are out " +
-      "of position with the BB still left to act, so calling takes on both " +
-      "disadvantages at once.",
+      "In the SB you're essentially 3-bet-or-fold against a BTN open — you're " +
+      "out of position with BB still left to act, so calling saddles you with " +
+      "both disadvantages at once.",
     ipNote:
-      "Even with position, an early-position open is a strong range, and " +
+      "Even with position, an early-position opening range is strong, and " +
       "calling risks a squeeze from the blinds still left to act. In-position " +
       "defense is therefore a narrow, 3-bet-centric range, with calls mostly " +
       "limited to pairs and premium suited hands.",
@@ -414,7 +414,7 @@ const M = {
     copied: "✓ Copied",
     sendOop: "① Send to OOP Range",
     sendIp: "② Send to IP Range",
-    howTitle: "How to read",
+    howTitle: "How to read this",
     how1: "The top-left to bottom-right diagonal is pairs; above it (right) is suited, below it (left) is offsuit.",
     how2: "Mixed-frequency hands (partial fill) are opened only that fraction of the time — they are borderline, so either choice loses little EV.",
     how3: "The [Send to Range] buttons load this range into the custom-spot range editor — try solving the postflop play yourself.",
@@ -427,24 +427,24 @@ const M = {
       "We cross-checked several " +
       "freely published GTO resources hand by hand to build a consensus range, " +
       "marking hands the sources disagree on as mixed frequencies. BTN and SB " +
-      "were also checked against the solver-verified ranges used by this app's study spots.",
+      "were also checked against the solver-verified ranges used by this app's Study Spots.",
     sourceList:
       "Public sources cross-checked: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB solved frequencies) · " +
       "GTO Gecko · RiverOdds (defense anchors) · GTO Wizard blog · FreeBetRange " +
       "(IP defense & squeeze principles) · 888poker · Run It Once (vs 3-bet " +
       "frequencies) + our own study-spot ranges (collected 2026-08)",
-    phase2: "More matchups and scenarios will keep being added.",
+    phase2: "We'll keep adding more matchups and scenarios.",
   },
   ja: {
-    modeRfi: "オープンレイズ (RFI)",
-    modeDefend: "vs オープン（ディフェンス）",
-    mode3bet: "vs 3ベット（オープン後）",
-    mode4bet: "vs 4ベット（3ベット後）",
+    modeRfi: "オープン (RFI)",
+    modeDefend: "vs オープン",
+    mode3bet: "vs 3ベット",
+    mode4bet: "vs 4ベット",
     intro4bet:
       "自分が3ベットした後に4ベットを受けたときの対応です — 赤は5ベット（オールイン）、" +
       "緑はコール、残りはフォールドです。頻度は「3ベットした場合」を基準としているため、" +
-      "3ベットしないハンドは空欄です。6マックスキャッシュ100bb、BBの3ベット11bb → 4ベット24bb / " +
+      "3ベットしないハンドは空欄です。6maxキャッシュゲーム100bb、BBの3ベット11bb → 4ベット24bb / " +
       "SBの3ベット10bb → 4ベット22bbが基準です。",
     legend5bet: "5ベット（オールイン）",
     legendCond4bet: "空欄 = そもそも3ベットしない",
@@ -463,7 +463,7 @@ const M = {
     intro3bet:
       "自分がオープンレイズした後に3ベットを受けたときの対応です — 赤は4ベット、緑はコール、" +
       "残りはフォールドです。頻度は「オープンした場合」を基準としているため、オープンしない" +
-      "ハンドは空欄です。6マックスキャッシュ100bb、オープン2.5bb、3ベット約10〜11bbが基準です。",
+      "ハンドは空欄です。6maxキャッシュゲーム100bb、オープン2.5bb、3ベット約10〜11bbが基準です。",
     legend4bet: "4ベット",
     legendCond: "空欄 = そもそもオープンしない",
     stat4bet: "4ベット率",
@@ -477,18 +477,18 @@ const M = {
       "スクイーズ = オープンとコーラーが両方いる状況での3ベット（ここでは約11〜12bb）です。" +
       "コーラーがいるとヘッズアップのディフェンスより全体の続行は狭くなり、3ベットは" +
       "バリュー中心になります。オーバーコールはマルチウェイでナッツを作れる" +
-      "スーテッド・コネクテッドなハンドが中心です。",
+      "スーテッドコネクター系のハンドが中心です。",
     how3bet2:
       "赤＋緑がマスを満たさない分はフォールドです。両色が重なるマスは4ベットとコールを" +
       "混合します。オープンレンジにないハンドはこの状況自体が起こらないため空欄です。",
     intro:
       "ポジション別のオープンレンジ（RFI）です — 前の全員がフォールドしたとき、どのハンドで" +
-      "レイズすべきでしょうか？6マックスキャッシュ100bb、オープン2.5bbが基準です。" +
+      "レイズすべきでしょうか？6maxキャッシュゲーム100bb、オープン2.5bbが基準です。" +
       "部分的な塗りは混合頻度（ときどきだけオープン）を表します。",
     introDefend:
       "相手が先にオープンレイズしたときの対応 — よく出る組み合わせです。" +
       "赤は3ベット、緑はコール、2色を積み上げた高さがディフェンス頻度です。" +
-      "6マックスキャッシュ100bb、オープン2.5bb（SBオープンは3bb）が基準です。",
+      "6maxキャッシュゲーム100bb、オープン2.5bb（SBオープンは3bb）が基準です。",
     legendOpen: "オープン (100%)",
     legendMixed: "混合頻度（塗りの高さ = オープン%）",
     legendFold: "フォールド",
@@ -497,7 +497,7 @@ const M = {
     legendMixedDefend: "塗りの高さ = 頻度（2色のマスはその比率で混合）",
     stat3bet: "3ベット率",
     statCall: "コール率",
-    statTotal: "総ディフェンス",
+    statTotal: "ディフェンス合計",
     copy3bet: "3ベットレンジをコピー",
     copyCall: "コールレンジをコピー",
     sbNote:
@@ -522,18 +522,18 @@ const M = {
     howDefend2:
       "赤＋緑がマスを満たさない分はフォールドが混ざるハンドです。両色が重なるマスは3ベットとコールをその比率で混合します。",
     howDefend3:
-      "[レンジをコピー]で得たテキストをカスタムスポットの①/②のレンジ入力に貼り付けると、このディフェンスレンジでフロップ以降を自分で計算できます。",
-    sourceTitle: "このレンジ表はどうやって作りましたか？",
+      "コピーしたレンジをカスタムスポットの①/②のレンジ入力に貼り付けると、このディフェンスレンジでフロップ以降を自分で計算できます。",
+    sourceTitle: "このレンジ表はどうやって作られていますか？",
     sourceBody:
       "公開されている無料のGTO資料を複数、" +
       "ハンド単位で相互検証して「合意レンジ」を作り、資料ごとに判断が分かれる境界ハンドは" +
       "混合頻度として表記しました。BTN・SBは、本アプリの学習スポットに使われている" +
       "ソルバー検証済みレンジとも照合しています。",
     sourceList:
-      "相互検証に使った公開資料: nlh.poker · Preflop Wizard · HoldemPro · " +
-      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO（BB vs SBの実測頻度） · " +
-      "GTO Gecko · RiverOdds（ディフェンス頻度のアンカー） · GTO Wizardブログ · FreeBetRange" +
-      "（IPディフェンス・スクイーズの原則） · 888poker · Run It Once（vs 3ベット頻度） + " +
+      "相互検証に使った公開資料：nlh.poker・Preflop Wizard・HoldemPro・" +
+      "The Felt (about-poker.com)・BeyondGTO・ThinkGTO（BB vs SBの実測頻度）・" +
+      "GTO Gecko・RiverOdds（ディフェンス頻度のアンカー）・GTO Wizardブログ・FreeBetRange" +
+      "（IPディフェンス・スクイーズの原則）・888poker・Run It Once（vs 3ベット頻度） + " +
       "自社の学習プリセットレンジ（2026-08収集）",
     phase2: "組み合わせとシナリオは今後も追加していく予定です。",
   },
@@ -545,7 +545,7 @@ const M = {
     intro4bet:
       "Cómo responder cuando tu 3-bet recibe un 4-bet — el rojo es 5-bet (all-in), el verde " +
       "es call y el resto se retira. Las frecuencias son condicionales a haber 3-beteado, así que " +
-      "las manos que nunca 3-beteas quedan en blanco. Cash 6-max, 100bb; el BB 3-betea 11bb " +
+      "las manos que nunca 3-beteas quedan en blanco. Cash 6-max, 100bb; la BB 3-betea 11bb " +
       "y enfrenta un 4-bet de 24bb, la SB 3-betea 10bb y enfrenta 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "En blanco = nunca se 3-betea",
@@ -554,10 +554,10 @@ const M = {
     copy5bet: "Copiar rango de 5-bet",
     note4bet:
       "Las estadísticas son proporciones de tu rango de 3-bet. A 100bb el 5-bet es en la práctica " +
-      "all-in — el valor se centra en AA·KK (a veces pagando de trampa), y QQ·AK mezclan 5-bets " +
+      "all-in — el valor se centra en AA·KK (a veces solo pagando para tender una trampa), y QQ·AK mezclan 5-bets " +
       "con calls. Los calls se guían por la realización, no por las pot odds: peleas fuera de " +
       "posición con SPR bajo, así que solo continúan los pares y las mejores manos suited — pero " +
-      "no lo tires todo, porque el rango de 4-bet mezcla bluffs como A5s-A4s.",
+      "no lo foldees todo, porque el rango de 4-bet mezcla bluffs como A5s-A4s.",
     how4bet2:
       "Si el rojo + verde no llenan la celda, el resto se retira. Las celdas con ambos colores " +
       "mezclan 5-bets y calls. Las manos fuera del rango de 3-bet nunca enfrentan este spot, " +
@@ -578,7 +578,7 @@ const M = {
     squeezeNote:
       "Un squeeze es un 3-bet con un opener y un caller ya en el bote (aquí de unos 11-12bb). " +
       "El caller hace que la defensa total sea más estrecha que en heads-up y empuja el 3-bet " +
-      "hacia el valor. Los overcalls favorecen manos suited y conectadas que pueden hacer nuts multiway.",
+      "hacia el valor. Los overcalls favorecen manos suited y conectadas que pueden ligar los nuts multiway.",
     how3bet2:
       "Si el rojo + verde no llenan la celda, el resto se retira. Las celdas con ambos colores " +
       "mezclan 4-bets y calls. Las manos fuera del rango de apertura nunca enfrentan este spot, " +
@@ -589,7 +589,7 @@ const M = {
       "llenas son opens de frecuencia mixta.",
     introDefend:
       "Cómo responder cuando alguien abre antes que tú — los enfrentamientos más comunes. El rojo " +
-      "es 3-bet, el verde es call, y la altura apilada es tu frecuencia total de defensa. " +
+      "es 3-bet, el verde es call, y la altura total de la barra es tu frecuencia de defensa. " +
       "Cash 6-max, 100bb, open de 2.5bb (3bb para opens de SB).",
     legendOpen: "Open (100%)",
     legendMixed: "Frecuencia mixta (altura = % de open)",
@@ -604,14 +604,14 @@ const M = {
     copyCall: "Copiar rango de call",
     sbNote:
       "La SB juega prácticamente 3-bet-o-fold contra un open del BTN — estás fuera de posición " +
-      "y el BB todavía queda por hablar, así que pagar carga con las dos desventajas a la vez.",
+      "y la BB todavía queda por hablar, así que pagar carga con las dos desventajas a la vez.",
     ipNote:
-      "Incluso con posición, un open de posición temprana es un rango fuerte, y pagar arriesga " +
-      "un squeeze de las ciegas que quedan por hablar. La defensa en posición es, por eso, un " +
+      "Incluso con posición, un open de posición temprana es un rango fuerte, y pagar te expone " +
+      "a un squeeze de las ciegas que quedan por hablar. La defensa en posición es, por eso, un " +
       "rango estrecho centrado en el 3-bet, con calls limitados sobre todo a pares y las mejores manos suited.",
     statPercent: "% de open",
     statCombos: "Combos abiertos",
-    statHands: "Manos abiertas",
+    statHands: "Manos que abres",
     statMixed: "Manos mixtas",
     copy: "Copiar texto del rango",
     copied: "✓ Copiado",
@@ -629,7 +629,7 @@ const M = {
     sourceBody:
       "Cotejamos a mano varios recursos GTO publicados gratuitamente para construir un rango de " +
       "consenso, marcando como frecuencia mixta las manos en las que las fuentes difieren. BTN y SB " +
-      "también se contrastaron con los rangos verificados por solver que usan los spots de estudio de esta app.",
+      "también se contrastaron con los rangos verificados por solver que usan los Spots de estudio de esta app.",
     sourceList:
       "Fuentes públicas cotejadas: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (frecuencias resueltas de BB vs SB) · " +

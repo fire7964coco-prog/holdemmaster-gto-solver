@@ -34,17 +34,17 @@ const CARD_TEXT = {
     result: (verdict: string) => `My result: ${verdict}`,
     evLine: (bb: string, streak: number) =>
       `EV loss ${bb}bb${streak > 1 ? ` · ${streak}-day streak` : ""}`,
-    invite: "Try the same puzzle",
+    invite: "Try today's puzzle",
   },
   ja: {
     brand: "HoldemMaster GTOトレーナー",
-    tagline: "毎日1問 · 全員同じ問題",
+    tagline: "毎日1問・全員同じ問題",
     heading: "今日のGTO問題",
     board: "ボード",
-    hand: "マイハンド",
+    hand: "自分のハンド",
     result: (verdict: string) => `私の結果: ${verdict}`,
     evLine: (bb: string, streak: number) =>
-      `EVロス ${bb}bb${streak > 1 ? ` · ${streak}日連続挑戦中` : ""}`,
+      `EVロス ${bb}bb${streak > 1 ? `・${streak}日連続挑戦中` : ""}`,
     invite: "同じ問題を解いてみる",
   },
   es: {

@@ -346,7 +346,7 @@ const M = {
     pot: "Pot",
     stack: "Stack",
     equity: "Equity",
-    win: (player: string) => `${player} Wins`,
+    win: (player: string) => `${player} wins`,
     spotPlayer: (player: string): string =>
       (
         {
@@ -386,7 +386,7 @@ const M = {
         } as Record<string, string>
       )[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
-      `${label} ${formatted} (${percent}% ポット)`,
+      `${label} ${formatted} (ポットの${percent}%)`,
   },
   es: {
     pot: "Bote",

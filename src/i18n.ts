@@ -63,7 +63,7 @@ const DOC_META: Record<Locale, { title: string; description: string }> = {
       "설치 없이 브라우저에서 실행하는 무료 GTO 솔버. 텍사스 홀덤 포스트플랍 전략을 레인지·보드·벳 사이즈별로 계산합니다. 홀덤마스터 커뮤니티 제공.",
   },
   en: {
-    title: "HoldemMaster GTO Solver — Free Browser GTO Solver",
+    title: "HoldemMaster GTO Solver — Free Online Solver for Texas Hold'em",
     description:
       "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
   },
@@ -75,7 +75,7 @@ const DOC_META: Record<Locale, { title: string; description: string }> = {
   es: {
     title: "HoldemMaster GTO Solver — Solver GTO gratis en el navegador",
     description:
-      "Solver GTO gratis que corre directo en tu navegador, sin instalar nada. Calcula la estrategia postflop de Texas Hold'em por rango, board y tamaño de apuesta. De HoldemMaster.",
+      "Solver GTO gratis que funciona directamente en tu navegador, sin instalar nada. Calcula la estrategia postflop de Texas Hold'em por rango, board y tamaño de apuesta. De HoldemMaster.",
   },
 };
 

@@ -50,7 +50,7 @@ export const DRAW_LABELS: Record<DrawKey, string> = {
   flush_draw: "플러시 드로우",
   oesd: "양방 스트레이트 드로우",
   gutshot: "거트샷",
-  backdoor_fd: "백도어 플러시",
+  backdoor_fd: "백도어 플러시 드로우",
   no_draw: "드로우 없음",
 };
 
@@ -60,39 +60,39 @@ export const MADE_LABELS_EN: Record<MadeKey, string> = {
   full_house: "Full House",
   flush: "Flush",
   straight: "Straight",
-  trips: "Trips",
+  trips: "Set/Trips",
   two_pair: "Two Pair",
   overpair: "Overpair",
   top_pair: "Top Pair",
   second_pair: "Second Pair",
   weak_pair: "Weak Pair",
   underpair: "Underpair",
-  ace_high: "Ace High",
-  king_high: "King High",
+  ace_high: "Ace-High",
+  king_high: "King-High",
   nothing: "No Made Hand",
 };
 
 export const DRAW_LABELS_EN: Record<DrawKey, string> = {
   combo_draw: "Combo Draw",
   flush_draw: "Flush Draw",
-  oesd: "Open-Ended Straight Draw",
+  oesd: "OESD",
   gutshot: "Gutshot",
-  backdoor_fd: "Backdoor Flush Draw",
+  backdoor_fd: "Backdoor FD",
   no_draw: "No Draw",
 };
 
 export const MADE_LABELS_JA: Record<MadeKey, string> = {
   straight_flush: "ストレートフラッシュ",
-  quads: "クワッズ",
+  quads: "フォーカード",
   full_house: "フルハウス",
   flush: "フラッシュ",
   straight: "ストレート",
-  trips: "トリップス",
+  trips: "スリーカード",
   two_pair: "ツーペア",
   overpair: "オーバーペア",
   top_pair: "トップペア",
   second_pair: "セカンドペア",
-  weak_pair: "ウィークペア",
+  weak_pair: "ローペア",
   underpair: "アンダーペア",
   ace_high: "Aハイ",
   king_high: "Kハイ",
@@ -104,7 +104,7 @@ export const DRAW_LABELS_JA: Record<DrawKey, string> = {
   flush_draw: "フラッシュドロー",
   oesd: "オープンエンド",
   gutshot: "ガットショット",
-  backdoor_fd: "バックドアフラッシュ",
+  backdoor_fd: "バックドアFD",
   no_draw: "ドローなし",
 };
 
@@ -115,23 +115,23 @@ export const MADE_LABELS_ES: Record<MadeKey, string> = {
   flush: "Color",
   straight: "Escalera",
   trips: "Trío",
-  two_pair: "Doble par",
+  two_pair: "Doble pareja",
   overpair: "Overpair",
   top_pair: "Top pair",
-  second_pair: "Segundo par",
-  weak_pair: "Par débil",
+  second_pair: "Segunda pareja",
+  weak_pair: "Pareja débil",
   underpair: "Underpair",
-  ace_high: "A alto",
-  king_high: "K alto",
+  ace_high: "A-high",
+  king_high: "K-high",
   nothing: "Sin jugada",
 };
 
 export const DRAW_LABELS_ES: Record<DrawKey, string> = {
-  combo_draw: "Proyecto combo",
+  combo_draw: "Proyecto combinado",
   flush_draw: "Proyecto de color",
   oesd: "Proyecto a dos puntas",
   gutshot: "Gutshot",
-  backdoor_fd: "Backdoor de color",
+  backdoor_fd: "Proyecto backdoor",
   no_draw: "Sin proyecto",
 };
 

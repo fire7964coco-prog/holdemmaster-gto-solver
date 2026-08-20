@@ -517,7 +517,7 @@ const M = {
     display: "Display:",
     actionPct: "Action %",
     actionEv: "Action EV",
-    exportCsv: "Export summary as CSV file",
+    exportCsv: "Export summary as a CSV file",
     all: "All",
     hand: "Hand",
     strategy: "Strategy",
@@ -528,7 +528,7 @@ const M = {
     comboBar: "Combos (Bar)",
     combos: "Combos",
     noReport: (chanceType: string) =>
-      `${chanceType === "turn" ? "Turn" : "River"} report is not available`,
+      `No ${chanceType === "turn" ? "turn" : "river"} report available`,
     noResults: "No results",
     action: (name: string): string => name,
   },

@@ -67,7 +67,7 @@ const M = {
       `편집된 트리는 보드 카드 ${n}장을 전제로 합니다.`,
   },
   en: {
-    placeholder: "e.g. AsKd7c",
+    placeholder: "e.g., AsKd7c",
     clear: "Clear",
     randomFlop: "Random Flop",
     warnLabel: "Warning:",
@@ -88,7 +88,7 @@ const M = {
     randomFlop: "Flop aleatorio",
     warnLabel: "Atención:",
     warnBody: (n: number) =>
-      `El árbol editado asume un board de ${n} cartas.`,
+      `El árbol editado asume un board de ${n} carta${n === 1 ? "" : "s"}.`,
   },
 } as const;
 

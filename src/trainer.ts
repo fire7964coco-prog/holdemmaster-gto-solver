@@ -133,13 +133,13 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       all: "すべて",
       srp: "シングルレイズポット",
       "3bp": "3ベットポット",
-      blind: "ブラインドバトル",
+      blind: "ブラインド戦",
     },
     es: {
       all: "Todos",
       srp: "Single Raised",
       "3bp": "Bote 3-bet",
-      blind: "Ciega vs ciega",
+      blind: "Guerra de ciegas",
     },
   };
   return labels[i18n.locale][category];

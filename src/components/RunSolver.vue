@@ -345,25 +345,25 @@ const M = {
     shareSpot: "🔗 Share Spot",
     statusLabel: "Status:",
     statusNotLoaded: "Module not loaded",
-    statusBuilding: "Building tree...",
+    statusBuilding: "Building tree…",
     statusError: (message: string) => `Error: ${message}`,
     statusBuilt: (threads: number) =>
-      `Successfully built tree (${threads} threads)`,
+      `Tree built successfully (${threads} thread${threads === 1 ? "" : "s"})`,
     precisionMode: "Precision mode:",
     precisionTipIntro:
       "The precision mode mainly affects memory usage. There are also a few other differences.",
     precisionTipFp:
-      "32-bit floating point (FP): recommended when the memory usage is below the limit (3.9GB). About 7 significant digits and better performance.",
+      "32-bit floating point (FP): recommended when memory usage is below the limit (3.9GB). About 7 significant digits and better performance.",
     precisionTipInt:
       "16-bit integer: an alternative when the 32-bit FP mode exceeds the memory limit. About 4 significant digits, so it is not suitable for a target exploitability below 0.1%, and it performs worse than 32-bit FP.",
     fp32Label: "32-bit FP:",
     int16Label: "16-bit integer:",
-    ramNeeded: (size: string) => `needs ${size} RAM`,
+    ramNeeded: (size: string) => `needs ${size} of RAM`,
     limitExceeded: "(limit exceeded)",
-    ramLimit: "RAM limit: 3.9GB (= 4GB Wasm limit - 0.1GB margin)",
+    ramLimit: "RAM limit: 3.9GB (= 4GB Wasm limit − 0.1GB margin)",
     targetLabel: "Target exploitability:",
     exploitTipIntro:
-      "Specifies the acceptable distance to the Nash equilibrium. A lower value gives a more accurate result, but the computation takes longer.",
+      "Specifies the acceptable distance from the Nash equilibrium. A lower value gives a more accurate result, but the computation takes longer.",
     exploitTipDetailLabel: "Details:",
     exploitTipDetail:
       "In a Nash equilibrium, both players' strategies are MES (Maximally Exploitative Strategies) against each other. Using this property, we define the distance between an obtained strategy and the Nash equilibrium as follows:",
@@ -375,29 +375,29 @@ const M = {
     stop: "Stop",
     pause: "Pause",
     resume: "Resume",
-    solving: "Solving...",
-    finalizing: "Finalizing...",
+    solving: "Solving…",
+    finalizing: "Finalizing…",
     pausedStatus: "Paused.",
     finished: "Solver finished!",
-    allocatingMemory: "Allocating memory...",
+    allocatingMemory: "Allocating memory…",
     iterations: (count: number) => `Iterations: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
       `Exploitability: ${value} (${percent})`,
-    timeLine: (seconds: string) => `Time elapsed: ${seconds} seconds`,
+    timeLine: (seconds: string) => `Time elapsed: ${seconds}s`,
   },
   ja: {
     sharedSpotBanner:
       "共有されたスポットを読み込みました — [ツリーを作成] → [ソルバーを実行] を押すと計算が始まります。",
     numThreadsLabel: "スレッド数:",
     buildTree: "ツリーを作成",
-    copied: "コピーしました!",
+    copied: "コピーしました",
     shareSpot: "🔗 スポットを共有",
     statusLabel: "ステータス:",
     statusNotLoaded: "モジュールがまだ読み込まれていません",
-    statusBuilding: "ツリーを作成中...",
+    statusBuilding: "ツリーを作成中…",
     statusError: (message: string) => `エラー: ${message}`,
     statusBuilt: (threads: number) =>
-      `ツリーの作成が完了しました(スレッド${threads}個)`,
+      `ツリーの作成が完了しました(${threads}スレッド)`,
     precisionMode: "精度モード:",
     precisionTipIntro:
       "精度モードは主にメモリ使用量に影響します。ほかにもいくつかの違いがあります。",
@@ -424,11 +424,11 @@ const M = {
     stop: "停止",
     pause: "一時停止",
     resume: "再開",
-    solving: "計算中...",
-    finalizing: "仕上げ処理中...",
+    solving: "計算中…",
+    finalizing: "仕上げ処理中…",
     pausedStatus: "一時停止中。",
-    finished: "計算が完了しました!",
-    allocatingMemory: "メモリを割り当て中...",
+    finished: "計算が完了しました！",
+    allocatingMemory: "メモリを割り当て中…",
     iterations: (count: number) => `イテレーション: ${count}回`,
     exploitabilityLine: (value: string, percent: string) =>
       `誤差(exploitability): ${value} (${percent})`,
@@ -443,10 +443,10 @@ const M = {
     shareSpot: "🔗 Compartir spot",
     statusLabel: "Estado:",
     statusNotLoaded: "El módulo aún no está cargado",
-    statusBuilding: "Creando el árbol...",
+    statusBuilding: "Creando el árbol…",
     statusError: (message: string) => `Error: ${message}`,
     statusBuilt: (threads: number) =>
-      `Árbol creado con éxito (${threads} hilos)`,
+      `Árbol creado con éxito (${threads} hilo${threads === 1 ? "" : "s"})`,
     precisionMode: "Modo de precisión:",
     precisionTipIntro:
       "El modo de precisión afecta principalmente el uso de memoria. También hay otras diferencias menores.",
@@ -459,29 +459,29 @@ const M = {
     ramNeeded: (size: string) => `necesita ${size} de RAM`,
     limitExceeded: "(límite superado)",
     ramLimit: "Límite de RAM: 3.9GB (= límite Wasm de 4GB - margen de 0.1GB)",
-    targetLabel: "Error objetivo (exploitability):",
+    targetLabel: "Error objetivo (explotabilidad):",
     exploitTipIntro:
       "Define la distancia aceptable al equilibrio de Nash. Un valor más bajo da un resultado más preciso, pero el cálculo tarda más.",
     exploitTipDetailLabel: "Detalles:",
     exploitTipDetail:
-      "En un equilibrio de Nash, las estrategias de ambos jugadores son MES (estrategias máximamente explotadoras) una contra la otra. Usando esta propiedad, definimos la distancia entre una estrategia obtenida y el equilibrio de Nash así:",
+      "En un equilibrio de Nash, las estrategias de ambos jugadores son MES (estrategias de máxima explotación) una contra la otra. Usando esta propiedad, definimos la distancia entre una estrategia obtenida y el equilibrio de Nash así:",
     exploitTipFormula: "Distancia = (EV del MES del rival) - (EV real del rival)",
     exploitTipOutro:
-      "Esta distancia nunca es negativa y solo es cero si la estrategia obtenida forma parte de un equilibrio de Nash. La exploitability se define como la distancia promedio de ambos jugadores.",
+      "Esta distancia nunca es negativa y solo es cero si la estrategia obtenida forma parte de un equilibrio de Nash. La explotabilidad se define como la distancia promedio de ambos jugadores.",
     maxIterationsLabel: "Iteraciones máximas:",
     runSolver: "Ejecutar solver",
     stop: "Detener",
     pause: "Pausar",
     resume: "Reanudar",
-    solving: "Calculando...",
-    finalizing: "Finalizando...",
+    solving: "Calculando…",
+    finalizing: "Finalizando…",
     pausedStatus: "En pausa.",
     finished: "¡Cálculo terminado!",
-    allocatingMemory: "Asignando memoria...",
+    allocatingMemory: "Asignando memoria…",
     iterations: (count: number) => `Iteraciones: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
       `Exploitability: ${value} (${percent})`,
-    timeLine: (seconds: string) => `Tiempo transcurrido: ${seconds} segundos`,
+    timeLine: (seconds: string) => `Tiempo transcurrido: ${seconds} s`,
   },
 } as const;
 
@@ -505,24 +505,24 @@ const checkConfig = (
     return pick(
       "시작 팟은 0보다 커야 합니다",
       "Starting pot must be positive",
-      "スタートポットは正の値である必要があります",
+      "スターティングポットには正の数を入力してください",
       "El bote inicial debe ser positivo"
     );
   }
 
   if (config.startingPot > MAX_AMOUNT) {
-    return pick("시작 팟이 너무 큽니다", "Starting pot is too large", "スタートポットが大きすぎます", "El bote inicial es demasiado grande");
+    return pick("시작 팟이 너무 큽니다", `Starting pot must not exceed ${MAX_AMOUNT}`, "スターティングポットが大きすぎます", "El bote inicial es demasiado grande");
   }
 
   if (config.startingPot % 1 !== 0) {
-    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スタートポットは整数である必要があります", "El bote inicial debe ser un entero");
+    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero");
   }
 
   if (config.effectiveStack <= 0) {
     return pick(
       "유효 스택은 0보다 커야 합니다",
       "Effective stack must be positive",
-      "有効スタックは正の値である必要があります",
+      "有効スタックには正の数を入力してください",
       "El stack efectivo debe ser positivo"
     );
   }
@@ -535,7 +535,7 @@ const checkConfig = (
     return pick(
       "유효 스택은 정수여야 합니다",
       "Effective stack must be an integer",
-      "有効スタックは整数である必要があります",
+      "有効スタックは整数で入力してください",
       "El stack efectivo debe ser un entero"
     );
   }
@@ -615,7 +615,7 @@ const checkConfig = (
       "올인 추가 기준값이 잘못되었습니다",
       "Invalid add all-in threshold",
       "オールイン追加のしきい値が無効です",
-      "Umbral de agregar all-in inválido"
+      "Umbral para agregar all-in inválido"
     );
   }
 

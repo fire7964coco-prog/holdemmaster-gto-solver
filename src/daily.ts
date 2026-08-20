@@ -140,12 +140,12 @@ export const dailyShareText = (verdict: string) => {
   const date = todayKey().replace(/-/g, ".").slice(2);
   if (i18n.locale === "ja") {
     return [
-      `[今日のGTO問題 · ${date}]`,
+      `[今日のGTO問題・${date}]`,
       `結果: ${verdict}（EVロス ${dailyState.lossBb.toFixed(3)}bb）`,
       dailyState.streak > 1 ? `${dailyState.streak}日連続チャレンジ中` : "",
       "",
       "同じ問題に挑戦 → https://solver.holdemmaster.com/?view=trainer&lang=ja",
-      "（HoldemMaster GTOソルバー · 毎日1問）",
+      "（HoldemMaster GTOソルバー・毎日1問）",
     ]
       .filter(Boolean)
       .join("\n");
