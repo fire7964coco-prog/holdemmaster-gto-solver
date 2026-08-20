@@ -86,6 +86,12 @@ const M = {
     draws: "ドロー",
     noDraws: "ドロー情報なし",
   },
+  es: {
+    hands: "Manos",
+    noHands: "No hay manos para mostrar",
+    draws: "Proyectos",
+    noDraws: "Sin información de proyectos",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)

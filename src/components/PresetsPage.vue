@@ -150,6 +150,21 @@ const M = {
     footnote:
       "レンジは100bbオンライン標準の近似値です。読み込んだ後、自由に調整して比較してみるのも良い勉強になります。",
   },
+  es: {
+    infoBtn1: "[⚡ Ver resultados]",
+    infoText1:
+      " muestra la estrategia resuelta al instante. Usa ",
+    infoBtn2: "[Resolver tú mismo]",
+    infoText2:
+      " solo cuando quieras ajustar los rangos o explorar turn y river.",
+    pot: "Bote",
+    stack: "Stack",
+    articleLink: "Leer análisis",
+    viewResults: "Ver resultados",
+    solveYourself: "Resolver tú mismo",
+    footnote:
+      "Los rangos son aproximaciones del estándar online de 100bb. Carga un spot, ajusta los rangos y compara — una gran forma de estudiar.",
+  },
 } as const;
 
 export default defineComponent({

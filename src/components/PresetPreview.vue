@@ -175,6 +175,18 @@ const M = {
     playerLabel: "プレイヤー:",
     oopHint: "最初にアクションするプレイヤーの戦略です",
   },
+  es: {
+    backToList: "← Lista",
+    pot: "Bote",
+    stack: "Stack",
+    flopOnlyNote: "Solo estrategia de flop. ¿Quieres explorar turn y river? →",
+    solveThisSpot: "Resolver este spot tú mismo",
+    readArticle: "Leer el análisis",
+    loadError: (e: string) => `No se pudieron cargar los resultados precalculados: ${e}`,
+    loading: "Cargando resultados...",
+    playerLabel: "Jugador:",
+    oopHint: "Estrategia del jugador que actúa primero",
+  },
 } as const;
 
 type PreviewData = {

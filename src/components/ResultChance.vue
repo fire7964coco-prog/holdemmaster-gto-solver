@@ -148,6 +148,12 @@ const M = {
         } as Record<string, string>
       )[name] ?? name,
   },
+  es: {
+    strategyCombos: "Estrategia (combos)",
+    strategy: "Estrategia",
+    equity: "Equity",
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

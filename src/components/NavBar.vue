@@ -39,7 +39,7 @@
       </div>
 
       <div class="flex ml-auto h-full items-center z-10">
-        <!-- 언어 선택 — 3개 언어(ko/en/ja)라 토글 대신 선택 상자.
+        <!-- 언어 선택 — 4개 언어(ko/en/ja/es)라 토글 대신 선택 상자.
              닫힌 상태에는 현재 언어의 이름만 보이므로 화면에 외국어가 남지 않는다 -->
         <select
           class="lang-select"
@@ -50,6 +50,7 @@
           <option value="ko">한국어</option>
           <option value="en">English</option>
           <option value="ja">日本語</option>
+          <option value="es">Español</option>
         </select>
         <a
           :href="communityUrl"
@@ -97,6 +98,14 @@ const M = {
     communitySuffix: " コミュニティ",
     langSwitchLabel: "言語を選択",
   },
+  es: {
+    brand: "HoldemMaster GTO Solver",
+    solver: "Solver",
+    results: "Resultados",
+    community: "Comunidad",
+    communitySuffix: " HoldemMaster",
+    langSwitchLabel: "Seleccionar idioma",
+  },
 } as const;
 
 export default defineComponent({
@@ -108,7 +117,13 @@ export default defineComponent({
     const L = computed(() => M[i18n.locale]);
     const onLocaleChange = (event: Event) => {
       const value = (event.target as HTMLSelectElement).value;
-      if (value === "ko" || value === "en" || value === "ja") setLocale(value);
+      if (
+        value === "ko" ||
+        value === "en" ||
+        value === "ja" ||
+        value === "es"
+      )
+        setLocale(value);
     };
     return {
       store: useStore(),

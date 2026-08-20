@@ -78,6 +78,18 @@ const M = {
       "コミュニティの投稿に貼り付けていただければ、修正に役立てます。個人情報は含まれていません。",
     promptCopy: "以下の内容をコピーしてください",
   },
+  es: {
+    title: "Se registró un problema",
+    body1: "Si algo se veía mal, cuéntanos. Los detalles se guardan ",
+    bodyB1: "solo en este dispositivo",
+    body2: " — compartirlos depende totalmente de ti.",
+    copied: "Copiado",
+    copyButton: "Copiar detalles del error",
+    close: "Cerrar",
+    copiedHint:
+      "Pégalo en una publicación de la comunidad y lo usaremos para corregir el problema. No contiene información personal.",
+    promptCopy: "Copia el texto de abajo",
+  },
 } as const;
 
 export default defineComponent({

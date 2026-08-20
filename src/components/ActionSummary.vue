@@ -38,6 +38,9 @@ const M = {
   ja: {
     combos: "コンボ",
   },
+  es: {
+    combos: "combos",
+  },
 } as const;
 
 const actionLabel = (
@@ -83,7 +86,8 @@ const actionLabel = (
     return `${label} ${shown} (${Math.round((value * 100) / pot)}% ${pick(
       "팟",
       "pot",
-      "ポット"
+      "ポット",
+      "bote"
     )})`;
   }
   return `${label} ${shown}`;

@@ -179,6 +179,30 @@ const M = {
     betSizeSub: "設定",
     run: "計算を実行",
   },
+  // ⚠ es도 같은 한 줄 제약 — 스페인어 라벨은 길어지기 쉬우니 늘리면 sidebar-fit로 확인할 것
+  es: {
+    exploreLabel: "Explorar",
+    exploreLabelSuffix: " y estudiar",
+    about: "Acerca de",
+    guide: "Cómo usarlo",
+    presets: "Spots de estudio",
+    presetsBadge: "Directo",
+    trainer: "Entrenador GTO",
+    trainerBadge: "Nota EV",
+    preflop: "Tablas preflop",
+    preflopBadge: "Rangos",
+    equity: "Calc. de equity",
+    equityBadge: "Victoria",
+    customLabel: "Spot personalizado",
+    // 한 줄 유지용 — 접미사를 비워 이름만 표시한다 (라벨이 길면 ⑤가 화면 밖으로 밀린다)
+    customLabelSuffix: "",
+    oopRange: "Rango OOP",
+    ipRange: "Rango IP",
+    board: "Board",
+    betSize: "Bet sizes",
+    betSizeSub: "Ajustes",
+    run: "Calcular",
+  },
 } as const;
 
 export default defineComponent({

@@ -61,6 +61,7 @@ export const MAIN_SITE = "https://www.holdemmaster.com";
 const LOCALE_PATHS: Record<string, Record<string, string>> = {
   en: { "": "/en", "/solver": "/en/solver" },
   ja: { "": "/ja" }, // /ja/solver·/ja/community는 아직 없다 (2026-08-19 실측 404)
+  es: { "": "/es" }, // /es는 실재(200), /es/solver는 404 (2026-08-20 실측 — 스페인어화 리서치)
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

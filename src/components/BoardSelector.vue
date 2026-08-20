@@ -82,6 +82,14 @@ const M = {
     warnBody: (n: number) =>
       `編集されたツリーはボードカード${n}枚を前提としています。`,
   },
+  es: {
+    placeholder: "ej. AsKd7c",
+    clear: "Borrar",
+    randomFlop: "Flop aleatorio",
+    warnLabel: "Atención:",
+    warnBody: (n: number) =>
+      `El árbol editado asume un board de ${n} cartas.`,
+  },
 } as const;
 
 export default defineComponent({

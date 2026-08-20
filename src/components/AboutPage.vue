@@ -273,6 +273,46 @@ const M = {
     creditMid2: "がローカライズ・改良したバージョンで、修正した全ソースコードは",
     creditAfter: "に同じライセンスで公開されています。",
   },
+  es: {
+    community: "Comunidad HoldemMaster",
+    heroTitle1: "Estrategia GTO,",
+    heroTitle2: "directo en tu navegador.",
+    heroSub1: "Nada que instalar, nada que pagar. Ingresa tus rangos y un board,",
+    heroSub2: "y la estrategia óptima se calcula en tu propio dispositivo.",
+    ctaPresets: "Ver ejemplos resueltos",
+    ctaTrainer: "Entrenador GTO",
+    ctaDaily: "Reto del día",
+    dailyDone: "Hecho",
+    ctaGuide: "Cómo usarlo",
+    ctaInstall: "Agregar a inicio",
+    installNote:
+      "Al instalarlo, los spots de estudio y el entrenador se guardan en tu dispositivo, así puedes seguir practicando incluso sin conexión. Es un acceso directo del navegador, no un programa — nunca pide permisos.",
+    installSafe: "¿Es seguro?",
+    features: [
+      { title: "Gratis", desc: "Todas las funciones, sin límites de uso" },
+      { title: "Estudio offline", desc: "Agrégalo a tu pantalla de inicio y practica sin internet" },
+      { title: "Cálculo rápido", desc: "Multihilo — velocidad de solver de escritorio" },
+      { title: "Entrenador GTO", desc: "Juega spots y recibe tu nota por pérdida de EV" },
+    ],
+    stepsTitle: "¿Primera vez aquí?",
+    steps: [
+      "Abre cualquier spot en Spots de estudio y toca [Ver resultados] — las soluciones aparecen al instante",
+      "Revisa Cómo usarlo para aprender a leer la pantalla de resultados",
+      "Prueba el Entrenador GTO — te muestra exactamente cuántos bb te cuesta cada decisión",
+      "Cuando te sientas a gusto, resuelve tus propias manos con el Spot personalizado (①~⑤)",
+    ],
+    landingBefore:
+      "¿Prefieres leer primero qué es un solver GTO y cómo interpretar sus resultados? Consulta",
+    landingLink: "la guía del solver de HoldemMaster",
+    landingAfter: ".",
+    notes:
+      "En iOS y Safari, las limitaciones del navegador fuerzan el cálculo con un solo hilo, así que corre más lento — en macOS recomendamos Chrome. La memoria disponible está limitada a 4GB (límite de WebAssembly), por lo que resolver spots grandes resulta más cómodo en una PC.",
+    creditBefore: "Esta app está basada en",
+    creditMid1: " (de Wataru Inariba, AGPL-3.0), localizada y mejorada por",
+    creditBrand: "HoldemMaster",
+    creditMid2: ". El código fuente modificado completo está publicado en",
+    creditAfter: " bajo la misma licencia.",
+  },
 } as const;
 
 export default defineComponent({

@@ -69,6 +69,12 @@ const M = {
     titleLine2: "GTOソルバーへ。",
     footer: "無料GTOソルバー · オフライン学習",
   },
+  es: {
+    greeting: "Te damos la bienvenida a",
+    titleLine1: "HoldemMaster",
+    titleLine2: "GTO Solver.",
+    footer: "Solver GTO gratis · Funciona offline",
+  },
 } as const;
 
 export default defineComponent({

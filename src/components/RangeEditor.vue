@@ -150,6 +150,14 @@ const M = {
     parseError: (range: string) =>
       `レンジを解析できません: ${range || "(空の文字列)"}`,
   },
+  es: {
+    clear: "Borrar",
+    errorPrefix: "Error:",
+    weight: "Peso:",
+    combos: "combos",
+    parseError: (range: string) =>
+      `No se pudo interpretar el rango: ${range || "(cadena vacía)"}`,
+  },
 } as const;
 
 import { C } from "../theme";

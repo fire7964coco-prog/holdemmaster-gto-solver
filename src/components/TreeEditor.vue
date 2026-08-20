@@ -312,6 +312,22 @@ const M = {
     addedLines: "追加されたライン:",
     removedLines: "削除されたライン:",
   },
+  es: {
+    treeError: "Error: no se pudo construir el árbol (¿cargaste un árbol dañado?)",
+    pot: "Bote",
+    stack: "Stack",
+    noActions: "(Sin acciones)",
+    wins: "gana",
+    invalidTerminals: "Nodos terminales inválidos:",
+    addBetAction: "Agregar acción de bet",
+    removeNode: "Quitar nodo seleccionado",
+    betAmount: "Monto del bet:",
+    potRate: (pct: string) => `(${pct}% del bote)`,
+    saveEdits: "Guardar cambios",
+    cancelEdits: "Cancelar cambios",
+    addedLines: "Líneas agregadas:",
+    removedLines: "Líneas eliminadas:",
+  },
 } as const;
 
 export default defineComponent({

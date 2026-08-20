@@ -194,6 +194,12 @@ const M = {
     finalizing: "仕上げ処理中...",
     paused: "ソルバーは一時停止中です。",
   },
+  es: {
+    notRun: "El solver aún no se ha ejecutado.",
+    running: "Ejecutando el solver...",
+    finalizing: "Finalizando...",
+    paused: "El solver está en pausa.",
+  },
 } as const;
 
 export default defineComponent({

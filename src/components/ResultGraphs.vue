@@ -112,6 +112,10 @@ const M = {
     noGraph: "グラフを表示できません",
     equity: "エクイティ",
   },
+  es: {
+    noGraph: "El gráfico no está disponible",
+    equity: "Equity",
+  },
 } as const;
 
 export default defineComponent({

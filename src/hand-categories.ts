@@ -108,18 +108,49 @@ export const DRAW_LABELS_JA: Record<DrawKey, string> = {
   no_draw: "ドローなし",
 };
 
+export const MADE_LABELS_ES: Record<MadeKey, string> = {
+  straight_flush: "Escalera de color",
+  quads: "Quads",
+  full_house: "Full house",
+  flush: "Color",
+  straight: "Escalera",
+  trips: "Trío",
+  two_pair: "Doble par",
+  overpair: "Overpair",
+  top_pair: "Top pair",
+  second_pair: "Segundo par",
+  weak_pair: "Par débil",
+  underpair: "Underpair",
+  ace_high: "A alto",
+  king_high: "K alto",
+  nothing: "Sin jugada",
+};
+
+export const DRAW_LABELS_ES: Record<DrawKey, string> = {
+  combo_draw: "Proyecto combo",
+  flush_draw: "Proyecto de color",
+  oesd: "Proyecto a dos puntas",
+  gutshot: "Gutshot",
+  backdoor_fd: "Backdoor de color",
+  no_draw: "Sin proyecto",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
     ? MADE_LABELS
     : i18n.locale === "ja"
     ? MADE_LABELS_JA
+    : i18n.locale === "es"
+    ? MADE_LABELS_ES
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
     ? DRAW_LABELS
     : i18n.locale === "ja"
     ? DRAW_LABELS_JA
+    : i18n.locale === "es"
+    ? DRAW_LABELS_ES
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

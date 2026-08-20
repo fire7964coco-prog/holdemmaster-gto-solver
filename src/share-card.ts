@@ -47,6 +47,17 @@ const CARD_TEXT = {
       `EVロス ${bb}bb${streak > 1 ? ` · ${streak}日連続挑戦中` : ""}`,
     invite: "同じ問題を解いてみる",
   },
+  es: {
+    brand: "Entrenador GTO de HoldemMaster",
+    tagline: "Un reto al día · el mismo para todos",
+    heading: "Reto GTO del día",
+    board: "Board",
+    hand: "Mi mano",
+    result: (verdict: string) => `Mi resultado: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `Pérdida de EV ${bb}bb${streak > 1 ? ` · racha de ${streak} días` : ""}`,
+    invite: "Resuelve el mismo reto",
+  },
 } as const;
 
 export type DailyCardInput = {

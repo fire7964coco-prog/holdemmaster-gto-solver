@@ -425,6 +425,62 @@ const M = {
       unknown: "計算中にエラーが発生しました。",
     } as Record<string, string>,
   },
+  es: {
+    intro:
+      "Tu probabilidad de ganar contra una mano concreta o contra un rango completo. Deja el board vacío " +
+      "para preflop, o elige 3/4/5 cartas para flop, turn y river.",
+    heroTitle: "① Tu mano",
+    heroHint: "Elige 2 cartas abajo",
+    fill: "Llenar aquí",
+    villainTitle: "② Rival",
+    modeHand: "Mano",
+    modeRange: "vs Rango",
+    rangePlaceholder: "ej. 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "Puedes pegar el resultado de [Copiar rango] de las tablas preflop. La notación con peso como " +
+      "«K8s:0.75» se aplica tal cual.",
+    anyTwo: "Cualquier par de cartas",
+    rangeError: (token: string) => `No se pudo interpretar: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos} combos · ${percent}% del total`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Vacío = preflop (también acepta 3/4/5 cartas)",
+    boardHintBad: "El board debe tener 0, 3, 4 o 5 cartas",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Calcular",
+    computing: "Calculando…",
+    stop: "Detener",
+    clear: "Borrar todo",
+    resultTitle: "Resultado",
+    resultEmpty:
+      "Elige tus dos cartas y un rival (mano de 2 cartas o rango) y presiona [Calcular].",
+    vsSide: (value: string) => `Rival ${value}%`,
+    win: "Victoria",
+    tie: "Empate",
+    lose: "Derrota",
+    combos: "Combos del rival",
+    badgeExact: "Cálculo exacto",
+    badgeApprox: "Aprox. (±0.2%p)",
+    exactNote: (n: number) => `Se contaron los ${n.toLocaleString()} casos posibles`,
+    approxNote: (n: number) =>
+      `Demasiados casos para enumerar — se muestrearon ${n.toLocaleString()} repartos al azar`,
+    howTitle: "Cómo leerlo",
+    how1: "Equity = % de victorias + la mitad de los empates. Es tu parte del bote si fueras all-in ahora mismo.",
+    how2: "Contra un rango, los combos bloqueados por tus cartas o el board se eliminan automáticamente (card removal).",
+    how3: "La insignia «Cálculo exacto» significa que se contaron todos los casos; «Aprox.» es una muestra aleatoria.",
+    limitTitle: "Alcance",
+    limitBody:
+      "Esta herramienta solo calcula equity de all-in entre dos jugadores. Rango contra rango, botes " +
+      "multiway y líneas de apuesta son trabajo del solver (Spot personalizado).",
+    errors: {
+      "need-hero": "Primero elige tus dos cartas.",
+      "bad-board": "El board debe tener 0, 3, 4 o 5 cartas.",
+      "bad-card": "Valor de carta inválido.",
+      duplicate: "No puedes usar la misma carta dos veces.",
+      "empty-range": "El rango del rival está vacío.",
+      "no-combos": "No quedan combos para el rival después del card removal.",
+      unknown: "Ocurrió un error durante el cálculo.",
+    } as Record<string, string>,
+  },
 } as const;
 
 const CAPACITY: Record<Target, number> = { hero: 2, villain: 2, board: 5 };

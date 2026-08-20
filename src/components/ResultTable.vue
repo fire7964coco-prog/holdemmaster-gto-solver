@@ -566,6 +566,30 @@ const M = {
         } as Record<string, string>
       )[name] ?? name,
   },
+  es: {
+    summary: "Resumen",
+    barWidth: "Ancho de barra:",
+    normalized: "Normalizado",
+    absolute: "Absoluto",
+    full: "Completo",
+    display: "Mostrar:",
+    actionPct: "% de acción",
+    actionEv: "EV de acción",
+    exportCsv: "Exportar resumen como CSV",
+    all: "Todo",
+    hand: "Mano",
+    strategy: "Estrategia",
+    weightBar: "Peso (barra)",
+    weight: "Peso",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (barra)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `No hay reporte de ${chanceType === "turn" ? "turn" : "river"}`,
+    noResults: "Sin resultados",
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

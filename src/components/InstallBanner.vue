@@ -156,6 +156,32 @@ const M = {
       "プログラムがインストールされるわけではなく、ブラウザのショートカットです。権限を要求せず、削除するときもアプリと同じようにアイコンを長押しして削除するだけです。",
     close: "閉じる",
   },
+  es: {
+    iconAlt: "Ícono de HoldemMaster GTO Solver",
+    title: "¿Agregar a tu pantalla de inicio?",
+    samsung1: "Samsung Internet muestra la advertencia ",
+    samsungB1: "«Aplicación no segura bloqueada»",
+    samsung2: " al instalar — es un problema del navegador, no de esta app. ",
+    samsungB2: "Ábrela en Chrome",
+    samsung3: " y se instala sin la advertencia.",
+    default1: "Se abre con un solo toque y ",
+    defaultB1: "guarda los 13 spots de estudio y el entrenador en tu dispositivo",
+    default2: " para que puedas estudiar incluso sin conexión a internet.",
+    ios1: "Toca el ",
+    iosB1: "botón Compartir",
+    ios2: " de abajo y elige ",
+    iosB2: "«Agregar a inicio»",
+    ios3: ". Se abre con un solo toque, con los spots de estudio y el entrenador guardados para usarlos sin conexión.",
+    openInChrome: "Abrir en Chrome",
+    install: "Agregar a inicio",
+    gotIt: "Entendido",
+    later: "Después",
+    samsungHint:
+      "Para instalar aquí de todos modos, toca [Más detalles] → [Instalar de todos modos] en el cuadro de advertencia.",
+    safety:
+      "No se instala nada en tu sistema — es solo un acceso directo del navegador. No pide permisos y puedes quitarlo cuando quieras manteniendo presionado el ícono, como cualquier app.",
+    close: "Cerrar",
+  },
 } as const;
 
 export default defineComponent({

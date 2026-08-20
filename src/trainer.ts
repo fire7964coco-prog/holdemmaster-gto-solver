@@ -90,11 +90,18 @@ const actionLabelsJa: Record<string, string> = {
   Allin: "オールイン",
   "All-in": "オールイン",
 };
+// es는 액션명을 영어 그대로 쓴다 (GTO Wizard es 관행) — 표기만 en과 통일
+const actionLabelsEs: Record<string, string> = {
+  Allin: "All-In",
+  "All-in": "All-In",
+};
 const actionName = (name: string) =>
   i18n.locale === "ko"
     ? actionLabelsKo[name] ?? name
     : i18n.locale === "ja"
     ? actionLabelsJa[name] ?? name
+    : i18n.locale === "es"
+    ? actionLabelsEs[name] ?? name
     : actionLabelsEn[name] ?? name;
 
 export const trainerCategory = (
@@ -106,7 +113,10 @@ export const trainerCategory = (
 };
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
-  const labels: Record<"ko" | "en" | "ja", Record<TrainerCategory, string>> = {
+  const labels: Record<
+    "ko" | "en" | "ja" | "es",
+    Record<TrainerCategory, string>
+  > = {
     ko: {
       all: "전체",
       srp: "싱글레이즈팟",
@@ -124,6 +134,12 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       srp: "シングルレイズポット",
       "3bp": "3ベットポット",
       blind: "ブラインドバトル",
+    },
+    es: {
+      all: "Todos",
+      srp: "Single Raised",
+      "3bp": "Bote 3-bet",
+      blind: "Ciega vs ciega",
     },
   };
   return labels[i18n.locale][category];
@@ -146,6 +162,8 @@ export const trainerActionLabel = (
       ? `${label} ${amount} (${pct}% 팟)`
       : i18n.locale === "ja"
       ? `${label} ${amount} (${pct}% ポット)`
+      : i18n.locale === "es"
+      ? `${label} ${amount} (${pct}% bote)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return `${label} ${amount}`;
