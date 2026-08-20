@@ -103,7 +103,8 @@ const M = {
     solver: "Solver",
     results: "Resultados",
     community: "Comunidad",
-    communitySuffix: " HoldemMaster",
+    // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
+    communitySuffix: " HoldemMaster",
     langSwitchLabel: "Seleccionar idioma",
   },
 } as const;

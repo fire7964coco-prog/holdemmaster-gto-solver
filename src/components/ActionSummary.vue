@@ -87,7 +87,7 @@ const actionLabel = (
       "팟",
       "pot",
       "ポット",
-      "bote"
+      "del bote"
     )})`;
   }
   return `${label} ${shown}`;

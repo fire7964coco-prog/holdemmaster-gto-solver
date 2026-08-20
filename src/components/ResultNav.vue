@@ -404,7 +404,7 @@ const M = {
       )[player] ?? player.toUpperCase(),
     action: (name: string): string => name,
     betPot: (label: string, formatted: string, percent: number) =>
-      `${label} ${formatted} (${percent}% bote)`,
+      `${label} ${formatted} (${percent}% del bote)`,
   },
 } as const;
 

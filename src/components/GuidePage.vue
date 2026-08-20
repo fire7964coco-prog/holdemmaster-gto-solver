@@ -299,8 +299,9 @@ import { i18n } from "../i18n";
 const M = {
   ko: {
     quickTitle: "1분 시작 — 처음이라면 이것부터",
-    quickStep1Desktop: "왼쪽에서",
-    quickStep1Mobile: "위쪽 탭에서",
+    // ⚠ 끝의 공백은 U+00A0 — Vue가 요소 사이 공백을 지워 버튼과 붙는다 (2026-08-20 눈검수)
+    quickStep1Desktop: "왼쪽에서 ",
+    quickStep1Mobile: "위쪽 탭에서 ",
     quickStep1Btn: "교육 예제",
     quickStep1After: "클릭",
     quickStep2Before: "아무 예제나",
@@ -468,8 +469,8 @@ const M = {
   },
   en: {
     quickTitle: "1-minute start — begin here if you're new",
-    quickStep1Desktop: "On the left, click",
-    quickStep1Mobile: "In the tabs above, click",
+    quickStep1Desktop: "On the left, click ",
+    quickStep1Mobile: "In the tabs above, click ",
     quickStep1Btn: "Study Spots",
     quickStep1After: "",
     quickStep2Before: "Open any spot and hit",
@@ -829,8 +830,8 @@ const M = {
   },
   es: {
     quickTitle: "Empieza en 1 minuto — si eres nuevo, comienza aquí",
-    quickStep1Desktop: "A la izquierda, haz clic en",
-    quickStep1Mobile: "En las pestañas de arriba, toca",
+    quickStep1Desktop: "A la izquierda, haz clic en ",
+    quickStep1Mobile: "En las pestañas de arriba, toca ",
     quickStep1Btn: "Spots de estudio",
     quickStep1After: "",
     quickStep2Before: "Abre cualquier spot y toca",

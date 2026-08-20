@@ -163,7 +163,7 @@ export const trainerActionLabel = (
       : i18n.locale === "ja"
       ? `${label} ${amount} (${pct}% ポット)`
       : i18n.locale === "es"
-      ? `${label} ${amount} (${pct}% bote)`
+      ? `${label} ${amount} (${pct}% del bote)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return `${label} ${amount}`;

@@ -920,7 +920,7 @@ const M = {
     goodRateLabel: "Buenas decisiones",
     weaknessTitle: "Detector de leaks",
     avgOfPot: (pct: string) => `media ${pct}% del bote`,
-    handCount: (n: number) => `(${n} manos)`,
+    handCount: (n: number) => `(${n} ${n === 1 ? "mano" : "manos"})`,
     notSolved: "sin intentar",
     weakestBefore: "Mayores pérdidas en ",
     weakestAfter: " —",
