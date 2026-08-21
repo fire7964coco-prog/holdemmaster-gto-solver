@@ -511,7 +511,12 @@ const checkConfig = (
   }
 
   if (config.startingPot > MAX_AMOUNT) {
-    return pick("시작 팟이 너무 큽니다", `Starting pot must not exceed ${MAX_AMOUNT}`, "スターティングポットが大きすぎます", "El bote inicial es demasiado grande");
+    return pick(
+      `시작 팟은 ${MAX_AMOUNT} 이하여야 합니다`,
+      `Starting pot must not exceed ${MAX_AMOUNT}`,
+      `スターティングポットは${MAX_AMOUNT}以下にしてください`,
+      `El bote inicial no debe exceder ${MAX_AMOUNT}`
+    );
   }
 
   if (config.startingPot % 1 !== 0) {
@@ -528,7 +533,12 @@ const checkConfig = (
   }
 
   if (config.effectiveStack > MAX_AMOUNT) {
-    return pick("유효 스택이 너무 큽니다", "Effective stack is too large", "有効スタックが大きすぎます", "El stack efectivo es demasiado grande");
+    return pick(
+      `유효 스택은 ${MAX_AMOUNT} 이하여야 합니다`,
+      `Effective stack must not exceed ${MAX_AMOUNT}`,
+      `有効スタックは${MAX_AMOUNT}以下にしてください`,
+      `El stack efectivo no debe exceder ${MAX_AMOUNT}`
+    );
   }
 
   if (config.effectiveStack % 1 !== 0) {

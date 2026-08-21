@@ -20,7 +20,9 @@
     </div>
 
     <div v-for="group in grouped" :key="group.category" class="mt-6">
-      <div class="text-base font-bold text-neutral-200">
+      <!-- 일본어 분류명은 전각이라 같은 글자 크기면 넘친다. 문구를 줄이는 대신
+           그 언어에서만 한 단계 작게 쓴다 — 언어마다 화면이 달라도 된다 (사용자 결정 2026-08-21) -->
+      <div :class="[isJa ? 'text-sm' : 'text-base', 'font-bold text-neutral-200']">
         {{ presetCategoryOf(group.items[0]) }}
       </div>
       <div class="mt-0.5 text-xs text-neutral-500">
@@ -266,6 +268,8 @@ export default defineComponent({
         : trackOutbound(ARTICLE_URLS[p.id] ?? "", "preset-card");
 
     const L = computed(() => M[i18n.locale]);
+    // 일본어 분류명은 전각이라 한 단계 작게 쓴다 (사용자 결정 2026-08-21)
+    const isJa = computed(() => i18n.locale === "ja");
 
     return {
       grouped,
@@ -279,6 +283,7 @@ export default defineComponent({
       presetTitleOf,
       presetLessonOf,
       presetCategoryOf,
+      isJa,
       oopLabelOf,
       ipLabelOf,
     };

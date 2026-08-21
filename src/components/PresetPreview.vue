@@ -53,12 +53,14 @@
 
     <template v-else>
       <!-- 플레이어 전환 -->
-      <!-- 모바일에서는 선택 상자가 눌려 «OOP (BB (클러...»로 잘렸다 -->
+      <!-- 폭을 고정하지 않는다 — 언어마다 라벨 길이가 달라(ja가 en의 1.4배) 어떤 값을
+           잡아도 어딘가는 잘린다. 내용에 맞춰 늘어나게 두고 상한만 건다.
+           (2026-08-21: ko 101·en 108·ja 143·es 106px vs 고정폭 안쪽 94px로 4개 국어 전부 잘렸다) -->
       <div class="flex flex-wrap items-center gap-2 mt-3">
         <span class="text-sm">{{ L.playerLabel }}</span>
         <select
           v-model="displayPlayer"
-          class="w-40 md:w-28 px-2 py-1 rounded-lg text-sm"
+          class="max-w-full sm:max-w-[18rem] px-2 py-1 rounded-lg text-sm"
         >
           <option value="oop">OOP ({{ oopLabelOf(preset) }})</option>
           <option value="ip">IP ({{ ipLabelOf(preset) }})</option>

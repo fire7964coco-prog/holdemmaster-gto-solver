@@ -143,7 +143,13 @@
             <button class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1" @click="doSignIn('google')">
               {{ L.googleSignIn }}
             </button>
-            <button class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1" @click="doSignIn('kakao')">
+            <!-- 카카오는 한국어 화면에서만 — 다른 언어권에는 없는 서비스이고,
+                 일본어 「カカオ」는 초콜릿 원료로 읽힌다 (사용자 결정 2026-08-21) -->
+            <button
+              v-if="isKo"
+              class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1"
+              @click="doSignIn('kakao')"
+            >
               {{ L.kakaoSignIn }}
             </button>
           </span>
@@ -1013,6 +1019,8 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale]);
+    // 카카오 로그인은 한국어 화면에서만 (사용자 결정 2026-08-21)
+    const isKo = computed(() => i18n.locale === "ko");
     const categories: TrainerCategory[] = ["all", "srp", "3bp", "blind"];
     let unsubscribeAuth: () => void = () => undefined;
     const category = ref<TrainerCategory>("all");
@@ -1486,6 +1494,7 @@ export default defineComponent({
       presetTitle,
       positionLabel,
       L,
+      isKo,
       trainerCategoryLabel,
       trainerActionLabel,
       amountBb,

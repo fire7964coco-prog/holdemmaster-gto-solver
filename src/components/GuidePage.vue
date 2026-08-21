@@ -574,10 +574,10 @@ const M = {
     installBold3: "even on the subway with no internet",
     install4: ".",
     samsung1:
-      "* Installing from Samsung Internet triggers an “Unsafe app blocked” warning. It appears because Google doesn't trust the install package that the browser generates — it has nothing to do with this app. ",
+      "* When you install from Samsung Internet, the browser or your device may block it for security reasons. That check comes from the browser, not from this app. ",
     samsungBold: "Open the site in Chrome",
     samsung2:
-      " and it installs with no warning; or, to proceed anyway, tap [More details] → [Install anyway] on the warning dialog.",
+      " and it installs without the block; if you'd rather continue here, follow the prompts in the dialog.",
     offlineDataLabel: "Offline study data",
     offlineSaved: "Saved — Study Spots and Trainer work without internet",
     offlineSaving: "Saving…",
@@ -609,7 +609,7 @@ const M = {
     removeDef:
       "Long-press and delete like any other app, and it's gone. Nothing runs in the background, nothing is left behind",
     samsungNote2:
-      "* The “Unsafe app blocked” warning in Samsung Internet is not malware detection — Google just hasn't added that browser's install packages to its trust list yet. It doesn't appear when you install from Chrome.",
+      "* A security block in Samsung Internet is not malware detection — the browser simply doesn't recognize this kind of install package yet. It doesn't appear when you install from Chrome.",
 
     studyTitle: "Suggested study plan",
     study1:
@@ -754,7 +754,7 @@ const M = {
     installBold3: "インターネットのない地下鉄でも",
     install4: " そのまま解けます。",
     samsung1:
-      "※ Samsung Internetからインストールすると「安全でないアプリをブロックしました」という警告が出ます。このブラウザが作るインストールパッケージをGoogleが信頼していないために起きる問題で、アプリ自体とは無関係です。",
+      "※ Samsung Internetからインストールすると、ブラウザや端末がセキュリティ上の理由でインストールをブロックすることがあります。ブラウザ側の確認であり、アプリ自体の問題ではありません。",
     samsungBold: "Chromeで開けば",
     samsung2:
       " 警告なしでインストールできます。そのまま進める場合は、警告画面の[詳細] → [無視してインストール]を押してください。",
@@ -935,7 +935,7 @@ const M = {
     installBold3: "incluso en el metro sin internet",
     install4: ".",
     samsung1:
-      "* Instalar desde Samsung Internet muestra una advertencia de aplicación no segura. Aparece porque Google no confía en el paquete de instalación que genera ese navegador — no tiene nada que ver con esta app. ",
+      "* Al instalar desde Samsung Internet, el navegador o tu dispositivo pueden bloquear la instalación por seguridad. Es una comprobación del navegador, no un problema de esta app. ",
     samsungBold: "Abre el sitio en Chrome",
     samsung2:
       " y se instala sin advertencia; o, para continuar de todos modos, toca [Más detalles] → [Instalar de todos modos] en el cuadro de advertencia.",

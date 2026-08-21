@@ -107,9 +107,9 @@ const M = {
   en: {
     iconAlt: "HoldemMaster GTO Solver icon",
     title: "Add to your home screen?",
-    samsung1: "Samsung Internet shows an ",
-    samsungB1: "“Unsafe app blocked”",
-    samsung2: " warning during install — it's a browser issue, not this app. ",
+    samsung1: "Samsung Internet may ",
+    samsungB1: "block the install for security",
+    samsung2: " — that check comes from the browser, not from this app. ",
     samsungB2: "Open it in Chrome",
     samsung3: " and it installs without the warning.",
     default1: "It opens with a single tap, and ",
@@ -125,7 +125,7 @@ const M = {
     gotIt: "Got it",
     later: "Later",
     samsungHint:
-      "To install here anyway, tap [More details] → [Install anyway] on the warning dialog.",
+      "To install here anyway, follow the prompts in the dialog to allow it.",
     safety:
       "Nothing gets installed on your system — it's just a browser shortcut. It asks for no permissions, and you can remove it anytime by long-pressing the icon, just like an app.",
     close: "Close",
@@ -133,9 +133,9 @@ const M = {
   ja: {
     iconAlt: "HoldemMaster GTOソルバーのアイコン",
     title: "ホーム画面に追加しますか？",
-    samsung1: "Samsung Internetではインストール時に",
-    samsungB1: "「安全でないアプリをブロックしました」",
-    samsung2: "という警告が表示されます — ブラウザ側の問題で、本アプリとは無関係です。",
+    samsung1: "Samsung Internetでは、ブラウザや端末が",
+    samsungB1: "セキュリティ上の理由でインストールをブロック",
+    samsung2: "することがあります — ブラウザ側の確認であり、本アプリの問題ではありません。",
     samsungB2: "Chromeで開くと",
     samsung3: "警告なしでインストールできます。",
     default1: "アイコン1つですぐ開けて、",
@@ -151,7 +151,7 @@ const M = {
     gotIt: "わかりました",
     later: "あとで",
     samsungHint:
-      "このままインストールする場合は、警告ダイアログの[詳細] → [無視してインストール]をタップしてください。",
+      "このままインストールする場合は、表示された画面の案内に従って許可してください。",
     safety:
       "プログラムがインストールされるわけではなく、ブラウザのショートカットです。権限を要求せず、削除するときもアプリと同じようにアイコンを長押しして削除するだけです。",
     close: "閉じる",
@@ -159,9 +159,9 @@ const M = {
   es: {
     iconAlt: "Ícono de HoldemMaster GTO Solver",
     title: "¿Agregar a tu pantalla de inicio?",
-    samsung1: "Samsung Internet muestra una ",
-    samsungB1: "advertencia de aplicación no segura",
-    samsung2: " al instalar — es un problema del navegador, no de esta app. ",
+    samsung1: "Samsung Internet puede ",
+    samsungB1: "bloquear la instalación por seguridad",
+    samsung2: " — es una comprobación del navegador, no un problema de esta app. ",
     samsungB2: "Ábrela en Chrome",
     samsung3: " y se instala sin la advertencia.",
     default1: "Se abre con un solo toque y ",
@@ -177,7 +177,7 @@ const M = {
     gotIt: "Entendido",
     later: "Después",
     samsungHint:
-      "Para instalar aquí de todos modos, toca [Más detalles] → [Instalar de todos modos] en el cuadro de advertencia.",
+      "Para instalar aquí de todos modos, sigue las indicaciones del aviso para permitirlo.",
     safety:
       "No se instala nada en tu sistema — es solo un acceso directo del navegador. No pide permisos y puedes quitarlo cuando quieras manteniendo presionado el ícono, como cualquier app.",
     close: "Cerrar",
