@@ -172,11 +172,11 @@
           <div v-else>
             <div class="flex items-end gap-3 mb-1">
               <div class="text-4xl font-bold text-yellow-400 tabular-nums">
-                <span data-testid="equity-result">{{ result.equity.toFixed(1) }}</span
+                <span data-testid="equity-result">{{ $n(result.equity.toFixed(1)) }}</span
                 >%
               </div>
               <div class="pb-1.5 text-sm text-neutral-400">
-                {{ L.vsSide((100 - result.equity).toFixed(1)) }}
+                {{ $n(L.vsSide((100 - result.equity).toFixed(1))) }}
               </div>
             </div>
 
@@ -190,10 +190,10 @@
 
             <div class="flex flex-wrap gap-2 mb-3">
               <div class="stat-chip">
-                {{ L.win }} <b data-testid="equity-win">{{ result.win.toFixed(1) }}%</b>
+                {{ L.win }} <b data-testid="equity-win">{{ $n(result.win.toFixed(1)) }}%</b>
               </div>
-              <div class="stat-chip">{{ L.tie }} <b>{{ result.tie.toFixed(1) }}%</b></div>
-              <div class="stat-chip">{{ L.lose }} <b>{{ result.lose.toFixed(1) }}%</b></div>
+              <div class="stat-chip">{{ L.tie }} <b>{{ $n(result.tie.toFixed(1)) }}%</b></div>
+              <div class="stat-chip">{{ L.lose }} <b>{{ $n(result.lose.toFixed(1)) }}%</b></div>
               <div class="stat-chip">
                 {{ L.combos }} <b>{{ result.villainCombos }}</b>
               </div>
@@ -479,6 +479,65 @@ const M = {
       "empty-range": "El rango del rival está vacío.",
       "no-combos": "No quedan combos para el rival después del card removal.",
       unknown: "Ocurrió un error durante el cálculo.",
+    } as Record<string, string>,
+  },
+  pt: {
+    intro:
+      "Sua probabilidade de vencer contra uma mão específica ou contra um range inteiro. Deixe o board vazio " +
+      "para o pré-flop, ou escolha 3/4/5 cartas para flop, turn e river.",
+    heroTitle: "① Sua mão",
+    heroHint: "Escolha 2 cartas abaixo",
+    fill: "Preencher a partir daqui",
+    villainTitle: "② Vilão",
+    modeHand: "vs Mão",
+    modeRange: "vs Range",
+    rangePlaceholder: "ex.: 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "Você pode colar o resultado de [Copiar texto do range] das tabelas pré-flop. A notação com peso como " +
+      "“K8s:0.75” é aplicada do jeito que está.",
+    anyTwo: "Duas cartas quaisquer",
+    rangeError: (token: string) => `Não foi possível interpretar: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos} combos · ${percent}% do total`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Vazio = pré-flop (também aceita 3/4/5 cartas)",
+    boardHintBad: "O board precisa ter 0, 3, 4 ou 5 cartas",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Calcular",
+    computing: "Calculando…",
+    stop: "Parar",
+    clear: "Limpar tudo",
+    resultTitle: "Resultado",
+    resultEmpty:
+      "Escolha as suas duas cartas e um vilão (mão de 2 cartas ou range) e pressione [Calcular].",
+    vsSide: (value: string) => `Vilão ${value}%`,
+    win: "Vitória",
+    tie: "Empate",
+    lose: "Derrota",
+    combos: "Combos do vilão",
+    badgeExact: "Cálculo exato",
+    badgeApprox: "Aprox. (±0,2 pp)",
+    exactNote: (n: number) =>
+      `Foram contados os ${n.toLocaleString("pt-BR")} casos possíveis`,
+    approxNote: (n: number) =>
+      `Casos demais para enumerar — foram amostrados ${n.toLocaleString(
+        "pt-BR"
+      )} runouts aleatórios`,
+    howTitle: "Como ler",
+    how1: "Equity = % de vitórias + metade dos empates. É a sua parte do pote se vocês estivessem all-in agora mesmo.",
+    how2: "Contra um range, os combos bloqueados pelas suas cartas ou pelo board são removidos automaticamente (card removal).",
+    how3: "O selo “Cálculo exato” significa que todos os casos foram contados; “Aprox.” é uma amostra aleatória.",
+    limitTitle: "O que esta calculadora cobre",
+    limitBody:
+      "Esta ferramenta só calcula equity de all-in entre dois jogadores. Range contra range, potes " +
+      "multiway e linhas de aposta são tratados pelo solver (Spot personalizado).",
+    errors: {
+      "need-hero": "Escolha primeiro as suas duas cartas.",
+      "bad-board": "O board precisa ter 0, 3, 4 ou 5 cartas.",
+      "bad-card": "Valor de carta inválido.",
+      duplicate: "Você não pode usar a mesma carta duas vezes.",
+      "empty-range": "O range do vilão está vazio.",
+      "no-combos": "Não sobrou nenhum combo para o vilão depois do card removal.",
+      unknown: "Ocorreu um erro durante o cálculo.",
     } as Record<string, string>,
   },
 } as const;

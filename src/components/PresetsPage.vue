@@ -28,9 +28,9 @@
       <div class="mt-0.5 text-xs text-neutral-500">
         OOP: {{ oopLabelOf(group.items[0]) }} · IP:
         {{ ipLabelOf(group.items[0]) }} · {{ L.pot }}
-        {{ group.items[0].startingPot / group.items[0].unitScale }}bb ·
+        {{ $n(String(group.items[0].startingPot / group.items[0].unitScale)) }}bb ·
         {{ L.stack }}
-        {{ group.items[0].effectiveStack / group.items[0].unitScale }}bb
+        {{ $n(String(group.items[0].effectiveStack / group.items[0].unitScale)) }}bb
       </div>
 
       <div
@@ -166,6 +166,21 @@ const M = {
     solveYourself: "Resolver tú mismo",
     footnote:
       "Los rangos son aproximaciones del estándar online de 100bb. Carga un spot, ajusta los rangos y compara — una gran forma de estudiar.",
+  },
+  pt: {
+    infoBtn1: "[⚡ Ver resultados]",
+    infoText1:
+      " mostra na hora a estratégia já resolvida. Use ",
+    infoBtn2: "[Resolver você mesmo]",
+    infoText2:
+      " só quando quiser ajustar os ranges ou explorar turn e river.",
+    pot: "Pote",
+    stack: "Stack",
+    articleLink: "Ler a análise",
+    viewResults: "Ver resultados",
+    solveYourself: "Resolver você mesmo",
+    footnote:
+      "Os ranges são aproximações do padrão online de 100bb. Carregue um spot, ajuste os ranges e compare — é um ótimo jeito de estudar.",
   },
 } as const;
 

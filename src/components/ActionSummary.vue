@@ -11,10 +11,10 @@
       </div>
       <div class="flex items-end justify-between mt-0.5">
         <span class="text-lg font-bold text-white tabular-nums">
-          {{ tile.freq.toFixed(1) }}%
+          {{ $n(tile.freq.toFixed(1)) }}%
         </span>
         <span class="text-[0.65rem] text-white/70 tabular-nums">
-          {{ tile.combos.toFixed(1) }}<br />{{ L.combos }}
+          {{ $n(tile.combos.toFixed(1)) }}<br />{{ L.combos }}
         </span>
       </div>
     </div>
@@ -26,7 +26,7 @@ import { computed, defineComponent } from "vue";
 import { Results, Spot, SpotPlayer } from "../result-types";
 import { useStore } from "../store";
 import { formatAmount } from "../utils";
-import { i18n, pick } from "../i18n";
+import { i18n, pick, localizeNumber } from "../i18n";
 
 const M = {
   ko: {
@@ -39,6 +39,9 @@ const M = {
     combos: "コンボ",
   },
   es: {
+    combos: "combos",
+  },
+  pt: {
     combos: "combos",
   },
 } as const;
@@ -83,14 +86,15 @@ const actionLabel = (
   const value = Number(amount);
   const shown = `${formatAmount(value, unitScale)}${unitScale === 10 ? "bb" : ""}`;
   if (name === "Bet" && pot > 0) {
-    return `${label} ${shown} (${Math.round((value * 100) / pot)}% ${pick(
+    return localizeNumber(`${label} ${shown} (${Math.round((value * 100) / pot)}% ${pick(
       "팟",
       "pot",
       "ポット",
-      "del bote"
-    )})`;
+      "del bote",
+      "do pote"
+    )})`);
   }
-  return `${label} ${shown}`;
+  return localizeNumber(`${label} ${shown}`);
 };
 
 // 타일 배경: 액션 색을 어두운 배경 위 타일 톤으로 (원색 그대로는 눈부심 → 70% 어둡게 혼합)

@@ -296,6 +296,30 @@ const M = {
     strategyCombos: "Estrategia (combos)",
     equity: "Equity",
   },
+  pt: {
+    modeLabels: {
+      basics: "Básico",
+      graphs: "Gráficos",
+      compare: "Comparar",
+      turn: "Turn",
+      river: "River",
+    } as Record<string, string>,
+    player: "Jogador:",
+    auto: (player: string) => `Auto (${player})`,
+    barHeight: "Altura da barra:",
+    normalized: "Normalizado",
+    absolute: "Absoluto",
+    full: "Completo",
+    suit: "Naipe:",
+    grouped: "Agrupado",
+    individual: "Individual",
+    display: "Mostrar:",
+    strategy: "Estratégia",
+    weight: "Peso",
+    chart: "Gráfico:",
+    strategyCombos: "Estratégia (combos)",
+    equity: "Equity",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

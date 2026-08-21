@@ -38,7 +38,7 @@
             >
               {{
                 cellValue(row, col) > 0 && cellValue(row, col) < 100
-                  ? cellValue(row, col).toFixed(1)
+                  ? $n(cellValue(row, col).toFixed(1))
                   : ""
               }}
             </div>
@@ -97,8 +97,8 @@
         </div>
 
         <span class="inline-block ml-auto">
-          {{ numCombos.toFixed(1) }} {{ L.combos }} ({{
-            ((numCombos * 100) / ((52 * 51) / 2)).toFixed(1)
+          {{ $n(numCombos.toFixed(1)) }} {{ L.combos }} ({{
+            $n(((numCombos * 100) / ((52 * 51) / 2)).toFixed(1))
           }}%)
         </span>
       </div>
@@ -157,6 +157,14 @@ const M = {
     combos: "combos",
     parseError: (range: string) =>
       `No se pudo interpretar el rango: ${range || "(cadena vacía)"}`,
+  },
+  pt: {
+    clear: "Limpar",
+    errorPrefix: "Erro:",
+    weight: "Peso:",
+    combos: "combos",
+    parseError: (range: string) =>
+      `Não foi possível interpretar o range: ${range || "(texto vazio)"}`,
   },
 } as const;
 

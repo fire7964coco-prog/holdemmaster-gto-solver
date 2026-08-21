@@ -177,6 +177,20 @@ export default defineComponent({
         "run-solver": "Ejecutar solver",
         treeEdit: "Vista previa y edición del árbol",
       },
+      pt: {
+        about: "Sobre",
+        guide: "Como usar — passo a passo",
+        presets: "Spots de estudo — exemplos com um clique",
+        trainer: "Treinador GTO — veja o EV de cada decisão",
+        preflop: "Tabelas pré-flop — ranges de open e defesa",
+        equity: "Calculadora de equity — probabilidade de vitória",
+        "oop-range": "Range OOP",
+        "ip-range": "Range IP",
+        board: "Board",
+        "tree-config": "Ajustes da árvore",
+        "run-solver": "Executar solver",
+        treeEdit: "Prévia e edição da árvore",
+      },
     } as const;
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];

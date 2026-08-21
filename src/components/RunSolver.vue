@@ -98,8 +98,8 @@
         {{
           L.ramNeeded(
             memoryUsage >= 1023.5 * 1024 * 1024
-              ? (memoryUsage / (1024 * 1024 * 1024)).toFixed(2) + "GB"
-              : (memoryUsage / (1024 * 1024)).toFixed(0) + "MB"
+              ? $n((memoryUsage / (1024 * 1024 * 1024)).toFixed(2)) + " GB"
+              : (memoryUsage / (1024 * 1024)).toFixed(0) + " MB"
           )
         }}
         {{ memoryUsage > maxMemoryUsage ? L.limitExceeded : "" }}
@@ -119,9 +119,9 @@
         {{
           L.ramNeeded(
             memoryUsageCompressed >= 1023.5 * 1024 * 1024
-              ? (memoryUsageCompressed / (1024 * 1024 * 1024)).toFixed(2) +
+              ? $n((memoryUsageCompressed / (1024 * 1024 * 1024)).toFixed(2)) +
                   "GB"
-              : (memoryUsageCompressed / (1024 * 1024)).toFixed(0) + "MB"
+              : (memoryUsageCompressed / (1024 * 1024)).toFixed(0) + " MB"
           )
         }}
         {{ memoryUsageCompressed > maxMemoryUsage ? L.limitExceeded : "" }}
@@ -267,7 +267,7 @@
 import { computed, defineComponent, ref } from "vue";
 import { init, handler } from "../global-worker";
 import { encodeSpotUrl } from "../spot-share";
-import { i18n, pick } from "../i18n";
+import { i18n, pick, localizeNumber } from "../i18n";
 import {
   useStore,
   useConfigStore,
@@ -483,6 +483,55 @@ const M = {
       `Exploitability: ${value} (${percent})`,
     timeLine: (seconds: string) => `Tiempo transcurrido: ${seconds} s`,
   },
+  pt: {
+    sharedSpotBanner:
+      "Spot compartilhado carregado — pressione [Criar árvore] → [Executar solver] para calcular.",
+    numThreadsLabel: "Número de threads:",
+    buildTree: "Criar árvore",
+    copied: "Copiado!",
+    shareSpot: "🔗 Compartilhar spot",
+    statusLabel: "Status:",
+    statusNotLoaded: "O módulo ainda não foi carregado",
+    statusBuilding: "Criando a árvore…",
+    statusError: (message: string) => `Erro: ${message}`,
+    statusBuilt: (threads: number) =>
+      `Árvore criada com sucesso (${threads} thread${threads === 1 ? "" : "s"})`,
+    precisionMode: "Modo de precisão:",
+    precisionTipIntro:
+      "O modo de precisão afeta principalmente o uso de memória. Há também outras diferenças menores.",
+    precisionTipFp:
+      "Ponto flutuante de 32 bits (FP): recomendado quando o uso de memória fica abaixo do limite (3,9 GB). Cerca de 7 dígitos significativos e melhor desempenho.",
+    precisionTipInt:
+      "Inteiro de 16 bits: uma alternativa para quando o modo FP de 32 bits ultrapassa o limite de memória. Com cerca de 4 dígitos significativos, não serve para um erro objetivo menor que 0,1%, e tem desempenho pior que o FP de 32 bits.",
+    fp32Label: "FP de 32 bits:",
+    int16Label: "Inteiro de 16 bits:",
+    ramNeeded: (size: string) => `precisa de ${size} de RAM`,
+    limitExceeded: "(limite ultrapassado)",
+    ramLimit: "Limite de RAM: 3,9 GB (= limite de 4 GB do Wasm - margem de 0,1 GB)",
+    targetLabel: "Erro objetivo (exploitability):",
+    exploitTipIntro:
+      "Define a distância aceitável até o equilíbrio de Nash. Um valor mais baixo dá um resultado mais preciso, mas o cálculo demora mais.",
+    exploitTipDetailLabel: "Detalhes:",
+    exploitTipDetail:
+      "Em um equilíbrio de Nash, as estratégias dos dois jogadores são MES (estratégias de exploração máxima) uma contra a outra. Usando essa propriedade, definimos assim a distância entre uma estratégia obtida e o equilíbrio de Nash:",
+    exploitTipFormula: "Distância = (EV do MES do vilão) - (EV real do vilão)",
+    exploitTipOutro:
+      "Essa distância nunca é negativa e só é zero quando a estratégia obtida faz parte de um equilíbrio de Nash. A exploitability é definida como a distância média dos dois jogadores.",
+    maxIterationsLabel: "Iterações máximas:",
+    runSolver: "Executar solver",
+    stop: "Parar",
+    pause: "Pausar",
+    resume: "Retomar",
+    solving: "Calculando…",
+    finalizing: "Finalizando…",
+    pausedStatus: "Pausado.",
+    finished: "Cálculo concluído!",
+    allocatingMemory: "Alocando memória…",
+    iterations: (count: number) => `Iterações: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Tempo decorrido: ${seconds} s`,
+  },
 } as const;
 
 const maxMemoryUsage = 3.9 * 1024 * 1024 * 1024; // 3.9 GB
@@ -497,7 +546,8 @@ const checkConfig = (
       "보드에는 최소 3장의 카드가 필요합니다",
       "The board must contain at least 3 cards",
       "ボードには少なくとも3枚のカードが必要です",
-      "El board debe tener al menos 3 cartas"
+      "El board debe tener al menos 3 cartas",
+      "O board precisa ter pelo menos 3 cartas"
     );
   }
 
@@ -506,7 +556,8 @@ const checkConfig = (
       "시작 팟은 0보다 커야 합니다",
       "Starting pot must be positive",
       "スターティングポットには正の数を入力してください",
-      "El bote inicial debe ser positivo"
+      "El bote inicial debe ser positivo",
+      "O pote inicial deve ser positivo"
     );
   }
 
@@ -515,12 +566,13 @@ const checkConfig = (
       `시작 팟은 ${MAX_AMOUNT} 이하여야 합니다`,
       `Starting pot must not exceed ${MAX_AMOUNT}`,
       `スターティングポットは${MAX_AMOUNT}以下にしてください`,
-      `El bote inicial no debe exceder ${MAX_AMOUNT}`
+      `El bote inicial no debe exceder ${MAX_AMOUNT}`,
+      `O pote inicial não pode passar de ${MAX_AMOUNT}`
     );
   }
 
   if (config.startingPot % 1 !== 0) {
-    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero");
+    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro");
   }
 
   if (config.effectiveStack <= 0) {
@@ -528,7 +580,8 @@ const checkConfig = (
       "유효 스택은 0보다 커야 합니다",
       "Effective stack must be positive",
       "有効スタックには正の数を入力してください",
-      "El stack efectivo debe ser positivo"
+      "El stack efectivo debe ser positivo",
+      "O stack efetivo deve ser positivo"
     );
   }
 
@@ -537,7 +590,8 @@ const checkConfig = (
       `유효 스택은 ${MAX_AMOUNT} 이하여야 합니다`,
       `Effective stack must not exceed ${MAX_AMOUNT}`,
       `有効スタックは${MAX_AMOUNT}以下にしてください`,
-      `El stack efectivo no debe exceder ${MAX_AMOUNT}`
+      `El stack efectivo no debe exceder ${MAX_AMOUNT}`,
+      `O stack efetivo não pode passar de ${MAX_AMOUNT}`
     );
   }
 
@@ -546,58 +600,59 @@ const checkConfig = (
       "유효 스택은 정수여야 합니다",
       "Effective stack must be an integer",
       "有効スタックは整数で入力してください",
-      "El stack efectivo debe ser un entero"
+      "El stack efectivo debe ser un entero",
+      "O stack efetivo deve ser um número inteiro"
     );
   }
 
   const betConfig = [
     {
       s: config.oopFlopBetSanitized,
-      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP"),
+      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP"),
     },
     {
       s: config.oopFlopRaiseSanitized,
-      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP"),
+      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP"),
     },
     {
       s: config.oopTurnBetSanitized,
-      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP"),
+      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP"),
     },
     {
       s: config.oopTurnRaiseSanitized,
-      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP"),
+      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP"),
     },
     {
       s: config.oopRiverBetSanitized,
-      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP"),
+      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP"),
     },
     {
       s: config.oopRiverRaiseSanitized,
-      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP"),
+      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP"),
     },
     {
       s: config.ipFlopBetSanitized,
-      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP"),
+      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP"),
     },
     {
       s: config.ipFlopRaiseSanitized,
-      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP"),
+      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP"),
     },
     {
       s: config.ipTurnBetSanitized,
-      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP"),
+      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP"),
     },
     {
       s: config.ipTurnRaiseSanitized,
-      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP"),
+      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP"),
     },
     {
       s: config.ipRiverBetSanitized,
-      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP"),
+      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP"),
     },
     {
       s: config.ipRiverRaiseSanitized,
-      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP"),
+      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP"),
     },
   ];
 
@@ -609,12 +664,12 @@ const checkConfig = (
 
   if (config.donkOption) {
     if (!config.oopTurnDonkSanitized.valid) {
-      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP")}: ${
+      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP")}: ${
         config.oopTurnDonkSanitized.s
       }`;
     }
     if (!config.oopRiverDonkSanitized.valid) {
-      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP")}: ${
+      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP")}: ${
         config.oopRiverDonkSanitized.s
       }`;
     }
@@ -625,7 +680,8 @@ const checkConfig = (
       "올인 추가 기준값이 잘못되었습니다",
       "Invalid add all-in threshold",
       "オールイン追加のしきい値が無効です",
-      "Umbral para agregar all-in inválido"
+      "Umbral para agregar all-in inválido",
+      "Limiar para adicionar all-in inválido"
     );
   }
 
@@ -634,7 +690,8 @@ const checkConfig = (
       "강제 올인 기준값이 잘못되었습니다",
       "Invalid force all-in threshold",
       "強制オールインのしきい値が無効です",
-      "Umbral de all-in forzado inválido"
+      "Umbral de all-in forzado inválido",
+      "Limiar de all-in forçado inválido"
     );
   }
 
@@ -643,7 +700,8 @@ const checkConfig = (
       "병합 기준값이 잘못되었습니다",
       "Invalid merging threshold",
       "マージのしきい値が無効です",
-      "Umbral de fusión inválido"
+      "Umbral de fusión inválido",
+      "Limiar de fusão inválido"
     );
   }
 
@@ -655,7 +713,8 @@ const checkConfig = (
       `보드가 잘못되었습니다 (${config.expectedBoardLength}장이 필요합니다)`,
       `Invalid board (${config.expectedBoardLength} cards required)`,
       `ボードが無効です(${config.expectedBoardLength}枚必要です)`,
-      `Board inválido (se requieren ${config.expectedBoardLength} cartas)`
+      `Board inválido (se requieren ${config.expectedBoardLength} cartas)`,
+      `Board inválido (são necessárias ${config.expectedBoardLength} cartas)`
     );
   }
 
@@ -679,7 +738,8 @@ const checkConfig = (
       "잘못된 라인이 있습니다 (손상된 설정을 불러왔나요?)",
       "Invalid line found (loaded broken configurations?)",
       "無効なラインが見つかりました(破損した設定を読み込みましたか?)",
-      "Se encontró una línea inválida (¿cargaste una configuración dañada?)"
+      "Se encontró una línea inválida (¿cargaste una configuración dañada?)",
+      "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)"
     );
   }
 
@@ -695,7 +755,8 @@ const checkConfig = (
       "설정이 잘못되었습니다 (손상된 설정을 불러왔나요?)",
       "Invalid configurations (loaded broken configurations?)",
       "設定が無効です(破損した設定を読み込みましたか?)",
-      "Configuración inválida (¿cargaste una configuración dañada?)"
+      "Configuración inválida (¿cargaste una configuración dañada?)",
+      "Configuração inválida (você carregou uma configuração corrompida?)"
     );
   }
 
@@ -768,9 +829,9 @@ export default defineComponent({
       if (!Number.isFinite(exploitability.value)) {
         return "";
       } else {
-        const valueText = exploitability.value.toFixed(2);
+        const valueText = localizeNumber(exploitability.value.toFixed(2));
         const percent = (exploitability.value * 100) / config.startingPot;
-        const percentText = `${percent.toFixed(2)}%`;
+        const percentText = localizeNumber(`${percent.toFixed(2)}%`);
         return L.value.exploitabilityLine(valueText, percentText);
       }
     });
@@ -779,7 +840,7 @@ export default defineComponent({
       if (elapsedTimeMs.value === -1 || !store.isSolverFinished) {
         return "";
       } else {
-        return L.value.timeLine((elapsedTimeMs.value / 1000).toFixed(2));
+        return L.value.timeLine(localizeNumber((elapsedTimeMs.value / 1000).toFixed(2)));
       }
     });
 
@@ -941,7 +1002,8 @@ export default defineComponent({
           "공유하려면 OOP·IP 레인지와 보드 3장을 먼저 입력하세요.",
           "To share a spot, enter the OOP and IP ranges and at least 3 board cards first.",
           "スポットを共有するには、OOPとIPのレンジ、そしてボードのカード3枚以上を先に入力してください。",
-          "Para compartir un spot, ingresa primero los rangos OOP e IP y al menos 3 cartas del board."
+          "Para compartir un spot, ingresa primero los rangos OOP e IP y al menos 3 cartas del board.",
+          "Para compartilhar um spot, informe primeiro os ranges OOP e IP e pelo menos 3 cartas do board."
         );
         return;
       }

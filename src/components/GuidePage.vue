@@ -1009,6 +1009,188 @@ const M = {
     errNone: "Aún no hay errores registrados.",
     errPrompt: "Copia el texto de abajo",
   },
+  pt: {
+    quickTitle: "Comece em 1 minuto — é a sua primeira vez? Comece por aqui",
+    quickStep1Desktop: "À esquerda, clique em ",
+    quickStep1Mobile: "Nas abas de cima, toque em ",
+    quickStep1Btn: "Spots de estudo",
+    quickStep1After: "",
+    quickStep2Before: "Abra qualquer spot e use",
+    quickStep2Btn: "[⚡ Ver resultados]",
+    quickStep2After: "— a solução aparece na hora",
+    quickStep3:
+      "Depois use “Como ler a tela de resultados” mais abaixo para interpretar os números",
+
+    termsTitle: "Você só precisa de quatro termos",
+    termRange: "Range",
+    defRange:
+      "O conjunto de mãos que um jogador pode ter (ex.: “com certeza ele tem AA, KK ou AK”)",
+    defPos:
+      "Fora de posição (age primeiro — desvantagem) / em posição (age por último — vantagem). Em BTN vs BB, a BB está OOP",
+    termEquity: "Equity",
+    defEquity:
+      "A sua parte do pote se vocês estivessem all-in agora mesmo — % de vitórias mais metade dos empates",
+    defEv: "Valor esperado — quanto uma ação ganha em média. Quanto maior, melhor",
+
+    customTitleBefore: "Resolver um spot personalizado — siga os números ",
+    customTitleDesktop: "da barra lateral",
+    customTitleMobile: "das abas",
+    customTitleAfter: " na ordem ① → ⑤",
+    step1Bold: "① Range OOP / ② Range IP",
+    step1After:
+      " — pinte a grade 13×13 clicando e arrastando, ou escreva como texto: ",
+    step1Hint:
+      "22+ = todos os pares · A2s+ = de A2s até AKs · KTo+ = de KTo até KQo. Na grade: diagonal = pares, acima à direita = suited, abaixo à esquerda = offsuit",
+    exampleHeader:
+      "É a sua primeira vez? Copie estes exemplos e cole nos campos de range (padrão BTN vs BB 100bb — os mesmos ranges dos Spots de estudo)",
+    exOopLabel: "OOP (BB caller)",
+    exIpLabel: "IP (BTN open-raiser)",
+    copiedLabel: "Copiado!",
+    copyLabel: "Copiar",
+    step3Bold: "③ Board",
+    step3After: " — clique em três cartas de flop ou use “Flop aleatório”",
+    step4Bold: "④ Bet sizes (ajustes da árvore)",
+    step4After:
+      " — no começo deixe os valores padrão. Confira apenas o pote inicial e o stack efetivo",
+    step4Hint:
+      "Os valores do spot personalizado usam fichas inteiras arbitrárias. Para raciocinar em bb, use 10 fichas = 1bb (ex.: pote 55 = 5,5bb). Os Spots de estudo e o Treinador convertem com essa escala automaticamente.",
+    step5Bold1: "⑤ Calcular",
+    step5Mid:
+      " — pressione “Criar árvore” e depois “Executar solver”. Quando aparecer “Cálculo concluído!”, abra a aba ",
+    step5Bold2: "[Resultados]",
+    step5After: " de cima",
+    step5Hint:
+      "O cálculo roda na sua própria máquina e leva de alguns segundos a alguns minutos. Use [Compartilhar spot] na tela ⑤ para copiar um link do seu spot e perguntar na comunidade",
+
+    resultsTitle: "Como ler a tela de resultados",
+    rTerm1: "Faixa superior",
+    rDef1:
+      "Um seletor de cenas da linha de ação (flop → bet → call → turn…). Clique em um nó para ver a estratégia naquele ponto",
+    rTerm2: "Matriz 13×13 (à esquerda)",
+    rDef2:
+      "Cada célula é uma mão; a divisão de cores mostra as frequências de ação. 🟥 bet/raise (mais escuro = bet maior) · 🟩 check/call · célula apagada = fora do range. O GTO joga a mesma mão como estratégia mista — distribui as ações por frequência para que ninguém leia o seu padrão",
+    rTerm3: "Mosaicos (canto superior direito)",
+    rDef3: "Frequências de ação (%) e número de combos do range inteiro",
+    rTerm4: "Mãos / Draws (centro à direita)",
+    rDef4:
+      "O quanto cada range conecta com o board (top pair, draws…) — uma leitura rápida de quem este board favorece",
+    rTerm5: "Tabela (canto inferior direito)",
+    rDef5:
+      "Peso, equity, EV e % de ação por mão — clique no cabeçalho de uma coluna para ordenar",
+
+    trainerTitle: "Treinador GTO — de assistir para jogar",
+    trainerIntroBefore:
+      "Quando já estiver confortável lendo a tela de resultados, passe para o",
+    trainerBtn: "Treinador GTO",
+    trainerIntroAfter:
+      ". Nos pontos de decisão dos 13 Spots de estudo você recebe mãos tiradas dos ranges reais — escolhe uma ação e recebe a sua nota.",
+    gradTerm: "Como a nota é dada",
+    gradBefore: "Não é uma nota de certo/errado, e sim por ",
+    gradBold: "perda de EV (bb)",
+    gradAfter:
+      ". O GTO mistura várias ações com a mesma mão, então uma ação de baixa frequência não é automaticamente um erro — o que importa é quanto EV você entrega",
+    verdictTerm: "Limiares do veredito",
+    verdictBefore: "A medida é ",
+    verdictBold: "em relação ao pote",
+    verdictAfter:
+      " — até 0,35% do pote = Melhor jogada · até 1% = Aceitável · acima disso = Revise este spot. Por exemplo, em um single raised pot de 5,5bb os limiares são 0,02bb e 0,06bb; em um pote de 3-bet de 22,5bb são 0,08bb e 0,23bb.",
+    verdictHint:
+      "Os mesmos 0,05bb são um erro enorme em um pote pequeno e uma diferença irrelevante em um pote grande. Avaliar em bb absolutos fazia os potes de 3-bet parecerem piores do que são, por isso mudamos para a nota relativa ao pote (15/08/2026). Os limiares têm um mínimo (0,02bb / 0,05bb): os cálculos só convergem até um erro objetivo de 0,5%, e diferenças menores não se distinguem do ruído do solver.",
+    reviewTerm: "Revisão",
+    reviewBefore:
+      "As mãos em que você mais perdeu EV voltam pelo botão [Revisar]. Por padrão, o seu histórico é salvo ",
+    reviewBold: "somente neste dispositivo",
+    reviewAfter:
+      ". Faça login com uma conta HoldemMaster para salvá-lo na sua conta e continuar em outros dispositivos — o login é opcional e todos os recursos funcionam sem ele",
+    filterTerm: "Filtros",
+    filterDef:
+      "Pratique só os seus pontos fracos: single raised pots, potes de 3-bet ou blind vs blind",
+
+    installTitle: "Instale na sua tela de início e estude offline",
+    install1:
+      "Você pode instalar este solver na sua tela de início como um app (sem arquivo de instalação). No Chrome ou no Edge, use o ",
+    installBold1: "ícone de instalar",
+    install2: " à direita da barra de endereços; no Safari do iPhone, toque em ",
+    installBold2: "Compartilhar → Adicionar à Tela de Início",
+    install3:
+      ". Depois de instalado, os 13 Spots de estudo e os desafios do Treinador ficam salvos no seu dispositivo, para você continuar estudando ",
+    installBold3: "até no metrô sem internet",
+    install4: ".",
+    samsung1:
+      "* Ao instalar pelo Samsung Internet, o navegador ou o seu dispositivo podem bloquear a instalação por segurança. É uma verificação do navegador, não um problema deste app. ",
+    samsungBold: "Abra o site no Chrome",
+    samsung2:
+      " e a instalação acontece sem aviso; ou, se preferir continuar aqui, siga as instruções da própria caixa de aviso.",
+    offlineDataLabel: "Dados de estudo offline",
+    offlineSaved: "Salvo — os Spots de estudo e o Treinador funcionam sem internet",
+    offlineSaving: "Salvando…",
+    offlineNotSaved: "Não salvo",
+    offlineSaveBtn: "Salvar agora (~2,3 MB)",
+    offlineFootnote:
+      "O “Resolver você mesmo” do spot personalizado só funciona sem conexão depois de ser executado online pelo menos uma vez — o motor de cálculo é baixado no primeiro uso.",
+
+    safeTitle: "É seguro instalar?",
+    safe1:
+      "Sim. “Instalar” aqui não significa baixar um programa para o seu dispositivo — significa ",
+    safeBold: "criar um atalho que roda dentro do seu navegador",
+    safe2:
+      ". No Android só é registrada uma camada leve que aponta para este endereço; tudo continua rodando dentro do motor do navegador. Se ficar em dúvida, confira estas quatro coisas você mesmo — verificar vale mais do que a nossa palavra.",
+    permTerm: "Não usa permissões",
+    permBefore:
+      "A instalação não pede nenhuma permissão — nem câmera, nem contatos, nem SMS, nem localização. Confira você mesmo em ",
+    permBold: "Configurações → Informações do app → Permissões",
+    permAfter: " do seu celular",
+    airplaneTerm: "Teste com o modo avião",
+    airplaneBefore:
+      "Desligue a internet e o Treinador continua funcionando — a prova mais clara de que o cálculo ",
+    airplaneBold: "acontece inteiramente no seu dispositivo",
+    airplaneAfter: "",
+    openTerm: "O código é público",
+    openBefore: "Este solver é open source AGPL-3.0 (",
+    openAfter: ")",
+    removeTerm: "Desinstala sem deixar rastro",
+    removeDef:
+      "Mantenha pressionado e remova como qualquer outro app, e pronto. Nada roda em segundo plano, nada fica para trás",
+    samsungNote2:
+      "* O aviso de aplicativo não seguro do Samsung Internet não é detecção de malware — o navegador simplesmente ainda não reconhece esse tipo de pacote de instalação. Ele não aparece quando você instala pelo Chrome.",
+
+    studyTitle: "Plano de estudo sugerido",
+    study1:
+      "Percorra os 13 Spots de estudo em ordem — eles formam um curso que avança como uma série",
+    study2:
+      "Ficou com a dúvida “por que esta mão mistura checks?” — compare os EV por ação na tabela de detalhes",
+    study3:
+      "Repita os mesmos spots no Treinador GTO para fixar — o detector de leaks mostra quais situações custam mais EV a você",
+    study4: "Mantenha os ranges, mude só o board e compare (ex.: A72 vs 974)",
+    study5:
+      "Recrie aqui as mãos que deixaram você na dúvida em partidas reais e revise cada uma",
+
+    troubleTitle: "Solução de problemas",
+    tTerm1: "Erro ao criar a árvore",
+    tDef1: "Confira se as 3 cartas do board e os dois ranges estão preenchidos",
+    tTerm2: "O cálculo está lento",
+    tDef2: "Aumente o erro objetivo para 0,5%",
+    tTerm3: "A aba de resultados está em branco",
+    tDef3: "Abra depois que aparecer “Cálculo concluído!”",
+    tTerm4: "Limite de memória ultrapassado",
+    tDef4: "Mude para o modo de inteiros de 16 bits ou use menos bet sizes",
+    tTerm5: "A matriz está toda cinza",
+    tDef5:
+      "Você está vendo o ponto em que é a vez do vilão agir — escolha outra cena na faixa superior",
+
+    errTitle: "Encontrou algo que devemos corrigir?",
+    err1: "Se a tela quebrar ou um cálculo travar, os detalhes do erro são registrados automaticamente neste dispositivo. ",
+    errBold: "Os registros nunca saem do seu dispositivo",
+    err2:
+      " — só os vemos se você copiá-los abaixo e publicá-los na comunidade. Eles contêm apenas a mensagem de erro e o tipo de navegador — nunca os seus ranges nem o seu histórico de estudo.",
+    errLoggedLabel: "Erros registrados",
+    errCount: (n: number) => `${n}`,
+    errCopied: "Copiado",
+    errCopyBtn: "Copiar detalhes do erro",
+    errClearBtn: "Apagar registro",
+    errNone: "Ainda não há erros registrados.",
+    errPrompt: "Copie o texto abaixo",
+  },
 } as const;
 
 export default defineComponent({

@@ -138,12 +138,12 @@
                   <span
                     v-if="column.type === 'weight'"
                     :data-set="
-                      (strTmp = toFixedAdaptive(summary[columnIndex(column)]))
+                      (strTmp = $n(toFixedAdaptive(summary[columnIndex(column)])))
                     "
                   >
-                    <span>{{ strTmp.slice(0, strTmp.indexOf(".") + 1) }}</span>
+                    <span>{{ strTmp.slice(0, strTmp.indexOf($d()) + 1) }}</span>
                     <span class="text-xs">{{
-                      strTmp.slice(strTmp.indexOf(".") + 1)
+                      strTmp.slice(strTmp.indexOf($d()) + 1)
                     }}</span>
                   </span>
                   <span
@@ -151,7 +151,7 @@
                       column.type === 'percentage' || column.type === 'action'
                     "
                     :data-set="
-                      (strTmp = toFixed1(summary[columnIndex(column)] * 100))
+                      (strTmp = $n(toFixed1(summary[columnIndex(column)] * 100)))
                     "
                   >
                     <span>{{ strTmp.slice(0, -1) }}</span>
@@ -160,8 +160,8 @@
                   <span
                     v-else-if="column.type === 'action-ev'"
                     :data-set="
-                      (strTmp = toFixed1(
-                        summary[columnIndex(column) - 1] * 100
+                      (strTmp = $n(
+                        toFixed1(summary[columnIndex(column) - 1] * 100)
                       ))
                     "
                   >
@@ -171,8 +171,8 @@
                   <span
                     v-else-if="column.type === 'ev'"
                     :data-set="
-                      (strTmp = toFixed[evDigits - 1](
-                        displayEv(summary[columnIndex(column)])
+                      (strTmp = $n(
+                        toFixed[evDigits - 1](displayEv(summary[columnIndex(column)]))
                       ))
                     "
                   >
@@ -264,12 +264,12 @@
                   <span
                     v-if="tableMode === 'chance' && column.type === 'weight'"
                     :data-set="
-                      (strTmp = toFixedAdaptive(item[columnIndex(column)]))
+                      (strTmp = $n(toFixedAdaptive(item[columnIndex(column)])))
                     "
                   >
-                    <span>{{ strTmp.slice(0, strTmp.indexOf(".") + 1) }}</span>
+                    <span>{{ strTmp.slice(0, strTmp.indexOf($d()) + 1) }}</span>
                     <span class="text-xs">{{
-                      strTmp.slice(strTmp.indexOf(".") + 1)
+                      strTmp.slice(strTmp.indexOf($d()) + 1)
                     }}</span>
                   </span>
                   <span
@@ -279,7 +279,7 @@
                       column.type === 'action'
                     "
                     :data-set="
-                      (strTmp = toFixed1(item[columnIndex(column)] * 100))
+                      (strTmp = $n(toFixed1(item[columnIndex(column)] * 100)))
                     "
                   >
                     <span>{{ strTmp.slice(0, -1) }}</span>
@@ -290,8 +290,8 @@
                       column.type === 'ev' || column.type === 'action-ev'
                     "
                     :data-set="
-                      (strTmp = toFixed[evDigits - 1](
-                        displayEv(item[columnIndex(column)])
+                      (strTmp = $n(
+                        toFixed[evDigits - 1](displayEv(item[columnIndex(column)]))
                       ))
                     "
                   >
@@ -360,7 +360,7 @@ import {
   formatAmount,
 } from "../utils";
 import { useStore } from "../store";
-import { i18n } from "../i18n";
+import { i18n, localizeNumber } from "../i18n";
 
 import {
   Results,
@@ -588,6 +588,30 @@ const M = {
     noReport: (chanceType: string) =>
       `No hay reporte de ${chanceType === "turn" ? "turn" : "river"}`,
     noResults: "Sin resultados",
+    action: (name: string): string => name,
+  },
+  pt: {
+    summary: "Resumo",
+    barWidth: "Largura da barra:",
+    normalized: "Normalizado",
+    absolute: "Absoluto",
+    full: "Completo",
+    display: "Mostrar:",
+    actionPct: "% da ação",
+    actionEv: "EV da ação",
+    exportCsv: "Exportar resumo em CSV",
+    all: "Tudo",
+    hand: "Mão",
+    strategy: "Estratégia",
+    weightBar: "Peso (barra)",
+    weight: "Peso",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (barra)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `Não há relatório de ${chanceType === "turn" ? "turn" : "river"}`,
+    noResults: "Sem resultados",
     action: (name: string): string => name,
   },
 } as const;
@@ -827,10 +851,12 @@ export default defineComponent({
             const label =
               action.amount === "0"
                 ? L.value.action(action.name)
-                : `${action.name[0]} ${formatAmount(
-                    Number(action.amount),
-                    evScale.value
-                  )}${evScale.value === 10 ? "bb" : ""}`;
+                : localizeNumber(
+                    `${action.name[0]} ${formatAmount(
+                      Number(action.amount),
+                      evScale.value
+                    )}${evScale.value === 10 ? "bb" : ""}`
+                  );
             if (options.content === "percentage") {
               ret.push({ label, type: "action", index: i });
             } else {
@@ -861,10 +887,12 @@ export default defineComponent({
             const label =
               action.amount === "0"
                 ? L.value.action(action.name)
-                : `${action.name[0]} ${formatAmount(
-                    Number(action.amount),
-                    evScale.value
-                  )}${evScale.value === 10 ? "bb" : ""}`;
+                : localizeNumber(
+                    `${action.name[0]} ${formatAmount(
+                      Number(action.amount),
+                      evScale.value
+                    )}${evScale.value === 10 ? "bb" : ""}`
+                  );
             ret.push({ label, type: "action", index: i });
           }
         }

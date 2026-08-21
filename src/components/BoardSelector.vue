@@ -90,6 +90,14 @@ const M = {
     warnBody: (n: number) =>
       `El árbol editado asume un board de ${n} carta${n === 1 ? "" : "s"}.`,
   },
+  pt: {
+    placeholder: "ex.: AsKd7c",
+    clear: "Limpar",
+    randomFlop: "Flop aleatório",
+    warnLabel: "Atenção:",
+    warnBody: (n: number) =>
+      `A árvore editada pressupõe um board de ${n} carta${n === 1 ? "" : "s"}.`,
+  },
 } as const;
 
 export default defineComponent({

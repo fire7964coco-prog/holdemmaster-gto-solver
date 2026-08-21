@@ -90,6 +90,18 @@ const M = {
       "Pégalo en una publicación de la comunidad y lo usaremos para corregir el problema. No contiene información personal.",
     promptCopy: "Copia el texto de abajo",
   },
+  pt: {
+    title: "Um erro foi registrado",
+    body1: "Se algo pareceu errado, conte para a gente. Os detalhes ficam salvos ",
+    bodyB1: "somente neste dispositivo",
+    body2: " — compartilhar ou não é decisão sua.",
+    copied: "Copiado",
+    copyButton: "Copiar detalhes do erro",
+    close: "Fechar",
+    copiedHint:
+      "Cole em uma publicação da comunidade e vamos usar isso para corrigir o problema. Não contém informações pessoais.",
+    promptCopy: "Copie o texto abaixo",
+  },
 } as const;
 
 export default defineComponent({

@@ -135,6 +135,34 @@ export const DRAW_LABELS_ES: Record<DrawKey, string> = {
   no_draw: "Sin proyecto",
 };
 
+export const MADE_LABELS_PT: Record<MadeKey, string> = {
+  straight_flush: "Straight flush",
+  quads: "Quadra",
+  full_house: "Full house",
+  flush: "Flush",
+  straight: "Straight",
+  // 「Trinca」는 포켓페어 세트·보드 트립스를 함께 가리키는 총칭 (pokernobrasil·MegaJogos 용어집)
+  trips: "Set/Trinca",
+  two_pair: "Dois pares",
+  overpair: "Overpair",
+  top_pair: "Top pair",
+  second_pair: "Segundo par",
+  weak_pair: "Par fraco",
+  underpair: "Underpair",
+  ace_high: "A-high",
+  king_high: "K-high",
+  nothing: "Sem mão feita",
+};
+
+export const DRAW_LABELS_PT: Record<DrawKey, string> = {
+  combo_draw: "Combo draw",
+  flush_draw: "Flush draw",
+  oesd: "OESD",
+  gutshot: "Gutshot",
+  backdoor_fd: "Backdoor FD",
+  no_draw: "Sem draw",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -143,6 +171,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_JA
     : i18n.locale === "es"
     ? MADE_LABELS_ES
+    : i18n.locale === "pt"
+    ? MADE_LABELS_PT
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -151,6 +181,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_JA
     : i18n.locale === "es"
     ? DRAW_LABELS_ES
+    : i18n.locale === "pt"
+    ? DRAW_LABELS_PT
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

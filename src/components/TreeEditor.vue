@@ -180,7 +180,7 @@
         @keydown.enter="addBetAction"
       />
       <span v-if="!isSelectedTerminal && !isAfterAllin" class="ml-2">
-        {{ L.potRate((amountRate * 100).toFixed(1)) }}
+        {{ $n(L.potRate((amountRate * 100).toFixed(1))) }}
       </span>
     </div>
   </div>
@@ -327,6 +327,22 @@ const M = {
     cancelEdits: "Cancelar cambios",
     addedLines: "Líneas agregadas:",
     removedLines: "Líneas eliminadas:",
+  },
+  pt: {
+    treeError: "Erro: não foi possível criar a árvore (você carregou uma árvore corrompida?)",
+    pot: "Pote",
+    stack: "Stack",
+    noActions: "(Sem ações)",
+    wins: "ganha",
+    invalidTerminals: "Nós terminais inválidos:",
+    addBetAction: "Adicionar ação de bet",
+    removeNode: "Remover nó selecionado",
+    betAmount: "Valor do bet:",
+    potRate: (pct: string) => `(${pct}% do pote)`,
+    saveEdits: "Salvar alterações",
+    cancelEdits: "Cancelar alterações",
+    addedLines: "Linhas adicionadas:",
+    removedLines: "Linhas removidas:",
   },
 } as const;
 

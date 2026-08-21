@@ -55,10 +55,10 @@
             "
             :data-set="(strTmp = cellValueText[cellIndex(row, col)])"
           >
-            {{ strTmp.split(".")[0]
-            }}<span v-if="strTmp.includes('.')"
-              >.<span style="font-size: 85%">{{
-                strTmp.split(".")[1]
+            {{ strTmp.split($d())[0]
+            }}<span v-if="strTmp.includes($d())"
+              >{{ $d() }}<span style="font-size: 85%">{{
+                strTmp.split($d())[1]
               }}</span></span
             >
           </div>
@@ -85,6 +85,7 @@ import {
   toFixed,
   colorString,
 } from "../utils";
+import { localizeNumber } from "../i18n";
 
 import {
   Results,
@@ -479,11 +480,11 @@ export default defineComponent({
         ) {
           return "-";
         } else if (displayOptions.contentBasics === "ev") {
-          return Math.abs(value) >= 999.95
-            ? value.toFixed(0)
-            : toFixedEv.value(value);
+          return localizeNumber(
+            Math.abs(value) >= 999.95 ? value.toFixed(0) : toFixedEv.value(value)
+          );
         } else {
-          return toFixed1(value * 100);
+          return localizeNumber(toFixed1(value * 100));
         }
       });
     });

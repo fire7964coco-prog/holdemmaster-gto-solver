@@ -52,7 +52,7 @@
 import { computed, defineComponent, ref } from "vue";
 import { cardText, cardPairOrder, toFixed1, toFixedAdaptive } from "../utils";
 import { useStore } from "../store";
-import { i18n } from "../i18n";
+import { i18n, localizeNumber } from "../i18n";
 import {
   Results,
   Spot,
@@ -114,6 +114,10 @@ const M = {
   },
   es: {
     noGraph: "El gráfico no está disponible",
+    equity: "Equity",
+  },
+  pt: {
+    noGraph: "O gráfico não está disponível",
     equity: "Equity",
   },
 } as const;
@@ -368,9 +372,9 @@ export default defineComponent({
                 const c2 = cardText(cardPair >>> 8);
                 const label = `${c2.rank}${c2.suit}${c1.rank}${c1.suit}`;
                 if (content === "ev") {
-                  return ` ${label}: ${toFixedAdaptive(value)}`;
+                  return localizeNumber(` ${label}: ${toFixedAdaptive(value)}`);
                 } else {
-                  return ` ${label}: ${toFixed1(value * 100)}%`;
+                  return localizeNumber(` ${label}: ${toFixed1(value * 100)}%`);
                 }
               },
             },

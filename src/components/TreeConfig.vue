@@ -1,6 +1,9 @@
 <template>
   <div v-if="!isEditMode">
-    <div class="flex flex-col md:flex-row">
+    <!-- ⚠ flex-wrap 필수 — 라벨이 긴 언어(es·pt)에서는 왼쪽 열이 넓어져
+         오른쪽 «저장된 설정» 패널이 화면 밖으로 잘려 나갔다 (2026-08-21 pt 눈검수).
+         자리가 모자라면 잘리는 대신 아래로 내려가게 한다. -->
+    <div class="flex flex-col md:flex-row md:flex-wrap">
       <div class="shrink-0">
         <div class="mb-2 text-xs text-neutral-500">
           {{ L.chipNote }}
@@ -941,6 +944,65 @@ const M = {
     boardMismatchHint:
       'Para descartar el árbol editado, haz clic en el botón «Borrar cambios y desbloquear».',
   },
+  pt: {
+    chipNote:
+      "Informe os valores em fichas inteiras (os spots personalizados usam unidades de ficha arbitrárias). Para raciocinar em big blinds, recomendamos 10 fichas = 1bb.",
+    startingPot: "Pote inicial:",
+    effectiveStack: "Stack efetivo:",
+    rake: "Rake:",
+    rakeCap: "Cap do rake:",
+    reset: "Limpar",
+    error: "Erro:",
+    warning: "Atenção:",
+    oopBetSizes: "Bet sizes do OOP",
+    donkOption: "Usar outros tamanhos para donk bets",
+    howToInput: "Como informar os valores",
+    inputHelpIntro:
+      "Você pode informar vários bet sizes separados por vírgulas ou espaços, em qualquer um dos formatos abaixo. Se deixar vazio, não há bet nem raise.",
+    inputHelpPercent:
+      'Um número que representa a porcentagem do pote (ex.: “50”). Para os raises, o tamanho é calculado pagando primeiro e somando depois a porcentagem indicada do pote resultante. Por exemplo, se o pote antes do bet é 100 e o vilão aposta 75, um raise de 50% é 75 + (100 + 75 + 75) * 50% = 200.',
+    inputHelpMultiple:
+      'Um múltiplo do bet anterior (ex.: “2.5x”). Disponível apenas para raises.',
+    inputHelpAllin: 'All-in (ex.: “a”).',
+    inputHelpFixed:
+      'Soma de um valor fixo (ex.: “100c”). Para os raises você também pode limitar o número de raises (ex.: “20c3r”).',
+    inputHelpGeometric:
+      'Tamanho geométrico, ou seja, dividir o stack restante no número indicado de bets da mesma porcentagem (ex.: “3e”). Por exemplo, com um pote de 100 e stack efetivo de 400, “2e” é um bet de 100. Se você omitir o número antes do “e”, é usado o número de streets restantes (Flop=3, Turn=2, River=1). Para os raises, subtrai-se o número de raises anteriores; ex.: “3e” vira “2e” ao dar re-raise. Você também pode acrescentar um número depois do “e” para fixar uma porcentagem máxima (ex.: “2e200”).',
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "Bet sizes do IP",
+    addAllInLabel: "Limiar para adicionar all-in:",
+    addAllInHelp:
+      "Adiciona uma ação de all-in em todo nó onde a relação entre o maior bet possível e o pote fica abaixo desse limiar.",
+    forceAllInLabel: "Limiar de all-in forçado:",
+    forceAllInHelp1:
+      "Se o SPR (relação stack/pote) depois de o vilão pagar um bet ficar abaixo desse limiar, esse bet é substituído por um all-in. Um valor recomendado fica em torno de 15% a 20%.",
+    forceAllInHelp2:
+      'Esta opção é parecida com o “all-in threshold” do PioSOLVER. O PioSOLVER substitui um bet por um all-in quando a relação entre o que já foi investido no pote e o stack inicial ultrapassa o limiar.',
+    forceAllInHelp3:
+      "Ignorando o arredondamento, a fórmula de conversão é a seguinte (s = SPR inicial, r = limiar do PioSOLVER):",
+    forceAllInFormula: "Limiar = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Limiar de fusão:",
+    mergingHelp1: "Funde em um só os bets de tamanhos parecidos.",
+    mergingHelp2:
+      "O algoritmo é o mesmo do PioSOLVER: escolhe-se o maior bet (= X% do pote) e elimina-se qualquer outro bet cujo tamanho (= Y% do pote) satisfaça a desigualdade a seguir:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + limiar.",
+    mergingHelp3: "O processo se repete com o próximo maior bet que sobrar.",
+    treePreviewEdit: "Prévia e edição da árvore",
+    clearEditUnlock: "Descartar alterações e desbloquear",
+    addedLines: "Linhas adicionadas:",
+    removedLines: "Linhas removidas:",
+    boardMismatch: (expected: number, actual: number) =>
+      `A árvore editada pressupõe um board de ${expected} carta${
+        expected === 1 ? "" : "s"
+      }, mas o board atual tem ${actual} carta${actual === 1 ? "" : "s"}.`,
+    boardMismatchHint:
+      'Para descartar a árvore editada, clique no botão “Descartar alterações e desbloquear”.',
+  },
 } as const;
 
 type ConfigValue = {
@@ -1006,7 +1068,7 @@ export default defineComponent({
       const errors: string[] = [];
       if (config.startingPot <= 0) {
         errors.push(
-          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スターティングポットには正の数を入力してください", "El bote inicial debe ser positivo")
+          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スターティングポットには正の数を入力してください", "El bote inicial debe ser positivo", "O pote inicial deve ser positivo")
         );
       }
       if (config.startingPot > MAX_AMOUNT) {
@@ -1015,13 +1077,14 @@ export default defineComponent({
             `스타팅 팟은 ${MAX_AMOUNT} 이하여야 합니다`,
             `Starting pot must not exceed ${MAX_AMOUNT}`,
             `スターティングポットは${MAX_AMOUNT}以下で入力してください`,
-            `El bote inicial no debe exceder ${MAX_AMOUNT}`
+            `El bote inicial no debe exceder ${MAX_AMOUNT}`,
+            `O pote inicial não pode passar de ${MAX_AMOUNT}`
           )
         );
       }
       if (config.startingPot % 1 !== 0) {
         errors.push(
-          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero")
+          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro")
         );
       }
       if (config.effectiveStack <= 0) {
@@ -1030,7 +1093,8 @@ export default defineComponent({
             "유효 스택은 양수여야 합니다",
             "Effective stack must be positive",
             "有効スタックには正の数を入力してください",
-            "El stack efectivo debe ser positivo"
+            "El stack efectivo debe ser positivo",
+            "O stack efetivo deve ser positivo"
           )
         );
       }
@@ -1040,7 +1104,8 @@ export default defineComponent({
             `유효 스택은 ${MAX_AMOUNT} 이하여야 합니다`,
             `Effective stack must not exceed ${MAX_AMOUNT}`,
             `有効スタックは${MAX_AMOUNT}以下で入力してください`,
-            `El stack efectivo no debe exceder ${MAX_AMOUNT}`
+            `El stack efectivo no debe exceder ${MAX_AMOUNT}`,
+            `O stack efetivo não pode passar de ${MAX_AMOUNT}`
           )
         );
       }
@@ -1050,23 +1115,24 @@ export default defineComponent({
             "유효 스택은 정수여야 합니다",
             "Effective stack must be an integer",
             "有効スタックは整数で入力してください",
-            "El stack efectivo debe ser un entero"
+            "El stack efectivo debe ser un entero",
+            "O stack efetivo deve ser um número inteiro"
           )
         );
       }
       if (config.rakePercent < 0) {
         errors.push(
-          pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo")
+          pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo", "O rake não pode ser negativo")
         );
       }
       if (config.rakePercent > 100) {
         errors.push(
-          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%")
+          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%")
         );
       }
       if (config.rakeCap < 0) {
         errors.push(
-          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo")
+          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo", "O teto do rake não pode ser negativo")
         );
       }
       if (config.rakeCap > 3 * MAX_AMOUNT) {
@@ -1087,36 +1153,36 @@ export default defineComponent({
       const isDonk = true;
       const betConfig = [
         {
-          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP"),
+          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP"),
           res: config.oopFlopBetSanitized,
         },
         {
-          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP"),
+          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP"),
           res: config.oopFlopRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP"),
+          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP"),
           res: config.oopTurnBetSanitized,
         },
         {
-          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP"),
+          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP"),
           res: config.oopTurnRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP"),
+          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP"),
           res: config.oopTurnDonkSanitized,
           isDonk,
         },
         {
-          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP"),
+          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP"),
           res: config.oopRiverBetSanitized,
         },
         {
-          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP"),
+          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP"),
           res: config.oopRiverRaiseSanitized,
         },
         {
-          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP"),
+          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP"),
           res: config.oopRiverDonkSanitized,
           isDonk,
         },
@@ -1133,27 +1199,27 @@ export default defineComponent({
       const errors: string[] = [];
       const betConfig = [
         {
-          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP"),
+          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP"),
           res: config.ipFlopBetSanitized,
         },
         {
-          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP"),
+          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP"),
           res: config.ipFlopRaiseSanitized,
         },
         {
-          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP"),
+          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP"),
           res: config.ipTurnBetSanitized,
         },
         {
-          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP"),
+          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP"),
           res: config.ipTurnRaiseSanitized,
         },
         {
-          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP"),
+          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP"),
           res: config.ipRiverBetSanitized,
         },
         {
-          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP"),
+          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP"),
           res: config.ipRiverRaiseSanitized,
         },
       ];
@@ -1173,7 +1239,8 @@ export default defineComponent({
             "올인 추가 임계값은 음수일 수 없습니다",
             "Add all-in threshold must not be negative",
             "オールイン追加しきい値は負の値にできません",
-            "El umbral para agregar all-in no puede ser negativo"
+            "El umbral para agregar all-in no puede ser negativo",
+            "O limiar para adicionar all-in não pode ser negativo"
           )
         );
       }
@@ -1183,7 +1250,8 @@ export default defineComponent({
             "강제 올인 임계값은 음수일 수 없습니다",
             "Force all-in threshold must not be negative",
             "強制オールインしきい値は負の値にできません",
-            "El umbral de all-in forzado no puede ser negativo"
+            "El umbral de all-in forzado no puede ser negativo",
+            "O limiar de all-in forçado não pode ser negativo"
           )
         );
       }
@@ -1193,7 +1261,8 @@ export default defineComponent({
             "병합 임계값은 음수일 수 없습니다",
             "Merging threshold must not be negative",
             "マージしきい値は負の値にできません",
-            "El umbral de fusión no puede ser negativo"
+            "El umbral de fusión no puede ser negativo",
+            "O limiar de fusão não pode ser negativo"
           )
         );
       }
@@ -1208,7 +1277,8 @@ export default defineComponent({
             "강제 올인 임계값을 30%보다 높게 설정하는 것은 권장되지 않습니다.\n의미는 도움말을 참고해 주세요.",
             "Setting the force all-in threshold higher than 30% is not recommended.\nSee the help text for what this setting does.",
             "強制オールインのしきい値を30%より高く設定することは推奨されません。\n詳しくはヘルプをご覧ください。",
-            "No se recomienda fijar el umbral de all-in forzado por encima del 30%.\nConsulta la ayuda para ver qué significa."
+            "No se recomienda fijar el umbral de all-in forzado por encima del 30%.\nConsulta la ayuda para ver qué significa.",
+            "Não é recomendado definir o limiar de all-in forçado acima de 30%.\nConsulte a ajuda para ver o que isso significa."
           )
         );
       }
@@ -1228,7 +1298,8 @@ export default defineComponent({
             "잘못된 라인이 발견되었습니다 (손상된 설정을 불러왔나요?)",
             "Invalid line found (loaded a broken configuration?)",
             "無効なラインが見つかりました(破損した設定を読み込みましたか?)",
-            "Se encontró una línea inválida (¿cargaste una configuración dañada?)"
+            "Se encontró una línea inválida (¿cargaste una configuración dañada?)",
+            "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)"
           )
         );
       }
@@ -1246,7 +1317,8 @@ export default defineComponent({
             "잘못된 설정입니다 (손상된 설정을 불러왔나요?)",
             "Invalid configuration (loaded a broken configuration?)",
             "無効な設定です(破損した設定を読み込みましたか?)",
-            "Configuración inválida (¿cargaste una configuración dañada?)"
+            "Configuración inválida (¿cargaste una configuración dañada?)",
+            "Configuração inválida (você carregou uma configuração corrompida?)"
           )
         );
       }

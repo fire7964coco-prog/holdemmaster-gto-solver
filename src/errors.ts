@@ -61,7 +61,7 @@ const shortBrowser = () => {
   if (/Chrome\/([\d.]+)/.test(ua)) return pick("크롬 ", "Chrome ", "Chrome ") + RegExp.$1;
   if (/Firefox\/([\d.]+)/.test(ua)) return pick("파이어폭스 ", "Firefox ", "Firefox ") + RegExp.$1;
   if (/Version\/([\d.]+).*Safari/.test(ua)) return pick("사파리 ", "Safari ", "Safari ") + RegExp.$1;
-  return pick("기타 브라우저", "Other browser", "その他のブラウザ", "Otro navegador");
+  return pick("기타 브라우저", "Other browser", "その他のブラウザ", "Otro navegador", "Outro navegador");
 };
 
 const record = (msg: string, stack: string) => {
@@ -86,16 +86,16 @@ export const errorReportText = () => {
   if (!records.length) return "";
   const standalone = window.matchMedia?.("(display-mode: standalone)").matches;
   const head = [
-    pick("홀덤마스터 GTO 솔버 오류 기록", "HoldemMaster GTO Solver error log", "HoldemMaster GTOソルバー エラーログ", "Registro de errores de HoldemMaster GTO Solver"),
-    `${pick("빌드", "Build", "ビルド")} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen", "画面", "Pantalla")} ${window.innerWidth}x${window.innerHeight}`,
-    `${pick("설치 실행", "Installed app", "インストール版", "App instalada")}: ${standalone ? pick("예", "yes", "はい", "sí") : pick("아니오", "no", "いいえ", "no")}`,
+    pick("홀덤마스터 GTO 솔버 오류 기록", "HoldemMaster GTO Solver error log", "HoldemMaster GTOソルバー エラーログ", "Registro de errores de HoldemMaster GTO Solver", "Registro de erros do HoldemMaster GTO Solver"),
+    `${pick("빌드", "Build", "ビルド")} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen", "画面", "Pantalla", "Tela")} ${window.innerWidth}x${window.innerHeight}`,
+    `${pick("설치 실행", "Installed app", "インストール版", "App instalada", "App instalado")}: ${standalone ? pick("예", "yes", "はい", "sí", "sim") : pick("아니오", "no", "いいえ", "no", "não")}`,
     "",
   ].join("\n");
   const body = records
     .slice()
     .reverse()
     .map((item, index) => {
-      const time = new Date(item.t).toLocaleString(pick("ko-KR", "en-US", "ja-JP", "es-MX"));
+      const time = new Date(item.t).toLocaleString(pick("ko-KR", "en-US", "ja-JP", "es-MX", "pt-BR"));
       return `[${index + 1}] ${time} (${item.where})\n${item.msg}\n${item.stack}`;
     })
     .join("\n\n");
@@ -126,7 +126,7 @@ export const setupErrorCapture = () => {
     } else if (target && target.tagName) {
       // 이미지·스크립트 로딩 실패는 error 객체가 없다
       record(
-        `${target.tagName} ${pick("로딩 실패", "failed to load", "読み込み失敗", "no se pudo cargar")}`,
+        `${target.tagName} ${pick("로딩 실패", "failed to load", "読み込み失敗", "no se pudo cargar", "não foi possível carregar")}`,
         String(target.src || target.href || "")
       );
     } else if (event.message) {
@@ -145,7 +145,7 @@ export const setupErrorCapture = () => {
   window.addEventListener("unhandledrejection", (event) => {
     const reason = event.reason;
     record(
-      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ") + String(reason?.message ?? reason),
+      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ", "Erro não tratado: ") + String(reason?.message ?? reason),
       String(reason?.stack ?? "")
     );
   });

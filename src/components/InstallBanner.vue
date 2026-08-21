@@ -182,6 +182,32 @@ const M = {
       "No se instala nada en tu sistema — es solo un acceso directo del navegador. No pide permisos y puedes quitarlo cuando quieras manteniendo presionado el ícono, como cualquier app.",
     close: "Cerrar",
   },
+  pt: {
+    iconAlt: "Ícone do HoldemMaster GTO Solver",
+    title: "Adicionar à sua tela de início?",
+    samsung1: "O Samsung Internet pode ",
+    samsungB1: "bloquear a instalação por segurança",
+    samsung2: " — é uma verificação do navegador, não um problema deste app. ",
+    samsungB2: "Abra no Chrome",
+    samsung3: " e a instalação acontece sem o aviso.",
+    default1: "Abre com um toque só e ",
+    defaultB1: "guarda os 13 Spots de estudo e o Treinador no seu dispositivo",
+    default2: " para você estudar mesmo sem conexão com a internet.",
+    ios1: "Toque no ",
+    iosB1: "botão Compartilhar",
+    ios2: " abaixo e escolha ",
+    iosB2: "“Adicionar à Tela de Início”",
+    ios3: ". Abre com um toque só, com os Spots de estudo e o Treinador guardados para usar sem conexão.",
+    openInChrome: "Abrir no Chrome",
+    install: "Adicionar à tela",
+    gotIt: "Entendi",
+    later: "Depois",
+    samsungHint:
+      "Para instalar aqui mesmo assim, siga as instruções do aviso para permitir.",
+    safety:
+      "Nada é instalado no seu sistema — é apenas um atalho do navegador. Ele não pede permissões e você pode removê-lo quando quiser mantendo o ícone pressionado, como qualquer app.",
+    close: "Fechar",
+  },
 } as const;
 
 export default defineComponent({

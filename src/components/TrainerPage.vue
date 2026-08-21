@@ -71,8 +71,8 @@
           <b :class="streak >= 3 ? 'text-emerald-300' : ''">{{ streak }}</b>
           <span v-if="bestStreak > 0" class="text-neutral-600">{{ L.bestPrefix }} {{ bestStreak }}</span>
         </span>
-        <span class="stat-chip">{{ L.totalLossLabel }} <b>{{ totalLoss.toFixed(3) }}</b>bb</span>
-        <span class="stat-chip">{{ L.avgLossLabel }} <b>{{ averageLoss.toFixed(3) }}</b>bb</span>
+        <span class="stat-chip">{{ L.totalLossLabel }} <b>{{ $n(totalLoss.toFixed(3)) }}</b>bb</span>
+        <span class="stat-chip">{{ L.avgLossLabel }} <b>{{ $n(averageLoss.toFixed(3)) }}</b>bb</span>
         <span class="stat-chip">{{ L.goodRateLabel }} <b>{{ excellentRate.toFixed(0) }}</b>%</span>
       </div>
 
@@ -94,8 +94,8 @@
           >
             {{ row.label }}
             <template v-if="row.count">
-              {{ L.avgOfPot(row.averageLossPct.toFixed(2)) }}
-              <span class="text-neutral-600">({{ row.averageLossBb.toFixed(3) }}bb)</span>
+              {{ $n(L.avgOfPot(row.averageLossPct.toFixed(2))) }}
+              <span class="text-neutral-600">({{ $n(row.averageLossBb.toFixed(3)) }}bb)</span>
               <span class="text-neutral-600">{{ L.handCount(row.count) }}</span>
             </template>
             <span v-else class="text-neutral-600">{{ L.notSolved }}</span>
@@ -160,7 +160,7 @@
       </div>
 
       <p class="order-4 md:order-2 mt-2 text-right text-xs text-neutral-500">
-        {{ L.footerLine(decisionCount, bank.targetExploitabilityPct) }}
+        {{ $n(L.footerLine(decisionCount, bank.targetExploitabilityPct)) }}
       </p>
 
       <!--
@@ -290,7 +290,7 @@
               v-if="evaluation"
               class="text-xs font-semibold tabular-nums text-neutral-400"
             >
-              {{ (evaluation.actions[index].frequency * 100).toFixed(1) }}%
+              {{ $n((evaluation.actions[index].frequency * 100).toFixed(1)) }}%
             </span>
           </button>
         </div>
@@ -310,7 +310,7 @@
           <div class="hidden md:block mt-0.5 text-sm text-neutral-400">
             {{ L.evLoss }}
             <b class="tabular-nums text-neutral-200">
-              {{ evaluation.evLossBb.toFixed(3) }}bb
+              {{ $n(evaluation.evLossBb.toFixed(3)) }}bb
             </b>
           </div>
           <div class="md:hidden text-sm font-semibold text-neutral-300">
@@ -327,10 +327,10 @@
                   {{ action.label }}{{ action.isBest ? L.bestEvTag : "" }}
                 </span>
                 <span class="ml-auto tabular-nums text-xs text-neutral-500">
-                  {{ (action.frequency * 100).toFixed(1) }}%
+                  {{ $n((action.frequency * 100).toFixed(1)) }}%
                 </span>
                 <span class="w-16 text-right tabular-nums">
-                  {{ action.evBb.toFixed(3) }}
+                  {{ $n(action.evBb.toFixed(3)) }}
                 </span>
               </div>
               <!-- 숫자를 못 읽어도 차이가 보이게 -->
@@ -416,7 +416,7 @@
                     </span>
                     <span class="ml-2">{{ row.nickname }}</span>
                     <span class="ml-2 tabular-nums text-neutral-500">
-                      {{ row.lossBb.toFixed(3) }}bb
+                      {{ $n(row.lossBb.toFixed(3)) }}bb
                     </span>
                   </li>
                 </ol>
@@ -462,7 +462,7 @@
           <p class="mt-3 text-xs leading-relaxed text-neutral-600">
             {{ L.gtoNoteBefore }}<b class="text-neutral-400">{{ L.gtoNoteBold }}</b>{{ L.gtoNoteAfter }}
             <template v-if="question">
-              {{ L.spotLimits(limits.potBb.toFixed(1), limits.bestBb.toFixed(2), limits.goodBb.toFixed(2)) }}
+              {{ $n(L.spotLimits(limits.potBb.toFixed(1), limits.bestBb.toFixed(2), limits.goodBb.toFixed(2))) }}
             </template>
           </p>
         </template>
@@ -493,7 +493,7 @@
           <div class="text-xs text-neutral-400">
             {{ L.evLoss }}
             <b class="tabular-nums text-neutral-200">
-              {{ evaluation.evLossBb.toFixed(3) }}bb
+              {{ $n(evaluation.evLossBb.toFixed(3)) }}bb
             </b>
             <button class="link-like ml-2" @click="scrollToDetail">{{ L.details }}</button>
           </div>
@@ -582,7 +582,7 @@ import {
   oopLabelOf,
   presetTitleById,
 } from "../presets";
-import { i18n } from "../i18n";
+import { i18n, localizeNumber } from "../i18n";
 import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
 import { cardText, formatBb } from "../utils";
@@ -1013,6 +1013,112 @@ const M = {
     syncFailed: (msg: string) => `Error de sincronización: ${msg}`,
     signInFailed: (msg: string) => `Error al iniciar sesión: ${msg}`,
   },
+  pt: {
+    loadFailed: "Não foi possível carregar os dados do Treinador:",
+    loading: "Carregando o treinador…",
+    review: (n: number) => `Revisar (${n})`,
+    daily: "Desafio do dia",
+    done: "Feito",
+    solved: "Resolvidas",
+    dayStreakSuffix: " em sequência",
+    bestPrefix: "/ melhor",
+    streakLabel: "Sequência",
+    totalLossLabel: "Perda de EV total",
+    avgLossLabel: "Perda de EV média",
+    goodRateLabel: "Boas decisões",
+    weaknessTitle: "Detector de leaks",
+    avgOfPot: (pct: string) => `média ${pct}% do pote`,
+    handCount: (n: number) => `(${n} ${n === 1 ? "mão" : "mãos"})`,
+    notSolved: "sem tentativas",
+    weakestBefore: "Maiores perdas em ",
+    weakestAfter: " —",
+    practiceThis: "Só este tipo de spot",
+    weaknessHint: "Resolva 3+ mãos em cada categoria para ver onde você perde EV.",
+    accountBefore: "Salvo na conta de ",
+    accountAfter: "",
+    syncingNow: "Sincronizando…",
+    syncNow: "Sincronizar agora",
+    signOutLabel: "Sair",
+    localOnlyBefore: "O seu progresso é salvo ",
+    localOnlyBold: "somente neste dispositivo",
+    localOnlyAfter:
+      ". Vincule uma conta HoldemMaster para continuar de onde parou em qualquer dispositivo.",
+    googleSignIn: "Continuar com o Google",
+    kakaoSignIn: "Continuar com o Kakao",
+    footerLine: (nodes: number, pct: number) =>
+      `13 Spots de estudo · ${nodes} nós de decisão · erro objetivo ${pct}%`,
+    details: "Detalhes ↓",
+    toAct: "para agir",
+    potLabel: "Pote",
+    stackLabel: "Stack",
+    lineLabel: "Linha:",
+    boardLabel: "Board",
+    myHand: "Sua mão",
+    yourChoice: "Sua escolha",
+    prompt: "Qual é a sua jogada?",
+    bestEvTag: " · Maior EV",
+    evLoss: "Perda de EV",
+    mobileDetailTitle: "Frequência e EV por ação",
+    mixedNote:
+      "As estratégias mistas não são marcadas como erro — a nota se baseia na diferença de EV entre as ações.",
+    dailyDone: "Desafio do dia concluído",
+    dailyDoneDesc:
+      "Hoje todo mundo recebe o mesmo desafio. Publique o seu resultado para comparar com outros jogadores.",
+    makeCard: "Criar card de resultado",
+    boardShow: "Ver o ranking de hoje",
+    boardHide: "Ocultar ranking",
+    boardLoading: "Carregando…",
+    boardCount: (n: number) => `${n} jogador${n === 1 ? "" : "es"} hoje`,
+    boardMyRank: (r: number) => `Minha posição #${r}`,
+    boardLoginHint:
+      "Faça login para colocar o seu nome no ranking — qualquer pessoa pode ver.",
+    boardUnavailable: "O ranking ainda não está disponível.",
+    copied: "Copiado",
+    copyResult: "Copiar texto do resultado",
+    openCommunity: "Abrir comunidade →",
+    pasteHintBefore: "Na comunidade, toque em ",
+    pasteHintBold: "[✏️ Nova publicação]",
+    pasteHintAfter: " e cole.",
+    keepPracticing: "Continuar praticando",
+    nextHand: "Próxima mão",
+    readArticle: "Ler a análise do spot →",
+    viewFull: "Ver a solução completa",
+    resultTitle: "Resultados",
+    resultHintBefore: "Escolha uma ação e você verá ",
+    resultHintBold: "a frequência e o EV de cada ação",
+    resultHintAfter: ", além de quantos bb a sua escolha custou.",
+    gtoNoteBefore:
+      "O GTO mistura ações com a mesma mão — uma escolha de baixa frequência não é automaticamente um erro. A medida é a perda de EV ",
+    gtoNoteBold: "em relação ao pote",
+    gtoNoteAfter:
+      ": ≤0,35% Melhor jogada · ≤1% Aceitável · acima disso, Revise este spot.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Neste spot (pote de ${pot}bb): Melhor jogada ≤${best}bb · Aceitável ≤${good}bb.`,
+    resetHistoryLabel: "Apagar histórico",
+    cardAlt: "Card de resultado do desafio do dia",
+    shareApps: "Compartilhar em apps",
+    saveImage: "Salvar imagem",
+    close: "Fechar",
+    cardHintBefore:
+      "Publique o seu card em um grupo de conversa ou nas redes — quem vir joga o ",
+    cardHintBold: "mesmo desafio",
+    cardHintAfter: " hoje. O card nunca revela a resposta.",
+    verdictBest: "Melhor jogada",
+    verdictGood: "Aceitável",
+    verdictMiss: "Revise este spot",
+    promptCopy: "Copie o texto abaixo",
+    shareText:
+      "Desafio GTO do dia — tente você também: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "Apagar todo o histórico do treinador neste dispositivo?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} salva${uploaded === 1 ? "" : "s"} · ${merged} trazida${
+        merged === 1 ? "" : "s"
+      } de outros dispositivos`,
+    syncSaved: (uploaded: number) =>
+      `${uploaded} salva${uploaded === 1 ? "" : "s"}`,
+    syncFailed: (msg: string) => `Erro de sincronização: ${msg}`,
+    signInFailed: (msg: string) => `Erro ao fazer login: ${msg}`,
+  },
 } as const;
 
 export default defineComponent({
@@ -1429,7 +1535,7 @@ export default defineComponent({
         : (preset && ipLabelOf(preset)) || "IP";
     });
     const amountBb = (value: number) =>
-      formatBb(value, question.value?.node.unitScale || 10);
+      localizeNumber(formatBb(value, question.value?.node.unitScale || 10));
     const historyLabel = (action: { name: string; amount: string }) =>
       trainerActionLabel(
         action,

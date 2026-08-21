@@ -1,7 +1,7 @@
 import { PRESETS, presetTitleOf } from "./presets";
 import { Results, SpotPlayer } from "./result-types";
 import { cardText, formatAmount } from "./utils";
-import { i18n } from "./i18n";
+import { i18n, localizeNumber } from "./i18n";
 import {
   classifyMade,
   classifyDraw,
@@ -100,7 +100,7 @@ const actionName = (name: string) =>
     ? actionLabelsKo[name] ?? name
     : i18n.locale === "ja"
     ? actionLabelsJa[name] ?? name
-    : i18n.locale === "es"
+    : i18n.locale === "es" || i18n.locale === "pt"
     ? actionLabelsEs[name] ?? name
     : actionLabelsEn[name] ?? name;
 
@@ -114,7 +114,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es",
+    "ko" | "en" | "ja" | "es" | "pt",
     Record<TrainerCategory, string>
   > = {
     ko: {
@@ -141,6 +141,12 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "Bote 3-bet",
       blind: "Guerra de ciegas",
     },
+    pt: {
+      all: "Todos",
+      srp: "Single Raised",
+      "3bp": "Pote 3-bet",
+      blind: "Blind vs Blind",
+    },
   };
   return labels[i18n.locale][category];
 };
@@ -153,9 +159,9 @@ export const trainerActionLabel = (
   const label = actionName(action.name);
   if (!action.amount || action.amount === "0") return label;
   const value = Number(action.amount);
-  const amount = `${formatAmount(value, unitScale)}${
-    unitScale === 10 ? "bb" : ""
-  }`;
+  const amount = localizeNumber(
+    `${formatAmount(value, unitScale)}${unitScale === 10 ? "bb" : ""}`
+  );
   if (action.name === "Bet" && pot > 0) {
     const pct = Math.round((value * 100) / pot);
     return i18n.locale === "ko"
@@ -164,6 +170,8 @@ export const trainerActionLabel = (
       ? `${label} ${amount} (${pct}% ポット)`
       : i18n.locale === "es"
       ? `${label} ${amount} (${pct}% del bote)`
+      : i18n.locale === "pt"
+      ? `${label} ${amount} (${pct}% do pote)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return `${label} ${amount}`;

@@ -191,7 +191,7 @@
                   : 'opacity-70')
               "
             >
-              [{{ (rates[action.index] * 100).toFixed(1) }}%]
+              [{{ $n((rates[action.index] * 100).toFixed(1)) }}%]
             </span>
           </button>
         </div>
@@ -221,13 +221,13 @@
             <div class="flex w-full px-1.5">
               <span>OOP</span>
               <span class="ml-auto pl-2">
-                {{ (spot.equityOop * 100).toFixed(1) }}%
+                {{ $n((spot.equityOop * 100).toFixed(1)) }}%
               </span>
             </div>
             <div class="flex w-full px-1.5">
               <span>IP</span>
               <span class="ml-auto pl-2">
-                {{ ((1 - spot.equityOop) * 100).toFixed(1) }}%
+                {{ $n(((1 - spot.equityOop) * 100).toFixed(1)) }}%
               </span>
             </div>
           </div>
@@ -405,6 +405,24 @@ const M = {
     action: (name: string): string => name,
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% del bote)`,
+  },
+  pt: {
+    pot: "Pote",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} ganha`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Fim",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string => name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% do pote)`,
   },
 } as const;
 

@@ -75,6 +75,12 @@ const M = {
     titleLine2: "GTO Solver.",
     footer: "Solver GTO gratis · Funciona offline",
   },
+  pt: {
+    greeting: "Boas-vindas ao",
+    titleLine1: "HoldemMaster",
+    titleLine2: "GTO Solver.",
+    footer: "Solver GTO grátis · Funciona offline",
+  },
 } as const;
 
 export default defineComponent({

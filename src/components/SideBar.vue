@@ -206,6 +206,29 @@ const M = {
     betSizeSub: "Ajustes",
     run: "Calcular",
   },
+  pt: {
+    exploreLabel: "Explorar",
+    exploreLabelSuffix: " e estudar",
+    about: "Sobre",
+    guide: "Como usar",
+    presets: "Spots de estudo",
+    presetsBadge: "Na hora",
+    trainer: "Treinador GTO",
+    trainerBadge: "Nota EV",
+    preflop: "Tabelas pré-flop",
+    preflopBadge: "Ranges",
+    equity: "Equity",
+    equityBadge: "% de vitória",
+    customLabel: "Spot personalizado",
+    // 한 줄 유지용 — 접미사를 비워 이름만 표시한다 (라벨이 길면 ⑤가 화면 밖으로 밀린다)
+    customLabelSuffix: "",
+    oopRange: "Range OOP",
+    ipRange: "Range IP",
+    board: "Board",
+    betSize: "Bet sizes",
+    betSizeSub: "Ajustes",
+    run: "Calcular",
+  },
 } as const;
 
 export default defineComponent({

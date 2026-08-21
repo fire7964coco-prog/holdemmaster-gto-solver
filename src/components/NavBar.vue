@@ -39,7 +39,7 @@
       </div>
 
       <div class="flex ml-auto h-full items-center z-10">
-        <!-- 언어 선택 — 4개 언어(ko/en/ja/es)라 토글 대신 선택 상자.
+        <!-- 언어 선택 — 5개 언어(ko/en/ja/es/pt)라 토글 대신 선택 상자.
              닫힌 상태에는 현재 언어의 이름만 보이므로 화면에 외국어가 남지 않는다 -->
         <select
           class="lang-select"
@@ -51,6 +51,7 @@
           <option value="en">English</option>
           <option value="ja">日本語</option>
           <option value="es">Español</option>
+          <option value="pt">Português</option>
         </select>
         <a
           :href="communityUrl"
@@ -107,6 +108,15 @@ const M = {
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Seleccionar idioma",
   },
+  pt: {
+    brand: "HoldemMaster GTO Solver",
+    solver: "Solver",
+    results: "Resultados",
+    community: "Comunidade",
+    // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
+    communitySuffix: " HoldemMaster",
+    langSwitchLabel: "Selecionar idioma",
+  },
 } as const;
 
 export default defineComponent({
@@ -122,7 +132,8 @@ export default defineComponent({
         value === "ko" ||
         value === "en" ||
         value === "ja" ||
-        value === "es"
+        value === "es" ||
+        value === "pt"
       )
         setLocale(value);
     };
@@ -141,9 +152,12 @@ export default defineComponent({
 <style scoped>
 /* 전역 select 스타일(어두운 상자 + 테두리)을 네비바용으로 무력화 — 글자만 보이게 */
 .lang-select {
-  @apply h-full cursor-pointer text-sm font-semibold;
+  @apply h-full cursor-pointer text-xs md:text-sm font-semibold;
   @apply !border-0 !bg-transparent text-neutral-400 hover:text-neutral-200;
-  @apply !py-0 !pl-2 !pr-7;
+  /* ⚠ 상자 폭은 «가장 긴 항목»(Português)이 정한다 — 포르투갈어를 넣자 390px에서
+     네비바가 10px 넘쳤다(en·ja). 모바일에서만 글자를 한 단계 줄여 자리를 만든다.
+     왼쪽 여백(pl-2)은 건드리지 말 것 — 줄이면 «ResultadosPortuguês»로 붙어 보인다. */
+  @apply !py-0 !pl-2 !pr-6 md:!pr-7;
 }
 .lang-select:focus {
   @apply !ring-0;

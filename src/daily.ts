@@ -150,6 +150,30 @@ export const dailyShareText = (verdict: string) => {
       .filter(Boolean)
       .join("\n");
   }
+  if (i18n.locale === "es") {
+    return [
+      `[Reto GTO del día · ${date}]`,
+      `Mi resultado: ${verdict} (pérdida de EV ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `Racha de ${dailyState.streak} días` : "",
+      "",
+      "Resuelve el mismo reto → https://solver.holdemmaster.com/?view=trainer&lang=es",
+      "(HoldemMaster GTO Solver · un reto al día)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "pt") {
+    return [
+      `[Desafio GTO do dia · ${date}]`,
+      `Meu resultado: ${verdict} (perda de EV ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `Sequência de ${dailyState.streak} dias` : "",
+      "",
+      "Resolva o mesmo desafio → https://solver.holdemmaster.com/?view=trainer&lang=pt",
+      "(HoldemMaster GTO Solver · um desafio por dia)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
   if (i18n.locale === "en") {
     return [
       `[Daily GTO Puzzle · ${date}]`,

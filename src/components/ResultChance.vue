@@ -60,7 +60,7 @@ import {
   formatAmount,
 } from "../utils";
 import { useStore } from "../store";
-import { i18n } from "../i18n";
+import { i18n, localizeNumber } from "../i18n";
 import {
   ChanceReports,
   Spot,
@@ -151,6 +151,12 @@ const M = {
   es: {
     strategyCombos: "Estrategia (combos)",
     strategy: "Estrategia",
+    equity: "Equity",
+    action: (name: string): string => name,
+  },
+  pt: {
+    strategyCombos: "Estratégia (combos)",
+    strategy: "Estratégia",
     equity: "Equity",
     action: (name: string): string => name,
   },
@@ -344,9 +350,9 @@ export default defineComponent({
                 let label = context.dataset.label ?? "";
                 if (label) label += ": ";
                 if (["strategy-combos", "ev"].includes(option)) {
-                  return ` ${label}${toFixedAdaptive(value)}`;
+                  return localizeNumber(` ${label}${toFixedAdaptive(value)}`);
                 } else {
-                  return ` ${label}${toFixed1(value * 100)}%`;
+                  return localizeNumber(` ${label}${toFixed1(value * 100)}%`);
                 }
               },
             },

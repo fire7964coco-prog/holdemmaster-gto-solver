@@ -10,7 +10,7 @@
  */
 import { cardText } from "./utils";
 import { C } from "./theme";
-import { i18n } from "./i18n";
+import { i18n, localizeNumber } from "./i18n";
 
 // 카드에 그려 넣는 고정 문구 — 카드 언어는 현재 화면 언어를 따른다
 const CARD_TEXT = {
@@ -57,6 +57,17 @@ const CARD_TEXT = {
     evLine: (bb: string, streak: number) =>
       `Pérdida de EV ${bb}bb${streak > 1 ? ` · racha de ${streak} días` : ""}`,
     invite: "Resuelve el mismo reto",
+  },
+  pt: {
+    brand: "Treinador GTO da HoldemMaster",
+    tagline: "Um desafio por dia · o mesmo para todos",
+    heading: "Desafio GTO do dia",
+    board: "Board",
+    hand: "Minha mão",
+    result: (verdict: string) => `Meu resultado: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `Perda de EV ${bb}bb${streak > 1 ? ` · sequência de ${streak} dias` : ""}`,
+    invite: "Resolva o mesmo desafio",
   },
 } as const;
 
@@ -255,7 +266,7 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   ctx.fillStyle = TEXT_DIM;
   ctx.font = `500 36px ${FONT}`;
   ctx.fillText(
-    T.evLine(input.evLossBb.toFixed(3), input.streak),
+    T.evLine(localizeNumber(input.evLossBb.toFixed(3)), input.streak),
     WIDTH / 2,
     verdictY + 60
   );

@@ -16,7 +16,7 @@
           <div class="flex justify-between">
             <span class="text-neutral-200">{{ row.label }}</span>
             <span class="text-neutral-300 tabular-nums">
-              {{ row.pct.toFixed(1) }}%
+              {{ $n(row.pct.toFixed(1)) }}%
             </span>
           </div>
           <div class="mt-0.5 h-1.5 w-full rounded-sm bg-neutral-700">
@@ -44,7 +44,7 @@
           <div class="flex justify-between">
             <span class="text-neutral-200">{{ row.label }}</span>
             <span class="text-neutral-300 tabular-nums">
-              {{ row.pct.toFixed(1) }}%
+              {{ $n(row.pct.toFixed(1)) }}%
             </span>
           </div>
           <div class="mt-0.5 h-1.5 w-full rounded-sm bg-neutral-700">
@@ -91,6 +91,12 @@ const M = {
     noHands: "No hay manos para mostrar",
     draws: "Proyectos",
     noDraws: "Sin información de proyectos",
+  },
+  pt: {
+    hands: "Mãos",
+    noHands: "Nenhuma mão para mostrar",
+    draws: "Draws",
+    noDraws: "Sem informações de draws",
   },
 } as const;
 

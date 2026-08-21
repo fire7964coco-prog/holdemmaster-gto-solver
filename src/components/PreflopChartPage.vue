@@ -38,7 +38,7 @@
             (tab.active ? 'text-neutral-700' : 'text-neutral-500')
           "
         >
-          {{ tab.percent }}%
+          {{ $n(tab.percent) }}%
         </span>
       </button>
     </div>
@@ -153,7 +153,7 @@
       <div class="flex-grow min-w-0">
         <div class="flex flex-wrap gap-2 mb-4">
           <div v-for="s in active.stats" :key="s.label" class="stat-chip">
-            {{ s.label }} <b :data-testid="s.testid">{{ s.value }}</b>
+            {{ s.label }} <b :data-testid="s.testid">{{ $n(s.value) }}</b>
           </div>
         </div>
 
@@ -637,6 +637,107 @@ const M = {
       "(defensa IP y principios de squeeze) · 888poker · Run It Once (frecuencias vs 3-bet) + " +
       "nuestros propios rangos de estudio (recopilado 2026-08)",
     phase2: "Se seguirán agregando más enfrentamientos y escenarios.",
+  },
+  pt: {
+    modeRfi: "Open (RFI)",
+    modeDefend: "vs Open (defesa)",
+    mode3bet: "vs 3-bet (depois de abrir)",
+    mode4bet: "vs 4-bet (depois do 3-bet)",
+    intro4bet:
+      "Como responder quando o seu 3-bet leva um 4-bet — o vermelho é 5-bet (all-in), o verde " +
+      "é call e o resto dá fold. As frequências são condicionais a ter dado 3-bet, então " +
+      "as mãos com que você nunca dá 3-bet ficam em branco. Cash 6-max, 100bb; a BB dá 3-bet de 11bb " +
+      "e enfrenta um 4-bet de 24bb, a SB dá 3-bet de 10bb e enfrenta 22bb.",
+    legend5bet: "5-bet (all-in)",
+    legendCond4bet: "Em branco = nunca dá 3-bet",
+    stat5bet: "% de 5-bet",
+    statContinue4bet: "% de continuação (dos 3-bets)",
+    copy5bet: "Copiar range de 5-bet",
+    note4bet:
+      "As estatísticas são proporções do seu range de 3-bet. Com 100bb o 5-bet é na prática " +
+      "all-in — o valor se concentra em AA·KK (às vezes só pagando para armar uma armadilha), e QQ·AK misturam 5-bets " +
+      "com calls. Os calls se guiam pela realização de equity, não pelas pot odds: você briga fora de " +
+      "posição com SPR baixo, então só continuam os pares e as melhores mãos suited — mas " +
+      "não dê fold em tudo, porque o range de 4-bet mistura blefes como A5s-A4s.",
+    how4bet2:
+      "Se o vermelho + verde não preencherem a célula, o resto dá fold. As células com as duas cores " +
+      "misturam 5-bets e calls. As mãos fora do range de 3-bet nunca enfrentam este spot, " +
+      "por isso estão em branco.",
+    intro3bet:
+      "Como responder quando o seu open-raise leva um 3-bet — o vermelho é 4-bet, o verde é call " +
+      "e o resto dá fold. As frequências são condicionais a ter aberto, então as mãos " +
+      "com que você nunca abre ficam em branco. Cash 6-max, 100bb, open de 2,5bb, 3-bet de ~10-11bb.",
+    legend4bet: "4-bet",
+    legendCond: "Em branco = nunca abre",
+    stat4bet: "% de 4-bet",
+    statContinue: "% de continuação (dos opens)",
+    copy4bet: "Copiar range de 4-bet",
+    note3bet:
+      "As estatísticas são proporções do seu range de abertura, não de todas as mãos. O valor " +
+      "do 4-bet se concentra em QQ+/AK com alguns blefes como A5s-A4s. Com posição, o range de " +
+      "call continua amplo: pares, broadways suited e connectors.",
+    squeezeNote:
+      "Um squeeze é um 3-bet com um opener e um caller já no pote (aqui de uns 11-12bb). " +
+      "O caller faz a defesa total ficar mais estreita que no heads-up e empurra o 3-bet " +
+      "para o valor. Os overcalls favorecem mãos suited e conectadas que podem ligar os nuts multiway.",
+    how3bet2:
+      "Se o vermelho + verde não preencherem a célula, o resto dá fold. As células com as duas cores " +
+      "misturam 4-bets e calls. As mãos fora do range de abertura nunca enfrentam este spot, " +
+      "por isso estão em branco.",
+    intro:
+      "Ranges de abertura por posição (RFI) — com que mãos você deve abrir quando todos " +
+      "dão fold antes de você? Baseado em cash 6-max, 100bb, open de 2,5bb. As células " +
+      "parcialmente preenchidas são opens de frequência mista.",
+    introDefend:
+      "Como responder quando alguém abre antes de você — os confrontos mais comuns. O vermelho " +
+      "é 3-bet, o verde é call, e a altura total da barra é a sua frequência de defesa. " +
+      "Cash 6-max, 100bb, open de 2,5bb (3bb para opens da SB).",
+    legendOpen: "Open (100%)",
+    legendMixed: "Frequência mista (altura = % de open)",
+    legendFold: "Fold",
+    legend3bet: "3-bet",
+    legendCall: "Call",
+    legendMixedDefend: "Altura do preenchimento = frequência (as células divididas são mistas)",
+    stat3bet: "% de 3-bet",
+    statCall: "% de call",
+    statTotal: "Defesa total",
+    copy3bet: "Copiar range de 3-bet",
+    copyCall: "Copiar range de call",
+    sbNote:
+      "Na SB você joga praticamente 3-bet ou fold contra um open do BTN — você está fora de posição " +
+      "e a BB ainda vai falar, então pagar carrega as duas desvantagens ao mesmo tempo.",
+    ipNote:
+      "Mesmo com posição, um open de posição inicial é um range forte, e pagar deixa você exposto " +
+      "a um squeeze das blinds que ainda vão falar. Por isso a defesa em posição é um " +
+      "range estreito centrado no 3-bet, com calls limitados sobretudo a pares e às melhores mãos suited.",
+    statPercent: "% de open",
+    statCombos: "Combos de open",
+    statHands: "Mãos que você abre",
+    statMixed: "Mãos mistas",
+    copy: "Copiar texto do range",
+    copied: "✓ Copiado",
+    sendOop: "① Enviar para o range OOP",
+    sendIp: "② Enviar para o range IP",
+    howTitle: "Como ler",
+    how1: "A diagonal de cima à esquerda até embaixo à direita são os pares; acima (à direita) é suited, abaixo (à esquerda) é offsuit.",
+    how2: "As mãos de frequência mista (preenchimento parcial) só abrem essa fração das vezes — são mãos limítrofes, então qualquer uma das duas opções perde pouco EV.",
+    how3: "Os botões [Enviar para o range] carregam este range no editor do spot personalizado — tente resolver você mesmo o jogo pós-flop.",
+    howDefend2:
+      "Se o vermelho + verde não preencherem a célula inteira, o resto dá fold. As células com as duas cores misturam 3-bets e calls nessas proporções.",
+    howDefend3:
+      "Cole um range copiado nos campos de range do spot personalizado (① / ②) para resolver você mesmo o pós-flop com este range de defesa.",
+    sourceTitle: "Como esta tabela foi montada?",
+    sourceBody:
+      "Cruzamos mão a mão vários materiais de GTO publicados gratuitamente para montar um range de " +
+      "consenso, marcando como frequência mista as mãos em que as fontes divergem. BTN e SB " +
+      "também foram confrontados com os ranges verificados por solver que os Spots de estudo deste app usam.",
+    sourceList:
+      "Fontes públicas cruzadas: nlh.poker · Preflop Wizard · HoldemPro · " +
+      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (frequências resolvidas de BB vs SB) · " +
+      "GTO Gecko · RiverOdds (âncoras de defesa) · blog da GTO Wizard · FreeBetRange " +
+      "(defesa IP e princípios de squeeze) · 888poker · Run It Once (frequências vs 3-bet) + " +
+      "os nossos próprios ranges de estudo (compilado em agosto de 2026)",
+    phase2: "Novos confrontos e cenários continuarão sendo adicionados.",
   },
 } as const;
 

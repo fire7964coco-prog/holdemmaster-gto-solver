@@ -17,10 +17,10 @@
       </span>
       <!-- 스팟 정보는 칩으로 — 트레이너와 같은 눈금을 쓴다 -->
       <span class="stat-chip">
-        {{ L.pot }} <b>{{ preset.startingPot / preset.unitScale }}</b>bb
+        {{ L.pot }} <b>{{ $n(String(preset.startingPot / preset.unitScale)) }}</b>bb
       </span>
       <span class="stat-chip">
-        {{ L.stack }} <b>{{ preset.effectiveStack / preset.unitScale }}</b>bb
+        {{ L.stack }} <b>{{ $n(String(preset.effectiveStack / preset.unitScale)) }}</b>bb
       </span>
     </div>
 
@@ -188,6 +188,18 @@ const M = {
     loading: "Cargando resultados…",
     playerLabel: "Jugador:",
     oopHint: "Estrategia del jugador que actúa primero",
+  },
+  pt: {
+    backToList: "← Lista",
+    pot: "Pote",
+    stack: "Stack",
+    flopOnlyNote: "Só a estratégia do flop. Quer explorar turn e river? →",
+    solveThisSpot: "Resolver este spot você mesmo",
+    readArticle: "Ler a análise",
+    loadError: (e: string) => `Não foi possível carregar os resultados pré-calculados: ${e}`,
+    loading: "Carregando resultados…",
+    playerLabel: "Jogador:",
+    oopHint: "Estratégia do jogador que age primeiro",
   },
 } as const;
 

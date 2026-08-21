@@ -117,6 +117,7 @@
 <script lang="ts">
 import { computed, defineComponent, h } from "vue";
 import { average, toFixed1, toFixed, toFixedAdaptive } from "../utils";
+import { localizeNumber, decimalMark } from "../i18n";
 import { Results, Spot, SpotChance } from "../result-types";
 import { useStore } from "../store";
 import { i18n } from "../i18n";
@@ -140,6 +141,10 @@ const M = {
     combos: "Combos",
     equity: "Equity",
   },
+  pt: {
+    combos: "Combos",
+    equity: "Equity",
+  },
 } as const;
 
 const EPS = 2e-6;
@@ -147,16 +152,18 @@ const sky500 = "#0ea5e9";
 const lime500 = "#84cc16";
 
 const Adaptive = (props: { value: number; class: object }) => {
-  const split = computed(() => toFixedAdaptive(props.value).split("."));
+  const split = computed(() =>
+    localizeNumber(toFixedAdaptive(props.value)).split(decimalMark())
+  );
   if (isNaN(props.value)) return h("div", { class: "px-1" }, "-");
   return h("div", { class: props.class }, [
-    h("span", {}, split.value[0] + "."),
+    h("span", {}, split.value[0] + decimalMark()),
     h("span", { class: "text-sm" }, split.value[1]),
   ]);
 };
 
 const Percentage = (props: { value: number; class: object }) => {
-  const str = computed(() => toFixed1(props.value * 100));
+  const str = computed(() => localizeNumber(toFixed1(props.value * 100)));
   if (isNaN(props.value)) return h("div", { class: "px-1" }, "-");
   return h("div", { class: props.class }, [
     h("span", {}, str.value.slice(0, -1)),
@@ -165,7 +172,9 @@ const Percentage = (props: { value: number; class: object }) => {
 };
 
 const Ev = (props: { value: number; digits: number; class: object }) => {
-  const str = computed(() => toFixed[props.digits - 1](props.value));
+  const str = computed(() =>
+    localizeNumber(toFixed[props.digits - 1](props.value))
+  );
   if (isNaN(props.value)) return h("div", { class: "px-1" }, "-");
   return h("span", { class: props.class }, [
     h("span", {}, str.value.slice(0, -props.digits)),
