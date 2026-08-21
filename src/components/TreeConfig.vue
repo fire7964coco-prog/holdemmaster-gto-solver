@@ -1003,6 +1003,64 @@ const M = {
     boardMismatchHint:
       'Para descartar a árvore editada, clique no botão “Descartar alterações e desbloquear”.',
   },
+  de: {
+    chipNote:
+      "Gib die Werte in ganzen Chips ein (eigene Spots nutzen frei wählbare Chip-Einheiten). Wenn du in Big Blinds denken willst, empfehlen wir 10 Chips = 1bb.",
+    startingPot: "Start-Pot:",
+    effectiveStack: "Effektiver Stack:",
+    rake: "Rake:",
+    rakeCap: "Rake-Cap:",
+    reset: "Alle Werte leeren",
+    error: "Fehler:",
+    warning: "Achtung:",
+    oopBetSizes: "Bet Sizes OOP",
+    donkOption: "Andere Sizes für Donk-Bets verwenden",
+    howToInput: "So gibst du die Werte ein",
+    inputHelpIntro:
+      "Du kannst mehrere Bet Sizes durch Kommas oder Leerzeichen getrennt in jedem der folgenden Formate eingeben. Lässt du das Feld leer, gibt es weder Bet noch Raise.",
+    // ⚠ 「2.5x」·「100c」·「2e200」은 사용자가 그대로 입력하는 «문법»이다 — 소수점을 콤마로 바꾸지 말 것
+    inputHelpPercent:
+      "Eine Zahl als Prozentsatz vom Pot (z. B. „50“). Bei Raises wird die Size so berechnet: erst callen, dann den angegebenen Prozentsatz des dadurch entstandenen Pots draufsetzen. Beispiel: Ist der Pot vor der Bet 100 und der Gegner bettet 75, dann ist ein Raise von 50% gleich 75 + (100 + 75 + 75) * 50% = 200.",
+    inputHelpMultiple:
+      "Ein Vielfaches der vorherigen Bet (z. B. „2.5x“). Nur bei Raises möglich.",
+    inputHelpAllin: "All-in (z. B. „a“).",
+    inputHelpFixed:
+      "Ein fester Betrag obendrauf (z. B. „100c“). Bei Raises kannst du zusätzlich die Zahl der Raises begrenzen (z. B. „20c3r“).",
+    inputHelpGeometric:
+      "Geometrische Size, also den verbleibenden Stack in die angegebene Zahl gleich großer prozentualer Bets aufteilen (z. B. „3e“). Beispiel: Bei einem Pot von 100 und einem effektiven Stack von 400 ist „2e“ eine Bet von 100. Lässt du die Zahl vor dem „e“ weg, wird die Zahl der verbleibenden Streets genommen (Flop=3, Turn=2, River=1). Bei Raises wird die Zahl der vorherigen Raises abgezogen; „3e“ wird beim Re-Raise also zu „2e“. Du kannst hinter dem „e“ auch eine Zahl anhängen, um eine maximale Prozentgrenze zu setzen (z. B. „2e200“).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "Bet Sizes IP",
+    addAllInLabel: "Schwelle für zusätzliches All-in:",
+    addAllInHelp:
+      "Fügt an jedem Knoten, an dem das Verhältnis der größtmöglichen Bet zum Pot unter dieser Schwelle liegt, eine All-in-Aktion hinzu.",
+    forceAllInLabel: "Schwelle für erzwungenes All-in:",
+    forceAllInHelp1:
+      "Liegt der SPR (Stack-zu-Pot-Verhältnis) nach einem Call des Gegners auf eine Bet unter dieser Schwelle, wird diese Bet durch ein All-in ersetzt. Empfohlen sind etwa 15% bis 20%.",
+    forceAllInHelp2:
+      "Diese Option ähnelt dem „all-in threshold“ von PioSOLVER. PioSOLVER ersetzt eine Bet durch ein All-in, sobald der Anteil des bereits investierten Betrags am Start-Stack die Schwelle überschreitet.",
+    forceAllInHelp3:
+      "Ohne Rundung lautet die Umrechnungsformel so (s = anfänglicher SPR, r = Schwelle von PioSOLVER):",
+    forceAllInFormula: "Schwelle = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Schwelle zum Zusammenfassen:",
+    mergingHelp1: "Bets mit ähnlicher Size werden zu einer zusammengefasst.",
+    mergingHelp2:
+      "Der Algorithmus ist derselbe wie bei PioSOLVER: Es wird die größte Bet (= X% vom Pot) gewählt und jede andere Bet entfernt, deren Size (= Y% vom Pot) die folgende Ungleichung erfüllt:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + Schwelle.",
+    mergingHelp3: "Das wiederholt sich mit der nächstgrößten verbleibenden Bet.",
+    treePreviewEdit: "Spielbaum – Vorschau & Bearbeiten",
+    clearEditUnlock: "Änderungen verwerfen & entsperren",
+    addedLines: "Hinzugefügte Lines:",
+    removedLines: "Entfernte Lines:",
+    boardMismatch: (expected: number, actual: number) =>
+      `Der bearbeitete Spielbaum setzt ein Board mit ${expected} Karte${expected === 1 ? "" : "n"} voraus, das aktuelle Board hat aber ${actual} Karte${actual === 1 ? "" : "n"}.`,
+    boardMismatchHint:
+      "Um den bearbeiteten Spielbaum zu verwerfen, klicke auf den Button „Änderungen verwerfen & entsperren“.",
+  },
 } as const;
 
 type ConfigValue = {
@@ -1068,7 +1126,7 @@ export default defineComponent({
       const errors: string[] = [];
       if (config.startingPot <= 0) {
         errors.push(
-          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スターティングポットには正の数を入力してください", "El bote inicial debe ser positivo", "O pote inicial deve ser positivo")
+          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スターティングポットには正の数を入力してください", "El bote inicial debe ser positivo", "O pote inicial deve ser positivo", "Der Start-Pot muss größer als 0 sein")
         );
       }
       if (config.startingPot > MAX_AMOUNT) {
@@ -1078,13 +1136,14 @@ export default defineComponent({
             `Starting pot must not exceed ${MAX_AMOUNT}`,
             `スターティングポットは${MAX_AMOUNT}以下で入力してください`,
             `El bote inicial no debe exceder ${MAX_AMOUNT}`,
-            `O pote inicial não pode passar de ${MAX_AMOUNT}`
+            `O pote inicial não pode passar de ${MAX_AMOUNT}`,
+            `Der Start-Pot darf höchstens ${MAX_AMOUNT} sein`
           )
         );
       }
       if (config.startingPot % 1 !== 0) {
         errors.push(
-          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro")
+          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein")
         );
       }
       if (config.effectiveStack <= 0) {
@@ -1094,7 +1153,8 @@ export default defineComponent({
             "Effective stack must be positive",
             "有効スタックには正の数を入力してください",
             "El stack efectivo debe ser positivo",
-            "O stack efetivo deve ser positivo"
+            "O stack efetivo deve ser positivo",
+            "Der effektive Stack muss größer als 0 sein"
           )
         );
       }
@@ -1105,7 +1165,8 @@ export default defineComponent({
             `Effective stack must not exceed ${MAX_AMOUNT}`,
             `有効スタックは${MAX_AMOUNT}以下で入力してください`,
             `El stack efectivo no debe exceder ${MAX_AMOUNT}`,
-            `O stack efetivo não pode passar de ${MAX_AMOUNT}`
+            `O stack efetivo não pode passar de ${MAX_AMOUNT}`,
+            `Der effektive Stack darf höchstens ${MAX_AMOUNT} sein`
           )
         );
       }
@@ -1116,23 +1177,24 @@ export default defineComponent({
             "Effective stack must be an integer",
             "有効スタックは整数で入力してください",
             "El stack efectivo debe ser un entero",
-            "O stack efetivo deve ser um número inteiro"
+            "O stack efetivo deve ser um número inteiro",
+            "Der effektive Stack muss eine ganze Zahl sein"
           )
         );
       }
       if (config.rakePercent < 0) {
         errors.push(
-          pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo", "O rake não pode ser negativo")
+          pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo", "O rake não pode ser negativo", "Der Rake darf nicht negativ sein")
         );
       }
       if (config.rakePercent > 100) {
         errors.push(
-          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%")
+          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%", "Der Rake darf 100% nicht überschreiten")
         );
       }
       if (config.rakeCap < 0) {
         errors.push(
-          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo", "O teto do rake não pode ser negativo")
+          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo", "O teto do rake não pode ser negativo", "Das Rake-Cap darf nicht negativ sein")
         );
       }
       if (config.rakeCap > 3 * MAX_AMOUNT) {
@@ -1141,7 +1203,9 @@ export default defineComponent({
             `레이크 캡은 ${3 * MAX_AMOUNT} 이하여야 합니다`,
             `Rake cap must not exceed ${3 * MAX_AMOUNT}`,
             `レーキキャップは${3 * MAX_AMOUNT}以下で入力してください`,
-            `El tope de rake no debe exceder ${3 * MAX_AMOUNT}`
+            `El tope de rake no debe exceder ${3 * MAX_AMOUNT}`,
+            `O teto do rake não pode passar de ${3 * MAX_AMOUNT}`,
+            `Das Rake-Cap darf höchstens ${3 * MAX_AMOUNT} sein`
           )
         );
       }
@@ -1153,36 +1217,36 @@ export default defineComponent({
       const isDonk = true;
       const betConfig = [
         {
-          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP"),
+          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet"),
           res: config.oopFlopBetSanitized,
         },
         {
-          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP"),
+          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise"),
           res: config.oopFlopRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP"),
+          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet"),
           res: config.oopTurnBetSanitized,
         },
         {
-          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP"),
+          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise"),
           res: config.oopTurnRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP"),
+          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk"),
           res: config.oopTurnDonkSanitized,
           isDonk,
         },
         {
-          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP"),
+          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet"),
           res: config.oopRiverBetSanitized,
         },
         {
-          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP"),
+          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise"),
           res: config.oopRiverRaiseSanitized,
         },
         {
-          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP"),
+          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk"),
           res: config.oopRiverDonkSanitized,
           isDonk,
         },
@@ -1199,27 +1263,27 @@ export default defineComponent({
       const errors: string[] = [];
       const betConfig = [
         {
-          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP"),
+          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet"),
           res: config.ipFlopBetSanitized,
         },
         {
-          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP"),
+          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise"),
           res: config.ipFlopRaiseSanitized,
         },
         {
-          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP"),
+          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet"),
           res: config.ipTurnBetSanitized,
         },
         {
-          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP"),
+          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise"),
           res: config.ipTurnRaiseSanitized,
         },
         {
-          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP"),
+          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet"),
           res: config.ipRiverBetSanitized,
         },
         {
-          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP"),
+          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise"),
           res: config.ipRiverRaiseSanitized,
         },
       ];
@@ -1240,7 +1304,8 @@ export default defineComponent({
             "Add all-in threshold must not be negative",
             "オールイン追加しきい値は負の値にできません",
             "El umbral para agregar all-in no puede ser negativo",
-            "O limiar para adicionar all-in não pode ser negativo"
+            "O limiar para adicionar all-in não pode ser negativo",
+            "Die Schwelle für zusätzliches All-in darf nicht negativ sein"
           )
         );
       }
@@ -1251,7 +1316,8 @@ export default defineComponent({
             "Force all-in threshold must not be negative",
             "強制オールインしきい値は負の値にできません",
             "El umbral de all-in forzado no puede ser negativo",
-            "O limiar de all-in forçado não pode ser negativo"
+            "O limiar de all-in forçado não pode ser negativo",
+            "Die Schwelle für erzwungenes All-in darf nicht negativ sein"
           )
         );
       }
@@ -1262,7 +1328,8 @@ export default defineComponent({
             "Merging threshold must not be negative",
             "マージしきい値は負の値にできません",
             "El umbral de fusión no puede ser negativo",
-            "O limiar de fusão não pode ser negativo"
+            "O limiar de fusão não pode ser negativo",
+            "Die Schwelle zum Zusammenfassen darf nicht negativ sein"
           )
         );
       }
@@ -1278,7 +1345,8 @@ export default defineComponent({
             "Setting the force all-in threshold higher than 30% is not recommended.\nSee the help text for what this setting does.",
             "強制オールインのしきい値を30%より高く設定することは推奨されません。\n詳しくはヘルプをご覧ください。",
             "No se recomienda fijar el umbral de all-in forzado por encima del 30%.\nConsulta la ayuda para ver qué significa.",
-            "Não é recomendado definir o limiar de all-in forçado acima de 30%.\nConsulte a ajuda para ver o que isso significa."
+            "Não é recomendado definir o limiar de all-in forçado acima de 30%.\nConsulte a ajuda para ver o que isso significa.",
+            "Es wird nicht empfohlen, die Schwelle für erzwungenes All-in auf über 30% zu setzen.\nWas die Einstellung bewirkt, steht unter „So gibst du die Werte ein“."
           )
         );
       }
@@ -1299,7 +1367,8 @@ export default defineComponent({
             "Invalid line found (loaded a broken configuration?)",
             "無効なラインが見つかりました(破損した設定を読み込みましたか?)",
             "Se encontró una línea inválida (¿cargaste una configuración dañada?)",
-            "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)"
+            "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)",
+            "Ungültige Line gefunden (beschädigte Einstellung geladen?)"
           )
         );
       }
@@ -1318,7 +1387,8 @@ export default defineComponent({
             "Invalid configuration (loaded a broken configuration?)",
             "無効な設定です(破損した設定を読み込みましたか?)",
             "Configuración inválida (¿cargaste una configuración dañada?)",
-            "Configuração inválida (você carregou uma configuração corrompida?)"
+            "Configuração inválida (você carregou uma configuração corrompida?)",
+            "Ungültige Einstellung (beschädigte Einstellung geladen?)"
           )
         );
       }

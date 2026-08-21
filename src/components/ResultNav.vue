@@ -424,6 +424,24 @@ const M = {
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% do pote)`,
   },
+  de: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} gewinnt`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Ende",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string => name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% vom Pot)`,
+  },
 } as const;
 
 export default defineComponent({

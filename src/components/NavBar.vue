@@ -10,7 +10,11 @@
         <span class="pr-4 text-lg font-semibold">{{ L.brand }}</span>
       </div>
 
-      <!-- 모바일: 일반 플로우(왼쪽 정렬), md+: 기존처럼 절대배치 중앙 -->
+      <!-- 모바일: 일반 플로우(왼쪽 정렬), md+: 기존처럼 절대배치 중앙
+           ⚠ 모바일(390px)에서는 탭 아이콘을 숨긴다 — 탭 폭이 w-20(80px)로 고정이라
+           라벨이 긴 언어(es «Resultados» · pt · de «Ergebnisse»)에서 아이콘이 0px로
+           찌그러지고 글자가 버튼 밖으로 4px 넘쳐 옆 탭과 붙어 보였다
+           (2026-08-21 독일어 UX 검수에서 발견 — es·pt는 이미 라이브에서 그 상태였다) -->
       <div
         class="flex md:absolute md:w-full md:h-full md:left-0 md:top-0 gap-1 md:gap-3 md:justify-center"
       >
@@ -22,8 +26,8 @@
           "
           @click="store.navView = 'solver'"
         >
-          <ComputerDesktopIcon class="w-6 h-6" />
-          <span class="pl-1.5 md:pl-3">{{ L.solver }}</span>
+          <ComputerDesktopIcon class="hidden md:block shrink-0 w-6 h-6" />
+          <span class="text-sm md:text-base md:pl-3">{{ L.solver }}</span>
         </button>
         <button
           :class="
@@ -33,13 +37,13 @@
           "
           @click="store.navView = 'results'"
         >
-          <ChartBarIcon class="w-6 h-6" />
-          <span class="pl-1.5 md:pl-3">{{ L.results }}</span>
+          <ChartBarIcon class="hidden md:block shrink-0 w-6 h-6" />
+          <span class="text-sm md:text-base md:pl-3">{{ L.results }}</span>
         </button>
       </div>
 
       <div class="flex ml-auto h-full items-center z-10">
-        <!-- 언어 선택 — 5개 언어(ko/en/ja/es/pt)라 토글 대신 선택 상자.
+        <!-- 언어 선택 — 6개 언어(ko/en/ja/es/pt/de)라 토글 대신 선택 상자.
              닫힌 상태에는 현재 언어의 이름만 보이므로 화면에 외국어가 남지 않는다 -->
         <select
           class="lang-select"
@@ -52,6 +56,7 @@
           <option value="ja">日本語</option>
           <option value="es">Español</option>
           <option value="pt">Português</option>
+          <option value="de">Deutsch</option>
         </select>
         <a
           :href="communityUrl"
@@ -117,6 +122,15 @@ const M = {
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Selecionar idioma",
   },
+  de: {
+    brand: "HoldemMaster GTO Solver",
+    solver: "Solver",
+    results: "Ergebnisse",
+    community: "HoldemMaster",
+    // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
+    communitySuffix: " Community",
+    langSwitchLabel: "Sprache wählen",
+  },
 } as const;
 
 export default defineComponent({
@@ -133,7 +147,8 @@ export default defineComponent({
         value === "en" ||
         value === "ja" ||
         value === "es" ||
-        value === "pt"
+        value === "pt" ||
+        value === "de"
       )
         setLocale(value);
     };

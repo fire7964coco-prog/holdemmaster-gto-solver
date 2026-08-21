@@ -44,6 +44,9 @@ const M = {
   pt: {
     combos: "combos",
   },
+  de: {
+    combos: "Combos",
+  },
 } as const;
 
 const actionLabel = (
@@ -91,7 +94,8 @@ const actionLabel = (
       "pot",
       "ポット",
       "del bote",
-      "do pote"
+      "do pote",
+      "vom Pot"
     )})`);
   }
   return localizeNumber(`${label} ${shown}`);

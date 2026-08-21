@@ -208,6 +208,35 @@ const M = {
       "Nada é instalado no seu sistema — é apenas um atalho do navegador. Ele não pede permissões e você pode removê-lo quando quiser mantendo o ícone pressionado, como qualquer app.",
     close: "Fechar",
   },
+  de: {
+    iconAlt: "Icon des HoldemMaster GTO Solvers",
+    title: "Zum Startbildschirm hinzufügen?",
+    samsung1: "Samsung Internet kann ",
+    samsungB1: "die Installation aus Sicherheitsgründen blockieren",
+    samsung2:
+      " – das ist eine Sicherheitsabfrage des Browsers, kein Problem dieser App. ",
+    samsungB2: "Öffne die Seite in Chrome",
+    samsung3: ", dann läuft die Installation ohne Warnung.",
+    // „Tipp“ ist im Deutschen ein Ratschlag (oder eine Wette) — die Geste heißt Fingertipp
+    default1: "Ein Fingertipp genügt zum Öffnen, und ",
+    defaultB1: "alle 13 Lernspots und der Trainer bleiben auf deinem Gerät",
+    default2: " – so kannst du auch ohne Internetverbindung lernen.",
+    ios1: "Tippe unten auf das ",
+    iosB1: "Teilen-Symbol",
+    ios2: " und wähle ",
+    // iOS Safari의 실제 독일어 메뉴 이름 (버튼명 대조 — 지시서 §6-④)
+    iosB2: "„Zum Home-Bildschirm“",
+    ios3: ". Ein Fingertipp genügt zum Öffnen – die Lernspots und der Trainer sind offline gespeichert.",
+    openInChrome: "In Chrome öffnen",
+    install: "Zum Startbildschirm",
+    gotIt: "Alles klar",
+    later: "Später",
+    samsungHint:
+      "Wenn du trotzdem hier installieren willst, folge den Hinweisen im Dialog und erlaube es.",
+    safety:
+      "Es wird kein Programm installiert – es ist nur eine Browser-Verknüpfung: keine Berechtigungen, und du kannst sie jederzeit entfernen, indem du das Icon lange gedrückt hältst, wie bei jeder App.",
+    close: "Schließen",
+  },
 } as const;
 
 export default defineComponent({

@@ -102,6 +102,18 @@ const M = {
       "Cole em uma publicação da comunidade e vamos usar isso para corrigir o problema. Não contém informações pessoais.",
     promptCopy: "Copie o texto abaixo",
   },
+  de: {
+    title: "Ein Fehler wurde protokolliert",
+    body1: "Wenn etwas komisch aussah, sag uns Bescheid. Die Details bleiben ",
+    bodyB1: "nur auf diesem Gerät",
+    body2: " – ob du sie teilst, entscheidest du selbst.",
+    copied: "Kopiert",
+    copyButton: "Fehlerdetails kopieren",
+    close: "Schließen",
+    copiedHint:
+      "Füge sie in einen Community-Beitrag ein, dann nutzen wir sie für die Behebung. Sie enthalten keine persönlichen Daten.",
+    promptCopy: "Kopiere den Text unten",
+  },
 } as const;
 
 export default defineComponent({

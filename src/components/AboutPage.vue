@@ -353,6 +353,51 @@ const M = {
     creditMid2: ". Todo o código-fonte modificado está publicado no",
     creditAfter: " sob a mesma licença.",
   },
+  de: {
+    community: "HoldemMaster Community",
+    heroTitle1: "GTO-Strategie,",
+    heroTitle2: "direkt im Browser.",
+    heroSub1:
+      "Nichts zu installieren, nichts zu bezahlen. Gib deine Ranges und ein Board ein,",
+    heroSub2:
+      "und die optimale Strategie wird direkt auf deinem Gerät berechnet.",
+    ctaPresets: "Lernspots ansehen",
+    ctaTrainer: "GTO-Trainer",
+    ctaDaily: "Tagesaufgabe",
+    dailyDone: "Erledigt",
+    ctaGuide: "Anleitung",
+    ctaInstall: "Zum Startbildschirm hinzufügen",
+    installNote:
+      "Nach der Installation liegen die Lernspots und der Trainer auf deinem Gerät, sodass du auch offline weiterüben kannst. Es ist eine Browser-Verknüpfung, kein Programm – sie fragt nie nach Berechtigungen.",
+    installSafe: "Ist das sicher?",
+    features: [
+      { title: "Kostenlos", desc: "Alle Funktionen, ohne Nutzungslimit" },
+      {
+        title: "Offline lernen",
+        desc: "Zum Startbildschirm hinzufügen und ohne Internet üben",
+      },
+      { title: "Schnelles Solving", desc: "Multithreaded – Tempo eines Desktop-Solvers" },
+      { title: "GTO-Trainer", desc: "Spots spielen und nach EV-Verlust benotet werden" },
+    ],
+    stepsTitle: "Neu hier?",
+    steps: [
+      "Öffne einen beliebigen Spot unter Lernspots und starte [Ergebnisse ansehen] – die Lösung erscheint sofort",
+      "Schau in die Anleitung, wie du den Ergebnisbildschirm liest",
+      "Probiere den GTO-Trainer – er zeigt dir, wie viele bb dich jede Entscheidung kostet",
+      "Wenn du dich sicher fühlst, berechne eigene Hände unter Eigener Spot (①–⑤)",
+    ],
+    landingBefore:
+      "Du willst erst nachlesen, was ein GTO-Solver ist und wie du die Ausgabe liest? Dann schau in",
+    landingLink: "den Solver-Guide von HoldemMaster",
+    landingAfter: ".",
+    notes:
+      "Unter iOS und Safari erzwingen Einschränkungen des Browsers das Rechnen mit nur einem Thread, deshalb läuft es langsamer – unter macOS empfehlen wir Chrome. Der verfügbare Speicher ist auf 4 GB begrenzt (ein WebAssembly-Limit), große Spots rechnest du also bequemer am PC.",
+    creditBefore: "Diese App basiert auf",
+    creditMid1: " (von Wataru Inariba, AGPL-3.0), lokalisiert und erweitert von",
+    creditBrand: "HoldemMaster",
+    creditMid2: ". Der vollständige geänderte Quellcode ist auf",
+    creditAfter: " unter derselben Lizenz veröffentlicht.",
+  },
 } as const;
 
 export default defineComponent({

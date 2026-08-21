@@ -166,6 +166,14 @@ const M = {
     parseError: (range: string) =>
       `Não foi possível interpretar o range: ${range || "(texto vazio)"}`,
   },
+  de: {
+    clear: "Leeren",
+    errorPrefix: "Fehler:",
+    weight: "Gewicht:",
+    combos: "Combos",
+    parseError: (range: string) =>
+      `Die Range konnte nicht gelesen werden: ${range || "(leerer Text)"}`,
+  },
 } as const;
 
 import { C } from "../theme";

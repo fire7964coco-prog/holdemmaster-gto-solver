@@ -1191,6 +1191,190 @@ const M = {
     errNone: "Ainda não há erros registrados.",
     errPrompt: "Copie o texto abaixo",
   },
+  de: {
+    quickTitle: "In 1 Minute startklar – neu hier? Dann fang hier an",
+    // ⚠ 뒤의 공백은 U+00A0 — flex 자리라 일반 공백은 잘린다 (ko/en/ja/es/pt와 동일)
+    quickStep1Desktop: "Klicke links auf ",
+    quickStep1Mobile: "Tippe oben in den Tabs auf ",
+    quickStep1Btn: "Lernspots",
+    quickStep1After: "",
+    quickStep2Before: "Öffne einen beliebigen Spot und drücke auf",
+    quickStep2Btn: "[⚡ Ergebnisse ansehen]",
+    quickStep2After: "– die Lösung erscheint sofort",
+    quickStep3:
+      "Danach hilft dir „So liest du den Ergebnisbildschirm“ weiter unten beim Deuten der Zahlen",
+
+    termsTitle: "Vier Begriffe genügen dir",
+    termRange: "Range",
+    defRange:
+      "Die Menge an Händen, die ein Spieler haben kann (z. B. „er hat wahrscheinlich AA, KK oder AK“)",
+    defPos:
+      "Out of Position (ist zuerst am Zug – Nachteil) / In Position (ist zuletzt am Zug – Vorteil). Bei BTN vs BB ist die BB OOP",
+    termEquity: "Equity",
+    defEquity:
+      "Dein Anteil am Pot, wenn ihr jetzt sofort all-in wärt – Gewinn-% plus die Hälfte der Splits",
+    defEv: "Erwartungswert – wie viel eine Aktion im Schnitt einbringt. Je höher, desto besser",
+
+    customTitleBefore: "Einen eigenen Spot rechnen – folge den Nummern ",
+    customTitleDesktop: "in der Seitenleiste",
+    customTitleMobile: "in den Tabs",
+    customTitleAfter: " der Reihe nach ① → ⑤",
+    step1Bold: "① OOP-Range / ② IP-Range",
+    step1After:
+      " – male das 13×13-Raster durch Klicken und Ziehen aus, oder schreib es als Text: ",
+    step1Hint:
+      "22+ = alle Pocket Pairs · A2s+ = A2s bis AKs · KTo+ = KTo bis KQo. Im Raster: Diagonale = Pocket Pairs, oben rechts = suited, unten links = offsuit",
+    exampleHeader:
+      "Zum ersten Mal hier? Kopiere diese Beispiele in die Range-Felder (Standard BTN vs BB 100bb – dieselben Ranges wie in den Lernspots)",
+    exOopLabel: "OOP (BB Caller)",
+    exIpLabel: "IP (BTN Open-Raiser)",
+    copiedLabel: "Kopiert!",
+    copyLabel: "Kopieren",
+    step3Bold: "③ Board",
+    step3After: " – klicke drei Flop-Karten an oder nimm „Zufälliger Flop“",
+    step4Bold: "④ Bet Sizes (Spielbaum-Einstellungen)",
+    step4After:
+      " – lass am Anfang die Standardwerte stehen. Schau nur auf den Start-Pot und den effektiven Stack",
+    step4Hint:
+      "Die Werte im eigenen Spot sind ganze Chips in einer frei wählbaren Einheit. Wenn du in bb denken willst, nimm 10 Chips = 1bb (z. B. Pot 55 = 5,5bb). Die Lernspots und der Trainer rechnen automatisch mit dieser Skala.",
+    step5Bold1: "⑤ Berechnen",
+    step5Mid:
+      " – drücke auf „Spielbaum erstellen“ und danach auf „Solver starten“. Sobald „Berechnung abgeschlossen!“ erscheint, öffne oben den Tab ",
+    step5Bold2: "[Ergebnisse]",
+    step5After: "",
+    step5Hint:
+      "Die Berechnung läuft auf deinem eigenen Rechner und dauert ein paar Sekunden bis ein paar Minuten. Mit [🔗 Spot teilen] auf Bildschirm ⑤ kopierst du einen Link zu deinem Spot und kannst in der Community nachfragen",
+
+    resultsTitle: "So liest du den Ergebnisbildschirm",
+    rTerm1: "Obere Leiste",
+    rDef1:
+      "Eine Auswahlleiste für die Action-Line (Flop → Bet → Call → Turn …). Klicke einen Knoten an, um die Strategie an dieser Stelle zu sehen",
+    rTerm2: "13×13-Matrix (links)",
+    rDef2:
+      "Jede Zelle ist eine Hand; die Farbaufteilung zeigt die Aktionsfrequenzen. 🟥 Bet/Raise (dunkler = größere Bet) · 🟩 Check/Call · blasse Zelle = außerhalb der Range. GTO spielt dieselbe Hand als gemischte Strategie – die Aktionen werden nach Frequenz verteilt, damit niemand dein Muster liest",
+    rTerm3: "Kacheln (oben rechts)",
+    rDef3: "Aktionsfrequenzen (%) und Anzahl der Combos der gesamten Range",
+    rTerm4: "Hände / Draws (Mitte rechts)",
+    rDef4:
+      "Wie stark jede Range das Board trifft (Top Pair, Draws …) – ein schneller Blick darauf, wem dieses Board hilft",
+    rTerm5: "Übersicht (unten rechts)",
+    rDef5:
+      "Gewicht, Equity, EV und Aktions-% je Hand – klicke auf eine Spaltenüberschrift, um zu sortieren",
+
+    trainerTitle: "GTO-Trainer – vom Zuschauen zum Spielen",
+    trainerIntroBefore:
+      "Wenn du den Ergebnisbildschirm sicher liest, geh weiter zum",
+    trainerBtn: "GTO-Trainer",
+    trainerIntroAfter:
+      ". An den Entscheidungspunkten der 13 Lernspots bekommst du Hände aus den echten Ranges – du wählst eine Aktion und bekommst deine Note.",
+    gradTerm: "Wie benotet wird",
+    gradBefore: "Es gibt kein Richtig/Falsch, sondern eine Note nach ",
+    gradBold: "EV-Verlust (bb)",
+    gradAfter:
+      ". GTO mischt mit derselben Hand mehrere Aktionen, eine seltene Aktion ist also nicht automatisch ein Fehler – es zählt, wie viel EV du abgibst",
+    verdictTerm: "Schwellen für das Urteil",
+    verdictBefore: "Gemessen wird ",
+    verdictBold: "im Verhältnis zum Pot",
+    verdictAfter:
+      " – bis 0,35% vom Pot = Beste Wahl · bis 1% = Vertretbar · darüber = Nochmal ansehen. In einem Single Raised Pot von 5,5bb sind das 0,02bb und 0,06bb; in einem 3-Bet-Pot von 22,5bb 0,08bb und 0,23bb.",
+    verdictHint:
+      "Dieselben 0,05bb sind in einem kleinen Pot ein grober Fehler und in einem großen Pot kaum der Rede wert. Absolute bb ließen 3-Bet-Pots schlechter aussehen, als sie sind, deshalb benoten wir relativ zum Pot. Die Schwellen haben eine Untergrenze (0,02bb / 0,05bb): Die Berechnung konvergiert nur bis zu einer Zielabweichung von 0,5%, kleinere Unterschiede sind vom Rauschen des Solvers nicht zu trennen.",
+    reviewTerm: "Wiederholen",
+    reviewBefore:
+      "Die Hände, bei denen du am meisten EV verloren hast, holst du dir über [Wiederholen] zurück. Dein Verlauf wird standardmäßig ",
+    reviewBold: "nur auf diesem Gerät",
+    reviewAfter:
+      " gespeichert. Melde dich mit einem HoldemMaster-Konto an, um ihn im Konto zu sichern und auf anderen Geräten weiterzumachen – die Anmeldung ist freiwillig und alle Funktionen laufen auch ohne sie",
+    filterTerm: "Filter",
+    filterDef:
+      "Übe gezielt deine Schwächen: Single Raised Pots, 3-Bet-Pots oder Blind vs Blind",
+
+    installTitle: "Auf dem Startbildschirm installieren und offline lernen",
+    install1:
+      "Du kannst diesen Solver wie eine App auf deinem Startbildschirm installieren (ohne Installationsdatei). In Chrome oder Edge nimmst du das ",
+    installBold1: "Installations-Symbol",
+    install2: " rechts in der Adressleiste; in Safari auf dem iPhone tippst du auf ",
+    installBold2: "Teilen → Zum Home-Bildschirm",
+    install3:
+      ". Nach der Installation liegen die 13 Lernspots und die Trainer-Aufgaben auf deinem Gerät, sodass du ",
+    installBold3: "auch in der U-Bahn ohne Netz",
+    install4: " weiterlernen kannst.",
+    samsung1:
+      "* Beim Installieren über Samsung Internet kann der Browser oder dein Gerät die Installation aus Sicherheitsgründen blockieren. Das ist eine Sicherheitsabfrage des Browsers, kein Problem dieser App. ",
+    samsungBold: "Öffne die Seite in Chrome",
+    samsung2:
+      ", dann läuft die Installation ohne Warnung; oder folge den Hinweisen im Warnfenster, wenn du hier bleiben willst.",
+    offlineDataLabel: "Offline-Lerndaten",
+    offlineSaved: "Gespeichert – Lernspots und Trainer laufen ohne Internet",
+    offlineSaving: "Wird gespeichert…",
+    offlineNotSaved: "Nicht gespeichert",
+    offlineSaveBtn: "Jetzt speichern (~2,3 MB)",
+    offlineFootnote:
+      "Das „Selbst berechnen“ im eigenen Spot läuft erst offline, nachdem du es mindestens einmal online ausgeführt hast – die Rechen-Engine wird beim ersten Mal heruntergeladen.",
+
+    safeTitle: "Ist das Installieren sicher?",
+    safe1:
+      "Ja. „Installieren“ heißt hier nicht, ein Programm auf dein Gerät zu laden, sondern ",
+    safeBold: "eine Verknüpfung anzulegen, die in deinem Browser läuft",
+    safe2:
+      ". Unter Android wird nur ein schlanker Wrapper registriert, der auf diese Adresse zeigt; alles läuft weiter in der Browser-Engine. Wenn du unsicher bist, sieh dir diese vier Dinge selbst an – nachsehen ist mehr wert als unser Wort.",
+    permTerm: "Keine Berechtigungen",
+    permBefore:
+      "Die Installation verlangt keinerlei Berechtigungen – keine Kamera, keine Kontakte, keine SMS, keinen Standort. Sieh selbst nach unter ",
+    permBold: "Einstellungen → App-Info → Berechtigungen",
+    permAfter: " auf deinem Handy",
+    airplaneTerm: "Test im Flugmodus",
+    airplaneBefore:
+      "Schalte das Internet ab und der Trainer läuft weiter – der klarste Beweis dafür, dass die Berechnung ",
+    airplaneBold: "vollständig auf deinem Gerät passiert",
+    airplaneAfter: "",
+    openTerm: "Der Code ist offen",
+    openBefore: "Dieser Solver ist Open Source unter AGPL-3.0 (",
+    openAfter: ")",
+    removeTerm: "Restlos deinstallierbar",
+    removeDef:
+      "Halte das Icon lange gedrückt und entferne es wie jede andere App – fertig. Nichts läuft im Hintergrund, nichts bleibt zurück",
+    samsungNote2:
+      "* Die Warnung „unsichere App“ von Samsung Internet ist keine Malware-Erkennung – der Browser kennt diese Art Installationspaket schlicht noch nicht. Beim Installieren über Chrome erscheint sie nicht.",
+
+    studyTitle: "Vorschlag für deinen Lernplan",
+    study1:
+      "Geh die 13 Lernspots der Reihe nach durch – sie sind als Kurs aufgebaut und bauen aufeinander auf",
+    study2:
+      "Bleibt die Frage „warum mischt diese Hand Checks?“ – vergleiche den EV je Aktion in der Übersicht",
+    study3:
+      "Wiederhole dieselben Spots im GTO-Trainer, damit es sitzt – die Leak-Analyse zeigt dir, welche Situationen dich am meisten EV kosten",
+    study4: "Lass die Ranges stehen, ändere nur das Board und vergleiche (z. B. A72 vs 974)",
+    study5:
+      "Baue hier die Hände nach, bei denen du im echten Spiel unsicher warst, und geh sie einzeln durch",
+
+    troubleTitle: "Fehlerbehebung",
+    tTerm1: "Fehler beim Erstellen des Spielbaums",
+    tDef1: "Sieh nach, ob die 3 Board-Karten und beide Ranges gefüllt sind",
+    tTerm2: "Die Berechnung ist langsam",
+    tDef2: "Setze die Zielabweichung auf 0,5%",
+    tTerm3: "Der Ergebnis-Tab ist leer",
+    tDef3: "Öffne ihn erst, wenn „Berechnung abgeschlossen!“ erscheint",
+    tTerm4: "Speicherlimit überschritten",
+    tDef4: "Wechsle in den 16-Bit-Ganzzahl-Modus oder nimm weniger Bet Sizes",
+    tTerm5: "Die Matrix ist komplett grau",
+    tDef5:
+      "Du siehst gerade den Punkt, an dem der Gegner am Zug ist – wähle in der oberen Leiste einen anderen Knoten",
+
+    errTitle: "Etwas gefunden, das wir korrigieren sollten?",
+    err1:
+      "Wenn die Anzeige nicht mehr stimmt oder eine Berechnung hängt, werden die Fehlerdetails automatisch auf diesem Gerät protokolliert. ",
+    errBold: "Die Protokolle verlassen dein Gerät nie",
+    err2:
+      " – wir sehen sie nur, wenn du sie unten kopierst und in der Community postest. Sie enthalten nur die Fehlermeldung und den Browsertyp – nie deine Ranges oder deinen Lernverlauf.",
+    errLoggedLabel: "Protokollierte Fehler",
+    errCount: (n: number) => `${n}`,
+    errCopied: "Kopiert",
+    errCopyBtn: "Fehlerdetails kopieren",
+    errClearBtn: "Protokoll löschen",
+    errNone: "Bisher wurden keine Fehler protokolliert.",
+    errPrompt: "Kopiere den Text unten",
+  },
 } as const;
 
 export default defineComponent({

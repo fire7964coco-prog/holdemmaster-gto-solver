@@ -163,6 +163,38 @@ export const DRAW_LABELS_PT: Record<DrawKey, string> = {
   no_draw: "Sem draw",
 };
 
+export const MADE_LABELS_DE: Record<MadeKey, string> = {
+  // 족보만 독일어, 나머지는 영어 유지 (본체 브리프 §1)
+  straight_flush: "Straight Flush",
+  quads: "Vierling",
+  full_house: "Full House",
+  flush: "Flush",
+  straight: "Straße",
+  // 이 칸은 «포켓페어 세트»와 «보드 트립스»를 함께 담는다. 독일어는 Set과 Drilling을
+  // 구분해 쓰므로 둘 다 적는다 (en 「Set/Trips」·pt 「Set/Trinca」와 같은 처리)
+  trips: "Set/Drilling",
+  two_pair: "Zwei Paare",
+  overpair: "Overpair",
+  top_pair: "Top Pair",
+  second_pair: "Second Pair",
+  // 이 목록에서 Overpair·Top Pair·Second Pair·Underpair가 영어라 여기만 독일어면 튄다
+  weak_pair: "Weak Pair",
+  underpair: "Underpair",
+  ace_high: "A-High",
+  king_high: "K-High",
+  nothing: "Keine Made Hand",
+};
+
+export const DRAW_LABELS_DE: Record<DrawKey, string> = {
+  combo_draw: "Combo Draw",
+  flush_draw: "Flushdraw",
+  oesd: "OESD",
+  gutshot: "Gutshot",
+  // 「Backdoor」만 쓰면 완성 플러시로 읽힌다 — FD(=Flushdraw)를 반드시 남길 것
+  backdoor_fd: "Backdoor-FD",
+  no_draw: "Kein Draw",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -173,6 +205,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_ES
     : i18n.locale === "pt"
     ? MADE_LABELS_PT
+    : i18n.locale === "de"
+    ? MADE_LABELS_DE
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -183,6 +217,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_ES
     : i18n.locale === "pt"
     ? DRAW_LABELS_PT
+    : i18n.locale === "de"
+    ? DRAW_LABELS_DE
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

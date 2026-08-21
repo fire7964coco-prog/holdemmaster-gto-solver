@@ -191,7 +191,10 @@ const M = {
     presets: "Spots de estudio",
     presetsBadge: "Al instante",
     trainer: "Entrenador GTO",
-    trainerBadge: "Nota EV",
+    // ⚠ 「Nota EV」는 이 항목이 «선택»되면(굵게) 1280×720에서 두 줄로 접혀 ⑤가 화면 밖으로 밀렸다
+    // (2026-08-21 독일어 작업 중 선택 상태까지 재는 검사를 만들며 발견 — 라이브 결함이었다).
+    // 이름(Entrenador GTO)은 다른 화면 문구가 그대로 가리키므로 뱃지 쪽을 줄였다
+    trainerBadge: "EV",
     preflop: "Tablas preflop",
     preflopBadge: "Rangos",
     equity: "Equity",
@@ -228,6 +231,36 @@ const M = {
     betSize: "Bet sizes",
     betSizeSub: "Ajustes",
     run: "Calcular",
+  },
+  // ⚠ 독일어는 복합명사로 라벨이 길어진다 — 착수 전 DOM 주입으로 4해상도를 미리 쟀고
+  // (1280×720에서 648/648, 기존과 동일) 접힘 없음을 확인한 뒤 확정한 문구다.
+  // 늘리려면 반드시 sidebar-fit-verify.js를 다시 돌릴 것.
+  de: {
+    exploreLabel: "Entdecken",
+    exploreLabelSuffix: " & Lernen",
+    about: "Über",
+    guide: "Anleitung",
+    // 「Studienspots」는 길어서 접힘 위험 — Lernen+Spot 복합어로 줄였다 (der Spot은 독일 포커 실사용어)
+    presets: "Lernspots",
+    presetsBadge: "Sofort",
+    trainer: "GTO-Trainer",
+    trainerBadge: "EV-Note",
+    preflop: "Preflop-Charts",
+    preflopBadge: "Ranges",
+    equity: "Equity-Rechner",
+    // 「Gewinn %」는 1280×720에서 두 줄로 접혔다 (2026-08-21 캡처 눈검수) → 한 단계 줄임.
+    // EquityPage의 승/무/패 칩이 「Sieg」라 그쪽과도 말이 맞는다
+    equityBadge: "Sieg-%",
+    customLabel: "Eigener Spot",
+    // 한 줄 유지용 — es·pt와 같이 접미사를 비운다
+    customLabelSuffix: "",
+    oopRange: "OOP-Range",
+    ipRange: "IP-Range",
+    board: "Board",
+    betSize: "Bet Sizes",
+    // 「Tree Settings」의 뜻을 살리면서 ④가 선택돼도 한 줄에 들어간다
+    betSizeSub: "Spielbaum",
+    run: "Berechnen",
   },
 } as const;
 

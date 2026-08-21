@@ -540,6 +540,71 @@ const M = {
       unknown: "Ocorreu um erro durante o cálculo.",
     } as Record<string, string>,
   },
+  de: {
+    intro:
+      "Deine Gewinnchance gegen eine bestimmte Hand oder gegen eine ganze Range. Lass das Board " +
+      "für Preflop leer, oder wähle 3/4/5 Karten für Flop, Turn und River.",
+    heroTitle: "① Deine Hand",
+    heroHint: "Wähle unten 2 Karten",
+    fill: "Von hier befüllen",
+    villainTitle: "② Gegner",
+    modeHand: "vs Hand",
+    modeRange: "vs Range",
+    rangePlaceholder: "z. B. 22+,AQs+,K8s:0.75",
+    // ⚠ 「Range-Text kopieren」는 PreflopChartPage의 실제 버튼 이름과 같아야 한다
+    rangeNote:
+      "Du kannst die Ausgabe von [Range-Text kopieren] aus den Preflop-Charts direkt einfügen. " +
+      "Gewichtete Notation wie „K8s:0.75“ wird genau so übernommen.",
+    anyTwo: "Beliebige zwei Karten",
+    rangeError: (token: string) =>
+      `„${token}“ ist keine gültige Notation – schreib z. B. 22+, AQs+ oder K8s:0.75`,
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} Combos · ${percent}% aller Combos`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Leer = Preflop (3/4/5 Karten sind auch möglich)",
+    boardHintBad: "Das Board darf nur 0, 3, 4 oder 5 Karten haben",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Berechnen",
+    computing: "Wird berechnet…",
+    stop: "Stopp",
+    clear: "Karten & Board leeren",
+    resultTitle: "Ergebnis",
+    resultEmpty:
+      "Wähle deine zwei Karten und einen Gegner (2 Karten oder Range) und drücke auf [Berechnen].",
+    vsSide: (value: string) => `Gegner ${value}%`,
+    win: "Sieg",
+    tie: "Split",
+    lose: "Niederlage",
+    combos: "Gegner-Combos",
+    badgeExact: "Exakt",
+    badgeApprox: "Näherung (±0,2%-Punkte)",
+    // 천단위 구분은 독일식 마침표 — 본체 브리프 §3 (pt판의 toLocaleString("pt-BR")과 같은 처리)
+    exactNote: (n: number) =>
+      `Alle ${n.toLocaleString("de-DE")} möglichen Fälle wurden gezählt`,
+    approxNote: (n: number) =>
+      `Zu viele Fälle zum Auszählen – ${n.toLocaleString("de-DE")} zufällige Runouts als Stichprobe`,
+    howTitle: "So liest du das",
+    how1:
+      "Equity = Gewinn-% + die Hälfte der Splits. Das ist dein Anteil am Pot, wenn ihr jetzt sofort all-in wärt.",
+    how2:
+      "Gegen eine Range fallen Combos, die durch deine Karten oder das Board blockiert sind, automatisch weg (Card Removal).",
+    how3:
+      "Das Abzeichen „Exakt“ heißt, dass jeder Fall gezählt wurde; „Näherung“ ist eine Zufallsstichprobe.",
+    limitTitle: "Was dieser Rechner abdeckt",
+    limitBody:
+      "Dieses Werkzeug berechnet nur die All-in-Equity zwischen zwei Spielern. Range gegen Range, " +
+      "Multiway-Pots und Bet-Lines übernimmt der Solver (Eigener Spot).",
+    errors: {
+      "need-hero": "Wähle zuerst deine zwei Karten.",
+      "bad-board": "Das Board darf nur 0, 3, 4 oder 5 Karten haben.",
+      "bad-card": "Ungültiger Kartenwert.",
+      duplicate: "Dieselbe Karte kann nicht zweimal vorkommen.",
+      "empty-range": "Die Gegner-Range ist leer.",
+      "no-combos":
+        "Nach dem Card Removal bleiben dem Gegner keine Combos übrig – wähle andere Karten oder mach die Gegner-Range weiter.",
+      unknown: "Bei der Berechnung ist ein Fehler aufgetreten.",
+    } as Record<string, string>,
+  },
 } as const;
 
 const CAPACITY: Record<Target, number> = { hero: 2, villain: 2, board: 5 };

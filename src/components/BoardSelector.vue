@@ -98,6 +98,15 @@ const M = {
     warnBody: (n: number) =>
       `A árvore editada pressupõe um board de ${n} carta${n === 1 ? "" : "s"}.`,
   },
+  de: {
+    placeholder: "z. B. AsKd7c",
+    clear: "Leeren",
+    randomFlop: "Zufälliger Flop",
+    warnLabel: "Achtung:",
+    // 독일어 복수: 1 Karte / 2 Karten
+    warnBody: (n: number) =>
+      `Der bearbeitete Spielbaum setzt ein Board mit ${n} Karte${n === 1 ? "" : "n"} voraus.`,
+  },
 } as const;
 
 export default defineComponent({

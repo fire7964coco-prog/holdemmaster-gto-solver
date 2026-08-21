@@ -13,7 +13,7 @@
  */
 import { reactive } from "vue";
 
-export type Locale = "ko" | "en" | "ja" | "es" | "pt";
+export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de";
 
 const KEY = "solver.locale";
 
@@ -24,7 +24,8 @@ const readStored = (): Locale | null => {
       value === "en" ||
       value === "ja" ||
       value === "es" ||
-      value === "pt"
+      value === "pt" ||
+      value === "de"
       ? value
       : null;
   } catch {
@@ -40,7 +41,8 @@ const detect = (): Locale => {
     fromUrl === "en" ||
     fromUrl === "ja" ||
     fromUrl === "es" ||
-    fromUrl === "pt"
+    fromUrl === "pt" ||
+    fromUrl === "de"
   ) {
     try {
       localStorage.setItem(KEY, fromUrl);
@@ -56,6 +58,7 @@ const detect = (): Locale => {
   if (lang.startsWith("ja")) return "ja";
   if (lang.startsWith("es")) return "es";
   if (lang.startsWith("pt")) return "pt";
+  if (lang.startsWith("de")) return "de";
   return "en";
 };
 
@@ -88,6 +91,12 @@ const DOC_META: Record<Locale, { title: string; description: string }> = {
     description:
       "Solver GTO grátis que roda direto no seu navegador, sem instalar nada. Calcule a estratégia pós-flop de Texas Hold'em por range, board e tamanho de aposta. Da HoldemMaster.",
   },
+  de: {
+    // 독일 조판은 Halbgeviertstrich «–» (본체 §7-10) — 다른 언어의 «—»와 일부러 다르다
+    title: "HoldemMaster GTO Solver – Kostenloser Online-Solver für Texas Hold\u2019em",
+    description:
+      "Kostenloser GTO-Solver, der direkt im Browser läuft – ohne Installation. Berechne die Postflop-Strategie in Texas Hold’em nach Range, Board und Bet Size. Von HoldemMaster.",
+  },
 };
 
 const applyDocumentLocale = (locale: Locale) => {
@@ -112,7 +121,7 @@ export const setLocale = (locale: Locale) => {
 };
 
 /**
- * 화면에 «찍히는» 수치의 소수점을 언어에 맞춘다 — 브라질은 «,»가 소수점이다.
+ * 화면에 «찍히는» 수치의 소수점을 언어에 맞춘다 — 브라질·독일은 «,»가 소수점이다.
  * 숫자 사이의 점만 바꾸므로 문장 끝 마침표·주소·버전(AGPL-3.0)은 건드리지 않는다.
  *
  * ⚠ 쓰면 안 되는 곳: CSV 내보내기(쉼표가 열 구분자) · style 문자열(width: 50,5%)
@@ -120,14 +129,24 @@ export const setLocale = (locale: Locale) => {
  * 템플릿에서는 전역 속성 `$n(...)`으로 쓴다 (index.ts에서 등록).
  */
 export const localizeNumber = (text: string) =>
-  i18n.locale === "pt" ? text.replace(/(\d)\.(\d)/g, "$1,$2") : text;
+  i18n.locale === "pt" || i18n.locale === "de"
+    ? text.replace(/(\d)\.(\d)/g, "$1,$2")
+    : text;
 
 /** 정수부·소수부를 나눠 그리는 화면(결과 표·13×13 격자)에서 쓰는 소수점 문자 */
-export const decimalMark = () => (i18n.locale === "pt" ? "," : ".");
+export const decimalMark = () =>
+  i18n.locale === "pt" || i18n.locale === "de" ? "," : ".";
 
 /** 언어별 값 중 현재 언어 것을 고른다 (문장 조립이 아닌 짧은 선택용).
- * ja·es·pt를 생략하면 영어로 폴백한다 — 새 문구는 반드시 pt까지 채울 것. */
-export const pick = <T>(ko: T, en: T, ja: T = en, es: T = en, pt: T = en): T =>
+ * ja·es·pt·de를 생략하면 영어로 폴백한다 — 새 문구는 반드시 de까지 채울 것. */
+export const pick = <T>(
+  ko: T,
+  en: T,
+  ja: T = en,
+  es: T = en,
+  pt: T = en,
+  de: T = en
+): T =>
   i18n.locale === "ko"
     ? ko
     : i18n.locale === "ja"
@@ -136,4 +155,6 @@ export const pick = <T>(ko: T, en: T, ja: T = en, es: T = en, pt: T = en): T =>
     ? es
     : i18n.locale === "pt"
     ? pt
+    : i18n.locale === "de"
+    ? de
     : en;

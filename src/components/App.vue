@@ -191,6 +191,20 @@ export default defineComponent({
         "run-solver": "Executar solver",
         treeEdit: "Prévia e edição da árvore",
       },
+      de: {
+        about: "Über",
+        guide: "Anleitung – Schritt für Schritt",
+        presets: "Lernspots – Beispiele mit einem Klick",
+        trainer: "GTO-Trainer – sieh den EV jeder Entscheidung",
+        preflop: "Preflop-Charts – Open- und Defense-Ranges",
+        equity: "Equity-Rechner – Gewinnchance für Hand und Range",
+        "oop-range": "OOP-Range",
+        "ip-range": "IP-Range",
+        board: "Board",
+        "tree-config": "Spielbaum-Einstellungen",
+        "run-solver": "Solver starten",
+        treeEdit: "Spielbaum – Vorschau & Bearbeiten",
+      },
     } as const;
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];

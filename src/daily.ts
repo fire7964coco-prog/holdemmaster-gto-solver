@@ -9,7 +9,7 @@
  * 데이터는 새로 만들지 않는다. 기존 문제 은행에 날짜 기반 난수를 넣을 뿐이다.
  */
 import { reactive } from "vue";
-import { i18n } from "./i18n";
+import { i18n, localizeNumber } from "./i18n";
 import { makeTrainerQuestion, TrainerBank, TrainerQuestion } from "./trainer";
 
 const KEY_LAST = "daily.lastDate";
@@ -165,11 +165,29 @@ export const dailyShareText = (verdict: string) => {
   if (i18n.locale === "pt") {
     return [
       `[Desafio GTO do dia · ${date}]`,
-      `Meu resultado: ${verdict} (perda de EV ${dailyState.lossBb.toFixed(3)}bb)`,
+      `Meu resultado: ${verdict} (perda de EV ${localizeNumber(
+        dailyState.lossBb.toFixed(3)
+      )}bb)`,
       dailyState.streak > 1 ? `Sequência de ${dailyState.streak} dias` : "",
       "",
       "Resolva o mesmo desafio → https://solver.holdemmaster.com/?view=trainer&lang=pt",
       "(HoldemMaster GTO Solver · um desafio por dia)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "de") {
+    // ⚠ 독일어 날짜는 TT.MM.JJJJ — 공용 「26.08.21」을 그대로 쓰면 «2021년 8월 26일»로 읽힌다
+    const deDate = todayKey().split("-").reverse().join(".");
+    return [
+      `[GTO-Tagesaufgabe · ${deDate}]`,
+      `Mein Ergebnis: ${verdict} (EV-Verlust ${localizeNumber(
+        dailyState.lossBb.toFixed(3)
+      )}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak} Tage in Folge` : "",
+      "",
+      "Dieselbe Aufgabe lösen → https://solver.holdemmaster.com/?view=trainer&lang=de",
+      "(HoldemMaster GTO Solver · eine Aufgabe pro Tag)",
     ]
       .filter(Boolean)
       .join("\n");

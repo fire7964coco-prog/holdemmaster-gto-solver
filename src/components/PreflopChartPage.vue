@@ -739,6 +739,115 @@ const M = {
       "os nossos próprios ranges de estudo (compilado em agosto de 2026)",
     phase2: "Novos confrontos e cenários continuarão sendo adicionados.",
   },
+  de: {
+    modeRfi: "Open (RFI)",
+    modeDefend: "vs Open (Verteidigung)",
+    mode3bet: "vs 3-Bet (nach dem Open)",
+    // die Bet ist weiblich (본체 브리프 §7-9 실측) → «nach der 3-Bet»
+    mode4bet: "vs 4-Bet (nach der 3-Bet)",
+    intro4bet:
+      "Wie du reagierst, wenn deine 3-Bet eine 4-Bet kassiert – Rot ist 5-Bet (All-in), Grün ist " +
+      "Call, der Rest foldet. Die Frequenzen gelten unter der Bedingung, dass du 3-bettest; " +
+      "Hände, die du nie 3-bettest, bleiben leer. 6-max Cashgame, 100bb: die BB 3-bettet auf " +
+      "11bb und bekommt eine 4-Bet auf 24bb, die SB 3-bettet auf 10bb und bekommt 22bb.",
+    legend5bet: "5-Bet (All-in)",
+    legendCond4bet: "Leer = wird hier nie 3-gebettet",
+    stat5bet: "5-Bet-Anteil",
+    statContinue4bet: "Continue-Anteil (von den 3-Bets)",
+    copy5bet: "5-Bet-Range kopieren",
+    note4bet:
+      "Die Statistik zeigt Anteile deiner 3-Bet-Range. Mit 100bb ist die 5-Bet praktisch immer " +
+      "All-in – der Value liegt bei AA·KK (manchmal nur gecallt, um eine Falle zu stellen), " +
+      "QQ·AK mischen 5-Bet und Call. Die Calls richten sich nach der Equity-Realisierung, nicht " +
+      "nach den Pot Odds: Du spielst ohne Position mit niedrigem SPR, deshalb bleiben nur Paare " +
+      "und die besten suited Hände – aber folde nicht alles, denn die 4-Bet-Range mischt Bluffs " +
+      "wie A5s-A4s hinein.",
+    how4bet2:
+      "Füllen Rot und Grün die Zelle nicht ganz, wird der Rest gefoldet. Zellen mit beiden Farben " +
+      "mischen 5-Bet und Call. Hände außerhalb der 3-Bet-Range geraten nie in diesen Spot und " +
+      "bleiben deshalb leer.",
+    intro3bet:
+      "Wie du reagierst, wenn dein Open-Raise eine 3-Bet kassiert – Rot ist 4-Bet, Grün ist Call, " +
+      "der Rest foldet. Die Frequenzen gelten unter der Bedingung, dass du geöffnet hast; Hände, " +
+      "die du nie eröffnest, bleiben leer. 6-max Cashgame, 100bb, Open auf 2,5bb, 3-Bet auf ca. 10–11bb.",
+    legend4bet: "4-Bet",
+    legendCond: "Leer = wird nie eröffnet",
+    stat4bet: "4-Bet-Anteil",
+    statContinue: "Continue-Anteil (von den Opens)",
+    copy4bet: "4-Bet-Range kopieren",
+    note3bet:
+      "Die Statistik zeigt Anteile deiner Open-Range, nicht aller Hände. Der Value der 4-Bet liegt " +
+      "bei QQ+/AK, dazu ein paar Bluffs wie A5s-A4s. Mit Position bleibt die Call-Range breit: " +
+      "Paare, suited Broadways und Connectors.",
+    squeezeNote:
+      "Ein Squeeze ist eine 3-Bet, wenn schon ein Opener und ein Caller im Pot sind (hier etwa " +
+      "11–12bb). Der Caller macht die Gesamtverteidigung enger als im Heads-up und schiebt die " +
+      "3-Bet Richtung Value. Overcalls bevorzugen suited Hände und Connectors, die multiway die " +
+      "Nuts treffen können.",
+    how3bet2:
+      "Füllen Rot und Grün die Zelle nicht ganz, wird der Rest gefoldet. Zellen mit beiden Farben " +
+      "mischen 4-Bet und Call. Hände außerhalb der Open-Range geraten nie in diesen Spot und " +
+      "bleiben deshalb leer.",
+    intro:
+      "Open-Ranges nach Position (RFI) – mit welchen Händen solltest du eröffnen, wenn vor dir alle " +
+      "folden? Basis: 6-max Cashgame, 100bb, Open auf 2,5bb. Teilweise gefüllte Zellen sind Opens " +
+      "mit gemischter Frequenz.",
+    introDefend:
+      "Wie du reagierst, wenn vor dir jemand öffnet – die häufigsten Konstellationen. Rot ist " +
+      "3-Bet, Grün ist Call, und die Gesamthöhe des Balkens ist deine Verteidigungsfrequenz. " +
+      "6-max Cashgame, 100bb, Open auf 2,5bb (3bb bei Opens der SB).",
+    legendOpen: "Open (100%)",
+    legendMixed: "Gemischte Frequenz (Füllhöhe = Open-%)",
+    legendFold: "Fold",
+    legend3bet: "3-Bet",
+    legendCall: "Call",
+    legendMixedDefend: "Füllhöhe = Frequenz (geteilte Zellen sind gemischt)",
+    stat3bet: "3-Bet-Anteil",
+    statCall: "Call-Anteil",
+    statTotal: "Gesamtverteidigung",
+    copy3bet: "3-Bet-Range kopieren",
+    copyCall: "Call-Range kopieren",
+    sbNote:
+      "In der SB spielst du gegen ein BTN-Open praktisch nur 3-Bet oder Fold – du bist ohne " +
+      "Position und die BB ist noch nicht durch, ein Call vereint also beide Nachteile.",
+    ipNote:
+      "Auch mit Position ist die Open-Range aus früher Position stark, und ein Call setzt " +
+      "dich dem Squeeze der Blinds aus, die noch nicht durch sind. Deshalb ist die Verteidigung in " +
+      "Position eng und dreht sich um die 3-Bet; Calls bleiben vor allem Paaren und den besten " +
+      "suited Händen vorbehalten.",
+    statPercent: "Open-Anteil",
+    statCombos: "Open-Combos",
+    statHands: "Hände, die du eröffnest",
+    statMixed: "Gemischte Hände",
+    copy: "Range-Text kopieren",
+    copied: "✓ Kopiert",
+    sendOop: "① An OOP-Range senden",
+    sendIp: "② An IP-Range senden",
+    howTitle: "So liest du das",
+    how1:
+      "Die Diagonale von links oben nach rechts unten sind die Paare; darüber (rechts) steht suited, darunter (links) offsuit.",
+    how2:
+      "Hände mit gemischter Frequenz (teilweise gefüllt) werden nur in diesem Anteil der Fälle eröffnet – es sind Grenzhände, bei denen beide Optionen kaum EV kosten.",
+    how3:
+      "Die Buttons [① An OOP-Range senden] / [② An IP-Range senden] laden diese Range in den Editor des eigenen Spots – versuche dich selbst am Postflop-Spiel.",
+    howDefend2:
+      "Füllen Rot und Grün die Zelle nicht ganz, wird der Rest gefoldet. Zellen mit beiden Farben mischen 3-Bet und Call in diesem Verhältnis.",
+    howDefend3:
+      "Füge eine kopierte Range in die Range-Felder des eigenen Spots (① / ②) ein, um mit dieser Verteidigungs-Range den Postflop selbst zu rechnen.",
+    sourceTitle: "Wie ist diese Tabelle entstanden?",
+    sourceBody:
+      "Wir haben mehrere frei veröffentlichte GTO-Materialien Hand für Hand abgeglichen und daraus " +
+      "eine Konsens-Range gebaut; Hände, bei denen die Quellen auseinandergehen, sind als " +
+      "gemischte Frequenz markiert. BTN und SB wurden zusätzlich mit den solvergeprüften Ranges " +
+      "abgeglichen, die die Lernspots dieser App verwenden.",
+    sourceList:
+      "Abgeglichene öffentliche Quellen: nlh.poker · Preflop Wizard · HoldemPro · " +
+      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (gelöste BB-vs-SB-Frequenzen) · " +
+      "GTO Gecko · RiverOdds (Anker für Verteidigungsfrequenzen) · GTO-Wizard-Blog · FreeBetRange " +
+      "(IP-Verteidigung und Squeeze-Prinzipien) · 888poker · Run It Once (Frequenzen vs 3-Bet) + " +
+      "unsere eigenen Lern-Ranges (Stand August 2026)",
+    phase2: "Weitere Konstellationen und Szenarien kommen nach und nach dazu.",
+  },
 } as const;
 
 type ModeKey = "rfi" | "defend" | "vs3bet" | "vs4bet";

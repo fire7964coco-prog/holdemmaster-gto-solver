@@ -96,7 +96,9 @@
             <template v-if="row.count">
               {{ $n(L.avgOfPot(row.averageLossPct.toFixed(2))) }}
               <span class="text-neutral-600">({{ $n(row.averageLossBb.toFixed(3)) }}bb)</span>
-              <span class="text-neutral-600">{{ L.handCount(row.count) }}</span>
+              <!-- ⚠ Vue의 whitespace condense가 태그 사이 줄바꿈 공백을 지운다 →
+                   «(0,002bb)(1 Hand)»로 붙어 나왔다 (2026-08-21 de 눈검수에서 발견, 전 언어 공통) -->
+              <span class="text-neutral-600">&nbsp;{{ L.handCount(row.count) }}</span>
             </template>
             <span v-else class="text-neutral-600">{{ L.notSolved }}</span>
           </span>
@@ -1118,6 +1120,112 @@ const M = {
       `${uploaded} salva${uploaded === 1 ? "" : "s"}`,
     syncFailed: (msg: string) => `Erro de sincronização: ${msg}`,
     signInFailed: (msg: string) => `Erro ao fazer login: ${msg}`,
+  },
+  de: {
+    loadFailed: "Die Trainer-Daten konnten nicht geladen werden:",
+    loading: "Trainer wird geladen…",
+    review: (n: number) => `Wiederholen (${n})`,
+    daily: "Tagesaufgabe",
+    done: "Erledigt",
+    solved: "Gelöst",
+    // «3 in Folge»는 명사가 없어 비문 → 수와 무관하게 맞는 «-mal in Folge»로 (1-mal / 3-mal)
+    dayStreakSuffix: "-mal in Folge",
+    bestPrefix: "/ Bestwert",
+    streakLabel: "Serie",
+    totalLossLabel: "EV-Verlust gesamt",
+    avgLossLabel: "EV-Verlust im Schnitt",
+    goodRateLabel: "Gute Entscheidungen",
+    weaknessTitle: "Leak-Analyse",
+    avgOfPot: (pct: string) => `im Schnitt ${pct}% vom Pot`,
+    // 독일어 복수: 1 Hand / 2 Hände
+    handCount: (n: number) => `(${n} ${n === 1 ? "Hand" : "Hände"})`,
+    notSolved: "Keine Versuche",
+    weakestBefore: "Größte Verluste bei ",
+    weakestAfter: " –",
+    practiceThis: "Nur diesen Spot-Typ üben",
+    weaknessHint: "Löse 3+ Hände je Kategorie, um zu sehen, wo du EV verlierst.",
+    accountBefore: "Gespeichert im Konto von ",
+    accountAfter: "",
+    syncingNow: "Wird synchronisiert…",
+    syncNow: "Jetzt synchronisieren",
+    signOutLabel: "Abmelden",
+    localOnlyBefore: "Dein Fortschritt wird ",
+    localOnlyBold: "nur auf diesem Gerät",
+    localOnlyAfter:
+      " gespeichert. Verknüpf ein HoldemMaster-Konto, um auf jedem Gerät dort weiterzumachen, wo du aufgehört hast.",
+    googleSignIn: "Weiter mit Google",
+    kakaoSignIn: "Weiter mit Kakao",
+    footerLine: (nodes: number, pct: number) =>
+      `13 Lernspots · ${nodes} Entscheidungsknoten · Zielabweichung ${pct}%`,
+    details: "Details ↓",
+    toAct: "am Zug",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Line:",
+    boardLabel: "Board",
+    myHand: "Deine Hand",
+    yourChoice: "Deine Wahl",
+    prompt: "Was spielst du?",
+    bestEvTag: " · Höchster EV",
+    evLoss: "EV-Verlust",
+    mobileDetailTitle: "Frequenz und EV je Aktion",
+    mixedNote:
+      "Gemischte Strategien zählen nicht als Fehler – benotet wird nach der EV-Differenz zwischen den Aktionen.",
+    dailyDone: "Tagesaufgabe geschafft",
+    dailyDoneDesc:
+      "Heute bekommen alle dieselbe Aufgabe. Poste dein Ergebnis und vergleiche dich mit anderen.",
+    makeCard: "Ergebniskarte erstellen",
+    boardShow: "Rangliste von heute ansehen",
+    boardHide: "Rangliste ausblenden",
+    boardLoading: "Wird geladen…",
+    // Spieler ist im Deutschen Singular wie Plural
+    boardCount: (n: number) => `${n} Spieler heute`,
+    boardMyRank: (r: number) => `Mein Platz #${r}`,
+    boardLoginHint:
+      "Melde dich an, damit dein Name in der Rangliste steht – ansehen kann sie jeder, auch ohne Anmeldung.",
+    boardUnavailable: "Die Rangliste ist noch nicht verfügbar.",
+    copied: "Kopiert",
+    copyResult: "Ergebnistext kopieren",
+    openCommunity: "Community öffnen →",
+    pasteHintBefore: "Tippe in der Community auf ",
+    pasteHintBold: "[✏️ Neuer Beitrag]",
+    pasteHintAfter: " und füge es ein.",
+    keepPracticing: "Weiterüben",
+    nextHand: "Nächste Hand",
+    readArticle: "Analyse zum Spot lesen →",
+    viewFull: "Komplette Lösung ansehen",
+    resultTitle: "Bewertung",
+    resultHintBefore: "Wähle eine Aktion und du siehst ",
+    resultHintBold: "Frequenz und EV jeder Aktion",
+    resultHintAfter: " – dazu, wie viele bb deine Wahl gekostet hat.",
+    gtoNoteBefore:
+      "GTO mischt mit derselben Hand mehrere Aktionen – eine seltene Wahl ist nicht automatisch ein Fehler. Gemessen wird der EV-Verlust ",
+    gtoNoteBold: "im Verhältnis zum Pot",
+    gtoNoteAfter:
+      ": ≤0,35% Beste Wahl · ≤1% Vertretbar · darüber Nochmal ansehen.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `In diesem Spot (Pot ${pot}bb): Beste Wahl ≤${best}bb · Vertretbar ≤${good}bb.`,
+    resetHistoryLabel: "Trainer-Verlauf löschen",
+    cardAlt: "Ergebniskarte der Tagesaufgabe",
+    shareApps: "In Apps teilen",
+    saveImage: "Bild speichern",
+    close: "Schließen",
+    cardHintBefore:
+      "Poste deine Karte in einen Chat oder in die sozialen Netzwerke – wer sie sieht, spielt heute ",
+    cardHintBold: "dieselbe Aufgabe",
+    cardHintAfter: ". Die Karte verrät nie die Lösung.",
+    verdictBest: "Beste Wahl",
+    verdictGood: "Vertretbar",
+    verdictMiss: "Nochmal ansehen",
+    promptCopy: "Kopiere den Text unten",
+    shareText:
+      "GTO-Tagesaufgabe – probiere sie auch: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "Den gesamten Trainer-Verlauf auf diesem Gerät löschen?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} gespeichert · ${merged} von anderen Geräten geholt`,
+    syncSaved: (uploaded: number) => `${uploaded} gespeichert`,
+    syncFailed: (msg: string) => `Fehler bei der Synchronisierung: ${msg}`,
+    signInFailed: (msg: string) => `Fehler beim Anmelden: ${msg}`,
   },
 } as const;
 

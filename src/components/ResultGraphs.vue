@@ -120,6 +120,10 @@ const M = {
     noGraph: "O gráfico não está disponível",
     equity: "Equity",
   },
+  de: {
+    noGraph: "Kein Graph vorhanden",
+    equity: "Equity",
+  },
 } as const;
 
 export default defineComponent({

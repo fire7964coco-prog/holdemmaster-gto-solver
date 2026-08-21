@@ -182,6 +182,21 @@ const M = {
     footnote:
       "Os ranges são aproximações do padrão online de 100bb. Carregue um spot, ajuste os ranges e compare — é um ótimo jeito de estudar.",
   },
+  de: {
+    infoBtn1: "[⚡ Ergebnisse ansehen]",
+    infoText1: " zeigt dir die fertige Strategie sofort. Nimm ",
+    infoBtn2: "[Selbst berechnen]",
+    infoText2:
+      " nur dann, wenn du die Ranges anpassen oder Turn und River erkunden willst.",
+    pot: "Pot",
+    stack: "Stack",
+    articleLink: "Analyse lesen",
+    viewResults: "Ergebnisse ansehen",
+    solveYourself: "Selbst berechnen",
+    // 「100bb」는 앱이 코드로 찍는 단위 표기(formatAmount)와 맞춘 것 — 화면 안 일관성 우선
+    footnote:
+      "Die Ranges sind Näherungen des 100bb-Onlinestandards. Lade einen Spot, passe die Ranges an und vergleiche – so lernst du am meisten.",
+  },
 } as const;
 
 export default defineComponent({

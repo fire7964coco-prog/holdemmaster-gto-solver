@@ -344,6 +344,24 @@ const M = {
     addedLines: "Linhas adicionadas:",
     removedLines: "Linhas removidas:",
   },
+  de: {
+    treeError:
+      "Fehler: Der Spielbaum konnte nicht erstellt werden (beschädigten Spielbaum geladen?)",
+    pot: "Pot",
+    stack: "Stack",
+    noActions: "(Keine Aktionen)",
+    wins: "gewinnt",
+    invalidTerminals: "Ungültige Endknoten:",
+    addBetAction: "Bet-Aktion hinzufügen",
+    removeNode: "Ausgewählten Knoten entfernen",
+    betAmount: "Bet-Betrag:",
+    potRate: (pct: string) => `(${pct}% vom Pot)`,
+    saveEdits: "Änderungen speichern",
+    cancelEdits: "Bearbeitung abbrechen",
+    // die Line — 독일 포커도 라인은 영어 그대로 쓴다
+    addedLines: "Hinzugefügte Lines:",
+    removedLines: "Entfernte Lines:",
+  },
 } as const;
 
 export default defineComponent({

@@ -63,6 +63,7 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   ja: { "": "/ja" }, // /ja/solver·/ja/community는 아직 없다 (2026-08-19 실측 404)
   es: { "": "/es" }, // /es는 실재(200), /es/solver는 404 (2026-08-20 실측 — 스페인어화 리서치)
   pt: { "": "/pt" }, // /pt는 실재(200), /pt/solver·/pt/community는 404 (2026-08-21 실측)
+  de: { "": "/de" }, // /de는 실재(200), /de/solver·/de/community는 404 (2026-08-21 실측)
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

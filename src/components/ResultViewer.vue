@@ -206,6 +206,12 @@ const M = {
     finalizing: "Finalizando…",
     paused: "O solver está pausado.",
   },
+  de: {
+    notRun: "Der Solver wurde noch nicht gestartet.",
+    running: "Der Solver rechnet…",
+    finalizing: "Wird abgeschlossen…",
+    paused: "Der Solver ist pausiert.",
+  },
 } as const;
 
 export default defineComponent({

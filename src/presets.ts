@@ -9,27 +9,32 @@ export type Preset = {
   categoryJa: string;
   categoryEs: string;
   categoryPt: string;
+  categoryDe: string;
   title: string;
   titleEn: string;
   titleJa: string;
   titleEs: string;
   titlePt: string;
+  titleDe: string;
   board: string; // 예: "Ah 7d 2c"
   lesson: string; // 이 스팟에서 배우는 것
   lessonEn: string;
   lessonJa: string;
   lessonEs: string;
   lessonPt: string;
+  lessonDe: string;
   oopLabel: string;
   oopLabelEn: string;
   oopLabelJa: string;
   oopLabelEs: string;
   oopLabelPt: string;
+  oopLabelDe: string;
   ipLabel: string;
   ipLabelEn: string;
   ipLabelJa: string;
   ipLabelEs: string;
   ipLabelPt: string;
+  ipLabelDe: string;
   oopRange: string;
   ipRange: string;
   startingPot: number;
@@ -43,7 +48,7 @@ export type Preset = {
 
 /* 현재 언어에 맞는 프리셋 문구 — 화면에서는 preset.title 대신 이걸 쓸 것 */
 export const presetTitleOf = (
-  preset: Pick<Preset, "title" | "titleEn" | "titleJa" | "titleEs" | "titlePt">
+  preset: Pick<Preset, "title" | "titleEn" | "titleJa" | "titleEs" | "titlePt" | "titleDe">
 ) =>
   i18n.locale === "ko"
     ? preset.title
@@ -53,9 +58,11 @@ export const presetTitleOf = (
     ? preset.titleEs
     : i18n.locale === "pt"
     ? preset.titlePt
+    : i18n.locale === "de"
+    ? preset.titleDe
     : preset.titleEn;
 export const presetLessonOf = (
-  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt">
+  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe">
 ) =>
   i18n.locale === "ko"
     ? preset.lesson
@@ -65,9 +72,11 @@ export const presetLessonOf = (
     ? preset.lessonEs
     : i18n.locale === "pt"
     ? preset.lessonPt
+    : i18n.locale === "de"
+    ? preset.lessonDe
     : preset.lessonEn;
 export const presetCategoryOf = (
-  preset: Pick<Preset, "category" | "categoryEn" | "categoryJa" | "categoryEs" | "categoryPt">
+  preset: Pick<Preset, "category" | "categoryEn" | "categoryJa" | "categoryEs" | "categoryPt" | "categoryDe">
 ) =>
   i18n.locale === "ko"
     ? preset.category
@@ -77,9 +86,11 @@ export const presetCategoryOf = (
     ? preset.categoryEs
     : i18n.locale === "pt"
     ? preset.categoryPt
+    : i18n.locale === "de"
+    ? preset.categoryDe
     : preset.categoryEn;
 export const oopLabelOf = (
-  preset: Pick<Preset, "oopLabel" | "oopLabelEn" | "oopLabelJa" | "oopLabelEs" | "oopLabelPt">
+  preset: Pick<Preset, "oopLabel" | "oopLabelEn" | "oopLabelJa" | "oopLabelEs" | "oopLabelPt" | "oopLabelDe">
 ) =>
   i18n.locale === "ko"
     ? preset.oopLabel
@@ -89,9 +100,11 @@ export const oopLabelOf = (
     ? preset.oopLabelEs
     : i18n.locale === "pt"
     ? preset.oopLabelPt
+    : i18n.locale === "de"
+    ? preset.oopLabelDe
     : preset.oopLabelEn;
 export const ipLabelOf = (
-  preset: Pick<Preset, "ipLabel" | "ipLabelEn" | "ipLabelJa" | "ipLabelEs" | "ipLabelPt">
+  preset: Pick<Preset, "ipLabel" | "ipLabelEn" | "ipLabelJa" | "ipLabelEs" | "ipLabelPt" | "ipLabelDe">
 ) =>
   i18n.locale === "ko"
     ? preset.ipLabel
@@ -101,6 +114,8 @@ export const ipLabelOf = (
     ? preset.ipLabelEs
     : i18n.locale === "pt"
     ? preset.ipLabelPt
+    : i18n.locale === "de"
+    ? preset.ipLabelDe
     : preset.ipLabelEn;
 /** id로 제목 찾기 (트레이너 등 id만 있는 곳용) */
 export const presetTitleById = (id: string) => {
@@ -142,16 +157,19 @@ const SRP = {
   categoryJa: "シングルレイズポット — BTN vs BB（基本）",
   categoryEs: "Single Raised Pot — BTN vs BB (fundamentos)",
   categoryPt: "Single Raised Pot — BTN vs BB (fundamentos)",
+  categoryDe: "Single Raised Pot – BTN vs BB (Grundlagen)",
   oopLabel: "BB (콜러)",
   oopLabelEn: "BB (Caller)",
   oopLabelJa: "BB（コーラー）",
   oopLabelEs: "BB (caller)",
   oopLabelPt: "BB (caller)",
+  oopLabelDe: "BB (Caller)",
   ipLabel: "BTN (오픈레이저)",
   ipLabelEn: "BTN (Opener)",
   ipLabelJa: "BTN（オープンレイザー）",
   ipLabelEs: "BTN (open-raiser)",
   ipLabelPt: "BTN (open-raiser)",
+  ipLabelDe: "BTN (Open-Raiser)",
   oopRange: BB_DEFEND,
   ipRange: BTN_OPEN,
   startingPot: 55,
@@ -168,16 +186,19 @@ const TBP = {
   categoryJa: "3ベットポット — BB 3ベット vs BTN コール（低SPR）",
   categoryEs: "Bote de 3-bet — BB 3-betea y BTN paga (SPR bajo)",
   categoryPt: "Pote de 3-bet — BB dá 3-bet e BTN paga (SPR baixo)",
+  categoryDe: "3-Bet-Pot – BB 3-bettet, BTN callt (niedriger SPR)",
   oopLabel: "BB (3벳터)",
   oopLabelEn: "BB (3-Bettor)",
   oopLabelJa: "BB（3ベッター）",
   oopLabelEs: "BB (3-bettor)",
   oopLabelPt: "BB (3-bettor)",
+  oopLabelDe: "BB (3-Bettor)",
   ipLabel: "BTN (콜러)",
   ipLabelEn: "BTN (Caller)",
   ipLabelJa: "BTN（コーラー）",
   ipLabelEs: "BTN (caller)",
   ipLabelPt: "BTN (caller)",
+  ipLabelDe: "BTN (Caller)",
   oopRange: BB_3BET,
   ipRange: BTN_CALL_3BET,
   startingPot: 225,
@@ -194,16 +215,19 @@ const SBBB = {
   categoryJa: "ブラインド戦（BvB） — SB vs BB（ワイドレンジ）",
   categoryEs: "Guerra de ciegas — SB vs BB (rangos amplios)",
   categoryPt: "Blind vs Blind — SB vs BB (ranges amplos)",
+  categoryDe: "Blind vs Blind – SB vs BB (weite Ranges)",
   oopLabel: "SB (오픈레이저)",
   oopLabelEn: "SB (Opener)",
   oopLabelJa: "SB（オープンレイザー）",
   oopLabelEs: "SB (open-raiser)",
   oopLabelPt: "SB (open-raiser)",
+  oopLabelDe: "SB (Open-Raiser)",
   ipLabel: "BB (콜러)",
   ipLabelEn: "BB (Caller)",
   ipLabelJa: "BB（コーラー）",
   ipLabelEs: "BB (caller)",
   ipLabelPt: "BB (caller)",
+  ipLabelDe: "BB (Caller)",
   oopRange: SB_OPEN,
   ipRange: BB_VS_SB,
   startingPot: 60,
@@ -234,6 +258,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board seco A-high",
     lessonPt:
       "O spot clássico de vantagem de range. Repare como o BTN dá um c-bet pequeno com um range amplíssimo depois do check do BB — o ás acerta em cheio no range de quem abriu.",
+    titleDe: "Trockenes A-High-Board",
+    lessonDe:
+      "Der Lehrbuch-Spot für den Range-Vorteil. Schau, wie weit die Range ist, mit der der BTN nach dem Check der BB eine kleine C-Bet macht – das Ass trifft die Range des Openers voll.",
   },
   {
     ...SRP,
@@ -254,6 +281,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board seco K-high",
     lessonPt:
       "Compare com o board A-high. O board K-high também favorece o BTN, mas os checks aumentam um pouco. Sabe dizer por quê?",
+    titleDe: "Trockenes K-High-Board",
+    lessonDe:
+      "Vergleiche es mit dem A-High-Board. K-High begünstigt den BTN ebenfalls, aber er checkt etwas öfter. Weißt du, warum?",
   },
   {
     ...SRP,
@@ -274,6 +304,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board Broadway conectado, two-tone",
     lessonPt:
       "Aqui os dois ranges conectam forte. As apostas grandes e os check-raises viram protagonistas — não pule o painel Mãos / Draws.",
+    titleDe: "Verbundenes Broadway-Board, Two-Tone",
+    lessonDe:
+      "Beide Ranges treffen dieses Board hart. Große Bets und Check-Raises leben auf – lass das Panel Hände / Draws nicht aus.",
   },
   {
     ...SRP,
@@ -294,6 +327,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board médio conectado, two-tone",
     lessonPt:
       "A textura clássica que favorece o caller. A frequência de c-bet do BTN despenca — este spot mostra exatamente por que «sempre dar c-bet» é um erro.",
+    titleDe: "Verbundenes Middle-Board, Two-Tone",
+    lessonDe:
+      "Die klassische Textur für den Caller. Die C-Bet-Frequenz des BTN bricht ein – dieser Spot zeigt genau, warum „immer c-betten“ falsch ist.",
   },
   {
     ...SRP,
@@ -314,6 +350,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board monotone",
     lessonPt:
       "As apostas grandes somem e dão lugar a apostas pequenas e checks. Repare com que frequência até um flush fechado só dá check.",
+    titleDe: "Monotones Board (eine Farbe)",
+    lessonDe:
+      "Sieh, warum große Bets verschwinden und kleine Bets und Checks übernehmen. Achte darauf, wie oft selbst ein fertiger Flush nur checkt.",
   },
   {
     ...SRP,
@@ -334,6 +373,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board pareado",
     lessonPt:
       "Ninguém conecta com este board, então a proporção de blefes sobe. Use a tabela de detalhes para achar quais mãos apostam como blefe.",
+    titleDe: "Gepaartes Board",
+    lessonDe:
+      "Niemand trifft dieses Board, also steigt die Bluff-Frequenz. Finde in der Übersicht heraus, welche Hände als Bluff betten.",
   },
   {
     ...SRP,
@@ -357,6 +399,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board baixo e rainbow",
     lessonPt:
       "Uma guerra de overcards. O BB dá check-raise com muita frequência nesta textura — siga a faixa superior depois de uma aposta para ver as respostas.",
+    titleDe: "Niedriges Rainbow-Board",
+    lessonDe:
+      "Ein Overcard-Krieg – die BB check-raist auf dieser Textur oft. Verfolge die obere Leiste über eine Bet hinaus, um die Antworten zu sehen.",
   },
   {
     ...TBP,
@@ -377,6 +422,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board A-high, vantagem do 3-bettor",
     lessonPt:
       "O melhor flop possível para o 3-bettor (carregado de AK, AA e KK). Com SPR baixo, apostas pequenas pressionam o range inteiro.",
+    titleDe: "A-High-Board, Vorteil für den 3-Bettor",
+    lessonDe:
+      "Der bestmögliche Flop für den 3-Bettor, dessen Range voll mit AK, AA und KK ist. Bei niedrigem SPR setzen kleine Bets die ganze Range unter Druck.",
   },
   {
     ...TBP,
@@ -397,6 +445,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board dinâmico two-tone",
     lessonPt:
       "Um pote de 3-bet num board que também agrada ao caller. Observe onde o 3-bettor começa a frear.",
+    titleDe: "Dynamisches Two-Tone-Board",
+    lessonDe:
+      "Ein 3-Bet-Pot auf einem Board, das auch dem Caller liegt. Schau, ab wann der 3-Bettor zu bremsen beginnt.",
   },
   {
     ...TBP,
@@ -417,6 +468,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board baixo e seco",
     lessonPt:
       "Um board que não conecta em nada com o range do 3-bettor — e mesmo assim os overpairs e as mãos A-high mantêm a pressão. Equity vs fold equity.",
+    titleDe: "Niedriges, trockenes Board",
+    lessonDe:
+      "Ein Board, das die Range des 3-Bettors weitgehend verfehlt – und trotzdem halten Overpairs und A-High den Druck aufrecht. Equity vs. Fold Equity.",
   },
   {
     ...SBBB,
@@ -441,6 +495,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board K-high com um T",
     lessonPt:
       "No blind vs blind os ranges são amplos e os dois jogadores chegam fracos ao flop. Compare as frequências com o spot K-high de BTN vs BB.",
+    titleDe: "K-High mit einer Zehn",
+    lessonDe:
+      "Im Blind vs Blind sind die Ranges weit, beide kommen also schwach zum Flop. Vergleiche die Frequenzen mit dem Spot „Trockenes K-High-Board“ aus BTN vs BB.",
   },
   {
     ...SBBB,
@@ -462,6 +519,9 @@ export const PRESETS: Preset[] = [
     titlePt: "Board baixo conectado, two-tone",
     lessonPt:
       "Dois ranges amplos se chocam num board ultraconectado: dois pares, straights e draws por todo lado. É aqui que o painel Mãos / Draws brilha.",
+    titleDe: "Verbundenes Low-Board, Two-Tone",
+    lessonDe:
+      "Zwei weite Ranges treffen auf einem extrem verbundenen Board aufeinander: Zwei Paare, Straßen und Draws überall. Hier glänzt das Panel Hände / Draws.",
   },
   {
     ...SBBB,
@@ -482,5 +542,8 @@ export const PRESETS: Preset[] = [
     titlePt: "Board com A pareado",
     lessonPt:
       "Com dois ases no board, as trincas são raras — o paraíso do blefe. Fique de olho nas frequências de fold.",
+    titleDe: "Board mit gepaartem Ass",
+    lessonDe:
+      "Mit zwei Assen auf dem Board sind Drillinge selten – ein Bluff-Paradies. Behalte die Fold-Frequenzen genau im Blick.",
   },
 ];

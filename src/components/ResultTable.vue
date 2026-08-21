@@ -614,6 +614,30 @@ const M = {
     noResults: "Sem resultados",
     action: (name: string): string => name,
   },
+  de: {
+    summary: "Übersicht",
+    barWidth: "Balkenbreite:",
+    normalized: "Normalisiert",
+    absolute: "Absolut",
+    full: "Voll",
+    display: "Anzeige:",
+    actionPct: "Aktions-%",
+    actionEv: "Aktions-EV",
+    exportCsv: "Übersicht als CSV-Datei exportieren",
+    all: "Alle",
+    hand: "Hand",
+    strategy: "Strategie",
+    weightBar: "Gewicht (Balken)",
+    weight: "Gewicht",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (Balken)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `Kein ${chanceType === "turn" ? "Turn" : "River"}-Report vorhanden`,
+    noResults: "Keine Ergebnisse vorhanden",
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

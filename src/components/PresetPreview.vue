@@ -201,6 +201,19 @@ const M = {
     playerLabel: "Jogador:",
     oopHint: "Estratégia do jogador que age primeiro",
   },
+  de: {
+    backToList: "← Zurück",
+    pot: "Pot",
+    stack: "Stack",
+    flopOnlyNote: "Nur die Flop-Strategie. Turn und River durchklicken? →",
+    solveThisSpot: "Diesen Spot selbst berechnen",
+    readArticle: "Analyse lesen",
+    loadError: (e: string) =>
+      `Die vorberechneten Ergebnisse konnten nicht geladen werden: ${e}`,
+    loading: "Ergebnisse werden geladen…",
+    playerLabel: "Spieler:",
+    oopHint: "Strategie des Spielers, der zuerst am Zug ist",
+  },
 } as const;
 
 type PreviewData = {

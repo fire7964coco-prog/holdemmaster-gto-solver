@@ -69,6 +69,17 @@ const CARD_TEXT = {
       `Perda de EV ${bb}bb${streak > 1 ? ` · sequência de ${streak} dias` : ""}`,
     invite: "Resolva o mesmo desafio",
   },
+  de: {
+    brand: "HoldemMaster GTO-Trainer",
+    tagline: "Eine Aufgabe pro Tag · für alle dieselbe",
+    heading: "GTO-Tagesaufgabe",
+    board: "Board",
+    hand: "Meine Hand",
+    result: (verdict: string) => `Mein Ergebnis: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `EV-Verlust ${bb}bb${streak > 1 ? ` · ${streak} Tage in Folge` : ""}`,
+    invite: "Dieselbe Aufgabe lösen",
+  },
 } as const;
 
 export type DailyCardInput = {

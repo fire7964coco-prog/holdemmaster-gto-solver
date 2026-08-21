@@ -320,6 +320,31 @@ const M = {
     strategyCombos: "Estratégia (combos)",
     equity: "Equity",
   },
+  de: {
+    modeLabels: {
+      basics: "Basis",
+      graphs: "Graphen",
+      compare: "Vergleich",
+      turn: "Turn",
+      river: "River",
+    } as Record<string, string>,
+    player: "Spieler:",
+    auto: (player: string) => `Auto (${player})`,
+    barHeight: "Balkenhöhe:",
+    normalized: "Normalisiert",
+    absolute: "Absolut",
+    full: "Voll",
+    // suit = die Farbe (본체 브리프 §2 — gefärbt 금지)
+    suit: "Farbe:",
+    grouped: "Gruppiert",
+    individual: "Einzeln",
+    display: "Anzeige:",
+    strategy: "Strategie",
+    weight: "Gewicht",
+    chart: "Diagramm:",
+    strategyCombos: "Strategie (Combos)",
+    equity: "Equity",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

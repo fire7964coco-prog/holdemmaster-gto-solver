@@ -559,6 +559,21 @@ const M = {
     exportJsonLabel: "Exportar JSON",
     importFailed: "Erro: a importação falhou.",
   },
+  de: {
+    noSavedRanges: "(Keine gespeicherten Ranges)",
+    noSavedConfigs: "(Keine gespeicherten Einstellungen)",
+    emptyGroup: "(Leere Gruppe)",
+    errorReload: "Es ist ein Fehler aufgetreten. Lade die Seite neu.",
+    load: "Laden",
+    overwrite: "Überschreiben",
+    save: "Speichern",
+    rename: "Umbenennen",
+    addGroup: "Gruppe hinzufügen",
+    deleteLabel: "Löschen",
+    importJsonLabel: "JSON importieren",
+    exportJsonLabel: "JSON exportieren",
+    importFailed: "Fehler: Der Import ist fehlgeschlagen.",
+  },
 } as const;
 
 type Item = {
@@ -1009,10 +1024,10 @@ export default defineComponent({
         .map((item) => item.path[item.path.length - 1])
         .filter((name) => name !== editingName.value);
       const defaultName = item.isGroup
-        ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo")
+        ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo", "Neue Gruppe")
         : props.storeName === "ranges"
-        ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range")
-        : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração");
+        ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range", "Neue Range")
+        : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração", "Neue Einstellung");
       if (editingName.value === "") {
         let i = 2;
         let newName = defaultName;
@@ -1357,7 +1372,8 @@ export default defineComponent({
           "Parse error (invalid JSON format)",
           "解析エラー(無効なJSON形式)",
           "Error de análisis (formato JSON inválido)",
-          "Erro de análise (formato JSON inválido)"
+          "Erro de análise (formato JSON inválido)",
+          "Lesefehler (ungültiges JSON-Format)"
         );
         return;
       }
@@ -1368,7 +1384,8 @@ export default defineComponent({
           "Data type mismatch",
           "データの種類が一致しません",
           "El tipo de datos no coincide",
-          "Os tipos de dados não coincidem"
+          "Os tipos de dados não coincidem",
+          "Die Datentypen passen nicht zusammen"
         );
         return;
       }
@@ -1379,13 +1396,14 @@ export default defineComponent({
           "Version mismatch",
           "バージョンが一致しません",
           "La versión no coincide",
-          "As versões não coincidem"
+          "As versões não coincidem",
+          "Die Versionen passen nicht zusammen"
         );
         return;
       }
 
       if (!checkJson(obj.data)) {
-        importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos");
+        importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos", "Ungültige Daten");
         return;
       }
 
@@ -1396,7 +1414,8 @@ export default defineComponent({
           `Cannot create group "${itemsToAdd}" because an item with the same name already exists`,
           `同じ名前の項目がすでに存在するため、グループ「${itemsToAdd}」を作成できません`,
           `No se puede crear el grupo "${itemsToAdd}" porque ya existe un elemento con el mismo nombre`,
-          `Não é possível criar o grupo "${itemsToAdd}" porque já existe um item com o mesmo nome`
+          `Não é possível criar o grupo "${itemsToAdd}" porque já existe um item com o mesmo nome`,
+          `Die Gruppe „${itemsToAdd}“ kann nicht erstellt werden, weil es bereits einen Eintrag mit demselben Namen gibt`
         );
         return;
       }

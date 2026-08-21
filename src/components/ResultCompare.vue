@@ -145,6 +145,10 @@ const M = {
     combos: "Combos",
     equity: "Equity",
   },
+  de: {
+    combos: "Combos",
+    equity: "Equity",
+  },
 } as const;
 
 const EPS = 2e-6;

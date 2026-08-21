@@ -160,6 +160,13 @@ const M = {
     equity: "Equity",
     action: (name: string): string => name,
   },
+  de: {
+    strategyCombos: "Strategie (Combos)",
+    strategy: "Strategie",
+    equity: "Equity",
+    // 액션명은 독일에서도 영어 그대로 (본체 브리프 §1 — der Check/der Call/der Raise)
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

@@ -532,6 +532,57 @@ const M = {
       `Exploitability: ${value} (${percent})`,
     timeLine: (seconds: string) => `Tempo decorrido: ${seconds} s`,
   },
+  de: {
+    sharedSpotBanner:
+      "Geteilter Spot geladen – drücke [Spielbaum erstellen] → [Solver starten], um zu rechnen.",
+    numThreadsLabel: "Anzahl der Threads:",
+    buildTree: "Spielbaum erstellen",
+    copied: "Kopiert!",
+    shareSpot: "🔗 Spot teilen",
+    statusLabel: "Status:",
+    statusNotLoaded: "Das Modul ist noch nicht geladen",
+    statusBuilding: "Spielbaum wird erstellt…",
+    statusError: (message: string) => `Fehler: ${message}`,
+    statusBuilt: (threads: number) =>
+      `Spielbaum erstellt (${threads} Thread${threads === 1 ? "" : "s"})`,
+    precisionMode: "Genauigkeitsmodus:",
+    precisionTipIntro:
+      "Der Genauigkeitsmodus wirkt sich vor allem auf den Speicherbedarf aus. Daneben gibt es ein paar kleinere Unterschiede.",
+    precisionTipFp:
+      "32-Bit-Gleitkomma (FP): empfohlen, solange der Speicherbedarf unter dem Limit (3,9 GB) bleibt. Rund 7 signifikante Stellen und bessere Performance.",
+    precisionTipInt:
+      "16-Bit-Ganzzahl: die Alternative, wenn der 32-Bit-FP-Modus das Speicherlimit sprengt. Mit rund 4 signifikanten Stellen taugt sie nicht für eine Zielabweichung unter 0,1% und ist langsamer als 32-Bit-FP.",
+    fp32Label: "32-Bit-FP:",
+    int16Label: "16-Bit-Ganzzahl:",
+    ramNeeded: (size: string) => `braucht ${size} RAM`,
+    limitExceeded: "(Limit überschritten)",
+    ramLimit: "RAM-Limit: 3,9 GB (= 4 GB Wasm-Limit − 0,1 GB Reserve)",
+    targetLabel: "Zielabweichung (Exploitability):",
+    exploitTipIntro:
+      "Legt fest, wie weit das Ergebnis vom Nash-Gleichgewicht entfernt sein darf. Ein kleinerer Wert liefert ein genaueres Ergebnis, die Berechnung dauert dann aber länger.",
+    exploitTipDetailLabel: "Details:",
+    // ⚠ exploit는 「Ausbeutung」으로 옮기지 않는다 (본체 §7-7 기계번역 지문) — exploitativ/Exploit
+    exploitTipDetail:
+      "Im Nash-Gleichgewicht sind die Strategien beider Spieler jeweils die MES (maximal exploitative Strategie) gegen die andere. Über diese Eigenschaft definieren wir den Abstand zwischen einer gefundenen Strategie und dem Nash-Gleichgewicht so:",
+    exploitTipFormula:
+      "Abstand = (MES-EV des Gegners) - (tatsächlicher EV des Gegners)",
+    exploitTipOutro:
+      "Dieser Abstand ist nie negativ und wird nur dann null, wenn die gefundene Strategie Teil eines Nash-Gleichgewichts ist. Die Exploitability ist der durchschnittliche Abstand beider Spieler.",
+    maxIterationsLabel: "Maximale Iterationen:",
+    runSolver: "Solver starten",
+    stop: "Stopp",
+    pause: "Pause",
+    resume: "Fortsetzen",
+    solving: "Der Solver rechnet…",
+    finalizing: "Wird abgeschlossen…",
+    pausedStatus: "Pausiert.",
+    finished: "Berechnung abgeschlossen!",
+    allocatingMemory: "Speicher wird zugewiesen…",
+    iterations: (count: number) => `Iterationen: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Verstrichene Zeit: ${seconds} s`,
+  },
 } as const;
 
 const maxMemoryUsage = 3.9 * 1024 * 1024 * 1024; // 3.9 GB
@@ -547,7 +598,8 @@ const checkConfig = (
       "The board must contain at least 3 cards",
       "ボードには少なくとも3枚のカードが必要です",
       "El board debe tener al menos 3 cartas",
-      "O board precisa ter pelo menos 3 cartas"
+      "O board precisa ter pelo menos 3 cartas",
+      "Das Board braucht mindestens 3 Karten"
     );
   }
 
@@ -557,7 +609,8 @@ const checkConfig = (
       "Starting pot must be positive",
       "スターティングポットには正の数を入力してください",
       "El bote inicial debe ser positivo",
-      "O pote inicial deve ser positivo"
+      "O pote inicial deve ser positivo",
+      "Der Start-Pot muss größer als 0 sein"
     );
   }
 
@@ -567,12 +620,13 @@ const checkConfig = (
       `Starting pot must not exceed ${MAX_AMOUNT}`,
       `スターティングポットは${MAX_AMOUNT}以下にしてください`,
       `El bote inicial no debe exceder ${MAX_AMOUNT}`,
-      `O pote inicial não pode passar de ${MAX_AMOUNT}`
+      `O pote inicial não pode passar de ${MAX_AMOUNT}`,
+      `Der Start-Pot darf höchstens ${MAX_AMOUNT} sein`
     );
   }
 
   if (config.startingPot % 1 !== 0) {
-    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro");
+    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein");
   }
 
   if (config.effectiveStack <= 0) {
@@ -581,7 +635,8 @@ const checkConfig = (
       "Effective stack must be positive",
       "有効スタックには正の数を入力してください",
       "El stack efectivo debe ser positivo",
-      "O stack efetivo deve ser positivo"
+      "O stack efetivo deve ser positivo",
+      "Der effektive Stack muss größer als 0 sein"
     );
   }
 
@@ -591,7 +646,8 @@ const checkConfig = (
       `Effective stack must not exceed ${MAX_AMOUNT}`,
       `有効スタックは${MAX_AMOUNT}以下にしてください`,
       `El stack efectivo no debe exceder ${MAX_AMOUNT}`,
-      `O stack efetivo não pode passar de ${MAX_AMOUNT}`
+      `O stack efetivo não pode passar de ${MAX_AMOUNT}`,
+      `Der effektive Stack darf höchstens ${MAX_AMOUNT} sein`
     );
   }
 
@@ -601,58 +657,59 @@ const checkConfig = (
       "Effective stack must be an integer",
       "有効スタックは整数で入力してください",
       "El stack efectivo debe ser un entero",
-      "O stack efetivo deve ser um número inteiro"
+      "O stack efetivo deve ser um número inteiro",
+      "Der effektive Stack muss eine ganze Zahl sein"
     );
   }
 
   const betConfig = [
     {
       s: config.oopFlopBetSanitized,
-      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP"),
+      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet"),
     },
     {
       s: config.oopFlopRaiseSanitized,
-      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP"),
+      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise"),
     },
     {
       s: config.oopTurnBetSanitized,
-      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP"),
+      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet"),
     },
     {
       s: config.oopTurnRaiseSanitized,
-      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP"),
+      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise"),
     },
     {
       s: config.oopRiverBetSanitized,
-      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP"),
+      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet"),
     },
     {
       s: config.oopRiverRaiseSanitized,
-      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP"),
+      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise"),
     },
     {
       s: config.ipFlopBetSanitized,
-      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP"),
+      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet"),
     },
     {
       s: config.ipFlopRaiseSanitized,
-      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP"),
+      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise"),
     },
     {
       s: config.ipTurnBetSanitized,
-      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP"),
+      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet"),
     },
     {
       s: config.ipTurnRaiseSanitized,
-      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP"),
+      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise"),
     },
     {
       s: config.ipRiverBetSanitized,
-      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP"),
+      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet"),
     },
     {
       s: config.ipRiverRaiseSanitized,
-      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP"),
+      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise"),
     },
   ];
 
@@ -664,12 +721,12 @@ const checkConfig = (
 
   if (config.donkOption) {
     if (!config.oopTurnDonkSanitized.valid) {
-      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP")}: ${
+      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk")}: ${
         config.oopTurnDonkSanitized.s
       }`;
     }
     if (!config.oopRiverDonkSanitized.valid) {
-      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP")}: ${
+      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk")}: ${
         config.oopRiverDonkSanitized.s
       }`;
     }
@@ -681,7 +738,8 @@ const checkConfig = (
       "Invalid add all-in threshold",
       "オールイン追加のしきい値が無効です",
       "Umbral para agregar all-in inválido",
-      "Limiar para adicionar all-in inválido"
+      "Limiar para adicionar all-in inválido",
+      "Ungültige Schwelle für zusätzliches All-in"
     );
   }
 
@@ -691,7 +749,8 @@ const checkConfig = (
       "Invalid force all-in threshold",
       "強制オールインのしきい値が無効です",
       "Umbral de all-in forzado inválido",
-      "Limiar de all-in forçado inválido"
+      "Limiar de all-in forçado inválido",
+      "Ungültige Schwelle für erzwungenes All-in"
     );
   }
 
@@ -701,7 +760,8 @@ const checkConfig = (
       "Invalid merging threshold",
       "マージのしきい値が無効です",
       "Umbral de fusión inválido",
-      "Limiar de fusão inválido"
+      "Limiar de fusão inválido",
+      "Ungültige Schwelle zum Zusammenfassen"
     );
   }
 
@@ -714,7 +774,8 @@ const checkConfig = (
       `Invalid board (${config.expectedBoardLength} cards required)`,
       `ボードが無効です(${config.expectedBoardLength}枚必要です)`,
       `Board inválido (se requieren ${config.expectedBoardLength} cartas)`,
-      `Board inválido (são necessárias ${config.expectedBoardLength} cartas)`
+      `Board inválido (são necessárias ${config.expectedBoardLength} cartas)`,
+      `Ungültiges Board (${config.expectedBoardLength} Karten nötig)`
     );
   }
 
@@ -739,7 +800,8 @@ const checkConfig = (
       "Invalid line found (loaded broken configurations?)",
       "無効なラインが見つかりました(破損した設定を読み込みましたか?)",
       "Se encontró una línea inválida (¿cargaste una configuración dañada?)",
-      "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)"
+      "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)",
+      "Ungültige Line gefunden (beschädigte Einstellungen geladen?)"
     );
   }
 
@@ -756,7 +818,8 @@ const checkConfig = (
       "Invalid configurations (loaded broken configurations?)",
       "設定が無効です(破損した設定を読み込みましたか?)",
       "Configuración inválida (¿cargaste una configuración dañada?)",
-      "Configuração inválida (você carregou uma configuração corrompida?)"
+      "Configuração inválida (você carregou uma configuração corrompida?)",
+      "Ungültige Einstellungen (beschädigte Einstellungen geladen?)"
     );
   }
 
@@ -1003,7 +1066,8 @@ export default defineComponent({
           "To share a spot, enter the OOP and IP ranges and at least 3 board cards first.",
           "スポットを共有するには、OOPとIPのレンジ、そしてボードのカード3枚以上を先に入力してください。",
           "Para compartir un spot, ingresa primero los rangos OOP e IP y al menos 3 cartas del board.",
-          "Para compartilhar um spot, informe primeiro os ranges OOP e IP e pelo menos 3 cartas do board."
+          "Para compartilhar um spot, informe primeiro os ranges OOP e IP e pelo menos 3 cartas do board.",
+          "Zum Teilen eines Spots brauchst du zuerst die OOP- und die IP-Range und mindestens 3 Board-Karten."
         );
         return;
       }
