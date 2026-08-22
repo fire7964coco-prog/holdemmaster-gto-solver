@@ -167,6 +167,27 @@ const M = {
     // 액션명은 독일에서도 영어 그대로 (본체 브리프 §1 — der Check/der Call/der Raise)
     action: (name: string): string => name,
   },
+  zh: {
+    // 중국어 조판은 전각 괄호（）— 반각 ()를 쓰면 앞뒤가 붙어 보인다 (본체 브리프 §6)
+    strategyCombos: "策略（组合）",
+    strategy: "策略",
+    equity: "胜率",
+    // 액션명은 중국어로 옮긴다 — 독일어(영어 유지)와 «일부러» 다르다.
+    // 본체 브리프 §1B: 기본 동작어는 중국어가 표준이다(弃牌·过牌·跟注·下注·加注).
+    // All-in은 영어 사용률이 가장 높지만(§1B «all in 그대로가 최다») 이 자리는 결과 표의
+    // 좁은 칸이라 다른 액션과 폭·품사를 맞춘 「全下」로 통일했다. 영어 병기는 사용법 화면에서 한다
+    action: (name: string): string =>
+      (
+        {
+          Fold: "弃牌",
+          Check: "过牌",
+          Call: "跟注",
+          Bet: "下注",
+          Raise: "加注",
+          "All-in": "全下",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

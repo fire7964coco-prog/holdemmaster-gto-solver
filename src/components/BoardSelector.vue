@@ -107,6 +107,16 @@ const M = {
     warnBody: (n: number) =>
       `Der bearbeitete Spielbaum setzt ein Board mit ${n} Karte${n === 1 ? "" : "n"} voraus.`,
   },
+  zh: {
+    placeholder: "例：AsKd7c",
+    // clearBoard()는 config.board를 «통째로» 비운다 — 「重置」(초기값으로)가 아니라 「清空」이 맞다
+    // (독일어 검수에서 얻은 교훈: 라벨을 쓰기 전에 그 함수가 진짜 뭘 하는지 코드를 볼 것)
+    clear: "清空",
+    randomFlop: "随机翻牌",
+    warnLabel: "注意：",
+    // 중국어는 명사에 복수 변화가 없다 — ko·ja와 같이 ${n}만 갈아끼운다
+    warnBody: (n: number) => `编辑过的决策树以 ${n} 张公共牌为前提。`,
+  },
 } as const;
 
 export default defineComponent({

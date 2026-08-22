@@ -80,6 +80,19 @@ const CARD_TEXT = {
       `EV-Verlust ${bb}bb${streak > 1 ? ` · ${streak} Tage in Folge` : ""}`,
     invite: "Dieselbe Aufgabe lösen",
   },
+  zh: {
+    brand: "HoldemMaster GTO 训练器",
+    tagline: "每天一题 · 所有人同一题",
+    heading: "今日 GTO 题目",
+    board: "公共牌",
+    hand: "我的手牌",
+    result: (verdict: string) => `我的结果：${verdict}`,
+    // ⚠ bb는 코드가 소문자로 찍는다(formatAmount). 브리프 §3은 「100BB」 대문자를 권하지만
+    //   화면 안 일관성을 택해 소문자 bb로 통일했다 — 독일어에서 내린 판단과 같다(리서치 §3)
+    evLine: (bb: string, streak: number) =>
+      `EV 损失 ${bb}bb${streak > 1 ? ` · 连续 ${streak} 天` : ""}`,
+    invite: "我也来做这道题",
+  },
 } as const;
 
 export type DailyCardInput = {

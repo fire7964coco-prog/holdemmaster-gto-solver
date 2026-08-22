@@ -237,6 +237,33 @@ const M = {
       "Es wird kein Programm installiert – es ist nur eine Browser-Verknüpfung: keine Berechtigungen, und du kannst sie jederzeit entfernen, indem du das Icon lange gedrückt hältst, wie bei jeder App.",
     close: "Schließen",
   },
+  zh: {
+    iconAlt: "HoldemMaster GTO 求解器图标",
+    title: "要添加到主屏幕吗？",
+    // samsung1 + «굵은» samsungB1 + samsung2 + «굵은» samsungB2 + samsung3 로 한 문장이 된다
+    samsung1: "三星浏览器或系统在安装时可能会",
+    samsungB1: "以安全为由拦截安装",
+    samsung2: "——这是浏览器自己做的安全拦截，跟这个应用无关。",
+    samsungB2: "改用 Chrome 打开",
+    samsung3: "，就不会有这个提示。",
+    default1: "点一下图标就能打开，而且",
+    defaultB1: "13 个教学案例和训练器都会存到你的设备里",
+    default2: "，没网也能学。",
+    ios1: "点下面的",
+    iosB1: "分享按钮",
+    ios2: "，然后选",
+    // iOS Safari 간체 중국어의 «실제» 메뉴 이름이다 (버튼명 대조 — 지시서 §6-⑤)
+    iosB2: "“添加到主屏幕”",
+    ios3: "。点一下图标就能打开，教学案例和训练器也都会离线存好。",
+    openInChrome: "用 Chrome 打开",
+    install: "添加到主屏幕",
+    gotIt: "知道了",
+    later: "以后再说",
+    samsungHint: "如果还是想在这里装，按提示框里的指引选择允许就行。",
+    safety:
+      "这不会在你的系统里装任何程序——它只是一个浏览器快捷方式：不索取任何权限；不想要了，长按图标删掉即可，跟普通应用一样。",
+    close: "关闭",
+  },
 } as const;
 
 export default defineComponent({

@@ -638,6 +638,43 @@ const M = {
     noResults: "Keine Ergebnisse vorhanden",
     action: (name: string): string => name,
   },
+  zh: {
+    summary: "汇总",
+    barWidth: "柱宽：",
+    normalized: "归一化",
+    absolute: "绝对值",
+    // ResultMiddle의 full과 같은 뜻 — 막대가 칸을 가득 채운다
+    full: "满格",
+    display: "显示：",
+    actionPct: "动作 %",
+    actionEv: "动作 EV",
+    // ⚠ CSV 자체는 언어와 무관하게 영어식 숫자로 나간다 — 중국어도 소수점이 «.»라
+    //   pt·de와 달리 여기서 충돌이 없다 (본체 브리프 §3)
+    exportCsv: "把汇总导出为 CSV 文件",
+    all: "全部",
+    hand: "手牌",
+    strategy: "策略",
+    weightBar: "权重（柱）",
+    weight: "权重",
+    turn: "转牌",
+    river: "河牌",
+    comboBar: "组合（柱）",
+    combos: "组合",
+    noReport: (chanceType: string) =>
+      `没有${chanceType === "turn" ? "转牌" : "河牌"}报告`,
+    noResults: "没有结果",
+    action: (name: string): string =>
+      (
+        {
+          Fold: "弃牌",
+          Check: "过牌",
+          Call: "跟注",
+          Bet: "下注",
+          Raise: "加注",
+          "All-in": "全下",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

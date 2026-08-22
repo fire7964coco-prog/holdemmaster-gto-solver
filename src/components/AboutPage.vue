@@ -20,8 +20,10 @@
       </h1>
       <p class="mt-4 text-base md:text-lg text-neutral-400 leading-relaxed">
         <!-- 아래에 «홈 화면에 설치» 버튼이 붙으므로 «설치 파일»이라고 못박는다 -->
-        {{ L.heroSub1 }}<br class="hidden md:block" />
-        {{ L.heroSub2 }}
+        <!-- ⚠ 사이에 공백을 두지 않는다 — 모바일(390px)에서는 <br>이 숨겨져서
+             그 공백만 남는다. 공백이 필요한 언어는 heroSub2 «앞»에 직접 넣는다
+             (중국어는 전각 쉼표 뒤를 띄우지 않으므로 넣지 않는다) -->
+        {{ L.heroSub1 }}<br class="hidden md:block" />{{ L.heroSub2 }}
       </p>
 
       <div class="flex flex-wrap items-center gap-3 mt-7">
@@ -159,7 +161,7 @@ const M = {
     heroTitle1: "GTO 전략,",
     heroTitle2: "브라우저에서 바로.",
     heroSub1: "설치 파일도, 결제도 없습니다. 레인지와 보드를 넣으면",
-    heroSub2: "상황별 최적 전략을 내 컴퓨터에서 직접 계산합니다.",
+    heroSub2: " 상황별 최적 전략을 내 컴퓨터에서 직접 계산합니다.",
     ctaPresets: "예제 결과 바로 보기",
     ctaTrainer: "GTO 트레이너",
     ctaDaily: "오늘의 문제",
@@ -199,7 +201,7 @@ const M = {
     heroTitle1: "GTO strategy,",
     heroTitle2: "right in your browser.",
     heroSub1: "Nothing to install, nothing to pay. Enter your ranges and a board,",
-    heroSub2: "and the optimal strategy is computed right on your own device.",
+    heroSub2: " and the optimal strategy is computed right on your own device.",
     ctaPresets: "View Study Spots",
     ctaTrainer: "GTO Trainer",
     ctaDaily: "Daily Puzzle",
@@ -239,7 +241,7 @@ const M = {
     heroTitle1: "GTO戦略を、",
     heroTitle2: "ブラウザですぐに。",
     heroSub1: "インストールも支払いも不要です。レンジとボードを入力すると、",
-    heroSub2: "状況ごとの最適戦略をお使いの端末上で直接計算します。",
+    heroSub2: " 状況ごとの最適戦略をお使いの端末上で直接計算します。",
     ctaPresets: "例題の結果をすぐ見る",
     ctaTrainer: "GTOトレーナー",
     ctaDaily: "今日のGTO問題",
@@ -278,7 +280,7 @@ const M = {
     heroTitle1: "Estrategia GTO,",
     heroTitle2: "directo en tu navegador.",
     heroSub1: "Nada que instalar, nada que pagar. Ingresa tus rangos y un board,",
-    heroSub2: "y la estrategia óptima se calcula en tu propio dispositivo.",
+    heroSub2: " y la estrategia óptima se calcula en tu propio dispositivo.",
     ctaPresets: "Ver ejemplos resueltos",
     ctaTrainer: "Entrenador GTO",
     ctaDaily: "Reto del día",
@@ -318,7 +320,7 @@ const M = {
     heroTitle1: "Estratégia GTO,",
     heroTitle2: "direto no seu navegador.",
     heroSub1: "Nada para instalar, nada para pagar. Informe seus ranges e um board,",
-    heroSub2: "e a estratégia ótima é calculada no seu próprio dispositivo.",
+    heroSub2: " e a estratégia ótima é calculada no seu próprio dispositivo.",
     ctaPresets: "Ver os Spots de estudo",
     ctaTrainer: "Treinador GTO",
     ctaDaily: "Desafio do dia",
@@ -360,7 +362,7 @@ const M = {
     heroSub1:
       "Nichts zu installieren, nichts zu bezahlen. Gib deine Ranges und ein Board ein,",
     heroSub2:
-      "und die optimale Strategie wird direkt auf deinem Gerät berechnet.",
+      " und die optimale Strategie wird direkt auf deinem Gerät berechnet.",
     ctaPresets: "Lernspots ansehen",
     ctaTrainer: "GTO-Trainer",
     ctaDaily: "Tagesaufgabe",
@@ -397,6 +399,53 @@ const M = {
     creditBrand: "HoldemMaster",
     creditMid2: ". Der vollständige geänderte Quellcode ist auf",
     creditAfter: " unter derselben Lizenz veröffentlicht.",
+  },
+  // 중국어 인용부호는 대륙 표준인 “ ”를 쓴다 — 「 」는 대만·홍콩·일본 관습이라
+  // 간체판에 섞이면 «번체 냄새»가 난다 (본체 브리프 §6 간체자 철저 원칙의 연장)
+  zh: {
+    community: "HoldemMaster 社区",
+    heroTitle1: "GTO 策略，",
+    heroTitle2: "打开浏览器就能算。",
+    heroSub1: "不用装软件，也不用花钱。填好范围和公共牌，",
+    heroSub2: "最优策略就会在你自己的设备上算出来。",
+    ctaPresets: "去看教学案例",
+    ctaTrainer: "GTO 训练器",
+    ctaDaily: "今日题目",
+    dailyDone: "已完成",
+    ctaGuide: "查看使用方法",
+    ctaInstall: "添加到主屏幕",
+    installNote:
+      "装上之后，教学案例和训练器都会存到你的设备里，断网也能接着练。它只是一个浏览器快捷方式，不是软件，从不索取任何权限。",
+    installSafe: "安全吗？",
+    features: [
+      { title: "免费", desc: "全部功能，不限次数" },
+      { title: "离线学习", desc: "添加到主屏幕，没网也能练" },
+      { title: "算得快", desc: "多线程——接近桌面版求解器的速度" },
+      { title: "GTO 训练器", desc: "做题，按 EV 损失打分" },
+    ],
+    stepsTitle: "第一次来？",
+    steps: [
+      "在教学案例里随便打开一个牌局，点[直接看结果]——不用等，结果马上出来",
+      "去[使用方法]看看结果画面该怎么读",
+      "试试 GTO 训练器——它会告诉你每个选择亏了多少 bb",
+      "上手之后，用自定义牌局（①~⑤）算你自己的手牌",
+    ],
+    // ⚠ 이 세 줄이 가리키는 본체 /zh/solver는 아직 없다(2026-08-21 실측 404).
+    //   AboutPage 템플릿의 v-if="landingUrl"이 통째로 숨기므로 화면에는 안 나온다.
+    //   본체에 /zh/solver가 생기면 outbound.ts의 LOCALE_PATHS.zh에 한 줄만 더하면 살아난다
+    landingBefore: "想先读文章，弄清 GTO 求解器是什么、结果怎么看？可以看",
+    landingLink: "HoldemMaster 求解器使用指南",
+    landingAfter: "。",
+    notes:
+      "在 iOS 上、以及在 Safari 里，浏览器的限制会让计算只能走单线程，所以会慢一些——macOS 上建议用 Chrome。可用内存上限是 4GB（WebAssembly 的限制），计算量大的牌局自己算的话，在电脑上更顺畅。",
+    creditBefore: "本应用基于",
+    // 앞뒤 링크와 붙는 조각이다. 「WASM Postflop（…」처럼 라틴문자 뒤 전각 괄호는 띄우지 않는다
+    creditMid1: "（Wataru Inariba 制作，AGPL-3.0），由",
+    creditBrand: "HoldemMaster",
+    // 앞의 공백은 «필요»하다 — 템플릿에서 </a> 바로 뒤에 붙어 「HoldemMaster本地化」가 되어 버린다.
+    // 중국어 조판은 한자와 라틴문자 사이를 띄운다
+    creditMid2: " 本地化并改进。修改后的完整源代码发布在",
+    creditAfter: "，采用相同的开源许可协议。",
   },
 } as const;
 

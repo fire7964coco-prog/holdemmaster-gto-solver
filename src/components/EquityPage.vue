@@ -605,6 +605,74 @@ const M = {
       unknown: "Bei der Berechnung ist ein Fehler aufgetreten.",
     } as Record<string, string>,
   },
+  zh: {
+    intro:
+      "这里算的是你的手牌对上对手某手牌（或者整个范围）时的胜率。公共牌留空就是翻前，" +
+      "选 3/4/5 张就分别算翻牌圈、转牌圈、河牌圈的胜率。",
+    heroTitle: "① 我的手牌",
+    heroHint: "在下面的选牌区里选 2 张",
+    fill: "填到这里",
+    villainTitle: "② 对手",
+    modeHand: "vs 手牌",
+    modeRange: "vs 范围",
+    rangePlaceholder: "例：22+,AQs+,K8s:0.75",
+    // ⚠ [复制范围文本]는 PreflopChartPage의 «실제» 버튼 이름과 글자까지 같아야 한다
+    rangeNote:
+      "在翻前范围表里点[复制范围文本]，再直接粘到这里就行。" +
+      "像“K8s:0.75”这样带权重的写法也会原样生效。",
+    anyTwo: "任意两张（随机手牌）",
+    rangeError: (token: string) =>
+      `“${token}”不是有效的写法——请写成 22+、AQs+ 或 K8s:0.75 这样的形式`,
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} 个组合 · 占全部的 ${percent}%`,
+    boardTitle: "③ 公共牌",
+    boardHintEmpty: "留空 = 翻前（3/4/5 张也可以）",
+    boardHintBad: "公共牌只能是 0、3、4 或 5 张。",
+    boardHintOk: (n: number) => ["", "", "", "翻牌", "转牌", "河牌"][n],
+    compute: "计算",
+    computing: "计算中…",
+    stop: "停止",
+    // ⚠ clearAll()은 손패·상대 핸드·공공패·결과만 지우고 «레인지 입력칸은 그대로» 둔다.
+    //   그래서 「全部清空」이라고 쓰면 거짓말이 된다 (독일어 UX 검수에서 잡은 그 결함)
+    clear: "清空手牌和公共牌",
+    resultTitle: "结果",
+    resultEmpty: "先选好自己的两张牌和对手（两张牌或一个范围），再点[计算]。",
+    vsSide: (value: string) => `对手 ${value}%`,
+    win: "胜",
+    tie: "平",
+    lose: "负",
+    combos: "对手组合数",
+    badgeExact: "精确",
+    // 「个百分点」= percentage point. 「%」와 뒤섞이지 않게 반드시 «点»을 붙인다
+    badgeApprox: "近似（±0.2 个百分点）",
+    // ⚠ 큰 수를 「万/亿」으로 바꾸지 «않는다» — 브리프 §3의 万/亿은 어림수(3万筹码)에 쓰는 말이고,
+    //   여기 1,712,304는 «정확히 센 개수»다. 정확한 개수는 중국어도 천단위 콤마로 적는다.
+    //   로케일을 명시해 브라우저 언어에 따라 표기가 흔들리지 않게 했다 (de판과 같은 처리)
+    exactNote: (n: number) =>
+      `${n.toLocaleString("zh-CN")} 种可能的情况全部数过了`,
+    approxNote: (n: number) =>
+      `情况太多，数不完——随机抽取了 ${n.toLocaleString("zh-CN")} 次发牌作为样本`,
+    howTitle: "怎么看",
+    how1:
+      "胜率（equity）= 获胜% + 平局的一半。也就是如果现在就全下，你能从底池里拿走的份额。",
+    how2:
+      "对手是一个范围时，被你的牌或公共牌挡住的组合会自动去掉——这叫牌张移除（card removal）。",
+    how3: "“精确”这个标记表示所有情况都数过了；“近似”则是随机抽样的结果。",
+    limitTitle: "这个计算器管到哪儿",
+    limitBody:
+      "它只算两人全下的胜率。范围对范围、3 人以上，以及夹着下注和弃牌的局面，" +
+      "由求解器（自定义牌局）来负责。",
+    errors: {
+      "need-hero": "请先选好自己的两张牌。",
+      "bad-board": "公共牌只能是 0、3、4 或 5 张。",
+      "bad-card": "牌的数值不对。",
+      duplicate: "同一张牌不能用两次。",
+      "empty-range": "对手范围是空的。",
+      "no-combos":
+        "去掉被挡住的组合后，对手一个组合都不剩了——换几张牌，或者把对手范围放宽一些。",
+      unknown: "计算过程中出错了。",
+    } as Record<string, string>,
+  },
 } as const;
 
 const CAPACITY: Record<Target, number> = { hero: 2, villain: 2, board: 5 };

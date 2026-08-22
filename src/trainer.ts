@@ -95,11 +95,24 @@ const actionLabelsEs: Record<string, string> = {
   Allin: "All-In",
   "All-in": "All-In",
 };
+// 중국어는 기본 동작어가 중국어다 (본체 브리프 §1B: 弃牌·过牌·跟注·下注·加注).
+// ⚠ es·pt·de와 «일부러» 다르다 — 결과 화면 3종의 action 표와 글자까지 같아야 한다
+const actionLabelsZh: Record<string, string> = {
+  Fold: "弃牌",
+  Check: "过牌",
+  Call: "跟注",
+  Bet: "下注",
+  Raise: "加注",
+  Allin: "全下",
+  "All-in": "全下",
+};
 const actionName = (name: string) =>
   i18n.locale === "ko"
     ? actionLabelsKo[name] ?? name
     : i18n.locale === "ja"
     ? actionLabelsJa[name] ?? name
+    : i18n.locale === "zh"
+    ? actionLabelsZh[name] ?? name
     : i18n.locale === "es" || i18n.locale === "pt"
     ? actionLabelsEs[name] ?? name
     : actionLabelsEn[name] ?? name;
@@ -114,7 +127,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh",
     Record<TrainerCategory, string>
   > = {
     ko: {
@@ -153,6 +166,14 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "3-Bet-Pot",
       blind: "Blind vs Blind",
     },
+    // 3bet은 영어 그대로가 표준이다 (본체 브리프 §1C 강제 영어 — 「三次加注」는 아무도 안 읽는다).
+    // 반면 pot·blind는 중국어가 표준이라 底池·盲位로 옮긴다 (§1A·§1C)
+    zh: {
+      all: "全部",
+      srp: "单加注底池",
+      "3bp": "3bet 底池",
+      blind: "盲位对战",
+    },
   };
   return labels[i18n.locale][category];
 };
@@ -180,6 +201,9 @@ export const trainerActionLabel = (
       ? `${label} ${amount} (${pct}% do pote)`
       : i18n.locale === "de"
       ? `${label} ${amount} (${pct}% vom Pot)`
+      : i18n.locale === "zh"
+      ? // 전각 괄호 + 「底池的 N%」 — ResultNav.betPot과 글자까지 같은 형식이다
+        `${label} ${amount}（底池的 ${pct}%）`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return `${label} ${amount}`;

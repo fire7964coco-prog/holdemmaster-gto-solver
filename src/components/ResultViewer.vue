@@ -212,6 +212,12 @@ const M = {
     finalizing: "Wird abgeschlossen…",
     paused: "Der Solver ist pausiert.",
   },
+  zh: {
+    notRun: "求解器还没有运行。",
+    running: "求解器计算中…",
+    finalizing: "即将完成…",
+    paused: "求解器已暂停。",
+  },
 } as const;
 
 export default defineComponent({

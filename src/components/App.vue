@@ -205,6 +205,22 @@ export default defineComponent({
         "run-solver": "Solver starten",
         treeEdit: "Spielbaum – Vorschau & Bearbeiten",
       },
+      // 중국어 破折号는 «두 칸»(——)이 국가표준(GB/T 15834)이다. 다른 언어의 «—»(1칸)·
+      // 독일어의 «–»와 일부러 다르다. 破折号 앞뒤는 띄우지 않는다
+      zh: {
+        about: "简介",
+        guide: "使用方法——按顺序照着做",
+        presets: "教学案例——一键加载的示例",
+        trainer: "GTO 训练器——看清每个选择的 EV",
+        preflop: "翻前范围表——开池与防守范围",
+        equity: "胜率计算器——手牌与范围的胜率",
+        "oop-range": "OOP 范围",
+        "ip-range": "IP 范围",
+        board: "公共牌",
+        "tree-config": "决策树设置",
+        "run-solver": "运行求解器",
+        treeEdit: "决策树——预览与编辑",
+      },
     } as const;
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];

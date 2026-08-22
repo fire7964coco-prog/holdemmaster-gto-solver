@@ -442,6 +442,37 @@ const M = {
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% vom Pot)`,
   },
+  zh: {
+    pot: "底池",
+    // stack = 「筹码量」(브리프 §1C 首选). 구어 「码量」이 더 地道하지만 이 자리는
+    // 팟과 나란히 놓이는 지표 라벨이라 오해가 없는 쪽을 골랐다
+    stack: "筹码量",
+    equity: "胜率",
+    win: (player: string) => `${player} 获胜`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "翻牌",
+          turn: "转牌",
+          river: "河牌",
+          end: "结束",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    // ResultChance와 같은 표 — 액션명은 중국어 (본체 브리프 §1B)
+    action: (name: string): string =>
+      (
+        {
+          Fold: "弃牌",
+          Check: "过牌",
+          Call: "跟注",
+          Bet: "下注",
+          Raise: "加注",
+          "All-in": "全下",
+        } as Record<string, string>
+      )[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted}（底池的 ${percent}%）`,
+  },
 } as const;
 
 export default defineComponent({

@@ -47,6 +47,9 @@ const M = {
   de: {
     combos: "Combos",
   },
+  zh: {
+    combos: "组合",
+  },
 } as const;
 
 const actionLabel = (
@@ -82,6 +85,46 @@ const actionLabel = (
       Raise: "レイズ",
       Allin: "オールイン",
       "All-in": "オールイン",
+    },
+    // es·pt·de는 액션명을 영어 그대로 쓴다 — 원래 생략해 en으로 폴백하던 자리라
+    // 값은 그대로지만, zh를 7번째에 넣으려면 앞자리를 채워야 해서 명시했다
+    {
+      Fold: "Fold",
+      Check: "Check",
+      Call: "Call",
+      Bet: "Bet",
+      Raise: "Raise",
+      Allin: "All-in",
+      "All-in": "All-in",
+    },
+    {
+      Fold: "Fold",
+      Check: "Check",
+      Call: "Call",
+      Bet: "Bet",
+      Raise: "Raise",
+      Allin: "All-in",
+      "All-in": "All-in",
+    },
+    {
+      Fold: "Fold",
+      Check: "Check",
+      Call: "Call",
+      Bet: "Bet",
+      Raise: "Raise",
+      Allin: "All-in",
+      "All-in": "All-in",
+    },
+    // 중국어는 기본 동작어가 중국어다 (본체 브리프 §1B).
+    // ⚠ ResultChance·ResultNav·ResultTable·trainer.ts의 표와 «글자까지» 같아야 한다
+    {
+      Fold: "弃牌",
+      Check: "过牌",
+      Call: "跟注",
+      Bet: "下注",
+      Raise: "加注",
+      Allin: "全下",
+      "All-in": "全下",
     }
   );
   const label = map[name] ?? name;
@@ -89,13 +132,21 @@ const actionLabel = (
   const value = Number(amount);
   const shown = `${formatAmount(value, unitScale)}${unitScale === 10 ? "bb" : ""}`;
   if (name === "Bet" && pot > 0) {
-    return localizeNumber(`${label} ${shown} (${Math.round((value * 100) / pot)}% ${pick(
+    const pct = Math.round((value * 100) / pot);
+    // ⚠ 중국어는 «전각 괄호 + 底池的 N%» 어순이다 — ResultNav.betPot·trainer.ts·
+    //   TreeEditor.potRate 셋과 «글자까지» 같아야 한다. 여기만 반각·역순이었다
+    //   (2026-08-22 원어민 UX 검수에서 코드 대조로 발견)
+    if (i18n.locale === "zh") {
+      return `${label} ${shown}（底池的 ${pct}%）`;
+    }
+    return localizeNumber(`${label} ${shown} (${pct}% ${pick(
       "팟",
       "pot",
       "ポット",
       "del bote",
       "do pote",
-      "vom Pot"
+      "vom Pot",
+      "底池"
     )})`);
   }
   return localizeNumber(`${label} ${shown}`);

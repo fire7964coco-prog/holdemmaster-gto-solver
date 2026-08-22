@@ -114,6 +114,22 @@ const M = {
       "Füge sie in einen Community-Beitrag ein, dann nutzen wir sie für die Behebung. Sie enthalten keine persönlichen Daten.",
     promptCopy: "Kopiere den Text unten",
   },
+  zh: {
+    title: "已记录一条错误",
+    // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백·문장부호 위치 주의.
+    // 중국어는 단어 사이를 띄우지 않으므로 ko와 같이 끝 공백을 두지 않는다
+    body1: "如果画面看起来不对，欢迎告诉我们。这些内容",
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
+    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다 (검수에서 4가지로 갈려 있었다)
+    bodyB1: "只保存在这台设备上",
+    body2: "，要不要发送完全由你决定。",
+    copied: "已复制",
+    copyButton: "复制错误内容",
+    close: "关闭",
+    copiedHint:
+      "把它贴到社区的提问帖里，我们会用它来修复问题。里面不含任何个人信息。",
+    promptCopy: "请复制下面的内容",
+  },
 } as const;
 
 export default defineComponent({

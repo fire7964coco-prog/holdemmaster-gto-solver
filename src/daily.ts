@@ -192,6 +192,21 @@ export const dailyShareText = (verdict: string) => {
       .filter(Boolean)
       .join("\n");
   }
+  if (i18n.locale === "zh") {
+    // ⚠ 날짜도 «언어»다 — 공용 「26.08.21」(yy.mm.dd)은 중국 독자에게 모호하다.
+    //   중국 국가표준(GB/T 7408)이자 실사용 관습인 YYYY-MM-DD를 그대로 쓴다.
+    //   ⚠ 소수점은 영어와 같은 «.»이므로 localizeNumber로 감싸지 «않는다» (pt·de와 다름)
+    return [
+      `[今日 GTO 题目 · ${todayKey()}]`,
+      `我的结果：${verdict}（EV 损失 ${dailyState.lossBb.toFixed(3)}bb）`,
+      dailyState.streak > 1 ? `已连续挑战 ${dailyState.streak} 天` : "",
+      "",
+      "来做同一道题 → https://solver.holdemmaster.com/?view=trainer&lang=zh",
+      "（HoldemMaster GTO 求解器 · 每天一题）",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
   if (i18n.locale === "en") {
     return [
       `[Daily GTO Puzzle · ${date}]`,

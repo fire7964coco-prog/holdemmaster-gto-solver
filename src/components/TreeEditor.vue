@@ -362,6 +362,25 @@ const M = {
     addedLines: "Hinzugefügte Lines:",
     removedLines: "Entfernte Lines:",
   },
+  zh: {
+    treeError: "错误：无法生成决策树（是不是加载了损坏的决策树？）",
+    pot: "底池",
+    stack: "筹码量",
+    noActions: "（无动作）",
+    wins: "获胜",
+    // node = 「节点」. 중국 德扑 매체가 「节点EV」로 쓰는 그 말이다 (dpskill — 리서치 §2)
+    invalidTerminals: "无效的终端节点：",
+    addBetAction: "添加下注动作",
+    removeNode: "删除选中的节点",
+    betAmount: "下注额：",
+    potRate: (pct: string) => `（底池的 ${pct}%）`,
+    saveEdits: "保存修改",
+    cancelEdits: "取消修改",
+    // line = 「线路」(打法线路). 독일어는 영어 Line을 그대로 뒀지만, 중국어는 이 말이
+    // 커뮤니티에 정착해 있어 옮기는 쪽이 자연스럽다 (본체 브리프 §0-1의 «구조어는 중국어»)
+    addedLines: "新增的线路：",
+    removedLines: "移除的线路：",
+  },
 } as const;
 
 export default defineComponent({

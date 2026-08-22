@@ -104,6 +104,13 @@ const M = {
     draws: "Draws",
     noDraws: "Keine Draw-Informationen",
   },
+  zh: {
+    hands: "手牌",
+    noHands: "没有可显示的手牌",
+    // draw = 「听牌」(同花听牌·顺子听牌). 중국 德扑 매체 실사용어 — 리서치 §2 출처
+    draws: "听牌",
+    noDraws: "没有听牌信息",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)

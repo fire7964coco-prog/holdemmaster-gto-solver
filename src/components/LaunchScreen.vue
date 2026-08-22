@@ -87,6 +87,13 @@ const M = {
     titleLine2: "GTO Solver.",
     footer: "Kostenloser GTO-Solver · Offline nutzbar",
   },
+  zh: {
+    greeting: "欢迎使用",
+    titleLine1: "HoldemMaster",
+    // 중국어 제목 줄에는 마침표를 찍지 않는다 (ko·en·de의 「.」와 «일부러» 다르다)
+    titleLine2: "GTO 求解器",
+    footer: "免费 GTO 求解器 · 可离线使用",
+  },
 } as const;
 
 export default defineComponent({

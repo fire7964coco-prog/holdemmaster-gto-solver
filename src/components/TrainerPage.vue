@@ -61,7 +61,7 @@
       <div id="trainer-stats" class="order-4 md:order-2 flex flex-wrap gap-1.5 mt-3">
         <span class="stat-chip">{{ L.solved }} <b>{{ attempts.length }}</b></span>
         <span v-if="dailyState.streak" class="stat-chip">
-          {{ L.daily }} <b>{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
+          {{ L.dailyStreakLabel }} <b>{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
           <span v-if="dailyState.bestStreak > dailyState.streak" class="text-neutral-600">
             {{ L.bestPrefix }} {{ dailyState.bestStreak }}
           </span>
@@ -182,7 +182,7 @@
           {{ L.goodRateLabel }} <b class="text-neutral-200">{{ excellentRate.toFixed(0) }}</b>%
         </span>
         <span v-if="dailyState.streak">
-          {{ L.daily }} <b class="text-brand">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
+          {{ L.dailyStreakLabel }} <b class="text-brand">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
         </span>
         <button class="ml-auto link-like" @click="scrollToStats">{{ L.details }}</button>
       </div>
@@ -614,6 +614,7 @@ const M = {
     loading: "트레이너 준비 중...",
     review: (n: number) => `복습 ${n}개`,
     daily: "오늘의 문제",
+    dailyStreakLabel: "오늘의 문제",
     done: "완료",
     solved: "풀이",
     dayStreakSuffix: "일 연속",
@@ -714,6 +715,7 @@ const M = {
     loading: "Loading trainer…",
     review: (n: number) => `Review (${n})`,
     daily: "Daily Puzzle",
+    dailyStreakLabel: "Daily Puzzle",
     done: "Done",
     solved: "Solved",
     dayStreakSuffix: "-day streak",
@@ -773,7 +775,7 @@ const M = {
     copyResult: "Copy result text",
     openCommunity: "Open community →",
     pasteHintBefore: "In the community, hit ",
-    pasteHintBold: "[✏️ New post]",
+    pasteHintBold: "[✏️ Write Post]",
     pasteHintAfter: " and paste.",
     keepPracticing: "Keep practicing",
     nextHand: "Next hand",
@@ -816,6 +818,7 @@ const M = {
     loading: "トレーナーを準備中…",
     review: (n: number) => `復習 ${n}問`,
     daily: "今日のGTO問題",
+    dailyStreakLabel: "今日のGTO問題",
     done: "完了",
     solved: "解答数",
     dayStreakSuffix: "日連続",
@@ -918,6 +921,7 @@ const M = {
     loading: "Cargando el entrenador…",
     review: (n: number) => `Repasar ${n}`,
     daily: "Reto del día",
+    dailyStreakLabel: "Reto diario",
     done: "Hecho",
     solved: "Resueltas",
     dayStreakSuffix: " días seguidos",
@@ -977,7 +981,7 @@ const M = {
     copyResult: "Copiar texto del resultado",
     openCommunity: "Abrir comunidad →",
     pasteHintBefore: "En la comunidad, toca ",
-    pasteHintBold: "[✏️ Nueva publicación]",
+    pasteHintBold: "[✏️ Escribir]",
     pasteHintAfter: " y pega.",
     keepPracticing: "Seguir practicando",
     nextHand: "Siguiente mano",
@@ -1020,6 +1024,7 @@ const M = {
     loading: "Carregando o treinador…",
     review: (n: number) => `Revisar (${n})`,
     daily: "Desafio do dia",
+    dailyStreakLabel: "Desafio do dia",
     done: "Feito",
     solved: "Resolvidas",
     dayStreakSuffix: " em sequência",
@@ -1079,7 +1084,7 @@ const M = {
     copyResult: "Copiar texto do resultado",
     openCommunity: "Abrir comunidade →",
     pasteHintBefore: "Na comunidade, toque em ",
-    pasteHintBold: "[✏️ Nova publicação]",
+    pasteHintBold: "[✏️ Escrever]",
     pasteHintAfter: " e cole.",
     keepPracticing: "Continuar praticando",
     nextHand: "Próxima mão",
@@ -1126,6 +1131,7 @@ const M = {
     loading: "Trainer wird geladen…",
     review: (n: number) => `Wiederholen (${n})`,
     daily: "Tagesaufgabe",
+    dailyStreakLabel: "Tagesaufgabe",
     done: "Erledigt",
     solved: "Gelöst",
     // «3 in Folge»는 명사가 없어 비문 → 수와 무관하게 맞는 «-mal in Folge»로 (1-mal / 3-mal)
@@ -1188,7 +1194,7 @@ const M = {
     copyResult: "Ergebnistext kopieren",
     openCommunity: "Community öffnen →",
     pasteHintBefore: "Tippe in der Community auf ",
-    pasteHintBold: "[✏️ Neuer Beitrag]",
+    pasteHintBold: "[✏️ Schreiben]",
     pasteHintAfter: " und füge es ein.",
     keepPracticing: "Weiterüben",
     nextHand: "Nächste Hand",
@@ -1226,6 +1232,136 @@ const M = {
     syncSaved: (uploaded: number) => `${uploaded} gespeichert`,
     syncFailed: (msg: string) => `Fehler bei der Synchronisierung: ${msg}`,
     signInFailed: (msg: string) => `Fehler beim Anmelden: ${msg}`,
+  },
+  zh: {
+    loadFailed: "训练器数据加载失败：",
+    loading: "训练器准备中…",
+    review: (n: number) => `复习 ${n} 题`,
+    daily: "今日题目",
+    // ⚠ 이 칩만 daily와 다른 말을 쓴다 — 템플릿이 「{라벨} <b>3</b>{접미}」 꼴이라
+    //   숫자가 가운데 온다. 중국어는 「连续3天」처럼 连续가 숫자 «앞»이라 접미로는 못 넣는다.
+    //   그래서 라벨 쪽이 «연속»을 맡고 접미는 단위(天)만 붙인다
+    dailyStreakLabel: "连续答题",
+    done: "已完成",
+    solved: "已做",
+    // ⚠ 이 자리는 「{today} <b>3</b>{suffix}」 꼴이라 숫자가 «가운데»에 온다.
+    //   중국어는 「连续3天」처럼 连续를 숫자 «앞»에 두므로 이 틀에 连续를 넣으면 어순이 뒤집힌다.
+    //   그래서 단위만 붙이고(签到3天 꼴), 연속의 뜻은 바로 옆 「/ 最佳 N」이 받는다
+    dayStreakSuffix: "天",
+    bestPrefix: "/ 最佳",
+    // ⚠ 「连续答对」로 쓰면 안 된다 — trainer.ts의 trainerStreak()는 연속으로 몇 문제가
+    //   isAcceptable(EV 손실 ≤ 허용선)이었나를 센다. «정답/오답»이 아니다.
+    //   앱 자신이 mixedNote·gradAfter에서 «판대로 채점하지 않는다»고 말하므로 모순이었다
+    //   (원어민 검토자 4명이 전원 지적, 코드로도 확인 — 2026-08-22)
+    streakLabel: "连续达标",
+    totalLossLabel: "累计 EV 损失",
+    avgLossLabel: "平均 EV 损失",
+    // 이 칸은 백분율이다(excellentRate) — en「Good-play rate」처럼 «率»이 있어야 한다
+    goodRateLabel: "好选择率",
+    weaknessTitle: "弱点分析",
+    avgOfPot: (pct: string) => `平均占底池 ${pct}%`,
+    // 중국어는 명사에 복수 변화가 없다 (de의 Hand/Hände 분기가 필요 없다)
+    handCount: (n: number) => `（${n} 题）`,
+    notSolved: "还没做过",
+    // 「你在 <분류명> 上的损失最大——」 꼴로 이어진다 (분류명이 가운데 굵게 들어간다)
+    weakestBefore: "你在",
+    weakestAfter: "上的损失最大——",
+    // 코드 대조: changeCategory(weakness.weakest.category) — 한 판이 아니라 «부류»를 고른다
+    // (en도 "Drill this spot type"). 프로젝트 규칙상 牌局=구체적 한 판 / 局面=부류다
+    practiceThis: "只练这类局面",
+    weaknessHint: "每类局面至少做 3 题，就能看出你在哪儿漏 EV。",
+    // 「已保存在 <닉네임> 的账号里」 꼴. 라틴·한글 닉네임이 올 수 있어 앞뒤에 공백을 둔다
+    accountBefore: "已保存在 ",
+    accountAfter: " 的账号里",
+    syncingNow: "同步中…",
+    syncNow: "立即同步",
+    signOutLabel: "退出登录",
+    localOnlyBefore: "你的学习记录",
+    localOnlyBold: "只保存在这台设备上",
+    localOnlyAfter:
+      "。绑定 HoldemMaster 账号，换台设备也能接着做。",
+    googleSignIn: "用 Google 继续",
+    kakaoSignIn: "用 Kakao 继续",
+    footerLine: (nodes: number, pct: number) =>
+      `13 个教学案例 · ${nodes} 个决策节点 · 目标可剥削度 ${pct}%`,
+    details: "详情 ↓",
+    toAct: "该行动",
+    potLabel: "底池",
+    stackLabel: "筹码量",
+    // TreeEditor의 addedLines/removedLines와 같은 말(线路)로 통일했다
+    lineLabel: "线路：",
+    boardLabel: "公共牌",
+    myHand: "我的手牌",
+    yourChoice: "我的选择",
+    prompt: "你打算怎么打？",
+    bestEvTag: " · EV 最高",
+    evLoss: "EV 损失",
+    mobileDetailTitle: "各动作的频率和 EV",
+    mixedNote: "遇到混合策略时，不会简单判对错，而是按动作之间的 EV 差来评价。",
+    dailyDone: "今日题目已完成",
+    dailyDoneDesc:
+      "今天所有人做的都是同一道题。把结果发出去，就能和别人的选择比一比。",
+    makeCard: "生成成绩卡",
+    boardShow: "看今天的排名",
+    boardHide: "收起排名",
+    boardLoading: "加载中…",
+    boardCount: (n: number) => `今天有 ${n} 人参与`,
+    boardMyRank: (r: number) => `我排第 ${r} 名`,
+    // ⚠ 원문의 뜻: «로그인하면 순위에 오른다 / 구경은 로그인 없이도 된다».
+    //   독일어에서 이 문장의 뜻이 뒤집혀 있었다 — 두 절의 주어를 반드시 확인할 것
+    boardLoginHint:
+      "登录之后，你的昵称也会出现在排名里。只是想看看的话，不登录也行。",
+    boardUnavailable: "排行榜还没开放。",
+    copied: "已复制",
+    copyResult: "复制结果文字",
+    openCommunity: "打开社区 →",
+    pasteHintBefore: "在社区里点",
+    pasteHintBold: "[✏️ 发帖]",
+    pasteHintAfter: "，粘贴进去就行。",
+    keepPracticing: "接着练",
+    nextHand: "下一题",
+    // ⚠ 해설 링크 자체는 지금 한국어에서만 뜬다 (본체에 GTO 시리즈 중국어판이 없다)
+    readArticle: "阅读这个牌局的解说 →",
+    viewFull: "查看完整结果",
+    resultTitle: "评分结果",
+    resultHintBefore: "选好动作之后，这里会显示",
+    resultHintBold: "每个动作的频率和 EV",
+    resultHintAfter: "，还有你的选择亏了多少 bb。",
+    gtoNoteBefore:
+      "GTO 对同一手牌也会混着打。频率低的选择不等于做错，判断标准是 EV 损失——",
+    gtoNoteBold: "占底池",
+    gtoNoteAfter: " 0.35% 以内是最优 · 1% 以内可以接受 · 再多就是该回头复盘的局面。",
+    // ⚠ 코드 대조: 이 ${pot}은 lossLimits() → presetPotBb(), 즉 «프리셋의 시작 팟»이다.
+    //   화면 위쪽에 뜨는 «현재 노드의 팟»과 다른 수라, 둘 다 「底池」라고만 쓰면 안 된다.
+    //   두 경계값이 각각 어느 판정인지도 밝힌다 (en은 Best/Acceptable 라벨이 붙어 있다)
+    spotLimits: (pot: string, best: string, good: string) =>
+      `按这个牌局的起始底池（${pot}bb）算，就是最优 ≤${best}bb、可以接受 ≤${good}bb。`,
+    resetHistoryLabel: "清空学习记录",
+    cardAlt: "今日题目成绩卡",
+    // ko는 「카카오톡·SNS」지만 중국어권에 카카오톡은 없다. 실제 동작은 브라우저의
+    // 공유 시트를 여는 것이라, 특정 앱 이름을 대지 않고 «어디로든 공유»로 적었다
+    shareApps: "分享到社交平台",
+    saveImage: "保存图片",
+    close: "关闭",
+    cardHintBefore: "把存好的卡片发到群里或社交平台吧。收到的人今天做的也是",
+    cardHintBold: "同一道题",
+    cardHintAfter: "。卡片里不会带上答案。",
+    verdictBest: "最优选择",
+    verdictGood: "可以接受的选择",
+    verdictMiss: "该回头复盘",
+    promptCopy: "请复制下面的内容",
+    shareText:
+      // ⚠ 이 문장은 사용자가 «커뮤니티에 붙여넣는» 글이다 — 읽는 사람은 남이다.
+      //   en「try it yourself」·de「probiere sie auch」와 같이 상대에게 말해야 한다.
+      //   daily.ts의 zh 분기처럼 &lang=zh를 붙여, 영문 시스템을 쓰는 중국어 사용자도
+      //   중국어 화면으로 들어오게 한다
+      "今日 GTO 题目，你也来试试：https://solver.holdemmaster.com/?view=trainer&lang=zh",
+    confirmReset: "要清空这台设备上的学习记录吗？",
+    syncMerged: (uploaded: number, merged: number) =>
+      `已保存 ${uploaded} 条 · 从其他设备取回 ${merged} 条`,
+    syncSaved: (uploaded: number) => `已保存 ${uploaded} 条`,
+    syncFailed: (msg: string) => `同步失败：${msg}`,
+    signInFailed: (msg: string) => `登录失败：${msg}`,
   },
 } as const;
 
@@ -1673,10 +1809,16 @@ export default defineComponent({
       reviewAttempts,
       limits,
       dailyState,
-      // 커뮤니티는 한국어 페이지뿐(/en/community 없음, 2026-08-19 실측 404)
-      // → EN에서는 빈 값을 줘서 버튼 자체를 숨긴다 (한국어 사이트로 보내지 않는다)
+      // 한국어는 /community, 그 밖의 언어는 «언어별 홈 자체가 그 언어 커뮤니티»다.
+      // 본체 app/{en,ja,es,pt,de,zh}/page.tsx가 전부 <CommunityClient pageLocale="…"/>를
+      // 렌더한다(2026-08-22 본체 소스 확인). 예전에는 «/en/community가 404»인 것만 보고
+      // ko 외 전부를 숨겨 뒀는데, 그 바람에 «커뮤니티에서 [글쓰기]를 누르라»고 안내하면서
+      // 정작 갈 곳을 안 주고 있었다 — 5개 언어에서 라이브 결함이었다.
+      // mainSiteUrl("")은 LOCALE_PATHS에 등재된 언어만 주소를 돌려주므로 안전하다.
       communityUrl: computed(() =>
-        i18n.locale === "ko" ? mainSiteUrl("/community", "daily-share") : ""
+        i18n.locale === "ko"
+          ? mainSiteUrl("/community", "daily-share")
+          : mainSiteUrl("", "daily-share")
       ),
       dailyMode,
       dailyCopied,

@@ -64,6 +64,9 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   es: { "": "/es" }, // /es는 실재(200), /es/solver는 404 (2026-08-20 실측 — 스페인어화 리서치)
   pt: { "": "/pt" }, // /pt는 실재(200), /pt/solver·/pt/community는 404 (2026-08-21 실측)
   de: { "": "/de" }, // /de는 실재(200), /de/solver·/de/community는 404 (2026-08-21 실측)
+  zh: { "": "/zh" }, // /zh는 실재(200), /zh/solver·/zh/community는 404 (2026-08-21 실측).
+  // ⚠ 본체 /zh/blog는 200이지만 GTO 13편의 «중국어판»은 없다(a-high-board-cbet = 404)
+  //   → 프리셋 해설 링크는 zh에서 숨긴다 (presets.ts articleSlug 쪽에서 판단)
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

@@ -195,6 +195,50 @@ export const DRAW_LABELS_DE: Record<DrawKey, string> = {
   no_draw: "Kein Draw",
 };
 
+export const MADE_LABELS_ZH: Record<MadeKey, string> = {
+  // ⚠ 족보는 «전부» 중국어다 (본체 브리프 §2 — 대륙 唯一形). 독일어처럼 일부를 영어로
+  //   남기면 안 된다. 금지역: 铁支(粤/구칭·四条로) · 满堂红(비유일 뿐·葫芦로) · 两队(오타·两对로)
+  straight_flush: "同花顺",
+  quads: "四条",
+  full_house: "葫芦",
+  flush: "同花",
+  straight: "顺子",
+  // 이 칸은 «포켓페어 세트»와 «보드 트립스»를 함께 담는다. 본체 브리프 §1D가
+  // 「暗三条(set)/明三条(trips)」로 반드시 구분하라고 못박은 자리다
+  // (en 「Set/Trips」·de 「Set/Drilling」과 같은 처리)
+  trips: "暗三条/明三条",
+  two_pair: "两对",
+  // 「超对」는 중문 매체 실사용 확인 («没有超对、同花或顺子听牌的翻牌面» — 리서치 §2)
+  overpair: "超对",
+  top_pair: "顶对",
+  // 「次顶对」= 顶对 다음 — 코드의 pos===1(정렬 후 두 번째로 높은 공공패와 맞춘 페어)과
+  // 글자 뜻이 그대로 맞고, 공공패가 5장이어도 성립한다 (摩十客 a/716).
+  // ⚠ 「中对」는 3장 보드에서만 맞고, 「第二对」는 «두 페어 중 작은 쪽»으로 읽힌다
+  second_pair: "次顶对",
+  weak_pair: "弱对",
+  // 「低对（Underpair）」가 정착역이다 (德扑GOD teach/155가 그대로 정의한다).
+  // ⚠ 「口袋小对」로 쓰면 안 된다 — 그 말은 «翻前 22-55»를 가리키는 자리를 이미 차지했다
+  //   (传奇扑克 xw/jx/2301). 超对/低对가 짝을 이뤄 코드의 overpair/underpair와 그대로 맞는다
+  underpair: "低对",
+  ace_high: "A 高牌",
+  king_high: "K 高牌",
+  nothing: "未成牌",
+};
+
+export const DRAW_LABELS_ZH: Record<DrawKey, string> = {
+  // draw = 「听牌」. 两头顺·卡顺·后门花 모두 중문 매체 실사용어다 (리서치 §2 출처).
+  // 「组合听牌」도 정착역이 맞다 — 德扑技巧 chuji/714가 同花听牌·两头顺子听牌·卡顺听牌·
+  // 组合听牌·后门同花听牌을 한 세트로 묶어 쓴다 (2026-08-22 원어민 검수에서 확인)
+  combo_draw: "组合听牌",
+  flush_draw: "同花听牌",
+  oesd: "两头顺听牌",
+  gutshot: "卡顺听牌",
+  // 「后门」만 쓰면 완성 플러시로 읽힌다 — 同花听牌를 반드시 남길 것 (de와 같은 이유)
+  backdoor_fd: "后门同花听牌",
+  // 같은 조의 나머지 다섯이 명사구이므로 여기도 명사구로 (MADE의 「未成牌」과 같은 결)
+  no_draw: "无听牌",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -207,6 +251,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_PT
     : i18n.locale === "de"
     ? MADE_LABELS_DE
+    : i18n.locale === "zh"
+    ? MADE_LABELS_ZH
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -219,6 +265,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_PT
     : i18n.locale === "de"
     ? DRAW_LABELS_DE
+    : i18n.locale === "zh"
+    ? DRAW_LABELS_ZH
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

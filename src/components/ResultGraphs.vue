@@ -124,6 +124,12 @@ const M = {
     noGraph: "Kein Graph vorhanden",
     equity: "Equity",
   },
+  zh: {
+    noGraph: "无法显示图表",
+    // equity는 「胜率」로 통일했다 (본체 브리프 §1C: 胜率=구어·권장, 权益=엄밀 학술어).
+    // 영어 원词 병기는 소개 화면·에퀴티 계산기 뱃지에서 한다
+    equity: "胜率",
+  },
 } as const;
 
 export default defineComponent({

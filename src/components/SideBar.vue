@@ -166,7 +166,9 @@ const M = {
     about: "はじめに",
     guide: "使い方",
     presets: "学習スポット",
-    presetsBadge: "計算済み",
+    // ⚠ «計算済み»는 «미리 계산해 뒀다»는 말이라 사용자 지시(2026-08-13)에 어긋났다.
+    //   ko「바로 보기」·en「Instant」·de「Sofort」와 같이 «빠르다»로 말한다
+    presetsBadge: "すぐ見る",
     trainer: "GTOトレーナー",
     trainerBadge: "EV採点",
     preflop: "プリフロップ",
@@ -261,6 +263,39 @@ const M = {
     // 「Tree Settings」의 뜻을 살리면서 ④가 선택돼도 한 줄에 들어간다
     betSizeSub: "Spielbaum",
     run: "Berechnen",
+  },
+  // ⚠ 이 라벨들은 «착수 전»에 zh-sidebar-premeasure.js로 4해상도 + 선택 상태 11화면을
+  // 미리 재고 확정한 것이다 (1280×720에서 648/648, 접힘 0건). 한자는 글자당 폭이 커서
+  // 짧아 보여도 두 자만 늘리면 접힌다 — 고칠 땐 sidebar-fit-verify.js를 반드시 다시 돌릴 것.
+  zh: {
+    exploreLabel: "探索",
+    exploreLabelSuffix: " · 学习",
+    about: "简介",
+    guide: "使用方法",
+    presets: "教学案例",
+    // ⚠ 사용자 지시(2026-08-13): 유저에게 «미리 계산»을 언급하지 않는다.
+    //   ko「바로 보기」·en「Instant」와 같이 «바로 볼 수 있다»로만 말한다
+    presetsBadge: "立刻看",
+    trainer: "GTO 训练器",
+    trainerBadge: "EV 评分",
+    preflop: "翻前范围表",
+    preflopBadge: "开池·防守",
+    equity: "胜率计算器",
+    // 라벨이 이미 「胜率」이라 뱃지에 같은 말을 또 쓰면 오작동처럼 보인다.
+    // 여기에 영어 원词를 두면 «첫 등장 영어 병기»(브리프 §0.5-1) 역할도 겸한다
+    equityBadge: "Equity",
+    customLabel: "自定义牌局",
+    // es·pt·de는 길이 때문에 접미사를 비웠지만 중국어는 한자가 짧아 실측상 여유가 있었다
+    customLabelSuffix: " · 自己算",
+    oopRange: "OOP 范围",
+    ipRange: "IP 范围",
+    board: "公共牌",
+    // bet size = 「下注尺寸」. 중국 德扑 매체(dpskill)가 쓰는 정착역 — 리서치 §2 출처
+    betSize: "下注尺寸",
+    betSizeSub: "决策树",
+    // 화면 제목(App.vue "run-solver")·안의 버튼과 같은 이름이어야 한다 —
+    // 다른 사이드바 항목은 전부 제목과 일치하는데 ⑤만 달랐다 (검토자 C)
+    run: "运行求解器",
   },
 } as const;
 

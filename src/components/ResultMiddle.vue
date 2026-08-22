@@ -345,6 +345,33 @@ const M = {
     strategyCombos: "Strategie (Combos)",
     equity: "Equity",
   },
+  zh: {
+    modeLabels: {
+      basics: "基础",
+      graphs: "图表",
+      compare: "对比",
+      turn: "转牌",
+      river: "河牌",
+    } as Record<string, string>,
+    player: "玩家：",
+    auto: (player: string) => `自动（${player}）`,
+    barHeight: "柱高：",
+    // 归一化 = 대륙 표준 표기 (대만은 正規化 — 간체판에서는 쓰지 않는다)
+    normalized: "归一化",
+    absolute: "绝对值",
+    // 「全部」로 옮기면 아래 all(전체 핸드)과 뜻이 겹친다 — 막대가 «가득 찬다»는 뜻이므로 铺满
+    full: "满格",
+    // suit = 「花色」 (본체 브리프 §5 가짜친구: 「西装」 오역 주의)
+    suit: "花色：",
+    grouped: "分组",
+    individual: "单独",
+    display: "显示：",
+    strategy: "策略",
+    weight: "权重",
+    chart: "图表：",
+    strategyCombos: "策略（组合）",
+    equity: "胜率",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

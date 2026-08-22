@@ -214,6 +214,19 @@ const M = {
     playerLabel: "Spieler:",
     oopHint: "Strategie des Spielers, der zuerst am Zug ist",
   },
+  zh: {
+    backToList: "← 列表",
+    pot: "底池",
+    stack: "筹码量",
+    flopOnlyNote: "这里只有翻牌圈的策略。想一路点到转牌和河牌 →",
+    solveThisSpot: "自己计算这个牌局",
+    // ⚠ PresetsPage.articleLink와 같은 사정 — 지금은 한국어에서만 뜬다
+    readArticle: "阅读这个牌局的解说",
+    loadError: (e: string) => `无法加载预先算好的结果：${e}`,
+    loading: "正在加载结果…",
+    playerLabel: "玩家：",
+    oopHint: "这是先行动一方的策略",
+  },
 } as const;
 
 type PreviewData = {

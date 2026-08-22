@@ -13,7 +13,7 @@
  */
 import { reactive } from "vue";
 
-export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de";
+export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh";
 
 const KEY = "solver.locale";
 
@@ -25,7 +25,8 @@ const readStored = (): Locale | null => {
       value === "ja" ||
       value === "es" ||
       value === "pt" ||
-      value === "de"
+      value === "de" ||
+      value === "zh"
       ? value
       : null;
   } catch {
@@ -42,7 +43,8 @@ const detect = (): Locale => {
     fromUrl === "ja" ||
     fromUrl === "es" ||
     fromUrl === "pt" ||
-    fromUrl === "de"
+    fromUrl === "de" ||
+    fromUrl === "zh"
   ) {
     try {
       localStorage.setItem(KEY, fromUrl);
@@ -59,6 +61,9 @@ const detect = (): Locale => {
   if (lang.startsWith("es")) return "es";
   if (lang.startsWith("pt")) return "pt";
   if (lang.startsWith("de")) return "de";
+  // 중국어는 지금 간체(zh-CN)만 지원한다 — 번체권(zh-TW·zh-HK) 브라우저도 간체로 받는다.
+  // 번체판을 만들면 여기서 zh-hant를 갈라내야 한다 (용어 자체가 달라 기계 변환은 금지)
+  if (lang.startsWith("zh")) return "zh";
   return "en";
 };
 
@@ -97,6 +102,14 @@ const DOC_META: Record<Locale, { title: string; description: string }> = {
     description:
       "Kostenloser GTO-Solver, der direkt im Browser läuft – ohne Installation. Berechne die Postflop-Strategie in Texas Hold’em nach Range, Board und Bet Size. Von HoldemMaster.",
   },
+  // 중국어(간체). 문장부호는 전각(，。)이 중국어 표준이다 (본체 브리프 §6).
+  // 「求解器」=solver ·「翻后」=postflop ·「下注尺寸」=bet size ·「公共牌」=board 는
+  // 중국 德扑 매체(dpskill·中扑网)의 실사용어다 — 리서치 문서 §2에 출처를 적어 뒀다
+  zh: {
+    title: "HoldemMaster GTO 求解器 — 免费在线德州扑克 GTO Solver",
+    description:
+      "免费 GTO 求解器，打开浏览器就能用，无需安装。按手牌范围、公共牌和下注尺寸计算德州扑克（德扑）翻后策略。由 HoldemMaster 提供。",
+  },
 };
 
 const applyDocumentLocale = (locale: Locale) => {
@@ -126,6 +139,8 @@ export const setLocale = (locale: Locale) => {
  *
  * ⚠ 쓰면 안 되는 곳: CSV 내보내기(쉼표가 열 구분자) · style 문자열(width: 50,5%)
  *   · 사용자가 그대로 입력해야 하는 벳 사이즈 문법(«2.5x»).
+ * ⚠ 중국어(zh)는 «영어와 같은» 마침표 소수점이다 — 여기에 zh를 넣으면 오히려 깨진다
+ *   (본체 브리프 §3: 1,326 · 0.003% · 2.7:1 · 천단위 콤마). pt·de 전용이다.
  * 템플릿에서는 전역 속성 `$n(...)`으로 쓴다 (index.ts에서 등록).
  */
 export const localizeNumber = (text: string) =>
@@ -138,14 +153,15 @@ export const decimalMark = () =>
   i18n.locale === "pt" || i18n.locale === "de" ? "," : ".";
 
 /** 언어별 값 중 현재 언어 것을 고른다 (문장 조립이 아닌 짧은 선택용).
- * ja·es·pt·de를 생략하면 영어로 폴백한다 — 새 문구는 반드시 de까지 채울 것. */
+ * ja·es·pt·de·zh를 생략하면 영어로 폴백한다 — 새 문구는 반드시 zh까지 채울 것. */
 export const pick = <T>(
   ko: T,
   en: T,
   ja: T = en,
   es: T = en,
   pt: T = en,
-  de: T = en
+  de: T = en,
+  zh: T = en
 ): T =>
   i18n.locale === "ko"
     ? ko
@@ -157,4 +173,6 @@ export const pick = <T>(
     ? pt
     : i18n.locale === "de"
     ? de
+    : i18n.locale === "zh"
+    ? zh
     : en;

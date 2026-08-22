@@ -21,8 +21,8 @@
         </li>
         <li>
           {{ L.quickStep2Before }}
-          <span class="font-semibold text-emerald-300">{{ L.quickStep2Btn }}</span>
-          {{ L.quickStep2After }}
+          <span class="font-semibold text-emerald-300">{{ L.quickStep2Btn }}</span
+          ><!-- 위와 같은 이유로 공백 없음 -->{{ L.quickStep2After }}
         </li>
         <li>{{ L.quickStep3 }}</li>
       </ol>
@@ -130,8 +130,9 @@
       {{ L.trainerIntroBefore }}
       <button class="link-like" @click="store.sideView = 'trainer'">
         {{ L.trainerBtn }}
-      </button>
-      {{ L.trainerIntroAfter }}
+      </button
+      ><!-- ⚠ 버튼과 뒷문장 사이에 공백을 두지 않는다 — 중국어는 한자끼리 띄우지 않는다.
+             공백이 필요한 언어는 trainerIntroAfter «앞»에 직접 넣는다 -->{{ L.trainerIntroAfter }}
     </p>
     <table class="guide-table">
       <tr>
@@ -306,7 +307,7 @@ const M = {
     quickStep1After: "클릭",
     quickStep2Before: "아무 예제나",
     quickStep2Btn: "[⚡ 결과 바로 보기]",
-    quickStep2After: "클릭 — 결과가 바로 나옵니다",
+    quickStep2After: " 클릭 — 결과가 바로 나옵니다",
     quickStep3: '아래 "결과 화면 읽는 법"을 보면서 숫자를 해석해보세요',
 
     termsTitle: "필수 용어 4개만 알면 됩니다",
@@ -366,7 +367,7 @@ const M = {
     trainerIntroBefore: "결과 화면을 읽는 게 익숙해졌다면",
     trainerBtn: "GTO 트레이너",
     trainerIntroAfter:
-      "로 넘어가세요. 교육 예제 13개의 결정 지점에서 실제 레인지대로 뽑은 핸드를 받고, 액션을 고르면 채점해줍니다.",
+      " 로 넘어가세요. 교육 예제 13개의 결정 지점에서 실제 레인지대로 뽑은 핸드를 받고, 액션을 고르면 채점해줍니다.",
     gradTerm: "채점 방식",
     gradBefore: "정답/오답이 아니라 ",
     gradBold: "EV 손실(bb)",
@@ -475,7 +476,7 @@ const M = {
     quickStep1After: "",
     quickStep2Before: "Open any spot and hit",
     quickStep2Btn: "[⚡ View results]",
-    quickStep2After: "— the solution appears immediately",
+    quickStep2After: " — the solution appears immediately",
     quickStep3:
       "Then use “Reading the results screen” below to make sense of the numbers",
 
@@ -540,7 +541,7 @@ const M = {
       "Once you're comfortable reading the results screen, move on to the",
     trainerBtn: "GTO Trainer",
     trainerIntroAfter:
-      ". At decision points from the 13 Study Spots, you're dealt hands drawn from the actual ranges — pick an action and it grades you.",
+      " . At decision points from the 13 Study Spots, you're dealt hands drawn from the actual ranges — pick an action and it grades you.",
     gradTerm: "How grading works",
     gradBefore: "You're graded not right-or-wrong but by ",
     gradBold: "EV loss (bb)",
@@ -656,7 +657,7 @@ const M = {
     quickStep1After: "をクリック",
     quickStep2Before: "スポットを一つ開いて",
     quickStep2Btn: "[⚡ 結果をすぐ見る]",
-    quickStep2After: "をクリック — 結果がすぐに表示されます",
+    quickStep2After: " をクリック — 結果がすぐに表示されます",
     quickStep3:
       "下の「結果画面の読み方」を見ながら数字を解釈してみましょう",
 
@@ -665,7 +666,7 @@ const M = {
     defRange:
       "プレイヤーが持っている可能性のあるハンドの集合（例:「相手はAA・KK・AKのどれかだろう」）",
     defPos:
-      "先に行動する側（不利）／後に行動する側（有利）。BTN vs BB では BB が OOP",
+      "先に行動する側（不利）/後に行動する側（有利）。BTN vs BB では BB が OOP",
     termEquity: "エクイティ",
     defEquity: "今この時点で勝てる確率（%）",
     defEv: "期待値 — このアクションで平均してどれだけ得をするか。大きいほど良い",
@@ -720,7 +721,7 @@ const M = {
     trainerIntroBefore: "結果画面の読み方に慣れてきたら",
     trainerBtn: "GTOトレーナー",
     trainerIntroAfter:
-      "に進みましょう。13個の学習スポットの決定ポイントで、実際のレンジから引いたハンドが配られ、アクションを選ぶと採点してくれます。",
+      " に進みましょう。13個の学習スポットの決定ポイントで、実際のレンジから引いたハンドが配られ、アクションを選ぶと採点してくれます。",
     gradTerm: "採点方式",
     gradBefore: "正解/不正解ではなく ",
     gradBold: "EVロス(bb)",
@@ -836,7 +837,7 @@ const M = {
     quickStep1After: "",
     quickStep2Before: "Abre cualquier spot y toca",
     quickStep2Btn: "[⚡ Ver resultados]",
-    quickStep2After: "— la solución aparece de inmediato",
+    quickStep2After: " — la solución aparece de inmediato",
     quickStep3:
       "Luego usa «Cómo leer la pantalla de resultados» más abajo para interpretar los números",
 
@@ -901,7 +902,7 @@ const M = {
       "Cuando ya te sientas cómodo leyendo la pantalla de resultados, pasa al",
     trainerBtn: "Entrenador GTO",
     trainerIntroAfter:
-      ". En los puntos de decisión de los 13 Spots de estudio recibes manos sacadas de los rangos reales — eliges una acción y te califica.",
+      " . En los puntos de decisión de los 13 Spots de estudio recibes manos sacadas de los rangos reales — eliges una acción y te califica.",
     gradTerm: "Cómo califica",
     gradBefore: "No se califica como correcto/incorrecto sino por ",
     gradBold: "pérdida de EV (bb)",
@@ -1017,7 +1018,7 @@ const M = {
     quickStep1After: "",
     quickStep2Before: "Abra qualquer spot e use",
     quickStep2Btn: "[⚡ Ver resultados]",
-    quickStep2After: "— a solução aparece na hora",
+    quickStep2After: " — a solução aparece na hora",
     quickStep3:
       "Depois use “Como ler a tela de resultados” mais abaixo para interpretar os números",
 
@@ -1083,7 +1084,7 @@ const M = {
       "Quando já estiver confortável lendo a tela de resultados, passe para o",
     trainerBtn: "Treinador GTO",
     trainerIntroAfter:
-      ". Nos pontos de decisão dos 13 Spots de estudo você recebe mãos tiradas dos ranges reais — escolhe uma ação e recebe a sua nota.",
+      " . Nos pontos de decisão dos 13 Spots de estudo você recebe mãos tiradas dos ranges reais — escolhe uma ação e recebe a sua nota.",
     gradTerm: "Como a nota é dada",
     gradBefore: "Não é uma nota de certo/errado, e sim por ",
     gradBold: "perda de EV (bb)",
@@ -1200,7 +1201,7 @@ const M = {
     quickStep1After: "",
     quickStep2Before: "Öffne einen beliebigen Spot und drücke auf",
     quickStep2Btn: "[⚡ Ergebnisse ansehen]",
-    quickStep2After: "– die Lösung erscheint sofort",
+    quickStep2After: " – die Lösung erscheint sofort",
     quickStep3:
       "Danach hilft dir „So liest du den Ergebnisbildschirm“ weiter unten beim Deuten der Zahlen",
 
@@ -1266,7 +1267,7 @@ const M = {
       "Wenn du den Ergebnisbildschirm sicher liest, geh weiter zum",
     trainerBtn: "GTO-Trainer",
     trainerIntroAfter:
-      ". An den Entscheidungspunkten der 13 Lernspots bekommst du Hände aus den echten Ranges – du wählst eine Aktion und bekommst deine Note.",
+      " . An den Entscheidungspunkten der 13 Lernspots bekommst du Hände aus den echten Ranges – du wählst eine Aktion und bekommst deine Note.",
     gradTerm: "Wie benotet wird",
     gradBefore: "Es gibt kein Richtig/Falsch, sondern eine Note nach ",
     gradBold: "EV-Verlust (bb)",
@@ -1374,6 +1375,182 @@ const M = {
     errClearBtn: "Protokoll löschen",
     errNone: "Bisher wurden keine Fehler protokolliert.",
     errPrompt: "Kopiere den Text unten",
+  },
+  zh: {
+    quickTitle: "一分钟上手——第一次来就看这里",
+    // ⚠ 끝의 공백은 U+00A0 — Vue가 요소 사이 일반 공백을 지워 버튼과 붙는다 (ko·en·de와 같다)
+    quickStep1Desktop: "在左边点",
+    quickStep1Mobile: "在上方标签里点",
+    quickStep1Btn: "教学案例",
+    quickStep1After: "",
+    quickStep2Before: "随便打开一个案例，点",
+    quickStep2Btn: "[⚡ 直接看结果]",
+    quickStep2After: "——结果马上就出来",
+    quickStep3: "照着下面的“结果画面怎么读”，把这些数字看懂",
+
+    termsTitle: "只要弄懂 4 个词就够了",
+    termRange: "范围（range）",
+    // ⚠ 「一个玩家」(a player 축자직역)도, 「对手」로 좁히는 것도 안 된다 —
+    //   바로 다음 단계 ①②가 «네 레인지»를 넣으라고 하기 때문이다 (검토자 A 지적)
+    defRange: "某个人在这个局面可能拿着的那一堆手牌，你自己的也算（比如“他大概拿着 AA、KK、AK 里的一个”）",
+    defPos: "先行动的一方（吃亏）/后行动的一方（占便宜）。BTN vs BB 的话，BB 是 OOP",
+    termEquity: "胜率（equity）",
+    // ⚠ equity는 «획득 확률»이 아니다 — 지금 전부 걸었을 때 팟에서 가져가는 «몫»이다.
+    //   en·es·pt·de 넷 다 pot share로 쓴다. EquityPage.how1과 글이 맞아야 한다
+    defEquity: "现在就全下的话，你能从底池里拿走的份额——获胜% 加上平局的一半",
+    defEv: "期望值——这个动作平均能帮你赢多少。越大越好",
+
+    customTitleBefore: "自己算一个牌局——",
+    customTitleDesktop: "侧边栏",
+    customTitleMobile: "上方标签",
+    customTitleAfter: "里的 ①→⑤，照顺序来就行",
+    step1Bold: "① OOP 范围 / ② IP 范围",
+    step1After: "——在 13×13 的表格里点击、拖动来涂色，也可以直接输入文字：",
+    step1Hint:
+      "22+ = 所有口袋对子 · A2s+ = A2s~AKs · KTo+ = KTo~KQo。表格里的对角线是口袋对子，右上是同花（s），左下是非同花（o）",
+    exampleHeader:
+      "第一次用的话，把下面这两段示例复制粘贴到范围输入框里（BTN vs BB 100bb 标准——和教学案例用的是同一套范围）",
+    exOopLabel: "OOP（BB 跟注）",
+    exIpLabel: "IP（BTN 开池）",
+    copiedLabel: "已复制！",
+    copyLabel: "复制",
+    step3Bold: "③ 公共牌",
+    step3After: "——点选翻牌 3 张，或者按“随机翻牌”",
+    step4Bold: "④ 下注尺寸（决策树设置）",
+    step4After: "——刚开始保持默认就行，只要确认一下起始底池和有效筹码",
+    step4Hint:
+      "自己算的时候，输入的数值用的是任意整数筹码单位。想按 bb 来看，就用 10 筹码 = 1bb 输入（比如底池 55 就是 5.5bb）。教学案例和训练器会自动按这个标准换算显示。",
+    step5Bold1: "⑤ 运行求解器",
+    step5Mid:
+      "——先点“新建决策树”，建好之后点“运行求解器”，等到出现“计算完成！”，再点上面的",
+    step5Bold2: "[结果]",
+    step5After: "标签",
+    step5Hint:
+      "计算是在你自己的电脑上跑的，几秒到几分钟不等。做好的牌局可以在 ⑤ 号画面用[分享牌局]复制链接，拿到社区去提问",
+
+    resultsTitle: "结果画面怎么读",
+    rTerm1: "顶部动作条",
+    rDef1:
+      "整条动作流程（翻牌→下注→跟注→转牌……）的场景选择器。点哪一步，就显示那一刻的策略",
+    rTerm2: "左边 13×13 表格",
+    rDef2:
+      "一格就是一手牌，格子里的颜色比例就是各个动作的比例。🟥 下注/加注 bet·raise（越深表示下得越大）· 🟩 过牌/跟注 check·call · 灰掉的格子表示不在范围里。GTO 对同一手牌也会“按比例混着打”——就是为了不让人看出规律",
+    rTerm3: "右上角的方块",
+    rDef3: "以整个范围为分母的动作频率（%）和组合数",
+    rTerm4: "右侧中间的分类",
+    rDef4:
+      "你的范围在这个公共牌上打中了什么（顶对 top pair、听牌 draw……）——一眼看出“这个牌面对谁有利”",
+    rTerm5: "右下角的表格",
+    rDef5: "每手牌的权重、胜率（EQ）、权益实现（EQR）、EV、动作占比。点列标题可以排序",
+
+    trainerTitle: "GTO 训练器——从“看懂”走到“自己做”",
+    trainerIntroBefore: "结果画面读顺了，就可以进",
+    trainerBtn: "GTO 训练器",
+    // ⚠ 앞 요소(버튼)와 사이에 HTML 공백이 들어가 「训练器 。」로 벌어졌다(실측).
+    //   전각 마침표를 앞으로 붙이지 말고 문장을 다시 시작한다
+    trainerIntroAfter:
+      "试试看。它会在 13 个教学案例的决策点上，按真实范围抽一手牌给你，你选完动作它就打分。",
+    gradTerm: "怎么打分",
+    gradBefore: "它不是判对错，而是按 ",
+    gradBold: "EV 损失（bb）",
+    gradAfter:
+      "来评价。GTO 对同一手牌本来就会混着打好几个动作，所以“频率低的那个动作”并不等于选错了——标准是你亏了多少",
+    verdictTerm: "判定标准",
+    verdictBefore: "按",
+    verdictBold: "占底池的比例",
+    verdictAfter:
+      "来量——底池的 0.35% 以内 = 最优选择 · 1% 以内 = 可以接受 · 再多 = 该回头复盘的局面。举个例子，5.5bb 的单加注底池（SRP）对应 0.02bb 和 0.06bb，22.5bb 的 3bet 底池对应 0.08bb 和 0.23bb。",
+    verdictHint:
+      "同样是 0.05bb，在小底池里是大失误，在大底池里只是小差别。用绝对 bb 来量的话，3bet 底池会显得比实际更糟，所以改成了按占底池的比例（2026-08-15）。这两条线各有一个下限：0.02bb 和 0.05bb。计算只收敛到目标可剥削度 0.5%，比这更小的差别已经和计算噪声分不开了。",
+    reviewTerm: "复习",
+    reviewBefore: "亏得多的题会通过[复习]按钮再出现一次。记录默认",
+    reviewBold: "只保存在这台设备上",
+    reviewAfter:
+      "。用 HoldemMaster 账号登录，记录就会存到账号里，换台设备也能接着做——登录是可选的，所有功能不登录也能用",
+    filterTerm: "筛选",
+    filterDef: "在单加注底池/3bet 底池/盲位对战里，挑你弱的那类专门练",
+
+    installTitle: "装到主屏幕，离线也能学",
+    install1:
+      "这个求解器可以像应用一样装到主屏幕上（没有安装包）。在 Chrome 和 Edge 里，点地址栏右边的",
+    installBold1: "安装图标",
+    install2: "；iPhone 的 Safari 则是点",
+    installBold2: "分享 → 添加到主屏幕",
+    install3:
+      "。装好之后，13 个教学案例和训练器的题目都会存到设备里，",
+    installBold3: "在没信号的地铁上",
+    install4: "也照样能做。",
+    // 三星浏览器 = Samsung Internet의 중국어 정식 명칭
+    // ⚠ 창 제목·버튼 이름을 «단정하지 않는다» — 기기와 안드로이드 버전마다 다르다
+    //   (Play 保护机制의 「已屏蔽不安全的应用」· 삼성 OneUI 6.0+의 「自动拦截程序」…).
+    //   en·de·pt도 같은 이유로 뭉뚱그렸다. 출처 없는 버튼 이름을 대면 없는 버튼을 누르라는 셈이다
+    samsung1:
+      "※ 用三星浏览器安装时，浏览器或系统可能会以安全为由拦截安装。这是浏览器那边的安全机制，跟应用本身无关。",
+    samsungBold: "改用 Chrome 打开",
+    samsung2:
+      "就不会被拦；想直接在这里装的话，按提示框里的指引选择允许即可。",
+    offlineDataLabel: "离线学习数据",
+    offlineSaved: "已保存——没网也能用教学案例和训练器",
+    offlineSaving: "保存中…",
+    offlineNotSaved: "未保存",
+    offlineSaveBtn: "现在保存（约 2.3MB）",
+    offlineFootnote:
+      "自定义牌局自己算（⑤ 运行求解器）得先联网跑过一次才能离线用——计算引擎是用到的时候才下载的。",
+
+    safeTitle: "装了安全吗？",
+    safe1: "安全。这里说的“安装”不是把一个程序下载到你设备上，而是",
+    safeBold: "做一个在浏览器里跑的快捷方式",
+    safe2:
+      "。在安卓上，注册的只是一层指向这个网址的薄壳，真正跑起来还是在浏览器引擎里。要是不放心，下面 4 件事你可以自己验一遍——验一次比听我说管用。",
+    permTerm: "它不要权限",
+    permBefore:
+      "安装的时候，相机、通讯录、短信、位置这些权限一个都不要。你可以在手机的",
+    permBold: "设置 → 应用信息 → 权限",
+    permAfter: "里自己看",
+    airplaneTerm: "开飞行模式验一下",
+    airplaneBefore: "断网之后训练器照样能跑。这就是",
+    airplaneBold: "计算全在你设备里完成",
+    airplaneAfter: "的最直接的证据",
+    openTerm: "源代码是公开的",
+    openBefore: "这个求解器是 AGPL-3.0 开源的（",
+    openAfter: "）",
+    removeTerm: "删得干干净净",
+    removeDef: "跟别的应用一样长按删掉就行。不会在后台跑，也不会留下什么",
+    samsungNote2:
+      "※ 三星浏览器那条拦截提示并不代表查出了恶意代码，只是因为 Google 还没把这个浏览器生成的安装包列入信任名单。用 Chrome 打开就不会出现。",
+
+    studyTitle: "推荐的学习路线",
+    study1: "把 13 个教学案例按顺序过一遍——它们是连成一套的课程",
+    study2: "想不通“这手牌为什么要混着过牌？”的时候，就到右下角的[汇总]表里比较各动作的 EV",
+    study3:
+      "同一个局面再用 GTO 训练器做一遍，把它练成手感——弱点分析会告诉你哪类局面亏得最多",
+    study4: "范围不变，只换公共牌来对比（比如 A72 和 974）",
+    study5: "把实战里拿不准的那手牌原样输进来复盘",
+
+    troubleTitle: "出问题了怎么办",
+    tTerm1: "生成决策树报错",
+    tDef1: "检查一下公共牌 3 张和两个范围是不是都填了",
+    tTerm2: "算得很慢",
+    tDef2: "把目标可剥削度调到 0.5%",
+    tTerm3: "结果标签是空白的",
+    tDef3: "等出现“计算完成！”之后再点",
+    tTerm4: "超出内存上限",
+    tDef4: "改用 16 位整数模式，或者少填几个下注尺寸",
+    tTerm5: "表格全是灰的",
+    tDef5: "你正在看的是对手行动的那一步——到顶部动作条上点别的场景",
+
+    errTitle: "如果你发现了需要修的问题",
+    err1: "画面出错或者计算卡住时，错误内容会自动记在这台设备上。",
+    errBold: "这些记录不会离开这台设备",
+    err2:
+      "——你在下面复制出来发到社区，我们才看得到。里面不含范围、学习记录这类内容，只有错误信息和浏览器类型。",
+    errLoggedLabel: "已记录的错误",
+    errCount: (n: number) => `${n} 条`,
+    errCopied: "已复制",
+    errCopyBtn: "复制错误内容",
+    errClearBtn: "清空记录",
+    errNone: "目前还没有记录到错误。",
+    errPrompt: "请复制下面的内容",
   },
 } as const;
 

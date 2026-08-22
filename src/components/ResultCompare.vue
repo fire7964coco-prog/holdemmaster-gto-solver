@@ -149,6 +149,10 @@ const M = {
     combos: "Combos",
     equity: "Equity",
   },
+  zh: {
+    combos: "组合",
+    equity: "胜率",
+  },
 } as const;
 
 const EPS = 2e-6;

@@ -848,6 +848,111 @@ const M = {
       "unsere eigenen Lern-Ranges (Stand August 2026)",
     phase2: "Weitere Konstellationen und Szenarien kommen nach und nach dazu.",
   },
+  // ⚠ 3bet·4bet·5bet·c-bet·GTO·SPR·squeeze는 «영어 그대로» 둔다 — 본체 브리프 §1C의
+  // 「강제 영어」 목록이다(「三次加注」는 존재해도 아무도 안 읽는다). 반대로 동작어
+  // (开池·跟注·弃牌·加注)와 스트리트(翻牌·转牌·河牌)는 중국어가 표준이다(§1A·§1B).
+  // ⚠ 숫자는 영어와 같은 표기다 — 2.5bb·10~11bb의 «.»를 «,»로 바꾸지 말 것 (§3)
+  zh: {
+    modeRfi: "开池（RFI）",
+    modeDefend: "vs 开池（防守）",
+    mode3bet: "vs 3bet（开池之后）",
+    mode4bet: "vs 4bet（3bet 之后）",
+    intro4bet:
+      "你 3bet 之后被 4bet 该怎么办——红色是 5bet（全下），绿色是跟注，其余弃牌。" +
+      "这里的频率是在“假设你 3bet 了”的前提下算的，所以你根本不会 3bet 的手牌是空白的。" +
+      "基准：6 人桌现金局 100bb，BB 3bet 到 11bb → 4bet 到 24bb；SB 3bet 到 10bb → 4bet 到 22bb。",
+    legend5bet: "5bet（all-in）",
+    legendCond4bet: "空白 = 这里本来就不 3bet",
+    stat5bet: "5bet 比例",
+    statContinue4bet: "继续比例（占 3bet 范围）",
+    copy5bet: "复制 5bet 范围",
+    note4bet:
+      "统计是“占你 3bet 范围”的比例。100bb 深度下，5bet 实际上只有全下这一种——" +
+      "价值牌以 AA、KK 为主（偶尔只跟注做陷阱），QQ 和 AK 则混着 5bet 和跟注。" +
+      "跟注看的不是底池赔率，而是权益实现（equity realization）。" +
+      "你没有位置、SPR 又低，所以只留对子和最强的同花手牌；" +
+      "但也别全弃——对手的 4bet 范围里混着 A5s、A4s 这类诈唬。",
+    how4bet2:
+      "红色加绿色没把格子填满，剩下的那部分就是弃牌。两种颜色同时出现，表示按这个比例混着 5bet 和跟注。" +
+      "不在 3bet 范围里的手牌，压根碰不到这个局面，所以留空。",
+    intro3bet:
+      "你开池加注之后被 3bet 该怎么办——红色是 4bet，绿色是跟注，其余弃牌。" +
+      "这里的频率是在“假设你开池了”的前提下算的，所以你根本不会开池的手牌是空白的。" +
+      "基准：6 人桌现金局 100bb，开池 2.5bb，3bet 大约 10~11bb。",
+    legend4bet: "4bet",
+    legendCond: "空白 = 这里本来就不开池",
+    stat4bet: "4bet 比例",
+    statContinue: "继续比例（占开池范围）",
+    copy4bet: "复制 4bet 范围",
+    note3bet:
+      "统计是“占你开池范围”的比例，不是占全部手牌。4bet 的价值牌以 QQ+、AK 为主，" +
+      "再掺一点 A5s、A4s 这样的诈唬。跟注这边因为你有位置，可以拿得很宽：" +
+      "对子、同花大牌、连牌都能留。",
+    squeezeNote:
+      "挤压（squeeze）指的是前面已经有人开池、又有人跟注时的 3bet（这里大约 11~12bb）。" +
+      "有跟注者在，总的防守范围会比单挑时更窄，3bet 也更偏价值。跟着一起跟注（overcall）" +
+      "时，优先选多人底池里能做出坚果牌的同花手牌和连张。",
+    how3bet2:
+      "红色加绿色没把格子填满，剩下的那部分就是弃牌。两种颜色同时出现，表示按这个比例混着 4bet 和跟注。" +
+      "不在开池范围里的手牌，压根碰不到这个局面，所以留空。",
+    intro:
+      "按位置分的开池范围（RFI）——前面的人全都弃牌时，你该拿哪些牌加注？" +
+      "基准是 6 人桌现金局 100bb、开池 2.5bb。格子只填了一部分，表示这手牌用的是混合频率（只在一部分时候开池）。",
+    introDefend:
+      "别人先开池加注时你该怎么应对——这里列的是最常遇到的几种组合。" +
+      "红色是 3bet，绿色是跟注，两色叠起来的高度就是你的防守频率。" +
+      "基准：6 人桌现金局 100bb，开池 2.5bb（SB 开池按 3bb）。",
+    legendOpen: "开池（100%）",
+    legendMixed: "混合频率（填充高度 = 开池 %）",
+    legendFold: "弃牌",
+    legend3bet: "3bet",
+    legendCall: "跟注",
+    legendMixedDefend: "填充高度 = 频率（双色格按该比例混合）",
+    stat3bet: "3bet 比例",
+    statCall: "跟注比例",
+    statTotal: "总防守",
+    copy3bet: "复制 3bet 范围",
+    copyCall: "复制跟注范围",
+    sbNote:
+      "在 SB 面对 BTN 开池时，你基本上只有“3bet 或弃牌”两条路——你没有位置，" +
+      "身后 BB 还没说话，跟注等于同时背上这两个坏处。",
+    ipNote:
+      "就算你有位置，前位（EP）开池的范围也很强；而且你一跟注，身后还没行动的盲位玩家就可能挤压你。" +
+      "所以有位置时的防守反而是窄的，以 3bet 为主，跟注只留给对子和最强的同花手牌。",
+    statPercent: "开池比例",
+    statCombos: "开池组合数",
+    statHands: "开池手牌数",
+    statMixed: "混合频率手牌",
+    // ⚠ 이 문구는 EquityPage.rangeNote가 «글자 그대로» 인용한다 — 고치면 그쪽도 같이 고칠 것
+    copy: "复制范围文本",
+    copied: "✓ 已复制",
+    sendOop: "① 发送到 OOP 范围",
+    sendIp: "② 发送到 IP 范围",
+    howTitle: "怎么看",
+    how1: "左上到右下的那条对角线是口袋对子；对角线上方（右边）是同花（s），下方（左边）是非同花（o）。",
+    how2:
+      "混合频率的手牌（格子只填了一部分）不是“每次都开池”，而是只按那个比例开池。" +
+      "它们是边缘牌，选哪边 EV 差别都很小。",
+    how3:
+      "点[① 发送到 OOP 范围]/[② 发送到 IP 范围]，这个范围就会填进自定义牌局的范围输入框——" +
+      "翻牌之后的打法你可以自己算算看。",
+    howDefend2:
+      "红色加绿色没把格子填满，剩下的那部分就是弃牌。两种颜色同时出现的格子，" +
+      "表示按该比例混着 3bet 和跟注。",
+    howDefend3:
+      "把复制好的范围文本粘进自定义牌局的 ①/② 范围输入框，就能用这套防守范围自己算翻牌之后的打法。",
+    sourceTitle: "这张表是怎么做出来的？",
+    sourceBody:
+      "我们把多份公开免费的 GTO 资料逐手对照，做出一份“共识范围”；各家判断不一致的边缘牌，" +
+      "则标成混合频率。BTN 和 SB 还多做了一步：拿本应用教学案例用的范围（经求解器验证）又对照了一遍。",
+    sourceList:
+      "交叉验证用到的公开资料：nlh.poker · Preflop Wizard · HoldemPro · " +
+      "The Felt（about-poker.com）· BeyondGTO · ThinkGTO（BB vs SB 的实测频率）· " +
+      "GTO Gecko · RiverOdds（防守频率的锚点）· GTO Wizard 博客 · FreeBetRange" +
+      "（有位置防守与挤压原则）· 888poker · Run It Once（vs 3bet 频率）+ " +
+      "我们自己的教学范围（2026 年 8 月整理）",
+    phase2: "防守组合和更多场景会陆续补上。",
+  },
 } as const;
 
 type ModeKey = "rfi" | "defend" | "vs3bet" | "vs4bet";

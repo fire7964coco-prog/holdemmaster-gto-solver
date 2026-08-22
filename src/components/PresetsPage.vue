@@ -197,6 +197,28 @@ const M = {
     footnote:
       "Die Ranges sind Näherungen des 100bb-Onlinestandards. Lade einen Spot, passe die Ranges an und vergleiche – so lernst du am meisten.",
   },
+  zh: {
+    // 이 넷은 «[버튼1] 글1 [버튼2] 글2» 순서로 한 문장을 이룬다 — 앞뒤 공백에 주의.
+    // 중국어는 단어를 띄우지 않으므로 en·de와 달리 조각 끝에 공백을 두지 않는다
+    // ⚠ 이 조각이 문장 «맨 앞»에 온다 — 동사가 없으면 잔문장이 된다
+    infoBtn1: "点[⚡ 直接看结果]",
+    infoText1:
+      "，就能立刻看到算好的策略。想改范围、或者想一路点到转牌和河牌时，再用",
+    infoBtn2: "[自己计算]",
+    infoText2: "。",
+    pot: "底池",
+    stack: "筹码量",
+    // ⚠ 해설 링크는 지금 한국어에서만 뜬다(articleUrl이 ko 외에는 ""를 돌려준다).
+    //   본체 /zh/blog는 있지만 GTO 13편의 중국어판이 아직 없다(2026-08-21 실측 404).
+    //   중국어판 글이 생기면 그때 articleUrl에 zh 분기를 더하면 이 문구가 살아난다
+    articleLink: "查看解说",
+    viewResults: "直接看结果",
+    solveYourself: "自己计算",
+    // 「100bb」는 앱이 코드로 찍는 단위 표기(formatAmount)와 맞춘 것 — 브리프 §3의 「100BB」
+    // 대문자 권고보다 «화면 안 일관성»을 택했다 (독일어에서 내린 판단과 같다)
+    footnote:
+      "这些范围是 100bb 线上标准打法的近似值。加载之后随便改、随便比较，这本身就是很好的练习。",
+  },
 } as const;
 
 export default defineComponent({

@@ -43,8 +43,9 @@
       </div>
 
       <div class="flex ml-auto h-full items-center z-10">
-        <!-- 언어 선택 — 6개 언어(ko/en/ja/es/pt/de)라 토글 대신 선택 상자.
-             닫힌 상태에는 현재 언어의 이름만 보이므로 화면에 외국어가 남지 않는다 -->
+        <!-- 언어 선택 — 7개 언어(ko/en/ja/es/pt/de/zh)라 토글 대신 선택 상자.
+             닫힌 상태에는 현재 언어의 이름만 보이므로 화면에 외국어가 남지 않는다.
+             ⚠ 항목을 늘리면 상자가 넓어져 «다른 언어» 화면이 밀린다 — select-fit-verify.js 필수 -->
         <select
           class="lang-select"
           :aria-label="L.langSwitchLabel"
@@ -57,6 +58,8 @@
           <option value="es">Español</option>
           <option value="pt">Português</option>
           <option value="de">Deutsch</option>
+          <!-- 지금은 간체만 지원한다. 번체(繁體中文)는 별도 언어로 추가할 것 -->
+          <option value="zh">简体中文</option>
         </select>
         <a
           :href="communityUrl"
@@ -131,6 +134,17 @@ const M = {
     communitySuffix: " Community",
     langSwitchLabel: "Sprache wählen",
   },
+  zh: {
+    brand: "HoldemMaster GTO 求解器",
+    // 「求解器」= solver의 중국어 정착역 (dpskill·中扑网 실사용 — 리서치 §2)
+    solver: "求解器",
+    results: "结果",
+    community: "HoldemMaster",
+    // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일).
+    //   중국어 조판에서도 한자와 라틴문자 사이는 띄우는 것이 표준이다
+    communitySuffix: " 社区",
+    langSwitchLabel: "选择语言",
+  },
 } as const;
 
 export default defineComponent({
@@ -148,7 +162,8 @@ export default defineComponent({
         value === "ja" ||
         value === "es" ||
         value === "pt" ||
-        value === "de"
+        value === "de" ||
+        value === "zh"
       )
         setLocale(value);
     };
