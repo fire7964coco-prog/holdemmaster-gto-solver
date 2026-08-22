@@ -60,8 +60,11 @@ export const MAIN_SITE = "https://www.holdemmaster.com";
  */
 const LOCALE_PATHS: Record<string, Record<string, string>> = {
   en: { "": "/en", "/solver": "/en/solver" },
-  ja: { "": "/ja" }, // /ja/solver·/ja/community는 아직 없다 (2026-08-19 실측 404)
-  es: { "": "/es" }, // /es는 실재(200), /es/solver는 404 (2026-08-20 실측 — 스페인어화 리서치)
+  // ✅ /ja/solver가 열렸다 (2026-08-22 실측 200). 2026-08-19에는 404였다 —
+  //    본체가 랜딩을 늘릴 때마다 여기가 낡는다. 언어 작업마다 한 번씩 다시 재 볼 것
+  ja: { "": "/ja", "/solver": "/ja/solver" }, // /ja/community는 아직 없다
+  // ✅ /es/solver 신설 (본체 회신 reply-to-solver-2026-08-22.md §4, 2026-08-22 실측 200)
+  es: { "": "/es", "/solver": "/es/solver" }, // /es/community는 아직 없다
   pt: { "": "/pt" }, // /pt는 실재(200), /pt/solver·/pt/community는 404 (2026-08-21 실측)
   de: { "": "/de" }, // /de는 실재(200), /de/solver·/de/community는 404 (2026-08-21 실측)
   zh: { "": "/zh" }, // /zh는 실재(200), /zh/solver·/zh/community는 404 (2026-08-21 실측).
@@ -70,12 +73,9 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   //
   // 번체: /zh-hant는 실재(200)이고 본체 app/zh-hant/page.tsx가 <CommunityClient pageLocale="zh-hant"/>를
   // 렌더한다 — 피드도 번체 글로 걸러지고 블로그 티저 42편도 번체다(2026-08-22 본체 소스 확인).
-  // ⚠ 다만 community-client.tsx의 `LABELS`에 zh-hant 키가 «없어서» 화면 라벨(버튼·탭)은
-  //   `getL()`의 폴백대로 **영어로 나온다**. 그래도 링크를 여는 쪽을 택한 이유:
-  //   ① 콘텐츠(글·블로그)는 실제로 번체다 ② 앱이 «커뮤니티에 올려보라»고 안내하면서 갈 곳을
-  //   숨기면 2026-08-22에 5개 언어에서 고친 바로 그 결함을 되풀이하게 된다.
-  //   → 대신 TrainerPage의 «[✏️ …]» 버튼 이름은 실제로 보이게 될 영어 라벨을 적었다.
-  //   본체에 zh-hant LABELS 추가를 요청해 두었다(handoff-to-main-site/).
+  // ✅ 본체가 `LABELS`에 zh-hant 한 벌(52키)을 넣었다 — 화면 라벨도 번체다
+  //   (회신 reply-to-solver-2026-08-22.md §1, 2026-08-22). 영어 폴백은 해소됐다.
+  //   → TrainerPage의 «[✏️ 發文]»은 본체 확정값이다(임시 영어 이름에서 바꿨다).
   "zh-hant": { "": "/zh-hant" }, // /zh-hant/solver·/zh-hant/community는 404 (2026-08-22 실측)
 };
 

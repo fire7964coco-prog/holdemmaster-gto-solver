@@ -1451,12 +1451,10 @@ const M = {
     copied: "已複製",
     copyResult: "複製結果文字",
     openCommunity: "開啟社群 →",
-    // ⚠ 본체 community-client.tsx의 LABELS에 zh-hant 키가 «없어서» 이 버튼은 실제로
-    //   영어 폴백(「✏️ Write Post」)으로 나온다(2026-08-22 본체 소스 확인).
-    //   없는 이름을 안내하지 않으려고 «실제로 보이게 될» 이름을 적는다.
-    //   본체가 zh-hant LABELS를 넣으면 그때 번체 버튼명으로 바꿀 것
+    // ✅ 본체가 2026-08-22에 LABELS에 zh-hant를 넣었다(회신 reply-to-solver-2026-08-22.md §1).
+    //   확정값 「✏️ 發文」을 라이브 /zh-hant에서 직접 확인하고 임시 영어 이름에서 바꿨다
     pasteHintBefore: "在社群裡按下",
-    pasteHintBold: "[✏️ Write Post]",
+    pasteHintBold: "[✏️ 發文]",
     pasteHintAfter: "，貼上去就行。",
     keepPracticing: "接著練",
     nextHand: "下一題",
