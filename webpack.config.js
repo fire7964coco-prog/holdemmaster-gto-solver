@@ -80,7 +80,9 @@ class GenerateServiceWorkerPlugin {
               .filter((n) => /\.(js|css)$/.test(n) && !lazyFiles.has(n))
               .map((n) => "/" + n),
             ...entryFiles.filter((f) => /\.(js|css)$/.test(f)).map((f) => "/" + f),
-            ...names.filter((n) => n === "favicon.png" || n === "manifest.webmanifest").map((n) => "/" + n),
+            ...// ⚠ 매니페스트는 언어별로 8개다 — 하나만 캐시하면 오프라인에서 다른 언어의
+            // 설치 프롬프트가 이름을 못 읽는다 (2026-08-22 언어별 매니페스트 도입)
+            names.filter((n) => n === "favicon.png" || /^manifest(-[\w-]+)?\.webmanifest$/.test(n)).map((n) => "/" + n),
             ...names.filter((n) => n.startsWith("icons/")).map((n) => "/" + n),
           ];
 

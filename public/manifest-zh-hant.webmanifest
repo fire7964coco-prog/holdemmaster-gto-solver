@@ -1,8 +1,8 @@
 {
-  "name": "홀덤마스터 GTO 솔버",
-  "short_name": "GTO 솔버",
-  "description": "무료 GTO 솔버와 트레이너. 교육 예제 13종은 오프라인에서도 바로 볼 수 있습니다.",
-  "lang": "ko",
+  "name": "HoldemMaster GTO 解算器",
+  "short_name": "GTO 解算器",
+  "description": "免費的 GTO 解算器和訓練器。13 個教學案例打開就能看，沒網路也一樣。",
+  "lang": "zh-Hant",
   "dir": "ltr",
   "start_url": "/?view=trainer",
   "scope": "/",
@@ -37,9 +37,9 @@
   ],
   "shortcuts": [
     {
-      "name": "GTO 트레이너",
-      "short_name": "트레이너",
-      "description": "실제 레인지에서 뽑은 핸드로 문제를 풀고 EV 손실을 채점받습니다",
+      "name": "GTO 訓練器",
+      "short_name": "訓練器",
+      "description": "從真實範圍裡抽一手牌做題，按 EV 損失評分",
       "url": "/?view=trainer",
       "icons": [
         {
@@ -49,9 +49,9 @@
       ]
     },
     {
-      "name": "교육 예제 13종",
-      "short_name": "교육 예제",
-      "description": "13개 스팟의 GTO 전략을 기다림 없이 확인합니다",
+      "name": "13 個教學案例",
+      "short_name": "教學案例",
+      "description": "13 個牌局的 GTO 策略，不用等就能看",
       "url": "/?view=presets",
       "icons": [
         {

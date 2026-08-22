@@ -145,8 +145,21 @@ const DOC_LANG: Record<Locale, string> = {
   "zh-hant": "zh-Hant",
 };
 
+/* 설치된 앱의 이름(창 제목·홈 화면 라벨)은 «매니페스트»가 정한다 — 문서 제목이 아니다.
+ * 언어별 파일이 public/manifest-<locale>.webmanifest로 있고, 첫 로드는 index.html의
+ * 인라인 스크립트가, 이후 전환은 이 함수가 담당한다.
+ * ⚠ 8개 파일의 id가 전부 "/"라 브라우저는 «같은 앱»으로 본다(다르면 앱이 갈라진다).
+ * ⚠ 이미 설치된 사용자는 재설치 전까지 예전 이름을 유지한다 — 정상이다. */
+const applyManifestLocale = (locale: Locale) => {
+  const link = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
+  if (!link) return;
+  const href = locale === "ko" ? "/manifest.webmanifest" : `/manifest-${locale}.webmanifest`;
+  if (!link.href.endsWith(href)) link.href = href;
+};
+
 const applyDocumentLocale = (locale: Locale) => {
   document.documentElement.lang = DOC_LANG[locale];
+  applyManifestLocale(locale);
   document.title = DOC_META[locale].title;
   document
     .querySelector('meta[name="description"]')

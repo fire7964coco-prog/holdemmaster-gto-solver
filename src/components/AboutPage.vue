@@ -179,7 +179,7 @@ const M = {
       // 「설치 없음」은 홈 화면 설치를 넣은 뒤로 앞뒤가 안 맞아 뺐다 (2026-08-15)
       { title: "오프라인 학습", desc: "홈 화면에 설치하면 인터넷 없이도" },
       { title: "빠른 계산", desc: "멀티스레드로 데스크톱 솔버 수준" },
-      { title: "GTO 트레이너", desc: "문제를 풀고 EV 손실로 채점받기" },
+      { title: "GTO 트레이너", desc: "문제를 풀고 팟 대비 EV 손실로 채점받기" },
     ],
     stepsTitle: "처음이라면",
     steps: [
@@ -218,7 +218,7 @@ const M = {
       { title: "Free", desc: "Every feature, no usage limits" },
       { title: "Offline Study", desc: "Add it to your home screen and practice without an internet connection" },
       { title: "Fast Solving", desc: "Multithreaded — desktop-solver speed" },
-      { title: "GTO Trainer", desc: "Play spots and get graded by EV loss" },
+      { title: "GTO Trainer", desc: "Play spots, graded on EV loss relative to the pot" },
     ],
     stepsTitle: "New here?",
     steps: [
@@ -258,7 +258,7 @@ const M = {
       { title: "無料", desc: "回数制限なく全機能を利用できます" },
       { title: "オフライン学習", desc: "ホーム画面に追加すればインターネットなしでも学習できます" },
       { title: "高速計算", desc: "マルチスレッドでデスクトップソルバー級" },
-      { title: "GTOトレーナー", desc: "問題を解いてEVロスで採点" },
+      { title: "GTOトレーナー", desc: "問題を解いてポット比のEVロスで採点" },
     ],
     stepsTitle: "初めての方へ",
     steps: [
@@ -297,7 +297,7 @@ const M = {
       { title: "Gratis", desc: "Todas las funciones, sin límites de uso" },
       { title: "Estudio offline", desc: "Agrégalo a tu pantalla de inicio y practica sin internet" },
       { title: "Cálculo rápido", desc: "Multihilo — velocidad de solver de escritorio" },
-      { title: "Entrenador GTO", desc: "Juega spots y recibe tu nota por pérdida de EV" },
+      { title: "Entrenador GTO", desc: "Juega spots; tu nota sale de la pérdida de EV respecto al bote" },
     ],
     stepsTitle: "¿Primera vez aquí?",
     steps: [
@@ -337,7 +337,7 @@ const M = {
       { title: "Grátis", desc: "Todos os recursos, sem limite de uso" },
       { title: "Estudo offline", desc: "Adicione à tela de início e pratique sem internet" },
       { title: "Cálculo rápido", desc: "Multithread — velocidade de solver de desktop" },
-      { title: "Treinador GTO", desc: "Jogue spots e receba sua nota pela perda de EV" },
+      { title: "Treinador GTO", desc: "Jogue spots; sua nota vem da perda de EV em relação ao pote" },
     ],
     stepsTitle: "É a sua primeira vez aqui?",
     steps: [
@@ -382,7 +382,7 @@ const M = {
         desc: "Zum Startbildschirm hinzufügen und ohne Internet üben",
       },
       { title: "Schnelles Solving", desc: "Multithreaded – Tempo eines Desktop-Solvers" },
-      { title: "GTO-Trainer", desc: "Spots spielen und nach EV-Verlust benotet werden" },
+      { title: "GTO-Trainer", desc: "Spots spielen, benotet nach EV-Verlust im Verhältnis zum Pot" },
     ],
     stepsTitle: "Neu hier?",
     steps: [
@@ -424,7 +424,7 @@ const M = {
       { title: "免费", desc: "全部功能，不限次数" },
       { title: "离线学习", desc: "添加到主屏幕，没网也能练" },
       { title: "算得快", desc: "多线程——接近桌面版求解器的速度" },
-      { title: "GTO 训练器", desc: "做题，按 EV 损失打分" },
+      { title: "GTO 训练器", desc: "做题，按占底池的 EV 损失打分" },
     ],
     stepsTitle: "第一次来？",
     steps: [
@@ -473,7 +473,7 @@ const M = {
       { title: "免費", desc: "全部功能，不限次數" },
       { title: "離線學習", desc: "加入主畫面，沒網路也能練" },
       { title: "算得快", desc: "多執行緒——接近桌面版解算器的速度" },
-      { title: "GTO 訓練器", desc: "做題，按 EV 損失評分" },
+      { title: "GTO 訓練器", desc: "做題，按佔底池的 EV 損失評分" },
     ],
     stepsTitle: "第一次來？",
     steps: [

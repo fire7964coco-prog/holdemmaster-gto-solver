@@ -348,25 +348,25 @@ export const PRESETS: Preset[] = [
     titleEn: "Connected Broadway Board, Two-Tone",
     board: "Qs Jd Ts",
     lesson:
-      "양쪽 모두 강한 핸드가 많은 보드. 큰 벳과 체크레이즈가 활발해집니다. 드로우 분류 패널을 꼭 보세요.",
+      "양쪽 다 맞은 것처럼 보이는 보드. 그런데 BB는 13스팟 중 에퀴티 실현율이 가장 낮습니다 — 77.9%, BTN은 119.4%. BB가 99.9% 체크하는 이유를 핸드 분류 패널에서 확인하세요.",
     lessonEn:
-      "Both ranges connect hard with this board. Big bets and check-raises come alive — don't skip the hand-category panel.",
+      "A board that looks like it hits both ranges. But BB realizes less equity here than in any of the 13 spots — 77.9% against BTN's 119.4% — and checks 99.9%. The hand-category panel shows why.",
     titleJa: "ブロードウェイのコネクトボード（2トーン）",
     lessonJa:
-      "両者のレンジに強いハンドが多いボードです。大きなベットとチェックレイズが活発になります。分類パネルも必ず確認しましょう。",
+      "両者に当たったように見えるボードです。ところがBBのエクイティ実現率は13スポット中で最も低く、77.9%（BTNは119.4%）。99.9%チェックになる理由を分類パネルで確かめましょう。",
     titleEs: "Broadway conectado, two-tone",
     lessonEs:
-      "Aquí ambos rangos conectan fuerte. Las apuestas grandes y los check-raises se vuelven protagonistas — no te saltes el panel de proyectos.",
+      "Un board que parece conectar con ambos rangos. Pero BB realiza menos equity aquí que en cualquiera de los 13 spots — 77.9% frente al 119.4% de BTN — y hace check el 99.9%. El panel de manos y proyectos explica por qué.",
     titlePt: "Board Broadway conectado, two-tone",
     lessonPt:
-      "Aqui os dois ranges conectam forte. As apostas grandes e os check-raises viram protagonistas — não pule o painel Mãos / Draws.",
+      "Um board que parece conectar com os dois ranges. Mas o BB realiza menos equity aqui do que em qualquer um dos 13 spots — 77,9% contra 119,4% do BTN — e dá check em 99,9%. O painel Mãos / Draws mostra o porquê.",
     titleDe: "Verbundenes Broadway-Board, Two-Tone",
     titleZh: "broadway 高张连张双色牌面",
     titleZhHant: "百老匯連張雙色牌面",
     lessonDe:
-      "Beide Ranges treffen dieses Board hart. Große Bets und Check-Raises leben auf – lass das Panel Hände / Draws nicht aus.",
-    lessonZh: "两边都容易打中的牌面。大注和过牌加注一下子多了起来——别漏掉“手牌/听牌”那个面板。",
-    lessonZhHant: "兩邊都容易打中的牌面。大注和過牌加注一下子多了起來——別漏掉「手牌/聽牌」那個面板。",
+      "Ein Board, das beide Ranges zu treffen scheint. Doch BB realisiert hier weniger Equity als in jedem der 13 Spots – 77,9% gegen 119,4% beim BTN – und checkt zu 99,9%. Das Panel Hände / Draws zeigt, warum.",
+    lessonZh: "看着像两边都打中的牌面。可 BB 的权益实现在 13 个案例里是最低的——77.9%，BTN 是 119.4%。BB 为什么 99.9% 都过牌，到“手牌/听牌”面板里找答案。",
+    lessonZhHant: "看著像兩邊都打中的牌面。可 BB 的勝率實現在 13 個案例裡是最低的——77.9%，BTN 是 119.4%。BB 為什麼 99.9% 都過牌，到「手牌/聽牌」面板裡找答案。",
   },
   {
     ...SRP,
@@ -513,25 +513,25 @@ export const PRESETS: Preset[] = [
     titleEn: "Dynamic Two-Tone Board",
     board: "Qh Th 7s",
     lesson:
-      "3벳팟인데 콜러에게도 좋은 카드가 많은 보드. 3벳터가 조심스러워지는 지점을 관찰하세요.",
+      "3벳팟인데 콜러에게도 좋은 카드가 많은 보드. 그런데 3벳터는 멈추지 않습니다 — 98.5%가 같은 2/3 사이즈로 나갑니다. 체크로 남는 0.8%가 어떤 핸드인지 보세요.",
     lessonEn:
-      "A 3-bet pot on a board that suits the caller as well. Watch where the 3-bettor starts slowing down.",
+      "A 3-bet pot on a board that suits the caller as well — and yet the 3-bettor doesn't slow down: 98.5% of the range fires the same two-thirds size. See which hands make up the 0.8% that checks.",
     titleJa: "ダイナミックな2トーンボード",
     lessonJa:
-      "3ベットポットなのにコーラーにも良いカードが多いボードです。3ベッターが慎重になる場面を観察しましょう。",
+      "3ベットポットなのにコーラーにも良いカードが多いボードです。それでも3ベッターは止まりません — 98.5%が同じ2/3サイズで打ちます。チェックに残る0.8%がどんなハンドか見てみましょう。",
     titleEs: "Board dinámico two-tone",
     lessonEs:
-      "Un bote de 3-bet en un board que también le gusta al caller. Observa dónde el 3-bettor empieza a frenar.",
+      "Un bote de 3-bet en un board que también le gusta al caller — y aun así el 3-bettor no frena: el 98.5% del rango dispara con el mismo tamaño de dos tercios. Mira qué manos forman ese 0.8% que hace check.",
     titlePt: "Board dinâmico two-tone",
     lessonPt:
-      "Um pote de 3-bet num board que também agrada ao caller. Observe onde o 3-bettor começa a frear.",
+      "Um pote de 3-bet num board que também agrada ao caller — e mesmo assim o 3-bettor não freia: 98,5% do range aposta com o mesmo tamanho de dois terços. Veja quais mãos formam os 0,8% que dão check.",
     titleDe: "Dynamisches Two-Tone-Board",
     titleZh: "多变的双色牌面",
     titleZhHant: "多變的雙色牌面",
     lessonDe:
-      "Ein 3-Bet-Pot auf einem Board, das auch dem Caller liegt. Schau, ab wann der 3-Bettor zu bremsen beginnt.",
-    lessonZh: "虽然是 3bet 底池，但这个牌面对跟注方也不差。看看 3bet 方是从哪儿开始变得小心起来的。",
-    lessonZhHant: "雖然是 3bet 底池，但這個牌面對跟注方也不差。看看 3bet 方是從哪裡開始變得小心起來的。",
+      "Ein 3-Bet-Pot auf einem Board, das auch dem Caller liegt – und trotzdem bremst der 3-Bettor nicht: 98,5% der Range feuert mit derselben Zwei-Drittel-Size. Sieh dir an, welche Hände die 0,8% Check ausmachen.",
+    lessonZh: "虽然是 3bet 底池，但这个牌面对跟注方也不差。可 3bet 方并不会收手——98.5% 的范围都用同一个 2/3 尺寸打出去。看看剩下过牌的 0.8% 是哪些手牌。",
+    lessonZhHant: "雖然是 3bet 底池，但這個牌面對跟注方也不差。可 3bet 方並不會收手——98.5% 的範圍都用同一個 2/3 尺寸打出去。看看剩下過牌的 0.8% 是哪些手牌。",
   },
   {
     ...TBP,
@@ -626,24 +626,24 @@ export const PRESETS: Preset[] = [
     titleEn: "Ace-Paired Board",
     board: "As Ah 6d",
     lesson:
-      "A가 2장 깔린 특수 보드. 트립스가 흔치 않아 블러프 천국이 됩니다. 폴드 비율을 잘 보세요.",
+      "A가 2장 깔린 특수 보드. 트립스는 드물지 않습니다 — SB가 94콤보로 BB(72콤보)보다 많아서 SB가 80.1%를 칩니다. 어느 쪽이 A를 더 들고 있는지가 이 보드의 전부입니다.",
     lessonEn:
-      "With two aces on board, trips are rare — bluff heaven. Keep a close eye on the fold frequencies.",
+      "Two aces on the board. Trips aren't rare — SB simply holds more of them (94 combos to BB's 72), so SB bets 80.1%. Who holds more aces is the whole story here.",
     titleJa: "Aペアボード",
     lessonJa:
-      "Aが2枚落ちた特殊なボードです。Aを持つスリーカードが珍しいため、ブラフ天国になります。フォールド頻度に注目しましょう。",
+      "Aが2枚落ちた特殊なボードです。トリップスは珍しくありません — SBが94コンボ、BBが72コンボで、Aを多く持つSBが80.1%打ちます。どちらがAを多く持つかがこのボードのすべてです。",
     titleEs: "Board con A pareado",
     lessonEs:
-      "Con dos ases en el board, los tríos son poco frecuentes — el paraíso del bluff. Vigila de cerca las frecuencias de fold.",
+      "Dos ases en el board. Los tríos no son raros — SB simplemente tiene más (94 combos frente a los 72 de BB), así que SB apuesta el 80.1%. Quién tiene más ases lo explica todo aquí.",
     titlePt: "Board com A pareado",
     lessonPt:
-      "Com dois ases no board, as trincas são raras — o paraíso do blefe. Fique de olho nas frequências de fold.",
+      "Dois ases no board. As trincas não são raras — o SB simplesmente tem mais delas (94 combos contra 72 do BB), então o SB aposta 80,1%. Quem tem mais ases explica tudo aqui.",
     titleDe: "Board mit gepaartem Ass",
     titleZh: "A 对子牌面",
     titleZhHant: "A 對子牌面",
     lessonDe:
-      "Mit zwei Assen auf dem Board sind Drillinge selten – ein Bluff-Paradies. Behalte die Fold-Frequenzen genau im Blick.",
-    lessonZh: "牌面上摆着两张 A 的特殊局面。明三条（trips）并不常见，于是这里成了诈唬的天堂。把弃牌比例看仔细。",
-    lessonZhHant: "牌面上擺著兩張 A 的特殊局面。明三條（trips）並不常見，於是這裡成了詐唬的天堂。把蓋牌比例看仔細。",
+      "Zwei Asse auf dem Board. Drillinge sind nicht selten – SB hält einfach mehr davon (94 Combos gegen 72 beim BB), also bettet SB 80,1%. Wer mehr Asse hält, erklärt hier alles.",
+    lessonZh: "牌面上摆着两张 A 的特殊局面。明三条（trips）并不少见——SB 有 94 个组合，BB 只有 72 个，所以 SB 打出 80.1%。谁手里的 A 更多，就是这个牌面的全部。",
+    lessonZhHant: "牌面上擺著兩張 A 的特殊局面。明三條（trips）並不少見——SB 有 94 個組合，BB 只有 72 個，所以 SB 打出 80.1%。誰手裡的 A 更多，就是這個牌面的全部。",
   },
 ];

@@ -87,7 +87,7 @@ export const MADE_LABELS_JA: Record<MadeKey, string> = {
   full_house: "フルハウス",
   flush: "フラッシュ",
   straight: "ストレート",
-  trips: "スリーカード",
+  trips: "セット/トリップス",
   two_pair: "ツーペア",
   overpair: "オーバーペア",
   top_pair: "トップペア",

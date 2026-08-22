@@ -23,6 +23,47 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="GTO 솔버">
     <meta name="mobile-web-app-capable" content="yes">
+    <!--
+      ⚠ 매니페스트는 «설치된 앱의 이름»을 정한다 — 창 제목·홈 화면 라벨·앱 목록.
+      2026-08-22까지 한국어 한 벌뿐이라 **7개 언어에서 앱 이름이 한글로 나왔다**
+      (사용자가 스페인어 설치본 창 제목에서 발견). 화면 검사는 body의 innerText만 보므로
+      이 자리를 영원히 못 잡는다.
+
+      브라우저는 <head>를 파싱한 «뒤» 매니페스트를 비동기로 가져간다. 그래서 여기서
+      href를 바꾸면 설치 프롬프트가 그 언어의 파일을 읽는다.
+      ⚠ 이 스크립트는 src/i18n.ts의 detect()를 «축약 복제»한 것이다 — 둘이 갈리면
+        앱 이름만 다른 언어로 나온다(설치가 깨지지는 않는다. 8개 파일의 id가 전부 "/"라
+        브라우저는 여전히 «같은 앱»으로 본다). 언어를 더할 땐 두 곳을 같이 고칠 것.
+        i18n.ts의 setLocale()도 이 링크를 갱신하므로, 이후 전환은 그쪽이 담당한다.
+    -->
+    <script>
+      (function () {
+        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant"];
+        var l = null;
+        try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
+        if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale"); } catch (e) { l = null; } }
+        if (OK.indexOf(l) < 0) {
+          var n = (navigator.language || "").toLowerCase();
+          if (n.indexOf("ko") === 0) l = "ko";
+          else if (n.indexOf("ja") === 0) l = "ja";
+          else if (n.indexOf("es") === 0) l = "es";
+          else if (n.indexOf("pt") === 0) l = "pt";
+          else if (n.indexOf("de") === 0) l = "de";
+          else if (n.indexOf("zh") === 0) l = (/^zh-(tw|hk|mo)($|[-_])/.test(n) || n.indexOf("hant") >= 0) ? "zh-hant" : "zh";
+          else l = "en";
+        }
+        if (l === "ko") return; // 기본 파일이 이미 한국어다
+        var link = document.querySelector('link[rel="manifest"]');
+        if (link) link.href = "/manifest-" + l + ".webmanifest";
+        // iOS 사파리는 매니페스트를 부분적으로만 읽는다 — 홈 화면 라벨은 이 meta가 정한다
+        var TITLE = {
+          en: "GTO Solver", ja: "GTOソルバー", es: "GTO Solver", pt: "GTO Solver",
+          de: "GTO Solver", zh: "GTO 求解器", "zh-hant": "GTO 解算器"
+        };
+        var meta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+        if (meta && TITLE[l]) meta.setAttribute("content", TITLE[l]);
+      })();
+    </script>
     <title>홀덤마스터 GTO 솔버 — 무료 브라우저 GTO 솔버</title>
     <meta name="description" content="설치 없이 브라우저에서 실행하는 무료 GTO 솔버. 텍사스 홀덤 포스트플랍 전략을 레인지·보드·벳 사이즈별로 계산합니다. 홀덤마스터 커뮤니티 제공.">
   </head>
