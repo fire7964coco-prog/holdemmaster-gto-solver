@@ -119,7 +119,7 @@ const toUser = (session: Session | null): AccountUser | null => {
       (meta.full_name as string) ||
       (meta.name as string) ||
       session.user.email?.split("@")[0] ||
-      pick("회원", "Player", "プレイヤー", "jugador", "Jogador", "Spieler", "玩家"),
+      pick("회원", "Player", "プレイヤー", "jugador", "Jogador", "Spieler", "玩家", "玩家"),
   };
 };
 
@@ -153,7 +153,7 @@ export const onAuthChange = (handler: (user: AccountUser | null) => void) => {
  */
 export const signIn = async (provider: "google" | "kakao") => {
   const supabase = await getClient();
-  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能"));
+  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能"));
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
@@ -239,10 +239,10 @@ export const syncAttempts = async (
   localAttempts: TrainerAttempt[]
 ): Promise<{ result: SyncResult; missingLocally: TrainerAttempt[] }> => {
   const supabase = await getClient();
-  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能"));
+  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能"));
   const { data: sessionData } = await supabase.auth.getSession();
   const userId = sessionData.session?.user.id;
-  if (!userId) throw new Error(pick("로그인이 필요합니다", "Please sign in first", "ログインが必要です", "Primero inicia sesión", "Faça login primeiro", "Melde dich zuerst an", "请先登录"));
+  if (!userId) throw new Error(pick("로그인이 필요합니다", "Please sign in first", "ログインが必要です", "Primero inicia sesión", "Faça login primeiro", "Melde dich zuerst an", "请先登录", "請先登入"));
 
   const uploadable = localAttempts.filter((item) => item.clientId);
   if (uploadable.length) {

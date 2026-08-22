@@ -133,6 +133,20 @@ export const recordDaily = (lossBb: number) => {
 };
 
 /**
+ * 성적 카드에 찍는 날짜 — 언어마다 관습이 다르다.
+ * ⚠ 카드는 canvas라 화면 검사도 clipboard-shot.js도 못 본다. 공유 문구와 «같은 규칙»으로 맞춘다.
+ *  - 독일어: TT.MM.JJJJ (26.08.2026을 «2026년 8월 26일»로 읽는 것을 막는다)
+ *  - 중국어(간체·번체): YYYY-MM-DD (본체의 zh/zh-hant 포스팅이 전부 ISO다)
+ *  - 나머지: YYYY.MM.DD
+ */
+export const dailyCardDate = () => {
+  const key = todayKey();
+  if (i18n.locale === "de") return key.split("-").reverse().join(".");
+  if (i18n.locale === "zh" || i18n.locale === "zh-hant") return key;
+  return key.replace(/-/g, ".");
+};
+
+/**
  * 커뮤니티에 붙여넣을 결과 문구.
  * 정답 자체는 넣지 않는다 — 아직 안 푼 사람의 재미를 없애면 글이 안 퍼진다.
  */
@@ -203,6 +217,21 @@ export const dailyShareText = (verdict: string) => {
       "",
       "来做同一道题 → https://solver.holdemmaster.com/?view=trainer&lang=zh",
       "（HoldemMaster GTO 求解器 · 每天一题）",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "zh-hant") {
+    // ⚠ 날짜도 «언어»다. 번체권 관습은 YYYY/MM/DD도 흔하지만, 본체의 zh-hant 포스팅이
+    //   전부 「2026-07-23」(ISO)라 본체와 같은 표기로 맞춘다.
+    //   ⚠ 소수점은 영어와 같은 «.»이므로 localizeNumber로 감싸지 «않는다» (pt·de와 다름)
+    return [
+      `[今日 GTO 題目 · ${todayKey()}]`,
+      `我的結果：${verdict}（EV 損失 ${dailyState.lossBb.toFixed(3)}bb）`,
+      dailyState.streak > 1 ? `已連續挑戰 ${dailyState.streak} 天` : "",
+      "",
+      "來做同一道題 → https://solver.holdemmaster.com/?view=trainer&lang=zh-hant",
+      "（HoldemMaster GTO 解算器 · 每天一題）",
     ]
       .filter(Boolean)
       .join("\n");

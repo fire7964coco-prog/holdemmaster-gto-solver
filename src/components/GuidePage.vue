@@ -20,8 +20,8 @@
           {{ L.quickStep1After }}
         </li>
         <li>
-          {{ L.quickStep2Before }}
-          <span class="font-semibold text-emerald-300">{{ L.quickStep2Btn }}</span
+          {{ L.quickStep2Before }}{{ sentenceGap
+          }}<span class="font-semibold text-emerald-300">{{ L.quickStep2Btn }}</span
           ><!-- 위와 같은 이유로 공백 없음 -->{{ L.quickStep2After }}
         </li>
         <li>{{ L.quickStep3 }}</li>
@@ -1552,12 +1552,200 @@ const M = {
     errNone: "目前还没有记录到错误。",
     errPrompt: "请复制下面的内容",
   },
+  // ⚠ 台灣 표기가 대륙과 «단어»부터 다른 자리들:
+  //   飞行模式→飛航模式 · 地铁→捷運 · 信号→訊號 · 短信→簡訊 · 地址栏→網址列 ·
+  //   链接→連結 · 后台→背景 · 列(column)→欄 · 安装包→安裝檔 · 恶意代码→惡意程式碼 ·
+  //   源代码→原始碼 · 标签(tab)→分頁 · 拖动→拖曳 · 默认→預設 · 条(건수)→筆
+  "zh-hant": {
+    quickTitle: "一分鐘上手——第一次來就看這裡",
+    quickStep1Desktop: "在左邊按下",
+    quickStep1Mobile: "在上方分頁裡按下",
+    quickStep1Btn: "教學案例",
+    quickStep1After: "",
+    quickStep2Before: "隨便打開一個案例，按下",
+    quickStep2Btn: "[⚡ 直接看結果]",
+    quickStep2After: "——結果馬上就出來",
+    quickStep3: "照著下面的「結果畫面怎麼讀」，把這些數字看懂",
+
+    termsTitle: "只要弄懂 4 個詞就夠了",
+    termRange: "範圍（range）",
+    // ⚠ 「一個玩家」(a player 축자직역)도, 「對手」로 좁히는 것도 안 된다 —
+    //   바로 다음 단계 ①②가 «네 레인지»를 넣으라고 하기 때문이다
+    defRange: "某個人在這個局面可能拿著的那一堆手牌，你自己的也算（比如「他大概拿著 AA、KK、AK 裡的一個」）",
+    defPos: "先行動的一方（吃虧）/後行動的一方（佔便宜）。BTN vs BB 的話，BB 是 OOP",
+    termEquity: "勝率（equity）",
+    // ⚠ equity는 «획득 확률»이 아니다 — 지금 전부 걸었을 때 팟에서 가져가는 «몫»이다.
+    //   EquityPage.how1과 글이 맞아야 한다
+    defEquity: "現在就全下的話，你能從底池裡拿走的份額——獲勝% 加上平手的一半",
+    defEv: "期望值——這個動作平均能幫你贏多少。越大越好",
+
+    customTitleBefore: "自己算一個牌局——",
+    customTitleDesktop: "側邊欄",
+    customTitleMobile: "上方分頁",
+    customTitleAfter: "裡的 ①→⑤，照順序來就行",
+    step1Bold: "① OOP 範圍 / ② IP 範圍",
+    step1After: "——在 13×13 的表格裡點選、拖曳來塗色，也可以直接輸入文字：",
+    step1Hint:
+      "22+ = 所有口袋對 · A2s+ = A2s～AKs · KTo+ = KTo～KQo。表格裡的對角線是口袋對，右上是同花（s），左下是不同花（o）",
+    exampleHeader:
+      "第一次用的話，把下面這兩段範例複製貼上到範圍輸入框裡（BTN vs BB 100bb 標準——和教學案例用的是同一套範圍）",
+    exOopLabel: "OOP（BB 跟注）",
+    exIpLabel: "IP（BTN 開池）",
+    copiedLabel: "已複製！",
+    copyLabel: "複製",
+    step3Bold: "③ 公共牌",
+    step3After: "——點選翻牌 3 張，或者按「隨機翻牌」",
+    step4Bold: "④ 下注尺寸（決策樹設定）",
+    step4After: "——剛開始保持預設就行，只要確認一下起始底池和有效籌碼",
+    step4Hint:
+      "自己算的時候，輸入的數值用的是任意整數籌碼單位。想按 bb 來看，就用 10 籌碼 = 1bb 輸入（比如底池 55 就是 5.5bb）。教學案例和訓練器會自動按這個標準換算顯示。",
+    step5Bold1: "⑤ 執行解算器",
+    // ⚠ 「建立決策樹」·「執行解算器」·「計算完成！」·[結果]는 실제 버튼·탭 이름이다 —
+    //   RunSolver.buildTree/runSolver/finished · NavBar.results와 글자까지 같아야 한다
+    step5Mid:
+      "——先按「建立決策樹」，建好之後按「執行解算器」，等到出現「計算完成！」，再按上面的",
+    step5Bold2: "[結果]",
+    step5After: "分頁",
+    step5Hint:
+      "計算是在你自己的電腦上跑的，幾秒到幾分鐘不等。做好的牌局可以在 ⑤ 號畫面用[分享牌局]複製連結，拿到社群去提問",
+
+    resultsTitle: "結果畫面怎麼讀",
+    rTerm1: "頂部動作列",
+    rDef1:
+      "整條動作流程（翻牌→下注→跟注→轉牌……）的場景選擇器。按哪一步，就顯示那一刻的策略",
+    rTerm2: "左邊 13×13 表格",
+    rDef2:
+      "一格就是一手牌，格子裡的顏色比例就是各個動作的頻率。🟥 下注/加注 bet·raise（越深表示下得越大）· 🟩 過牌/跟注 check·call · 灰掉的格子表示不在範圍裡。GTO 對同一手牌也會「按比例混著打」——就是為了不讓人看出規律",
+    rTerm3: "右上角的方塊",
+    rDef3: "以整個範圍為分母的動作頻率（%）和組合數",
+    rTerm4: "右側中間的分類",
+    rDef4:
+      "你的範圍在這個公共牌上打中了什麼（頂對 top pair、聽牌 draw……）——一眼看出「這個牌面對誰有利」",
+    rTerm5: "右下角的表格",
+    // EQR = equity realization = 「勝率實現」 (본체 브리프·번체 포스팅 4회. 간체의 「权益实现」과 다르다)
+    rDef5: "每手牌的權重、勝率（EQ）、勝率實現（EQR）、EV、動作佔比。按欄標題可以排序",
+
+    trainerTitle: "GTO 訓練器——從「看懂」走到「自己做」",
+    trainerIntroBefore: "結果畫面讀順了，就可以進",
+    trainerBtn: "GTO 訓練器",
+    // ⚠ 앞 요소(버튼)와 사이에 HTML 공백이 들어가 「訓練器 。」로 벌어진다 —
+    //   전각 마침표를 앞으로 붙이지 말고 문장을 다시 시작한다
+    trainerIntroAfter:
+      "試試看。它會在 13 個教學案例的決策點上，按真實範圍抽一手牌給你，你選完動作它就評分。",
+    gradTerm: "怎麼評分",
+    gradBefore: "它不是判對錯，而是按 ",
+    gradBold: "EV 損失（bb）",
+    gradAfter:
+      "來評價。GTO 對同一手牌本來就會混著打好幾個動作，所以「頻率低的那個動作」並不等於選錯了——標準是你虧了多少",
+    verdictTerm: "判定標準",
+    verdictBefore: "按",
+    verdictBold: "佔底池的比例",
+    verdictAfter:
+      "來量——底池的 0.35% 以內 = 最佳選擇 · 1% 以內 = 可以接受 · 再多 = 該回頭檢討的局面。舉個例子，5.5bb 的單加注底池（SRP）對應 0.02bb 和 0.06bb，22.5bb 的 3bet 底池對應 0.08bb 和 0.23bb。",
+    verdictHint:
+      "同樣是 0.05bb，在小底池裡是大失誤，在大底池裡只是小差別。用絕對 bb 來量的話，3bet 底池會顯得比實際更糟，所以改成了按佔底池的比例（2026-08-15）。這兩條線各有一個下限：0.02bb 和 0.05bb。計算只收斂到目標可剝削度 0.5%，比這更小的差別已經和計算雜訊分不開了。",
+    reviewTerm: "複習",
+    reviewBefore: "虧得多的題會透過[複習]按鈕再出現一次。紀錄預設",
+    // ⚠ ErrorToast.bodyB1·TrainerPage.localOnlyBold·errBold와 «글자까지» 같아야 한다
+    reviewBold: "只儲存在這台裝置上",
+    reviewAfter:
+      "。用 HoldemMaster 帳號登入，紀錄就會存到帳號裡，換台裝置也能接著做——登入是選用的，所有功能不登入也能用",
+    filterTerm: "篩選",
+    filterDef: "在單加注底池/3bet 底池/盲位對戰裡，挑你弱的那類專門練",
+
+    installTitle: "加入主畫面，離線也能學",
+    install1:
+      "這個解算器可以像應用程式一樣加入主畫面（不用下載安裝檔）。在 Chrome 和 Edge 裡，按網址列右邊的",
+    installBold1: "安裝圖示",
+    install2: "；iPhone 的 Safari 則是按",
+    // iOS Safari 번체 메뉴 이름 (Apple 台灣 표기는 「加入主畫面」 — 간체의 「添加到主屏幕」과 다르다)
+    installBold2: "分享 → 加入主畫面",
+    install3:
+      "。裝好之後，13 個教學案例和訓練器的題目都會存到裝置裡，",
+    installBold3: "在沒訊號的地鐵上",
+    install4: "也照樣能做。",
+    // ⚠ 창 제목·버튼 이름을 «단정하지 않는다» — 기기와 Android 버전마다 다르고 실기 캡처가 없다
+    //   (핸드오프 2부 규칙 ②. en·de·pt도 같은 이유로 뭉뚱그렸다)
+    samsung1:
+      "※ 用三星瀏覽器安裝時，瀏覽器或系統可能會以安全為由攔截安裝。這是瀏覽器那邊的安全機制，跟應用程式本身無關。",
+    samsungBold: "改用 Chrome 開啟",
+    samsung2:
+      "就不會被攔；想直接在這裡裝的話，照提示視窗裡的指引選擇允許即可。",
+    offlineDataLabel: "離線學習資料",
+    offlineSaved: "已儲存——沒網路也能用教學案例和訓練器",
+    offlineSaving: "儲存中…",
+    offlineNotSaved: "未儲存",
+    offlineSaveBtn: "現在儲存（約 2.3MB）",
+    offlineFootnote:
+      "自訂牌局自己算（⑤ 執行解算器）得先連網跑過一次才能離線用——計算引擎是用到的時候才下載的。",
+
+    safeTitle: "裝了安全嗎？",
+    safe1: "安全。這裡說的「安裝」不是把一個程式下載到你裝置上，而是",
+    safeBold: "做一個在瀏覽器裡跑的捷徑",
+    safe2:
+      "。在 Android 上，註冊的只是一層指向這個網址的薄殼，真正跑起來還是在瀏覽器引擎裡。要是不放心，下面 4 件事你可以自己驗一遍——驗一次比聽我說管用。",
+    permTerm: "它不要權限",
+    permBefore:
+      "安裝的時候，相機、通訊錄、簡訊、位置這些權限一個都不要。你可以在手機的",
+    permBold: "設定 → 應用程式資訊 → 權限",
+    permAfter: "裡自己看",
+    airplaneTerm: "開飛航模式驗一下",
+    airplaneBefore: "斷網之後訓練器照樣能跑。這就是",
+    airplaneBold: "計算全在你裝置裡完成",
+    airplaneAfter: "的最直接證據",
+    openTerm: "原始碼是公開的",
+    openBefore: "這個解算器是 AGPL-3.0 開源的（",
+    openAfter: "）",
+    removeTerm: "刪得乾乾淨淨",
+    removeDef: "跟別的應用程式一樣長按刪掉就行。不會在背景執行，也不會留下什麼",
+    samsungNote2:
+      "※ 三星瀏覽器那條攔截提示並不代表查出了惡意程式碼，只是因為 Google 還沒把這個瀏覽器產生的安裝檔列入信任名單。用 Chrome 開啟就不會出現。",
+
+    studyTitle: "推薦的學習路線",
+    study1: "把 13 個教學案例按順序過一遍——它們是連成一套的課程",
+    study2: "想不通「這手牌為什麼要混著過牌？」的時候，就到右下角的[彙總]表裡比較各動作的 EV",
+    study3:
+      "同一個局面再用 GTO 訓練器做一遍，把它練成手感——弱點分析會告訴你哪類局面虧得最多",
+    study4: "範圍不變，只換公共牌來比較（比如 A72 和 974）",
+    study5: "把實戰裡拿不準的那手牌原樣輸進來檢討",
+
+    troubleTitle: "出問題了怎麼辦",
+    tTerm1: "建立決策樹出錯",
+    tDef1: "檢查一下公共牌 3 張和兩個範圍是不是都填了",
+    tTerm2: "算得很慢",
+    tDef2: "把目標可剝削度調到 0.5%",
+    tTerm3: "結果分頁是空白的",
+    tDef3: "等出現「計算完成！」之後再按",
+    tTerm4: "超出記憶體上限",
+    tDef4: "改用 16 位元整數模式，或者少填幾個下注尺寸",
+    tTerm5: "表格全是灰的",
+    tDef5: "你正在看的是對手行動的那一步——到頂部動作列上按別的場景",
+
+    errTitle: "如果你發現了需要修的問題",
+    err1: "畫面出錯或者計算卡住時，錯誤內容會自動記在這台裝置上。",
+    // ⚠ ErrorToast.bodyB1·TrainerPage.localOnlyBold·reviewBold와 같은 약속이다
+    errBold: "這些紀錄不會離開這台裝置",
+    err2:
+      "——你在下面複製出來發到社群，我們才看得到。裡面不含範圍、學習紀錄這類內容，只有錯誤訊息和瀏覽器類型。",
+    errLoggedLabel: "已記錄的錯誤",
+    errCount: (n: number) => `${n} 筆`,
+    errCopied: "已複製",
+    errCopyBtn: "複製錯誤內容",
+    errClearBtn: "清空紀錄",
+    errNone: "目前還沒有記錄到錯誤。",
+    errPrompt: "請複製下面的內容",
+  },
 } as const;
 
 export default defineComponent({
   setup() {
     const copied = ref("");
     const L = computed(() => M[i18n.locale]);
+    /* 두 조각을 잇는 공백 — CJK는 낱말을 띄우지 않으므로 넣으면 벌어져 보인다.
+     * (같은 문장을 쓰는 PresetsPage 배너는 공백 없이 붙는다 — 화면끼리 어긋나 있었다) */
+    const sentenceGap = computed(() =>
+      i18n.locale === "ja" || i18n.locale === "zh" || i18n.locale === "zh-hant" ? "" : " "
+    );
 
     // 사용법 화면을 열 때마다 실제 저장 상태를 서비스워커에 물어본다
     checkOfflineStatus();
@@ -1601,6 +1789,7 @@ export default defineComponent({
     };
 
     return {
+      sentenceGap,
       store: useStore(),
       exampleRanges,
       copyRange,

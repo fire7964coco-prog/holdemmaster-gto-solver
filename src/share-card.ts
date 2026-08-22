@@ -93,6 +93,18 @@ const CARD_TEXT = {
       `EV 损失 ${bb}bb${streak > 1 ? ` · 连续 ${streak} 天` : ""}`,
     invite: "我也来做这道题",
   },
+  "zh-hant": {
+    brand: "HoldemMaster GTO 訓練器",
+    tagline: "每天一題 · 所有人同一題",
+    heading: "今日 GTO 題目",
+    board: "公共牌",
+    hand: "我的手牌",
+    result: (verdict: string) => `我的結果：${verdict}`,
+    // ⚠ bb는 코드가 소문자로 찍는다(formatAmount). 화면 안 일관성을 택해 소문자 bb로 통일
+    evLine: (bb: string, streak: number) =>
+      `EV 損失 ${bb}bb${streak > 1 ? ` · 連續 ${streak} 天` : ""}`,
+    invite: "我也來做這道題",
+  },
 } as const;
 
 export type DailyCardInput = {

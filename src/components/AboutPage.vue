@@ -68,8 +68,11 @@
         </button>
       </div>
       <p v-if="canShowInstallButton()" class="mt-2.5 text-xs text-neutral-500">
-        {{ L.installNote }}
-        <button class="underline hover:text-neutral-300" @click="store.sideView = 'guide'">
+        <!-- ⚠ 두 문장 사이의 «이음새». 줄바꿈을 그대로 두면 Vue가 공백 하나를 넣는데,
+             CJK는 「。」가 이미 여백을 품고 있어 «權限。 安全嗎？»처럼 벌어진다.
+             그래서 공백을 HTML이 아니라 «코드»(sentenceGap)가 정한다 (TrainerPage와 같은 처리) -->
+        {{ L.installNote }}{{ sentenceGap
+        }}<button class="underline hover:text-neutral-300" @click="store.sideView = 'guide'">
           {{ L.installSafe }}
         </button>
       </p>
@@ -447,15 +450,73 @@ const M = {
     creditMid2: " 本地化并改进。修改后的完整源代码发布在",
     creditAfter: "，采用相同的开源许可协议。",
   },
+  // ⚠ 台灣 소프트웨어 표기는 대륙과 «단어 자체»가 다르다:
+  //   社区→社群 · 浏览器→瀏覽器 · 软件→軟體 · 设备→裝置 · 线程→執行緒 · 内存→記憶體 ·
+  //   快捷方式→捷徑 · 源代码→原始碼 · 许可协议→授權條款 · 本地化→在地化 · 主屏幕→主畫面
+  "zh-hant": {
+    community: "HoldemMaster 社群",
+    heroTitle1: "GTO 策略，",
+    heroTitle2: "打開瀏覽器就能算。",
+    heroSub1: "不用裝軟體，也不用花錢。填好範圍和公共牌，",
+    heroSub2: "最佳策略就會在你自己的裝置上算出來。",
+    ctaPresets: "去看教學案例",
+    ctaTrainer: "GTO 訓練器",
+    ctaDaily: "今日題目",
+    dailyDone: "已完成",
+    ctaGuide: "查看使用方法",
+    // 우리 앱의 버튼 이름이다 — 台灣 iOS·Android가 쓰는 「主畫面」에 맞춘다(대륙은 「主屏幕」)
+    ctaInstall: "加入主畫面",
+    installNote:
+      "裝上之後，教學案例和訓練器都會存到你的裝置裡，沒網路也能接著練。它只是一個瀏覽器捷徑，不是軟體，從不索取任何權限。",
+    installSafe: "安全嗎？",
+    features: [
+      { title: "免費", desc: "全部功能，不限次數" },
+      { title: "離線學習", desc: "加入主畫面，沒網路也能練" },
+      { title: "算得快", desc: "多執行緒——接近桌面版解算器的速度" },
+      { title: "GTO 訓練器", desc: "做題，按 EV 損失評分" },
+    ],
+    stepsTitle: "第一次來？",
+    steps: [
+      "在教學案例裡隨便打開一個牌局，按下[⚡ 直接看結果]——不用等，結果馬上出來",
+      "去[使用方法]看看結果畫面該怎麼讀",
+      "試試 GTO 訓練器——它會告訴你每個選擇虧了多少 bb",
+      "上手之後，用自訂牌局（①～⑤）算你自己的手牌",
+    ],
+    // ⚠ 이 세 줄이 가리키는 본체 /zh-hant/solver는 없다(2026-08-22 실측 404 — app/zh-hant에
+    //   solver 폴더 자체가 없다). AboutPage 템플릿의 v-if="landingUrl"이 통째로 숨긴다.
+    //   본체에 /zh-hant/solver가 생기면 outbound.ts의 LOCALE_PATHS["zh-hant"]에 한 줄만 더하면 살아난다
+    landingBefore: "想先讀文章，弄清 GTO 解算器是什麼、結果怎麼看？可以看",
+    landingLink: "HoldemMaster 解算器使用指南",
+    landingAfter: "。",
+    notes:
+      "在 iOS 和 Safari 上，瀏覽器的限制會讓計算只能以單一執行緒計算，所以會慢一些——macOS 上建議用 Chrome。可用記憶體上限是 4GB（WebAssembly 的限制），計算量大的牌局自己算的話，在電腦上更順暢。",
+    creditBefore: "本應用程式基於",
+    // 앞뒤 링크와 붙는 조각이다. 「WASM Postflop（…」처럼 라틴문자 뒤 전각 괄호는 띄우지 않는다
+    creditMid1: "（Wataru Inariba 製作，AGPL-3.0），由",
+    creditBrand: "HoldemMaster",
+    // 앞의 공백은 «필요»하다 — 템플릿에서 </a> 바로 뒤에 붙어 「HoldemMaster在地化」가 되어 버린다.
+    // 중국어 조판은 한자와 라틴문자 사이를 띄운다
+    creditMid2: " 在地化並改進。修改後的完整原始碼發布在",
+    creditAfter: "，採用相同的開源授權條款。",
+  },
 } as const;
 
 export default defineComponent({
   setup() {
     const L = computed(() => M[i18n.locale]);
+    /* installNote와 「안전한가요?」 버튼을 잇는 공백.
+     * ⚠ 언어마다 «문장이 끝나는 방식»이 달라서 로케일 목록이 TrainerPage와 다르다:
+     *   ko·ja는 installNote가 «— »(줄표)로 끝나 버튼이 문장을 이어받는다 → 공백 «필요»
+     *   zh·zh-hant는 「。」로 끝나고, 전각 마침표가 이미 여백을 품고 있다 → 공백 «금지»
+     * (2026-08-22 joint-shot.js 실측으로 ja가 «— 安全ですか»에서 붙어 버리는 것을 잡았다) */
+    const sentenceGap = computed(() =>
+      i18n.locale === "zh" || i18n.locale === "zh-hant" ? "" : " "
+    );
 
     loadDailyState();
 
     return {
+      sentenceGap,
       store: useStore(),
       dailyState,
       L,

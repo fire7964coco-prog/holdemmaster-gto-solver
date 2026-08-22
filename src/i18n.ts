@@ -13,7 +13,9 @@
  */
 import { reactive } from "vue";
 
-export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh";
+// ⚠ "zh"(간체)와 "zh-hant"(번체)는 «별개 언어»다 — 용어 자체가 다르므로 기계 변환 금지
+// (德州扑克/德州撲克 · 求解器/解算器 · 概率/機率 · 弃牌/蓋牌).
+export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant";
 
 const KEY = "solver.locale";
 
@@ -26,7 +28,8 @@ const readStored = (): Locale | null => {
       value === "es" ||
       value === "pt" ||
       value === "de" ||
-      value === "zh"
+      value === "zh" ||
+      value === "zh-hant"
       ? value
       : null;
   } catch {
@@ -44,7 +47,8 @@ const detect = (): Locale => {
     fromUrl === "es" ||
     fromUrl === "pt" ||
     fromUrl === "de" ||
-    fromUrl === "zh"
+    fromUrl === "zh" ||
+    fromUrl === "zh-hant"
   ) {
     try {
       localStorage.setItem(KEY, fromUrl);
@@ -61,9 +65,14 @@ const detect = (): Locale => {
   if (lang.startsWith("es")) return "es";
   if (lang.startsWith("pt")) return "pt";
   if (lang.startsWith("de")) return "de";
-  // 중국어는 지금 간체(zh-CN)만 지원한다 — 번체권(zh-TW·zh-HK) 브라우저도 간체로 받는다.
-  // 번체판을 만들면 여기서 zh-hant를 갈라내야 한다 (용어 자체가 달라 기계 변환은 금지)
-  if (lang.startsWith("zh")) return "zh";
+  // ⚠ 중국어는 간체(zh-CN)와 번체(zh-hant)가 별개 언어다. **번체 판정이 «먼저» 와야 한다** —
+  //   startsWith("zh")를 앞에 두면 zh-TW·zh-HK가 전부 간체로 새어 나간다(2026-08-22까지 실제로 그랬다).
+  //   번체권 = 대만(zh-TW)·홍콩(zh-HK)·마카오(zh-MO), 그리고 명시적 문자표기 zh-Hant-*.
+  //   간체권 = 중국 대륙(zh-CN)·싱가포르(zh-SG)·zh-Hans-*, 그리고 지역 없는 「zh」.
+  if (lang.startsWith("zh")) {
+    if (/^zh-(tw|hk|mo)($|[-_])/.test(lang) || lang.includes("hant")) return "zh-hant";
+    return "zh";
+  }
   return "en";
 };
 
@@ -110,10 +119,34 @@ const DOC_META: Record<Locale, { title: string; description: string }> = {
     description:
       "免费 GTO 求解器，打开浏览器就能用，无需安装。按手牌范围、公共牌和下注尺寸计算德州扑克（德扑）翻后策略。由 HoldemMaster 提供。",
   },
+  // 중국어(번체). ⚠ 간체를 글자만 바꾼 것이 아니다 — 용어 자체가 다르다.
+  // 「解算器」=solver(본체 브리프 §7-C · 본체 zh-hant 포스팅 42편에서 解算器 25회 / 求解器 0회) ·
+  // 「翻牌後」=postflop(§7-A) ·「範圍」=range ·「下注尺寸」=bet size ·「德撲」=고빈도 약칭(플랜 §3).
+  // 문장부호는 전각(，。)이 중국어 공통 표준이지만 인용부호는 대만·홍콩 관습인 「 」다(§8-4).
+  "zh-hant": {
+    title: "HoldemMaster GTO 解算器 —— 免費線上德州撲克 GTO Solver",
+    description:
+      "免費 GTO 解算器，打開瀏覽器就能用，不用安裝。依手牌範圍、公共牌與下注尺寸計算德州撲克（德撲）翻牌後策略。由 HoldemMaster 提供。",
+  },
+};
+
+/* html lang= 값. ⚠ 중국어는 «문자»까지 밝혀야 브라우저가 글꼴을 제대로 고른다 —
+ * 번체와 간체는 같은 코드포인트를 쓰면서 자형이 다른 글자가 많아(直·骨·産 등),
+ * lang이 zh-Hant인지 zh-Hans인지에 따라 CJK 폴백 글꼴이 갈린다.
+ * (BCP-47은 대소문자를 안 가리지만 표준 표기가 zh-Hant이므로 그대로 적는다) */
+const DOC_LANG: Record<Locale, string> = {
+  ko: "ko",
+  en: "en",
+  ja: "ja",
+  es: "es",
+  pt: "pt",
+  de: "de",
+  zh: "zh-Hans",
+  "zh-hant": "zh-Hant",
 };
 
 const applyDocumentLocale = (locale: Locale) => {
-  document.documentElement.lang = locale;
+  document.documentElement.lang = DOC_LANG[locale];
   document.title = DOC_META[locale].title;
   document
     .querySelector('meta[name="description"]')
@@ -139,7 +172,7 @@ export const setLocale = (locale: Locale) => {
  *
  * ⚠ 쓰면 안 되는 곳: CSV 내보내기(쉼표가 열 구분자) · style 문자열(width: 50,5%)
  *   · 사용자가 그대로 입력해야 하는 벳 사이즈 문법(«2.5x»).
- * ⚠ 중국어(zh)는 «영어와 같은» 마침표 소수점이다 — 여기에 zh를 넣으면 오히려 깨진다
+ * ⚠ 중국어(zh·zh-hant)는 «영어와 같은» 마침표 소수점이다 — 여기에 넣으면 오히려 깨진다
  *   (본체 브리프 §3: 1,326 · 0.003% · 2.7:1 · 천단위 콤마). pt·de 전용이다.
  * 템플릿에서는 전역 속성 `$n(...)`으로 쓴다 (index.ts에서 등록).
  */
@@ -153,7 +186,9 @@ export const decimalMark = () =>
   i18n.locale === "pt" || i18n.locale === "de" ? "," : ".";
 
 /** 언어별 값 중 현재 언어 것을 고른다 (문장 조립이 아닌 짧은 선택용).
- * ja·es·pt·de·zh를 생략하면 영어로 폴백한다 — 새 문구는 반드시 zh까지 채울 것. */
+ * ja·es·pt·de·zh·zhHant를 생략하면 영어로 폴백한다 — 새 문구는 반드시 zhHant까지 채울 것.
+ * ⚠ zhHant를 비우면 «간체»가 아니라 «영어»로 떨어진다. 중국어끼리 폴백하지 않는 것은
+ *   일부러다 — 번체 화면에 간체가 섞이면 «틀린 언어»로 읽히기 때문이다. */
 export const pick = <T>(
   ko: T,
   en: T,
@@ -161,7 +196,8 @@ export const pick = <T>(
   es: T = en,
   pt: T = en,
   de: T = en,
-  zh: T = en
+  zh: T = en,
+  zhHant: T = en
 ): T =>
   i18n.locale === "ko"
     ? ko
@@ -175,4 +211,6 @@ export const pick = <T>(
     ? de
     : i18n.locale === "zh"
     ? zh
+    : i18n.locale === "zh-hant"
+    ? zhHant
     : en;

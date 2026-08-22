@@ -153,6 +153,10 @@ const M = {
     combos: "组合",
     equity: "胜率",
   },
+  "zh-hant": {
+    combos: "組合",
+    equity: "勝率",
+  },
 } as const;
 
 const EPS = 2e-6;

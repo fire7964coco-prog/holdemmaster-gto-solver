@@ -953,6 +953,111 @@ const M = {
       "我们自己的教学范围（2026 年 8 月整理）",
     phase2: "防守组合和更多场景会陆续补上。",
   },
+  // ⚠ 번체 용어는 본체 브리프 translation-terms-zh-hant.md가 정답지다:
+  //   equity realization→勝率實現(번체 포스팅 4회, 權益實現 0회 ─ 간체의 「权益实现 EqR」과 다르다) ·
+  //   fold→蓋牌 · offsuit→不同花(§7-C Natural8) · EP→早期位 · nuts→堅果 · cash game→現金桌 ·
+  //   blog→部落格 · text→文字 · send→傳送 · copy→複製
+  "zh-hant": {
+    modeRfi: "開池（RFI）",
+    modeDefend: "vs 開池（防守）",
+    mode3bet: "vs 3bet（開池之後）",
+    mode4bet: "vs 4bet（3bet 之後）",
+    intro4bet:
+      "你 3bet 之後被 4bet 該怎麼辦——紅色是 5bet（全下），綠色是跟注，其餘蓋牌。" +
+      "這裡的頻率是在「假設你 3bet 了」的前提下算的，所以你根本不會 3bet 的手牌是空白的。" +
+      "基準：6 人現金桌 100bb，BB 3bet 到 11bb → 4bet 到 24bb；SB 3bet 到 10bb → 4bet 到 22bb。",
+    legend5bet: "5bet（all-in）",
+    legendCond4bet: "空白 = 這裡本來就不 3bet",
+    stat5bet: "5bet 比例",
+    statContinue4bet: "繼續比例（佔 3bet 範圍）",
+    copy5bet: "複製 5bet 範圍",
+    note4bet:
+      "統計是「佔你 3bet 範圍」的比例。100bb 深度下，5bet 實際上只有全下這一種——" +
+      "價值牌以 AA、KK 為主（偶爾只跟注做陷阱），QQ 和 AK 則混著 5bet 和跟注。" +
+      "跟注看的不是底池賠率，而是勝率實現（equity realization）。" +
+      "你沒有位置，SPR 又低，所以只留對子和最強的同花手牌；" +
+      "但也別全蓋——對手的 4bet 範圍裡混著 A5s、A4s 這類詐唬。",
+    how4bet2:
+      "紅色加綠色沒把格子填滿，剩下的那部分就是蓋牌。兩種顏色同時出現，表示按這個比例混著 5bet 和跟注。" +
+      "不在 3bet 範圍裡的手牌，根本碰不到這個局面，所以留空。",
+    intro3bet:
+      "你開池加注之後被 3bet 該怎麼辦——紅色是 4bet，綠色是跟注，其餘蓋牌。" +
+      "這裡的頻率是在「假設你開池了」的前提下算的，所以你根本不會開池的手牌是空白的。" +
+      "基準：6 人現金桌 100bb，開池 2.5bb，3bet 大約 10～11bb。",
+    legend4bet: "4bet",
+    legendCond: "空白 = 這裡本來就不開池",
+    stat4bet: "4bet 比例",
+    statContinue: "繼續比例（佔開池範圍）",
+    copy4bet: "複製 4bet 範圍",
+    note3bet:
+      "統計是「佔你開池範圍」的比例，不是佔全部手牌。4bet 的價值牌以 QQ+、AK 為主，" +
+      "再摻一點 A5s、A4s 這樣的詐唬。跟注這邊因為你有位置，可以拿得很寬：" +
+      "對子、同花百老匯、連張都能留。",
+    squeezeNote:
+      "擠壓（squeeze）指的是前面已經有人開池，又有人跟注時的 3bet（這裡大約 11～12bb）。" +
+      "有跟注者在，總的防守範圍會比單挑時更窄，3bet 也更偏價值。跟著一起跟注（overcall）" +
+      "時，優先選多人底池裡能做出堅果的同花手牌和連張。",
+    how3bet2:
+      "紅色加綠色沒把格子填滿，剩下的那部分就是蓋牌。兩種顏色同時出現，表示按這個比例混著 4bet 和跟注。" +
+      "不在開池範圍裡的手牌，根本碰不到這個局面，所以留空。",
+    intro:
+      "按位置分的開池範圍（RFI）——前面的人全都蓋牌時，你該拿哪些牌加注？" +
+      "基準：6 人現金桌 100bb，開池 2.5bb。格子只填了一部分，表示這手牌用的是混合頻率（只在一部分時候開池）。",
+    introDefend:
+      "別人先開池加注時你該怎麼應對——這裡列的是最常遇到的幾種組合。" +
+      "紅色是 3bet，綠色是跟注，兩色疊起來的高度就是你的防守頻率。" +
+      "基準：6 人現金桌 100bb，開池 2.5bb（SB 開池按 3bb）。",
+    legendOpen: "開池（100%）",
+    legendMixed: "混合頻率（填充高度 = 開池 %）",
+    legendFold: "蓋牌",
+    legend3bet: "3bet",
+    legendCall: "跟注",
+    legendMixedDefend: "填充高度 = 頻率（雙色格按該比例混合）",
+    stat3bet: "3bet 比例",
+    statCall: "跟注比例",
+    statTotal: "總防守",
+    copy3bet: "複製 3bet 範圍",
+    copyCall: "複製跟注範圍",
+    sbNote:
+      "在 SB 面對 BTN 開池時，你基本上只有「3bet 或蓋牌」兩條路——你沒有位置，" +
+      "身後 BB 還沒說話，跟注等於同時背上這兩個壞處。",
+    ipNote:
+      "就算你有位置，早期位（EP）開池的範圍也很強；而且你一跟注，身後還沒行動的盲位玩家就可能擠壓你。" +
+      "所以有位置時的防守反而是窄的，以 3bet 為主，跟注只留給對子和最強的同花手牌。",
+    statPercent: "開池比例",
+    statCombos: "開池組合數",
+    statHands: "開池手牌數",
+    statMixed: "混合頻率手牌",
+    // ⚠ 이 문구는 EquityPage.rangeNote가 «글자 그대로» 인용한다 — 고치면 그쪽도 같이 고칠 것
+    copy: "複製範圍文字",
+    copied: "✓ 已複製",
+    sendOop: "① 填入 OOP 範圍",
+    sendIp: "② 填入 IP 範圍",
+    howTitle: "怎麼看",
+    how1: "左上到右下的那條對角線是口袋對；對角線上方（右邊）是同花（s），下方（左邊）是不同花（o）。",
+    how2:
+      "混合頻率的手牌（格子只填了一部分）不是「每次都開池」，而是只按那個比例開池。" +
+      "它們是邊緣牌，選哪邊 EV 差別都很小。",
+    how3:
+      "按下[① 填入 OOP 範圍]/[② 填入 IP 範圍]，這個範圍就會填進自訂牌局的範圍輸入框——" +
+      "翻牌之後的打法你可以自己算算看。",
+    howDefend2:
+      "紅色加綠色沒把格子填滿，剩下的那部分就是蓋牌。兩種顏色同時出現的格子，" +
+      "表示按該比例混著 3bet 和跟注。",
+    howDefend3:
+      "把複製好的範圍文字貼進自訂牌局的 ①/② 範圍輸入框，就能用這套防守範圍自己算翻牌之後的打法。",
+    sourceTitle: "這張表是怎麼做出來的？",
+    sourceBody:
+      "我們把多份公開免費的 GTO 資料逐手對照，做出一份「共識範圍」；各家判斷不一致的邊緣牌，" +
+      "則標成混合頻率。BTN 和 SB 還多做了一步：又和本應用程式教學案例所用的範圍（經解算器驗證）對照了一遍。",
+    sourceList:
+      "交叉驗證用到的公開資料：nlh.poker · Preflop Wizard · HoldemPro · " +
+      "The Felt（about-poker.com）· BeyondGTO · ThinkGTO（BB vs SB 的實測頻率）· " +
+      "GTO Gecko · RiverOdds（防守頻率的錨點）· GTO Wizard 部落格 · FreeBetRange" +
+      "（有位置防守與擠壓原則）· 888poker · Run It Once（vs 3bet 頻率）+ " +
+      "我們自己的教學範圍（2026 年 8 月整理）",
+    phase2: "防守組合和更多場景會陸續補上。",
+  },
 } as const;
 
 type ModeKey = "rfi" | "defend" | "vs3bet" | "vs4bet";

@@ -130,6 +130,12 @@ const M = {
     // 영어 원词 병기는 소개 화면·에퀴티 계산기 뱃지에서 한다
     equity: "胜率",
   },
+  "zh-hant": {
+    noGraph: "無法顯示圖表",
+    // equity는 「勝率」로 통일 (본체 브리프 §7-B: Equity = 勝率／權益（Equity）.
+    // 대만 실사용은 勝率이 압도적이고, 영어 원어 병기는 뱃지·소개 화면에서 한다)
+    equity: "勝率",
+  },
 } as const;
 
 export default defineComponent({

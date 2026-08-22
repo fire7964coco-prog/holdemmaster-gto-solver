@@ -675,6 +675,45 @@ const M = {
         } as Record<string, string>
       )[name] ?? name,
   },
+  "zh-hant": {
+    summary: "彙總",
+    barWidth: "長條寬：",
+    // ⚠ 대륙 「归一化」 → 台灣 「正規化」 (ResultMiddle과 같은 이유)
+    normalized: "正規化",
+    absolute: "絕對值",
+    // ResultMiddle의 full과 같은 뜻 — 막대가 칸을 가득 채운다
+    full: "滿格",
+    display: "顯示：",
+    actionPct: "動作 %",
+    actionEv: "動作 EV",
+    // ⚠ CSV 자체는 언어와 무관하게 영어식 숫자로 나간다 — 중국어도 소수점이 «.»라
+    //   pt·de와 달리 여기서 충돌이 없다. 「匯出」= 台灣 표기(대륙 「导出」)
+    exportCsv: "把彙總匯出成 CSV 檔案",
+    all: "全部",
+    hand: "手牌",
+    strategy: "策略",
+    weightBar: "權重（長條）",
+    weight: "權重",
+    turn: "轉牌",
+    river: "河牌",
+    comboBar: "組合（長條）",
+    combos: "組合",
+    noReport: (chanceType: string) =>
+      `沒有${chanceType === "turn" ? "轉牌" : "河牌"}報告`,
+    noResults: "沒有結果",
+    // ⚠ ResultChance·ResultNav·ActionSummary·trainer.ts의 표와 «글자까지» 같아야 한다
+    action: (name: string): string =>
+      (
+        {
+          Fold: "蓋牌",
+          Check: "過牌",
+          Call: "跟注",
+          Bet: "下注",
+          Raise: "加注",
+          "All-in": "全下",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

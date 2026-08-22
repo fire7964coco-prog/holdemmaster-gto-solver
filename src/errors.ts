@@ -67,13 +67,13 @@ const shortBrowser = () => {
         "Samsung Internet ",
         "Samsung Internet ",
         "三星浏览器 "
-      ) + RegExp.$1
+      , "三星瀏覽器 ") + RegExp.$1
     );
   if (/Edg\/([\d.]+)/.test(ua)) return pick("엣지 ", "Edge ", "Edge ") + RegExp.$1;
   if (/Chrome\/([\d.]+)/.test(ua)) return pick("크롬 ", "Chrome ", "Chrome ") + RegExp.$1;
   if (/Firefox\/([\d.]+)/.test(ua)) return pick("파이어폭스 ", "Firefox ", "Firefox ") + RegExp.$1;
   if (/Version\/([\d.]+).*Safari/.test(ua)) return pick("사파리 ", "Safari ", "Safari ") + RegExp.$1;
-  return pick("기타 브라우저", "Other browser", "その他のブラウザ", "Otro navegador", "Outro navegador", "Anderer Browser", "其他浏览器");
+  return pick("기타 브라우저", "Other browser", "その他のブラウザ", "Otro navegador", "Outro navegador", "Anderer Browser", "其他浏览器", "其他瀏覽器");
 };
 
 const record = (msg: string, stack: string) => {
@@ -98,16 +98,16 @@ export const errorReportText = () => {
   if (!records.length) return "";
   const standalone = window.matchMedia?.("(display-mode: standalone)").matches;
   const head = [
-    pick("홀덤마스터 GTO 솔버 오류 기록", "HoldemMaster GTO Solver error log", "HoldemMaster GTOソルバー エラーログ", "Registro de errores de HoldemMaster GTO Solver", "Registro de erros do HoldemMaster GTO Solver", "Fehlerprotokoll des HoldemMaster GTO Solvers", "HoldemMaster GTO 求解器错误日志"),
-    `${pick("빌드", "Build", "ビルド")} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen", "画面", "Pantalla", "Tela", "Bildschirm", "屏幕")} ${window.innerWidth}x${window.innerHeight}`,
-    `${pick("설치 실행", "Installed app", "インストール版", "App instalada", "App instalado", "Installierte App", "已安装的应用")}: ${standalone ? pick("예", "yes", "はい", "sí", "sim", "ja", "是") : pick("아니오", "no", "いいえ", "no", "não", "nein", "否")}`,
+    pick("홀덤마스터 GTO 솔버 오류 기록", "HoldemMaster GTO Solver error log", "HoldemMaster GTOソルバー エラーログ", "Registro de errores de HoldemMaster GTO Solver", "Registro de erros do HoldemMaster GTO Solver", "Fehlerprotokoll des HoldemMaster GTO Solvers", "HoldemMaster GTO 求解器错误日志", "HoldemMaster GTO 解算器錯誤紀錄"),
+    `${pick("빌드", "Build", "ビルド")} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen", "画面", "Pantalla", "Tela", "Bildschirm", "屏幕", "螢幕")} ${window.innerWidth}x${window.innerHeight}`,
+    `${pick("설치 실행", "Installed app", "インストール版", "App instalada", "App instalado", "Installierte App", "已安装的应用", "已安裝的應用程式")}: ${standalone ? pick("예", "yes", "はい", "sí", "sim", "ja", "是", "是") : pick("아니오", "no", "いいえ", "no", "não", "nein", "否", "否")}`,
     "",
   ].join("\n");
   const body = records
     .slice()
     .reverse()
     .map((item, index) => {
-      const time = new Date(item.t).toLocaleString(pick("ko-KR", "en-US", "ja-JP", "es-MX", "pt-BR", "de-DE", "zh-CN"));
+      const time = new Date(item.t).toLocaleString(pick("ko-KR", "en-US", "ja-JP", "es-MX", "pt-BR", "de-DE", "zh-CN", "zh-TW"));
       return `[${index + 1}] ${time} (${item.where})\n${item.msg}\n${item.stack}`;
     })
     .join("\n\n");
@@ -138,7 +138,7 @@ export const setupErrorCapture = () => {
     } else if (target && target.tagName) {
       // 이미지·스크립트 로딩 실패는 error 객체가 없다
       record(
-        `${target.tagName} ${pick("로딩 실패", "failed to load", "読み込み失敗", "no se pudo cargar", "não foi possível carregar", "konnte nicht geladen werden", "加载失败")}`,
+        `${target.tagName} ${pick("로딩 실패", "failed to load", "読み込み失敗", "no se pudo cargar", "não foi possível carregar", "konnte nicht geladen werden", "加载失败", "載入失敗")}`,
         String(target.src || target.href || "")
       );
     } else if (event.message) {
@@ -157,7 +157,7 @@ export const setupErrorCapture = () => {
   window.addEventListener("unhandledrejection", (event) => {
     const reason = event.reason;
     record(
-      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ", "Erro não tratado: ", "Unbehandelter Fehler: ", "未处理的错误：") + String(reason?.message ?? reason),
+      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ", "Erro não tratado: ", "Unbehandelter Fehler: ", "未处理的错误：", "未處理的錯誤：") + String(reason?.message ?? reason),
       String(reason?.stack ?? "")
     );
   });

@@ -50,6 +50,9 @@ const M = {
   zh: {
     combos: "组合",
   },
+  "zh-hant": {
+    combos: "組合",
+  },
 } as const;
 
 const actionLabel = (
@@ -125,6 +128,18 @@ const actionLabel = (
       Raise: "加注",
       Allin: "全下",
       "All-in": "全下",
+    },
+    // 번체는 fold의 주력이 「蓋牌」다 (본체 브리프 §7-A 「蓋牌·棄牌（Fold）」 ·
+    // 본체 번체 포스팅 42편에서 蓋牌 369회 / 棄牌 118회). 간체의 「弃牌」와 «일부러» 다르다.
+    // ⚠ ResultChance·ResultNav·ResultTable·trainer.ts의 표와 «글자까지» 같아야 한다
+    {
+      Fold: "蓋牌",
+      Check: "過牌",
+      Call: "跟注",
+      Bet: "下注",
+      Raise: "加注",
+      Allin: "全下",
+      "All-in": "全下",
     }
   );
   const label = map[name] ?? name;
@@ -136,18 +151,21 @@ const actionLabel = (
     // ⚠ 중국어는 «전각 괄호 + 底池的 N%» 어순이다 — ResultNav.betPot·trainer.ts·
     //   TreeEditor.potRate 셋과 «글자까지» 같아야 한다. 여기만 반각·역순이었다
     //   (2026-08-22 원어민 UX 검수에서 코드 대조로 발견)
-    if (i18n.locale === "zh") {
+    if (i18n.locale === "zh" || i18n.locale === "zh-hant") {
       return `${label} ${shown}（底池的 ${pct}%）`;
     }
-    return localizeNumber(`${label} ${shown} (${pct}% ${pick(
-      "팟",
-      "pot",
-      "ポット",
-      "del bote",
-      "do pote",
-      "vom Pot",
-      "底池"
-    )})`);
+    return localizeNumber(
+      `${label} ${shown} (${pct}% ${pick(
+        "팟",
+        "pot",
+        "ポット",
+        "del bote",
+        "do pote",
+        "vom Pot",
+        "底池",
+        "底池"
+      )})`
+    );
   }
   return localizeNumber(`${label} ${shown}`);
 };

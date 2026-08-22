@@ -673,6 +673,75 @@ const M = {
       unknown: "计算过程中出错了。",
     } as Record<string, string>,
   },
+  "zh-hant": {
+    intro:
+      "這裡算的是你的手牌對上對手某手牌（或者整個範圍）時的勝率。公共牌留空就是翻牌前，" +
+      "選 3/4/5 張就分別算翻牌圈、轉牌圈、河牌圈的勝率。",
+    heroTitle: "① 我的手牌",
+    heroHint: "在下面的選牌區裡選 2 張",
+    fill: "填到這裡",
+    villainTitle: "② 對手",
+    modeHand: "vs 手牌",
+    modeRange: "vs 範圍",
+    rangePlaceholder: "例：22+,AQs+,K8s:0.75",
+    // ⚠ [複製範圍文字]는 PreflopChartPage의 «실제» 버튼 이름과 글자까지 같아야 한다
+    rangeNote:
+      "在翻前範圍表裡按下[複製範圍文字]，再直接貼到這裡就行。" +
+      "像「K8s:0.75」這樣帶權重的寫法也會原樣生效。",
+    anyTwo: "任意兩張（隨機手牌）",
+    rangeError: (token: string) =>
+      `「${token}」不是有效的寫法——請寫成 22+、AQs+ 或 K8s:0.75 這樣的形式`,
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} 個組合 · 佔全部的 ${percent}%`,
+    boardTitle: "③ 公共牌",
+    boardHintEmpty: "留空 = 翻牌前（3/4/5 張也可以）",
+    boardHintBad: "公共牌只能是 0、3、4 或 5 張。",
+    boardHintOk: (n: number) => ["", "", "", "翻牌", "轉牌", "河牌"][n],
+    compute: "計算",
+    computing: "計算中…",
+    stop: "停止",
+    // ⚠ clearAll()은 손패·상대 핸드·공공패·결과만 지우고 «레인지 입력칸은 그대로» 둔다.
+    //   그래서 「全部清空」이라고 쓰면 거짓말이 된다 (독일어 UX 검수에서 잡은 그 결함)
+    clear: "清空手牌和公共牌",
+    resultTitle: "結果",
+    resultEmpty: "先選好自己的兩張牌和對手（兩張牌或一個範圍），再按下[計算]。",
+    vsSide: (value: string) => `對手 ${value}%`,
+    win: "勝",
+    tie: "平",
+    lose: "負",
+    combos: "對手組合數",
+    badgeExact: "精確",
+    // 「個百分點」= percentage point. 「%」와 뒤섞이지 않게 반드시 «點»을 붙인다
+    badgeApprox: "近似（±0.2 個百分點）",
+    // ⚠ 큰 수를 「萬/億」으로 바꾸지 «않는다» — 어림수(3萬籌碼)에 쓰는 말이고
+    //   여기 1,712,304는 «정확히 센 개수»다. 로케일은 zh-TW로 명시해 표기가 흔들리지 않게 했다
+    exactNote: (n: number) =>
+      `${n.toLocaleString("zh-TW")} 種可能的情況全部數過了`,
+    approxNote: (n: number) =>
+      `情況太多，數不完——隨機抽取了 ${n.toLocaleString("zh-TW")} 次發牌作為樣本`,
+    howTitle: "怎麼看",
+    // ⚠ equity의 «정의»를 잃지 말 것 — 간체 세션에서 검토자 3명이 이 자리를 🔴로 올렸다.
+    //   en「win% plus half of the ties」와 같은 뜻이어야 한다
+    how1:
+      "勝率（equity）= 獲勝% + 平手的一半。也就是如果現在就全下，你能從底池裡拿走的份額。",
+    how2:
+      "對手是一個範圍時，被你的牌或公共牌擋住的組合會自動去掉——這叫牌張移除（card removal）。",
+    how3: "「精確」這個標記表示所有情況都數過了；「近似」則是隨機抽樣的結果。",
+    limitTitle: "這個計算器算得到什麼",
+    limitBody:
+      "它只算兩人全下的勝率。範圍對範圍、3 人以上，以及夾著下注和蓋牌的局面，" +
+      "由解算器（自訂牌局）來負責。",
+    errors: {
+      "need-hero": "請先選好自己的兩張牌。",
+      "bad-board": "公共牌只能是 0、3、4 或 5 張。",
+      "bad-card": "牌的數值不對。",
+      duplicate: "同一張牌不能用兩次。",
+      "empty-range": "對手範圍是空的。",
+      "no-combos":
+        "去掉被擋住的組合後，對手一個組合都不剩了——換幾張牌，或者把對手範圍放寬一些。",
+      unknown: "計算過程中出錯了。",
+    } as Record<string, string>,
+  },
 } as const;
 
 const CAPACITY: Record<Target, number> = { hero: 2, villain: 2, board: 5 };

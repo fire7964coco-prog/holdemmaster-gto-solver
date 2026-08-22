@@ -381,6 +381,24 @@ const M = {
     addedLines: "新增的线路：",
     removedLines: "移除的线路：",
   },
+  "zh-hant": {
+    treeError: "錯誤：無法建立決策樹（是不是載入了損壞的決策樹？）",
+    pot: "底池",
+    stack: "籌碼量",
+    noActions: "（無動作）",
+    wins: "獲勝",
+    // node = 「節點」 (台灣 소프트웨어 표준 표기)
+    invalidTerminals: "無效的終端節點：",
+    addBetAction: "新增下注動作",
+    // 「選取」= 台灣 표기(대륙 「选中」)
+    removeNode: "刪除選取的節點",
+    betAmount: "下注額：",
+    potRate: (pct: string) => `（底池的 ${pct}%）`,
+    saveEdits: "儲存修改",
+    cancelEdits: "取消修改",
+    addedLines: "新增的線路：",
+    removedLines: "移除的線路：",
+  },
 } as const;
 
 export default defineComponent({

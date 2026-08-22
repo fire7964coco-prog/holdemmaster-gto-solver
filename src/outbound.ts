@@ -67,6 +67,16 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   zh: { "": "/zh" }, // /zh는 실재(200), /zh/solver·/zh/community는 404 (2026-08-21 실측).
   // ⚠ 본체 /zh/blog는 200이지만 GTO 13편의 «중국어판»은 없다(a-high-board-cbet = 404)
   //   → 프리셋 해설 링크는 zh에서 숨긴다 (presets.ts articleSlug 쪽에서 판단)
+  //
+  // 번체: /zh-hant는 실재(200)이고 본체 app/zh-hant/page.tsx가 <CommunityClient pageLocale="zh-hant"/>를
+  // 렌더한다 — 피드도 번체 글로 걸러지고 블로그 티저 42편도 번체다(2026-08-22 본체 소스 확인).
+  // ⚠ 다만 community-client.tsx의 `LABELS`에 zh-hant 키가 «없어서» 화면 라벨(버튼·탭)은
+  //   `getL()`의 폴백대로 **영어로 나온다**. 그래도 링크를 여는 쪽을 택한 이유:
+  //   ① 콘텐츠(글·블로그)는 실제로 번체다 ② 앱이 «커뮤니티에 올려보라»고 안내하면서 갈 곳을
+  //   숨기면 2026-08-22에 5개 언어에서 고친 바로 그 결함을 되풀이하게 된다.
+  //   → 대신 TrainerPage의 «[✏️ …]» 버튼 이름은 실제로 보이게 될 영어 라벨을 적었다.
+  //   본체에 zh-hant LABELS 추가를 요청해 두었다(handoff-to-main-site/).
+  "zh-hant": { "": "/zh-hant" }, // /zh-hant/solver·/zh-hant/community는 404 (2026-08-22 실측)
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

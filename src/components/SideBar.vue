@@ -297,6 +297,39 @@ const M = {
     // 다른 사이드바 항목은 전부 제목과 일치하는데 ⑤만 달랐다 (검토자 C)
     run: "运行求解器",
   },
+  // ⚠ 이 라벨들도 «착수 전»에 zh-hant-sidebar-premeasure.js로 4해상도 + 선택 상태 11화면을
+  // 미리 재고 확정한 것이다 (15/15 PASS, 1280×720에서 648/648, 접힘 0건).
+  // 번체는 간체와 «글자 폭»이 같지만 글자 «수»가 달라진 항목이 있어 다시 쟀다
+  // (自定义牌局 4자 → 自訂牌局 3자 · 运行求解器 → 執行解算器).
+  "zh-hant": {
+    exploreLabel: "探索",
+    exploreLabelSuffix: " · 學習",
+    about: "簡介",
+    guide: "使用方法",
+    presets: "教學案例",
+    // ⚠ 사용자 지시(2026-08-13): 유저에게 «미리 계산»을 언급하지 않는다
+    presetsBadge: "立刻看",
+    trainer: "GTO 訓練器",
+    trainerBadge: "EV 評分",
+    preflop: "翻前範圍表",
+    preflopBadge: "開池·防守",
+    equity: "勝率計算器",
+    // 라벨이 이미 「勝率」이라 뱃지에는 영어 원어를 둔다 (첫 등장 병기 역할도 겸한다)
+    equityBadge: "Equity",
+    // 台灣 소프트웨어 표기는 «自訂»이다 (본체 번체 포스팅 自訂 1 / 自定義 0.
+    // 간체의 「自定义」와 다르다 — 대만 Windows·Office가 전부 自訂을 쓴다)
+    customLabel: "自訂牌局",
+    customLabelSuffix: " · 自己算",
+    oopRange: "OOP 範圍",
+    ipRange: "IP 範圍",
+    board: "公共牌",
+    // bet size = 「下注尺寸」 (본체 브리프 §7-D 底池賠率 필라의 «下注尺寸표» — 간체와 같다)
+    betSize: "下注尺寸",
+    betSizeSub: "決策樹",
+    // solver=解算器(브리프 §7-C) · run=執行(台灣 표기. 본체 코퍼스 執行 3 / 運行 0).
+    // 화면 제목(App.vue "run-solver")·안의 버튼과 글자까지 같아야 한다
+    run: "執行解算器",
+  },
 } as const;
 
 export default defineComponent({

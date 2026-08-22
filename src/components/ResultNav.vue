@@ -473,6 +473,36 @@ const M = {
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted}（底池的 ${percent}%）`,
   },
+  "zh-hant": {
+    pot: "底池",
+    // stack = 「籌碼量」 (본체 브리프 §7-E 「籌碼量(Stack)」)
+    stack: "籌碼量",
+    equity: "勝率",
+    win: (player: string) => `${player} 獲勝`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "翻牌",
+          turn: "轉牌",
+          river: "河牌",
+          end: "結束",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    // ⚠ ResultChance·ResultTable·ActionSummary·trainer.ts의 표와 «글자까지» 같아야 한다
+    action: (name: string): string =>
+      (
+        {
+          Fold: "蓋牌",
+          Check: "過牌",
+          Call: "跟注",
+          Bet: "下注",
+          Raise: "加注",
+          "All-in": "全下",
+        } as Record<string, string>
+      )[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted}（底池的 ${percent}%）`,
+  },
 } as const;
 
 export default defineComponent({

@@ -117,6 +117,15 @@ const M = {
     // 중국어는 명사에 복수 변화가 없다 — ko·ja와 같이 ${n}만 갈아끼운다
     warnBody: (n: number) => `编辑过的决策树以 ${n} 张公共牌为前提。`,
   },
+  "zh-hant": {
+    placeholder: "例：AsKd7c",
+    // clearBoard()는 config.board를 «통째로» 비운다 — 「重設」(초기값으로)이 아니라 「清空」이 맞다
+    clear: "清空",
+    randomFlop: "隨機翻牌",
+    warnLabel: "注意：",
+    // 중국어는 명사에 복수 변화가 없다 — ko·ja와 같이 ${n}만 갈아끼운다
+    warnBody: (n: number) => `編輯過的決策樹以 ${n} 張公共牌為前提。`,
+  },
 } as const;
 
 export default defineComponent({

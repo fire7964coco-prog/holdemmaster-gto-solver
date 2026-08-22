@@ -183,6 +183,15 @@ const M = {
     parseError: (range: string) =>
       `无法解析这个范围：${range || "（空）"}`,
   },
+  "zh-hant": {
+    // clearRange()는 격자·비중·입력칸을 전부 비운다 (BoardSelector와 같은 뜻의 「清空」)
+    clear: "清空",
+    errorPrefix: "錯誤：",
+    weight: "權重：",
+    combos: "組合",
+    parseError: (range: string) =>
+      `無法解析這個範圍：${range || "（空）"}`,
+  },
 } as const;
 
 import { C } from "../theme";

@@ -130,6 +130,23 @@ const M = {
       "把它贴到社区的提问帖里，我们会用它来修复问题。里面不含任何个人信息。",
     promptCopy: "请复制下面的内容",
   },
+  "zh-hant": {
+    title: "已記錄一筆錯誤",
+    // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백·문장부호 위치 주의.
+    // 중국어는 단어 사이를 띄우지 않으므로 ko와 같이 끝 공백을 두지 않는다
+    body1: "如果畫面看起來不對，歡迎告訴我們。這些內容",
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
+    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다.
+    //   「裝置」= 台灣 표기(대륙 「设备」)
+    bodyB1: "只儲存在這台裝置上",
+    body2: "，要不要傳送完全由你決定。",
+    copied: "已複製",
+    copyButton: "複製錯誤內容",
+    close: "關閉",
+    copiedHint:
+      "把它貼到社群的提問貼文裡，我們會用它來修正問題。裡面不含任何個人資訊。",
+    promptCopy: "請複製下面的內容",
+  },
 } as const;
 
 export default defineComponent({

@@ -106,6 +106,18 @@ const actionLabelsZh: Record<string, string> = {
   Allin: "全下",
   "All-in": "全下",
 };
+// 번체는 fold의 주력이 「蓋牌」다 (본체 브리프 §7-A 「蓋牌·棄牌（Fold）」 ·
+// 번체 포스팅 42편에서 蓋牌 369회 / 棄牌 118회). 나머지는 간체와 글자만 다르다.
+// ⚠ ResultChance·ResultNav·ResultTable·ActionSummary의 표와 «글자까지» 같아야 한다
+const actionLabelsZhHant: Record<string, string> = {
+  Fold: "蓋牌",
+  Check: "過牌",
+  Call: "跟注",
+  Bet: "下注",
+  Raise: "加注",
+  Allin: "全下",
+  "All-in": "全下",
+};
 const actionName = (name: string) =>
   i18n.locale === "ko"
     ? actionLabelsKo[name] ?? name
@@ -113,6 +125,8 @@ const actionName = (name: string) =>
     ? actionLabelsJa[name] ?? name
     : i18n.locale === "zh"
     ? actionLabelsZh[name] ?? name
+    : i18n.locale === "zh-hant"
+    ? actionLabelsZhHant[name] ?? name
     : i18n.locale === "es" || i18n.locale === "pt"
     ? actionLabelsEs[name] ?? name
     : actionLabelsEn[name] ?? name;
@@ -127,7 +141,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant",
     Record<TrainerCategory, string>
   > = {
     ko: {
@@ -174,6 +188,12 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "3bet 底池",
       blind: "盲位对战",
     },
+    "zh-hant": {
+      all: "全部",
+      srp: "單加注底池",
+      "3bp": "3bet 底池",
+      blind: "盲位對戰",
+    },
   };
   return labels[i18n.locale][category];
 };
@@ -201,8 +221,9 @@ export const trainerActionLabel = (
       ? `${label} ${amount} (${pct}% do pote)`
       : i18n.locale === "de"
       ? `${label} ${amount} (${pct}% vom Pot)`
-      : i18n.locale === "zh"
+      : i18n.locale === "zh" || i18n.locale === "zh-hant"
       ? // 전각 괄호 + 「底池的 N%」 — ResultNav.betPot과 글자까지 같은 형식이다
+        // (간체·번체가 같은 문장이라 한 분기로 둔다 — 숫자와 «底池的»는 글자가 안 바뀐다)
         `${label} ${amount}（底池的 ${pct}%）`
       : `${label} ${amount} (${pct}% pot)`;
   }

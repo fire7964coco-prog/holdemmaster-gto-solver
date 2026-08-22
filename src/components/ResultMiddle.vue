@@ -372,6 +372,34 @@ const M = {
     strategyCombos: "策略（组合）",
     equity: "胜率",
   },
+  "zh-hant": {
+    modeLabels: {
+      basics: "基礎",
+      graphs: "圖表",
+      compare: "比較",
+      turn: "轉牌",
+      river: "河牌",
+    } as Record<string, string>,
+    player: "玩家：",
+    auto: (player: string) => `自動（${player}）`,
+    barHeight: "長條高：",
+    // ⚠ normalize는 대륙이 「归一化」, 台灣이 「正規化」다 — 간체판 주석이 그 차이를 적어 뒀다.
+    //   여기서 「歸一化」로 글자만 바꾸면 대만 독자에게는 낯선 말이 된다
+    normalized: "正規化",
+    absolute: "絕對值",
+    // 「全部」로 옮기면 아래 all(전체 핸드)과 뜻이 겹친다 — 막대가 «가득 찬다»는 뜻이므로 滿格
+    full: "滿格",
+    // suit = 「花色」 (가짜친구: 「西裝」 오역 주의)
+    suit: "花色：",
+    grouped: "合併",
+    individual: "個別",
+    display: "顯示：",
+    strategy: "策略",
+    weight: "權重",
+    chart: "圖表：",
+    strategyCombos: "策略（組合）",
+    equity: "勝率",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

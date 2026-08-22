@@ -218,6 +218,12 @@ const M = {
     finalizing: "即将完成…",
     paused: "求解器已暂停。",
   },
+  "zh-hant": {
+    notRun: "解算器還沒有執行。",
+    running: "解算器計算中…",
+    finalizing: "即將完成…",
+    paused: "解算器已暫停。",
+  },
 } as const;
 
 export default defineComponent({

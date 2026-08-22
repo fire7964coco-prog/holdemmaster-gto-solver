@@ -635,6 +635,61 @@ const M = {
       `可剥削度：${value}（${percent}）`,
     timeLine: (seconds: string) => `用时：${seconds} 秒`,
   },
+  // ⚠ 台灣 전산 용어는 대륙과 다르다: 线程→執行緒 · 模块→模組 · 内存→記憶體 ·
+  //   位→位元(bit) · 迭代→疊代 · 运行→執行 · 加载→載入 · 纳什→納許(본체 브리프 §7-E)
+  "zh-hant": {
+    sharedSpotBanner:
+      "已載入分享過來的牌局——按下[建立決策樹] → [執行解算器]就開始算。",
+    numThreadsLabel: "執行緒數：",
+    buildTree: "建立決策樹",
+    copied: "已複製！",
+    shareSpot: "🔗 分享牌局",
+    statusLabel: "狀態：",
+    statusNotLoaded: "模組還沒載入",
+    statusBuilding: "正在建立決策樹…",
+    statusError: (message: string) => `錯誤：${message}`,
+    // 중국어는 명사에 복수 변화가 없다 — en·de의 thread/threads 분기가 필요 없다
+    statusBuilt: (threads: number) => `決策樹建立完畢（${threads} 個執行緒）`,
+    precisionMode: "精度模式：",
+    precisionTipIntro: "精度模式主要影響記憶體佔用，另外還有幾處細小差別。",
+    // ⚠ 숫자는 영어와 같은 표기다 — 3.9GB·0.1%의 «.»를 «,»로 바꾸지 말 것 (브리프 §3)
+    precisionTipFp:
+      "32 位元浮點（FP）：只要記憶體佔用沒超過上限（3.9GB），就建議用這個模式。有效數字約 7 位，效能也更好。",
+    precisionTipInt:
+      "16 位元整數：32 位元 FP 模式超過記憶體上限時的替代方案。有效數字只有約 4 位，所以不適合把目標可剝削度設在 0.1% 以下；效能也不如 32 位元 FP。",
+    fp32Label: "32 位元 FP：",
+    int16Label: "16 位元整數：",
+    ramNeeded: (size: string) => `需要 ${size} 記憶體`,
+    limitExceeded: "（超出上限）",
+    ramLimit: "記憶體上限：3.9GB（= Wasm 上限 4GB − 預留 0.1GB）",
+    // exploitability = 「可剝削度」. 剝削(exploit)은 대만 매체도 쓰는 말이다
+    // (본체 브리프 §7-F 「剝削」 monsterstack 전용글 · 번체 포스팅 24회).
+    // 첫 등장 자리라 영어 원어를 괄호로 병기했다
+    targetLabel: "目標可剝削度（exploitability）：",
+    exploitTipIntro:
+      "指定結果與納許均衡之間可接受的距離。數值越小，結果越準，但計算時間也越長。",
+    exploitTipDetailLabel: "詳細說明：",
+    exploitTipDetail:
+      "在納許均衡裡，雙方的策略互為 MES（最大剝削策略）。利用這個性質，我們把求得的策略與納許均衡之間的距離定義為：",
+    // 수식은 반각 괄호가 맞다 — 중국어 조판에서도 수식·코드는 반각을 쓴다
+    exploitTipFormula: "距離 = (對手的 MES EV) - (對手的實際 EV)",
+    exploitTipOutro:
+      "這個距離永遠不小於零，只有當求得的策略本身就是納許均衡的一部分時才等於零。可剝削度（exploitability）就定義為雙方距離的平均值。",
+    maxIterationsLabel: "最大疊代次數：",
+    runSolver: "執行解算器",
+    stop: "停止",
+    pause: "暫停",
+    resume: "繼續",
+    solving: "解算器計算中…",
+    finalizing: "即將完成…",
+    pausedStatus: "已暫停。",
+    finished: "計算完成！",
+    allocatingMemory: "正在配置記憶體…",
+    iterations: (count: number) => `疊代：${count} 次`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `可剝削度：${value}（${percent}）`,
+    timeLine: (seconds: string) => `耗時：${seconds} 秒`,
+  },
 } as const;
 
 const maxMemoryUsage = 3.9 * 1024 * 1024 * 1024; // 3.9 GB
@@ -653,7 +708,7 @@ const checkConfig = (
       "O board precisa ter pelo menos 3 cartas",
       "Das Board braucht mindestens 3 Karten"
     ,
-      "公共牌至少需要 3 张");
+      "公共牌至少需要 3 张", "公共牌至少需要 3 張");
   }
 
   if (config.startingPot <= 0) {
@@ -665,7 +720,7 @@ const checkConfig = (
       "O pote inicial deve ser positivo",
       "Der Start-Pot muss größer als 0 sein"
     ,
-      "起始底池必须大于 0");
+      "起始底池必须大于 0", "起始底池必須大於 0");
   }
 
   if (config.startingPot > MAX_AMOUNT) {
@@ -677,11 +732,11 @@ const checkConfig = (
       `O pote inicial não pode passar de ${MAX_AMOUNT}`,
       `Der Start-Pot darf höchstens ${MAX_AMOUNT} sein`
     ,
-      `起始底池不能超过 ${MAX_AMOUNT}`);
+      `起始底池不能超过 ${MAX_AMOUNT}`, `起始底池不能超過 ${MAX_AMOUNT}`);
   }
 
   if (config.startingPot % 1 !== 0) {
-    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数");
+    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數");
   }
 
   if (config.effectiveStack <= 0) {
@@ -693,7 +748,7 @@ const checkConfig = (
       "O stack efetivo deve ser positivo",
       "Der effektive Stack muss größer als 0 sein"
     ,
-      "有效筹码必须大于 0");
+      "有效筹码必须大于 0", "有效籌碼必須大於 0");
   }
 
   if (config.effectiveStack > MAX_AMOUNT) {
@@ -705,7 +760,7 @@ const checkConfig = (
       `O stack efetivo não pode passar de ${MAX_AMOUNT}`,
       `Der effektive Stack darf höchstens ${MAX_AMOUNT} sein`
     ,
-      `有效筹码不能超过 ${MAX_AMOUNT}`);
+      `有效筹码不能超过 ${MAX_AMOUNT}`, `有效籌碼不能超過 ${MAX_AMOUNT}`);
   }
 
   if (config.effectiveStack % 1 !== 0) {
@@ -717,57 +772,57 @@ const checkConfig = (
       "O stack efetivo deve ser um número inteiro",
       "Der effektive Stack muss eine ganze Zahl sein"
     ,
-      "有效筹码必须是整数");
+      "有效筹码必须是整数", "有效籌碼必須是整數");
   }
 
   const betConfig = [
     {
       s: config.oopFlopBetSanitized,
-      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注"),
+      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注"),
     },
     {
       s: config.oopFlopRaiseSanitized,
-      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注"),
+      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注"),
     },
     {
       s: config.oopTurnBetSanitized,
-      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注"),
+      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注"),
     },
     {
       s: config.oopTurnRaiseSanitized,
-      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注"),
+      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注"),
     },
     {
       s: config.oopRiverBetSanitized,
-      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注"),
+      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注"),
     },
     {
       s: config.oopRiverRaiseSanitized,
-      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注"),
+      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注"),
     },
     {
       s: config.ipFlopBetSanitized,
-      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注"),
+      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注"),
     },
     {
       s: config.ipFlopRaiseSanitized,
-      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注"),
+      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注"),
     },
     {
       s: config.ipTurnBetSanitized,
-      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注"),
+      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注"),
     },
     {
       s: config.ipTurnRaiseSanitized,
-      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注"),
+      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注"),
     },
     {
       s: config.ipRiverBetSanitized,
-      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注"),
+      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注"),
     },
     {
       s: config.ipRiverRaiseSanitized,
-      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注"),
+      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注"),
     },
   ];
 
@@ -779,12 +834,12 @@ const checkConfig = (
 
   if (config.donkOption) {
     if (!config.oopTurnDonkSanitized.valid) {
-      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打")}: ${
+      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打")}: ${
         config.oopTurnDonkSanitized.s
       }`;
     }
     if (!config.oopRiverDonkSanitized.valid) {
-      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打")}: ${
+      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打")}: ${
         config.oopRiverDonkSanitized.s
       }`;
     }
@@ -799,7 +854,7 @@ const checkConfig = (
       "Limiar para adicionar all-in inválido",
       "Ungültige Schwelle für zusätzliches All-in"
     ,
-      "追加全下的阈值不正确");
+      "追加全下的阈值不正确", "追加全下的門檻不正確");
   }
 
   if (config.forceAllInThreshold < 0) {
@@ -811,7 +866,7 @@ const checkConfig = (
       "Limiar de all-in forçado inválido",
       "Ungültige Schwelle für erzwungenes All-in"
     ,
-      "强制全下的阈值不正确");
+      "强制全下的阈值不正确", "強制全下的門檻不正確");
   }
 
   if (config.mergingThreshold < 0) {
@@ -823,7 +878,7 @@ const checkConfig = (
       "Limiar de fusão inválido",
       "Ungültige Schwelle zum Zusammenfassen"
     ,
-      "合并阈值不正确");
+      "合并阈值不正确", "合併門檻不正確");
   }
 
   if (
@@ -838,7 +893,7 @@ const checkConfig = (
       `Board inválido (são necessárias ${config.expectedBoardLength} cartas)`,
       `Ungültiges Board (${config.expectedBoardLength} Karten nötig)`
     ,
-      `公共牌不正确（需要 ${config.expectedBoardLength} 张）`);
+      `公共牌不正确（需要 ${config.expectedBoardLength} 张）`, `公共牌不正確（需要 ${config.expectedBoardLength} 張）`);
   }
 
   const addedLinesArray =
@@ -865,7 +920,7 @@ const checkConfig = (
       "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)",
       "Ungültige Line gefunden (beschädigte Einstellungen geladen?)"
     ,
-      "发现了无效的线路（是不是加载了损坏的设置？）");
+      "发现了无效的线路（是不是加载了损坏的设置？）", "發現了無效的線路（是不是載入了損壞的設定？）");
   }
 
   if (
@@ -884,7 +939,7 @@ const checkConfig = (
       "Configuração inválida (você carregou uma configuração corrompida?)",
       "Ungültige Einstellungen (beschädigte Einstellungen geladen?)"
     ,
-      "设置不正确（是不是加载了损坏的设置？）");
+      "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）");
   }
 
   return null;
@@ -1133,7 +1188,7 @@ export default defineComponent({
           "Para compartilhar um spot, informe primeiro os ranges OOP e IP e pelo menos 3 cartas do board.",
           "Zum Teilen eines Spots brauchst du zuerst die OOP- und die IP-Range und mindestens 3 Board-Karten."
         ,
-          "想分享牌局的话，请先填好 OOP 和 IP 范围，并选好至少 3 张公共牌。");
+          "想分享牌局的话，请先填好 OOP 和 IP 范围，并选好至少 3 张公共牌。", "想分享牌局的話，請先填好 OOP 和 IP 範圍，並選好至少 3 張公共牌。");
         return;
       }
       try {

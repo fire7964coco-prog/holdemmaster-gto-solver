@@ -188,6 +188,25 @@ const M = {
         } as Record<string, string>
       )[name] ?? name,
   },
+  "zh-hant": {
+    // 중국어 조판은 전각 괄호（）— 반각 ()를 쓰면 앞뒤가 붙어 보인다
+    strategyCombos: "策略（組合）",
+    strategy: "策略",
+    equity: "勝率",
+    // ⚠ ResultNav·ResultTable·ActionSummary·trainer.ts의 표와 «글자까지» 같아야 한다.
+    // fold는 台灣 주력이 「蓋牌」다 (본체 브리프 §7-A · 번체 포스팅 蓋牌 369 / 棄牌 118)
+    action: (name: string): string =>
+      (
+        {
+          Fold: "蓋牌",
+          Check: "過牌",
+          Call: "跟注",
+          Bet: "下注",
+          Raise: "加注",
+          "All-in": "全下",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

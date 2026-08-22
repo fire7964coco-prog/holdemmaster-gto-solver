@@ -227,6 +227,20 @@ const M = {
     playerLabel: "玩家：",
     oopHint: "这是先行动一方的策略",
   },
+  "zh-hant": {
+    backToList: "← 列表",
+    pot: "底池",
+    stack: "籌碼量",
+    flopOnlyNote: "這裡只有翻牌圈的策略。想一路點到轉牌和河牌 →",
+    solveThisSpot: "自己計算這個牌局",
+    // ⚠ PresetsPage.articleLink와 같은 사정 — 지금은 한국어에서만 뜬다
+    readArticle: "閱讀這個牌局的解說",
+    // ⚠ 「미리 계산해 뒀다」를 말하지 않는 규칙의 예외 — 실패했을 때만 뜨는 문구다
+    loadError: (e: string) => `無法載入預先算好的結果：${e}`,
+    loading: "正在載入結果…",
+    playerLabel: "玩家：",
+    oopHint: "這是先行動一方的策略",
+  },
 } as const;
 
 type PreviewData = {

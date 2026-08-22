@@ -43,7 +43,7 @@
       </div>
 
       <div class="flex ml-auto h-full items-center z-10">
-        <!-- 언어 선택 — 7개 언어(ko/en/ja/es/pt/de/zh)라 토글 대신 선택 상자.
+        <!-- 언어 선택 — 8개 언어(ko/en/ja/es/pt/de/zh/zh-hant)라 토글 대신 선택 상자.
              닫힌 상태에는 현재 언어의 이름만 보이므로 화면에 외국어가 남지 않는다.
              ⚠ 항목을 늘리면 상자가 넓어져 «다른 언어» 화면이 밀린다 — select-fit-verify.js 필수 -->
         <select
@@ -58,8 +58,10 @@
           <option value="es">Español</option>
           <option value="pt">Português</option>
           <option value="de">Deutsch</option>
-          <!-- 지금은 간체만 지원한다. 번체(繁體中文)는 별도 언어로 추가할 것 -->
+          <!-- ⚠ 간체·번체는 «별개 언어»다 (용어 자체가 다르다 — 기계 변환 금지).
+               두 이름 모두 «자기 글자»로 적어야 그 언어 사용자가 알아본다 -->
           <option value="zh">简体中文</option>
+          <option value="zh-hant">繁體中文</option>
         </select>
         <a
           :href="communityUrl"
@@ -145,6 +147,18 @@ const M = {
     communitySuffix: " 社区",
     langSwitchLabel: "选择语言",
   },
+  "zh-hant": {
+    brand: "HoldemMaster GTO 解算器",
+    // 「解算器」= solver의 대만 정착역 (본체 브리프 §7-C. 본체 번체 포스팅 42편에서 解算器 25회 ·
+    // 求解器 0회 — 간체의 「求解器」와 «일부러» 다르다)
+    solver: "解算器",
+    results: "結果",
+    community: "HoldemMaster",
+    // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
+    //   「社群」= 대만·홍콩 표기. 본체 /zh-hant 페이지도 「德州撲克大師社群」이다(社區 0회)
+    communitySuffix: " 社群",
+    langSwitchLabel: "選擇語言",
+  },
 } as const;
 
 export default defineComponent({
@@ -163,7 +177,8 @@ export default defineComponent({
         value === "es" ||
         value === "pt" ||
         value === "de" ||
-        value === "zh"
+        value === "zh" ||
+        value === "zh-hant"
       )
         setLocale(value);
     };

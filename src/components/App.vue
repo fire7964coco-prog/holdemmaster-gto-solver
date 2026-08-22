@@ -221,6 +221,22 @@ export default defineComponent({
         "run-solver": "运行求解器",
         treeEdit: "决策树——预览与编辑",
       },
+      // 번체도 破折號는 «두 칸»(——)이다. 인용부호만 대만·홍콩 관습인 「 」로 간다
+      // (간체의 “ ”와 «반대» — 본체 브리프 §8-4 「引號는 「」 통일」)
+      "zh-hant": {
+        about: "簡介",
+        guide: "使用方法——照著順序做",
+        presets: "教學案例——一鍵載入的範例",
+        trainer: "GTO 訓練器——看清每個選擇的 EV",
+        preflop: "翻前範圍表——開池與防守範圍",
+        equity: "勝率計算器——手牌與範圍的勝率",
+        "oop-range": "OOP 範圍",
+        "ip-range": "IP 範圍",
+        board: "公共牌",
+        "tree-config": "決策樹設定",
+        "run-solver": "執行解算器",
+        treeEdit: "決策樹——預覽與編輯",
+      },
     } as const;
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];

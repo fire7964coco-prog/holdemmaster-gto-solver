@@ -462,10 +462,13 @@
             {{ L.resultHintBefore }}<b class="text-neutral-400">{{ L.resultHintBold }}</b>{{ L.resultHintAfter }}
           </p>
           <p class="mt-3 text-xs leading-relaxed text-neutral-600">
-            {{ L.gtoNoteBefore }}<b class="text-neutral-400">{{ L.gtoNoteBold }}</b>{{ L.gtoNoteAfter }}
-            <template v-if="question">
-              {{ $n(L.spotLimits(limits.potBb.toFixed(1), limits.bestBb.toFixed(2), limits.goodBb.toFixed(2))) }}
-            </template>
+            <!-- ⚠ 두 문장 사이의 «이음새»다. 줄바꿈을 그대로 두면 Vue가 공백 하나를 넣는데,
+                 CJK(일본어·중국어)는 「。」가 이미 여백을 품고 있어 «국면입니다。 이…»처럼 벌어진다
+                 (2026-08-22 joint-shot.js 실측으로 발견 — ja·zh 라이브에도 있던 결함).
+                 그래서 공백을 HTML이 아니라 «코드»가 정한다. -->
+            {{ L.gtoNoteBefore }}<b class="text-neutral-400">{{ L.gtoNoteBold }}</b>{{ L.gtoNoteAfter
+            }}<template v-if="question">{{ sentenceGap
+            }}{{ $n(L.spotLimits(limits.potBb.toFixed(1), limits.bestBb.toFixed(2), limits.goodBb.toFixed(2))) }}</template>
           </p>
         </template>
       </div>
@@ -549,6 +552,7 @@ import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
 import { noteTrainerSolved } from "../pwa";
 import {
   dailyState,
+  dailyCardDate,
   dailyShareText,
   loadDailyState,
   makeDailyQuestion,
@@ -619,7 +623,10 @@ const M = {
     solved: "풀이",
     dayStreakSuffix: "일 연속",
     bestPrefix: "/ 최고",
-    streakLabel: "연속 정답",
+    // ⚠ trainerStreak()는 «정답»이 아니라 «EV 손실이 허용선 이내인 연속»을 센다.
+    //   앱 자신이 「정답/오답이 아니라 EV 손실로 평가」한다고 말하므로 «정답»은 모순이었다
+    //   (2026-08-22 번체 UX 검수가 덤으로 발견 — zh·zh-hant는 「連續達標」)
+    streakLabel: "연속 통과",
     totalLossLabel: "누적 EV 손실",
     avgLossLabel: "평균 EV 손실",
     goodRateLabel: "좋은 선택",
@@ -823,7 +830,9 @@ const M = {
     solved: "解答数",
     dayStreakSuffix: "日連続",
     bestPrefix: "/ 最高",
-    streakLabel: "連続ベスト",
+    // ⚠ 「ベスト」는 «最適»(ポット比 0.35%)으로 읽히는데 실제 기준은 «許容»(1%)이라
+    //   사용자가 자기 기록을 과대평가하게 된다 (ko와 같은 자리, 2026-08-22 발견)
+    streakLabel: "連続クリア",
     totalLossLabel: "累計EVロス",
     avgLossLabel: "平均EVロス",
     goodRateLabel: "良い選択",
@@ -1363,12 +1372,145 @@ const M = {
     syncFailed: (msg: string) => `同步失败：${msg}`,
     signInFailed: (msg: string) => `登录失败：${msg}`,
   },
+  // ⚠ 台灣 표기: 账号→帳號 · 登录→登入 · 退出登录→登出 · 昵称→暱稱 · 设备→裝置 ·
+  //   保存→儲存 · 记录(명사)→紀錄 · 社区→社群 · 加载→載入 · 复盘→複盤 · 图片→圖片
+  "zh-hant": {
+    loadFailed: "訓練器資料載入失敗：",
+    loading: "訓練器準備中…",
+    review: (n: number) => `複習 ${n} 題`,
+    daily: "今日題目",
+    // ⚠ 이 칩만 daily와 다른 말을 쓴다 — 템플릿이 「{라벨} <b>3</b>{접미}」 꼴이라
+    //   숫자가 가운데 온다. 중국어는 「連續3天」처럼 連續가 숫자 «앞»이라 접미로는 못 넣는다
+    dailyStreakLabel: "連續挑戰",
+    done: "已完成",
+    solved: "已做",
+    dayStreakSuffix: "天",
+    bestPrefix: "/ 最佳",
+    // ⚠ 「連續答對」로 쓰면 안 된다 — trainer.ts의 trainerStreak()는 연속으로 몇 문제가
+    //   isAcceptable(EV 손실 ≤ 허용선)이었나를 센다. «정답/오답»이 아니다
+    //   (간체 세션에서 원어민 4명 전원이 지적한 자리 — 2026-08-22)
+    streakLabel: "連續達標",
+    totalLossLabel: "累計 EV 損失",
+    avgLossLabel: "平均 EV 損失",
+    // 이 칸은 백분율이다(excellentRate) — en「Good-play rate」처럼 «率»이 있어야 한다
+    goodRateLabel: "達標率",
+    weaknessTitle: "弱點分析",
+    avgOfPot: (pct: string) => `平均佔底池 ${pct}%`,
+    // 중국어는 명사에 복수 변화가 없다 (de의 Hand/Hände 분기가 필요 없다)
+    handCount: (n: number) => `（${n} 題）`,
+    notSolved: "還沒做過",
+    // 「你在 <분류명> 上的損失最大——」 꼴로 이어진다 (분류명이 가운데 굵게 들어간다)
+    weakestBefore: "你在",
+    weakestAfter: "的損失最大——",
+    // 코드 대조: changeCategory(weakness.weakest.category) — 한 판이 아니라 «부류»를 고른다
+    practiceThis: "只練這類局面",
+    weaknessHint: "每類局面至少做 3 題，就能看出你在哪裡漏 EV。",
+    // 「已儲存在 <닉네임> 的帳號裡」 꼴. 라틴·한글 닉네임이 올 수 있어 앞뒤에 공백을 둔다
+    accountBefore: "已儲存在 ",
+    accountAfter: " 的帳號裡",
+    syncingNow: "同步中…",
+    syncNow: "立刻同步",
+    signOutLabel: "登出",
+    localOnlyBefore: "你的學習紀錄",
+    // ⚠ ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
+    localOnlyBold: "只儲存在這台裝置上",
+    localOnlyAfter:
+      "。綁定 HoldemMaster 帳號，換台裝置也能接著做。",
+    googleSignIn: "用 Google 繼續",
+    kakaoSignIn: "用 Kakao 繼續",
+    footerLine: (nodes: number, pct: number) =>
+      `13 個教學案例 · ${nodes} 個決策節點 · 目標可剝削度 ${pct}%`,
+    details: "詳情 ↓",
+    toAct: "該行動",
+    potLabel: "底池",
+    stackLabel: "籌碼量",
+    // TreeEditor의 addedLines/removedLines와 같은 말(線路)로 통일했다
+    lineLabel: "線路：",
+    boardLabel: "公共牌",
+    myHand: "我的手牌",
+    yourChoice: "我的選擇",
+    prompt: "你打算怎麼打？",
+    bestEvTag: " · EV 最高",
+    evLoss: "EV 損失",
+    mobileDetailTitle: "各動作的頻率和 EV",
+    mixedNote: "遇到混合策略時，不會簡單判對錯，而是按動作之間的 EV 差來評價。",
+    dailyDone: "今日題目已完成",
+    dailyDoneDesc:
+      "今天所有人做的都是同一道題。把結果發出去，就能和別人的選擇比一比。",
+    makeCard: "產生成績卡",
+    boardShow: "看今天的排名",
+    boardHide: "收起排名",
+    boardLoading: "載入中…",
+    boardCount: (n: number) => `今天有 ${n} 人參與`,
+    boardMyRank: (r: number) => `我排第 ${r} 名`,
+    // ⚠ 원문의 뜻: «로그인하면 순위에 오른다 / 구경은 로그인 없이도 된다».
+    //   독일어에서 이 문장의 뜻이 뒤집혀 있었다 — 두 절의 주어를 반드시 확인할 것
+    boardLoginHint:
+      "登入之後，你的暱稱也會出現在排名裡。只是想看看的話，不登入也行。",
+    boardUnavailable: "排名還沒開放。",
+    copied: "已複製",
+    copyResult: "複製結果文字",
+    openCommunity: "開啟社群 →",
+    // ⚠ 본체 community-client.tsx의 LABELS에 zh-hant 키가 «없어서» 이 버튼은 실제로
+    //   영어 폴백(「✏️ Write Post」)으로 나온다(2026-08-22 본체 소스 확인).
+    //   없는 이름을 안내하지 않으려고 «실제로 보이게 될» 이름을 적는다.
+    //   본체가 zh-hant LABELS를 넣으면 그때 번체 버튼명으로 바꿀 것
+    pasteHintBefore: "在社群裡按下",
+    pasteHintBold: "[✏️ Write Post]",
+    pasteHintAfter: "，貼上去就行。",
+    keepPracticing: "接著練",
+    nextHand: "下一題",
+    // ⚠ 해설 링크 자체는 지금 한국어에서만 뜬다 (본체에 GTO 시리즈 번체판이 없다 — 실측 404)
+    readArticle: "閱讀這個牌局的解說 →",
+    viewFull: "打開這個牌局",
+    resultTitle: "評分結果",
+    resultHintBefore: "選好動作之後，這裡會顯示",
+    resultHintBold: "每個動作的頻率和 EV",
+    resultHintAfter: "，還有你的選擇虧了多少 bb。",
+    gtoNoteBefore:
+      "GTO 對同一手牌也會混著打。頻率低的選擇不等於做錯，判斷標準是 EV 損失——",
+    gtoNoteBold: "佔底池",
+    gtoNoteAfter: " 0.35% 以內是最佳 · 1% 以內可以接受 · 再多就是該回頭檢討的局面。",
+    // ⚠ 코드 대조: 이 ${pot}은 lossLimits() → presetPotBb(), 즉 «프리셋의 시작 팟»이다.
+    //   화면 위쪽에 뜨는 «현재 노드의 팟»과 다른 수라, 둘 다 「底池」라고만 쓰면 안 된다
+    spotLimits: (pot: string, best: string, good: string) =>
+      `按這個牌局的起始底池（${pot}bb）算，就是最佳 ≤${best}bb、可以接受 ≤${good}bb。`,
+    resetHistoryLabel: "清空學習紀錄",
+    cardAlt: "今日題目成績卡",
+    // ko는 「카카오톡·SNS」지만 중화권에 카카오톡은 없다. 실제 동작은 브라우저의
+    // 공유 시트를 여는 것이라, 특정 앱 이름을 대지 않고 «어디로든 공유»로 적었다
+    shareApps: "分享到社群平台",
+    saveImage: "儲存圖片",
+    close: "關閉",
+    cardHintBefore: "把存好的卡片發到群組裡或社群平台吧。收到的人今天做的也是",
+    cardHintBold: "同一道題",
+    cardHintAfter: "。卡片裡不會帶上答案。",
+    verdictBest: "最佳選擇",
+    verdictGood: "可以接受的選擇",
+    verdictMiss: "該回頭檢討",
+    promptCopy: "請複製下面的內容",
+    shareText:
+      // ⚠ 이 문장은 사용자가 «커뮤니티에 붙여넣는» 글이다 — 읽는 사람은 남이다.
+      //   en「try it yourself」·de「probiere sie auch」와 같이 상대에게 말해야 한다
+      "今日 GTO 題目，你也來試試：https://solver.holdemmaster.com/?view=trainer&lang=zh-hant",
+    confirmReset: "要清空這台裝置上的學習紀錄嗎？",
+    syncMerged: (uploaded: number, merged: number) =>
+      `已儲存 ${uploaded} 筆 · 從其他裝置取回 ${merged} 筆`,
+    syncSaved: (uploaded: number) => `已儲存 ${uploaded} 筆`,
+    syncFailed: (msg: string) => `同步失敗：${msg}`,
+    signInFailed: (msg: string) => `登入失敗：${msg}`,
+  },
 } as const;
 
 export default defineComponent({
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale]);
+    /* 두 문장을 잇는 공백 — 서양어는 필요하고, CJK는 「。」가 이미 여백을 품고 있어
+     * 넣으면 오히려 벌어진다. 템플릿의 줄바꿈에 맡기면 전 언어가 공백을 받는다 */
+    const sentenceGap = computed(() =>
+      i18n.locale === "ja" || i18n.locale === "zh" || i18n.locale === "zh-hant" ? "" : " "
+    );
     // 카카오 로그인은 한국어 화면에서만 (사용자 결정 2026-08-21)
     const isKo = computed(() => i18n.locale === "ko");
     const categories: TrainerCategory[] = ["all", "srp", "3bp", "blind"];
@@ -1604,7 +1746,7 @@ export default defineComponent({
           : L.value.verdictMiss;
       const node = question.value.node;
       cardCanvas = drawDailyCard({
-        dateLabel: todayKey().replace(/-/g, "."),
+        dateLabel: dailyCardDate(),
         spotTitle: presetTitleById(question.value.presetId),
         positionLabel: `${positionLabel.value} (${node.selectedSpot.player.toUpperCase()}) ${L.value.toAct}`,
         potLabel: `${L.value.potLabel} ${amountBb(node.selectedSpot.pot ?? node.startingPot)}`,
@@ -1808,6 +1950,7 @@ export default defineComponent({
       excellentRate,
       reviewAttempts,
       limits,
+      sentenceGap,
       dailyState,
       // 한국어는 /community, 그 밖의 언어는 «언어별 홈 자체가 그 언어 커뮤니티»다.
       // 본체 app/{en,ja,es,pt,de,zh}/page.tsx가 전부 <CommunityClient pageLocale="…"/>를
