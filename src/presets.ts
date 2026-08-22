@@ -625,25 +625,30 @@ export const PRESETS: Preset[] = [
     title: "A 페어 보드",
     titleEn: "Ace-Paired Board",
     board: "As Ah 6d",
+    // ⚠ 콤보 수 88/66은 «트립스»다 — «A를 든 콤보»(94/72)가 아니다.
+    //   보드가 As Ah 6d라 A6는 트립스가 아니라 «에이스 풀하우스»다(AAA + 66).
+    //   양쪽 다 A6가 정확히 6콤보씩이라 94-6=88 · 72-6=66이 된다.
+    //   2026-08-22에 우리가 94/72로 잘못 적었고 본체가 88/66으로 잡아 줬다.
+    //   레인지에서 «족보»를 셀 때는 보드와 페어를 이루는 킥커를 먼저 빼고 셀 것
     lesson:
-      "A가 2장 깔린 특수 보드. 트립스는 드물지 않습니다 — SB가 94콤보로 BB(72콤보)보다 많아서 SB가 80.1%를 칩니다. 어느 쪽이 A를 더 들고 있는지가 이 보드의 전부입니다.",
+      "A가 2장 깔린 특수 보드. 트립스는 드물지 않습니다 — SB가 88콤보로 BB(66콤보)보다 많아서 SB가 80.1%를 칩니다. 어느 쪽이 A를 더 들고 있는지가 이 보드의 전부입니다.",
     lessonEn:
-      "Two aces on the board. Trips aren't rare — SB simply holds more of them (94 combos to BB's 72), so SB bets 80.1%. Who holds more aces is the whole story here.",
+      "Two aces on the board. Trips aren't rare — SB simply holds more of them (88 combos to BB's 66), so SB bets 80.1%. Who holds more aces is the whole story here.",
     titleJa: "Aペアボード",
     lessonJa:
-      "Aが2枚落ちた特殊なボードです。トリップスは珍しくありません — SBが94コンボ、BBが72コンボで、Aを多く持つSBが80.1%打ちます。どちらがAを多く持つかがこのボードのすべてです。",
+      "Aが2枚落ちた特殊なボードです。トリップスは珍しくありません — SBが88コンボ、BBが66コンボで、Aを多く持つSBが80.1%打ちます。どちらがAを多く持つかがこのボードのすべてです。",
     titleEs: "Board con A pareado",
     lessonEs:
-      "Dos ases en el board. Los tríos no son raros — SB simplemente tiene más (94 combos frente a los 72 de BB), así que SB apuesta el 80.1%. Quién tiene más ases lo explica todo aquí.",
+      "Dos ases en el board. Los tríos no son raros — SB simplemente tiene más (88 combos frente a los 66 de BB), así que SB apuesta el 80.1%. Quién tiene más ases lo explica todo aquí.",
     titlePt: "Board com A pareado",
     lessonPt:
-      "Dois ases no board. As trincas não são raras — o SB simplesmente tem mais delas (94 combos contra 72 do BB), então o SB aposta 80,1%. Quem tem mais ases explica tudo aqui.",
+      "Dois ases no board. As trincas não são raras — o SB simplesmente tem mais delas (88 combos contra 66 do BB), então o SB aposta 80,1%. Quem tem mais ases explica tudo aqui.",
     titleDe: "Board mit gepaartem Ass",
     titleZh: "A 对子牌面",
     titleZhHant: "A 對子牌面",
     lessonDe:
-      "Zwei Asse auf dem Board. Drillinge sind nicht selten – SB hält einfach mehr davon (94 Combos gegen 72 beim BB), also bettet SB 80,1%. Wer mehr Asse hält, erklärt hier alles.",
-    lessonZh: "牌面上摆着两张 A 的特殊局面。明三条（trips）并不少见——SB 有 94 个组合，BB 只有 72 个，所以 SB 打出 80.1%。谁手里的 A 更多，就是这个牌面的全部。",
-    lessonZhHant: "牌面上擺著兩張 A 的特殊局面。明三條（trips）並不少見——SB 有 94 個組合，BB 只有 72 個，所以 SB 打出 80.1%。誰手裡的 A 更多，就是這個牌面的全部。",
+      "Zwei Asse auf dem Board. Drillinge sind nicht selten – SB hält einfach mehr davon (88 Combos gegen 66 beim BB), also bettet SB 80,1%. Wer mehr Asse hält, erklärt hier alles.",
+    lessonZh: "牌面上摆着两张 A 的特殊局面。明三条（trips）并不少见——SB 有 88 个组合，BB 只有 66 个，所以 SB 打出 80.1%。谁手里的 A 更多，就是这个牌面的全部。",
+    lessonZhHant: "牌面上擺著兩張 A 的特殊局面。明三條（trips）並不少見——SB 有 88 個組合，BB 只有 66 個，所以 SB 打出 80.1%。誰手裡的 A 更多，就是這個牌面的全部。",
   },
 ];
