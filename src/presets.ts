@@ -512,26 +512,33 @@ export const PRESETS: Preset[] = [
     title: "다이나믹 투톤 보드",
     titleEn: "Dynamic Two-Tone Board",
     board: "Qh Th 7s",
+    // ⚠ 빈도는 «normalizer»로 잰다 — «weights»가 아니다.
+    //   화면(ActionSummary.vue)의 freq = Σ strategy×normalizer / Σ normalizer 다.
+    //   weights로 재면 2/3 사이즈가 98.4534%(→98.5)가 나오고,
+    //   normalizer로 재면 98.4437%(→98.4)가 나온다. 화면에 뜨는 값은 «98.4»다.
+    //   2026-08-22에 우리가 98.5로 잘못 적었고 본체가 98.4로 잡아 줬다(2026-08-23).
+    //   🪶 체크 0.8%는 우리가 맞았다 — 본체의 0.9%는 100-99.1로 «반올림된 값을 빼서» 나온 값이다.
+    //   빈도를 인용할 때는 normalizer 기준으로 재고, 합을 빼서 구하지 말 것.
     lesson:
-      "3벳팟인데 콜러에게도 좋은 카드가 많은 보드. 그런데 3벳터는 멈추지 않습니다 — 98.5%가 같은 2/3 사이즈로 나갑니다. 체크로 남는 0.8%가 어떤 핸드인지 보세요.",
+      "3벳팟인데 콜러에게도 좋은 카드가 많은 보드. 그런데 3벳터는 멈추지 않습니다 — 98.4%가 같은 2/3 사이즈로 나갑니다. 체크로 남는 0.8%가 어떤 핸드인지 보세요.",
     lessonEn:
-      "A 3-bet pot on a board that suits the caller as well — and yet the 3-bettor doesn't slow down: 98.5% of the range fires the same two-thirds size. See which hands make up the 0.8% that checks.",
+      "A 3-bet pot on a board that suits the caller as well — and yet the 3-bettor doesn't slow down: 98.4% of the range fires the same two-thirds size. See which hands make up the 0.8% that checks.",
     titleJa: "ダイナミックな2トーンボード",
     lessonJa:
-      "3ベットポットなのにコーラーにも良いカードが多いボードです。それでも3ベッターは止まりません — 98.5%が同じ2/3サイズで打ちます。チェックに残る0.8%がどんなハンドか見てみましょう。",
+      "3ベットポットなのにコーラーにも良いカードが多いボードです。それでも3ベッターは止まりません — 98.4%が同じ2/3サイズで打ちます。チェックに残る0.8%がどんなハンドか見てみましょう。",
     titleEs: "Board dinámico two-tone",
     lessonEs:
-      "Un bote de 3-bet en un board que también le gusta al caller — y aun así el 3-bettor no frena: el 98.5% del rango dispara con el mismo tamaño de dos tercios. Mira qué manos forman ese 0.8% que hace check.",
+      "Un bote de 3-bet en un board que también le gusta al caller — y aun así el 3-bettor no frena: el 98.4% del rango dispara con el mismo tamaño de dos tercios. Mira qué manos forman ese 0.8% que hace check.",
     titlePt: "Board dinâmico two-tone",
     lessonPt:
-      "Um pote de 3-bet num board que também agrada ao caller — e mesmo assim o 3-bettor não freia: 98,5% do range aposta com o mesmo tamanho de dois terços. Veja quais mãos formam os 0,8% que dão check.",
+      "Um pote de 3-bet num board que também agrada ao caller — e mesmo assim o 3-bettor não freia: 98,4% do range aposta com o mesmo tamanho de dois terços. Veja quais mãos formam os 0,8% que dão check.",
     titleDe: "Dynamisches Two-Tone-Board",
     titleZh: "多变的双色牌面",
     titleZhHant: "多變的雙色牌面",
     lessonDe:
-      "Ein 3-Bet-Pot auf einem Board, das auch dem Caller liegt – und trotzdem bremst der 3-Bettor nicht: 98,5% der Range feuert mit derselben Zwei-Drittel-Size. Sieh dir an, welche Hände die 0,8% Check ausmachen.",
-    lessonZh: "虽然是 3bet 底池，但这个牌面对跟注方也不差。可 3bet 方并不会收手——98.5% 的范围都用同一个 2/3 尺寸打出去。看看剩下过牌的 0.8% 是哪些手牌。",
-    lessonZhHant: "雖然是 3bet 底池，但這個牌面對跟注方也不差。可 3bet 方並不會收手——98.5% 的範圍都用同一個 2/3 尺寸打出去。看看剩下過牌的 0.8% 是哪些手牌。",
+      "Ein 3-Bet-Pot auf einem Board, das auch dem Caller liegt – und trotzdem bremst der 3-Bettor nicht: 98,4% der Range feuert mit derselben Zwei-Drittel-Size. Sieh dir an, welche Hände die 0,8% Check ausmachen.",
+    lessonZh: "虽然是 3bet 底池，但这个牌面对跟注方也不差。可 3bet 方并不会收手——98.4% 的范围都用同一个 2/3 尺寸打出去。看看剩下过牌的 0.8% 是哪些手牌。",
+    lessonZhHant: "雖然是 3bet 底池，但這個牌面對跟注方也不差。可 3bet 方並不會收手——98.4% 的範圍都用同一個 2/3 尺寸打出去。看看剩下過牌的 0.8% 是哪些手牌。",
   },
   {
     ...TBP,
