@@ -1,6 +1,6 @@
 {
-  "name": "홀덤마스터 GTO 솔버",
-  "short_name": "GTO 솔버",
+  "name": "홀덤마스터 트레이너",
+  "short_name": "트레이너",
   "description": "무료 GTO 솔버와 트레이너. 교육 예제 13종은 오프라인에서도 바로 볼 수 있습니다.",
   "lang": "ko",
   "dir": "ltr",

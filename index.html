@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="GTO 솔버">
+    <meta name="apple-mobile-web-app-title" content="트레이너">
     <meta name="mobile-web-app-capable" content="yes">
     <!--
       ⚠ 매니페스트는 «설치된 앱의 이름»을 정한다 — 창 제목·홈 화면 라벨·앱 목록.
@@ -57,14 +57,14 @@
         if (link) link.href = "/manifest-" + l + ".webmanifest";
         // iOS 사파리는 매니페스트를 부분적으로만 읽는다 — 홈 화면 라벨은 이 meta가 정한다
         var TITLE = {
-          en: "GTO Solver", ja: "GTOソルバー", es: "GTO Solver", pt: "GTO Solver",
-          de: "GTO Solver", zh: "GTO 求解器", "zh-hant": "GTO 解算器"
+          en: "GTO Trainer", ja: "GTOトレーナー", es: "GTO Trainer", pt: "GTO Trainer",
+          de: "GTO Trainer", zh: "GTO 训练器", "zh-hant": "GTO 訓練器"
         };
         var meta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
         if (meta && TITLE[l]) meta.setAttribute("content", TITLE[l]);
       })();
     </script>
-    <title>홀덤마스터 GTO 솔버 — 무료 브라우저 GTO 솔버</title>
+    <title>홀덤마스터 트레이너 — 무료 GTO 솔버·트레이너</title>
     <meta name="description" content="설치 없이 브라우저에서 실행하는 무료 GTO 솔버. 텍사스 홀덤 포스트플랍 전략을 레인지·보드·벳 사이즈별로 계산합니다. 홀덤마스터 커뮤니티 제공.">
   </head>
   <body>

@@ -1,6 +1,6 @@
 {
-  "name": "HoldemMaster GTO 解算器",
-  "short_name": "GTO 解算器",
+  "name": "HoldemMaster GTO 訓練器",
+  "short_name": "GTO 訓練器",
   "description": "免費的 GTO 解算器和訓練器。13 個教學案例打開就能看，沒網路也一樣。",
   "lang": "zh-Hant",
   "dir": "ltr",

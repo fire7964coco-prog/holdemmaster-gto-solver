@@ -102,7 +102,7 @@ export const errorReportText = () => {
     // 빌드 2벌 분기 — npokers 빌드는 상표만 바꾼 제목을 쓴다 (죽은 쪽은 압축기가 제거)
     __APP_TARGET__ === "npokers"
       ? pick("npokers 오류 기록", "npokers error log", "npokers エラーログ", "Registro de errores de npokers", "Registro de erros do npokers", "npokers-Fehlerprotokoll", "npokers 错误日志", "npokers 錯誤紀錄")
-      : pick("홀덤마스터 GTO 솔버 오류 기록", "HoldemMaster GTO Solver error log", "HoldemMaster GTOソルバー エラーログ", "Registro de errores de HoldemMaster GTO Solver", "Registro de erros do HoldemMaster GTO Solver", "Fehlerprotokoll des HoldemMaster GTO Solvers", "HoldemMaster GTO 求解器错误日志", "HoldemMaster GTO 解算器錯誤紀錄"),
+      : pick("홀덤마스터 트레이너 오류 기록", "HoldemMaster GTO Trainer error log", "HoldemMaster GTOトレーナー エラーログ", "Registro de errores de HoldemMaster GTO Trainer", "Registro de erros do HoldemMaster GTO Trainer", "Fehlerprotokoll des HoldemMaster GTO Trainers", "HoldemMaster GTO 训练器错误日志", "HoldemMaster GTO 訓練器錯誤紀錄"),
     `${pick("빌드", "Build", "ビルド")} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen", "画面", "Pantalla", "Tela", "Bildschirm", "屏幕", "螢幕")} ${window.innerWidth}x${window.innerHeight}`,
     `${pick("설치 실행", "Installed app", "インストール版", "App instalada", "App instalado", "Installierte App", "已安装的应用", "已安裝的應用程式")}: ${standalone ? pick("예", "yes", "はい", "sí", "sim", "ja", "是", "是") : pick("아니오", "no", "いいえ", "no", "não", "nein", "否", "否")}`,
     "",

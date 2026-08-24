@@ -1,6 +1,6 @@
 {
-  "name": "HoldemMaster GTO Solver",
-  "short_name": "GTO Solver",
+  "name": "HoldemMaster GTO Trainer",
+  "short_name": "GTO Trainer",
   "description": "A free GTO solver and trainer. All 13 Study Spots open instantly, even offline.",
   "lang": "en",
   "dir": "ltr",

@@ -54,51 +54,51 @@ const M = {
   ko: {
     greeting: "안녕하세요",
     titleLine1: "홀덤마스터",
-    titleLine2: "GTO 솔버입니다.",
+    titleLine2: "트레이너입니다.",
     footer: "무료 GTO 솔버 · 오프라인 학습",
   },
   en: {
     greeting: "Welcome to",
     titleLine1: "HoldemMaster",
-    titleLine2: "GTO Solver.",
+    titleLine2: "GTO Trainer.",
     footer: "Free GTO Solver · Works Offline",
   },
   ja: {
     greeting: "ようこそ",
     titleLine1: "HoldemMaster",
-    titleLine2: "GTOソルバーへ。",
+    titleLine2: "GTOトレーナーへ。",
     footer: "無料GTOソルバー・オフライン学習",
   },
   es: {
     greeting: "Te damos la bienvenida a",
     titleLine1: "HoldemMaster",
-    titleLine2: "GTO Solver.",
+    titleLine2: "GTO Trainer.",
     footer: "Solver GTO gratis · Funciona offline",
   },
   pt: {
     greeting: "Boas-vindas ao",
     titleLine1: "HoldemMaster",
-    titleLine2: "GTO Solver.",
+    titleLine2: "GTO Trainer.",
     footer: "Solver GTO grátis · Funciona offline",
   },
   de: {
     greeting: "Willkommen bei",
     titleLine1: "HoldemMaster",
-    titleLine2: "GTO Solver.",
+    titleLine2: "GTO Trainer.",
     footer: "Kostenloser GTO-Solver · Offline nutzbar",
   },
   zh: {
     greeting: "欢迎使用",
     titleLine1: "HoldemMaster",
     // 중국어 제목 줄에는 마침표를 찍지 않는다 (ko·en·de의 「.」와 «일부러» 다르다)
-    titleLine2: "GTO 求解器",
+    titleLine2: "GTO 训练器",
     footer: "免费 GTO 求解器 · 可离线使用",
   },
   "zh-hant": {
     greeting: "歡迎使用",
     titleLine1: "HoldemMaster",
     // 중국어 제목 줄에는 마침표를 찍지 않는다 (ko·en·de의 「.」와 «일부러» 다르다)
-    titleLine2: "GTO 解算器",
+    titleLine2: "GTO 訓練器",
     footer: "免費 GTO 解算器 · 可離線使用",
   },
 } as const;

@@ -78,36 +78,38 @@ const detect = (): Locale => {
 
 /* 문서 자체(탭 제목·메타 설명)도 언어를 따라간다 — index.html은 한국어로 배포되므로
  * EN 진입 시 여기서 바꿔 준다 (탭에 한국어가 남아 있던 문제, 2026-08-19 사용자 발견).
- * ko 값은 index.html의 <title>·description과 글자까지 같아야 한다. */
+ * ko 값은 index.html의 <title>·description과 글자까지 같아야 한다.
+ * 간판 교체(2026-08-24, «트레이너») 반영 — ⚠ "GTO 솔버/GTO Solver" 키워드는 검색
+ * 자산이므로 제목·설명에서 빼면 안 된다 (작업계획.md 가드레일 G3). */
 const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> = {
   ko: {
-    title: "홀덤마스터 GTO 솔버 — 무료 브라우저 GTO 솔버",
+    title: "홀덤마스터 트레이너 — 무료 GTO 솔버·트레이너",
     description:
       "설치 없이 브라우저에서 실행하는 무료 GTO 솔버. 텍사스 홀덤 포스트플랍 전략을 레인지·보드·벳 사이즈별로 계산합니다. 홀덤마스터 커뮤니티 제공.",
   },
   en: {
-    title: "HoldemMaster GTO Solver — Free Online Solver for Texas Hold'em",
+    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em",
     description:
       "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
   },
   ja: {
-    title: "HoldemMaster GTOソルバー — 無料ブラウザGTOソルバー",
+    title: "HoldemMaster GTOトレーナー — 無料GTOソルバー・トレーナー",
     description:
       "インストール不要、ブラウザで動く無料GTOソルバー。テキサスホールデムのポストフロップ戦略をレンジ・ボード・ベットサイズ別に計算します。HoldemMaster提供。",
   },
   es: {
-    title: "HoldemMaster GTO Solver — Solver GTO gratis en el navegador",
+    title: "HoldemMaster GTO Trainer — Solver y entrenador GTO gratis en el navegador",
     description:
       "Solver GTO gratis que funciona directamente en tu navegador, sin instalar nada. Calcula la estrategia postflop de Texas Hold'em por rango, board y tamaño de apuesta. De HoldemMaster.",
   },
   pt: {
-    title: "HoldemMaster GTO Solver — Solver de poker GTO grátis no navegador",
+    title: "HoldemMaster GTO Trainer — Solver e treinador GTO grátis no navegador",
     description:
       "Solver GTO grátis que roda direto no seu navegador, sem instalar nada. Calcule a estratégia pós-flop de Texas Hold'em por range, board e tamanho de aposta. Da HoldemMaster.",
   },
   de: {
     // 독일 조판은 Halbgeviertstrich «–» (본체 §7-10) — 다른 언어의 «—»와 일부러 다르다
-    title: "HoldemMaster GTO Solver – Kostenloser Online-Solver für Texas Hold\u2019em",
+    title: "HoldemMaster GTO Trainer – Kostenloser GTO-Solver & Trainer für Texas Hold\u2019em",
     description:
       "Kostenloser GTO-Solver, der direkt im Browser läuft – ohne Installation. Berechne die Postflop-Strategie in Texas Hold’em nach Range, Board und Bet Size. Von HoldemMaster.",
   },
@@ -115,7 +117,7 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
   // 「求解器」=solver ·「翻后」=postflop ·「下注尺寸」=bet size ·「公共牌」=board 는
   // 중국 德扑 매체(dpskill·中扑网)의 실사용어다 — 리서치 문서 §2에 출처를 적어 뒀다
   zh: {
-    title: "HoldemMaster GTO 求解器 — 免费在线德州扑克 GTO Solver",
+    title: "HoldemMaster GTO 训练器 — 免费在线德州扑克 GTO Solver 与训练器",
     description:
       "免费 GTO 求解器，打开浏览器就能用，无需安装。按手牌范围、公共牌和下注尺寸计算德州扑克（德扑）翻后策略。由 HoldemMaster 提供。",
   },
@@ -124,7 +126,7 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
   // 「翻牌後」=postflop(§7-A) ·「範圍」=range ·「下注尺寸」=bet size ·「德撲」=고빈도 약칭(플랜 §3).
   // 문장부호는 전각(，。)이 중국어 공통 표준이지만 인용부호는 대만·홍콩 관습인 「 」다(§8-4).
   "zh-hant": {
-    title: "HoldemMaster GTO 解算器 —— 免費線上德州撲克 GTO Solver",
+    title: "HoldemMaster GTO 訓練器 —— 免費線上德州撲克 GTO Solver 與訓練器",
     description:
       "免費 GTO 解算器，打開瀏覽器就能用，不用安裝。依手牌範圍、公共牌與下注尺寸計算德州撲克（德撲）翻牌後策略。由 HoldemMaster 提供。",
   },

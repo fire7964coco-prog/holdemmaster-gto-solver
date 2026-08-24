@@ -30,13 +30,18 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       "zh-hant": "npokers",
     }
   : {
-      ko: "홀덤마스터 GTO 솔버",
-      en: "HoldemMaster GTO Solver",
-      ja: "HoldemMaster GTOソルバー",
-      es: "HoldemMaster GTO Solver",
-      pt: "HoldemMaster GTO Solver",
-      de: "HoldemMaster GTO Solver",
-      // 「求解器」=간체 / 「解算器」=번체 정착역 — NavBar.vue의 기존 주석 참조
-      zh: "HoldemMaster GTO 求解器",
-      "zh-hant": "HoldemMaster GTO 解算器",
+      /* 간판 교체 (2026-08-24, 트랙 B — 작업계획.md 가드레일 G3):
+       * 「홀덤마스터 GTO 솔버」→「홀덤마스터 트레이너」. 솔버 기능·주소는 그대로이고
+       * 간판만 바뀐다. ⚠ "GTO 솔버" 검색 키워드는 탭 제목·메타(i18n.ts DOC_META)와
+       * index.html의 H1이 계속 지킨다 — 여기서 빠졌다고 지우면 안 된다.
+       * ko만 전략 문서의 확정 표기(GTO 없이)이고, 외국어는 기능명이 이미
+       * 「GTO Trainer/GTOトレーナー/训练器/訓練器」로 검수돼 있어 그대로 쓴다. */
+      ko: "홀덤마스터 트레이너",
+      en: "HoldemMaster GTO Trainer",
+      ja: "HoldemMaster GTOトレーナー",
+      es: "HoldemMaster GTO Trainer",
+      pt: "HoldemMaster GTO Trainer",
+      de: "HoldemMaster GTO Trainer",
+      zh: "HoldemMaster GTO 训练器",
+      "zh-hant": "HoldemMaster GTO 訓練器",
     };

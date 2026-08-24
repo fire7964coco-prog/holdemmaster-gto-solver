@@ -1,6 +1,6 @@
 {
-  "name": "HoldemMaster GTO 求解器",
-  "short_name": "GTO 求解器",
+  "name": "HoldemMaster GTO 训练器",
+  "short_name": "GTO 训练器",
   "description": "免费的 GTO 求解器和训练器。13 个教学案例打开就能看，断网也一样。",
   "lang": "zh-Hans",
   "dir": "ltr",

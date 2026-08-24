@@ -79,7 +79,7 @@ import { i18n } from "../i18n";
 
 const M = {
   ko: {
-    iconAlt: "홀덤마스터 GTO 솔버 아이콘",
+    iconAlt: "홀덤마스터 트레이너 아이콘",
     title: "홈 화면에 추가할까요?",
     samsung1: "삼성 인터넷은 설치할 때 ",
     samsungB1: "「안전하지 않은 앱 차단됨」",
@@ -105,7 +105,7 @@ const M = {
     close: "닫기",
   },
   en: {
-    iconAlt: "HoldemMaster GTO Solver icon",
+    iconAlt: "HoldemMaster GTO Trainer icon",
     title: "Add to your home screen?",
     samsung1: "Samsung Internet may ",
     samsungB1: "block the install for security",
@@ -131,7 +131,7 @@ const M = {
     close: "Close",
   },
   ja: {
-    iconAlt: "HoldemMaster GTOソルバーのアイコン",
+    iconAlt: "HoldemMaster GTOトレーナーのアイコン",
     title: "ホーム画面に追加しますか？",
     samsung1: "Samsung Internetでは、ブラウザや端末が",
     samsungB1: "セキュリティ上の理由でインストールをブロック",
@@ -157,7 +157,7 @@ const M = {
     close: "閉じる",
   },
   es: {
-    iconAlt: "Ícono de HoldemMaster GTO Solver",
+    iconAlt: "Ícono de HoldemMaster GTO Trainer",
     title: "¿Agregar a tu pantalla de inicio?",
     samsung1: "Samsung Internet puede ",
     samsungB1: "bloquear la instalación por seguridad",
@@ -183,7 +183,7 @@ const M = {
     close: "Cerrar",
   },
   pt: {
-    iconAlt: "Ícone do HoldemMaster GTO Solver",
+    iconAlt: "Ícone do HoldemMaster GTO Trainer",
     title: "Adicionar à sua tela de início?",
     samsung1: "O Samsung Internet pode ",
     samsungB1: "bloquear a instalação por segurança",
@@ -209,7 +209,7 @@ const M = {
     close: "Fechar",
   },
   de: {
-    iconAlt: "Icon des HoldemMaster GTO Solvers",
+    iconAlt: "Icon des HoldemMaster GTO Trainers",
     title: "Zum Startbildschirm hinzufügen?",
     samsung1: "Samsung Internet kann ",
     samsungB1: "die Installation aus Sicherheitsgründen blockieren",
@@ -238,7 +238,7 @@ const M = {
     close: "Schließen",
   },
   zh: {
-    iconAlt: "HoldemMaster GTO 求解器图标",
+    iconAlt: "HoldemMaster GTO 训练器图标",
     title: "要添加到主屏幕吗？",
     // samsung1 + «굵은» samsungB1 + samsung2 + «굵은» samsungB2 + samsung3 로 한 문장이 된다
     samsung1: "三星浏览器或系统在安装时可能会",
@@ -266,7 +266,7 @@ const M = {
   },
   "zh-hant": {
     // 台灣 표기: 图标→圖示 · 主屏幕→主畫面 · 应用→應用程式 · 快捷方式→捷徑 · 设备→裝置
-    iconAlt: "HoldemMaster GTO 解算器圖示",
+    iconAlt: "HoldemMaster GTO 訓練器圖示",
     title: "要加入主畫面嗎？",
     // samsung1 + «굵은» samsungB1 + samsung2 + «굵은» samsungB2 + samsung3 로 한 문장이 된다.
     // ⚠ 삼성 경고창의 «제목·버튼 이름»은 적지 않는다 — 기기·버전마다 다르고 실기 캡처가 없다
