@@ -103,9 +103,16 @@ const M = {
   },
 } as const;
 
+/* npokers 빌드는 첫 줄 상표만 바꾼다 — 「npokers GTO 솔버입니다.」처럼 읽힌다.
+ * 죽은 쪽은 압축 단계에서 번들에서 빠진다. */
+declare const __APP_TARGET__: "trainer" | "npokers";
+const NPOKERS_TITLE = __APP_TARGET__ === "npokers" ? "npokers" : null;
+
 export default defineComponent({
   setup() {
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() =>
+      NPOKERS_TITLE ? { ...M[i18n.locale], titleLine1: NPOKERS_TITLE } : M[i18n.locale]
+    );
     return { pwa, closeLaunch, L };
   },
 });

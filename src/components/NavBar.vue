@@ -7,7 +7,7 @@
         <span class="pl-4 pr-1.5 text-lg silver-spade select-none" aria-hidden="true"
           >♠</span
         >
-        <span class="pr-4 text-lg font-semibold">{{ L.brand }}</span>
+        <span class="pr-4 text-lg font-semibold">{{ brandName }}</span>
       </div>
 
       <!-- 모바일: 일반 플로우(왼쪽 정렬), md+: 기존처럼 절대배치 중앙
@@ -82,11 +82,11 @@ import { useStore } from "../store";
 
 import { ComputerDesktopIcon, ChartBarIcon } from "@heroicons/vue/24/solid";
 import { mainSiteUrl } from "../outbound";
+import { BRAND_NAME } from "../brand";
 import { i18n, setLocale } from "../i18n";
 
 const M = {
   ko: {
-    brand: "홀덤마스터 GTO 솔버",
     solver: "솔버",
     results: "결과",
     community: "홀덤마스터",
@@ -94,7 +94,6 @@ const M = {
     langSwitchLabel: "언어 선택",
   },
   en: {
-    brand: "HoldemMaster GTO Solver",
     solver: "Solver",
     results: "Results",
     community: "HoldemMaster",
@@ -102,7 +101,6 @@ const M = {
     langSwitchLabel: "Select language",
   },
   ja: {
-    brand: "HoldemMaster GTOソルバー",
     solver: "ソルバー",
     results: "結果",
     community: "HoldemMaster",
@@ -110,7 +108,6 @@ const M = {
     langSwitchLabel: "言語を選択",
   },
   es: {
-    brand: "HoldemMaster GTO Solver",
     solver: "Solver",
     results: "Resultados",
     community: "Comunidad",
@@ -119,7 +116,6 @@ const M = {
     langSwitchLabel: "Seleccionar idioma",
   },
   pt: {
-    brand: "HoldemMaster GTO Solver",
     solver: "Solver",
     results: "Resultados",
     community: "Comunidade",
@@ -128,7 +124,6 @@ const M = {
     langSwitchLabel: "Selecionar idioma",
   },
   de: {
-    brand: "HoldemMaster GTO Solver",
     solver: "Solver",
     results: "Ergebnisse",
     community: "HoldemMaster",
@@ -137,7 +132,6 @@ const M = {
     langSwitchLabel: "Sprache wählen",
   },
   zh: {
-    brand: "HoldemMaster GTO 求解器",
     // 「求解器」= solver의 중국어 정착역 (dpskill·中扑网 실사용 — 리서치 §2)
     solver: "求解器",
     results: "结果",
@@ -148,7 +142,6 @@ const M = {
     langSwitchLabel: "选择语言",
   },
   "zh-hant": {
-    brand: "HoldemMaster GTO 解算器",
     // 「解算器」= solver의 대만 정착역 (본체 브리프 §7-C. 본체 번체 포스팅 42편에서 解算器 25회 ·
     // 求解器 0회 — 간체의 「求解器」와 «일부러» 다르다)
     solver: "解算器",
@@ -184,6 +177,8 @@ export default defineComponent({
     };
     return {
       store: useStore(),
+      // 간판은 빌드별로 다르다 (src/brand.ts — 트레이너 빌드/우리 커뮤니티용 vs npokers 빌드)
+      brandName: computed(() => BRAND_NAME[i18n.locale]),
       // 언어 전환 시 그 언어의 본체 홈(/en 등)으로 갈아타야 하므로 computed
       communityUrl: computed(() => mainSiteUrl("", "navbar")),
       locale: computed(() => i18n.locale),

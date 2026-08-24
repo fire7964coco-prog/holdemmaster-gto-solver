@@ -12,8 +12,15 @@
 import { reactive } from "vue";
 import type { SideView } from "./store";
 
+/* 빌드 2벌 분기 — npokers 빌드에는 교육예제·트레이너가 없다.
+ * ⚠ @features를 import하지 않고 전역 상수를 직접 읽는 이유: @features(트레이너 빌드)가
+ *   TrainerPage를 물고, TrainerPage가 다시 이 파일을 물어 순환이 생기기 때문. */
+declare const __APP_TARGET__: "trainer" | "npokers";
+const FEATURE_TRAINER = __APP_TARGET__ !== "npokers";
+
 const KEY_PRESET_VIEWS = "pwa.presetViews";
 const KEY_TRAINER_SOLVED = "pwa.trainerSolved";
+const KEY_TOOL_USES = "pwa.toolUses";
 const KEY_DISMISSED_AT = "pwa.bannerDismissedAt";
 const KEY_INSTALLED = "pwa.installed";
 
@@ -89,9 +96,15 @@ const dismissedRecently = () => {
   return Date.now() - at < DISMISS_DAYS * 24 * 60 * 60 * 1000;
 };
 
+// npokers 빌드에는 교육예제·트레이너가 없으므로 «써봤다» 기준을 도구 사용 횟수로 바꾼다
+// (프리플랍 차트를 열거나 에퀴티를 계산하면 1씩 오른다 — noteToolUsed)
+const TOOL_USES_NEEDED = 3;
+
 const usedEnough = () =>
-  readCount(KEY_PRESET_VIEWS) >= PRESET_VIEWS_NEEDED ||
-  readCount(KEY_TRAINER_SOLVED) >= TRAINER_SOLVED_NEEDED;
+  FEATURE_TRAINER
+    ? readCount(KEY_PRESET_VIEWS) >= PRESET_VIEWS_NEEDED ||
+      readCount(KEY_TRAINER_SOLVED) >= TRAINER_SOLVED_NEEDED
+    : readCount(KEY_TOOL_USES) >= TOOL_USES_NEEDED;
 
 const refreshBanner = () => {
   pwa.showBanner =
@@ -116,6 +129,14 @@ export const noteTrainerSolved = () => {
   refreshBanner();
 };
 
+/** (npokers 빌드 전용) 프리플랍 차트를 열거나 에퀴티를 계산했을 때 호출.
+ * 트레이너 빌드에서는 아무 일도 하지 않는다 — 기존 배너 조건을 바꾸지 않기 위해. */
+export const noteToolUsed = () => {
+  if (FEATURE_TRAINER) return;
+  writeValue(KEY_TOOL_USES, String(readCount(KEY_TOOL_USES) + 1));
+  refreshBanner();
+};
+
 /* ── 설치 ──────────────────────────────────────────────── */
 
 /** 배너의 [홈 화면에 추가] — 크롬 계열에서만 실제 설치창이 뜬다 */
@@ -130,8 +151,10 @@ export const promptInstall = async () => {
 
 /** 삼성 인터넷에서 [크롬으로 열기] — 크롬이 없으면 그냥 현재 주소로 떨어진다 */
 export const openInChrome = () => {
-  const target = `${location.host}/?view=trainer`;
-  const fallback = encodeURIComponent(`${location.origin}/?view=trainer`);
+  // npokers 빌드에는 트레이너가 없다 — 첫 화면(소개)으로 보낸다
+  const startPath = FEATURE_TRAINER ? "/?view=trainer" : "/";
+  const target = `${location.host}${startPath}`;
+  const fallback = encodeURIComponent(`${location.origin}${startPath}`);
   location.href =
     `intent://${target}#Intent;scheme=https;package=com.android.chrome;` +
     `S.browser_fallback_url=${fallback};end`;
@@ -181,8 +204,8 @@ export const checkOfflineStatus = () => postToServiceWorker({ type: "cache-statu
 const VIEWS: SideView[] = [
   "about",
   "guide",
-  "presets",
-  "trainer",
+  // npokers 빌드에는 이 두 화면이 없다 — ?view=trainer로 들어와도 소개 화면으로 떨어진다
+  ...(FEATURE_TRAINER ? (["presets", "trainer"] as SideView[]) : []),
   "preflop",
   "equity",
   "oop-range",

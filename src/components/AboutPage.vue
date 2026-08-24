@@ -27,20 +27,39 @@
       </p>
 
       <div class="flex flex-wrap items-center gap-3 mt-7">
+        <!-- 교육예제·트레이너·오늘의문제는 트레이너 빌드 전용 (npokers에는 화면 자체가 없다) -->
         <button
+          v-if="FEATURE_TRAINER"
           class="px-5 py-2.5 rounded-full bg-white text-neutral-900 text-sm font-semibold transition hover:bg-neutral-200"
           @click="store.sideView = 'presets'"
         >
           {{ L.ctaPresets }}
         </button>
+        <!-- npokers에서는 프리플랍 차트가 첫 번째(흰) 버튼을 물려받는다 -->
         <button
+          v-else
+          class="px-5 py-2.5 rounded-full bg-white text-neutral-900 text-sm font-semibold transition hover:bg-neutral-200"
+          @click="store.sideView = 'preflop'"
+        >
+          {{ L.ctaPreflop }}
+        </button>
+        <button
+          v-if="FEATURE_TRAINER"
           class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5"
           @click="store.sideView = 'trainer'"
         >
           {{ L.ctaTrainer }}
         </button>
+        <button
+          v-else
+          class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5"
+          @click="store.sideView = 'equity'"
+        >
+          {{ L.ctaEquity }}
+        </button>
         <!-- 매일 하나뿐이라 «오늘 건 풀었나»가 돌아올 이유가 된다 -->
         <button
+          v-if="FEATURE_TRAINER"
           class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5 flex items-center gap-2"
           @click="store.sideView = 'trainer'"
         >
@@ -153,7 +172,8 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { requestInstall, canShowInstallButton } from "../pwa";
-import { dailyState, loadDailyState } from "../daily";
+// 빌드 2벌 분기 — npokers 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
+import { dailyState, loadDailyState, FEATURE_TRAINER } from "@features";
 import { useStore } from "../store";
 import { mainSiteUrl } from "../outbound";
 import { i18n } from "../i18n";
@@ -501,9 +521,166 @@ const M = {
   },
 } as const;
 
+/* npokers 빌드에서 위 사전을 덮어쓰는 조각 — 트레이너·교육예제·오늘의문제 언급을 걷어내고
+ * 프리플랍 차트·에퀴티 계산기를 앞세운다. 문구는 이미 원어민 검수를 거친
+ * 기존 사전(App HEADERS·SideBar 라벨·이 파일의 문장)에서 조합했다 — 새 창작을 최소화.
+ * 죽은 쪽(트레이너 빌드에서는 이 사전 전체)은 압축 단계에서 번들에서 빠진다. */
+declare const __APP_TARGET__: "trainer" | "npokers";
+const N =
+  __APP_TARGET__ === "npokers"
+    ? {
+        ko: {
+          community: "npokers.com",
+          ctaPreflop: "프리플랍 차트",
+          ctaEquity: "에퀴티 계산기",
+          installNote:
+            "설치하면 인터넷이 끊겨도 앱이 열립니다. 프로그램이 아니라 브라우저 바로가기라 권한을 요구하지 않습니다 —",
+          features: [
+            { title: "무료", desc: "횟수 제한 없이 모든 기능을 그대로" },
+            { title: "오프라인", desc: "홈 화면에 설치하면 인터넷 없이도" },
+            { title: "빠른 계산", desc: "멀티스레드로 데스크톱 솔버 수준" },
+            { title: "프리플랍 차트·에퀴티", desc: "오픈·수비 레인지 표와 핸드·레인지 승률" },
+          ],
+          steps: [
+            "프리플랍 차트에서 오픈 & 수비 레인지를 먼저 훑어보세요",
+            "사용법에서 결과 화면 읽는 법을 확인하세요",
+            "익숙해지면 커스텀 스팟(①~⑤)으로 내 핸드를 직접 계산해보세요",
+          ],
+        },
+        en: {
+          community: "npokers.com",
+          ctaPreflop: "Preflop Charts",
+          ctaEquity: "Equity Calculator",
+          installNote:
+            "Installing saves the app to your device, so it opens even when you're offline. It's a browser shortcut, not a program — it never asks for any permissions.",
+          features: [
+            { title: "Free", desc: "Every feature, no usage limits" },
+            { title: "Offline", desc: "Add it to your home screen and use it without an internet connection" },
+            { title: "Fast Solving", desc: "Multithreaded — desktop-solver speed" },
+            { title: "Charts & Equity", desc: "Opening & defense ranges, plus hand and range equity" },
+          ],
+          steps: [
+            "Skim the opening & defense ranges under Preflop Charts",
+            "Check How to Use to learn how to read the results screen",
+            "Once you're comfortable, solve your own hands with Custom Spot (①–⑤)",
+          ],
+        },
+        ja: {
+          community: "npokers.com",
+          ctaPreflop: "プリフロップレンジ表",
+          ctaEquity: "エクイティ計算機",
+          installNote:
+            "インストールするとアプリが端末に保存され、インターネットが切れても開けます。プログラムではなくブラウザのショートカットなので、権限を要求しません —",
+          features: [
+            { title: "無料", desc: "回数制限なく全機能を利用できます" },
+            { title: "オフライン", desc: "ホーム画面に追加すればインターネットなしでも使えます" },
+            { title: "高速計算", desc: "マルチスレッドでデスクトップソルバー級" },
+            { title: "レンジ表・エクイティ", desc: "オープン & ディフェンスのレンジ表とハンド・レンジの勝率" },
+          ],
+          steps: [
+            "プリフロップレンジ表でオープン & ディフェンスのレンジを眺めてみましょう",
+            "使い方で結果画面の読み方を確認しましょう",
+            "慣れてきたらカスタムスポット（①〜⑤）で自分のハンドを直接計算してみましょう",
+          ],
+        },
+        es: {
+          community: "npokers.com",
+          ctaPreflop: "Tablas preflop",
+          ctaEquity: "Calculadora de equity",
+          installNote:
+            "Al instalarla, la app se guarda en tu dispositivo y se abre incluso sin conexión. Es un acceso directo del navegador, no un programa — nunca pide permisos.",
+          features: [
+            { title: "Gratis", desc: "Todas las funciones, sin límites de uso" },
+            { title: "Offline", desc: "Agrégala a tu pantalla de inicio y úsala sin internet" },
+            { title: "Cálculo rápido", desc: "Multihilo — velocidad de solver de escritorio" },
+            { title: "Tablas y equity", desc: "Rangos de open y defensa, y equity de mano y rango" },
+          ],
+          steps: [
+            "Echa un vistazo a los rangos de open y defensa en Tablas preflop",
+            "Revisa Cómo usarlo para aprender a leer la pantalla de resultados",
+            "Cuando te sientas a gusto, resuelve tus propias manos con el Spot personalizado (①~⑤)",
+          ],
+        },
+        pt: {
+          community: "npokers.com",
+          ctaPreflop: "Tabelas pré-flop",
+          ctaEquity: "Calculadora de equity",
+          installNote:
+            "Ao instalar, o app fica salvo no seu dispositivo e abre mesmo sem conexão. É um atalho do navegador, não um programa — ele nunca pede permissões.",
+          features: [
+            { title: "Grátis", desc: "Todos os recursos, sem limite de uso" },
+            { title: "Offline", desc: "Adicione à tela de início e use sem internet" },
+            { title: "Cálculo rápido", desc: "Multithread — velocidade de solver de desktop" },
+            { title: "Tabelas e equity", desc: "Ranges de open e defesa, e equity de mão e range" },
+          ],
+          steps: [
+            "Dê uma olhada nos ranges de open e defesa em Tabelas pré-flop",
+            "Veja Como usar para aprender a ler a tela de resultados",
+            "Quando estiver à vontade, resolva suas próprias mãos com o Spot personalizado (① → ⑤)",
+          ],
+        },
+        de: {
+          community: "npokers.com",
+          ctaPreflop: "Preflop-Charts",
+          ctaEquity: "Equity-Rechner",
+          installNote:
+            "Nach der Installation liegt die App auf deinem Gerät und öffnet sich auch offline. Es ist eine Browser-Verknüpfung, kein Programm – sie fragt nie nach Berechtigungen.",
+          features: [
+            { title: "Kostenlos", desc: "Alle Funktionen, ohne Nutzungslimit" },
+            { title: "Offline", desc: "Zum Startbildschirm hinzufügen und ohne Internet nutzen" },
+            { title: "Schnelles Solving", desc: "Multithreaded – Tempo eines Desktop-Solvers" },
+            { title: "Charts & Equity", desc: "Open- und Defense-Ranges plus Equity für Hand und Range" },
+          ],
+          steps: [
+            "Wirf zuerst einen Blick auf die Open- und Defense-Ranges unter Preflop-Charts",
+            "Schau in die Anleitung, wie du den Ergebnisbildschirm liest",
+            "Wenn du dich sicher fühlst, berechne eigene Hände unter Eigener Spot (①–⑤)",
+          ],
+        },
+        zh: {
+          community: "npokers.com",
+          ctaPreflop: "翻前范围表",
+          ctaEquity: "胜率计算器",
+          installNote:
+            "装上之后，应用会存到你的设备里，断网也能打开。它只是一个浏览器快捷方式，不是软件，从不索取任何权限。",
+          features: [
+            { title: "免费", desc: "全部功能，不限次数" },
+            { title: "离线可用", desc: "添加到主屏幕，没网也能用" },
+            { title: "算得快", desc: "多线程——接近桌面版求解器的速度" },
+            { title: "范围表与胜率", desc: "开池与防守范围表，加上手牌与范围的胜率" },
+          ],
+          steps: [
+            "先去翻前范围表看看开池与防守范围",
+            "去[使用方法]看看结果画面该怎么读",
+            "上手之后，用自定义牌局（①~⑤）算你自己的手牌",
+          ],
+        },
+        "zh-hant": {
+          community: "npokers.com",
+          ctaPreflop: "翻前範圍表",
+          ctaEquity: "勝率計算器",
+          installNote:
+            "裝上之後，應用程式會存到你的裝置裡，沒網路也能打開。它只是一個瀏覽器捷徑，不是軟體，從不索取任何權限。",
+          features: [
+            { title: "免費", desc: "全部功能，不限次數" },
+            { title: "離線可用", desc: "加入主畫面，沒網路也能用" },
+            { title: "算得快", desc: "多執行緒——接近桌面版解算器的速度" },
+            { title: "範圍表與勝率", desc: "開池與防守範圍表，加上手牌與範圍的勝率" },
+          ],
+          steps: [
+            "先去翻前範圍表看看開池與防守範圍",
+            "去[使用方法]看看結果畫面該怎麼讀",
+            "上手之後，用自訂牌局（①～⑤）算你自己的手牌",
+          ],
+        },
+      }
+    : null;
+
 export default defineComponent({
   setup() {
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() =>
+      N ? { ...M[i18n.locale], ...N[i18n.locale] } : { ctaPreflop: "", ctaEquity: "", ...M[i18n.locale] }
+    );
     /* installNote와 「안전한가요?」 버튼을 잇는 공백.
      * ⚠ 언어마다 «문장이 끝나는 방식»이 달라서 로케일 목록이 TrainerPage와 다르다:
      *   ko·ja는 installNote가 «— »(줄표)로 끝나 버튼이 문장을 이어받는다 → 공백 «필요»
@@ -519,6 +696,7 @@ export default defineComponent({
       sentenceGap,
       store: useStore(),
       dailyState,
+      FEATURE_TRAINER,
       L,
       requestInstall,
       canShowInstallButton,

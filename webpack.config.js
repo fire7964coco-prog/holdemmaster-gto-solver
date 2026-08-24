@@ -119,12 +119,29 @@ class GenerateServiceWorkerPlugin {
   }
 }
 
-/** @type {import("webpack").Configuration} */
-module.exports = {
+/*
+ * 빌드 2벌 분기 (2026-08-24, 트랙 B ① — 작업계획.md 가드레일 G1·G2).
+ *   npm run build          → 트레이너 빌드 (solver.holdemmaster.com, 전 기능) → dist/
+ *   npm run build:npokers  → npokers 빌드 (스토어용 순수 솔버) → dist-npokers/
+ *
+ * 갈리는 곳 4가지 — 런타임 호스트 분기가 아니라 «빌드 타임»에 가른다(G2):
+ *   ① resolve.alias "@features": 트레이너·교육예제·오늘의문제·계정(Supabase) 코드를
+ *      npokers 번들에서 물리적으로 뺀다 (src/features/trainer-{enabled,disabled}.ts)
+ *   ② DefinePlugin __APP_TARGET__: 간판·문구·utm_source 등 데이터 분기 (죽은 쪽은 압축기가 제거)
+ *   ③ HTML 템플릿: index.html / index-npokers.html (제목·메타·정적 대체 본문)
+ *   ④ 정적 파일: npokers는 트레이너 데이터(trainer-decisions.json·preset-results/)를
+ *      복사하지 않고, 매니페스트·아이콘을 public-npokers/ 것으로 덮는다
+ */
+/** @returns {import("webpack").Configuration} */
+module.exports = (envArgs = {}) => {
+  const target = envArgs.target === "npokers" ? "npokers" : "trainer";
+  const isNpokers = target === "npokers";
+
+  return {
   mode: "production",
   entry: "./src/index.ts",
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, isNpokers ? "dist-npokers" : "dist"),
     filename: "[contenthash].js",
   },
   module: {
@@ -159,19 +176,55 @@ module.exports = {
       },
     ],
   },
-  resolve: { extensions: [".js", ".ts", ".vue"] },
+  resolve: {
+    extensions: [".js", ".ts", ".vue"],
+    alias: {
+      // 빌드 2벌 분기의 이음새 — npokers 빌드는 트레이너 코드가 하나도 담기지 않는
+      // 스텁을 문다. 두 파일의 export는 짝을 이뤄야 한다(각 파일 머리 주석 참조).
+      "@features$": path.resolve(
+        __dirname,
+        "src/features",
+        isNpokers ? "trainer-disabled.ts" : "trainer-enabled.ts"
+      ),
+    },
+  },
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
-      __SUPABASE_URL__: JSON.stringify(env.SUPABASE_URL ?? ""),
-      __SUPABASE_ANON_KEY__: JSON.stringify(env.SUPABASE_ANON_KEY ?? ""),
+      // npokers 빌드는 계정 기능이 통째로 빠지므로 키를 아예 주입하지 않는다
+      __SUPABASE_URL__: JSON.stringify(isNpokers ? "" : env.SUPABASE_URL ?? ""),
+      __SUPABASE_ANON_KEY__: JSON.stringify(isNpokers ? "" : env.SUPABASE_ANON_KEY ?? ""),
+      __APP_TARGET__: JSON.stringify(target),
       // 오류 신고에 찍히는 빌드 번호 — 어느 배포에서 난 문제인지 구분한다
       __BUILD_ID__: JSON.stringify(
         new Date().toISOString().slice(0, 16).replace("T", " ")
       ),
     }),
-    new CopyWebpackPlugin({ patterns: [{ from: "public" }] }),
-    new HTMLWebpackPlugin({ template: "index.html" }),
+    new CopyWebpackPlugin({
+      patterns: isNpokers
+        ? [
+            {
+              from: "public",
+              // 트레이너 데이터는 npokers에 싣지 않는다. 매니페스트·아이콘은
+              // public-npokers/ 것으로 대체된다 (파일 이름은 같게 유지 —
+              // index.html의 언어별 매니페스트 스크립트가 이름으로 찾는다)
+              globOptions: {
+                ignore: [
+                  "**/trainer-decisions.json",
+                  "**/preset-results/**",
+                  "**/manifest*.webmanifest",
+                  "**/icons/**",
+                  "**/favicon.png",
+                ],
+              },
+            },
+            { from: "public-npokers" },
+          ]
+        : [{ from: "public" }],
+    }),
+    new HTMLWebpackPlugin({
+      template: isNpokers ? "index-npokers.html" : "index.html",
+    }),
     new MiniCSSExtractPlugin({ filename: "[contenthash].css" }),
     new VueLoaderPlugin(),
     new GenerateServiceWorkerPlugin(),
@@ -179,4 +232,5 @@ module.exports = {
   experiments: {
     asyncWebAssembly: true,
   },
+  };
 };

@@ -1,4 +1,5 @@
 /dist/
+/dist-npokers/
 /node_modules/
 /pkg/
 /public/google*.html

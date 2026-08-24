@@ -1,7 +1,8 @@
 <template>
   <div class="max-w-3xl pb-8">
-    <!-- 빠른 시작 -->
+    <!-- 빠른 시작 (교육 예제로 안내하므로 트레이너 빌드 전용) -->
     <div
+      v-if="FEATURE_TRAINER"
       class="px-4 py-3.5 rounded-xl bg-emerald-950 border border-emerald-800"
     >
       <div class="font-bold text-emerald-300">
@@ -125,6 +126,7 @@
     </table>
 
     <!-- GTO 트레이너 -->
+    <template v-if="FEATURE_TRAINER">
     <h3 class="guide-h">{{ L.trainerTitle }}</h3>
     <p class="text-sm text-neutral-400 leading-relaxed">
       {{ L.trainerIntroBefore }}
@@ -161,6 +163,7 @@
         <td>{{ L.filterDef }}</td>
       </tr>
     </table>
+    </template>
 
     <!-- 홈 화면 설치 · 오프라인 -->
     <h3 class="guide-h">{{ L.installTitle }}</h3>
@@ -170,7 +173,9 @@
     <p class="mt-1.5 text-xs text-neutral-500 leading-relaxed">
       {{ L.samsung1 }}<b class="text-neutral-300">{{ L.samsungBold }}</b>{{ L.samsung2 }}
     </p>
+    <!-- 오프라인 «학습 데이터»는 트레이너 빌드 전용 (npokers는 앱 자체가 통째로 캐시된다) -->
     <div
+      v-if="FEATURE_TRAINER"
       class="mt-2 px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm"
     >
       <div class="flex items-center gap-3 flex-wrap">
@@ -238,9 +243,9 @@
     <!-- 추천 공부법 -->
     <h3 class="guide-h">{{ L.studyTitle }}</h3>
     <ol class="guide-steps">
-      <li>{{ L.study1 }}</li>
+      <li v-if="FEATURE_TRAINER">{{ L.study1 }}</li>
       <li>{{ L.study2 }}</li>
-      <li>
+      <li v-if="FEATURE_TRAINER">
         {{ L.study3 }}
       </li>
       <li>{{ L.study4 }}</li>
@@ -294,6 +299,8 @@
 import { computed, defineComponent, ref } from "vue";
 import { useStore } from "../store";
 import { pwa, saveOffline, checkOfflineStatus } from "../pwa";
+// 빌드 2벌 분기 — npokers 빌드에서는 FEATURE_TRAINER=false (webpack alias, src/features/ 참조)
+import { FEATURE_TRAINER } from "@features";
 import { errorState, errorReportText, clearErrors } from "../errors";
 import { i18n } from "../i18n";
 
@@ -1737,10 +1744,99 @@ const M = {
   },
 } as const;
 
+/* npokers 빌드에서 설치 문단의 «교육 예제·트레이너 저장» 대목만 «앱 저장»으로 바꾼다.
+ * (그 밖의 트레이너 언급은 위 template의 v-if="FEATURE_TRAINER"가 문단째 숨긴다)
+ * 죽은 쪽 사전은 압축 단계에서 번들에서 빠진다. */
+declare const __APP_TARGET__: "trainer" | "npokers";
+const N =
+  __APP_TARGET__ === "npokers"
+    ? {
+        ko: {
+          exampleHeader:
+            "처음이라면 이 예시를 복사해서 레인지 입력칸에 붙여넣으세요 (BTN vs BB 100bb 표준)",
+          step4Hint:
+            "커스텀 계산의 입력값은 임의의 정수 칩 단위입니다. bb로 보려면 10칩=1bb로 입력하세요(예: 팟 55 = 5.5bb).",
+          airplaneBefore: "인터넷을 끄고도 앱이 그대로 돌아갑니다. 계산이 ",
+          install3: "입니다. 설치하면 앱이 기기에 저장돼 ",
+          install4: " 그대로 쓸 수 있습니다.",
+        },
+        en: {
+          exampleHeader:
+            "New here? Copy these and paste them into the range inputs (standard BTN vs BB 100bb)",
+          step4Hint:
+            "Custom-spot inputs are in arbitrary integer chips. To think in bb, use 10 chips = 1bb (e.g., pot 55 = 5.5bb).",
+          airplaneBefore:
+            "Turn the internet off and the app keeps working — the clearest proof that the computation ",
+          install3: ". Once installed, the app is stored on your device, so you can keep using it ",
+          install4: ".",
+        },
+        ja: {
+          exampleHeader:
+            "初めての方はこの例をコピーしてレンジ入力欄に貼り付けてください（BTN vs BB 100bb標準）",
+          step4Hint:
+            "カスタム計算の入力値は任意の整数チップ単位です。bbで考えるには10チップ=1bbとして入力してください（例: ポット55 = 5.5bb）。",
+          airplaneBefore: "インターネットを切ってもアプリはそのまま動きます。計算が ",
+          install3: " です。インストールするとアプリが端末に保存され、",
+          install4: " そのまま使えます。",
+        },
+        es: {
+          exampleHeader:
+            "¿Primera vez? Copia estos ejemplos y pégalos en los campos de rango (BTN vs BB 100bb estándar)",
+          step4Hint:
+            "Los valores del spot personalizado usan fichas enteras arbitrarias. Para pensar en bb, usa 10 fichas = 1bb (ej. bote 55 = 5.5bb).",
+          airplaneBefore:
+            "Apaga el internet y la app sigue funcionando — la prueba más clara de que el cálculo ",
+          install3: ". Una vez instalado, la app queda guardada en tu dispositivo, para que puedas seguir usándola ",
+          install4: ".",
+        },
+        pt: {
+          exampleHeader:
+            "É a sua primeira vez? Copie estes exemplos e cole nos campos de range (padrão BTN vs BB 100bb)",
+          step4Hint:
+            "Os valores do spot personalizado usam fichas inteiras arbitrárias. Para raciocinar em bb, use 10 fichas = 1bb (ex.: pote 55 = 5,5bb).",
+          airplaneBefore:
+            "Desligue a internet e o app continua funcionando — a prova mais clara de que o cálculo ",
+          install3: ". Depois de instalado, o app fica salvo no seu dispositivo, para você continuar usando ",
+          install4: ".",
+        },
+        de: {
+          exampleHeader:
+            "Zum ersten Mal hier? Kopiere diese Beispiele in die Range-Felder (Standard BTN vs BB 100bb)",
+          step4Hint:
+            "Die Werte im eigenen Spot sind ganze Chips in einer frei wählbaren Einheit. Wenn du in bb denken willst, nimm 10 Chips = 1bb (z. B. Pot 55 = 5,5bb).",
+          airplaneBefore:
+            "Schalte das Internet ab und die App läuft weiter – der klarste Beweis dafür, dass die Berechnung ",
+          install3: ". Nach der Installation liegt die App auf deinem Gerät, sodass du sie ",
+          install4: " weiter nutzen kannst.",
+        },
+        zh: {
+          exampleHeader:
+            "第一次用的话，把下面这两段示例复制粘贴到范围输入框里（BTN vs BB 100bb 标准）",
+          step4Hint:
+            "自己算的时候，输入的数值用的是任意整数筹码单位。想按 bb 来看，就用 10 筹码 = 1bb 输入（比如底池 55 就是 5.5bb）。",
+          airplaneBefore: "断网之后应用照样能跑。这就是",
+          install3: "。装好之后，应用会存到设备里，",
+          install4: "也照样能用。",
+        },
+        "zh-hant": {
+          exampleHeader:
+            "第一次用的話，把下面這兩段範例複製貼上到範圍輸入框裡（BTN vs BB 100bb 標準）",
+          step4Hint:
+            "自己算的時候，輸入的數值用的是任意整數籌碼單位。想按 bb 來看，就用 10 籌碼 = 1bb 輸入（比如底池 55 就是 5.5bb）。",
+          airplaneBefore: "斷網之後應用程式照樣能跑。這就是",
+          install3: "。裝好之後，應用程式會存到裝置裡，",
+          install4: "也照樣能用。",
+        },
+      }
+    : null;
+
+
 export default defineComponent({
   setup() {
     const copied = ref("");
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() =>
+      N ? { ...M[i18n.locale], ...N[i18n.locale] } : M[i18n.locale]
+    );
     /* 두 조각을 잇는 공백 — CJK는 낱말을 띄우지 않으므로 넣으면 벌어져 보인다.
      * (같은 문장을 쓰는 PresetsPage 배너는 공백 없이 붙는다 — 화면끼리 어긋나 있었다) */
     const sentenceGap = computed(() =>
@@ -1791,6 +1887,7 @@ export default defineComponent({
     return {
       sentenceGap,
       store: useStore(),
+      FEATURE_TRAINER,
       exampleRanges,
       copyRange,
       copied,

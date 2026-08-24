@@ -297,9 +297,69 @@ const M = {
   },
 } as const;
 
+/* npokers 빌드용 덮어쓰기 — 배너의 «교육 예제·트레이너 저장» 대목을 «앱 저장»으로.
+ * 죽은 쪽 사전은 압축 단계에서 번들에서 빠진다. */
+declare const __APP_TARGET__: "trainer" | "npokers";
+const N =
+  __APP_TARGET__ === "npokers"
+    ? {
+        ko: {
+          iconAlt: "npokers 아이콘",
+          defaultB1: "앱을 기기에 저장",
+          default2: "해 인터넷이 없는 곳에서도 쓸 수 있습니다.",
+          ios3: "를 선택하세요. 아이콘 하나로 바로 열리고, 앱이 저장돼 인터넷 없이도 쓸 수 있습니다.",
+        },
+        en: {
+          iconAlt: "npokers icon",
+          defaultB1: "keeps the app on your device",
+          default2: " so you can use it even without an internet connection.",
+          ios3: ". It opens with a single tap and works even offline.",
+        },
+        ja: {
+          iconAlt: "npokers のアイコン",
+          defaultB1: "アプリを端末に保存",
+          default2: "するので、インターネットのない場所でも使えます。",
+          ios3: "を選んでください。アイコン1つですぐ開けて、インターネットなしでも使えます。",
+        },
+        es: {
+          iconAlt: "Ícono de npokers",
+          defaultB1: "guarda la app en tu dispositivo",
+          default2: " para que puedas usarla incluso sin conexión a internet.",
+          ios3: ". Se abre con un solo toque y funciona incluso sin conexión.",
+        },
+        pt: {
+          iconAlt: "Ícone do npokers",
+          defaultB1: "guarda o app no seu dispositivo",
+          default2: " para você usar mesmo sem conexão com a internet.",
+          ios3: ". Abre com um toque só e funciona mesmo sem conexão.",
+        },
+        de: {
+          iconAlt: "npokers-Icon",
+          defaultB1: "die App bleibt auf deinem Gerät",
+          default2: " – so kannst du sie auch ohne Internetverbindung nutzen.",
+          ios3: ". Ein Fingertipp genügt zum Öffnen – die App funktioniert auch offline.",
+        },
+        zh: {
+          iconAlt: "npokers 图标",
+          defaultB1: "应用会存到你的设备里",
+          default2: "，没网也能用。",
+          ios3: "。点一下图标就能打开，没网也能用。",
+        },
+        "zh-hant": {
+          iconAlt: "npokers 圖示",
+          defaultB1: "應用程式會存到你的裝置裡",
+          default2: "，沒網路也能用。",
+          ios3: "。點一下圖示就能開啟，沒網路也能用。",
+        },
+      }
+    : null;
+
+
 export default defineComponent({
   setup() {
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() =>
+      N ? { ...M[i18n.locale], ...N[i18n.locale] } : M[i18n.locale]
+    );
     return { pwa, promptInstall, dismissBanner, openInChrome, L };
   },
 });

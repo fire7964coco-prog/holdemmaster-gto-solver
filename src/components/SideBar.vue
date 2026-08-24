@@ -15,7 +15,12 @@
       {{ L.guide }}
     </button>
 
-    <button :class="itemStyle('presets')" @click="store.sideView = 'presets'">
+    <!-- 교육예제·트레이너는 트레이너 빌드 전용 — npokers 빌드에서는 메뉴째 사라진다 -->
+    <button
+      v-if="FEATURE_TRAINER"
+      :class="itemStyle('presets')"
+      @click="store.sideView = 'presets'"
+    >
       {{ L.presets }}
       <span class="badge hidden md:inline text-xs font-semibold text-emerald-400">
         ⚡ {{ L.presetsBadge }}
@@ -23,7 +28,11 @@
       <span class="md:hidden text-emerald-400">⚡</span>
     </button>
 
-    <button :class="itemStyle('trainer')" @click="store.sideView = 'trainer'">
+    <button
+      v-if="FEATURE_TRAINER"
+      :class="itemStyle('trainer')"
+      @click="store.sideView = 'trainer'"
+    >
       {{ L.trainer }}
       <span class="badge hidden md:inline text-xs font-semibold text-blue-400">
         {{ L.trainerBadge }}
@@ -106,6 +115,7 @@ import { computed, defineComponent } from "vue";
 import { SideView, useStore, useConfigStore } from "../store";
 import { cardText } from "../utils";
 import { i18n } from "../i18n";
+import { FEATURE_TRAINER } from "@features";
 
 import RangeMiniViewer from "./RangeMiniViewer.vue";
 
@@ -354,6 +364,7 @@ export default defineComponent({
       store,
       boardTexts,
       L,
+      FEATURE_TRAINER,
       itemStyle: (view: SideView) => {
         return (
           "side-bar-item " +

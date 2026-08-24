@@ -201,6 +201,7 @@
 import { computed, defineComponent, ref } from "vue";
 import { useStore } from "../store";
 import { i18n } from "../i18n";
+import { noteToolUsed } from "../pwa";
 import {
   POSITIONS,
   Position,
@@ -1102,6 +1103,9 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale]);
+
+    // npokers 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
+    noteToolUsed();
 
     const mode = ref<ModeKey>("rfi");
     const selected = ref<Position>("UTG");

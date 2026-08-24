@@ -243,6 +243,7 @@
 <script lang="ts">
 import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { i18n } from "../i18n";
+import { noteToolUsed } from "../pwa";
 import {
   ALL_HANDS_RANGE,
   comboOfCards,
@@ -751,6 +752,9 @@ export default defineComponent({
 
   setup() {
     const L = computed(() => M[i18n.locale]);
+
+    // npokers 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
+    noteToolUsed();
 
     const hero = ref<number[]>([]);
     const villainHand = ref<number[]>([]);

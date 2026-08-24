@@ -78,15 +78,14 @@ import { computed, defineComponent, ref } from "vue";
 import { useStore } from "../store";
 import { applySpotFromUrl } from "../spot-share";
 import { viewFromUrl } from "../pwa";
-import { bootstrapAccount } from "../account";
+// 빌드 2벌 분기 — npokers 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
+import { TrainerPage, PresetsPage, bootstrapAccount } from "@features";
 import { i18n } from "../i18n";
 
 import NavBar from "./NavBar.vue";
 import SideBar from "./SideBar.vue";
 import AboutPage from "./AboutPage.vue";
 import GuidePage from "./GuidePage.vue";
-import PresetsPage from "./PresetsPage.vue";
-import TrainerPage from "./TrainerPage.vue";
 import PreflopChartPage from "./PreflopChartPage.vue";
 import EquityPage from "./EquityPage.vue";
 import RangeEditor from "./RangeEditor.vue";

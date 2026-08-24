@@ -79,7 +79,7 @@ const detect = (): Locale => {
 /* 문서 자체(탭 제목·메타 설명)도 언어를 따라간다 — index.html은 한국어로 배포되므로
  * EN 진입 시 여기서 바꿔 준다 (탭에 한국어가 남아 있던 문제, 2026-08-19 사용자 발견).
  * ko 값은 index.html의 <title>·description과 글자까지 같아야 한다. */
-const DOC_META: Record<Locale, { title: string; description: string }> = {
+const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> = {
   ko: {
     title: "홀덤마스터 GTO 솔버 — 무료 브라우저 GTO 솔버",
     description:
@@ -130,6 +130,59 @@ const DOC_META: Record<Locale, { title: string; description: string }> = {
   },
 };
 
+/* npokers 빌드(스토어용 순수 솔버)의 탭 제목·메타 설명 — 빌드 2벌 분기(2026-08-24).
+ * 위 트레이너 사전에서 상표만 바꾸고 «홀덤마스터 제공» 문구를 뺀 것이다(법인 분리 취지).
+ * ⚠ en 값은 index-npokers.html의 <title>·description과 글자까지 같아야 한다
+ *   (npokers 정적 대체 본문은 영어가 기본이다 — 스토어 유통은 글로벌이 우선).
+ * 죽은 쪽 사전은 압축 단계에서 번들에서 빠진다. */
+const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> = {
+  ko: {
+    title: "npokers — 무료 브라우저 GTO 솔버",
+    description:
+      "설치 없이 브라우저에서 실행하는 무료 GTO 솔버. 텍사스 홀덤 포스트플랍 전략을 레인지·보드·벳 사이즈별로 계산합니다.",
+  },
+  en: {
+    title: "npokers — Free Online GTO Solver for Texas Hold'em",
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+  },
+  ja: {
+    title: "npokers — 無料ブラウザGTOソルバー",
+    description:
+      "インストール不要、ブラウザで動く無料GTOソルバー。テキサスホールデムのポストフロップ戦略をレンジ・ボード・ベットサイズ別に計算します。",
+  },
+  es: {
+    title: "npokers — Solver GTO gratis en el navegador",
+    description:
+      "Solver GTO gratis que funciona directamente en tu navegador, sin instalar nada. Calcula la estrategia postflop de Texas Hold'em por rango, board y tamaño de apuesta.",
+  },
+  pt: {
+    title: "npokers — Solver de poker GTO grátis no navegador",
+    description:
+      "Solver GTO grátis que roda direto no seu navegador, sem instalar nada. Calcule a estratégia pós-flop de Texas Hold'em por range, board e tamanho de aposta.",
+  },
+  de: {
+    // 독일 조판은 Halbgeviertstrich «–» (트레이너 사전과 같은 규칙)
+    title: "npokers – Kostenloser Online-Solver für Texas Hold’em",
+    description:
+      "Kostenloser GTO-Solver, der direkt im Browser läuft – ohne Installation. Berechne die Postflop-Strategie in Texas Hold’em nach Range, Board und Bet Size.",
+  },
+  zh: {
+    title: "npokers — 免费在线德州扑克 GTO Solver",
+    description:
+      "免费 GTO 求解器，打开浏览器就能用，无需安装。按手牌范围、公共牌和下注尺寸计算德州扑克（德扑）翻后策略。",
+  },
+  "zh-hant": {
+    title: "npokers —— 免費線上德州撲克 GTO Solver",
+    description:
+      "免費 GTO 解算器，打開瀏覽器就能用，不用安裝。依手牌範圍、公共牌與下注尺寸計算德州撲克（德撲）翻牌後策略。",
+  },
+};
+
+/* 빌드 2벌 분기 — 어느 사전을 쓸지는 빌드 타임에 정해진다 (webpack DefinePlugin) */
+declare const __APP_TARGET__: "trainer" | "npokers";
+const DOC_META = __APP_TARGET__ === "npokers" ? NPOKERS_DOC_META : TRAINER_DOC_META;
+
 /* html lang= 값. ⚠ 중국어는 «문자»까지 밝혀야 브라우저가 글꼴을 제대로 고른다 —
  * 번체와 간체는 같은 코드포인트를 쓰면서 자형이 다른 글자가 많아(直·骨·産 등),
  * lang이 zh-Hant인지 zh-Hans인지에 따라 CJK 폴백 글꼴이 갈린다.
@@ -153,7 +206,12 @@ const DOC_LANG: Record<Locale, string> = {
 const applyManifestLocale = (locale: Locale) => {
   const link = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
   if (!link) return;
-  const href = locale === "ko" ? "/manifest.webmanifest" : `/manifest-${locale}.webmanifest`;
+  // 기본 파일(manifest.webmanifest)의 언어가 빌드마다 다르다 — 트레이너 빌드는 한국어
+  // (우리 커뮤니티가 출발점), npokers 빌드는 영어(글로벌 스토어 유통이 우선).
+  // index.html / index-npokers.html의 인라인 스크립트와 짝을 이룬다.
+  const defaultLocale: Locale = __APP_TARGET__ === "npokers" ? "en" : "ko";
+  const href =
+    locale === defaultLocale ? "/manifest.webmanifest" : `/manifest-${locale}.webmanifest`;
   if (!link.href.endsWith(href)) link.href = href;
 };
 

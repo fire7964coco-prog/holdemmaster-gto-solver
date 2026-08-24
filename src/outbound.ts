@@ -10,7 +10,11 @@
  */
 
 import { i18n } from "./i18n";
-const SOURCE = "solver";
+
+/* 빌드 2벌 분기 — 본체 통계에서 «어느 앱이 보낸 유입인지» 갈라 보여야 한다.
+ * 트레이너 빌드는 기존 값(solver)을 유지한다 — 본체 통계의 연속성이 깨지지 않게. */
+declare const __APP_TARGET__: "trainer" | "npokers";
+const SOURCE = __APP_TARGET__ === "npokers" ? "npokers" : "solver";
 const MEDIUM = "referral";
 
 /** 링크가 놓인 위치 — 본체 통계에서 이 값으로 화면별 성과를 구분한다. */

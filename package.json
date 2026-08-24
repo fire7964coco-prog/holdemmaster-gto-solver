@@ -13,7 +13,9 @@
     "wasm:range": "rustup run nightly wasm-pack build --out-dir ../../pkg/range rust/range",
     "wasm:tree": "rustup run nightly wasm-pack build --out-dir ../../pkg/tree rust/tree",
     "wasm:solver-st": "rustup run nightly wasm-pack build --target web --out-dir ../../pkg/solver-st rust/solver-st",
-    "wasm:solver-mt": "rustup run nightly wasm-pack build --target web --out-dir ../../pkg/solver-mt rust/solver-mt"
+    "wasm:solver-mt": "rustup run nightly wasm-pack build --target web --out-dir ../../pkg/solver-mt rust/solver-mt",
+    "build:npokers": "webpack --env target=npokers",
+    "build:all": "webpack && webpack --env target=npokers"
   },
   "dependencies": {
     "@heroicons/vue": "^2.0.18",

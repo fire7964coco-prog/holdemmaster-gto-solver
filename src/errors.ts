@@ -16,6 +16,7 @@ import { pick } from "./i18n";
 
 /** 빌드 시각 (webpack DefinePlugin이 채운다) — 어느 버전에서 난 오류인지 구분용 */
 declare const __BUILD_ID__: string;
+declare const __APP_TARGET__: "trainer" | "npokers";
 
 const KEY = "solver.errors";
 const MAX_RECORDS = 20;
@@ -98,7 +99,10 @@ export const errorReportText = () => {
   if (!records.length) return "";
   const standalone = window.matchMedia?.("(display-mode: standalone)").matches;
   const head = [
-    pick("홀덤마스터 GTO 솔버 오류 기록", "HoldemMaster GTO Solver error log", "HoldemMaster GTOソルバー エラーログ", "Registro de errores de HoldemMaster GTO Solver", "Registro de erros do HoldemMaster GTO Solver", "Fehlerprotokoll des HoldemMaster GTO Solvers", "HoldemMaster GTO 求解器错误日志", "HoldemMaster GTO 解算器錯誤紀錄"),
+    // 빌드 2벌 분기 — npokers 빌드는 상표만 바꾼 제목을 쓴다 (죽은 쪽은 압축기가 제거)
+    __APP_TARGET__ === "npokers"
+      ? pick("npokers 오류 기록", "npokers error log", "npokers エラーログ", "Registro de errores de npokers", "Registro de erros do npokers", "npokers-Fehlerprotokoll", "npokers 错误日志", "npokers 錯誤紀錄")
+      : pick("홀덤마스터 GTO 솔버 오류 기록", "HoldemMaster GTO Solver error log", "HoldemMaster GTOソルバー エラーログ", "Registro de errores de HoldemMaster GTO Solver", "Registro de erros do HoldemMaster GTO Solver", "Fehlerprotokoll des HoldemMaster GTO Solvers", "HoldemMaster GTO 求解器错误日志", "HoldemMaster GTO 解算器錯誤紀錄"),
     `${pick("빌드", "Build", "ビルド")} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen", "画面", "Pantalla", "Tela", "Bildschirm", "屏幕", "螢幕")} ${window.innerWidth}x${window.innerHeight}`,
     `${pick("설치 실행", "Installed app", "インストール版", "App instalada", "App instalado", "Installierte App", "已安装的应用", "已安裝的應用程式")}: ${standalone ? pick("예", "yes", "はい", "sí", "sim", "ja", "是", "是") : pick("아니오", "no", "いいえ", "no", "não", "nein", "否", "否")}`,
     "",
