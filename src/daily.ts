@@ -137,11 +137,13 @@ export const recordDaily = (lossBb: number) => {
  * ⚠ 카드는 canvas라 화면 검사도 clipboard-shot.js도 못 본다. 공유 문구와 «같은 규칙»으로 맞춘다.
  *  - 독일어: TT.MM.JJJJ (26.08.2026을 «2026년 8월 26일»로 읽는 것을 막는다)
  *  - 중국어(간체·번체): YYYY-MM-DD (본체의 zh/zh-hant 포스팅이 전부 ISO다)
+ *  - 프랑스어: JJ/MM/AAAA (브리프 §표기 — 착수지시서도 DD/MM/YYYY로 못박았다)
  *  - 나머지: YYYY.MM.DD
  */
 export const dailyCardDate = () => {
   const key = todayKey();
   if (i18n.locale === "de") return key.split("-").reverse().join(".");
+  if (i18n.locale === "fr") return key.split("-").reverse().join("/");
   if (i18n.locale === "zh" || i18n.locale === "zh-hant") return key;
   return key.replace(/-/g, ".");
 };
@@ -232,6 +234,23 @@ export const dailyShareText = (verdict: string) => {
       "",
       "來做同一道題 → https://solver.holdemmaster.com/?view=trainer&lang=zh-hant",
       "（HoldemMaster GTO 解算器 · 每天一題）",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "fr") {
+    // ⚠ 프랑스 날짜는 JJ/MM/AAAA — 공용 «26.08.24»(yy.mm.dd)는 프랑스 독자에게 모호하다.
+    //   «résultat :»의 콜론 앞 공백은 프랑스 조판 관습이다 (평문 공유라 일반 공백으로 둔다).
+    const frDate = todayKey().split("-").reverse().join("/");
+    return [
+      `[Défi GTO du jour · ${frDate}]`,
+      `Mon résultat : ${verdict} (perte d'EV ${localizeNumber(
+        dailyState.lossBb.toFixed(3)
+      )}bb)`,
+      dailyState.streak > 1 ? `Série de ${dailyState.streak} jours` : "",
+      "",
+      "Relève le même défi → https://solver.holdemmaster.com/?view=trainer&lang=fr",
+      "(HoldemMaster GTO Solver · un défi par jour)",
     ]
       .filter(Boolean)
       .join("\n");

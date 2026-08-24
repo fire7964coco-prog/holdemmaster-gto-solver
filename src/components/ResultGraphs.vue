@@ -136,6 +136,10 @@ const M = {
     // 대만 실사용은 勝率이 압도적이고, 영어 원어 병기는 뱃지·소개 화면에서 한다)
     equity: "勝率",
   },
+  fr: {
+    noGraph: "Graphique indisponible",
+    equity: "Equity",
+  },
 } as const;
 
 export default defineComponent({

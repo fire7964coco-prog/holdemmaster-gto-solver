@@ -153,6 +153,10 @@ const M = {
     combos: "组合",
     equity: "胜率",
   },
+  fr: {
+    combos: "Combos",
+    equity: "Equity",
+  },
   "zh-hant": {
     combos: "組合",
     equity: "勝率",

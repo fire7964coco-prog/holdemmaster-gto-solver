@@ -239,6 +239,24 @@ const M = {
     footnote:
       "這些範圍是 100bb 線上標準打法的近似值。載入之後隨便改、隨便比較，這本身就是很好的練習。",
   },
+  fr: {
+    // 이 넷은 «[버튼1] 글1 [버튼2] 글2» 순서로 한 문장을 이룬다 — 앞뒤 공백에 주의.
+    // 버튼 이름은 아래 viewResults·solveYourself와 «글자까지» 같아야 한다
+    infoBtn1: "[⚡ Voir les résultats]",
+    infoText1: " affiche aussitôt la stratégie calculée. Utilise ",
+    infoBtn2: "[Calculer toi-même]",
+    infoText2:
+      " seulement si tu veux modifier les ranges ou explorer le turn et la river.",
+    pot: "Pot",
+    stack: "Stack",
+    // ⚠ 해설 링크는 지금 한국어에서만 뜬다 (/fr/blog의 GTO 13편 없음 — 2026-08-24 실측 404)
+    articleLink: "Lire l'article",
+    viewResults: "Voir les résultats",
+    solveYourself: "Calculer toi-même",
+    // 「100bb」는 앱이 코드로 찍는 단위 표기(formatAmount)와 맞춘 것 — «화면 안 일관성» 우선
+    footnote:
+      "Les ranges sont des approximations du jeu en ligne standard à 100bb. Charge un spot, modifie les ranges et compare — une excellente façon d'étudier.",
+  },
 } as const;
 
 export default defineComponent({

@@ -236,6 +236,20 @@ export default defineComponent({
         "run-solver": "執行解算器",
         treeEdit: "決策樹——預覽與編輯",
       },
+      fr: {
+        about: "À propos",
+        guide: "Mode d'emploi — pas à pas",
+        presets: "Spots d'étude — exemples en un clic",
+        trainer: "Trainer GTO — l'EV de chaque décision",
+        preflop: "Charts préflop — ranges d'open et de défense",
+        equity: "Calculateur d'equity — equity de main et de range",
+        "oop-range": "Range OOP",
+        "ip-range": "Range IP",
+        board: "Board",
+        "tree-config": "Réglages de l'arbre",
+        "run-solver": "Lancer le solver",
+        treeEdit: "Aperçu et édition de l'arbre",
+      },
     } as const;
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];

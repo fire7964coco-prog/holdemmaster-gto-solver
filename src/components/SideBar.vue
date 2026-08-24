@@ -340,6 +340,35 @@ const M = {
     // 화면 제목(App.vue "run-solver")·안의 버튼과 글자까지 같아야 한다
     run: "執行解算器",
   },
+  // fr 라벨은 fr-sidebar-premeasure.js로 4해상도 + 선택 상태 12뷰 실측 후 확정 (2026-08-24).
+  // 1차 후보에서 두 개가 접혔다: «Immédiat» 뱃지(전 해상도) → Direct ·
+  // «Tableaux préflop»(선택 시 ⑤가 화면 밖) → Charts préflop (프랑스 실사용어 chart préflop)
+  fr: {
+    exploreLabel: "Explorer",
+    exploreLabelSuffix: " et étudier",
+    about: "À propos",
+    guide: "Mode d'emploi",
+    presets: "Spots d'étude",
+    // ⚠ 사용자 지시(2026-08-13): 유저에게 «미리 계산»을 언급하지 않는다
+    presetsBadge: "Direct",
+    // 도구명 Trainer는 프랑스 코퍼스가 영어로 쓴다 (리서치 §1-2)
+    trainer: "Trainer GTO",
+    trainerBadge: "Note EV",
+    preflop: "Charts préflop",
+    preflopBadge: "Ranges",
+    // es·pt와 같은 선택 — "Calculateur d'equity"(20자)는 접힘 확정이라 원어 하나로
+    equity: "Equity",
+    equityBadge: "% victoire",
+    customLabel: "Spot personnalisé",
+    // 한 줄 유지용 — es·pt·de와 같이 접미사를 비운다
+    customLabelSuffix: "",
+    oopRange: "Range OOP",
+    ipRange: "Range IP",
+    board: "Board",
+    betSize: "Bet sizes",
+    betSizeSub: "Réglages",
+    run: "Calculer",
+  },
 } as const;
 
 export default defineComponent({

@@ -399,6 +399,23 @@ const M = {
     addedLines: "新增的線路：",
     removedLines: "移除的線路：",
   },
+  fr: {
+    treeError: "Erreur : impossible de construire l'arbre (arbre corrompu chargé ?)",
+    pot: "Pot",
+    stack: "Stack",
+    noActions: "(Aucune action)",
+    wins: "gagne",
+    invalidTerminals: "Nœuds terminaux invalides :",
+    addBetAction: "Ajouter une action de mise",
+    removeNode: "Supprimer le nœud sélectionné",
+    betAmount: "Montant de la mise :",
+    // ⚠ % 앞 공백은 U+202F — «% du pot» 계열(trainer.ts·ResultNav)과 같은 형식
+    potRate: (pct: string) => `(${pct} % du pot)`,
+    saveEdits: "Enregistrer les modifications",
+    cancelEdits: "Annuler les modifications",
+    addedLines: "Lignes ajoutées :",
+    removedLines: "Lignes retirées :",
+  },
 } as const;
 
 export default defineComponent({

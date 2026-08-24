@@ -1,0 +1,64 @@
+{
+  "name": "HoldemMaster GTO Trainer",
+  "short_name": "GTO Trainer",
+  "description": "Un solver et trainer GTO gratuit. Les 13 spots d'étude s'ouvrent aussitôt, même hors ligne.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "/?view=trainer",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Trainer GTO",
+      "short_name": "Trainer",
+      "description": "Joue des mains tirées de vraies ranges et fais-toi noter à la perte d'EV",
+      "url": "/?view=trainer",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "13 spots d'étude",
+      "short_name": "Spots d'étude",
+      "description": "Regarde la stratégie GTO de 13 spots sans attendre",
+      "url": "/?view=presets",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

@@ -241,6 +241,21 @@ const M = {
     playerLabel: "玩家：",
     oopHint: "這是先行動一方的策略",
   },
+  fr: {
+    backToList: "← Liste",
+    pot: "Pot",
+    stack: "Stack",
+    flopOnlyNote: "Stratégie du flop uniquement. Envie de cliquer jusqu'au turn et à la river ? →",
+    solveThisSpot: "Calcule ce spot toi-même",
+    // ⚠ PresetsPage.articleLink와 같은 사정 — 지금은 한국어에서만 뜬다
+    readArticle: "Lire l'article",
+    // ⚠ 「미리 계산해 뒀다」를 말하지 않는 규칙의 예외 — 실패했을 때만 뜨는 문구다
+    loadError: (e: string) => `Impossible de charger les résultats précalculés : ${e}`,
+    loading: "Chargement des résultats…",
+    playerLabel: "Joueur :",
+    // «parler» = 프랑스 포커에서 «액션할 차례»의 관용 표현 (c'est à toi de parler)
+    oopHint: "La stratégie du joueur qui parle en premier",
+  },
 } as const;
 
 type PreviewData = {

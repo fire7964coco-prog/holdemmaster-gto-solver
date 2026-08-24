@@ -38,7 +38,7 @@
     -->
     <script>
       (function () {
-        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant"];
+        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr"];
         var l = null;
         try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
         if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale"); } catch (e) { l = null; } }
@@ -49,6 +49,7 @@
           else if (n.indexOf("es") === 0) l = "es";
           else if (n.indexOf("pt") === 0) l = "pt";
           else if (n.indexOf("de") === 0) l = "de";
+          else if (n.indexOf("fr") === 0) l = "fr";
           else if (n.indexOf("zh") === 0) l = (/^zh-(tw|hk|mo)($|[-_])/.test(n) || n.indexOf("hant") >= 0) ? "zh-hant" : "zh";
           else l = "en";
         }
@@ -58,7 +59,7 @@
         // iOS 사파리는 매니페스트를 부분적으로만 읽는다 — 홈 화면 라벨은 이 meta가 정한다
         var TITLE = {
           en: "GTO Trainer", ja: "GTOトレーナー", es: "GTO Trainer", pt: "GTO Trainer",
-          de: "GTO Trainer", zh: "GTO 训练器", "zh-hant": "GTO 訓練器"
+          de: "GTO Trainer", zh: "GTO 训练器", "zh-hant": "GTO 訓練器", fr: "GTO Trainer"
         };
         var meta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
         if (meta && TITLE[l]) meta.setAttribute("content", TITLE[l]);

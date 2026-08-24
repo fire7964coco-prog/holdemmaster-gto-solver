@@ -126,6 +126,15 @@ const M = {
     // 중국어는 명사에 복수 변화가 없다 — ko·ja와 같이 ${n}만 갈아끼운다
     warnBody: (n: number) => `編輯過的決策樹以 ${n} 張公共牌為前提。`,
   },
+  fr: {
+    placeholder: "ex. AsKd7c",
+    clear: "Effacer",
+    randomFlop: "Flop aléatoire",
+    // 콜론 앞 공백 = 프랑스 조판 관습 (리서치 §1-3과 같은 결 — 평문이라 일반 공백)
+    warnLabel: "Attention :",
+    warnBody: (n: number) =>
+      `L'arbre édité suppose un board de ${n} carte${n === 1 ? "" : "s"}.`,
+  },
 } as const;
 
 export default defineComponent({

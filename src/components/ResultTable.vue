@@ -714,6 +714,32 @@ const M = {
         } as Record<string, string>
       )[name] ?? name,
   },
+  fr: {
+    summary: "Résumé",
+    barWidth: "Largeur des barres :",
+    normalized: "Normalisé",
+    absolute: "Absolu",
+    full: "Plein",
+    display: "Affichage :",
+    actionPct: "% action",
+    actionEv: "EV action",
+    // ⚠ CSV 자체는 언어와 무관하게 영어식 숫자(소수점 «.»)로 나간다 — fr에서도 그대로다
+    exportCsv: "Exporter le résumé en fichier CSV",
+    all: "Tout",
+    hand: "Main",
+    strategy: "Stratégie",
+    weightBar: "Poids (barre)",
+    weight: "Poids",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (barre)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `Aucun rapport ${chanceType === "turn" ? "turn" : "river"} disponible`,
+    noResults: "Aucun résultat",
+    // 액션명은 영어 유지 — trainer.ts actionName과 같은 결정 (리서치 §3)
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

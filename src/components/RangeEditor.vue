@@ -192,6 +192,14 @@ const M = {
     parseError: (range: string) =>
       `無法解析這個範圍：${range || "（空）"}`,
   },
+  fr: {
+    clear: "Effacer",
+    errorPrefix: "Erreur :",
+    weight: "Poids :",
+    combos: "combos",
+    parseError: (range: string) =>
+      `Impossible d'interpréter la range : ${range || "(chaîne vide)"}`,
+  },
 } as const;
 
 import { C } from "../theme";

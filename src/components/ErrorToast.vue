@@ -147,6 +147,21 @@ const M = {
       "把它貼到社群的提問貼文裡，我們會用它來修正問題。裡面不含任何個人資訊。",
     promptCopy: "請複製下面的內容",
   },
+  fr: {
+    title: "Une erreur a été enregistrée",
+    // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백 주의
+    body1: "Si quelque chose semblait anormal, dis-le-nous. Les détails sont stockés ",
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
+    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    bodyB1: "uniquement sur cet appareil",
+    body2: " — les partager ne dépend que de toi.",
+    copied: "Copié",
+    copyButton: "Copier les détails de l'erreur",
+    close: "Fermer",
+    copiedHint:
+      "Colle-les dans un post de la communauté et on s'en servira pour corriger le problème. Ils ne contiennent aucune information personnelle.",
+    promptCopy: "Copie le texte ci-dessous",
+  },
 } as const;
 
 export default defineComponent({

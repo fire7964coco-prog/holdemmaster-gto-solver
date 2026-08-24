@@ -1498,6 +1498,117 @@ const M = {
     syncFailed: (msg: string) => `同步失敗：${msg}`,
     signInFailed: (msg: string) => `登入失敗：${msg}`,
   },
+  fr: {
+    loadFailed: "Impossible de charger les données du trainer :",
+    loading: "Chargement du trainer…",
+    review: (n: number) => `Révision (${n})`,
+    daily: "Défi du jour",
+    dailyStreakLabel: "Défi du jour",
+    done: "Terminé",
+    solved: "Résolues",
+    dayStreakSuffix: " fois d'affilée",
+    bestPrefix: "/ record",
+    streakLabel: "Série",
+    totalLossLabel: "Perte d'EV totale",
+    avgLossLabel: "Perte d'EV moyenne",
+    goodRateLabel: "Taux de bons choix",
+    // «leak» = 프랑스 포커 실사용어 (un leak)
+    weaknessTitle: "Détecteur de leaks",
+    avgOfPot: (pct: string) => `en moyenne ${pct} % du pot`,
+    handCount: (n: number) => `(${n} main${n === 1 ? "" : "s"})`,
+    notSolved: "Pas encore tenté",
+    weakestBefore: "Plus grosses pertes sur ",
+    weakestAfter: " —",
+    // «bosser» = 프랑스 포커 구어의 «연습하다» (bosser ses ranges)
+    practiceThis: "Travailler ce type de spot",
+    weaknessHint: "Résous au moins 3 mains par catégorie pour voir où tu perds de l'EV.",
+    accountBefore: "Progression enregistrée sur le compte de ",
+    accountAfter: "",
+    syncingNow: "Synchronisation…",
+    syncNow: "Synchroniser",
+    signOutLabel: "Se déconnecter",
+    localOnlyBefore: "Ta progression est enregistrée ",
+    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
+    localOnlyBold: "uniquement sur cet appareil",
+    localOnlyAfter:
+      ". Associe un compte HoldemMaster pour reprendre où tu en étais sur n'importe quel appareil.",
+    googleSignIn: "Continuer avec Google",
+    kakaoSignIn: "Continuer avec Kakao",
+    footerLine: (nodes: number, pct: number) =>
+      `13 Spots d'étude · ${nodes} nœuds de décision · exploitabilité cible ${pct} %`,
+    details: "Détails ↓",
+    toAct: "doit parler",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Ligne :",
+    boardLabel: "Board",
+    myHand: "Ta main",
+    yourChoice: "Ton choix",
+    prompt: "Tu joues quoi ?",
+    bestEvTag: " · EV max",
+    evLoss: "Perte d'EV",
+    mobileDetailTitle: "Fréquence et EV par action",
+    mixedNote:
+      "Les stratégies mixtes ne sont pas comptées comme des erreurs — la note se base sur l'écart d'EV entre les actions.",
+    dailyDone: "Défi du jour terminé",
+    dailyDoneDesc:
+      "Tout le monde a le même défi aujourd'hui. Poste ton résultat pour te comparer aux autres joueurs.",
+    makeCard: "Créer une carte de résultat",
+    boardShow: "Voir le classement du jour",
+    boardHide: "Masquer le classement",
+    boardLoading: "Chargement…",
+    boardCount: (n: number) => `${n} joueur${n === 1 ? "" : "s"} aujourd'hui`,
+    boardMyRank: (r: number) => `Mon rang n°${r}`,
+    boardLoginHint:
+      "Connecte-toi pour mettre ton nom au classement — la consultation est ouverte à tous.",
+    boardUnavailable: "Le classement n'est pas encore disponible.",
+    copied: "Copié",
+    copyResult: "Copier le texte du résultat",
+    openCommunity: "Ouvrir la communauté →",
+    pasteHintBefore: "Dans la communauté, appuie sur ",
+    // ⚠ 본체 community-client.tsx의 LABELS에 fr가 없어 /fr 화면의 버튼은 «영어 폴백»으로
+    //   나온다 (2026-08-24 본체 소스 실측: LABELS[lang] ?? en). 그래서 사용자가 «실제로
+    //   보게 될» 영어 이름을 적는다 — 본체가 fr LABELS를 넣으면 여기도 같이 바꿀 것
+    pasteHintBold: "[✏️ Write Post]",
+    pasteHintAfter: " et colle ton résultat.",
+    keepPracticing: "Continuer à s'entraîner",
+    nextHand: "Main suivante",
+    readArticle: "Lire l'analyse du spot →",
+    viewFull: "Voir la solution complète",
+    resultTitle: "Résultats",
+    resultHintBefore: "Choisis une action et tu verras ",
+    resultHintBold: "la fréquence et l'EV de chaque action",
+    resultHintAfter: ", plus ce que ton choix a coûté en bb.",
+    gtoNoteBefore:
+      "La GTO mixe les actions avec la même main — un choix à basse fréquence n'est pas automatiquement une erreur. La mesure, c'est la perte d'EV ",
+    gtoNoteBold: "par rapport au pot",
+    // ⚠ 아래 세 판정명은 verdictBest·verdictGood·verdictMiss와 «글자까지» 같아야 한다
+    gtoNoteAfter: " : ≤0,35 % Meilleur choix · ≤1 % Acceptable · au-delà, Spot à revoir.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Pour ce spot (pot de ${pot}bb), ça donne Meilleur choix ≤${best}bb · Acceptable ≤${good}bb.`,
+    resetHistoryLabel: "Réinitialiser l'historique",
+    cardAlt: "Carte de résultat du défi du jour",
+    shareApps: "Partager",
+    saveImage: "Enregistrer l'image",
+    close: "Fermer",
+    cardHintBefore:
+      "Poste ta carte dans un groupe ou sur les réseaux — tous ceux qui la voient jouent le ",
+    cardHintBold: "même défi",
+    cardHintAfter: " aujourd'hui. La carte ne divulgue jamais la réponse.",
+    verdictBest: "Meilleur choix",
+    verdictGood: "Acceptable",
+    verdictMiss: "Spot à revoir",
+    promptCopy: "Copie le texte ci-dessous",
+    shareText:
+      // ⚠ 이 문장은 사용자가 «커뮤니티에 붙여넣는» 글이다 — 읽는 사람(남)에게 말한다
+      "Le défi GTO du jour — essaie-le toi aussi : https://solver.holdemmaster.com/?view=trainer&lang=fr",
+    confirmReset: "Effacer tout l'historique du trainer sur cet appareil ?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} enregistrées · ${merged} récupérées depuis d'autres appareils`,
+    syncSaved: (uploaded: number) => `${uploaded} enregistrées`,
+    syncFailed: (msg: string) => `Échec de la synchronisation : ${msg}`,
+    signInFailed: (msg: string) => `Échec de la connexion : ${msg}`,
+  },
 } as const;
 
 export default defineComponent({

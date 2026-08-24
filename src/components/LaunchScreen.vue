@@ -101,6 +101,12 @@ const M = {
     titleLine2: "GTO 訓練器",
     footer: "免費 GTO 解算器 · 可離線使用",
   },
+  fr: {
+    greeting: "Bienvenue sur",
+    titleLine1: "HoldemMaster",
+    titleLine2: "GTO Trainer.",
+    footer: "Solver GTO gratuit · Fonctionne hors ligne",
+  },
 } as const;
 
 /* npokers 빌드는 첫 줄 상표만 바꾼다 — 「npokers GTO 솔버입니다.」처럼 읽힌다.

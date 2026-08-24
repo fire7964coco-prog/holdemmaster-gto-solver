@@ -519,6 +519,50 @@ const M = {
     creditMid2: " 在地化並改進。修改後的完整原始碼發布在",
     creditAfter: "，採用相同的開源授權條款。",
   },
+  fr: {
+    community: "Communauté HoldemMaster",
+    heroTitle1: "La stratégie GTO,",
+    heroTitle2: "directement dans ton navigateur.",
+    heroSub1: "Rien à installer, rien à payer. Saisis tes ranges et un board,",
+    heroSub2: " et la stratégie optimale se calcule directement sur ton appareil.",
+    ctaPresets: "Voir les Spots d'étude",
+    ctaTrainer: "Trainer GTO",
+    ctaDaily: "Défi du jour",
+    dailyDone: "Terminé",
+    ctaGuide: "Mode d'emploi",
+    ctaInstall: "Ajouter à l'écran d'accueil",
+    installNote:
+      "L'installation garde les Spots d'étude et le Trainer sur ton appareil, pour continuer à t'entraîner même hors ligne. C'est un raccourci du navigateur, pas un programme — il ne demande jamais aucune permission.",
+    installSafe: "C'est sûr ?",
+    features: [
+      { title: "Gratuit", desc: "Toutes les fonctions, sans limite d'usage" },
+      { title: "Étude hors ligne", desc: "Ajoute-le à ton écran d'accueil et entraîne-toi sans connexion" },
+      { title: "Calcul rapide", desc: "Multithread — la vitesse d'un solver de bureau" },
+      { title: "Trainer GTO", desc: "Joue des spots, notés sur la perte d'EV par rapport au pot" },
+    ],
+    stepsTitle: "Nouveau ici ?",
+    // 버튼 이름 인용은 PresetsPage.viewResults·SideBar와 «글자까지» 같아야 한다
+    steps: [
+      "Ouvre n'importe quel spot dans Spots d'étude et appuie sur [Voir les résultats] — les solutions s'affichent aussitôt",
+      "Passe par Mode d'emploi pour apprendre à lire l'écran de résultats",
+      "Essaie le Trainer GTO — il te montre exactement combien de bb chaque décision te coûte",
+      "Une fois à l'aise, calcule tes propres mains avec Spot personnalisé (①–⑤)",
+    ],
+    // ⚠ 이 세 줄이 가리키는 본체 /fr/solver는 없다 (2026-08-24 실측 404) —
+    //   AboutPage 템플릿의 v-if="landingUrl"이 통째로 숨긴다. 본체에 /fr/solver가 생기면
+    //   outbound.ts LOCALE_PATHS.fr에 "/solver" 한 줄만 더하면 살아난다
+    landingBefore:
+      "Tu préfères d'abord lire ce qu'est un solver GTO et comment interpréter ses résultats ? Va voir",
+    landingLink: "le guide du solver HoldemMaster",
+    landingAfter: ".",
+    notes:
+      "Sur iOS et Safari, les limites du navigateur imposent un calcul monothread, donc plus lent — sur macOS, on recommande Chrome. La mémoire disponible est plafonnée à 4 Go (une limite de WebAssembly), donc les gros spots se calculent plus confortablement sur PC.",
+    creditBefore: "Cette app est basée sur",
+    creditMid1: " (de Wataru Inariba, AGPL-3.0), localisée et enrichie par",
+    creditBrand: "HoldemMaster",
+    creditMid2: ". Le code source modifié complet est publié sur",
+    creditAfter: " sous la même licence.",
+  },
 } as const;
 
 /* npokers 빌드에서 위 사전을 덮어쓰는 조각 — 트레이너·교육예제·오늘의문제 언급을 걷어내고
@@ -671,6 +715,24 @@ const N =
             "先去翻前範圍表看看開池與防守範圍",
             "去[使用方法]看看結果畫面該怎麼讀",
             "上手之後，用自訂牌局（①～⑤）算你自己的手牌",
+          ],
+        },
+        fr: {
+          community: "npokers.com",
+          ctaPreflop: "Charts préflop",
+          ctaEquity: "Calculateur d'equity",
+          installNote:
+            "L'installation garde l'app sur ton appareil : elle s'ouvre même hors ligne. C'est un raccourci du navigateur, pas un programme — il ne demande jamais aucune permission.",
+          features: [
+            { title: "Gratuit", desc: "Toutes les fonctions, sans limite d'usage" },
+            { title: "Hors ligne", desc: "Ajoute-la à ton écran d'accueil et utilise-la sans connexion" },
+            { title: "Calcul rapide", desc: "Multithread — la vitesse d'un solver de bureau" },
+            { title: "Charts & equity", desc: "Ranges d'open et de défense, plus l'equity de main et de range" },
+          ],
+          steps: [
+            "Commence par les charts préflop pour parcourir les ranges d'open et de défense",
+            "Passe par Mode d'emploi pour apprendre à lire l'écran de résultats",
+            "Une fois à l'aise, calcule tes propres mains avec Spot personnalisé (①–⑤)",
           ],
         },
       }

@@ -1188,6 +1188,68 @@ const M = {
       `編輯過的決策樹以 ${expected} 張公共牌為前提，但目前的公共牌是 ${actual} 張。`,
     boardMismatchHint: "想丟掉編輯過的決策樹，按下「清除修改並解鎖」按鈕即可。",
   },
+  fr: {
+    chipNote:
+      "Les montants se saisissent en jetons entiers (les spots personnalisés utilisent une unité de jetons arbitraire). Pour raisonner en big blinds, on recommande 10 jetons = 1bb.",
+    startingPot: "Pot initial :",
+    effectiveStack: "Stack effectif :",
+    rake: "Rake :",
+    rakeCap: "Cap de rake :",
+    reset: "Tout effacer",
+    error: "Erreur :",
+    warning: "Attention :",
+    oopBetSizes: "Bet sizes OOP",
+    donkOption: "Utiliser d'autres sizes pour les donk bets",
+    // ⚠ 이 이름은 경고 메시지(pick 호출)가 «« Comment remplir »»로 그대로 인용한다
+    howToInput: "Comment remplir",
+    inputHelpIntro:
+      "Tu peux entrer plusieurs bet sizes séparées par des virgules ou des espaces, dans n'importe lequel des formats suivants. Laisse vide pour ne faire ni bet ni raise.",
+    // ⚠ «2.5x»·«100c»·«2e200»은 사용자가 «그대로 입력»하는 문법이다 — 이 안의 소수점을
+    //   쉼표로 바꾸지 말 것 (localizeNumber 금지 구역과 같은 이유). 산문의 %는 프랑스식(U+202F)
+    inputHelpPercent:
+      "Un nombre représentant le pourcentage du pot (ex. « 50 »). Pour un raise, la size se calcule comme si tu payais (call) d'abord la mise, puis en ajoutant le pourcentage indiqué du pot ainsi obtenu. Par exemple, si le pot avant la mise est de 100 et que l'adversaire mise 75, un raise de 50 % vaut 75 + (100 + 75 + 75) * 50 % = 200.",
+    inputHelpMultiple:
+      "Un multiple de la mise précédente (ex. « 2.5x »). Disponible seulement pour les raises.",
+    inputHelpAllin: "All-in (ex. « a »).",
+    inputHelpFixed:
+      "Ajout d'un montant fixe (ex. « 100c »). Pour les raises, tu peux aussi plafonner le nombre de raises (ex. « 20c3r »).",
+    inputHelpGeometric:
+      "Size géométrique : le stack restant est découpé en un nombre donné de mises au même pourcentage (ex. « 3e »). Par exemple, avec un pot de 100 et un stack effectif de 400, « 2e » correspond à une mise de 100. Si le nombre avant « e » est omis, c'est le nombre de streets restantes qui est utilisé (flop = 3, turn = 2, river = 1). Pour les raises, le nombre de raises déjà faits est soustrait du nombre indiqué ; par exemple « 3e » devient « 2e » en cas de re-raise. Tu peux aussi ajouter un nombre après « e » pour fixer un pourcentage maximum (ex. « 2e200 »).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet :",
+    raise: "Raise :",
+    donk: "Donk :",
+    ipBetSizes: "Bet sizes IP",
+    addAllInLabel: "Seuil d'ajout du all-in :",
+    addAllInHelp:
+      "Ajoute une action all-in à chaque nœud où le rapport entre la mise maximale possible et le pot est sous ce seuil.",
+    forceAllInLabel: "Seuil de all-in forcé :",
+    forceAllInHelp1:
+      "Si le SPR (rapport stack/pot) après que l'adversaire a payé une mise est sous ce seuil, cette mise est remplacée par un all-in. Une valeur recommandée se situe autour de 15–20 %.",
+    forceAllInHelp2:
+      "Cette option ressemble au « all-in threshold » de PioSOLVER. PioSOLVER remplace une mise par un all-in quand la part du stack initial déjà investie dans le pot dépasse le seuil.",
+    forceAllInHelp3:
+      "En ignorant les arrondis, la formule de conversion est la suivante (s = SPR initial, r = seuil de PioSOLVER) :",
+    forceAllInFormula: "Seuil = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Seuil de fusion :",
+    mergingHelp1: "Fusionne en une seule les mises de sizes proches.",
+    mergingHelp2:
+      "L'algorithme est le même que celui de PioSOLVER : on prend la plus grosse bet size (= X % du pot) et on supprime toute autre mise dont la size (= Y % du pot) vérifie l'inégalité suivante :",
+    // 수식의 소수점도 pt·de 선례대로 쉼표(1,0)
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + seuil.",
+    mergingHelp3: "On répète ensuite le même processus avec la plus grosse bet size restante.",
+    // ⚠ App.vue HEADERS의 treeEdit와 «글자까지» 같아야 한다
+    treePreviewEdit: "Aperçu et édition de l'arbre",
+    clearEditUnlock: "Effacer les modifications et déverrouiller",
+    addedLines: "Lignes ajoutées :",
+    removedLines: "Lignes retirées :",
+    boardMismatch: (expected: number, actual: number) =>
+      `L'arbre édité suppose un board de ${expected} cartes, mais le board actuel en a ${actual}.`,
+    boardMismatchHint:
+      "Pour abandonner l'arbre édité, clique sur « Effacer les modifications et déverrouiller ».",
+  },
 } as const;
 
 type ConfigValue = {
@@ -1253,7 +1315,7 @@ export default defineComponent({
       const errors: string[] = [];
       if (config.startingPot <= 0) {
         errors.push(
-          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スターティングポットには正の数を入力してください", "El bote inicial debe ser positivo", "O pote inicial deve ser positivo", "Der Start-Pot muss größer als 0 sein", "起始底池必须是正数", "起始底池必須是正數")
+          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スターティングポットには正の数を入力してください", "El bote inicial debe ser positivo", "O pote inicial deve ser positivo", "Der Start-Pot muss größer als 0 sein", "起始底池必须是正数", "起始底池必須是正數", "Le pot initial doit être positif")
         );
       }
       if (config.startingPot > MAX_AMOUNT) {
@@ -1266,12 +1328,13 @@ export default defineComponent({
             `O pote inicial não pode passar de ${MAX_AMOUNT}`,
             `Der Start-Pot darf höchstens ${MAX_AMOUNT} sein`
           ,
-            `起始底池不能超过 ${MAX_AMOUNT}`, `起始底池不能超過 ${MAX_AMOUNT}`)
+            `起始底池不能超过 ${MAX_AMOUNT}`, `起始底池不能超過 ${MAX_AMOUNT}`,
+            `Le pot initial ne doit pas dépasser ${MAX_AMOUNT}`)
         );
       }
       if (config.startingPot % 1 !== 0) {
         errors.push(
-          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數")
+          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier")
         );
       }
       if (config.effectiveStack <= 0) {
@@ -1284,7 +1347,8 @@ export default defineComponent({
             "O stack efetivo deve ser positivo",
             "Der effektive Stack muss größer als 0 sein"
           ,
-            "有效筹码必须是正数", "有效籌碼必須是正數")
+            "有效筹码必须是正数", "有效籌碼必須是正數",
+            "Le stack effectif doit être positif")
         );
       }
       if (config.effectiveStack > MAX_AMOUNT) {
@@ -1297,7 +1361,8 @@ export default defineComponent({
             `O stack efetivo não pode passar de ${MAX_AMOUNT}`,
             `Der effektive Stack darf höchstens ${MAX_AMOUNT} sein`
           ,
-            `有效筹码不能超过 ${MAX_AMOUNT}`, `有效籌碼不能超過 ${MAX_AMOUNT}`)
+            `有效筹码不能超过 ${MAX_AMOUNT}`, `有效籌碼不能超過 ${MAX_AMOUNT}`,
+            `Le stack effectif ne doit pas dépasser ${MAX_AMOUNT}`)
         );
       }
       if (config.effectiveStack % 1 !== 0) {
@@ -1310,22 +1375,23 @@ export default defineComponent({
             "O stack efetivo deve ser um número inteiro",
             "Der effektive Stack muss eine ganze Zahl sein"
           ,
-            "有效筹码必须是整数", "有效籌碼必須是整數")
+            "有效筹码必须是整数", "有效籌碼必須是整數",
+            "Le stack effectif doit être un nombre entier")
         );
       }
       if (config.rakePercent < 0) {
         errors.push(
-          pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo", "O rake não pode ser negativo", "Der Rake darf nicht negativ sein", "抽水不能是负数", "抽水不能是負數")
+          pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo", "O rake não pode ser negativo", "Der Rake darf nicht negativ sein", "抽水不能是负数", "抽水不能是負數", "Le rake ne peut pas être négatif")
         );
       }
       if (config.rakePercent > 100) {
         errors.push(
-          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%", "Der Rake darf 100% nicht überschreiten", "抽水不能超过 100%", "抽水不能超過 100%")
+          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%", "Der Rake darf 100% nicht überschreiten", "抽水不能超过 100%", "抽水不能超過 100%", "Le rake ne peut pas dépasser 100 %")
         );
       }
       if (config.rakeCap < 0) {
         errors.push(
-          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo", "O teto do rake não pode ser negativo", "Das Rake-Cap darf nicht negativ sein", "抽水上限不能是负数", "抽水上限不能是負數")
+          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo", "O teto do rake não pode ser negativo", "Das Rake-Cap darf nicht negativ sein", "抽水上限不能是负数", "抽水上限不能是負數", "Le cap de rake ne peut pas être négatif")
         );
       }
       if (config.rakeCap > 3 * MAX_AMOUNT) {
@@ -1338,7 +1404,8 @@ export default defineComponent({
             `O teto do rake não pode passar de ${3 * MAX_AMOUNT}`,
             `Das Rake-Cap darf höchstens ${3 * MAX_AMOUNT} sein`
           ,
-            `抽水上限不能超过 ${3 * MAX_AMOUNT}`)
+            `抽水上限不能超过 ${3 * MAX_AMOUNT}`, `抽水上限不能超過 ${3 * MAX_AMOUNT}`,
+            `Le cap de rake ne doit pas dépasser ${3 * MAX_AMOUNT}`)
         );
       }
       return errors;
@@ -1349,36 +1416,36 @@ export default defineComponent({
       const isDonk = true;
       const betConfig = [
         {
-          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注"),
+          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP"),
           res: config.oopFlopBetSanitized,
         },
         {
-          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注"),
+          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP"),
           res: config.oopFlopRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注"),
+          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP"),
           res: config.oopTurnBetSanitized,
         },
         {
-          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注"),
+          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP"),
           res: config.oopTurnRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打"),
+          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP"),
           res: config.oopTurnDonkSanitized,
           isDonk,
         },
         {
-          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注"),
+          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP"),
           res: config.oopRiverBetSanitized,
         },
         {
-          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注"),
+          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP"),
           res: config.oopRiverRaiseSanitized,
         },
         {
-          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打"),
+          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP"),
           res: config.oopRiverDonkSanitized,
           isDonk,
         },
@@ -1395,27 +1462,27 @@ export default defineComponent({
       const errors: string[] = [];
       const betConfig = [
         {
-          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注"),
+          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP"),
           res: config.ipFlopBetSanitized,
         },
         {
-          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注"),
+          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP"),
           res: config.ipFlopRaiseSanitized,
         },
         {
-          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注"),
+          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP"),
           res: config.ipTurnBetSanitized,
         },
         {
-          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注"),
+          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP"),
           res: config.ipTurnRaiseSanitized,
         },
         {
-          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注"),
+          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP"),
           res: config.ipRiverBetSanitized,
         },
         {
-          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注"),
+          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP"),
           res: config.ipRiverRaiseSanitized,
         },
       ];
@@ -1439,7 +1506,8 @@ export default defineComponent({
             "O limiar para adicionar all-in não pode ser negativo",
             "Die Schwelle für zusätzliches All-in darf nicht negativ sein"
           ,
-            "追加全下的阈值不能是负数", "追加全下的門檻不能是負數")
+            "追加全下的阈值不能是负数", "追加全下的門檻不能是負數",
+            "Le seuil d'ajout du all-in ne peut pas être négatif")
         );
       }
       if (config.forceAllInThreshold < 0) {
@@ -1452,7 +1520,8 @@ export default defineComponent({
             "O limiar de all-in forçado não pode ser negativo",
             "Die Schwelle für erzwungenes All-in darf nicht negativ sein"
           ,
-            "强制全下的阈值不能是负数", "強制全下的門檻不能是負數")
+            "强制全下的阈值不能是负数", "強制全下的門檻不能是負數",
+            "Le seuil de all-in forcé ne peut pas être négatif")
         );
       }
       if (config.mergingThreshold < 0) {
@@ -1465,7 +1534,8 @@ export default defineComponent({
             "O limiar de fusão não pode ser negativo",
             "Die Schwelle zum Zusammenfassen darf nicht negativ sein"
           ,
-            "合并阈值不能是负数", "合併門檻不能是負數")
+            "合并阈值不能是负数", "合併門檻不能是負數",
+            "Le seuil de fusion ne peut pas être négatif")
         );
       }
       return errors;
@@ -1483,7 +1553,8 @@ export default defineComponent({
             "Não é recomendado definir o limiar de all-in forçado acima de 30%.\nConsulte a ajuda para ver o que isso significa.",
             "Es wird nicht empfohlen, die Schwelle für erzwungenes All-in auf über 30% zu setzen.\nWas die Einstellung bewirkt, steht unter „So gibst du die Werte ein“."
           ,
-            "不建议把强制全下的阈值设到 30% 以上。\n想知道这个设置是做什么的，看上面的“怎么填”。", "不建議把強制全下的門檻設到 30% 以上。\n想知道這個設定是做什麼的，請看上面的「怎麼填」。")
+            "不建议把强制全下的阈值设到 30% 以上。\n想知道这个设置是做什么的，看上面的“怎么填”。", "不建議把強制全下的門檻設到 30% 以上。\n想知道這個設定是做什麼的，請看上面的「怎麼填」。",
+            "Régler le seuil de all-in forcé au-dessus de 30 % n'est pas recommandé.\nVa voir « Comment remplir » pour comprendre ce réglage.")
         );
       }
       return warnings;
@@ -1506,7 +1577,8 @@ export default defineComponent({
             "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)",
             "Ungültige Line gefunden (beschädigte Einstellung geladen?)"
           ,
-            "发现了无效的线路（是不是加载了损坏的设置？）", "發現了無效的線路（是不是載入了損壞的設定？）")
+            "发现了无效的线路（是不是加载了损坏的设置？）", "發現了無效的線路（是不是載入了損壞的設定？）",
+            "Ligne invalide trouvée (configuration corrompue chargée ?)")
         );
       }
       if (
@@ -1527,7 +1599,8 @@ export default defineComponent({
             "Configuração inválida (você carregou uma configuração corrompida?)",
             "Ungültige Einstellung (beschädigte Einstellung geladen?)"
           ,
-            "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）")
+            "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
+            "Configuration invalide (configuration corrompue chargée ?)")
         );
       }
       return errors;

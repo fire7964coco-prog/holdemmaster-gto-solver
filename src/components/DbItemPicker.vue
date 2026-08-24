@@ -607,6 +607,21 @@ const M = {
     exportJsonLabel: "匯出 JSON",
     importFailed: "錯誤：匯入失敗。",
   },
+  fr: {
+    noSavedRanges: "(Aucune range enregistrée)",
+    noSavedConfigs: "(Aucune configuration enregistrée)",
+    emptyGroup: "(Groupe vide)",
+    errorReload: "Une erreur est survenue. Recharge la page.",
+    load: "Charger",
+    overwrite: "Écraser",
+    save: "Enregistrer",
+    rename: "Renommer",
+    addGroup: "Ajouter un groupe",
+    deleteLabel: "Supprimer",
+    importJsonLabel: "Importer JSON",
+    exportJsonLabel: "Exporter JSON",
+    importFailed: "Erreur : échec de l'import.",
+  },
 } as const;
 
 type Item = {
@@ -1057,10 +1072,10 @@ export default defineComponent({
         .map((item) => item.path[item.path.length - 1])
         .filter((name) => name !== editingName.value);
       const defaultName = item.isGroup
-        ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo", "Neue Gruppe", "新建分组", "新增群組")
+        ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo", "Neue Gruppe", "新建分组", "新增群組", "Nouveau groupe")
         : props.storeName === "ranges"
-        ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range", "Neue Range", "新建范围", "新增範圍")
-        : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração", "Neue Einstellung", "新建设置", "新增設定");
+        ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range", "Neue Range", "新建范围", "新增範圍", "Nouvelle range")
+        : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração", "Neue Einstellung", "新建设置", "新增設定", "Nouvelle configuration");
       if (editingName.value === "") {
         let i = 2;
         let newName = defaultName;
@@ -1408,7 +1423,8 @@ export default defineComponent({
           "Erro de análise (formato JSON inválido)",
           "Lesefehler (ungültiges JSON-Format)"
         ,
-          "解析出错（JSON 格式无效）", "解析錯誤（JSON 格式無效）");
+          "解析出错（JSON 格式无效）", "解析錯誤（JSON 格式無效）",
+          "Erreur d'analyse (format JSON invalide)");
         return;
       }
 
@@ -1421,7 +1437,8 @@ export default defineComponent({
           "Os tipos de dados não coincidem",
           "Die Datentypen passen nicht zusammen"
         ,
-          "数据类型不一致", "資料類型不一致");
+          "数据类型不一致", "資料類型不一致",
+          "Le type de données ne correspond pas");
         return;
       }
 
@@ -1434,12 +1451,13 @@ export default defineComponent({
           "As versões não coincidem",
           "Die Versionen passen nicht zusammen"
         ,
-          "版本不一致", "版本不一致");
+          "版本不一致", "版本不一致",
+          "La version ne correspond pas");
         return;
       }
 
       if (!checkJson(obj.data)) {
-        importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos", "Ungültige Daten", "无效的数据", "無效的資料");
+        importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos", "Ungültige Daten", "无效的数据", "無效的資料", "Données invalides");
         return;
       }
 
@@ -1453,7 +1471,8 @@ export default defineComponent({
           `Não é possível criar o grupo "${itemsToAdd}" porque já existe um item com o mesmo nome`,
           `Die Gruppe „${itemsToAdd}“ kann nicht erstellt werden, weil es bereits einen Eintrag mit demselben Namen gibt`
         ,
-          `已经有同名的项目，无法创建分组“${itemsToAdd}”`, `已經有同名的項目，無法建立群組「${itemsToAdd}」`);
+          `已经有同名的项目，无法创建分组“${itemsToAdd}”`, `已經有同名的項目，無法建立群組「${itemsToAdd}」`,
+          `Impossible de créer le groupe « ${itemsToAdd} » : un élément du même nom existe déjà`);
         return;
       }
 

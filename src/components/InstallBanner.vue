@@ -295,6 +295,35 @@ const M = {
       "這不會在你的系統裡裝任何程式——它只是一個瀏覽器捷徑：不索取任何權限；不想要了，長按圖示刪掉即可，跟一般的應用程式一樣。",
     close: "關閉",
   },
+  fr: {
+    iconAlt: "Icône du HoldemMaster GTO Trainer",
+    title: "Ajouter à l'écran d'accueil ?",
+    // samsung1 + «굵은» samsungB1 + samsung2 + «굵은» samsungB2 + samsung3 로 한 문장이 된다.
+    // ⚠ 삼성 경고창의 «제목·버튼 이름»은 적지 않는다 — 기기·버전마다 다르고 실기 캡처가 없다
+    samsung1: "Samsung Internet peut ",
+    samsungB1: "bloquer l'installation pour des raisons de sécurité",
+    samsung2: " — ce contrôle vient du navigateur, pas de cette app. ",
+    samsungB2: "Ouvre-la dans Chrome",
+    samsung3: " et elle s'installe sans l'avertissement.",
+    default1: "Elle s'ouvre d'un seul geste, et ",
+    defaultB1: "garde les 13 Spots d'étude et le Trainer sur ton appareil",
+    default2: " pour étudier même sans connexion internet.",
+    ios1: "Touche le ",
+    iosB1: "bouton Partager",
+    ios2: " en bas, puis choisis ",
+    // iOS Safari 프랑스어의 실제 메뉴 이름 — Apple 프랑스어 표기는 «Sur l'écran d'accueil»
+    iosB2: "« Sur l'écran d'accueil »",
+    ios3: ". Elle s'ouvre d'un geste, avec les Spots d'étude et le Trainer disponibles hors ligne.",
+    openInChrome: "Ouvrir dans Chrome",
+    install: "Ajouter à l'écran d'accueil",
+    gotIt: "Compris",
+    later: "Plus tard",
+    samsungHint:
+      "Pour l'installer ici quand même, suis les indications de la boîte de dialogue pour l'autoriser.",
+    safety:
+      "Rien ne s'installe sur ton système — c'est juste un raccourci du navigateur. Il ne demande aucune permission, et tu peux le retirer à tout moment en maintenant l'icône, comme une app.",
+    close: "Fermer",
+  },
 } as const;
 
 /* npokers 빌드용 덮어쓰기 — 배너의 «교육 예제·트레이너 저장» 대목을 «앱 저장»으로.
@@ -350,6 +379,12 @@ const N =
           defaultB1: "應用程式會存到你的裝置裡",
           default2: "，沒網路也能用。",
           ios3: "。點一下圖示就能開啟，沒網路也能用。",
+        },
+        fr: {
+          iconAlt: "Icône de npokers",
+          defaultB1: "garde l'app sur ton appareil",
+          default2: " pour l'utiliser même sans connexion internet.",
+          ios3: ". Elle s'ouvre d'un geste et fonctionne même hors ligne.",
         },
       }
     : null;

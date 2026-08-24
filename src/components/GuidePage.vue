@@ -1742,6 +1742,196 @@ const M = {
     errNone: "目前還沒有記錄到錯誤。",
     errPrompt: "請複製下面的內容",
   },
+  fr: {
+    quickTitle: "Départ en 1 minute — commence ici si tu débarques",
+    quickStep1Desktop: "À gauche, clique sur ",
+    quickStep1Mobile: "Dans les onglets du haut, touche ",
+    // ⚠ 사이드바 라벨과 «글자까지» 같아야 한다
+    quickStep1Btn: "Spots d'étude",
+    quickStep1After: "",
+    quickStep2Before: "Ouvre n'importe quel spot et appuie sur",
+    // ⚠ PresetsPage.infoBtn1·viewResults와 같은 이름
+    quickStep2Btn: "[⚡ Voir les résultats]",
+    quickStep2After: " — la solution s'affiche immédiatement",
+    quickStep3:
+      "Ensuite, passe par « Lire l'écran de résultats » ci-dessous pour donner du sens aux chiffres",
+
+    termsTitle: "Quatre termes suffisent",
+    termRange: "Range",
+    defRange:
+      "L'ensemble des mains qu'un joueur peut avoir (ex. « il a sans doute AA, KK ou AK »)",
+    defPos:
+      "Hors de position (parle en premier — un désavantage) / en position (parle en dernier — un avantage). En BTN vs BB, la BB est OOP",
+    termEquity: "Equity",
+    defEquity:
+      "Ta part du pot si tout partait à tapis maintenant — le % de victoires plus la moitié des égalités",
+    defEv: "Espérance de gain (expected value) — ce qu'une action rapporte en moyenne. Plus c'est grand, mieux c'est",
+
+    customTitleBefore: "Calculer un spot personnalisé — suis les numéros ",
+    customTitleDesktop: "de la barre latérale",
+    customTitleMobile: "des onglets",
+    customTitleAfter: " ① → ⑤ dans l'ordre",
+    step1Bold: "① Range OOP / ② Range IP",
+    step1After:
+      " — peins la grille 13×13 par cliquer-glisser, ou écris la range en texte : ",
+    step1Hint:
+      "22+ = toutes les paires servies · A2s+ = de A2s à AKs · KTo+ = de KTo à KQo. Sur la grille : diagonale = paires servies, en haut à droite = suited, en bas à gauche = offsuit",
+    exampleHeader:
+      "Nouveau ici ? Copie ces exemples et colle-les dans les champs de range (BTN vs BB 100bb standard — les mêmes ranges que les Spots d'étude)",
+    exOopLabel: "OOP (BB caller)",
+    exIpLabel: "IP (BTN ouvreur)",
+    copiedLabel: "Copié !",
+    copyLabel: "Copier",
+    step3Bold: "③ Board",
+    // ⚠ BoardSelector.randomFlop과 같은 이름
+    step3After: " — clique sur trois cartes pour le flop, ou appuie sur « Flop aléatoire »",
+    step4Bold: "④ Bet sizes (Réglages)",
+    step4After:
+      " — laisse d'abord les valeurs par défaut. Vérifie juste le pot initial et le stack effectif",
+    step4Hint:
+      "Les valeurs du spot personnalisé sont des jetons entiers, dans l'unité de ton choix. Pour raisonner en bb, prends 10 jetons = 1bb (ex. pot 55 = 5,5bb). Les Spots d'étude et le Trainer convertissent automatiquement sur cette échelle.",
+    // ⚠ 사이드바 ⑤(Calculer)·RunSolver의 버튼 이름들과 «글자까지» 같아야 한다
+    step5Bold1: "⑤ Calculer",
+    step5Mid:
+      " — appuie sur « Construire l'arbre », puis sur « Lancer le solver » quand c'est prêt. Dès que « Calcul terminé ! » apparaît, ouvre l'onglet ",
+    step5Bold2: "[Résultats]",
+    step5After: " en haut",
+    step5Hint:
+      "Le calcul tourne sur ta propre machine et prend de quelques secondes à quelques minutes. Utilise [Partager le spot] sur l'écran ⑤ pour copier un lien vers ton spot et poser ta question dans la communauté",
+
+    resultsTitle: "Lire l'écran de résultats",
+    rTerm1: "Barre d'actions du haut",
+    rDef1:
+      "Un sélecteur de nœud sur la ligne d'action (flop → bet → call → turn…). Clique sur un nœud pour voir la stratégie à ce point",
+    rTerm2: "Matrice 13×13 (à gauche)",
+    rDef2:
+      "Chaque case est une main ; le découpage de couleurs montre les fréquences d'action. 🟥 bet/raise (plus foncé = plus grosse mise) · 🟩 check/call · case éteinte = hors de la range. La GTO joue la même main en stratégie mixte — les actions se répartissent par fréquence pour que ton jeu reste illisible",
+    rTerm3: "Tuiles (en haut à droite)",
+    rDef3: "Fréquences d'action (%) et nombres de combos sur toute la range",
+    rTerm4: "Catégories de mains (au milieu à droite)",
+    rDef4:
+      "Comment chaque range accroche le board (top paire, tirages…) — pour voir en un coup d'œil qui ce board favorise",
+    rTerm5: "Tableau (en bas à droite)",
+    rDef5:
+      "Poids, equity, EV et % d'action par main — clique sur un en-tête de colonne pour trier",
+
+    trainerTitle: "Trainer GTO — de l'observation au jeu",
+    trainerIntroBefore:
+      "Une fois à l'aise avec l'écran de résultats, passe au",
+    trainerBtn: "Trainer GTO",
+    trainerIntroAfter:
+      ". Aux points de décision des 13 Spots d'étude, tu reçois des mains tirées des vraies ranges — choisis une action et il te note.",
+    gradTerm: "Comment marche la note",
+    gradBefore: "Tu n'es pas noté en bonne ou mauvaise réponse, mais en ",
+    gradBold: "perte d'EV (bb)",
+    gradAfter:
+      ". La GTO mixe plusieurs actions avec la même main, donc une action à basse fréquence n'est pas automatiquement une erreur — ce qui compte, c'est combien d'EV elle abandonne",
+    verdictTerm: "Seuils de verdict",
+    verdictBefore: "Mesurés ",
+    verdictBold: "par rapport au pot",
+    // ⚠ 판정명은 TrainerPage.verdictBest·verdictGood·verdictMiss와 «글자까지» 같아야 한다
+    verdictAfter:
+      " — jusqu'à 0,35 % du pot = Meilleur choix · jusqu'à 1 % = Acceptable · au-delà = Spot à revoir. Par exemple, dans un single raised pot (SRP) de 5,5bb, les seuils sont 0,02bb et 0,06bb ; dans un pot 3-bet de 22,5bb, 0,08bb et 0,23bb.",
+    verdictHint:
+      "La même perte de 0,05bb est une grosse erreur dans un petit pot et une broutille dans un gros pot. Noter en bb absolus faisait paraître les pots 3-bet pires qu'ils ne le sont, donc on est passés à la note relative au pot (15/08/2026). Les seuils ont des planchers (0,02bb / 0,05bb) : les calculs ne convergent que vers une exploitabilité cible de 0,5 %, donc les écarts plus petits ne se distinguent pas du bruit du solver.",
+    reviewTerm: "Révision",
+    reviewBefore:
+      "Les mains où tu as perdu le plus d'EV reviennent via le bouton [Révision]. Par défaut, ton historique est stocké ",
+    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    reviewBold: "uniquement sur cet appareil",
+    reviewAfter:
+      ". Connecte-toi avec un compte HoldemMaster pour le garder sur ton compte et continuer sur d'autres appareils — la connexion est optionnelle, tout fonctionne sans",
+    filterTerm: "Filtres",
+    filterDef:
+      "Bosse juste tes points faibles : single raised pots, pots 3-bet ou blind vs blind",
+
+    installTitle: "Installe-le sur ton écran d'accueil et étudie hors ligne",
+    install1:
+      "Tu peux installer ce solver sur ton écran d'accueil comme une app (sans fichier d'installation). Dans Chrome ou Edge, utilise l'",
+    installBold1: "icône d'installation",
+    install2: " à droite de la barre d'adresse ; dans Safari sur iPhone, touche ",
+    // ⚠ InstallBanner.iosB2(Apple 프랑스어 메뉴명)와 같은 표기
+    installBold2: "Partager → Sur l'écran d'accueil",
+    install3:
+      ". Une fois installé, les 13 Spots d'étude et les exercices du Trainer sont stockés sur ton appareil, pour continuer à étudier ",
+    installBold3: "même dans le métro sans internet",
+    install4: ".",
+    samsung1:
+      "* À l'installation depuis Samsung Internet, le navigateur ou l'appareil peut bloquer l'installation pour des raisons de sécurité. Ce contrôle vient du navigateur, pas de cette app. ",
+    samsungBold: "Ouvre le site dans Chrome",
+    samsung2:
+      " et il s'installe sans blocage ; si tu préfères rester ici, suis les indications de la boîte de dialogue.",
+    offlineDataLabel: "Données d'étude hors ligne",
+    offlineSaved: "Enregistrées — les Spots d'étude et le Trainer fonctionnent sans internet",
+    offlineSaving: "Enregistrement…",
+    offlineNotSaved: "Pas encore enregistrées",
+    offlineSaveBtn: "Enregistrer maintenant (~2,3 Mo)",
+    offlineFootnote:
+      "Le calcul de spots personnalisés ne marche hors ligne qu'après l'avoir lancé au moins une fois en ligne — le moteur du solver se télécharge à la première utilisation.",
+
+    safeTitle: "C'est sûr d'installer ?",
+    safe1:
+      "Oui. « Installer » ici ne veut pas dire télécharger un programme sur ton appareil — ça veut dire ",
+    safeBold: "créer un raccourci qui tourne dans ton navigateur",
+    safe2:
+      ". Sur Android, seul un simple raccourci pointant vers cette adresse est enregistré ; tout continue de tourner dans le moteur du navigateur. Si tu es sceptique, vérifie toi-même ces quatre points — vérifier vaut mieux que nous croire sur parole.",
+    permTerm: "Aucune permission utilisée",
+    permBefore:
+      "L'installation ne demande aucune permission — ni caméra, ni contacts, ni SMS, ni position. Vérifie toi-même dans ",
+    permBold: "Paramètres → Infos sur l'app → Autorisations",
+    permAfter: " sur ton téléphone",
+    airplaneTerm: "Vérifie en mode avion",
+    airplaneBefore:
+      "Coupe internet et le Trainer continue de marcher — la preuve la plus claire que le calcul ",
+    airplaneBold: "se fait entièrement sur ton appareil",
+    airplaneAfter: "",
+    openTerm: "Le code source est public",
+    openBefore: "Ce solver est open source sous AGPL-3.0 (",
+    openAfter: ")",
+    removeTerm: "Se désinstalle proprement",
+    removeDef:
+      "Appuie longuement sur l'icône puis supprime, comme n'importe quelle app, et c'est fini. Rien ne tourne en arrière-plan, rien ne reste",
+    samsungNote2:
+      "* Un blocage de sécurité dans Samsung Internet n'est pas une détection de malware — le navigateur ne reconnaît simplement pas encore ce type de paquet d'installation. Il n'apparaît pas quand tu installes depuis Chrome.",
+
+    studyTitle: "Plan d'étude suggéré",
+    study1:
+      "Fais les 13 Spots d'étude dans l'ordre — chaque spot s'appuie sur le précédent",
+    study2:
+      "Si tu te demandes « pourquoi cette main mixe des checks ? », compare les EV par action dans le tableau détaillé",
+    study3:
+      "Rejoue les mêmes spots dans le Trainer GTO pour les ancrer — le détecteur de leaks montre quelles situations te coûtent le plus d'EV",
+    study4: "Garde les ranges, change seulement le board, et compare (ex. A72 vs 974)",
+    study5:
+      "Reconstruis ici les mains qui t'ont embrouillé en session et analyse-les",
+
+    troubleTitle: "Dépannage",
+    tTerm1: "Erreur à la construction de l'arbre",
+    tDef1: "Vérifie que 3 cartes de board et les deux ranges sont renseignées",
+    tTerm2: "Le calcul est lent",
+    tDef2: "Monte l'exploitabilité cible à 0,5 %",
+    tTerm3: "L'onglet Résultats est vide",
+    tDef3: "Ouvre-le après l'apparition de « Calcul terminé ! »",
+    tTerm4: "Limite mémoire dépassée",
+    tDef4: "Passe en mode entier 16 bits, ou réduis le nombre de bet sizes",
+    tTerm5: "La matrice est toute grise",
+    tDef5:
+      "Tu regardes le tour de parole de l'adversaire — choisis un autre nœud dans la barre d'actions du haut",
+
+    errTitle: "Tu as trouvé quelque chose à corriger ?",
+    err1: "Si quelque chose s'affiche mal ou qu'un calcul se fige, les détails de l'erreur sont enregistrés automatiquement sur cet appareil. ",
+    // ⚠ ErrorToast.bodyB1·TrainerPage.localOnlyBold·reviewBold와 같은 약속이다
+    errBold: "Ces journaux ne quittent jamais ton appareil",
+    err2:
+      " — on ne les voit que si tu les copies ci-dessous et les postes dans la communauté. Ils ne contiennent que le message d'erreur et le type de navigateur — jamais tes ranges ni ton historique d'étude.",
+    errLoggedLabel: "Erreurs enregistrées",
+    errCount: (n: number) => `${n}`,
+    errCopied: "Copié",
+    errCopyBtn: "Copier les détails de l'erreur",
+    errClearBtn: "Vider le journal",
+    errNone: "Aucune erreur enregistrée pour l'instant.",
+    errPrompt: "Copie le texte ci-dessous",
+  },
 } as const;
 
 /* npokers 빌드에서 설치 문단의 «교육 예제·트레이너 저장» 대목만 «앱 저장»으로 바꾼다.
@@ -1826,6 +2016,16 @@ const N =
           airplaneBefore: "斷網之後應用程式照樣能跑。這就是",
           install3: "。裝好之後，應用程式會存到裝置裡，",
           install4: "也照樣能用。",
+        },
+        fr: {
+          exampleHeader:
+            "Nouveau ici ? Copie ces exemples et colle-les dans les champs de range (BTN vs BB 100bb standard)",
+          step4Hint:
+            "Les valeurs du spot personnalisé sont des jetons entiers, dans l'unité de ton choix. Pour raisonner en bb, prends 10 jetons = 1bb (ex. pot 55 = 5,5bb).",
+          airplaneBefore:
+            "Coupe internet et l'app continue de marcher — la preuve la plus claire que le calcul ",
+          install3: ". Une fois installée, l'app est stockée sur ton appareil, pour continuer à l'utiliser ",
+          install4: ".",
         },
       }
     : null;

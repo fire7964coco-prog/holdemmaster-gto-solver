@@ -284,6 +284,45 @@ export const DRAW_LABELS_ZH_HANT: Record<DrawKey, string> = {
   no_draw: "無聽牌",
 };
 
+export const MADE_LABELS_FR: Record<MadeKey, string> = {
+  // ⚠ 족보는 «전부» 프랑스어 표준명이다 (본체 브리프 §용어 — 3개 매체 합의:
+  //   pokerstars.fr·fr.pokernews.com·fr.wikipedia). 페어 세분(overpair 등)은 프랑스
+  //   코퍼스도 영어를 쓰므로 de·es와 같은 혼용 처리다.
+  straight_flush: "Quinte Flush",
+  quads: "Carré",
+  full_house: "Full",
+  // ⚠ «couleur»는 무늬(suit)라는 뜻도 있다 — 족보 문맥에서만 이 라벨을 쓸 것 (브리프 ⚠)
+  flush: "Couleur",
+  straight: "Quinte",
+  // 이 칸은 «포켓페어 세트»와 «보드 트립스»를 함께 담는다. set = brelan servi(브리프)이고
+  // 프랑스 코퍼스도 «le set»을 영어로 쓴다 — en 「Set/Trips」과 같은 처리
+  trips: "Set/Brelan",
+  two_pair: "Double Paire",
+  overpair: "Overpair",
+  // «top paire»는 프랑스 포커 실사용 혼용어다 (kill-tilt 등 — 리서치 §3)
+  top_pair: "Top paire",
+  second_pair: "Deuxième paire",
+  weak_pair: "Paire faible",
+  underpair: "Underpair",
+  // «hauteur As/Roi»가 프랑스 표준 — 브리프 「Carte Haute (또는 Hauteur)」
+  ace_high: "Hauteur As",
+  king_high: "Hauteur Roi",
+  nothing: "Pas de main faite",
+};
+
+export const DRAW_LABELS_FR: Record<DrawKey, string> = {
+  // draw = «tirage» (프랑스 표준 — tirage couleur·tirage bilatéral·tirage ventral 전부
+  // pokerstrategy.com/fr·clubpoker.net 용어집 등재)
+  combo_draw: "Tirage combo",
+  flush_draw: "Tirage couleur",
+  // OESD = «tirage bilatéral» (pokerstrategy.com/fr 용어집 — «par les deux bouts»는 길다)
+  oesd: "Tirage quinte bilatéral",
+  gutshot: "Tirage ventral",
+  // 「backdoor」만 쓰면 완성 couleur로 읽힌다 — tirage를 반드시 남길 것 (de와 같은 이유)
+  backdoor_fd: "Tirage couleur backdoor",
+  no_draw: "Aucun tirage",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -300,6 +339,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_ZH
     : i18n.locale === "zh-hant"
     ? MADE_LABELS_ZH_HANT
+    : i18n.locale === "fr"
+    ? MADE_LABELS_FR
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -316,6 +357,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_ZH
     : i18n.locale === "zh-hant"
     ? DRAW_LABELS_ZH_HANT
+    : i18n.locale === "fr"
+    ? DRAW_LABELS_FR
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

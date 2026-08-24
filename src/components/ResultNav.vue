@@ -503,6 +503,26 @@ const M = {
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted}（底池的 ${percent}%）`,
   },
+  fr: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} gagne`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Fin",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    // 액션명은 영어 유지 — trainer.ts actionName과 같은 결정 (리서치 §3)
+    action: (name: string): string => name,
+    // ⚠ % 앞 공백은 U+202F — trainer.ts trainerActionLabel의 «(N % du pot)»와 글자까지 같다
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent} % du pot)`,
+  },
 } as const;
 
 export default defineComponent({

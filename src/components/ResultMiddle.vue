@@ -400,6 +400,33 @@ const M = {
     strategyCombos: "策略（組合）",
     equity: "勝率",
   },
+  fr: {
+    modeLabels: {
+      basics: "Bases",
+      graphs: "Graphiques",
+      compare: "Comparer",
+      turn: "Turn",
+      river: "River",
+    } as Record<string, string>,
+    // 콜론 앞 공백 = 프랑스 조판 관습 (짧은 라벨이라 일반 공백)
+    player: "Joueur :",
+    auto: (player: string) => `Auto (${player})`,
+    barHeight: "Hauteur des barres :",
+    normalized: "Normalisé",
+    absolute: "Absolu",
+    full: "Plein",
+    // ⚠ 여기서 couleur는 «무늬(suit)»다 — 족보의 Couleur(플러시)와 동철이지만
+    //   프랑스 카드 용어의 표준 표기라 그대로 쓴다 (브리프 ⚠ 문맥 구분 · 원어민 검수 대상)
+    suit: "Couleurs (♠♥♦♣) :",
+    grouped: "Groupées",
+    individual: "Individuelles",
+    display: "Affichage :",
+    strategy: "Stratégie",
+    weight: "Poids",
+    chart: "Graphique :",
+    strategyCombos: "Stratégie (combos)",
+    equity: "Equity",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

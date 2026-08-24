@@ -105,6 +105,20 @@ const CARD_TEXT = {
       `EV 損失 ${bb}bb${streak > 1 ? ` · 連續 ${streak} 天` : ""}`,
     invite: "我也來做這道題",
   },
+  fr: {
+    // 도구명 Trainer는 프랑스 코퍼스가 영어로 쓴다 (리서치 §1-2) — brand.ts와 같은 표기
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "Un défi par jour · le même pour tous",
+    heading: "Défi GTO du jour",
+    board: "Board",
+    hand: "Ma main",
+    // 콜론 앞 공백 = 프랑스 조판 관습 (daily.ts 공유 문구와 같은 처리)
+    result: (verdict: string) => `Mon résultat : ${verdict}`,
+    // ⚠ bb는 코드가 소문자로 찍는다(formatAmount). 화면 안 일관성을 택해 소문자 bb로 통일
+    evLine: (bb: string, streak: number) =>
+      `Perte d'EV ${bb}bb${streak > 1 ? ` · série de ${streak} jours` : ""}`,
+    invite: "Relève le même défi",
+  },
 } as const;
 
 export type DailyCardInput = {

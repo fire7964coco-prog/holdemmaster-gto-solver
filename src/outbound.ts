@@ -81,6 +81,10 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   //   (회신 reply-to-solver-2026-08-22.md §1, 2026-08-22). 영어 폴백은 해소됐다.
   //   → TrainerPage의 «[✏️ 發文]»은 본체 확정값이다(임시 영어 이름에서 바꿨다).
   "zh-hant": { "": "/zh-hant" }, // /zh-hant/solver·/zh-hant/community는 404 (2026-08-22 실측)
+  // /fr는 실재(200), /fr/solver·/fr/community·/fr/blog/a-high-board-cbet는 404 (2026-08-24 실측 2회)
+  // ⚠ 이 한 줄을 빼면 «숨김»이 아니라 «한국어 홈으로 연결»된다 — 맵 자체가 없으면
+  //   mainSiteUrl()이 경로를 그대로 통과시키기 때문 (착수지시서 §0)
+  fr: { "": "/fr" },
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

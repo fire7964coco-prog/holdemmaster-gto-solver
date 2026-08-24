@@ -58,6 +58,7 @@
           <option value="es">Español</option>
           <option value="pt">Português</option>
           <option value="de">Deutsch</option>
+          <option value="fr">Français</option>
           <!-- ⚠ 간체·번체는 «별개 언어»다 (용어 자체가 다르다 — 기계 변환 금지).
                두 이름 모두 «자기 글자»로 적어야 그 언어 사용자가 알아본다 -->
           <option value="zh">简体中文</option>
@@ -152,6 +153,15 @@ const M = {
     communitySuffix: " 社群",
     langSwitchLabel: "選擇語言",
   },
+  fr: {
+    // «solver»는 프랑스 포커 매체의 지배적 표기다 (le solver — 리서치 §1-1. solveur는 안 쓴다)
+    solver: "Solver",
+    results: "Résultats",
+    community: "Communauté",
+    // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
+    communitySuffix: " HoldemMaster",
+    langSwitchLabel: "Choisir la langue",
+  },
 } as const;
 
 export default defineComponent({
@@ -171,7 +181,8 @@ export default defineComponent({
         value === "pt" ||
         value === "de" ||
         value === "zh" ||
-        value === "zh-hant"
+        value === "zh-hant" ||
+        value === "fr"
       )
         setLocale(value);
     };

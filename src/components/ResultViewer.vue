@@ -224,6 +224,12 @@ const M = {
     finalizing: "即將完成…",
     paused: "解算器已暫停。",
   },
+  fr: {
+    notRun: "Le solver n'a pas encore été lancé.",
+    running: "Calcul en cours…",
+    finalizing: "Finalisation…",
+    paused: "Solver en pause.",
+  },
 } as const;
 
 export default defineComponent({

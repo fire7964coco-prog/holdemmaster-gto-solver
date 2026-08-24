@@ -119,6 +119,13 @@ const M = {
     // 「資訊」= 台灣 표기 (간체의 「信息」에 해당)
     noDraws: "沒有聽牌資訊",
   },
+  fr: {
+    // 프리셋 lessonFr가 인용하는 패널 이름(« Mains / Tirages »)과 글자가 맞아야 한다
+    hands: "Mains",
+    noHands: "Aucune main à afficher",
+    draws: "Tirages",
+    noDraws: "Aucune info de tirage",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)

@@ -743,6 +743,69 @@ const M = {
       unknown: "計算過程中出錯了。",
     } as Record<string, string>,
   },
+  fr: {
+    intro:
+      "Tes chances de gagner contre une main précise ou une range entière. Laisse le board vide " +
+      "pour le préflop, ou choisis 3/4/5 cartes pour le flop, le turn ou la river.",
+    heroTitle: "① Ta main",
+    heroHint: "Choisis 2 cartes ci-dessous",
+    fill: "Remplir à partir d'ici",
+    villainTitle: "② Adversaire",
+    modeHand: "vs main",
+    modeRange: "vs range",
+    // ⚠ «0.75»의 소수점은 입력 문법이다 — 쉼표로 바꾸면 파서가 못 읽는다 (localizeNumber 금지 구역)
+    rangePlaceholder: "ex. 22+,AQs+,K8s:0.75",
+    // 버튼 이름은 PreflopChartPage의 복사 버튼과 «글자까지» 같아야 한다
+    rangeNote:
+      "Colle la sortie de [Copier la range en texte] depuis les charts préflop. La notation pondérée comme " +
+      "« K8s:0.75 » est appliquée telle quelle.",
+    anyTwo: "N'importe quelle main (any two)",
+    rangeError: (token: string) => `Analyse impossible : ${token}`,
+    // % 앞은 U+202F (프랑스 조판 — 리서치 §1-3)
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} combos · ${percent} % de tous les combos`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Vide = préflop (3/4/5 cartes aussi possibles)",
+    boardHintBad: "Le board doit avoir 0, 3, 4 ou 5 cartes.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Calculer",
+    computing: "Calcul en cours…",
+    stop: "Arrêter",
+    clear: "Tout effacer",
+    resultTitle: "Résultat",
+    resultEmpty: "Choisis tes deux cartes et une main ou une range adverse, puis appuie sur Calculer.",
+    vsSide: (value: string) => `Adversaire ${value} %`,
+    win: "Victoire",
+    tie: "Égalité",
+    lose: "Défaite",
+    combos: "Combos adverses",
+    badgeExact: "Exact",
+    badgeApprox: "Approx. (±0,2 pt)",
+    // 천단위는 fr-FR — 구분자가 U+202F(좁은 공백)로 나온다 (브리프 §표기 1 326 · de의 «5자리 이상» 정책과 같은 자리)
+    exactNote: (n: number) =>
+      `Les ${n.toLocaleString("fr-FR")} cas possibles ont tous été comptés`,
+    approxNote: (n: number) =>
+      `Trop de cas à énumérer — échantillon de ${n.toLocaleString("fr-FR")} simulations aléatoires`,
+    howTitle: "Comment lire ce résultat",
+    // ⚠ equity의 «정의»를 잃지 말 것 — en «win% plus half of the ties»와 같은 뜻이어야 한다
+    how1: "Equity = % de victoires + la moitié des égalités. C'est ta part du pot si tout partait à tapis maintenant.",
+    how2: "Contre une range, les combos bloqués par tes cartes ou par le board sont retirés automatiquement.",
+    how3: "Le badge « Exact » veut dire que chaque cas a été compté ; « Approx. » est un échantillon aléatoire.",
+    limitTitle: "Ce que couvre ce calculateur",
+    // «Spot personnalisé» = 사이드바 customLabel과 같은 글자
+    limitBody:
+      "Cet outil calcule uniquement l'equity à tapis entre deux joueurs. Range contre range, pots multiway " +
+      "et lignes de bet relèvent du solver (Spot personnalisé).",
+    errors: {
+      "need-hero": "Choisis d'abord tes deux cartes.",
+      "bad-board": "Le board doit avoir 0, 3, 4 ou 5 cartes.",
+      "bad-card": "Carte invalide.",
+      duplicate: "La même carte ne peut pas être utilisée deux fois.",
+      "empty-range": "La range adverse est vide.",
+      "no-combos": "Aucun combo adverse ne reste après le retrait des cartes bloquées.",
+      unknown: "Une erreur est survenue pendant le calcul.",
+    } as Record<string, string>,
+  },
 } as const;
 
 const CAPACITY: Record<Target, number> = { hero: 2, villain: 2, board: 5 };

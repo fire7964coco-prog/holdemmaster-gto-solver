@@ -53,6 +53,9 @@ const M = {
   "zh-hant": {
     combos: "組合",
   },
+  fr: {
+    combos: "combos",
+  },
 } as const;
 
 const actionLabel = (
@@ -163,7 +166,9 @@ const actionLabel = (
         "do pote",
         "vom Pot",
         "底池",
-        "底池"
+        "底池",
+        // fr의 «% 앞 공백»(U+202F)은 localizeNumber가 넣는다 — 이 문자열이 그 안을 지난다
+        "du pot"
       )})`
     );
   }
