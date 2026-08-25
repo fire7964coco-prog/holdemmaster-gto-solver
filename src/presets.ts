@@ -350,7 +350,7 @@ export const PRESETS: Preset[] = [
     lesson:
       "A하이 보드와 비교해보세요. K 보드도 BTN 우위지만 미묘하게 체크가 늘어납니다. 왜일까요?",
     lessonEn:
-      "Compare with the ace-high board. King-high still favors BTN, but BTN starts checking a bit more. Can you tell why?",
+      "Compare with the ace-high board. King-high still favors BTN, but there's a bit more checking. Can you tell why?",
     titleJa: "ドライなKハイボード",
     lessonJa:
       "Aハイボードと比較してみましょう。KハイボードでもBTN優位ですが、チェックがわずかに増えます。なぜでしょうか？",
@@ -364,7 +364,7 @@ export const PRESETS: Preset[] = [
     titleZh: "干燥的 K 高牌面",
     titleZhHant: "乾燥的 K 高牌面",
     lessonDe:
-      "Vergleiche es mit dem A-High-Board. K-High begünstigt den BTN ebenfalls, aber er checkt etwas öfter. Weißt du, warum?",
+      "Vergleiche es mit dem A-High-Board. K-High begünstigt den BTN ebenfalls, aber es wird etwas öfter gecheckt. Weißt du, warum?",
     lessonZh: "和 A 高牌面比一比。K 高牌面同样是 BTN 占优，但过牌会稍微多一点。为什么呢？",
     lessonZhHant: "和 A 高牌面比一比。K 高牌面同樣是 BTN 佔優，但過牌會稍微多一點。為什麼呢？",
     titleFr: "Board sec K-high",
@@ -438,28 +438,28 @@ export const PRESETS: Preset[] = [
     titleEn: "Monotone Board (All One Suit)",
     board: "Qs 9s 2s",
     lesson:
-      "큰 벳이 사라지고 작은 벳/체크 위주가 되는 이유. 플러시 완성 핸드도 자주 체크하는 것을 관찰하세요.",
+      "큰 벳이 드물어지고 작은 벳/체크 위주가 되는 이유. 플러시 완성 핸드도 자주 체크하는 것을 관찰하세요.",
     lessonEn:
-      "Watch why big bets disappear in favor of small bets and checks. Notice how often even made flushes just check.",
+      "Watch why big bets give way to small bets and checks. Notice how often even made flushes just check.",
     titleJa: "モノトーンボード（同スート3枚）",
     lessonJa:
-      "大きなベットが消え、小さなベットとチェックが中心になる理由を学びます。完成したフラッシュでさえ頻繁にチェックすることを観察しましょう。",
+      "大きなベットが減り、小さなベットとチェックが中心になる理由を学びます。完成したフラッシュでさえ頻繁にチェックすることを観察しましょう。",
     titleEs: "Board monotone",
     lessonEs:
-      "Las apuestas grandes desaparecen a favor de apuestas pequeñas y checks. Fíjate con qué frecuencia incluso un color hecho se limita a hacer check.",
+      "Las apuestas grandes ceden el paso a apuestas pequeñas y checks. Fíjate con qué frecuencia incluso un color hecho se limita a hacer check.",
     titlePt: "Board monotone",
     lessonPt:
-      "As apostas grandes somem e dão lugar a apostas pequenas e checks. Repare com que frequência até um flush fechado só dá check.",
+      "As apostas grandes ficam raras e dão lugar a apostas pequenas e checks. Repare com que frequência até um flush fechado só dá check.",
     titleDe: "Monotones Board (eine Farbe)",
     titleZh: "单色牌面（3 张同花）",
     titleZhHant: "單色牌面（3 張同花）",
     lessonDe:
-      "Sieh, warum große Bets verschwinden und kleine Bets und Checks übernehmen. Achte darauf, wie oft selbst ein fertiger Flush nur checkt.",
-    lessonZh: "看看大注为什么消失了，只剩下小注和过牌。注意连已经成同花的牌都经常只过牌。",
-    lessonZhHant: "看看大注為什麼消失了，只剩下小注和過牌。注意連已經成同花的牌都經常只過牌。",
+      "Sieh, warum große Bets seltener werden und kleine Bets und Checks übernehmen. Achte darauf, wie oft selbst ein fertiger Flush nur checkt.",
+    lessonZh: "看看大注为什么变少了，主要剩下小注和过牌。注意连已经成同花的牌都经常只过牌。",
+    lessonZhHant: "看看大注為什麼變少了，主要剩下小注和過牌。注意連已經成同花的牌都經常只過牌。",
     titleFr: "Board monochrome",
     lessonFr:
-      "Regarde pourquoi les grosses mises disparaissent au profit des petites mises et des checks. Remarque à quelle fréquence même une couleur faite se contente de checker.",
+      "Regarde pourquoi les grosses mises se raréfient au profit des petites mises et des checks. Remarque à quelle fréquence même une couleur faite se contente de checker.",
   },
   {
     ...SRP,

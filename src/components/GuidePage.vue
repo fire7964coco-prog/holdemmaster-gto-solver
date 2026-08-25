@@ -386,7 +386,7 @@ const M = {
     verdictAfter:
       "로 잽니다 — 팟의 0.35% 이하 = 최적 선택 · 1% 이하 = 허용 가능 · 그 이상 = 다시 볼 스팟. 예를 들어 팟 5.5bb인 싱글레이즈팟은 0.02bb·0.06bb, 팟 22.5bb인 3벳팟은 0.08bb·0.23bb가 경계입니다.",
     verdictHint:
-      "같은 0.05bb라도 작은 팟에서는 큰 실수고 큰 팟에서는 사소한 차이입니다. 절대 bb로 재면 3벳팟이 실제보다 나쁘게 보여서 팟 대비로 바꿨습니다(2026-08-15). 경계에는 하한(0.02bb·0.05bb)이 있는데, 계산을 목표 오차 0.5%까지만 수렴시키므로 그보다 작은 차이는 계산 노이즈와 구분되지 않기 때문입니다.",
+      "같은 0.08bb라도 작은 팟에서는 큰 실수고 큰 팟에서는 사소한 차이입니다. 절대 bb로 재면 3벳팟이 실제보다 나쁘게 보여서 팟 대비로 바꿨습니다(2026-08-15). 경계에는 하한(0.02bb·0.05bb)이 있는데, 계산을 목표 오차 0.5%까지만 수렴시키므로 그보다 작은 차이는 계산 노이즈와 구분되지 않기 때문입니다.",
     reviewTerm: "복습",
     reviewBefore: "손실이 컸던 문제는 [복습] 버튼으로 다시 나옵니다. 기록은 기본적으로 ",
     reviewBold: "이 기기 안에만",
@@ -560,7 +560,7 @@ const M = {
     verdictAfter:
       " — up to 0.35% of the pot = Best play · up to 1% = Acceptable · beyond that = Review this spot. For example, in a 5.5bb single raised pot (SRP) the cutoffs are 0.02bb and 0.06bb; in a 22.5bb 3-bet pot they're 0.08bb and 0.23bb.",
     verdictHint:
-      "The same 0.05bb is a big mistake in a small pot and a trivial one in a big pot. Grading in absolute bb made 3-bet pots look worse than they are, so we switched to pot-relative grading (2026-08-15). The cutoffs have floors (0.02bb / 0.05bb): solves only converge to a target exploitability of 0.5%, so differences smaller than that can't be distinguished from solver noise.",
+      "The same 0.08bb is a big mistake in a small pot and a trivial one in a big pot. Grading in absolute bb made 3-bet pots look worse than they are, so we switched to pot-relative grading (2026-08-15). The cutoffs have floors (0.02bb / 0.05bb): solves only converge to a target exploitability of 0.5%, so differences smaller than that can't be distinguished from solver noise.",
     reviewTerm: "Review",
     reviewBefore:
       "Hands where you lost the most EV come back via the [Review] button. By default, your history is stored ",
@@ -740,7 +740,7 @@ const M = {
     verdictAfter:
       "で測ります — ポットの0.35%以下 = 最適な選択・1%以下 = 許容できる選択・それ以上 = 復習すべきスポット。例えばポット5.5bbのシングルレイズポットでは0.02bb・0.06bb、ポット22.5bbの3ベットポットでは0.08bb・0.23bbが境界です。",
     verdictHint:
-      "同じ0.05bbでも、小さいポットでは大きなミス、大きいポットでは些細な差です。絶対bbで測ると3ベットポットが実際より悪く見えるため、ポット比の採点に変更しました(2026-08-15)。境界には下限(0.02bb・0.05bb)があります。計算を目標誤差0.5%までしか収束させていないため、それより小さい差は計算ノイズと区別できないからです。",
+      "同じ0.08bbでも、小さいポットでは大きなミス、大きいポットでは些細な差です。絶対bbで測ると3ベットポットが実際より悪く見えるため、ポット比の採点に変更しました(2026-08-15)。境界には下限(0.02bb・0.05bb)があります。計算を目標誤差0.5%までしか収束させていないため、それより小さい差は計算ノイズと区別できないからです。",
     reviewTerm: "復習",
     reviewBefore:
       "EVロスが大きかった問題は[復習]ボタンで再出題されます。記録はデフォルトで ",
@@ -921,7 +921,7 @@ const M = {
     verdictAfter:
       " — hasta el 0.35% del bote = Mejor jugada · hasta el 1% = Aceptable · más allá = Repasa este spot. Por ejemplo, en un single raised pot de 5.5bb los umbrales son 0.02bb y 0.06bb; en un bote de 3-bet de 22.5bb son 0.08bb y 0.23bb.",
     verdictHint:
-      "Los mismos 0.05bb son un gran error en un bote chico y una diferencia trivial en uno grande. Calificar en bb absolutos hacía que los botes de 3-bet se vieran peor de lo que son, así que cambiamos a la calificación relativa al bote (2026-08-15). Los umbrales tienen un mínimo (0.02bb / 0.05bb): los cálculos solo convergen hasta un error objetivo del 0.5%, y diferencias menores no se distinguen del ruido del solver.",
+      "Los mismos 0.08bb son un gran error en un bote chico y una diferencia trivial en uno grande. Calificar en bb absolutos hacía que los botes de 3-bet se vieran peor de lo que son, así que cambiamos a la calificación relativa al bote (2026-08-15). Los umbrales tienen un mínimo (0.02bb / 0.05bb): los cálculos solo convergen hasta un error objetivo del 0.5%, y diferencias menores no se distinguen del ruido del solver.",
     reviewTerm: "Repaso",
     reviewBefore:
       "Las manos donde más EV perdiste vuelven con el botón [Repasar]. Por defecto, tu historial se guarda ",
@@ -1103,7 +1103,7 @@ const M = {
     verdictAfter:
       " — até 0,35% do pote = Melhor jogada · até 1% = Aceitável · acima disso = Revise este spot. Por exemplo, em um single raised pot de 5,5bb os limiares são 0,02bb e 0,06bb; em um pote de 3-bet de 22,5bb são 0,08bb e 0,23bb.",
     verdictHint:
-      "Os mesmos 0,05bb são um erro enorme em um pote pequeno e uma diferença irrelevante em um pote grande. Avaliar em bb absolutos fazia os potes de 3-bet parecerem piores do que são, por isso mudamos para a nota relativa ao pote (15/08/2026). Os limiares têm um mínimo (0,02bb / 0,05bb): os cálculos só convergem até um erro objetivo de 0,5%, e diferenças menores não se distinguem do ruído do solver.",
+      "Os mesmos 0,08bb são um erro enorme em um pote pequeno e uma diferença irrelevante em um pote grande. Avaliar em bb absolutos fazia os potes de 3-bet parecerem piores do que são, por isso mudamos para a nota relativa ao pote (15/08/2026). Os limiares têm um mínimo (0,02bb / 0,05bb): os cálculos só convergem até um erro objetivo de 0,5%, e diferenças menores não se distinguem do ruído do solver.",
     reviewTerm: "Revisão",
     reviewBefore:
       "As mãos em que você mais perdeu EV voltam pelo botão [Revisar]. Por padrão, o seu histórico é salvo ",
@@ -1286,7 +1286,7 @@ const M = {
     verdictAfter:
       " – bis 0,35% vom Pot = Beste Wahl · bis 1% = Vertretbar · darüber = Nochmal ansehen. In einem Single Raised Pot von 5,5bb sind das 0,02bb und 0,06bb; in einem 3-Bet-Pot von 22,5bb 0,08bb und 0,23bb.",
     verdictHint:
-      "Dieselben 0,05bb sind in einem kleinen Pot ein grober Fehler und in einem großen Pot kaum der Rede wert. Absolute bb ließen 3-Bet-Pots schlechter aussehen, als sie sind, deshalb benoten wir relativ zum Pot. Die Schwellen haben eine Untergrenze (0,02bb / 0,05bb): Die Berechnung konvergiert nur bis zu einer Zielabweichung von 0,5%, kleinere Unterschiede sind vom Rauschen des Solvers nicht zu trennen.",
+      "Dieselben 0,08bb sind in einem kleinen Pot ein grober Fehler und in einem großen Pot kaum der Rede wert. Absolute bb ließen 3-Bet-Pots schlechter aussehen, als sie sind, deshalb benoten wir relativ zum Pot (2026-08-15). Die Schwellen haben eine Untergrenze (0,02bb / 0,05bb): Die Berechnung konvergiert nur bis zu einer Zielabweichung von 0,5%, kleinere Unterschiede sind vom Rauschen des Solvers nicht zu trennen.",
     reviewTerm: "Wiederholen",
     reviewBefore:
       "Die Hände, bei denen du am meisten EV verloren hast, holst du dir über [Wiederholen] zurück. Dein Verlauf wird standardmäßig ",
@@ -1468,7 +1468,7 @@ const M = {
     verdictAfter:
       "来量——底池的 0.35% 以内 = 最优选择 · 1% 以内 = 可以接受 · 再多 = 该回头复盘的局面。举个例子，5.5bb 的单加注底池（SRP）对应 0.02bb 和 0.06bb，22.5bb 的 3bet 底池对应 0.08bb 和 0.23bb。",
     verdictHint:
-      "同样是 0.05bb，在小底池里是大失误，在大底池里只是小差别。用绝对 bb 来量的话，3bet 底池会显得比实际更糟，所以改成了按占底池的比例（2026-08-15）。这两条线各有一个下限：0.02bb 和 0.05bb。计算只收敛到目标可剥削度 0.5%，比这更小的差别已经和计算噪声分不开了。",
+      "同样是 0.08bb，在小底池里是大失误，在大底池里只是小差别。用绝对 bb 来量的话，3bet 底池会显得比实际更糟，所以改成了按占底池的比例（2026-08-15）。这两条线各有一个下限：0.02bb 和 0.05bb。计算只收敛到目标可剥削度 0.5%，比这更小的差别已经和计算噪声分不开了。",
     reviewTerm: "复习",
     reviewBefore: "亏得多的题会通过[复习]按钮再出现一次。记录默认",
     reviewBold: "只保存在这台设备上",
@@ -1650,7 +1650,7 @@ const M = {
     verdictAfter:
       "來量——底池的 0.35% 以內 = 最佳選擇 · 1% 以內 = 可以接受 · 再多 = 該回頭檢討的局面。舉個例子，5.5bb 的單加注底池（SRP）對應 0.02bb 和 0.06bb，22.5bb 的 3bet 底池對應 0.08bb 和 0.23bb。",
     verdictHint:
-      "同樣是 0.05bb，在小底池裡是大失誤，在大底池裡只是小差別。用絕對 bb 來量的話，3bet 底池會顯得比實際更糟，所以改成了按佔底池的比例（2026-08-15）。這兩條線各有一個下限：0.02bb 和 0.05bb。計算只收斂到目標可剝削度 0.5%，比這更小的差別已經和計算雜訊分不開了。",
+      "同樣是 0.08bb，在小底池裡是大失誤，在大底池裡只是小差別。用絕對 bb 來量的話，3bet 底池會顯得比實際更糟，所以改成了按佔底池的比例（2026-08-15）。這兩條線各有一個下限：0.02bb 和 0.05bb。計算只收斂到目標可剝削度 0.5%，比這更小的差別已經和計算雜訊分不開了。",
     reviewTerm: "複習",
     reviewBefore: "虧得多的題會透過[複習]按鈕再出現一次。紀錄預設",
     // ⚠ ErrorToast.bodyB1·TrainerPage.localOnlyBold·errBold와 «글자까지» 같아야 한다
@@ -1833,7 +1833,7 @@ const M = {
     verdictAfter:
       " — jusqu'à 0,35 % du pot = Meilleur choix · jusqu'à 1 % = Acceptable · au-delà = Spot à revoir. Par exemple, dans un single raised pot (SRP) de 5,5bb, les seuils sont 0,02bb et 0,06bb ; dans un pot 3-bet de 22,5bb, 0,08bb et 0,23bb.",
     verdictHint:
-      "La même perte de 0,05bb est une grosse erreur dans un petit pot et une broutille dans un gros pot. Noter en bb absolus faisait paraître les pots 3-bet pires qu'ils ne le sont, donc on est passés à la note relative au pot (15/08/2026). Les seuils ont des planchers (0,02bb / 0,05bb) : les calculs ne convergent que vers une exploitabilité cible de 0,5 %, donc les écarts plus petits ne se distinguent pas du bruit du solver.",
+      "La même perte de 0,08bb est une grosse erreur dans un petit pot et une broutille dans un gros pot. Noter en bb absolus faisait paraître les pots 3-bet pires qu'ils ne le sont, donc on est passés à la note relative au pot (15/08/2026). Les seuils ont des planchers (0,02bb / 0,05bb) : les calculs ne convergent que vers une exploitabilité cible de 0,5 %, donc les écarts plus petits ne se distinguent pas du bruit du solver.",
     reviewTerm: "Révision",
     reviewBefore:
       "Les mains où tu as perdu le plus d'EV reviennent via le bouton [Révision]. Par défaut, ton historique est stocké ",
