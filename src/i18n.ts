@@ -17,10 +17,25 @@ import { reactive } from "vue";
 // (德州扑克/德州撲克 · 求解器/解算器 · 概率/機率 · 弃牌/蓋牌).
 export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr";
 
-const KEY = "solver.locale";
+/* 🔴 2026-08-27에 키를 갈았다 — «solver.locale» → «solver.locale.pegged».
+ *
+ * 왜: 언어 셀렉터를 없애고 본진(holdemmaster.com) 언어에 페깅하면서, 예전 셀렉터로 고른 값이
+ * localStorage에 그대로 남아 **브라우저 언어보다 세게 이겨 버렸다.** 셀렉터가 없으니 되돌릴
+ * 길도 같이 사라졌다 — 사용자가 실제로 여기 걸렸다(영어 브라우저인데 좌측 상단이 한글).
+ *
+ * 셀렉터 시대의 저장값은 이제 «사용자가 고른 언어»가 아니라 **찌꺼기**다. 키를 갈면 그 값들이
+ * 한 번에 무시되고, 각자 브라우저 언어(또는 본진이 보내는 ?lang=)로 정상 복귀한다.
+ * 새 키에 쓰이는 값은 **오직 ?lang=**뿐이다 — 즉 저장값 = 본진이 정한 언어다. 뜻이 일관된다.
+ *
+ * ⚠ 옛 키는 읽지 않고 지운다(마이그레이션하지 않는다). 옮겨 오면 고치려던 그 찌꺼기를
+ *   그대로 물려받는다. */
+const KEY = "solver.locale.pegged";
+const LEGACY_KEY = "solver.locale";
 
 const readStored = (): Locale | null => {
   try {
+    // 셀렉터 시대의 찌꺼기를 한 번 걷어낸다 (위 KEY 주석 참조)
+    if (localStorage.getItem(LEGACY_KEY) !== null) localStorage.removeItem(LEGACY_KEY);
     const value = localStorage.getItem(KEY);
     return value === "ko" ||
       value === "en" ||
