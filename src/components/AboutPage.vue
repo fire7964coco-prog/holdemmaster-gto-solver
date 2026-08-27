@@ -124,7 +124,9 @@
         </div>
       </div>
       <!-- 본체 랜딩(정보형 콘텐츠)으로 연결 — 앱은 도구, 랜딩은 설명 역할 분담 -->
-      <!-- 그 언어의 랜딩이 본체에 없으면 문단째 숨긴다 (ja 등) -->
+      <!-- 그 언어의 랜딩이 본체에 없으면 문단째 숨긴다.
+           2026-08-27 라이브 실측 기준 9개 언어 전부 /xx/solver가 200이라 지금은 전부 보인다 —
+           숨김 경로는 본체가 새 언어를 늘리는 동안의 과도기용으로 남겨 둔다 -->
       <div
         v-if="landingUrl"
         class="mt-5 pt-4 border-t border-neutral-700 text-[0.8125rem] text-neutral-500"
@@ -453,9 +455,8 @@ const M = {
       "试试 GTO 训练器——它会告诉你每个选择亏了多少 bb",
       "上手之后，用自定义牌局（①~⑤）算你自己的手牌",
     ],
-    // ⚠ 이 세 줄이 가리키는 본체 /zh/solver는 아직 없다(2026-08-21 실측 404).
-    //   AboutPage 템플릿의 v-if="landingUrl"이 통째로 숨기므로 화면에는 안 나온다.
-    //   본체에 /zh/solver가 생기면 outbound.ts의 LOCALE_PATHS.zh에 한 줄만 더하면 살아난다
+    // ✅ 살아났다 — 본체 /zh/solver 200 (2026-08-27 라이브 실측. 08-21에는 404였다).
+    //   outbound.ts LOCALE_PATHS.zh에 "/solver"를 넣어 v-if="landingUrl"이 열렸다.
     landingBefore: "想先读文章，弄清 GTO 求解器是什么、结果怎么看？可以看",
     landingLink: "HoldemMaster 求解器使用指南",
     landingAfter: "。",
@@ -502,9 +503,8 @@ const M = {
       "試試 GTO 訓練器——它會告訴你每個選擇虧了多少 bb",
       "上手之後，用自訂牌局（①～⑤）算你自己的手牌",
     ],
-    // ⚠ 이 세 줄이 가리키는 본체 /zh-hant/solver는 없다(2026-08-22 실측 404 — app/zh-hant에
-    //   solver 폴더 자체가 없다). AboutPage 템플릿의 v-if="landingUrl"이 통째로 숨긴다.
-    //   본체에 /zh-hant/solver가 생기면 outbound.ts의 LOCALE_PATHS["zh-hant"]에 한 줄만 더하면 살아난다
+    // ✅ 살아났다 — 본체 /zh-hant/solver 200 (2026-08-27 라이브 실측. 08-22에는 폴더 자체가 없었다).
+    //   outbound.ts LOCALE_PATHS["zh-hant"]에 "/solver"를 넣어 v-if="landingUrl"이 열렸다.
     landingBefore: "想先讀文章，弄清 GTO 解算器是什麼、結果怎麼看？可以看",
     landingLink: "HoldemMaster 解算器使用指南",
     landingAfter: "。",
@@ -548,9 +548,8 @@ const M = {
       "Essaie le Trainer GTO — il te montre exactement combien de bb chaque décision te coûte",
       "Une fois à l'aise, calcule tes propres mains avec Spot personnalisé (①–⑤)",
     ],
-    // ⚠ 이 세 줄이 가리키는 본체 /fr/solver는 없다 (2026-08-24 실측 404) —
-    //   AboutPage 템플릿의 v-if="landingUrl"이 통째로 숨긴다. 본체에 /fr/solver가 생기면
-    //   outbound.ts LOCALE_PATHS.fr에 "/solver" 한 줄만 더하면 살아난다
+    // ✅ 살아났다 — 본체 /fr/solver 200 (2026-08-27 라이브 실측. 08-24에는 404였다).
+    //   outbound.ts LOCALE_PATHS.fr에 "/solver"를 넣어 v-if="landingUrl"이 열렸다.
     landingBefore:
       "Tu préfères d'abord lire ce qu'est un solver GTO et comment interpréter ses résultats ? Va voir",
     landingLink: "le guide du solver HoldemMaster",

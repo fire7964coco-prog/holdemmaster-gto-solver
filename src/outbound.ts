@@ -62,15 +62,14 @@ export const MAIN_SITE = "https://www.holdemmaster.com";
  * 언어별로 «실재하는» 경로만 등재한다. 표에 없는 경로는 빈 문자열을 돌려주므로
  * 화면 쪽에서 v-if로 링크 자체를 숨겨야 한다 (한국어 페이지나 404로 보내지 않는다).
  *
- * ── 🔴 실측 갱신 2026-08-27 (라이브 curl 25경로 · 상시 규칙 «언어 작업마다 다시 잰다») ──
- * 아래 줄줄이 붙은 «404 (08-2x 실측)» 주석이 **낡았다.** 지금은 이렇다:
+ * ── ✅ 실측 갱신 2026-08-27 (라이브 curl 25경로 · 상시 규칙 «언어 작업마다 다시 잰다») ──
  *   · `/xx/solver` — **9개 언어 전부 200** (en·ja·es·pt·de·zh·zh-hant·fr + ko `/solver`)
- *   · `/xx/community` — **9개 언어 전부 404** (지금 주석과 일치. 여기는 손댈 것이 없다)
- * ⚠ 그래서 pt·de·zh·zh-hant·fr 줄에 `"/solver"`가 빠져 있는 것은 **이제 틀린 상태**다.
- *   다만 그 줄을 채우면 «소개 화면 랜딩 링크»가 5개 언어에서 새로 켜지고,
- *   여러 `*-verify.js`의 «랜딩 링크가 없어야 한다» 단언이 통째로 뒤집힌다
- *   (확정_결정 «검사도 낡는다»가 경고한 바로 그 모양). 표 수정은 그 검사 갱신과 한 묶음이라
- *   **별도 회차로 뺐다** — 세션_핸드오프 미결 표 참조. 이 주석의 실측치를 그대로 쓰면 된다.
+ *   · `/xx/community` — **9개 언어 전부 404** (그래서 어느 로케일에도 `"/community"`가 없다)
+ * ⚠ 08-27 이전에는 pt·de·zh·zh-hant·fr에 `"/solver"`가 빠져 있었다 — 본체가 랜딩을 늘리는 동안
+ *   이 표가 낡은 것이다. 그날 5줄을 채웠고, 각 언어 `*-verify.js`의 «랜딩 링크가 없어야 한다»
+ *   단언도 «그 언어 것이어야 한다»로 같이 뒤집었다(확정_결정 «검사도 낡는다»).
+ * 🔴 **다음에 언어를 건드리는 세션은 여기를 또 재라.** 본체가 `/xx/community`를 열면
+ *   이번과 똑같은 모양으로 이 표와 검사가 한꺼번에 낡는다.
  */
 const LOCALE_PATHS: Record<string, Record<string, string>> = {
   en: { "": "/en", "/solver": "/en/solver" },
@@ -79,9 +78,12 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   ja: { "": "/ja", "/solver": "/ja/solver" }, // /ja/community는 아직 없다
   // ✅ /es/solver 신설 (본체 회신 reply-to-solver-2026-08-22.md §4, 2026-08-22 실측 200)
   es: { "": "/es", "/solver": "/es/solver" }, // /es/community는 아직 없다
-  pt: { "": "/pt" }, // /pt는 실재(200), /pt/solver·/pt/community는 404 (2026-08-21 실측)
-  de: { "": "/de" }, // /de는 실재(200), /de/solver·/de/community는 404 (2026-08-21 실측)
-  zh: { "": "/zh" }, // /zh는 실재(200), /zh/solver·/zh/community는 404 (2026-08-21 실측).
+  // ✅ /pt/solver 200 (2026-08-27 실측 — 08-21에는 404였다). /pt/community는 여전히 404
+  pt: { "": "/pt", "/solver": "/pt/solver" },
+  // ✅ /de/solver 200 (2026-08-27 실측 — 08-21에는 404였다). /de/community는 여전히 404
+  de: { "": "/de", "/solver": "/de/solver" },
+  // ✅ /zh/solver 200 (2026-08-27 실측 — 08-21에는 404였다). /zh/community는 여전히 404
+  zh: { "": "/zh", "/solver": "/zh/solver" },
   // ⚠ 본체 /zh/blog는 200이지만 GTO 13편의 «중국어판»은 없다(a-high-board-cbet = 404)
   //   → 프리셋 해설 링크는 zh에서 숨긴다 (presets.ts articleSlug 쪽에서 판단)
   //
@@ -90,11 +92,13 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   // ✅ 본체가 `LABELS`에 zh-hant 한 벌(52키)을 넣었다 — 화면 라벨도 번체다
   //   (회신 reply-to-solver-2026-08-22.md §1, 2026-08-22). 영어 폴백은 해소됐다.
   //   → TrainerPage의 «[✏️ 發文]»은 본체 확정값이다(임시 영어 이름에서 바꿨다).
-  "zh-hant": { "": "/zh-hant" }, // /zh-hant/solver·/zh-hant/community는 404 (2026-08-22 실측)
-  // /fr는 실재(200), /fr/solver·/fr/community·/fr/blog/a-high-board-cbet는 404 (2026-08-24 실측 2회)
+  // ✅ /zh-hant/solver 200 (2026-08-27 실측 — 08-22에는 404였다). /zh-hant/community는 여전히 404
+  "zh-hant": { "": "/zh-hant", "/solver": "/zh-hant/solver" },
+  // ✅ /fr/solver 200 (2026-08-27 실측 — 08-24에는 404였다). /fr/community는 여전히 404
+  // ⚠ /fr/blog/a-high-board-cbet는 손대지 않았다 — 해설 링크는 별개 판단이다(08-24 실측 404)
   // ⚠ 이 한 줄을 빼면 «숨김»이 아니라 «한국어 홈으로 연결»된다 — 맵 자체가 없으면
   //   mainSiteUrl()이 경로를 그대로 통과시키기 때문 (착수지시서 §0)
-  fr: { "": "/fr" },
+  fr: { "": "/fr", "/solver": "/fr/solver" },
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {
