@@ -4,7 +4,7 @@
   "description": "免费的 GTO 求解器和训练器。13 个教学案例打开就能看，断网也一样。",
   "lang": "zh-Hans",
   "dir": "ltr",
-  "start_url": "/?view=trainer",
+  "start_url": "/?view=trainer&lang=zh",
   "scope": "/",
   "id": "/",
   "display": "standalone",
@@ -40,7 +40,7 @@
       "name": "GTO 训练器",
       "short_name": "训练器",
       "description": "从真实范围里抽一手牌做题，按 EV 损失打分",
-      "url": "/?view=trainer",
+      "url": "/?view=trainer&lang=zh",
       "icons": [
         {
           "src": "/icons/icon-192.png",
@@ -52,7 +52,7 @@
       "name": "13 个教学案例",
       "short_name": "教学案例",
       "description": "13 个牌局的 GTO 策略，不用等就能看",
-      "url": "/?view=presets",
+      "url": "/?view=presets&lang=zh",
       "icons": [
         {
           "src": "/icons/icon-192.png",

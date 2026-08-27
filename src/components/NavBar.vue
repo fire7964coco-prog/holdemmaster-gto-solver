@@ -43,10 +43,17 @@
       </div>
 
       <div class="flex ml-auto h-full items-center z-10">
-        <!-- 언어 선택 — 8개 언어(ko/en/ja/es/pt/de/zh/zh-hant)라 토글 대신 선택 상자.
-             닫힌 상태에는 현재 언어의 이름만 보이므로 화면에 외국어가 남지 않는다.
+        <!-- 언어 선택 — 🔴 npokers(독립 앱) 빌드에만 둔다 (사용자 결정 2026-08-27).
+             트레이너 빌드는 본진(holdemmaster.com)이 언어별 랜딩에서 «?lang=xx»를 붙여 보낸다.
+             여기서 언어를 또 고르면 그 값이 localStorage를 덮어써서 네비바의 본진 링크까지
+             그 언어로 끌려갔다 — 사용자가 지적한 «다른 언어를 고르면 본진도 바뀐다» 현상.
+             → 트레이너는 본진 언어에 «페깅»한다. 되돌릴 길은 본진에서 다시 들어오는 것 +
+                설치 앱의 경우 매니페스트 start_url에 박아 둔 &lang=xx(설치 시점 언어로 고정).
+             ⚠ npokers는 페깅할 본진이 없다(스토어에서 바로 설치). 여기서 지우면 사용자가
+                폰 언어에 영구히 갇힌다 — 양쪽 빌드에서 무작정 지우지 말 것.
              ⚠ 항목을 늘리면 상자가 넓어져 «다른 언어» 화면이 밀린다 — select-fit-verify.js 필수 -->
         <select
+          v-if="showLangSelect"
           class="lang-select"
           :aria-label="L.langSwitchLabel"
           :value="locale"
@@ -83,7 +90,7 @@ import { useStore } from "../store";
 
 import { ComputerDesktopIcon, ChartBarIcon } from "@heroicons/vue/24/solid";
 import { mainSiteUrl } from "../outbound";
-import { BRAND_NAME } from "../brand";
+import { BRAND_NAME, IS_NPOKERS } from "../brand";
 import { i18n, setLocale } from "../i18n";
 
 const M = {
@@ -190,6 +197,8 @@ export default defineComponent({
       store: useStore(),
       // 간판은 빌드별로 다르다 (src/brand.ts — 트레이너 빌드/우리 커뮤니티용 vs npokers 빌드)
       brandName: computed(() => BRAND_NAME[i18n.locale]),
+      // 언어 셀렉터는 npokers 빌드 전용 — 트레이너는 본진 언어에 페깅한다(위 템플릿 주석)
+      showLangSelect: IS_NPOKERS,
       // 언어 전환 시 그 언어의 본체 홈(/en 등)으로 갈아타야 하므로 computed
       communityUrl: computed(() => mainSiteUrl("", "navbar")),
       locale: computed(() => i18n.locale),

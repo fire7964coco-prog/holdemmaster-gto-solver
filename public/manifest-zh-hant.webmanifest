@@ -4,7 +4,7 @@
   "description": "免費的 GTO 解算器和訓練器。13 個教學案例打開就能看，沒網路也一樣。",
   "lang": "zh-Hant",
   "dir": "ltr",
-  "start_url": "/?view=trainer",
+  "start_url": "/?view=trainer&lang=zh-hant",
   "scope": "/",
   "id": "/",
   "display": "standalone",
@@ -40,7 +40,7 @@
       "name": "GTO 訓練器",
       "short_name": "訓練器",
       "description": "從真實範圍裡抽一手牌做題，按 EV 損失評分",
-      "url": "/?view=trainer",
+      "url": "/?view=trainer&lang=zh-hant",
       "icons": [
         {
           "src": "/icons/icon-192.png",
@@ -52,7 +52,7 @@
       "name": "13 個教學案例",
       "short_name": "教學案例",
       "description": "13 個牌局的 GTO 策略，不用等就能看",
-      "url": "/?view=presets",
+      "url": "/?view=presets&lang=zh-hant",
       "icons": [
         {
           "src": "/icons/icon-192.png",

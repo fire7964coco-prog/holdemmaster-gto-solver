@@ -4,7 +4,7 @@
   "description": "Un solver GTO y entrenador gratis. Los 13 spots de estudio se abren al instante, incluso offline.",
   "lang": "es",
   "dir": "ltr",
-  "start_url": "/?view=trainer",
+  "start_url": "/?view=trainer&lang=es",
   "scope": "/",
   "id": "/",
   "display": "standalone",
@@ -40,7 +40,7 @@
       "name": "Entrenador GTO",
       "short_name": "Entrenador",
       "description": "Juega manos repartidas desde rangos reales y recibe tu nota por pérdida de EV",
-      "url": "/?view=trainer",
+      "url": "/?view=trainer&lang=es",
       "icons": [
         {
           "src": "/icons/icon-192.png",
@@ -52,7 +52,7 @@
       "name": "13 spots de estudio",
       "short_name": "Spots de estudio",
       "description": "Consulta la estrategia GTO de 13 spots sin esperar",
-      "url": "/?view=presets",
+      "url": "/?view=presets&lang=es",
       "icons": [
         {
           "src": "/icons/icon-192.png",

@@ -4,7 +4,7 @@
   "description": "A free GTO solver and trainer. All 13 Study Spots open instantly, even offline.",
   "lang": "en",
   "dir": "ltr",
-  "start_url": "/?view=trainer",
+  "start_url": "/?view=trainer&lang=en",
   "scope": "/",
   "id": "/",
   "display": "standalone",
@@ -40,7 +40,7 @@
       "name": "GTO Trainer",
       "short_name": "Trainer",
       "description": "Play hands dealt from real ranges and get graded on EV loss",
-      "url": "/?view=trainer",
+      "url": "/?view=trainer&lang=en",
       "icons": [
         {
           "src": "/icons/icon-192.png",
@@ -52,7 +52,7 @@
       "name": "13 Study Spots",
       "short_name": "Study Spots",
       "description": "See the GTO strategy for 13 spots with no waiting",
-      "url": "/?view=presets",
+      "url": "/?view=presets&lang=en",
       "icons": [
         {
           "src": "/icons/icon-192.png",

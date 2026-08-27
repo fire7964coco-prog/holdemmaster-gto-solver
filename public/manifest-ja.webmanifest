@@ -4,7 +4,7 @@
   "description": "無料のGTOソルバーとトレーナー。学習スポット13種はオフラインでもすぐ見られます。",
   "lang": "ja",
   "dir": "ltr",
-  "start_url": "/?view=trainer",
+  "start_url": "/?view=trainer&lang=ja",
   "scope": "/",
   "id": "/",
   "display": "standalone",
@@ -40,7 +40,7 @@
       "name": "GTOトレーナー",
       "short_name": "トレーナー",
       "description": "実際のレンジから配られたハンドを解き、EVロスで採点します",
-      "url": "/?view=trainer",
+      "url": "/?view=trainer&lang=ja",
       "icons": [
         {
           "src": "/icons/icon-192.png",
@@ -52,7 +52,7 @@
       "name": "学習スポット13種",
       "short_name": "学習スポット",
       "description": "13スポットのGTO戦略を待たずに確認できます",
-      "url": "/?view=presets",
+      "url": "/?view=presets&lang=ja",
       "icons": [
         {
           "src": "/icons/icon-192.png",
