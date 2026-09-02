@@ -30,7 +30,7 @@
     -->
     <script>
       (function () {
-        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr"];
+        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id"];
         var l = null;
         try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
         if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale"); } catch (e) { l = null; } }
@@ -42,6 +42,7 @@
           else if (n.indexOf("pt") === 0) l = "pt";
           else if (n.indexOf("de") === 0) l = "de";
           else if (n.indexOf("fr") === 0) l = "fr";
+          else if (n.indexOf("id") === 0 || n.indexOf("in") === 0) l = "id"; // «in»은 인도네시아어 옛 코드
           else if (n.indexOf("zh") === 0) l = (/^zh-(tw|hk|mo)($|[-_])/.test(n) || n.indexOf("hant") >= 0) ? "zh-hant" : "zh";
           else l = "en";
         }

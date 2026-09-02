@@ -416,6 +416,23 @@ const M = {
     addedLines: "Lignes ajoutées :",
     removedLines: "Lignes retirées :",
   },
+  id: {
+    treeError: "Error: tree gagal dibuat (memuat tree yang rusak?)",
+    pot: "Pot",
+    stack: "Stack",
+    noActions: "(Tidak ada aksi)",
+    wins: "menang",
+    invalidTerminals: "Node terminal tidak valid:",
+    addBetAction: "Tambah aksi bet",
+    removeNode: "Hapus node terpilih",
+    betAmount: "Jumlah bet:",
+    // % 앞 공백 없음(인니 표기) — «% pot» 계열(trainer.ts·ResultNav)과 같은 형식
+    potRate: (pct: string) => `(${pct}% pot)`,
+    saveEdits: "Simpan perubahan",
+    cancelEdits: "Batalkan perubahan",
+    addedLines: "Line ditambahkan:",
+    removedLines: "Line dihapus:",
+  },
 } as const;
 
 export default defineComponent({

@@ -162,6 +162,21 @@ const M = {
       "Colle-les dans un post de la communauté et on s'en servira pour corriger le problème. Ils ne contiennent aucune information personnelle.",
     promptCopy: "Copie le texte ci-dessous",
   },
+  id: {
+    title: "Ada error yang tercatat",
+    // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백 주의
+    body1: "Jika ada yang terasa tidak beres, beri tahu kami. Detailnya tersimpan ",
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
+    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    bodyB1: "hanya di perangkat ini",
+    body2: " — membagikannya sepenuhnya keputusan Anda.",
+    copied: "Tersalin",
+    copyButton: "Salin detail error",
+    close: "Tutup",
+    copiedHint:
+      "Tempelkan ke postingan pertanyaan di komunitas, dan kami akan memakainya untuk memperbaiki masalahnya. Tidak ada informasi pribadi di dalamnya.",
+    promptCopy: "Salin teks di bawah ini",
+  },
 } as const;
 
 export default defineComponent({

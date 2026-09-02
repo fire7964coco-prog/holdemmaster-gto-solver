@@ -1167,6 +1167,112 @@ const M = {
       "+ nos propres ranges des Spots d'étude (collecte 08/2026)",
     phase2: "D'autres configurations et scénarios arriveront au fur et à mesure.",
   },
+  // 인도네시아어 — 문체는 Anda체(본체 브리프 확정). range·board·open·defend·call·fold·3-bet은
+  // 본체 id 코퍼스가 영어 그대로 쓴다(리서치 §2). 접두사+영어 동사는 하이픈(«di-3-bet» — 코퍼스 실사용).
+  // ⚠ 모드 라벨은 모바일 390px 폭 제약이 있다(preflop-verify) — fr보다 짧게 잡았다.
+  id: {
+    modeRfi: "Open (RFI)",
+    modeDefend: "vs open (defend)",
+    mode3bet: "vs 3-bet (setelah open)",
+    mode4bet: "vs 4-bet (setelah 3-bet)",
+    // 산문의 소수는 인니식 2,5bb — § 13 값 자체는 불변. % 앞 공백 없음
+    intro4bet:
+      "Cara merespons saat 3-bet Anda di-4-bet — merah = 5-bet (all-in), hijau = call, " +
+      "sisanya fold. Frekuensinya dihitung hanya dari hand yang memang Anda 3-bet, jadi hand yang tidak pernah Anda 3-bet dibiarkan kosong. Cash game 6-max, 100bb; BB 3-bet ke 11bb " +
+      "menghadapi 4-bet 24bb; SB 3-bet ke 10bb menghadapi 22bb.",
+    legend5bet: "5-bet (all-in)",
+    legendCond4bet: "Kosong = tidak pernah 3-bet sejak awal",
+    stat5bet: "% 5-bet",
+    statContinue4bet: "% lanjut (dari 3-bet)",
+    copy5bet: "Salin range 5-bet",
+    note4bet:
+      "Statistiknya adalah bagian dari range 3-bet Anda. Di 100bb, 5-bet praktis berarti " +
+      "all-in — value terpusat di AA·KK (sesekali call untuk menjebak), sedangkan QQ·AK " +
+      "mencampur 5-bet dan call. Call dibenarkan oleh kemampuan merealisasikan equity, bukan " +
+      "oleh pot odds: Anda bermain out of position dengan SPR rendah, jadi hanya pair dan " +
+      "hand suited terbaik yang lanjut — tetapi jangan fold semuanya: range 4-bet lawan juga " +
+      "berisi bluff seperti A5s-A4s.",
+    how4bet2:
+      "Jika merah + hijau tidak memenuhi kotak, sisanya di-fold. Kotak dua warna mencampur " +
+      "5-bet dan call. Hand di luar range 3-bet tidak pernah sampai ke spot ini, jadi tetap kosong.",
+    intro3bet:
+      "Cara merespons saat open Anda di-3-bet — merah = 4-bet, hijau = call, sisanya fold. " +
+      "Frekuensinya dihitung hanya dari hand yang memang Anda open, jadi hand yang tidak pernah Anda open dibiarkan kosong. Cash game 6-max, 100bb, open 2,5bb, 3-bet sekitar 10-11bb.",
+    legend4bet: "4-bet",
+    legendCond: "Kosong = tidak pernah open sejak awal",
+    stat4bet: "% 4-bet",
+    statContinue: "% lanjut (dari open)",
+    copy4bet: "Salin range 4-bet",
+    note3bet:
+      "Statistiknya adalah bagian dari range open Anda, bukan dari semua hand. Value 4-bet " +
+      "terpusat di QQ+/AK, ditambah beberapa bluff seperti A5s-A4s. Dengan posisi, range call " +
+      "tetap lebar: pair, broadway suited, dan connector.",
+    squeezeNote:
+      "Squeeze adalah 3-bet saat sudah ada yang open dan ada yang call (sekitar 11-12bb di sini). " +
+      "Adanya caller membuat total defend lebih ketat daripada heads-up dan mendorong 3-bet ke " +
+      "arah value. Overcall (call setelah pemain lain sudah call open) lebih cocok untuk hand " +
+      "suited dan connected yang bisa jadi nuts di pot multiway.",
+    how3bet2:
+      "Jika merah + hijau tidak memenuhi kotak, sisanya di-fold. Kotak dua warna mencampur " +
+      "4-bet dan call. Hand di luar range open tidak pernah sampai ke spot ini, jadi tetap kosong.",
+    intro:
+      "Range open per posisi (RFI) — hand mana yang di-raise saat semua orang sudah fold " +
+      "sebelum Anda? Asumsi: cash game 6-max, 100bb, open 2,5bb. " +
+      "Kotak yang terisi sebagian adalah open dengan frekuensi campuran.",
+    introDefend:
+      "Cara merespons saat ada yang open sebelum Anda — matchup yang paling umum. " +
+      "Merah = 3-bet, hijau = call, dan tinggi isian kotak (merah + hijau) adalah total frekuensi defend Anda. " +
+      "Cash game 6-max, 100bb, open 2,5bb (3bb untuk open dari SB).",
+    legendOpen: "Open (100%)",
+    legendMixed: "Frekuensi campuran (tinggi = % open)",
+    legendFold: "Fold",
+    legend3bet: "3-bet",
+    legendCall: "Call",
+    legendMixedDefend: "Tinggi = frekuensi (kotak dua warna = campuran)",
+    stat3bet: "% 3-bet",
+    statCall: "% call",
+    statTotal: "Total defend",
+    copy3bet: "Salin range 3-bet",
+    copyCall: "Salin range call",
+    sbNote:
+      "Di SB, menghadapi open dari BTN, pilihannya praktis 3-bet atau fold — Anda out of position " +
+      "dan BB masih belum bertindak, jadi call membuat Anda menanggung dua kerugian sekaligus.",
+    ipNote:
+      "Meski punya posisi, range open dari early position kuat, dan call berisiko kena squeeze " +
+      "dari blind yang belum bertindak. Karena itu defend in position adalah range sempit yang " +
+      "berpusat pada 3-bet, dengan call terbatas terutama pada pair dan hand suited terbaik.",
+    statPercent: "% open",
+    statCombos: "Combo di-open",
+    statHands: "Hand di-open",
+    statMixed: "Hand campuran",
+    // ⚠ EquityPage.rangeNote가 이 버튼 이름을 «글자까지» 그대로 인용한다
+    copy: "Salin teks range",
+    copied: "✓ Tersalin",
+    // «Range OOP / Range IP» = 사이드바 ①·②와 같은 글자
+    sendOop: "① Kirim ke Range OOP",
+    sendIp: "② Kirim ke Range IP",
+    howTitle: "Cara membaca chart ini",
+    how1: "Diagonal dari kiri atas ke kanan bawah adalah pair; di atas diagonal adalah suited; di bawahnya offsuit.",
+    how2: "Hand dengan frekuensi campuran (terisi sebagian) hanya di-open sebagian waktu — hand ini marginal, jadi kedua pilihan hanya kehilangan sedikit EV.",
+    how3: "Tombol [Kirim ke Range] memuat range ini ke editor Spot kustom — coba hitung sendiri permainan postflop-nya.",
+    howDefend2:
+      "Jika merah + hijau tidak memenuhi seluruh kotak, sisanya di-fold. Kotak dua warna mencampur 3-bet dan call dengan rasio tersebut.",
+    howDefend3:
+      "Tempel range yang disalin ke kolom range Spot kustom (① / ②) untuk menghitung sendiri permainan postflop dengan range defend ini.",
+    sourceTitle: "Bagaimana chart ini dibuat?",
+    sourceBody:
+      "Kami membandingkan hand demi hand beberapa sumber GTO yang tersedia untuk umum untuk membangun range konsensus, lalu menandai hand yang berbeda antarsumber sebagai " +
+      "frekuensi campuran. BTN dan SB juga dibandingkan dengan range hasil verifikasi solver " +
+      "dari Spot belajar di aplikasi ini.",
+    // 날짜도 언어다 — id는 MM/YYYY (브리프 §표기 DD/MM/YYYY와 같은 결)
+    sourceList:
+      "Sumber publik yang dibandingkan: nlh.poker · Preflop Wizard · HoldemPro · " +
+      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (frekuensi solved BB vs SB) · " +
+      "GTO Gecko · RiverOdds (acuan defend) · blog GTO Wizard · FreeBetRange " +
+      "(defend IP & prinsip squeeze) · 888poker · Run It Once (frekuensi vs 3-bet) " +
+      "+ range Spot belajar kami sendiri (dikumpulkan 08/2026)",
+    phase2: "Matchup dan skenario lain akan ditambahkan secara bertahap.",
+  },
 } as const;
 
 type ModeKey = "rfi" | "defend" | "vs3bet" | "vs4bet";

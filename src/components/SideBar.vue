@@ -369,6 +369,33 @@ const M = {
     betSizeSub: "Réglages",
     run: "Calculer",
   },
+  // id 라벨은 id-sidebar-premeasure.js로 4해상도 + 선택 상태 12뷰 실측 후 확정 (2026-09-02, 15뷰 전부 PASS).
+  // 도구명 Trainer·용어 Range·Board·Equity·Bet size는 본체 id 코퍼스가 영어 그대로 쓴다(리서치 §2).
+  id: {
+    exploreLabel: "Jelajahi",
+    exploreLabelSuffix: " & pelajari",
+    about: "Tentang",
+    guide: "Cara pakai",
+    presets: "Spot belajar",
+    // ⚠ 사용자 지시(2026-08-13): 유저에게 «미리 계산»을 언급하지 않는다 — «즉시»로만
+    presetsBadge: "Instan",
+    // Pelatih는 사람(코치)이 1차 의미 — 도구명은 영어 Trainer (리서치 §1-2)
+    trainer: "Trainer GTO",
+    trainerBadge: "Skor EV",
+    preflop: "Chart preflop",
+    preflopBadge: "Range",
+    equity: "Equity",
+    equityBadge: "% menang",
+    customLabel: "Spot kustom",
+    // 한 줄 유지용 — es·pt·de·fr과 같이 접미사를 비운다
+    customLabelSuffix: "",
+    oopRange: "Range OOP",
+    ipRange: "Range IP",
+    board: "Board",
+    betSize: "Bet size",
+    betSizeSub: "Pengaturan",
+    run: "Hitung",
+  },
 } as const;
 
 export default defineComponent({

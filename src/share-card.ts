@@ -119,6 +119,19 @@ const CARD_TEXT = {
       `Perte d'EV ${bb}bb${streak > 1 ? ` · série de ${streak} jours` : ""}`,
     invite: "Relève le même défi",
   },
+  id: {
+    // 도구명 Trainer는 인니 코퍼스가 영어로 쓴다 (리서치 §1-2) — brand.ts와 같은 표기
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "Satu tantangan per hari · sama untuk semua",
+    heading: "Tantangan GTO Harian",
+    board: "Board",
+    hand: "Hand saya",
+    result: (verdict: string) => `Hasil saya: ${verdict}`,
+    // ⚠ bb는 코드가 소문자로 찍는다(formatAmount). 화면 안 일관성을 택해 소문자 bb로 통일
+    evLine: (bb: string, streak: number) =>
+      `Kerugian EV ${bb}bb${streak > 1 ? ` · streak ${streak} hari` : ""}`,
+    invite: "Coba tantangan yang sama",
+  },
 } as const;
 
 export type DailyCardInput = {

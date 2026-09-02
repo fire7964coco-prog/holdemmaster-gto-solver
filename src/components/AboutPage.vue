@@ -562,6 +562,52 @@ const M = {
     creditMid2: ". Le code source modifié complet est publié sur",
     creditAfter: " sous la même licence.",
   },
+  // 인도네시아어 — Anda체(본체 브리프 확정). solver·range·board·Trainer는 본체 id 코퍼스가 영어 그대로 쓴다
+  // (리서치 §1·§2). 설치 문구는 «프로그램이 아니라 브라우저 바로가기» 골자를 그대로 옮겼다.
+  id: {
+    community: "Komunitas HoldemMaster",
+    heroTitle1: "Strategi GTO,",
+    heroTitle2: "langsung di browser Anda.",
+    heroSub1: "Tanpa instal, tanpa bayar. Masukkan range dan board,",
+    heroSub2: " lalu strategi optimalnya dihitung langsung di perangkat Anda.",
+    ctaPresets: "Lihat Spot belajar",
+    ctaTrainer: "Trainer GTO",
+    ctaDaily: "Tantangan Harian",
+    dailyDone: "Selesai",
+    ctaGuide: "Cara pakai",
+    ctaInstall: "Pasang ke layar utama",
+    installNote:
+      "Setelah dipasang, Spot belajar dan Trainer tersimpan di perangkat Anda, jadi latihan tetap berjalan meski offline. Ini pintasan browser, bukan program — tidak pernah meminta izin apa pun.",
+    installSafe: "Amankah?",
+    features: [
+      { title: "Gratis", desc: "Semua fitur, tanpa batas pemakaian" },
+      { title: "Belajar offline", desc: "Pasang ke layar utama dan berlatih tanpa koneksi internet" },
+      { title: "Perhitungan cepat", desc: "Multithread — secepat solver desktop" },
+      { title: "Trainer GTO", desc: "Mainkan spot dan dapatkan skor kerugian EV relatif terhadap pot" },
+    ],
+    stepsTitle: "Baru di sini?",
+    // 버튼 이름 인용은 PresetsPage.viewResults·SideBar와 «글자까지» 같아야 한다
+    steps: [
+      "Buka spot mana pun di Spot belajar lalu tekan [Lihat hasil] — solusinya langsung tampil",
+      "Baca Cara pakai untuk belajar membaca layar hasil",
+      "Coba Trainer GTO — Anda akan tahu persis berapa bb yang hilang di setiap keputusan",
+      "Setelah terbiasa, hitung hand Anda sendiri lewat Spot kustom (①–⑤)",
+    ],
+    // ⚠ 이 세 줄이 가리키는 본체 /id/solver는 없다 (2026-09-02 실측 404) —
+    //   AboutPage 템플릿의 v-if="landingUrl"이 통째로 숨긴다. 본체에 /id/solver가 생기면
+    //   outbound.ts LOCALE_PATHS.id에 "/solver" 한 줄만 더하면 살아난다
+    landingBefore:
+      "Ingin memahami dulu apa itu solver GTO dan cara membaca hasilnya? Lihat",
+    landingLink: "panduan solver HoldemMaster",
+    landingAfter: ".",
+    notes:
+      "Di iOS dan Safari, batasan browser memaksa perhitungan satu thread sehingga lebih lambat — di macOS kami sarankan Chrome. Memori yang tersedia dibatasi 4 GB (batas WebAssembly), jadi spot besar lebih nyaman dihitung di PC.",
+    creditBefore: "Aplikasi ini dibangun di atas",
+    creditMid1: " (karya Wataru Inariba, AGPL-3.0), dilokalkan dan diperluas oleh",
+    creditBrand: "HoldemMaster",
+    creditMid2: ". Kode sumber lengkap hasil modifikasi dipublikasikan di",
+    creditAfter: " dengan lisensi yang sama.",
+  },
 } as const;
 
 /* npokers 빌드에서 위 사전을 덮어쓰는 조각 — 트레이너·교육예제·오늘의문제 언급을 걷어내고
@@ -732,6 +778,25 @@ const N =
             "Commence par les charts préflop pour parcourir les ranges d'open et de défense",
             "Passe par Mode d'emploi pour apprendre à lire l'écran de résultats",
             "Une fois à l'aise, calcule tes propres mains avec Spot personnalisé (①–⑤)",
+          ],
+        },
+        // ⚠ 트레이너 어휘 금지(Trainer·Pelatih·latihan·berlatih·Spot belajar·Tantangan) — npokers-verify FORBIDDEN id
+        id: {
+          community: "npokers.com",
+          ctaPreflop: "Chart preflop",
+          ctaEquity: "Kalkulator equity",
+          installNote:
+            "Setelah dipasang, aplikasi tersimpan di perangkat Anda dan tetap bisa dibuka saat offline. Ini pintasan browser, bukan program — tidak pernah meminta izin apa pun.",
+          features: [
+            { title: "Gratis", desc: "Semua fitur, tanpa batas pemakaian" },
+            { title: "Offline", desc: "Pasang ke layar utama dan pakai tanpa koneksi internet" },
+            { title: "Perhitungan cepat", desc: "Multithread — secepat solver desktop" },
+            { title: "Chart & equity", desc: "Range open dan defend, plus equity hand dan range" },
+          ],
+          steps: [
+            "Mulai dari Chart preflop untuk melihat range open dan defend",
+            "Baca Cara pakai untuk belajar membaca layar hasil",
+            "Setelah terbiasa, hitung hand Anda sendiri lewat Spot kustom (①–⑤)",
           ],
         },
       }

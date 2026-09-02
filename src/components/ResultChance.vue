@@ -214,6 +214,13 @@ const M = {
     // 액션명은 영어 유지 — trainer.ts actionName과 같은 결정 (리서치 §3)
     action: (name: string): string => name,
   },
+  id: {
+    strategyCombos: "Strategi (combo)",
+    strategy: "Strategi",
+    equity: "Equity",
+    // 액션명은 영어 유지 — 인니 코퍼스 check/call/raise/fold 영어
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

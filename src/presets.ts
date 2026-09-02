@@ -13,6 +13,7 @@ export type Preset = {
   categoryZh: string;
   categoryZhHant: string;
   categoryFr: string;
+  categoryId: string;
   title: string;
   titleEn: string;
   titleJa: string;
@@ -22,6 +23,7 @@ export type Preset = {
   titleZh: string;
   titleZhHant: string;
   titleFr: string;
+  titleId: string;
   board: string; // 예: "Ah 7d 2c"
   lesson: string; // 이 스팟에서 배우는 것
   lessonEn: string;
@@ -32,6 +34,7 @@ export type Preset = {
   lessonZh: string;
   lessonZhHant: string;
   lessonFr: string;
+  lessonId: string;
   oopLabel: string;
   oopLabelEn: string;
   oopLabelJa: string;
@@ -41,6 +44,7 @@ export type Preset = {
   oopLabelZh: string;
   oopLabelZhHant: string;
   oopLabelFr: string;
+  oopLabelId: string;
   ipLabel: string;
   ipLabelEn: string;
   ipLabelJa: string;
@@ -50,6 +54,7 @@ export type Preset = {
   ipLabelZh: string;
   ipLabelZhHant: string;
   ipLabelFr: string;
+  ipLabelId: string;
   oopRange: string;
   ipRange: string;
   startingPot: number;
@@ -63,7 +68,7 @@ export type Preset = {
 
 /* 현재 언어에 맞는 프리셋 문구 — 화면에서는 preset.title 대신 이걸 쓸 것 */
 export const presetTitleOf = (
-  preset: Pick<Preset, "title" | "titleEn" | "titleJa" | "titleEs" | "titlePt" | "titleDe" | "titleZh" | "titleZhHant" | "titleFr">
+  preset: Pick<Preset, "title" | "titleEn" | "titleJa" | "titleEs" | "titlePt" | "titleDe" | "titleZh" | "titleZhHant" | "titleFr" | "titleId">
 ) =>
   i18n.locale === "ko"
     ? preset.title
@@ -81,9 +86,11 @@ export const presetTitleOf = (
     ? preset.titleZhHant
     : i18n.locale === "fr"
     ? preset.titleFr
+    : i18n.locale === "id"
+    ? preset.titleId
     : preset.titleEn;
 export const presetLessonOf = (
-  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr">
+  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId">
 ) =>
   i18n.locale === "ko"
     ? preset.lesson
@@ -101,9 +108,11 @@ export const presetLessonOf = (
     ? preset.lessonZhHant
     : i18n.locale === "fr"
     ? preset.lessonFr
+    : i18n.locale === "id"
+    ? preset.lessonId
     : preset.lessonEn;
 export const presetCategoryOf = (
-  preset: Pick<Preset, "category" | "categoryEn" | "categoryJa" | "categoryEs" | "categoryPt" | "categoryDe" | "categoryZh" | "categoryZhHant" | "categoryFr">
+  preset: Pick<Preset, "category" | "categoryEn" | "categoryJa" | "categoryEs" | "categoryPt" | "categoryDe" | "categoryZh" | "categoryZhHant" | "categoryFr" | "categoryId">
 ) =>
   i18n.locale === "ko"
     ? preset.category
@@ -121,9 +130,11 @@ export const presetCategoryOf = (
     ? preset.categoryZhHant
     : i18n.locale === "fr"
     ? preset.categoryFr
+    : i18n.locale === "id"
+    ? preset.categoryId
     : preset.categoryEn;
 export const oopLabelOf = (
-  preset: Pick<Preset, "oopLabel" | "oopLabelEn" | "oopLabelJa" | "oopLabelEs" | "oopLabelPt" | "oopLabelDe" | "oopLabelZh" | "oopLabelZhHant" | "oopLabelFr">
+  preset: Pick<Preset, "oopLabel" | "oopLabelEn" | "oopLabelJa" | "oopLabelEs" | "oopLabelPt" | "oopLabelDe" | "oopLabelZh" | "oopLabelZhHant" | "oopLabelFr" | "oopLabelId">
 ) =>
   i18n.locale === "ko"
     ? preset.oopLabel
@@ -141,9 +152,11 @@ export const oopLabelOf = (
     ? preset.oopLabelZhHant
     : i18n.locale === "fr"
     ? preset.oopLabelFr
+    : i18n.locale === "id"
+    ? preset.oopLabelId
     : preset.oopLabelEn;
 export const ipLabelOf = (
-  preset: Pick<Preset, "ipLabel" | "ipLabelEn" | "ipLabelJa" | "ipLabelEs" | "ipLabelPt" | "ipLabelDe" | "ipLabelZh" | "ipLabelZhHant" | "ipLabelFr">
+  preset: Pick<Preset, "ipLabel" | "ipLabelEn" | "ipLabelJa" | "ipLabelEs" | "ipLabelPt" | "ipLabelDe" | "ipLabelZh" | "ipLabelZhHant" | "ipLabelFr" | "ipLabelId">
 ) =>
   i18n.locale === "ko"
     ? preset.ipLabel
@@ -161,6 +174,8 @@ export const ipLabelOf = (
     ? preset.ipLabelZhHant
     : i18n.locale === "fr"
     ? preset.ipLabelFr
+    : i18n.locale === "id"
+    ? preset.ipLabelId
     : preset.ipLabelEn;
 /** id로 제목 찾기 (트레이너 등 id만 있는 곳용) */
 export const presetTitleById = (id: string) => {
@@ -206,6 +221,7 @@ const SRP = {
   categoryZh: "单加注底池——BTN vs BB（基础）",
   categoryZhHant: "單加注底池——BTN vs BB（基礎）",
   categoryFr: "Single Raised Pot — BTN vs BB (fondamentaux)",
+  categoryId: "Single Raised Pot — BTN vs BB (dasar)",
   oopLabel: "BB (콜러)",
   oopLabelEn: "BB (Caller)",
   oopLabelJa: "BB（コーラー）",
@@ -215,6 +231,7 @@ const SRP = {
   oopLabelZh: "BB 跟注方",
   oopLabelZhHant: "BB 跟注方",
   oopLabelFr: "BB (caller)",
+  oopLabelId: "BB (caller)",
   ipLabel: "BTN (오픈레이저)",
   ipLabelEn: "BTN (Opener)",
   ipLabelJa: "BTN（オープンレイザー）",
@@ -224,6 +241,7 @@ const SRP = {
   ipLabelZh: "BTN 开池方",
   ipLabelZhHant: "BTN 開池方",
   ipLabelFr: "BTN (ouvreur)",
+  ipLabelId: "BTN (opener)",
   oopRange: BB_DEFEND,
   ipRange: BTN_OPEN,
   startingPot: 55,
@@ -244,6 +262,7 @@ const TBP = {
   categoryZh: "3bet 底池——BB 3bet、BTN 跟注（低 SPR）",
   categoryZhHant: "3bet 底池——BB 3bet、BTN 跟注（低 SPR）",
   categoryFr: "Pot 3-bet — BB 3-bet, BTN paye (SPR bas)",
+  categoryId: "Pot 3-bet — BB 3-bet, BTN call (SPR rendah)",
   oopLabel: "BB (3벳터)",
   oopLabelEn: "BB (3-Bettor)",
   oopLabelJa: "BB（3ベッター）",
@@ -253,6 +272,7 @@ const TBP = {
   oopLabelZh: "BB 3bet 方",
   oopLabelZhHant: "BB 3bet 方",
   oopLabelFr: "BB (3-betteur)",
+  oopLabelId: "BB (3-bettor)",
   ipLabel: "BTN (콜러)",
   ipLabelEn: "BTN (Caller)",
   ipLabelJa: "BTN（コーラー）",
@@ -262,6 +282,7 @@ const TBP = {
   ipLabelZh: "BTN 跟注方",
   ipLabelZhHant: "BTN 跟注方",
   ipLabelFr: "BTN (caller)",
+  ipLabelId: "BTN (caller)",
   oopRange: BB_3BET,
   ipRange: BTN_CALL_3BET,
   startingPot: 225,
@@ -282,6 +303,7 @@ const SBBB = {
   categoryZh: "盲位对战——SB vs BB（宽范围）",
   categoryZhHant: "盲位對戰——SB vs BB（寬範圍）",
   categoryFr: "Blind vs Blind — SB vs BB (ranges larges)",
+  categoryId: "Blind vs Blind — SB vs BB (range lebar)",
   oopLabel: "SB (오픈레이저)",
   oopLabelEn: "SB (Opener)",
   oopLabelJa: "SB（オープンレイザー）",
@@ -291,6 +313,7 @@ const SBBB = {
   oopLabelZh: "SB 开池方",
   oopLabelZhHant: "SB 開池方",
   oopLabelFr: "SB (ouvreur)",
+  oopLabelId: "SB (opener)",
   ipLabel: "BB (콜러)",
   ipLabelEn: "BB (Caller)",
   ipLabelJa: "BB（コーラー）",
@@ -300,6 +323,7 @@ const SBBB = {
   ipLabelZh: "BB 跟注方",
   ipLabelZhHant: "BB 跟注方",
   ipLabelFr: "BB (caller)",
+  ipLabelId: "BB (caller)",
   oopRange: SB_OPEN,
   ipRange: BB_VS_SB,
   startingPot: 60,
@@ -340,6 +364,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board sec A-high",
     lessonFr:
       "Le cas d'école de l'avantage de range. Regarde avec quelle range large BTN mise un petit c-bet après le check de BB — l'as tape en plein dans la range de l'ouvreur.",
+    titleId: "Board kering A-high",
+    lessonId:
+      "Contoh klasik range advantage. Perhatikan seberapa lebar range yang dipakai BTN untuk c-bet kecil setelah BB check — kartu As menghantam range opener dengan telak.",
   },
   {
     ...SRP,
@@ -370,6 +397,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board sec K-high",
     lessonFr:
       "Compare avec le board A-high. Le board K-high favorise aussi BTN, mais les checks augmentent un peu. Tu sais pourquoi ?",
+    titleId: "Board kering K-high",
+    lessonId:
+      "Bandingkan dengan board A-high. Board K-high masih menguntungkan BTN, tetapi check-nya sedikit lebih sering. Tahu kenapa?",
   },
   {
     ...SRP,
@@ -400,6 +430,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Broadway connecté, bicolore",
     lessonFr:
       "Un board qui semble toucher les deux ranges. Pourtant c'est ici que BB réalise le moins bien son equity des 13 spots — 77,9 % réalisés contre 119,4 % pour BTN — et il check à 99,9 %. Le panneau « Mains / Tirages » montre pourquoi.",
+    titleId: "Board Broadway terhubung, two-tone",
+    lessonId:
+      "Board yang tampak mengenai kedua range. Namun justru di sini BB merealisasikan equity paling rendah dari 13 spot — 77,9% berbanding 119,4% milik BTN — dan check 99,9%. Panel kategori hand menunjukkan alasannya.",
   },
   {
     ...SRP,
@@ -430,6 +463,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board médian connecté, bicolore",
     lessonFr:
       "La texture classique qui favorise le caller. La fréquence de c-bet de BTN s'effondre — ce spot montre exactement pourquoi « toujours c-bet » est une erreur.",
+    titleId: "Board tengah terhubung, two-tone",
+    lessonId:
+      "Tekstur klasik yang menguntungkan caller. Frekuensi c-bet BTN anjlok — spot ini menunjukkan persis kenapa “selalu c-bet” itu keliru.",
   },
   {
     ...SRP,
@@ -460,6 +496,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board monochrome",
     lessonFr:
       "Regarde pourquoi les grosses mises se raréfient au profit des petites mises et des checks. Remarque à quelle fréquence même une couleur faite se contente de checker.",
+    titleId: "Board monotone (satu suit)",
+    lessonId:
+      "Perhatikan kenapa bet besar menghilang dan digantikan bet kecil serta check. Lihat seberapa sering flush yang sudah jadi pun hanya check.",
   },
   {
     ...SRP,
@@ -490,6 +529,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board pairé",
     lessonFr:
       "Personne ne touche ce board, donc la part de bluffs augmente. Utilise le tableau détaillé pour trouver quelles mains misent en bluff.",
+    titleId: "Board paired",
+    lessonId:
+      "Tidak ada yang mengenai board ini, jadi porsi bluff naik. Gunakan tabel detail untuk menemukan hand mana yang bet sebagai bluff.",
   },
   {
     ...SRP,
@@ -523,6 +565,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board bas rainbow",
     lessonFr:
       "Une guerre d'overcards — BB check-raise souvent sur cette texture. Suis la barre d'actions du haut après une mise pour voir les réponses.",
+    titleId: "Board rendah rainbow",
+    lessonId:
+      "Perang overcard — BB sering check-raise di tekstur ini. Ikuti bilah aksi di atas setelah bet untuk melihat responsnya.",
   },
   {
     ...TBP,
@@ -553,6 +598,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board A-high, avantage du 3-betteur",
     lessonFr:
       "Le meilleur flop possible pour le 3-betteur, dont la range est remplie d'AK, d'AA et de KK. À SPR bas, les petites mises mettent la pression sur toute la range.",
+    titleId: "Board A-high, keunggulan 3-bettor",
+    lessonId:
+      "Flop terbaik untuk 3-bettor, yang range-nya penuh AK, AA, dan KK. Di SPR rendah, bet kecil menekan seluruh range.",
   },
   {
     ...TBP,
@@ -590,6 +638,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board dynamique bicolore",
     lessonFr:
       "Un pot 3-bet sur un board qui convient aussi au caller — et pourtant le 3-betteur ne ralentit pas : 98,4 % de la range mise aux deux tiers du pot, toujours au même sizing. Regarde quelles mains composent les 0,8 % qui checkent.",
+    titleId: "Board dinamis two-tone",
+    lessonId:
+      "Pot 3-bet di board yang juga cocok untuk caller — tetapi 3-bettor tidak mengendur: 98,4% range-nya bet dengan ukuran dua pertiga pot yang sama. Lihat hand mana saja yang membentuk 0,8% yang check.",
   },
   {
     ...TBP,
@@ -620,6 +671,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board bas et sec",
     lessonFr:
       "Un board qui rate presque toute la range du 3-betteur — et pourtant les overpairs et les mains hauteur As maintiennent la pression. Equity contre fold equity.",
+    titleId: "Board rendah kering",
+    lessonId:
+      "Board yang hampir sepenuhnya meleset dari range 3-bettor — tetapi overpair dan hand A-high tetap menekan. Equity vs fold equity.",
   },
   {
     ...SBBB,
@@ -654,6 +708,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board K-high avec un T",
     lessonFr:
       "En blind vs blind, les ranges sont larges, donc les deux joueurs arrivent faibles au flop. Compare les fréquences avec le spot « Board sec K-high » de BTN vs BB.",
+    titleId: "Board K-high dengan T",
+    lessonId:
+      "Di blind vs blind, range-nya lebar, jadi kedua range sama-sama lemah. Bandingkan frekuensinya dengan spot Board kering K-high di BTN vs BB.",
   },
   {
     ...SBBB,
@@ -685,6 +742,9 @@ export const PRESETS: Preset[] = [
     titleFr: "Board bas connecté, bicolore",
     lessonFr:
       "Deux ranges larges se percutent sur un board ultra-connecté : doubles paires, quintes et tirages partout. C'est ici que le panneau « Mains / Tirages » est le plus parlant.",
+    titleId: "Board rendah terhubung, two-tone",
+    lessonId:
+      "Dua range lebar bertabrakan di board yang sangat terhubung: two pair, straight, dan draw ada di mana-mana. Panel kategori hand paling bersinar di sini.",
   },
   {
     ...SBBB,
@@ -720,5 +780,8 @@ export const PRESETS: Preset[] = [
     titleFr: "Board avec deux As",
     lessonFr:
       "Deux as sur le board. Les brelans ne sont pas rares — SB en a simplement plus (88 combos contre 66 pour BB), donc SB mise à 80,1 %. Toute la question sur ce board : qui a le plus d'as dans sa range.",
+    titleId: "Board dengan dua As",
+    lessonId:
+      "Dua As di board. Trips tidak langka — SB sekadar punya lebih banyak (88 combo berbanding 66 milik BB), jadi SB bet 80,1%. Siapa yang memegang lebih banyak As, itulah inti board ini.",
   },
 ];

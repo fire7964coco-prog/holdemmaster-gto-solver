@@ -257,6 +257,24 @@ const M = {
     footnote:
       "Les ranges sont des approximations du jeu en ligne standard à 100bb. Charge un spot, modifie les ranges et compare — une excellente façon d'étudier.",
   },
+  id: {
+    // 이 넷은 «[버튼1] 글1 [버튼2] 글2» 순서로 한 문장을 이룬다 — 앞뒤 공백에 주의.
+    // 버튼 이름은 아래 viewResults·solveYourself와 «글자까지» 같아야 한다
+    infoBtn1: "[⚡ Lihat hasil]",
+    infoText1: " langsung menampilkan strategi spot itu. Gunakan ",
+    infoBtn2: "[Hitung sendiri]",
+    infoText2:
+      " hanya jika Anda ingin mengubah range atau menjelajah turn dan river.",
+    pot: "Pot",
+    stack: "Stack",
+    // ⚠ 해설 링크는 지금 한국어에서만 뜬다 (/id/blog/a-high-board-cbet — 2026-09-02 실측 404)
+    articleLink: "Baca artikel",
+    viewResults: "Lihat hasil",
+    solveYourself: "Hitung sendiri",
+    // 「100bb」는 앱이 코드로 찍는 단위 표기(formatAmount)와 맞춘 것 — «화면 안 일관성» 우선
+    footnote:
+      "Range ini adalah perkiraan permainan online standar 100bb. Muat satu spot, ubah range-nya, lalu bandingkan — cara belajar yang sangat bagus.",
+  },
 } as const;
 
 export default defineComponent({

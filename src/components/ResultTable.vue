@@ -740,6 +740,33 @@ const M = {
     // 액션명은 영어 유지 — trainer.ts actionName과 같은 결정 (리서치 §3)
     action: (name: string): string => name,
   },
+  id: {
+    summary: "Ringkasan",
+    barWidth: "Lebar batang:",
+    // «Ternormalisasi»(14자)는 토글 폭을 넘긴다 — 명사형 Normalisasi로
+    normalized: "Normalisasi",
+    absolute: "Absolut",
+    full: "Penuh",
+    display: "Tampilan:",
+    actionPct: "% aksi",
+    actionEv: "EV aksi",
+    // ⚠ CSV 자체는 언어와 무관하게 영어식 숫자(소수점 «.»)로 나간다 — id에서도 그대로다
+    exportCsv: "Ekspor ringkasan ke file CSV",
+    all: "Semua",
+    hand: "Hand",
+    strategy: "Strategi",
+    weightBar: "Bobot (batang)",
+    weight: "Bobot",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combo (batang)",
+    combos: "Combo",
+    noReport: (chanceType: string) =>
+      `Laporan ${chanceType === "turn" ? "turn" : "river"} tidak tersedia`,
+    noResults: "Tidak ada hasil",
+    // 액션명은 영어 유지 — 인니 코퍼스 check/call/raise/fold 영어 (인니어화_리서치 §2)
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

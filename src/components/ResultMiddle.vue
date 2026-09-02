@@ -427,6 +427,31 @@ const M = {
     strategyCombos: "Stratégie (combos)",
     equity: "Equity",
   },
+  id: {
+    modeLabels: {
+      basics: "Dasar",
+      graphs: "Grafik",
+      compare: "Bandingkan",
+      turn: "Turn",
+      river: "River",
+    } as Record<string, string>,
+    player: "Pemain:",
+    auto: (player: string) => `Otomatis (${player})`,
+    barHeight: "Tinggi batang:",
+    normalized: "Normalisasi",
+    absolute: "Absolut",
+    full: "Penuh",
+    // 무늬 = suit (브리프 «jenis (suit)») — 족보 Flush와 겹치지 않아 그대로 쓴다
+    suit: "Suit (♠♥♦♣):",
+    grouped: "Digabung",
+    individual: "Terpisah",
+    display: "Tampilan:",
+    strategy: "Strategi",
+    weight: "Bobot",
+    chart: "Grafik:",
+    strategyCombos: "Strategi (combo)",
+    equity: "Equity",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

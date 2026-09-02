@@ -138,12 +138,13 @@ export const recordDaily = (lossBb: number) => {
  *  - 독일어: TT.MM.JJJJ (26.08.2026을 «2026년 8월 26일»로 읽는 것을 막는다)
  *  - 중국어(간체·번체): YYYY-MM-DD (본체의 zh/zh-hant 포스팅이 전부 ISO다)
  *  - 프랑스어: JJ/MM/AAAA (브리프 §표기 — 착수지시서도 DD/MM/YYYY로 못박았다)
+ *  - 인도네시아어: DD/MM/YYYY (인니 표준 — 리서치 §1-4)
  *  - 나머지: YYYY.MM.DD
  */
 export const dailyCardDate = () => {
   const key = todayKey();
   if (i18n.locale === "de") return key.split("-").reverse().join(".");
-  if (i18n.locale === "fr") return key.split("-").reverse().join("/");
+  if (i18n.locale === "fr" || i18n.locale === "id") return key.split("-").reverse().join("/");
   if (i18n.locale === "zh" || i18n.locale === "zh-hant") return key;
   return key.replace(/-/g, ".");
 };
@@ -251,6 +252,23 @@ export const dailyShareText = (verdict: string) => {
       "",
       "Relève le même défi → https://solver.holdemmaster.com/?view=trainer&lang=fr",
       "(HoldemMaster GTO Solver · un défi par jour)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "id") {
+    // ⚠ 인니 날짜는 DD/MM/YYYY — 공용 «26.08.24»(yy.mm.dd)는 인니 독자에게 모호하다.
+    //   소수점은 «,»(localizeNumber가 바꾼다). % 앞 공백은 없다(fr과 다르다 — 리서치 §1-4).
+    const idDate = todayKey().split("-").reverse().join("/");
+    return [
+      `[Tantangan GTO Harian · ${idDate}]`,
+      `Hasil saya: ${verdict} (kerugian EV ${localizeNumber(
+        dailyState.lossBb.toFixed(3)
+      )}bb)`,
+      dailyState.streak > 1 ? `Streak ${dailyState.streak} hari` : "",
+      "",
+      "Coba tantangan yang sama → https://solver.holdemmaster.com/?view=trainer&lang=id",
+      "(HoldemMaster GTO Solver · satu tantangan per hari)",
     ]
       .filter(Boolean)
       .join("\n");

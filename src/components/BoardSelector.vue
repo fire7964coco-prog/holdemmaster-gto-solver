@@ -135,6 +135,14 @@ const M = {
     warnBody: (n: number) =>
       `L'arbre édité suppose un board de ${n} carte${n === 1 ? "" : "s"}.`,
   },
+  id: {
+    placeholder: "mis. AsKd7c",
+    clear: "Bersihkan",
+    randomFlop: "Flop acak",
+    warnLabel: "Peringatan:",
+    // 인니어는 명사에 복수 변화가 없다 — ko·ja·zh와 같이 ${n}만 갈아끼운다
+    warnBody: (n: number) => `Tree yang diedit mengasumsikan board ${n} kartu.`,
+  },
 } as const;
 
 export default defineComponent({

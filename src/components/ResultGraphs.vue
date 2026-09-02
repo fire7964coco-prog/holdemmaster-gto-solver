@@ -140,6 +140,10 @@ const M = {
     noGraph: "Graphique indisponible",
     equity: "Equity",
   },
+  id: {
+    noGraph: "Grafik tidak tersedia",
+    equity: "Equity",
+  },
 } as const;
 
 export default defineComponent({

@@ -230,6 +230,12 @@ const M = {
     finalizing: "Finalisation…",
     paused: "Solver en pause.",
   },
+  id: {
+    notRun: "Solver belum dijalankan.",
+    running: "Menghitung…",
+    finalizing: "Menyelesaikan…",
+    paused: "Solver dijeda.",
+  },
 } as const;
 
 export default defineComponent({

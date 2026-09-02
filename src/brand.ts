@@ -29,6 +29,7 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       zh: "npokers",
       "zh-hant": "npokers",
       fr: "npokers",
+      id: "npokers",
     }
   : {
       /* 간판 교체 (2026-08-24, 트랙 B — 작업계획.md 가드레일 G3):
@@ -47,4 +48,6 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       "zh-hant": "HoldemMaster GTO 訓練器",
       // fr도 라틴계 통일 표기 — 프랑스 코퍼스가 도구명 Trainer를 번역하지 않는다(리서치 §1-2)
       fr: "HoldemMaster GTO Trainer",
+      // id도 라틴계 통일 — 인니 코퍼스가 도구명(solver·trainer)을 번역하지 않는다(리서치 §1-2)
+      id: "HoldemMaster GTO Trainer",
     };

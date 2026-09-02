@@ -744,6 +744,58 @@ const M = {
       `Exploitabilité : ${value} (${percent})`,
     timeLine: (seconds: string) => `Temps écoulé : ${seconds}s`,
   },
+  // 인도네시아어 — 용어는 본체 id 코퍼스대로 영어(solver·thread·pot·stack·exploitability). Anda체.
+  // 산문 소수는 인니식 쉼표(3,9) · 단위는 GB/MB 그대로(인니 OS 표준 — fr Go/Mo 분기 불필요) · % 앞 공백 없음
+  id: {
+    // 버튼 이름은 아래 buildTree·runSolver와 «글자까지» 같아야 한다
+    sharedSpotBanner:
+      "Spot yang dibagikan sudah dimuat — tekan [Buat Tree] → [Jalankan Solver] untuk mulai menghitung.",
+    numThreadsLabel: "Jumlah thread:",
+    buildTree: "Buat Tree",
+    copied: "Tersalin!",
+    shareSpot: "🔗 Bagikan Spot",
+    statusLabel: "Status:",
+    statusNotLoaded: "Modul belum dimuat",
+    statusBuilding: "Membuat tree…",
+    statusError: (message: string) => `Error: ${message}`,
+    statusBuilt: (threads: number) => `Tree selesai dibuat (${threads} thread)`,
+    precisionMode: "Mode presisi:",
+    precisionTipIntro:
+      "Mode presisi terutama memengaruhi pemakaian memori. Ada juga beberapa perbedaan kecil lainnya.",
+    precisionTipFp:
+      "Floating point 32-bit (FP): disarankan selama pemakaian memori masih di bawah batas (3,9 GB). Sekitar 7 digit signifikan dan performa lebih baik.",
+    precisionTipInt:
+      "Integer 16-bit: alternatif saat mode FP 32-bit melebihi batas memori. Sekitar 4 digit signifikan, jadi tidak cocok untuk target exploitability di bawah 0,1%, dan performanya di bawah FP 32-bit.",
+    fp32Label: "FP 32-bit:",
+    int16Label: "Integer 16-bit:",
+    ramNeeded: (size: string) => `butuh RAM ${size}`,
+    limitExceeded: "(melebihi batas)",
+    ramLimit: "Batas RAM: 3,9 GB (= batas Wasm 4 GB − margin 0,1 GB)",
+    targetLabel: "Target exploitability:",
+    exploitTipIntro:
+      "Menentukan seberapa jauh hasil boleh menyimpang dari ekuilibrium Nash. Nilai yang lebih kecil memberi hasil lebih akurat, tetapi perhitungannya lebih lama.",
+    exploitTipDetailLabel: "Detail:",
+    exploitTipDetail:
+      "Dalam ekuilibrium Nash, strategi kedua pemain adalah MES (Maximally Exploitative Strategy) terhadap satu sama lain. Dari sifat ini, jarak antara strategi yang diperoleh dan ekuilibrium Nash didefinisikan sebagai berikut:",
+    exploitTipFormula: "Jarak = (EV MES lawan) − (EV aktual lawan)",
+    exploitTipOutro:
+      "Jarak ini tidak pernah negatif dan bernilai nol hanya jika strategi yang diperoleh merupakan bagian dari ekuilibrium Nash. Exploitability didefinisikan sebagai rata-rata jarak kedua pemain.",
+    maxIterationsLabel: "Iterasi maks:",
+    runSolver: "Jalankan Solver",
+    stop: "Hentikan",
+    pause: "Jeda",
+    resume: "Lanjutkan",
+    solving: "Menghitung…",
+    finalizing: "Menyelesaikan…",
+    pausedStatus: "Dijeda.",
+    finished: "Perhitungan selesai!",
+    allocatingMemory: "Mengalokasikan memori…",
+    iterations: (count: number) => `Iterasi: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    // 초 단위 약어는 인니 표준 «dtk» (s는 SI 표기라 화면에선 낯설다)
+    timeLine: (seconds: string) => `Waktu berjalan: ${seconds} dtk`,
+  },
 } as const;
 
 const maxMemoryUsage = 3.9 * 1024 * 1024 * 1024; // 3.9 GB
@@ -763,7 +815,7 @@ const checkConfig = (
       "Das Board braucht mindestens 3 Karten"
     ,
       "公共牌至少需要 3 张", "公共牌至少需要 3 張",
-      "Le board doit contenir au moins 3 cartes");
+      "Le board doit contenir au moins 3 cartes", "Board harus berisi minimal 3 kartu");
   }
 
   if (config.startingPot <= 0) {
@@ -776,7 +828,7 @@ const checkConfig = (
       "Der Start-Pot muss größer als 0 sein"
     ,
       "起始底池必须大于 0", "起始底池必須大於 0",
-      "Le pot initial doit être positif");
+      "Le pot initial doit être positif", "Pot awal harus lebih dari 0");
   }
 
   if (config.startingPot > MAX_AMOUNT) {
@@ -789,11 +841,11 @@ const checkConfig = (
       `Der Start-Pot darf höchstens ${MAX_AMOUNT} sein`
     ,
       `起始底池不能超过 ${MAX_AMOUNT}`, `起始底池不能超過 ${MAX_AMOUNT}`,
-      `Le pot initial ne doit pas dépasser ${MAX_AMOUNT}`);
+      `Le pot initial ne doit pas dépasser ${MAX_AMOUNT}`, `Pot awal tidak boleh melebihi ${MAX_AMOUNT}`);
   }
 
   if (config.startingPot % 1 !== 0) {
-    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier");
+    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier", "Pot awal harus bilangan bulat");
   }
 
   if (config.effectiveStack <= 0) {
@@ -806,7 +858,7 @@ const checkConfig = (
       "Der effektive Stack muss größer als 0 sein"
     ,
       "有效筹码必须大于 0", "有效籌碼必須大於 0",
-      "Le stack effectif doit être positif");
+      "Le stack effectif doit être positif", "Stack efektif harus lebih dari 0");
   }
 
   if (config.effectiveStack > MAX_AMOUNT) {
@@ -819,7 +871,7 @@ const checkConfig = (
       `Der effektive Stack darf höchstens ${MAX_AMOUNT} sein`
     ,
       `有效筹码不能超过 ${MAX_AMOUNT}`, `有效籌碼不能超過 ${MAX_AMOUNT}`,
-      `Le stack effectif ne doit pas dépasser ${MAX_AMOUNT}`);
+      `Le stack effectif ne doit pas dépasser ${MAX_AMOUNT}`, `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`);
   }
 
   if (config.effectiveStack % 1 !== 0) {
@@ -832,57 +884,57 @@ const checkConfig = (
       "Der effektive Stack muss eine ganze Zahl sein"
     ,
       "有效筹码必须是整数", "有效籌碼必須是整數",
-      "Le stack effectif doit être un nombre entier");
+      "Le stack effectif doit être un nombre entier", "Stack efektif harus bilangan bulat");
   }
 
   const betConfig = [
     {
       s: config.oopFlopBetSanitized,
-      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP"),
+      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP"),
     },
     {
       s: config.oopFlopRaiseSanitized,
-      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP"),
+      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP"),
     },
     {
       s: config.oopTurnBetSanitized,
-      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP"),
+      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP"),
     },
     {
       s: config.oopTurnRaiseSanitized,
-      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP"),
+      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP"),
     },
     {
       s: config.oopRiverBetSanitized,
-      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP"),
+      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP"),
     },
     {
       s: config.oopRiverRaiseSanitized,
-      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP"),
+      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP"),
     },
     {
       s: config.ipFlopBetSanitized,
-      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP"),
+      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP"),
     },
     {
       s: config.ipFlopRaiseSanitized,
-      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP"),
+      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP"),
     },
     {
       s: config.ipTurnBetSanitized,
-      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP"),
+      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP"),
     },
     {
       s: config.ipTurnRaiseSanitized,
-      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP"),
+      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP"),
     },
     {
       s: config.ipRiverBetSanitized,
-      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP"),
+      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP"),
     },
     {
       s: config.ipRiverRaiseSanitized,
-      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP"),
+      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP"),
     },
   ];
 
@@ -894,12 +946,12 @@ const checkConfig = (
 
   if (config.donkOption) {
     if (!config.oopTurnDonkSanitized.valid) {
-      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP")}: ${
+      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP")}: ${
         config.oopTurnDonkSanitized.s
       }`;
     }
     if (!config.oopRiverDonkSanitized.valid) {
-      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP")}: ${
+      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP")}: ${
         config.oopRiverDonkSanitized.s
       }`;
     }
@@ -915,7 +967,7 @@ const checkConfig = (
       "Ungültige Schwelle für zusätzliches All-in"
     ,
       "追加全下的阈值不正确", "追加全下的門檻不正確",
-      "Seuil d'ajout du all-in invalide");
+      "Seuil d'ajout du all-in invalide", "Ambang tambah all-in tidak valid");
   }
 
   if (config.forceAllInThreshold < 0) {
@@ -928,7 +980,7 @@ const checkConfig = (
       "Ungültige Schwelle für erzwungenes All-in"
     ,
       "强制全下的阈值不正确", "強制全下的門檻不正確",
-      "Seuil de all-in forcé invalide");
+      "Seuil de all-in forcé invalide", "Ambang all-in paksa tidak valid");
   }
 
   if (config.mergingThreshold < 0) {
@@ -941,7 +993,7 @@ const checkConfig = (
       "Ungültige Schwelle zum Zusammenfassen"
     ,
       "合并阈值不正确", "合併門檻不正確",
-      "Seuil de fusion invalide");
+      "Seuil de fusion invalide", "Ambang penggabungan tidak valid");
   }
 
   if (
@@ -957,7 +1009,7 @@ const checkConfig = (
       `Ungültiges Board (${config.expectedBoardLength} Karten nötig)`
     ,
       `公共牌不正确（需要 ${config.expectedBoardLength} 张）`, `公共牌不正確（需要 ${config.expectedBoardLength} 張）`,
-      `Board invalide (${config.expectedBoardLength} cartes requises)`);
+      `Board invalide (${config.expectedBoardLength} cartes requises)`, `Board tidak valid (butuh ${config.expectedBoardLength} kartu)`);
   }
 
   const addedLinesArray =
@@ -985,7 +1037,7 @@ const checkConfig = (
       "Ungültige Line gefunden (beschädigte Einstellungen geladen?)"
     ,
       "发现了无效的线路（是不是加载了损坏的设置？）", "發現了無效的線路（是不是載入了損壞的設定？）",
-      "Ligne invalide trouvée (configuration corrompue chargée ?)");
+      "Ligne invalide trouvée (configuration corrompue chargée ?)", "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)");
   }
 
   if (
@@ -1005,7 +1057,7 @@ const checkConfig = (
       "Ungültige Einstellungen (beschädigte Einstellungen geladen?)"
     ,
       "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
-      "Configuration invalide (configuration corrompue chargée ?)");
+      "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)");
   }
 
   return null;
@@ -1255,7 +1307,7 @@ export default defineComponent({
           "Zum Teilen eines Spots brauchst du zuerst die OOP- und die IP-Range und mindestens 3 Board-Karten."
         ,
           "想分享牌局的话，请先填好 OOP 和 IP 范围，并选好至少 3 张公共牌。", "想分享牌局的話，請先填好 OOP 和 IP 範圍，並選好至少 3 張公共牌。",
-          "Pour partager un spot, renseigne d'abord les ranges OOP et IP et au moins 3 cartes de board.");
+          "Pour partager un spot, renseigne d'abord les ranges OOP et IP et au moins 3 cartes de board.", "Untuk membagikan spot, isi dulu range OOP dan IP serta minimal 3 kartu board.");
         return;
       }
       try {

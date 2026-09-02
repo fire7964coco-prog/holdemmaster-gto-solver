@@ -90,7 +90,8 @@ const actionLabelsJa: Record<string, string> = {
   Allin: "オールイン",
   "All-in": "オールイン",
 };
-// es·pt·de·fr는 액션명을 영어 그대로 쓴다 (독일: 본체 브리프 §1 — der Check/der Call/der Raise.
+// es·pt·de·fr·id는 액션명을 영어 그대로 쓴다 (독일: 본체 브리프 §1 — der Check/der Call/der Raise.
+// 인니: 본체 id 코퍼스가 check·call·fold·raise·all-in을 영어로 쓴다 — 리서치 §2. id는 아래 en 폴백을 탄다.
 // 프랑스: 브리프가 «영어 병용»을 허용하고, 조밀한 액션 표에서 Se coucher(10자)·Relancer(8자)는
 // Fold·Raise보다 폭이 2배라 잘림을 만든다 — 산문에서만 프랑스어 동사를 쓴다. 리서치 §3)
 const actionLabelsEs: Record<string, string> = {
@@ -143,7 +144,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id",
     Record<TrainerCategory, string>
   > = {
     ko: {
@@ -198,6 +199,12 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
     },
     fr: {
       all: "Tous",
+      srp: "Single Raised",
+      "3bp": "Pot 3-bet",
+      blind: "Blind vs Blind",
+    },
+    id: {
+      all: "Semua",
       srp: "Single Raised",
       "3bp": "Pot 3-bet",
       blind: "Blind vs Blind",

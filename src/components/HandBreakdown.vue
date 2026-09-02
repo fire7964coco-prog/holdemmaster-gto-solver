@@ -126,6 +126,13 @@ const M = {
     draws: "Tirages",
     noDraws: "Aucune info de tirage",
   },
+  id: {
+    // 프리셋 lessonId가 인용하는 패널 이름(«Hand / Draw»)과 글자가 맞아야 한다
+    hands: "Hand",
+    noHands: "Tidak ada hand untuk ditampilkan",
+    draws: "Draw",
+    noDraws: "Tidak ada info draw",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)

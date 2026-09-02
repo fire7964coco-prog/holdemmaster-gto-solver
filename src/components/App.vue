@@ -250,6 +250,20 @@ export default defineComponent({
         "run-solver": "Lancer le solver",
         treeEdit: "Aperçu et édition de l'arbre",
       },
+      id: {
+        about: "Tentang",
+        guide: "Cara pakai — langkah demi langkah",
+        presets: "Spot belajar — contoh siap pakai, sekali klik",
+        trainer: "Trainer GTO — lihat EV setiap keputusan Anda",
+        preflop: "Chart preflop — range open dan defend",
+        equity: "Kalkulator equity — equity hand dan range",
+        "oop-range": "Range OOP",
+        "ip-range": "Range IP",
+        board: "Board",
+        "tree-config": "Pengaturan tree",
+        "run-solver": "Jalankan Solver",
+        treeEdit: "Pratinjau & Edit Tree",
+      },
     } as const;
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];

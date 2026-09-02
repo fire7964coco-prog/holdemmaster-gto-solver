@@ -15,7 +15,7 @@ import { reactive } from "vue";
 
 // ⚠ "zh"(간체)와 "zh-hant"(번체)는 «별개 언어»다 — 용어 자체가 다르므로 기계 변환 금지
 // (德州扑克/德州撲克 · 求解器/解算器 · 概率/機率 · 弃牌/蓋牌).
-export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr";
+export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id";
 
 /* 🔴 2026-08-27에 키를 갈았다 — «solver.locale» → «solver.locale.pegged».
  *
@@ -45,7 +45,8 @@ const readStored = (): Locale | null => {
       value === "de" ||
       value === "zh" ||
       value === "zh-hant" ||
-      value === "fr"
+      value === "fr" ||
+      value === "id"
       ? value
       : null;
   } catch {
@@ -65,7 +66,8 @@ const detect = (): Locale => {
     fromUrl === "de" ||
     fromUrl === "zh" ||
     fromUrl === "zh-hant" ||
-    fromUrl === "fr"
+    fromUrl === "fr" ||
+    fromUrl === "id"
   ) {
     try {
       localStorage.setItem(KEY, fromUrl);
@@ -83,6 +85,9 @@ const detect = (): Locale => {
   if (lang.startsWith("pt")) return "pt";
   if (lang.startsWith("de")) return "de";
   if (lang.startsWith("fr")) return "fr"; // 프랑스·벨기에·스위스·퀘벡·아프리카 프랑코폰 전부 fr
+  // 인도네시아어. ⚠ 구형 안드로이드·자바 계열은 옛 ISO 코드 «in»(in-ID)을 보낸다 — 둘 다 받는다.
+  //   «in»으로 시작하는 다른 언어 코드는 없다(BCP-47 기본 태그 기준)라 오탐이 없다.
+  if (lang.startsWith("id") || lang.startsWith("in")) return "id";
   // ⚠ 중국어는 간체(zh-CN)와 번체(zh-hant)가 별개 언어다. **번체 판정이 «먼저» 와야 한다** —
   //   startsWith("zh")를 앞에 두면 zh-TW·zh-HK가 전부 간체로 새어 나간다(2026-08-22까지 실제로 그랬다).
   //   번체권 = 대만(zh-TW)·홍콩(zh-HK)·마카오(zh-MO), 그리고 명시적 문자표기 zh-Hant-*.
@@ -155,6 +160,13 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Solver GTO gratuit qui tourne directement dans ton navigateur, rien à installer. Calcule la stratégie postflop du Texas Hold'em à partir de tes ranges, du board et des bet sizes. Par HoldemMaster.",
   },
+  // 인도네시아어. «solver»·«trainer»·«range»·«board»는 본체 id 코퍼스(43편)가 영어 그대로 쓴다
+  // (solver 26회·range 215회·board 380회 — 리서치 §2). 문체는 Anda체(본체 브리프 확정 — es tú·fr tu와 다르다).
+  id: {
+    title: "HoldemMaster GTO Trainer — Solver & Trainer GTO Gratis untuk Texas Hold'em",
+    description:
+      "Solver GTO gratis yang langsung berjalan di browser Anda, tanpa instal apa pun. Hitung strategi postflop Texas Hold'em berdasarkan range, board, dan bet size. Dari HoldemMaster.",
+  },
 };
 
 /* npokers 빌드(스토어용 순수 솔버)의 탭 제목·메타 설명 — 빌드 2벌 분기(2026-08-24).
@@ -209,6 +221,11 @@ const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Solver GTO gratuit qui tourne directement dans ton navigateur, rien à installer. Calcule la stratégie postflop du Texas Hold'em à partir de tes ranges, du board et des bet sizes.",
   },
+  id: {
+    title: "npokers — Solver GTO Gratis untuk Texas Hold'em di Browser",
+    description:
+      "Solver GTO gratis yang langsung berjalan di browser Anda, tanpa instal apa pun. Hitung strategi postflop Texas Hold'em berdasarkan range, board, dan bet size.",
+  },
 };
 
 /* 빌드 2벌 분기 — 어느 사전을 쓸지는 빌드 타임에 정해진다 (webpack DefinePlugin) */
@@ -229,6 +246,7 @@ const DOC_LANG: Record<Locale, string> = {
   zh: "zh-Hans",
   "zh-hant": "zh-Hant",
   fr: "fr",
+  id: "id",
 };
 
 /* 설치된 앱의 이름(창 제목·홈 화면 라벨)은 «매니페스트»가 정한다 — 문서 제목이 아니다.
@@ -277,7 +295,8 @@ export const setLocale = (locale: Locale) => {
  * ⚠ 쓰면 안 되는 곳: CSV 내보내기(쉼표가 열 구분자) · style 문자열(width: 50,5%)
  *   · 사용자가 그대로 입력해야 하는 벳 사이즈 문법(«2.5x»).
  * ⚠ 중국어(zh·zh-hant)는 «영어와 같은» 마침표 소수점이다 — 여기에 넣으면 오히려 깨진다
- *   (본체 브리프 §3: 1,326 · 0.003% · 2.7:1 · 천단위 콤마). pt·de·fr 전용이다.
+ *   (본체 브리프 §3: 1,326 · 0.003% · 2.7:1 · 천단위 콤마). pt·de·fr·id 전용이다.
+ * id(인도네시아)는 pt·de와 같은 계열(소수점 «,» · 천단위 «.») — % 앞 공백은 없다(«35,4%»).
  *
  * fr은 여기에 «% 앞 좁은 공백»(U+202F, 프랑스 조판 관습 35 %)이 더해진다.
  * ⚠ 일부러 «문자열 안에 이미 %가 있는 경우»에만 걸리게 했다 — 조밀 UI(13×13 격자·액션
@@ -289,21 +308,24 @@ export const localizeNumber = (text: string) => {
   // ⚠ 아래 fr 치환문의 "$1…%" 공백은 «U+202F 리터럴»이다 — 일반 공백으로 «고치면» 깨진다
   if (i18n.locale === "fr")
     return text.replace(/(\d)\.(\d)/g, "$1,$2").replace(/(\d)\s?%/g, "$1 %");
-  return i18n.locale === "pt" || i18n.locale === "de"
+  return i18n.locale === "pt" || i18n.locale === "de" || i18n.locale === "id"
     ? text.replace(/(\d)\.(\d)/g, "$1,$2")
     : text;
 };
 
 /** 정수부·소수부를 나눠 그리는 화면(결과 표·13×13 격자)에서 쓰는 소수점 문자 */
 export const decimalMark = () =>
-  i18n.locale === "pt" || i18n.locale === "de" || i18n.locale === "fr" ? "," : ".";
+  i18n.locale === "pt" || i18n.locale === "de" || i18n.locale === "fr" || i18n.locale === "id"
+    ? ","
+    : ".";
 
 /** 언어별 값 중 현재 언어 것을 고른다 (문장 조립이 아닌 짧은 선택용).
- * ja·es·pt·de·zh·zhHant·fr을 생략하면 영어로 폴백한다 — 새 문구는 반드시 fr까지 채울 것.
+ * ja·es·pt·de·zh·zhHant·fr·id를 생략하면 영어로 폴백한다 — 새 문구는 반드시 id까지 채울 것.
  * ⚠ zhHant를 비우면 «간체»가 아니라 «영어»로 떨어진다. 중국어끼리 폴백하지 않는 것은
  *   일부러다 — 번체 화면에 간체가 섞이면 «틀린 언어»로 읽히기 때문이다.
  * ⚠ fr이 Locale 유니온 순서(de 다음)가 아니라 «맨 끝»인 것도 일부러다 — 중간에 끼우면
- *   기존 8인자 호출의 zh·zhHant가 한 칸씩 밀려 조용히 틀린 언어가 나온다. */
+ *   기존 8인자 호출의 zh·zhHant가 한 칸씩 밀려 조용히 틀린 언어가 나온다.
+ *   id(2026-09-02)도 같은 이유로 fr 뒤 «맨 끝»이다 — 기존 9인자 호출 전수에 10번째 값을 붙였다. */
 export const pick = <T>(
   ko: T,
   en: T,
@@ -313,7 +335,8 @@ export const pick = <T>(
   de: T = en,
   zh: T = en,
   zhHant: T = en,
-  fr: T = en
+  fr: T = en,
+  id: T = en
 ): T =>
   i18n.locale === "ko"
     ? ko
@@ -331,4 +354,6 @@ export const pick = <T>(
     ? zhHant
     : i18n.locale === "fr"
     ? fr
+    : i18n.locale === "id"
+    ? id
     : en;

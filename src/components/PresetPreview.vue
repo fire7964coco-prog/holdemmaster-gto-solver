@@ -256,6 +256,20 @@ const M = {
     // «parler» = 프랑스 포커에서 «액션할 차례»의 관용 표현 (c'est à toi de parler)
     oopHint: "La stratégie du joueur qui parle en premier",
   },
+  id: {
+    backToList: "← Kembali",
+    pot: "Pot",
+    stack: "Stack",
+    flopOnlyNote: "Hanya strategi flop. Ingin lanjut ke turn dan river? →",
+    solveThisSpot: "Hitung sendiri spot ini",
+    // ⚠ PresetsPage.articleLink와 같은 사정 — 지금은 한국어에서만 뜬다
+    readArticle: "Baca artikel",
+    // ⚠ 「미리 계산해 뒀다」를 말하지 않는 규칙의 예외 — 실패했을 때만 뜨는 문구다
+    loadError: (e: string) => `Gagal memuat hasil yang sudah dihitung (coba muat ulang halaman): ${e}`,
+    loading: "Memuat hasil…",
+    playerLabel: "Pemain:",
+    oopHint: "Strategi pemain yang bertindak lebih dulu",
+  },
 } as const;
 
 type PreviewData = {

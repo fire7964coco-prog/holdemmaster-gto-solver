@@ -66,6 +66,7 @@
           <option value="pt">Português</option>
           <option value="de">Deutsch</option>
           <option value="fr">Français</option>
+          <option value="id">Bahasa Indonesia</option>
           <!-- ⚠ 간체·번체는 «별개 언어»다 (용어 자체가 다르다 — 기계 변환 금지).
                두 이름 모두 «자기 글자»로 적어야 그 언어 사용자가 알아본다 -->
           <option value="zh">简体中文</option>
@@ -169,6 +170,15 @@ const M = {
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Choisir la langue",
   },
+  id: {
+    // «solver»는 본체 id 코퍼스가 영어 그대로 쓴다(26회 — 리서치 §1-1)
+    solver: "Solver",
+    results: "Hasil",
+    community: "Komunitas",
+    // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
+    communitySuffix: " HoldemMaster",
+    langSwitchLabel: "Pilih bahasa",
+  },
 } as const;
 
 export default defineComponent({
@@ -189,7 +199,8 @@ export default defineComponent({
         value === "de" ||
         value === "zh" ||
         value === "zh-hant" ||
-        value === "fr"
+        value === "fr" ||
+        value === "id"
       )
         setLocale(value);
     };

@@ -200,6 +200,14 @@ const M = {
     parseError: (range: string) =>
       `Impossible d'interpréter la range : ${range || "(chaîne vide)"}`,
   },
+  id: {
+    clear: "Bersihkan",
+    errorPrefix: "Error:",
+    weight: "Bobot:",
+    combos: "combo",
+    parseError: (range: string) =>
+      `Range tidak bisa dibaca: ${range || "(kosong)"}`,
+  },
 } as const;
 
 import { C } from "../theme";
