@@ -543,6 +543,26 @@ const M = {
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% pot)`,
   },
+  ms: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} menang`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Tamat",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    // 액션명은 영어 유지 — 말레이 코퍼스도 check/call/raise/fold 영어 (리서치 §2)
+    action: (name: string): string => name,
+    // ⚠ trainer.ts trainerActionLabel의 기본 분기 «(N% pot)»와 글자까지 같다 (ms 전용 분기 없음)
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% pot)`,
+  },
 } as const;
 
 export default defineComponent({

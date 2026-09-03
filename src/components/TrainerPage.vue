@@ -1719,6 +1719,117 @@ const M = {
     syncFailed: (msg: string) => `Sinkronisasi gagal: ${msg}`,
     signInFailed: (msg: string) => `Login gagal: ${msg}`,
   },
+  // 말레이어 — anda(소문자)체(문두만 Anda, kamu·awak 금지). 도구명 trainer·leak·streak·hand·range·pot은
+  // 영어 그대로(리서치 §2). 액션명은 영어(trainer.ts와 동일). 🔴 인니어 낱말 금지(리서치 §6).
+  ms: {
+    loadFailed: "Gagal memuatkan data trainer (cuba muat semula halaman):",
+    loading: "Sedang memuatkan trainer…",
+    review: (n: number) => `Semak semula (${n})`,
+    daily: "Cabaran Harian",
+    dailyStreakLabel: "Cabaran Harian",
+    done: "Selesai",
+    solved: "Dijawab",
+    dayStreakSuffix: " hari",
+    bestPrefix: "/ terbaik",
+    streakLabel: "Streak",
+    totalLossLabel: "Jumlah kerugian EV",
+    avgLossLabel: "Purata kerugian EV",
+    goodRateLabel: "% keputusan baik",
+    // «leak» = 말레이시아 포커 독자도 영어 그대로 쓴다 (kebocoran ✗)
+    weaknessTitle: "Pengesan Leak",
+    avgOfPot: (pct: string) => `purata ${pct}% daripada pot`,
+    handCount: (n: number) => `(${n} tangan)`,
+    notSolved: "Belum dicuba",
+    weakestBefore: "Kerugian terbesar dalam ",
+    weakestAfter: " —",
+    practiceThis: "Latih jenis spot ini",
+    weaknessHint: "Main sekurang-kurangnya 3 tangan dalam setiap kategori untuk melihat di mana anda kehilangan EV.",
+    accountBefore: "Disimpan dalam akaun ",
+    accountAfter: "",
+    syncingNow: "Sedang menyegerakkan…",
+    syncNow: "Segerakkan",
+    signOutLabel: "Log keluar",
+    localOnlyBefore: "Kemajuan anda disimpan ",
+    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
+    localOnlyBold: "hanya pada peranti ini",
+    localOnlyAfter:
+      ". Pautkan akaun HoldemMaster untuk menyambung semula pada mana-mana peranti.",
+    googleSignIn: "Teruskan dengan Google",
+    kakaoSignIn: "Teruskan dengan Kakao",
+    footerLine: (nodes: number, pct: number) =>
+      `13 Spot belajar · ${nodes} node keputusan · sasaran exploitability ${pct}%`,
+    details: "Butiran ↓",
+    toAct: "untuk bertindak",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Line:",
+    boardLabel: "Board",
+    myHand: "Tangan anda",
+    yourChoice: "Pilihan anda",
+    prompt: "Apa keputusan anda?",
+    bestEvTag: " · EV tertinggi",
+    evLoss: "Kerugian EV",
+    mobileDetailTitle: "Frekuensi & EV setiap aksi",
+    mixedNote:
+      "Strategi campuran tidak dikira salah — penilaian berdasarkan perbezaan EV antara aksi.",
+    dailyDone: "Cabaran Harian selesai",
+    dailyDoneDesc:
+      "Semua orang mendapat cabaran yang sama hari ini. Kongsi hasil anda untuk membandingkannya dengan pemain lain.",
+    makeCard: "Buat kad hasil",
+    boardShow: "Papan pendahulu hari ini",
+    boardHide: "Sembunyikan papan pendahulu",
+    boardLoading: "Sedang memuatkan…",
+    boardCount: (n: number) => `${n} pemain hari ini`,
+    boardMyRank: (r: number) => `Kedudukan saya #${r}`,
+    boardLoginHint:
+      "Log masuk untuk memaparkan nama anda pada papan pendahulu — tanpa log masuk pun anda masih boleh melihatnya.",
+    boardUnavailable: "Papan pendahulu belum tersedia.",
+    copied: "Disalin",
+    copyResult: "Salin teks hasil",
+    openCommunity: "Buka komuniti →",
+    pasteHintBefore: "Dalam komuniti, tekan ",
+    // 본체 community-client.tsx LABELS.ms.writePost = «✏️ Tulis» (2026-09-03 본체 소스 실측)
+    pasteHintBold: "[✏️ Tulis]",
+    pasteHintAfter: " lalu tampal hasil anda.",
+    keepPracticing: "Terus berlatih",
+    nextHand: "Tangan seterusnya",
+    readArticle: "Baca analisis spot ini →",
+    viewFull: "Lihat penyelesaian penuh",
+    resultTitle: "Hasil",
+    resultHintBefore: "Pilih satu aksi dan anda akan melihat ",
+    resultHintBold: "frekuensi dan EV setiap aksi",
+    resultHintAfter: ", serta berapa bb yang hilang daripada pilihan anda.",
+    gtoNoteBefore:
+      "GTO mencampurkan aksi dengan tangan yang sama — pilihan berfrekuensi rendah tidak semestinya salah. Ukurannya ialah kerugian EV ",
+    gtoNoteBold: "berbanding pot",
+    // ⚠ 아래 세 판정명은 verdictBest·verdictGood·verdictMiss와 «글자까지» 같아야 한다.
+    //   숫자는 영어식 — 소수점은 «.»다(리서치 §1-2. id의 «0,35%»와 «일부러» 다르다)
+    gtoNoteAfter: ": ≤0.35% Pilihan terbaik · ≤1% Boleh diterima · lebih daripada itu, Perlu disemak.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Untuk spot ini (pot ${pot}bb), ertinya Pilihan terbaik ≤${best}bb · Boleh diterima ≤${good}bb.`,
+    resetHistoryLabel: "Set semula rekod",
+    cardAlt: "Kad hasil Cabaran Harian",
+    shareApps: "Kongsi",
+    saveImage: "Simpan imej",
+    close: "Tutup",
+    cardHintBefore:
+      "Hantar kad anda ke kumpulan sembang atau media sosial — sesiapa yang melihatnya memainkan ",
+    cardHintBold: "cabaran yang sama",
+    cardHintAfter: " hari ini. Kad ini tidak pernah membocorkan jawapannya.",
+    verdictBest: "Pilihan terbaik",
+    verdictGood: "Boleh diterima",
+    verdictMiss: "Perlu disemak",
+    promptCopy: "Salin teks di bawah",
+    shareText:
+      // ⚠ 이 문장은 사용자가 «커뮤니티에 붙여넣는» 글이다 — 읽는 사람(남)에게 말한다
+      "Cabaran GTO Harian hari ini — cuba anda pula: https://solver.holdemmaster.com/?view=trainer&lang=ms",
+    confirmReset: "Padam semua rekod trainer pada peranti ini?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} disimpan · ${merged} diambil daripada peranti lain`,
+    syncSaved: (uploaded: number) => `${uploaded} disimpan`,
+    syncFailed: (msg: string) => `Penyegerakan gagal: ${msg}`,
+    signInFailed: (msg: string) => `Log masuk gagal: ${msg}`,
+  },
 } as const;
 
 export default defineComponent({

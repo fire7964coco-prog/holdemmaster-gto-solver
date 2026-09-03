@@ -356,6 +356,40 @@ export const DRAW_LABELS_ID: Record<DrawKey, string> = {
   no_draw: "Tanpa draw",
 };
 
+export const MADE_LABELS_MS: Record<MadeKey, string> = {
+  // 족보는 영어가 말레이시아 표준이다 (말레이어 리서치 §2 «족보 = 영어» — 브리프도 같다).
+  // 페어 세분(overpair 등)도 영어를 쓰고, 말레이어 수식은 «Pair lemah» 한 칸뿐이다.
+  straight_flush: "Straight Flush",
+  // 폭 때문에 짧은 쪽(Quads)을 쓴다 (en·id와 같다)
+  quads: "Quads",
+  full_house: "Full House",
+  flush: "Flush",
+  straight: "Straight",
+  // 이 칸은 «포켓페어 세트»와 «보드 트립스»를 함께 담는다 — en 「Set/Trips」과 같은 처리
+  trips: "Set/Trips",
+  two_pair: "Two Pair",
+  overpair: "Overpair",
+  top_pair: "Top Pair",
+  second_pair: "Second Pair",
+  weak_pair: "Pair lemah",
+  underpair: "Underpair",
+  ace_high: "Ace-High",
+  king_high: "King-High",
+  // «아직 아무것도 안 만들어진 핸드» — 원어민 리뷰에서 «Tiada made hand»로 확정
+  nothing: "Tiada made hand",
+};
+
+export const DRAW_LABELS_MS: Record<DrawKey, string> = {
+  // draw는 영어 그대로 (리서치 §2 — flush draw·gutshot·OESD 전부 영어)
+  combo_draw: "Combo draw",
+  flush_draw: "Flush draw",
+  oesd: "OESD",
+  gutshot: "Gutshot",
+  backdoor_fd: "Backdoor FD",
+  // 말레이어의 «없다»는 tiada다 (인니 «tanpa draw»와 다른 자연스러운 쪽)
+  no_draw: "Tiada draw",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -376,6 +410,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_FR
     : i18n.locale === "id"
     ? MADE_LABELS_ID
+    : i18n.locale === "ms"
+    ? MADE_LABELS_MS
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -396,6 +432,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_FR
     : i18n.locale === "id"
     ? DRAW_LABELS_ID
+    : i18n.locale === "ms"
+    ? DRAW_LABELS_MS
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

@@ -767,6 +767,34 @@ const M = {
     // 액션명은 영어 유지 — 인니 코퍼스 check/call/raise/fold 영어 (인니어화_리서치 §2)
     action: (name: string): string => name,
   },
+  ms: {
+    summary: "Ringkasan",
+    barWidth: "Lebar bar:",
+    // 토글 폭 제한 — 11자 이내
+    normalized: "Dinormalkan",
+    absolute: "Mutlak",
+    full: "Penuh",
+    display: "Paparan:",
+    actionPct: "% aksi",
+    actionEv: "EV aksi",
+    // ⚠ CSV 자체는 언어와 무관하게 영어식 숫자(소수점 «.»)로 나간다 — ms도 영어식이라 충돌 없음
+    exportCsv: "Eksport ringkasan sebagai fail CSV",
+    all: "Semua",
+    // 말레이 표준은 tangan (코퍼스 tangan 203 · hand 52 — 리서치 §1-4). id의 «Hand»와 다르다
+    hand: "Tangan",
+    strategy: "Strategi",
+    weightBar: "Wajaran (bar)",
+    weight: "Wajaran",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combo (bar)",
+    combos: "Combo",
+    noReport: (chanceType: string) =>
+      `Tiada laporan ${chanceType === "turn" ? "turn" : "river"}`,
+    noResults: "Tiada hasil",
+    // 액션명은 영어 유지 — 말레이 코퍼스도 check/call/raise/fold 영어 (리서치 §2)
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

@@ -133,6 +133,13 @@ const M = {
     draws: "Draw",
     noDraws: "Tidak ada info draw",
   },
+  ms: {
+    // 말레이 표준은 tangan (리서치 §1-4) — id의 «Hand»와 다르다. draw는 영어 유지
+    hands: "Tangan",
+    noHands: "Tiada tangan untuk dipaparkan",
+    draws: "Draw",
+    noDraws: "Tiada maklumat draw",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)

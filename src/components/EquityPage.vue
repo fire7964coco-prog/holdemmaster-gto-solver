@@ -868,6 +868,68 @@ const M = {
       unknown: "Terjadi kesalahan saat menghitung. Coba tekan Hitung sekali lagi.",
     } as Record<string, string>,
   },
+  ms: {
+    intro:
+      "Peluang anda menang melawan satu tangan tertentu atau keseluruhan range. Kosongkan board " +
+      "untuk preflop, atau pilih 3/4/5 kad untuk flop, turn, atau river.",
+    heroTitle: "① Tangan anda",
+    heroHint: "Pilih 2 kad di bawah",
+    fill: "Isi dari sini",
+    villainTitle: "② Lawan",
+    modeHand: "vs tangan",
+    modeRange: "vs range",
+    // ⚠ «0.75»의 소수점은 입력 문법이다 — 쉼표로 바꾸면 파서가 못 읽는다 (localizeNumber 금지 구역)
+    rangePlaceholder: "cth. 22+,AQs+,K8s:0.75",
+    // 버튼 이름은 PreflopChartPage의 복사 버튼과 «글자까지» 같아야 한다
+    rangeNote:
+      "Tampal hasil [Salin teks range] daripada carta preflop. Notasi berwajaran seperti “K8s:0.75” digunakan seadanya.",
+    anyTwo: "Mana-mana dua kad",
+    rangeError: (token: string) => `Tidak dapat dibaca: ${token}`,
+    // % 앞 공백 없음 — 말레이시아 표기 «35.4%» (숫자는 영어식, 리서치 §1-2)
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} combo · ${percent}% daripada semua combo`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Kosong = preflop (3/4/5 kad juga boleh)",
+    boardHintBad: "Board mesti ada 0, 3, 4 atau 5 kad.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Kira",
+    computing: "Sedang mengira…",
+    stop: "Hentikan",
+    clear: "Kosongkan semua",
+    resultTitle: "Hasil",
+    resultEmpty: "Pilih dua kad anda dan satu tangan atau range lawan, kemudian tekan Kira.",
+    vsSide: (value: string) => `Lawan ${value}%`,
+    win: "Menang",
+    tie: "Seri",
+    lose: "Kalah",
+    combos: "Combo lawan",
+    badgeExact: "Tepat",
+    badgeApprox: "Anggaran (±0.2%)",
+    // 천단위는 영어식 쉼표 — 말레이시아 표기 «1,326» (리서치 §1-2, en-US 강제)
+    exactNote: (n: number) =>
+      `Kesemua ${n.toLocaleString("en-US")} kemungkinan telah dikira`,
+    approxNote: (n: number) =>
+      `Terlalu banyak kemungkinan untuk dikira satu per satu — sampel ${n.toLocaleString("en-US")} simulasi rawak`,
+    howTitle: "Cara membaca hasil ini",
+    // ⚠ equity의 «정의»를 잃지 말 것 — en «win% plus half of the ties»와 같은 뜻이어야 한다
+    how1: "Equity = % menang + separuh daripada seri. Itulah bahagian anda dalam pot jika semua pemain all-in sekarang.",
+    how2: "Melawan satu range, combo yang terhalang oleh kad anda atau board dikeluarkan secara automatik.",
+    how3: "Label “Tepat” bermakna setiap kemungkinan dikira; “Anggaran” pula ialah sampel rawak.",
+    limitTitle: "Skop kalkulator ini",
+    // «Spot tersuai» = 사이드바 customLabel과 같은 글자
+    limitBody:
+      "Alat ini hanya mengira equity all-in antara dua pemain. Range lawan range, pot multiway, " +
+      "dan line pertaruhan dikendalikan oleh solver (Spot tersuai).",
+    errors: {
+      "need-hero": "Sila pilih dua kad anda dahulu.",
+      "bad-board": "Board mesti ada 0, 3, 4 atau 5 kad.",
+      "bad-card": "Nilai kad tidak sah.",
+      duplicate: "Kad yang sama tidak boleh digunakan dua kali.",
+      "empty-range": "Range lawan kosong.",
+      "no-combos": "Tiada combo lawan yang tinggal selepas kad terhalang dikeluarkan.",
+      unknown: "Ralat berlaku semasa mengira. Cuba tekan Kira sekali lagi.",
+    } as Record<string, string>,
+  },
 } as const;
 
 const CAPACITY: Record<Target, number> = { hero: 2, villain: 2, board: 5 };

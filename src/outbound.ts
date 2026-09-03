@@ -103,6 +103,10 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   // `/id/blog/a-high-board-cbet` 404 → 홈만 등재. 랜딩·해설 링크는 화면에서 숨겨진다.
   // 🔴 본체가 `/id/solver`를 열면 여기와 id-verify.js가 같이 낡는다 — 언어 작업마다 다시 잴 것
   id: { "": "/id" },
+  // 말레이어 (2026-09-03 실측 curl): `/ms` 200 · **`/ms/solver` 404** · `/ms/community` 404 ·
+  // 개별 `/ms/blog/...` 해설 글 404 → 홈만 등재. 랜딩·해설 링크는 화면에서 숨겨진다.
+  // 🔴 본체가 `/ms/solver`를 열면 여기와 ms-verify.js가 같이 낡는다 — 언어 작업마다 다시 잴 것
+  ms: { "": "/ms" },
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

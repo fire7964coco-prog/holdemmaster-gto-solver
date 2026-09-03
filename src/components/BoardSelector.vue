@@ -143,6 +143,14 @@ const M = {
     // 인니어는 명사에 복수 변화가 없다 — ko·ja·zh와 같이 ${n}만 갈아끼운다
     warnBody: (n: number) => `Tree yang diedit mengasumsikan board ${n} kartu.`,
   },
+  ms: {
+    placeholder: "cth. AsKd7c",
+    clear: "Kosongkan",
+    randomFlop: "Flop rawak",
+    warnLabel: "Amaran:",
+    // 말레이어도 명사 복수 변화가 없다 — ko·ja·zh·id와 같이 ${n}만 갈아끼운다
+    warnBody: (n: number) => `Tree yang disunting mengandaikan board dengan ${n} kad.`,
+  },
 } as const;
 
 export default defineComponent({

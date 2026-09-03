@@ -452,6 +452,34 @@ const M = {
     strategyCombos: "Strategi (combo)",
     equity: "Equity",
   },
+  ms: {
+    modeLabels: {
+      basics: "Asas",
+      graphs: "Graf",
+      compare: "Bandingkan",
+      turn: "Turn",
+      river: "River",
+    } as Record<string, string>,
+    player: "Pemain:",
+    // 「Automatik」은 탭 폭을 넘긴다 — 말레이시아 UI에서도 Auto가 통용어다
+    auto: (player: string) => `Auto (${player})`,
+    barHeight: "Tinggi bar:",
+    // 토글 폭 제한 — 11자 이내
+    normalized: "Dinormalkan",
+    absolute: "Mutlak",
+    full: "Penuh",
+    // 무늬 = suit (리서치 §2 «jenis kad (suit)») — 족보 Flush와 겹치지 않아 그대로 쓴다
+    suit: "Suit (♠♥♦♣):",
+    grouped: "Digabung",
+    individual: "Berasingan",
+    display: "Paparan:",
+    strategy: "Strategi",
+    weight: "Wajaran",
+    // carta = 말레이 «chart» (리서치 §3 — 사이드바 «Carta preflop»과 같은 낱말)
+    chart: "Carta:",
+    strategyCombos: "Strategi (combo)",
+    equity: "Equity",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

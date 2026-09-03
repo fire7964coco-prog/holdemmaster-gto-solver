@@ -144,6 +144,10 @@ const M = {
     noGraph: "Grafik tidak tersedia",
     equity: "Equity",
   },
+  ms: {
+    noGraph: "Graf tidak tersedia",
+    equity: "Equity",
+  },
 } as const;
 
 export default defineComponent({

@@ -270,6 +270,20 @@ const M = {
     playerLabel: "Pemain:",
     oopHint: "Strategi pemain yang bertindak lebih dulu",
   },
+  ms: {
+    backToList: "← Kembali",
+    pot: "Pot",
+    stack: "Stack",
+    flopOnlyNote: "Strategi flop sahaja. Mahu klik terus ke turn dan river? →",
+    solveThisSpot: "Kira sendiri spot ini",
+    // ⚠ PresetsPage.articleLink와 같은 사정 — 지금은 한국어에서만 뜬다
+    readArticle: "Baca artikel",
+    // ⚠ 「미리 계산해 뒀다」를 말하지 않는 규칙의 예외 — 실패했을 때만 뜨는 문구다
+    loadError: (e: string) => `Gagal memuatkan hasil yang telah dikira (sila muat semula halaman): ${e}`,
+    loading: "Sedang memuatkan hasil…",
+    playerLabel: "Pemain:",
+    oopHint: "Strategi pemain yang bertindak dahulu",
+  },
 } as const;
 
 type PreviewData = {

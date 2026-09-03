@@ -59,6 +59,9 @@ const M = {
   id: {
     combos: "combo",
   },
+  ms: {
+    combos: "combo",
+  },
 } as const;
 
 const actionLabel = (
@@ -172,7 +175,9 @@ const actionLabel = (
         "底池",
         // fr의 «% 앞 공백»(U+202F)은 localizeNumber가 넣는다 — 이 문자열이 그 안을 지난다
         "du pot",
-        "dari pot"
+        "dari pot",
+        // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
+        "pot"
       )})`
     );
   }

@@ -132,6 +132,20 @@ const CARD_TEXT = {
       `Kerugian EV ${bb}bb${streak > 1 ? ` · streak ${streak} hari` : ""}`,
     invite: "Coba tantangan yang sama",
   },
+  ms: {
+    // 도구명 Trainer는 말레이시아 GTO 콘텐츠도 영어로 쓴다 (리서치 §1-3) — brand.ts와 같은 표기
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "Satu cabaran sehari · sama untuk semua",
+    heading: "Cabaran GTO Harian",
+    board: "Board",
+    // hand = tangan (말레이 표준. 인니판이 «hand»를 남긴 것과 반대다 — 리서치 §1-4)
+    hand: "Tangan saya",
+    result: (verdict: string) => `Hasil saya: ${verdict}`,
+    // ⚠ bb는 코드가 소문자로 찍는다(formatAmount). 화면 안 일관성을 택해 소문자 bb로 통일
+    evLine: (bb: string, streak: number) =>
+      `Kerugian EV ${bb}bb${streak > 1 ? ` · streak ${streak} hari` : ""}`,
+    invite: "Cuba cabaran yang sama",
+  },
 } as const;
 
 export type DailyCardInput = {

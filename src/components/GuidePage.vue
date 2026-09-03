@@ -2124,6 +2124,196 @@ const M = {
     errNone: "Belum ada error yang tercatat.",
     errPrompt: "Salin teks di bawah ini",
   },
+  ms: {
+    quickTitle: "Mula dalam 1 minit — kalau anda baru, bermula di sini",
+    quickStep1Desktop: "Di sebelah kiri, klik  ",
+    quickStep1Mobile: "Pada tab di atas, ketik  ",
+    // ⚠ 사이드바 라벨과 «글자까지» 같아야 한다
+    quickStep1Btn: "Spot belajar",
+    quickStep1After: "",
+    quickStep2Before: "Buka mana-mana spot dan tekan",
+    // ⚠ PresetsPage.infoBtn1·viewResults와 같은 이름
+    quickStep2Btn: "[⚡ Lihat hasil]",
+    quickStep2After: " — jawapannya terus keluar",
+    quickStep3:
+      "Selepas itu, baca “Cara membaca skrin hasil” di bawah supaya anda faham maksud angka-angkanya",
+
+    termsTitle: "Empat istilah ini sudah memadai",
+    termRange: "Range",
+    defRange:
+      "Kumpulan tangan yang mungkin dipegang seorang pemain, iaitu julat tangannya (contoh: “dia mungkin ada AA, KK, atau AK”)",
+    defPos:
+      "Out of position (bertindak dahulu — kelemahan) / in position (bertindak terakhir — kelebihan). Dalam BTN vs BB, BB ialah OOP",
+    termEquity: "Equity",
+    defEquity:
+      "Bahagian pot yang menjadi milik anda kalau semua all-in sekarang, iaitu ekuiti — % menang campur separuh daripada % seri",
+    defEv: "Expected value (nilai jangkaan) — purata hasil sesuatu aksi kalau diulang berkali-kali. Makin besar makin bagus",
+
+    customTitleBefore: "Mengira spot tersuai — ikut nombor ",
+    customTitleDesktop: "di bar sisi",
+    customTitleMobile: "di tab",
+    customTitleAfter: " ① → ⑤ mengikut urutan",
+    step1Bold: "① Range OOP / ② Range IP",
+    step1After:
+      " — warnakan grid 13×13 dengan klik-dan-seret, atau taip range itu sebagai teks: ",
+    step1Hint:
+      "22+ = semua pocket pair · A2s+ = A2s hingga AKs · KTo+ = KTo hingga KQo. Pada grid: pepenjuru = pocket pair, kanan atas = suited, kiri bawah = offsuit",
+    exampleHeader:
+      "Baru di sini? Salin contoh ini dan tampal ke kotak range (standard BTN vs BB 100bb — range yang sama dengan Spot belajar)",
+    exOopLabel: "OOP (BB caller)",
+    exIpLabel: "IP (BTN opener)",
+    copiedLabel: "Disalin!",
+    copyLabel: "Salin",
+    step3Bold: "③ Board",
+    // ⚠ BoardSelector.randomFlop과 같은 이름
+    step3After: " — klik tiga kad untuk flop, atau tekan “Flop rawak”",
+    step4Bold: "④ Bet size (Tetapan)",
+    step4After:
+      " — biarkan nilai lalai dahulu. Cukup semak Pot permulaan dan Stack efektif",
+    step4Hint:
+      "Nilai dalam spot tersuai ialah cip integer dalam unit pilihan anda sendiri. Untuk berfikir dalam bb, guna 10 cip = 1bb (contoh: pot 55 = 5.5bb). Spot belajar dan Trainer GTO menggunakan skala ini secara automatik.",
+    // ⚠ 사이드바 ⑤(Kira)·RunSolver의 버튼 이름들과 «글자까지» 같아야 한다
+    step5Bold1: "⑤ Kira",
+    step5Mid:
+      " — tekan “Bina Tree”, kemudian “Jalankan Solver” selepas tree siap dibina. Sebaik sahaja “Pengiraan selesai!” muncul, buka tab ",
+    step5Bold2: "[Hasil]",
+    step5After: " di bahagian atas",
+    step5Hint:
+      "Pengiraan berjalan pada peranti anda sendiri dan mengambil masa beberapa saat hingga beberapa minit. Guna [Kongsi Spot] pada skrin ⑤ untuk menyalin pautan spot anda dan bertanya tentangnya di komuniti",
+
+    resultsTitle: "Cara membaca skrin hasil",
+    rTerm1: "Bar aksi di atas",
+    rDef1:
+      "Pemilih node di sepanjang laluan aksi (flop → bet → call → turn…). Klik satu node untuk melihat strategi pada titik itu",
+    rTerm2: "Grid 13×13 (kiri)",
+    rDef2:
+      "Setiap kotak ialah satu tangan; pembahagian warna di dalamnya menunjukkan frekuensi aksi. 🟥 bet/raise (makin gelap = makin besar pertaruhannya) · 🟩 check/call · kotak malap = di luar range. GTO memainkan tangan yang sama dengan strategi campuran — aksinya dibahagikan mengikut frekuensi supaya corak permainan anda susah dibaca",
+    rTerm3: "Kotak ringkasan (kanan atas)",
+    rDef3: "Frekuensi aksi (%) dan bilangan combo untuk keseluruhan range",
+    rTerm4: "Kategori tangan (kanan tengah)",
+    rDef4:
+      "Cara setiap range berinteraksi dengan board (top pair, draw, dan seterusnya) — untuk melihat sekali pandang siapa yang diuntungkan oleh board ini",
+    rTerm5: "Jadual (kanan bawah)",
+    rDef5:
+      "Berat, equity, EV dan % aksi bagi setiap tangan — klik tajuk lajur untuk mengisih",
+
+    trainerTitle: "Trainer GTO — daripada memerhati kepada bermain",
+    trainerIntroBefore:
+      "Selepas anda selesa membaca skrin hasil, teruskan ke",
+    trainerBtn: "Trainer GTO",
+    trainerIntroAfter:
+      ". Pada titik keputusan daripada 13 Spot belajar, anda diberi tangan yang diambil daripada range sebenar — pilih satu aksi dan anda terus dinilai.",
+    gradTerm: "Cara penilaian",
+    gradBefore: "Anda tidak dinilai betul atau salah, sebaliknya berdasarkan ",
+    gradBold: "kerugian EV (bb)",
+    gradAfter:
+      ". GTO mencampurkan beberapa aksi dengan tangan yang sama, jadi aksi berfrekuensi rendah belum tentu satu kesilapan — yang penting ialah berapa banyak EV yang dilepaskan",
+    verdictTerm: "Ambang penilaian",
+    verdictBefore: "Diukur ",
+    verdictBold: "berbanding pot",
+    // ⚠ 판정명은 TrainerPage.verdictBest·verdictGood·verdictMiss와 «글자까지» 같아야 한다
+    verdictAfter:
+      " — sehingga 0.35% pot = Pilihan terbaik · sehingga 1% = Boleh diterima · lebih daripada itu = Perlu disemak. Contohnya, dalam single raised pot (SRP) 5.5bb ambangnya 0.02bb dan 0.06bb; dalam pot 3-bet 22.5bb, 0.08bb dan 0.23bb.",
+    verdictHint:
+      "Kerugian 0.08bb yang sama ialah kesilapan besar dalam pot kecil tetapi remeh dalam pot besar. Penilaian dalam bb mutlak membuatkan pot 3-bet kelihatan lebih teruk daripada keadaan sebenar, jadi kami beralih kepada penilaian berbanding pot (15/08/2026). Ambang ini ada had bawah (0.02bb / 0.05bb): pengiraan hanya menumpu sehingga sasaran exploitability 0.5%, jadi beza yang lebih kecil daripada itu tidak dapat dibezakan daripada noise solver.",
+    reviewTerm: "Semak semula",
+    reviewBefore:
+      "Tangan yang paling banyak membuang EV anda akan muncul semula melalui butang [Semak semula]. Secara lalai, rekod anda disimpan ",
+    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    reviewBold: "hanya pada peranti ini",
+    reviewAfter:
+      ". Log masuk dengan akaun HoldemMaster untuk menyimpannya dalam akaun anda dan menyambung semula pada peranti lain — log masuk tidak diwajibkan, semuanya tetap berfungsi tanpa log masuk",
+    filterTerm: "Penapis",
+    filterDef:
+      "Fokus pada titik lemah anda sahaja: single raised pot, pot 3-bet, atau blind vs blind",
+
+    installTitle: "Tambah ke skrin utama dan belajar di luar talian",
+    install1:
+      "Solver ini boleh anda pasang pada skrin utama seperti aplikasi (tiada fail pemasangan). Dalam Chrome atau Edge, guna ",
+    installBold1: "ikon pasang",
+    install2: " di sebelah kanan bar alamat; dalam Safari pada iPhone, ketik ",
+    // ⚠ InstallBanner.iosB2(Apple 말레이어 메뉴명)와 같은 표기
+    installBold2: "Kongsi → Tambah ke Skrin Utama",
+    install3:
+      ". Selepas dipasang, 13 Spot belajar dan soalan Trainer GTO tersimpan pada peranti anda, jadi anda boleh terus belajar ",
+    installBold3: "walaupun dalam LRT tanpa internet",
+    install4: ".",
+    samsung1:
+      "* Apabila anda memasang daripada Samsung Internet, pelayar atau peranti anda mungkin menyekatnya atas sebab keselamatan. Pemeriksaan itu datang daripada pelayar, bukan daripada aplikasi ini. ",
+    samsungBold: "Buka laman ini dalam Chrome",
+    samsung2:
+      " dan pemasangan berjalan tanpa sekatan; kalau anda mahu teruskan di sini, ikut arahan dalam kotak dialog itu.",
+    offlineDataLabel: "Data belajar luar talian",
+    offlineSaved: "Tersimpan — Spot belajar dan Trainer GTO berfungsi tanpa internet",
+    offlineSaving: "Sedang menyimpan…",
+    offlineNotSaved: "Belum disimpan",
+    offlineSaveBtn: "Simpan sekarang (~2.3 MB)",
+    offlineFootnote:
+      "Pengiraan spot tersuai hanya berfungsi di luar talian selepas anda menjalankannya sekurang-kurangnya sekali secara dalam talian — enjin solver dimuat turun pada penggunaan pertama.",
+
+    safeTitle: "Selamatkah untuk dipasang?",
+    safe1:
+      "Selamat. “Pasang” di sini bukan bermakna memuat turun program ke peranti anda — sebaliknya ",
+    safeBold: "membuat pintasan yang berjalan di dalam pelayar anda",
+    safe2:
+      ". Pada Android, yang didaftarkan hanyalah pintasan ringkas ke alamat ini; semuanya tetap berjalan dalam enjin pelayar. Kalau anda masih ragu, periksa sendiri empat perkara berikut — memeriksa lebih baik daripada sekadar percaya kata kami.",
+    permTerm: "Tiada kebenaran digunakan",
+    permBefore:
+      "Pemasangan tidak meminta sebarang kebenaran — tiada kamera, kenalan, SMS mahupun lokasi. Periksa sendiri di ",
+    permBold: "Tetapan → Maklumat apl → Kebenaran",
+    permAfter: " pada telefon anda",
+    airplaneTerm: "Uji dengan mod pesawat",
+    airplaneBefore:
+      "Matikan internet dan Trainer GTO tetap berjalan — bukti paling jelas bahawa pengiraan ",
+    airplaneBold: "berlaku sepenuhnya pada peranti anda",
+    airplaneAfter: "",
+    openTerm: "Kod sumbernya terbuka",
+    openBefore: "Solver ini ialah open source di bawah lesen AGPL-3.0 (",
+    openAfter: ")",
+    removeTerm: "Boleh dibuang dengan bersih",
+    removeDef:
+      "Tekan lama ikonnya lalu padam, seperti aplikasi lain, dan selesai. Tiada apa-apa yang berjalan di latar belakang, tiada apa-apa yang tertinggal",
+    samsungNote2:
+      "* Sekatan keselamatan dalam Samsung Internet bukan pengesanan malware — pelayar itu cuma belum mengenali jenis pakej pemasangan ini. Sekatan itu tidak muncul kalau anda memasang daripada Chrome.",
+
+    studyTitle: "Cadangan cara belajar",
+    study1:
+      "Selesaikan 13 Spot belajar mengikut urutan — setiap spot dibina di atas spot sebelumnya",
+    study2:
+      "Kalau anda tertanya-tanya “kenapa tangan ini kadang-kadang check?”, bandingkan EV setiap aksi dalam jadual terperinci",
+    study3:
+      "Main semula spot yang sama dalam Trainer GTO supaya lebih mudah diingat — laporan kelemahan menunjukkan situasi mana yang paling banyak menghabiskan EV anda",
+    study4: "Kekalkan range-nya, tukar board sahaja, kemudian bandingkan (contoh: A72 vs 974)",
+    study5:
+      "Bina semula tangan yang mengelirukan anda semasa main sebenar, kemudian semak hasilnya di sini",
+
+    troubleTitle: "Kalau ada masalah",
+    tTerm1: "Ralat semasa membina tree",
+    tDef1: "Pastikan 3 kad board dan kedua-dua range sudah diisi",
+    tTerm2: "Pengiraan lambat",
+    tDef2: "Naikkan sasaran exploitability kepada 0.5%",
+    tTerm3: "Tab Hasil kosong",
+    tDef3: "Buka selepas “Pengiraan selesai!” muncul",
+    tTerm4: "Had memori dilampaui",
+    tDef4: "Tukar kepada mod integer 16-bit, atau kurangkan bilangan bet size",
+    tTerm5: "Grid kelabu semuanya",
+    tDef5:
+      "Anda sedang melihat giliran lawan — pilih node lain pada bar aksi di bahagian atas",
+
+    errTitle: "Jumpa sesuatu yang perlu kami baiki?",
+    err1: "Kalau paparan rosak atau pengiraan tersekat, butiran ralatnya dicatat secara automatik pada peranti ini. ",
+    // ⚠ ErrorToast.bodyB1·TrainerPage.localOnlyBold·reviewBold와 같은 약속이다
+    errBold: "Rekod ini tidak pernah keluar daripada peranti anda",
+    err2:
+      " — kami hanya melihatnya kalau anda menyalinnya di bawah dan menyiarkannya di komuniti. Isinya hanya mesej ralat dan jenis pelayar — tidak pernah range atau rekod belajar anda.",
+    errLoggedLabel: "Ralat tercatat",
+    errCount: (n: number) => `${n}`,
+    errCopied: "Disalin",
+    errCopyBtn: "Salin butiran ralat",
+    errClearBtn: "Kosongkan rekod",
+    errNone: "Belum ada ralat yang tercatat.",
+    errPrompt: "Salin teks di bawah",
+  },
 } as const;
 
 /* npokers 빌드에서 설치 문단의 «교육 예제·트레이너 저장» 대목만 «앱 저장»으로 바꾼다.
@@ -2228,6 +2418,17 @@ const N =
           airplaneBefore:
             "Matikan internet dan aplikasi tetap berjalan — bukti paling jelas bahwa perhitungan ",
           install3: ". Setelah terpasang, aplikasi tersimpan di perangkat Anda, jadi Anda tetap bisa memakainya ",
+          install4: ".",
+        },
+        // ⚠ npokers 빌드 — Trainer·latihan·Spot belajar 어휘가 새면 npokers-verify(FORBIDDEN ms)가 잡는다
+        ms: {
+          exampleHeader:
+            "Baru di sini? Salin contoh ini dan tampal ke kotak range (standard BTN vs BB 100bb)",
+          step4Hint:
+            "Nilai dalam spot tersuai ialah cip integer dalam unit pilihan anda sendiri. Untuk berfikir dalam bb, guna 10 cip = 1bb (contoh: pot 55 = 5.5bb).",
+          airplaneBefore:
+            "Matikan internet dan aplikasi tetap berjalan — bukti paling jelas bahawa pengiraan ",
+          install3: ". Selepas dipasang, aplikasi tersimpan pada peranti anda, jadi anda boleh terus menggunakannya ",
           install4: ".",
         },
       }

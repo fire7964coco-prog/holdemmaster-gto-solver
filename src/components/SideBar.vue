@@ -396,6 +396,34 @@ const M = {
     betSizeSub: "Pengaturan",
     run: "Hitung",
   },
+  // ms 라벨은 ms-sidebar-premeasure.js 실측으로 확정 (리서치 §3). id와 어휘가 겹쳐 보여도
+  // 인니어(kustom·Instan·Pengaturan·Hitung)를 쓰지 않는다 — 말레이 표준어로 새로 잡았다.
+  ms: {
+    exploreLabel: "Teroka",
+    exploreLabelSuffix: " & belajar",
+    about: "Tentang",
+    // 「Cara menggunakan」보다 짧다 — 한 줄 유지
+    guide: "Cara guna",
+    presets: "Spot belajar",
+    // ⚠ 사용자 지시(2026-08-13): 유저에게 «미리 계산»을 언급하지 않는다 — «즉시»로만
+    presetsBadge: "Segera",
+    // Jurulatih는 사람(코치)이 1차 의미 — 도구명은 영어 Trainer (리서치 §1-3)
+    trainer: "Trainer GTO",
+    trainerBadge: "Skor EV",
+    preflop: "Carta preflop",
+    preflopBadge: "Range",
+    equity: "Equity",
+    equityBadge: "% menang",
+    customLabel: "Spot tersuai",
+    // 한 줄 유지용 — es·pt·de·fr·id와 같이 접미사를 비운다
+    customLabelSuffix: "",
+    oopRange: "Range OOP",
+    ipRange: "Range IP",
+    board: "Board",
+    betSize: "Bet size",
+    betSizeSub: "Tetapan",
+    run: "Kira",
+  },
 } as const;
 
 export default defineComponent({

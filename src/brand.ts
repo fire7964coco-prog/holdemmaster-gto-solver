@@ -30,6 +30,7 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       "zh-hant": "npokers",
       fr: "npokers",
       id: "npokers",
+      ms: "npokers",
     }
   : {
       /* 간판 교체 (2026-08-24, 트랙 B — 작업계획.md 가드레일 G3):
@@ -50,4 +51,6 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       fr: "HoldemMaster GTO Trainer",
       // id도 라틴계 통일 — 인니 코퍼스가 도구명(solver·trainer)을 번역하지 않는다(리서치 §1-2)
       id: "HoldemMaster GTO Trainer",
+      // ms도 라틴계 통일 — 말레이시아 GTO 콘텐츠는 영어이고 Jurulatih는 «사람 코치»다(리서치 §1-3)
+      ms: "HoldemMaster GTO Trainer",
     };

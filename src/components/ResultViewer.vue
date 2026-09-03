@@ -236,6 +236,12 @@ const M = {
     finalizing: "Menyelesaikan…",
     paused: "Solver dijeda.",
   },
+  ms: {
+    notRun: "Solver belum dijalankan.",
+    running: "Sedang mengira…",
+    finalizing: "Sedang menyelesaikan…",
+    paused: "Solver dijeda.",
+  },
 } as const;
 
 export default defineComponent({

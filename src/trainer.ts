@@ -144,7 +144,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms",
     Record<TrainerCategory, string>
   > = {
     ko: {
@@ -204,6 +204,13 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       blind: "Blind vs Blind",
     },
     id: {
+      all: "Semua",
+      srp: "Single Raised",
+      "3bp": "Pot 3-bet",
+      blind: "Blind vs Blind",
+    },
+    // 말레이어도 «Semua»가 같은 낱말이다 (두 언어가 정당하게 공유 — 리서치 §6 각주)
+    ms: {
       all: "Semua",
       srp: "Single Raised",
       "3bp": "Pot 3-bet",

@@ -221,6 +221,13 @@ const M = {
     // 액션명은 영어 유지 — 인니 코퍼스 check/call/raise/fold 영어
     action: (name: string): string => name,
   },
+  ms: {
+    strategyCombos: "Strategi (combo)",
+    strategy: "Strategi",
+    equity: "Equity",
+    // 액션명은 영어 유지 — 말레이 코퍼스도 check/call/raise/fold 영어
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

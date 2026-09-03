@@ -608,6 +608,50 @@ const M = {
     creditMid2: ". Kode sumber lengkap hasil modifikasi dipublikasikan di",
     creditAfter: " dengan lisensi yang sama.",
   },
+  ms: {
+    community: "Komuniti HoldemMaster",
+    heroTitle1: "Strategi GTO,",
+    heroTitle2: "terus dalam pelayar anda.",
+    heroSub1: "Tiada pemasangan, tiada bayaran. Masukkan range dan board anda,",
+    heroSub2: " dan strategi optimum dikira terus pada peranti anda sendiri.",
+    ctaPresets: "Lihat Spot belajar",
+    ctaTrainer: "Trainer GTO",
+    ctaDaily: "Cabaran Harian",
+    dailyDone: "Selesai",
+    ctaGuide: "Cara guna",
+    ctaInstall: "Tambah ke skrin utama",
+    installNote:
+      "Selepas dipasang, Spot belajar dan Trainer GTO tersimpan pada peranti anda, jadi anda boleh terus berlatih walaupun di luar talian. Ini pintasan pelayar, bukan program — ia tidak pernah meminta sebarang kebenaran.",
+    installSafe: "Selamatkah?",
+    features: [
+      { title: "Percuma", desc: "Semua ciri, tanpa had penggunaan" },
+      { title: "Belajar luar talian", desc: "Tambah ke skrin utama dan berlatih tanpa sambungan internet" },
+      { title: "Pengiraan pantas", desc: "Multithread — sepantas solver desktop" },
+      { title: "Trainer GTO", desc: "Main spot dan dapatkan skor kerugian EV berbanding pot" },
+    ],
+    stepsTitle: "Baru di sini?",
+    // 버튼 이름 인용은 PresetsPage.viewResults·SideBar와 «글자까지» 같아야 한다
+    steps: [
+      "Buka mana-mana spot dalam Spot belajar lalu tekan [Lihat hasil] — penyelesaiannya terus muncul",
+      "Baca Cara guna untuk belajar membaca skrin hasil",
+      "Cuba Trainer GTO — ia menunjukkan dengan tepat berapa bb yang anda rugi pada setiap keputusan",
+      "Selepas anda biasa, kira tangan anda sendiri dengan Spot tersuai (①–⑤)",
+    ],
+    // ⚠ 이 세 줄이 가리키는 본체 /ms/solver는 없다 (2026-09-03 실측 404) —
+    //   AboutPage 템플릿의 v-if="landingUrl"이 통째로 숨긴다. 본체에 /ms/solver가 생기면
+    //   outbound.ts LOCALE_PATHS.ms에 "/solver" 한 줄만 더하면 살아난다
+    landingBefore:
+      "Mahu faham dahulu apa itu solver GTO dan cara membaca hasilnya? Lihat",
+    landingLink: "panduan solver HoldemMaster",
+    landingAfter: ".",
+    notes:
+      "Pada iOS dan Safari, batasan pelayar memaksa pengiraan satu thread, jadi lebih perlahan — pada macOS kami syorkan Chrome. Memori yang tersedia dihadkan kepada 4 GB (had WebAssembly), jadi spot besar lebih baik dikira pada PC.",
+    creditBefore: "Aplikasi ini dibina berasaskan",
+    creditMid1: " (karya Wataru Inariba, AGPL-3.0), diterjemah dan ditambah baik oleh",
+    creditBrand: "HoldemMaster",
+    creditMid2: ". Keseluruhan kod sumber yang diubah suai diterbitkan di",
+    creditAfter: " di bawah lesen yang sama.",
+  },
 } as const;
 
 /* npokers 빌드에서 위 사전을 덮어쓰는 조각 — 트레이너·교육예제·오늘의문제 언급을 걷어내고
@@ -797,6 +841,25 @@ const N =
             "Mulai dari Chart preflop untuk melihat range open dan defend",
             "Baca Cara pakai untuk belajar membaca layar hasil",
             "Setelah terbiasa, hitung hand Anda sendiri lewat Spot kustom (①–⑤)",
+          ],
+        },
+        // ⚠ 트레이너 어휘 금지(Trainer·Jurulatih·latihan·berlatih·Spot belajar·Cabaran) — npokers-verify FORBIDDEN ms
+        ms: {
+          community: "npokers.com",
+          ctaPreflop: "Carta preflop",
+          ctaEquity: "Kalkulator equity",
+          installNote:
+            "Selepas dipasang, aplikasi tersimpan pada peranti anda dan tetap boleh dibuka di luar talian. Ini pintasan pelayar, bukan program — ia tidak pernah meminta sebarang kebenaran.",
+          features: [
+            { title: "Percuma", desc: "Semua ciri, tanpa had penggunaan" },
+            { title: "Luar talian", desc: "Tambah ke skrin utama dan guna tanpa sambungan internet" },
+            { title: "Pengiraan pantas", desc: "Multithread — sepantas solver desktop" },
+            { title: "Carta & equity", desc: "Range open dan defend, serta equity tangan dan range" },
+          ],
+          steps: [
+            "Mulakan dengan Carta preflop untuk melihat range open dan defend",
+            "Baca Cara guna untuk belajar membaca skrin hasil",
+            "Selepas anda biasa, kira tangan anda sendiri dengan Spot tersuai (①–⑤)",
           ],
         },
       }

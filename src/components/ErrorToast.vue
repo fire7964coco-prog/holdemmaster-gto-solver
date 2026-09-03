@@ -177,6 +177,21 @@ const M = {
       "Tempelkan ke postingan pertanyaan di komunitas, dan kami akan memakainya untuk memperbaiki masalahnya. Tidak ada informasi pribadi di dalamnya.",
     promptCopy: "Salin teks di bawah ini",
   },
+  ms: {
+    title: "Ralat telah direkodkan",
+    // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백 주의
+    body1: "Jika ada yang kelihatan tidak kena, beritahu kami. Butirannya disimpan ",
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
+    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    bodyB1: "hanya pada peranti ini",
+    body2: " — mahu berkongsi atau tidak, terpulang kepada anda.",
+    copied: "Disalin",
+    copyButton: "Salin butiran ralat",
+    close: "Tutup",
+    copiedHint:
+      "Tampalkan dalam siaran soalan di komuniti, dan kami akan menggunakannya untuk membaiki masalah itu. Tiada maklumat peribadi di dalamnya.",
+    promptCopy: "Salin teks di bawah",
+  },
 } as const;
 
 export default defineComponent({

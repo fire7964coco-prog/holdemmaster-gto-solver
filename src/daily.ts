@@ -139,12 +139,14 @@ export const recordDaily = (lossBb: number) => {
  *  - 중국어(간체·번체): YYYY-MM-DD (본체의 zh/zh-hant 포스팅이 전부 ISO다)
  *  - 프랑스어: JJ/MM/AAAA (브리프 §표기 — 착수지시서도 DD/MM/YYYY로 못박았다)
  *  - 인도네시아어: DD/MM/YYYY (인니 표준 — 리서치 §1-4)
+ *  - 말레이어: DD/MM/YYYY (말레이시아 표준 — 말레이어 리서치 §1-2)
  *  - 나머지: YYYY.MM.DD
  */
 export const dailyCardDate = () => {
   const key = todayKey();
   if (i18n.locale === "de") return key.split("-").reverse().join(".");
-  if (i18n.locale === "fr" || i18n.locale === "id") return key.split("-").reverse().join("/");
+  if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms")
+    return key.split("-").reverse().join("/");
   if (i18n.locale === "zh" || i18n.locale === "zh-hant") return key;
   return key.replace(/-/g, ".");
 };
@@ -269,6 +271,21 @@ export const dailyShareText = (verdict: string) => {
       "",
       "Coba tantangan yang sama → https://solver.holdemmaster.com/?view=trainer&lang=id",
       "(HoldemMaster GTO Solver · satu tantangan per hari)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "ms") {
+    // ⚠ 말레이시아 날짜도 DD/MM/YYYY — 공용 «26.08.24»(yy.mm.dd)는 모호하다.
+    //   소수점은 영어와 같은 «.»이라 localizeNumber로 감싸지 «않는다» (id와 다르다 — 리서치 §1-2).
+    const msDate = todayKey().split("-").reverse().join("/");
+    return [
+      `[Cabaran GTO Harian · ${msDate}]`,
+      `Hasil saya: ${verdict} (kerugian EV ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `Streak ${dailyState.streak} hari` : "",
+      "",
+      "Cuba cabaran yang sama → https://solver.holdemmaster.com/?view=trainer&lang=ms",
+      "(HoldemMaster GTO Solver · satu cabaran sehari)",
     ]
       .filter(Boolean)
       .join("\n");

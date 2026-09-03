@@ -353,6 +353,36 @@ const M = {
       "Tidak ada yang terpasang ke sistem Anda — ini hanya pintasan browser. Tidak meminta izin apa pun, dan bisa Anda hapus kapan saja dengan menahan ikonnya, seperti aplikasi biasa.",
     close: "Tutup",
   },
+  // 말레이어 — anda(소문자)체. 삼성 경고창의 «제목·버튼 이름»은 적지 않는다(실기 캡처 없음 — 확정_결정 규칙 2)
+  ms: {
+    iconAlt: "Ikon HoldemMaster GTO Trainer",
+    title: "Tambah ke skrin utama?",
+    // samsung1 + «굵은» samsungB1 + samsung2 + «굵은» samsungB2 + samsung3 로 한 문장이 된다.
+    samsung1: "Samsung Internet mungkin ",
+    samsungB1: "menyekat pemasangan atas sebab keselamatan",
+    samsung2: " — pemeriksaan itu datang daripada pelayar, bukan daripada aplikasi ini. ",
+    samsungB2: "Buka dalam Chrome",
+    samsung3: " dan ia akan dipasang tanpa amaran tersebut.",
+    default1: "Ia terbuka dengan satu ketikan, dan ",
+    defaultB1: "menyimpan kesemua 13 Spot belajar serta Trainer GTO pada peranti anda",
+    default2: " supaya anda boleh belajar walaupun tiada sambungan internet.",
+    ios1: "Ketik ",
+    iosB1: "butang Kongsi",
+    ios2: " di bawah, kemudian pilih ",
+    // iOS Safari 말레이어의 실제 메뉴 이름 — Apple ms-my 표기는 «Tambah ke Skrin Utama».
+    // ⚠ 인니어판(위 id 블록)과 낱말이 다르다 — 복사해 오지 말 것
+    iosB2: "“Tambah ke Skrin Utama”",
+    ios3: ". Ia terbuka dengan satu ketikan, dan Spot belajar serta Trainer GTO tersimpan untuk kegunaan luar talian.",
+    openInChrome: "Buka dalam Chrome",
+    install: "Tambah ke skrin utama",
+    gotIt: "Faham",
+    later: "Nanti dulu",
+    samsungHint:
+      "Kalau anda tetap mahu memasang di sini, ikut arahan dalam kotak dialog untuk membenarkannya.",
+    safety:
+      "Tiada apa-apa yang dipasang pada sistem anda — ini hanya pintasan pelayar. Ia tidak meminta sebarang kebenaran, dan anda boleh membuangnya bila-bila masa dengan menekan lama ikonnya, seperti aplikasi biasa.",
+    close: "Tutup",
+  },
 } as const;
 
 /* npokers 빌드용 덮어쓰기 — 배너의 «교육 예제·트레이너 저장» 대목을 «앱 저장»으로.
@@ -420,6 +450,12 @@ const N =
           defaultB1: "menyimpan aplikasi di perangkat Anda",
           default2: " supaya tetap bisa dipakai tanpa koneksi internet.",
           ios3: ". Terbuka dengan sekali sentuh dan tetap berfungsi saat offline.",
+        },
+        ms: {
+          iconAlt: "Ikon npokers",
+          defaultB1: "menyimpan aplikasi pada peranti anda",
+          default2: " supaya anda boleh menggunakannya walaupun tiada sambungan internet.",
+          ios3: ". Ia terbuka dengan satu ketikan dan tetap berfungsi walaupun di luar talian.",
         },
       }
     : null;

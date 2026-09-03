@@ -208,6 +208,14 @@ const M = {
     parseError: (range: string) =>
       `Range tidak bisa dibaca: ${range || "(kosong)"}`,
   },
+  ms: {
+    clear: "Kosongkan",
+    errorPrefix: "Ralat:",
+    weight: "Wajaran:",
+    combos: "combo",
+    parseError: (range: string) =>
+      `Range tidak dapat dibaca: ${range || "(kosong)"}`,
+  },
 } as const;
 
 import { C } from "../theme";

@@ -433,6 +433,24 @@ const M = {
     addedLines: "Line ditambahkan:",
     removedLines: "Line dihapus:",
   },
+  ms: {
+    treeError: "Ralat: tree gagal dibina (memuatkan tree yang rosak?)",
+    pot: "Pot",
+    stack: "Stack",
+    // 액션 «이름»(bet·check·all-in)은 영어 유지(리서치 §2) — 일반어 «action»은 원어민 검수(09-03)로 aksi 통일
+    noActions: "(Tiada aksi)",
+    wins: "menang",
+    invalidTerminals: "Node terminal tidak sah:",
+    addBetAction: "Tambah aksi bet",
+    removeNode: "Buang node terpilih",
+    betAmount: "Jumlah bet:",
+    // % 앞 공백 없음(말레이 표기 = 영어식) — «% pot» 계열과 같은 형식
+    potRate: (pct: string) => `(${pct}% pot)`,
+    saveEdits: "Simpan suntingan",
+    cancelEdits: "Batalkan suntingan",
+    addedLines: "Line ditambah:",
+    removedLines: "Line dibuang:",
+  },
 } as const;
 
 export default defineComponent({
