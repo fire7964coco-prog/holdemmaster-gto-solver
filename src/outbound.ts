@@ -99,10 +99,10 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   // ⚠ 이 한 줄을 빼면 «숨김»이 아니라 «한국어 홈으로 연결»된다 — 맵 자체가 없으면
   //   mainSiteUrl()이 경로를 그대로 통과시키기 때문 (착수지시서 §0)
   fr: { "": "/fr", "/solver": "/fr/solver" },
-  // 인도네시아어 (2026-09-02 실측 curl): `/id` 200 · **`/id/solver` 404** · `/id/community` 404 ·
-  // `/id/blog/a-high-board-cbet` 404 → 홈만 등재. 랜딩·해설 링크는 화면에서 숨겨진다.
-  // 🔴 본체가 `/id/solver`를 열면 여기와 id-verify.js가 같이 낡는다 — 언어 작업마다 다시 잴 것
-  id: { "": "/id" },
+  // ✅ /id/solver 200 (2026-09-06 curl 실측, 본체 M-093 회신). 09-02에는 404였다.
+  // id-verify.js는 랜딩이 있으면 /id/solver인지 검사하므로 기존 단언을 유지한다.
+  // 커뮤니티·개별 해설 경로는 별개이며 이번 랜딩 연결에 포함하지 않는다.
+  id: { "": "/id", "/solver": "/id/solver" },
   // 말레이어 (2026-09-03 실측 curl): `/ms` 200 · **`/ms/solver` 404** · `/ms/community` 404 ·
   // 개별 `/ms/blog/...` 해설 글 404 → 홈만 등재. 랜딩·해설 링크는 화면에서 숨겨진다.
   // 🔴 본체가 `/ms/solver`를 열면 여기와 ms-verify.js가 같이 낡는다 — 언어 작업마다 다시 잴 것

@@ -819,7 +819,7 @@ export const PRESETS: Preset[] = [
   },
   {
     titleHi: "जुड़ा हुआ low board, two-tone",
-    lessonHi: "7-6-5 पर SB पहली बारी में 90.4% check और 9.6% bet करता है। SB की equity 49.6% है, लेकिन EQR 85.3% तक गिरता है। चौड़ी range के साथ OOP खेलते समय equity को EV में बदलने की मुश्किल देखें।",
+    lessonHi: "7-6-5 पर SB पहली बारी में 90.4% check और 9.6% bet करता है। यहाँ flop पर केवल 33% pot का bet उपलब्ध है, इसलिए यह परिणाम छोटे और बड़े sizes के बीच चुनाव नहीं दिखाता। SB की equity 49.6% है, लेकिन EQR 85.3% तक गिरता है। चौड़ी range के साथ OOP खेलते समय equity को EV में बदलने की मुश्किल देखें।",
     ...SBBB,
     id: "sb-connected",
     title: "로우 연결 투톤",
