@@ -228,6 +228,12 @@ const M = {
     // 액션명은 영어 유지 — 말레이 코퍼스도 check/call/raise/fold 영어
     action: (name: string): string => name,
   },
+  hi: {
+    strategyCombos: "रणनीति (Combos)",
+    strategy: "रणनीति",
+    equity: "Equity",
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

@@ -148,6 +148,10 @@ const M = {
     noGraph: "Graf tidak tersedia",
     equity: "Equity",
   },
+  hi: {
+    noGraph: "ग्राफ़ उपलब्ध नहीं है",
+    equity: "Equity",
+  },
 } as const;
 
 export default defineComponent({

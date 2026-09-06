@@ -38,10 +38,10 @@
     -->
     <script>
       (function () {
-        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms"];
+        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi"];
         var l = null;
         try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
-        if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale"); } catch (e) { l = null; } }
+        if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale.pegged"); } catch (e) { l = null; } }
         if (OK.indexOf(l) < 0) {
           var n = (navigator.language || "").toLowerCase();
           if (n.indexOf("ko") === 0) l = "ko";
@@ -52,6 +52,7 @@
           else if (n.indexOf("fr") === 0) l = "fr";
           else if (n.indexOf("id") === 0 || n.indexOf("in") === 0) l = "id"; // «in»은 인도네시아어 옛 코드
           else if (n.indexOf("ms") === 0) l = "ms"; // ms-MY·ms-BN·ms-SG 모두 여기로
+          else if (n === "hi" || n.indexOf("hi-") === 0) l = "hi";
           else if (n.indexOf("zh") === 0) l = (/^zh-(tw|hk|mo)($|[-_])/.test(n) || n.indexOf("hant") >= 0) ? "zh-hant" : "zh";
           else l = "en";
         }
@@ -62,7 +63,7 @@
         var TITLE = {
           en: "GTO Trainer", ja: "GTOトレーナー", es: "GTO Trainer", pt: "GTO Trainer",
           de: "GTO Trainer", zh: "GTO 训练器", "zh-hant": "GTO 訓練器", fr: "GTO Trainer", id: "GTO Trainer",
-          ms: "GTO Trainer"
+          ms: "GTO Trainer", hi: "GTO Trainer"
         };
         var meta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
         if (meta && TITLE[l]) meta.setAttribute("content", TITLE[l]);

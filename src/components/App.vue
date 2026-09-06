@@ -134,6 +134,21 @@ export default defineComponent({
         "run-solver": "솔버 실행",
         treeEdit: "트리 미리보기 & 편집",
       },
+      hi: {
+
+        about: "परिचय",
+        guide: "कैसे इस्तेमाल करें — कदम-दर-कदम",
+        presets: "अभ्यास स्पॉट — एक क्लिक में उदाहरण",
+        trainer: "GTO Trainer — हर फ़ैसले का EV देखें",
+        preflop: "Preflop चार्ट — Open और defend ranges",
+        equity: "Equity — हैंड और range की equity",
+        "oop-range": "OOP Range",
+        "ip-range": "IP Range",
+        board: "Board",
+        "tree-config": "Tree सेटिंग",
+        "run-solver": "Solver चलाएँ",
+        treeEdit: "Tree देखें और बदलें",
+  },
       en: {
         about: "About",
         guide: "How to Use — Step by Step",

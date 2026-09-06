@@ -62,6 +62,9 @@ const M = {
   ms: {
     combos: "combo",
   },
+  hi: {
+    combos: "combos",
+  },
 } as const;
 
 const actionLabel = (
@@ -149,6 +152,14 @@ const actionLabel = (
       Raise: "加注",
       Allin: "全下",
       "All-in": "全下",
+    }, undefined, undefined, undefined, {
+      Fold: "Fold",
+      Check: "Check",
+      Call: "Call",
+      Bet: "Bet",
+      Raise: "Raise",
+      Allin: "All-in",
+      "All-in": "All-in",
     }
   );
   const label = map[name] ?? name;
@@ -177,7 +188,7 @@ const actionLabel = (
         "du pot",
         "dari pot",
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
-        "pot"
+        "pot", "pot"
       )})`
     );
   }

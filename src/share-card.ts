@@ -25,6 +25,18 @@ const CARD_TEXT = {
       `EV 손실 ${bb}bb${streak > 1 ? ` · ${streak}일 연속 풀이 중` : ""}`,
     invite: "나도 같은 문제 풀어보기",
   },
+  hi: {
+
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "हर दिन 1 सवाल · सभी के लिए एक जैसा",
+    heading: "आज का GTO सवाल",
+    board: "Board",
+    hand: "मेरा हैंड",
+    result: (verdict: string) => `मेरा परिणाम: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `EV नुकसान ${bb}bb${streak > 1 ? ` · लगातार ${streak} दिन` : ""}`,
+    invite: "आज का सवाल हल करें",
+  },
   en: {
     brand: "HoldemMaster GTO Trainer",
     tagline: "One puzzle a day · same for everyone",
@@ -329,7 +341,8 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   drawCardRow(ctx, input.hand, WIDTH / 2, panelY + 430, 118, 18);
 
   // 판정 — 문구가 길면(«허용 가능한 선택») 폭을 넘치므로 크기를 맞춰 줄인다
-  const verdictY = 1122;
+  // Hindi matras rise above the Latin baseline: keep the verdict below the panel border.
+  const verdictY = i18n.locale === "hi" ? 1142 : 1122;
   ctx.textAlign = "center";
   ctx.fillStyle = TONE_COLORS[input.verdictTone];
   const verdictLine = T.result(input.verdictText);

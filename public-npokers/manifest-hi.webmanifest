@@ -1,0 +1,64 @@
+{
+  "name": "npokers",
+  "short_name": "npokers",
+  "description": "अपने ब्राउज़र में मुफ़्त GTO सॉल्वर चलाएँ। Preflop चार्ट और equity की गणना भी उपलब्ध है।",
+  "lang": "hi",
+  "dir": "ltr",
+  "start_url": "/?lang=hi",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Preflop चार्ट",
+      "short_name": "चार्ट",
+      "description": "हर पोज़िशन से open और defend करने की ranges देखें",
+      "url": "/?view=preflop&lang=hi",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Equity कैलकुलेटर",
+      "short_name": "Equity",
+      "description": "अपने हैंड की equity किसी हैंड या range के ख़िलाफ़ निकालें",
+      "url": "/?view=equity&lang=hi",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

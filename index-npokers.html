@@ -30,10 +30,10 @@
     -->
     <script>
       (function () {
-        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms"];
+        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi"];
         var l = null;
         try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
-        if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale"); } catch (e) { l = null; } }
+        if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale.pegged"); } catch (e) { l = null; } }
         if (OK.indexOf(l) < 0) {
           var n = (navigator.language || "").toLowerCase();
           if (n.indexOf("ko") === 0) l = "ko";
@@ -44,6 +44,7 @@
           else if (n.indexOf("fr") === 0) l = "fr";
           else if (n.indexOf("id") === 0 || n.indexOf("in") === 0) l = "id"; // «in»은 인도네시아어 옛 코드
           else if (n.indexOf("ms") === 0) l = "ms"; // ms-MY·ms-BN·ms-SG 모두 여기로
+          else if (n === "hi" || n.indexOf("hi-") === 0) l = "hi";
           else if (n.indexOf("zh") === 0) l = (/^zh-(tw|hk|mo)($|[-_])/.test(n) || n.indexOf("hant") >= 0) ? "zh-hant" : "zh";
           else l = "en";
         }
@@ -84,7 +85,7 @@
           <li><strong>Preflop charts</strong> — opening and defense ranges by position, plus vs-3bet and vs-4bet modes</li>
           <li><strong>Equity calculator</strong> — hand-vs-hand and hand-vs-range equity with hand breakdowns</li>
           <li><strong>Spot share links</strong> — share any spot you build with a single URL</li>
-          <li><strong>8 languages</strong> — English, 한국어, 日本語, Español, Português, Deutsch, 简体中文, 繁體中文</li>
+          <li><strong>12 languages</strong> — English, 한국어, 日本語, Español, Português, Deutsch, Français, Bahasa Indonesia, Bahasa Melayu, हिन्दी, 简体中文, 繁體中文</li>
         </ul>
 
         <h2 style="font-size:1.125rem;font-weight:700;color:#fafafa;margin:1.75rem 0 .5rem">FAQ</h2>

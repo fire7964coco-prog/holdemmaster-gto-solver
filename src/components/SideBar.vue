@@ -424,6 +424,28 @@ const M = {
     betSizeSub: "Tetapan",
     run: "Kira",
   },
+  hi: {
+    exploreLabel: "जानें",
+    exploreLabelSuffix: " और सीखें",
+    about: "परिचय",
+    guide: "कैसे इस्तेमाल करें",
+    presets: "अभ्यास स्पॉट",
+    presetsBadge: "तुरंत",
+    trainer: "GTO Trainer",
+    trainerBadge: "EV",
+    preflop: "Preflop चार्ट",
+    preflopBadge: "Range",
+    equity: "Equity",
+    equityBadge: "हिस्सा",
+    customLabel: "अपना स्पॉट",
+    customLabelSuffix: "",
+    oopRange: "OOP Range",
+    ipRange: "IP Range",
+    board: "Board",
+    betSize: "Bet size",
+    betSizeSub: "सेटिंग",
+    run: "गणना करें",
+  },
 } as const;
 
 export default defineComponent({

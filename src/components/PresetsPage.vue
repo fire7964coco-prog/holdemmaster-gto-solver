@@ -123,6 +123,19 @@ const M = {
     footnote:
       "레인지는 100bb 온라인 표준의 근사치입니다. 불러온 뒤 자유롭게 수정해서 비교해보는 것도 좋은 공부예요.",
   },
+  hi: {
+
+    infoBtn1: "[⚡ परिणाम देखें]",
+    infoText1: " से रणनीति तुरंत देखें। ",
+    infoBtn2: "[खुद गणना करें]",
+    infoText2: " से ranges बदलें या turn और river की रणनीति देखें।",
+    pot: "Pot",
+    stack: "Stack",
+    articleLink: "विश्लेषण पढ़ें",
+    viewResults: "परिणाम देखें",
+    solveYourself: "खुद गणना करें",
+    footnote: "ये ranges मानक 100bb ऑनलाइन खेल के करीब रखी गई हैं। कोई स्पॉट लोड करें, ranges बदलें और परिणामों की तुलना करके सीखें।",
+  },
   en: {
     infoBtn1: "[⚡ View results]",
     infoText1:

@@ -192,6 +192,18 @@ const M = {
       "Tampalkan dalam siaran soalan di komuniti, dan kami akan menggunakannya untuk membaiki masalah itu. Tiada maklumat peribadi di dalamnya.",
     promptCopy: "Salin teks di bawah",
   },
+  hi: {
+    title: "त्रुटि दर्ज हुई",
+    body1: "अगर कुछ ग़लत दिखाई दिया हो, तो हमें बताएँ। विवरण ",
+    bodyB1: "सिर्फ़ इस डिवाइस पर",
+    body2: " सेव है — इसे शेयर करना पूरी तरह आपकी इच्छा पर है।",
+    copied: "कॉपी हो गया",
+    copyButton: "त्रुटि का विवरण कॉपी करें",
+    close: "बंद करें",
+    copiedHint:
+      "इसे कम्युनिटी पोस्ट में पेस्ट करें। इससे हमें समस्या समझने में मदद मिलेगी। शेयर करने से पहले कॉपी किया गया विवरण देख लें।",
+    promptCopy: "नीचे दिया टेक्स्ट कॉपी करें",
+  },
 } as const;
 
 export default defineComponent({

@@ -242,6 +242,12 @@ const M = {
     finalizing: "Sedang menyelesaikan…",
     paused: "Solver dijeda.",
   },
+  hi: {
+    notRun: "अभी तक सॉल्वर नहीं चलाया गया है।",
+    running: "सॉल्वर चल रहा है…",
+    finalizing: "अंतिम चरण पूरा हो रहा है…",
+    paused: "सॉल्वर रुका हुआ है।",
+  },
 } as const;
 
 export default defineComponent({

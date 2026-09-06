@@ -480,6 +480,30 @@ const M = {
     strategyCombos: "Strategi (combo)",
     equity: "Equity",
   },
+  hi: {
+    modeLabels: {
+      basics: "मूल जानकारी",
+      graphs: "ग्राफ़",
+      compare: "तुलना",
+      turn: "Turn",
+      river: "River",
+    } as Record<string, string>,
+    player: "खिलाड़ी:",
+    auto: (player: string) => `अपने आप (${player})`,
+    barHeight: "बार की ऊँचाई:",
+    normalized: "सामान्यीकृत",
+    absolute: "मूल वज़न",
+    full: "पूरा",
+    suit: "Suit:",
+    grouped: "समूह में",
+    individual: "अलग-अलग",
+    display: "दिखाएँ:",
+    strategy: "रणनीति",
+    weight: "वज़न",
+    chart: "चार्ट:",
+    strategyCombos: "रणनीति (Combos)",
+    equity: "Equity",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

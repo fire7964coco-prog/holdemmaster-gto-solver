@@ -608,6 +608,45 @@ const M = {
     creditMid2: ". Kode sumber lengkap hasil modifikasi dipublikasikan di",
     creditAfter: " dengan lisensi yang sama.",
   },
+  hi: {
+    community: "HoldemMaster कम्युनिटी",
+    heroTitle1: "GTO रणनीति,",
+    heroTitle2: "सीधे आपके ब्राउज़र में।",
+    heroSub1: "इंस्टॉल करने या पैसे देने की ज़रूरत नहीं। Range और बोर्ड चुनें,",
+    heroSub2: " फिर आपका डिवाइस उस स्पॉट की GTO रणनीति की गणना करता है।",
+    ctaPresets: "अभ्यास स्पॉट देखें",
+    ctaTrainer: "GTO Trainer",
+    ctaDaily: "आज की चुनौती",
+    dailyDone: "पूरा हुआ",
+    ctaGuide: "कैसे इस्तेमाल करें",
+    ctaInstall: "होम स्क्रीन पर जोड़ें",
+    installNote: "इंस्टॉल करने पर अभ्यास स्पॉट और ट्रेनर आपके डिवाइस पर सेव हो जाते हैं, ताकि आप ऑफ़लाइन भी अभ्यास कर सकें। यह ब्राउज़र में चलने वाला वेब ऐप है। इंस्टॉल करने के लिए कैमरा, संपर्क, SMS या लोकेशन की अनुमति नहीं माँगता।",
+    installSafe: "इंस्टॉल के बारे में जानें",
+    features: [{
+       title: "मुफ़्त",
+       desc: "सभी सुविधाएँ, इस्तेमाल की कोई सीमा नहीं",
+     }, {
+       title: "ऑफ़लाइन अभ्यास",
+       desc: "होम स्क्रीन पर जोड़ें और बिना इंटरनेट अभ्यास करें",
+     }, {
+       title: "तेज़ गणना",
+       desc: "कई थ्रेड का इस्तेमाल करके गणना करता है",
+     }, {
+       title: "GTO Trainer",
+       desc: "स्पॉट खेलें और pot के अनुपात में EV नुकसान पर अपना प्रदर्शन देखें",
+     }],
+    stepsTitle: "पहली बार इस्तेमाल कर रहे हैं?",
+    steps: ["अभ्यास स्पॉट में कोई स्पॉट खोलें और [परिणाम देखें] दबाएँ — परिणाम तुरंत दिखेंगे", "परिणाम स्क्रीन समझने के लिए [कैसे इस्तेमाल करें] गाइड पढ़ें।", "GTO Trainer आज़माएँ — देखें कि हर फ़ैसले में कितने bb का EV नुकसान होता है", "तैयार होने पर अपना स्पॉट (①–⑤) में खुद के हैंड की गणना करें"],
+    landingBefore: "पहले समझना चाहते हैं कि GTO सॉल्वर क्या है और इसके परिणाम कैसे पढ़ें? देखें: ",
+    landingLink: "HoldemMaster की सॉल्वर गाइड",
+    landingAfter: "।",
+    notes: "iOS और Safari में ब्राउज़र की सीमाओं के कारण गणना एक ही थ्रेड पर चलती है और धीमी होती है। macOS पर Chrome इस्तेमाल कर सकते हैं। WebAssembly की सीमा के कारण उपलब्ध मेमोरी अधिकतम 4GB है। बड़े स्पॉट की गणना PC पर अधिक सुविधाजनक है।",
+    creditBefore: "यह ऐप आधारित है ",
+    creditMid1: " पर (Wataru Inariba, AGPL-3.0)। इसका अनुवाद और विस्तार ",
+    creditBrand: "HoldemMaster",
+    creditMid2: " ने किया है। संशोधित सोर्स कोड पूरा का पूरा ",
+    creditAfter: " पर उसी लाइसेंस के तहत उपलब्ध है।",
+  },
   ms: {
     community: "Komuniti HoldemMaster",
     heroTitle1: "Strategi GTO,",
@@ -844,6 +883,26 @@ const N =
           ],
         },
         // ⚠ 트레이너 어휘 금지(Trainer·Jurulatih·latihan·berlatih·Spot belajar·Cabaran) — npokers-verify FORBIDDEN ms
+        hi: {
+          community: "npokers.com",
+          ctaPreflop: "Preflop चार्ट",
+          ctaEquity: "Equity कैलकुलेटर",
+          installNote: "इंस्टॉल करने पर ऐप आपके डिवाइस पर सेव हो जाता है, ताकि आप ऑफ़लाइन भी इसे खोल सकें। यह ब्राउज़र में चलने वाला वेब ऐप है। इंस्टॉल करने के लिए कैमरा, संपर्क, SMS या लोकेशन की अनुमति नहीं माँगता।",
+          features: [{
+             title: "मुफ़्त",
+             desc: "सभी सुविधाएँ, इस्तेमाल की कोई सीमा नहीं",
+           }, {
+             title: "ऑफ़लाइन",
+             desc: "होम स्क्रीन पर जोड़ें और बिना इंटरनेट इस्तेमाल करें",
+           }, {
+             title: "तेज़ गणना",
+             desc: "कई थ्रेड का इस्तेमाल करके गणना करता है",
+           }, {
+             title: "चार्ट और Equity",
+             desc: "Open और बचाव की range, साथ में हैंड और range की equity",
+           }],
+          steps: ["Preflop चार्ट में open और बचाव की range देखें", "परिणाम स्क्रीन समझने के लिए [कैसे इस्तेमाल करें] गाइड पढ़ें।", "तैयार होने पर अपना स्पॉट (①–⑤) में खुद के हैंड की गणना करें"],
+        },
         ms: {
           community: "npokers.com",
           ctaPreflop: "Carta preflop",

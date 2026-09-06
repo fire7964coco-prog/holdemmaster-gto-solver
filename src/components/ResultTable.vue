@@ -795,6 +795,29 @@ const M = {
     // 액션명은 영어 유지 — 말레이 코퍼스도 check/call/raise/fold 영어 (리서치 §2)
     action: (name: string): string => name,
   },
+  hi: {
+    summary: "सारांश",
+    barWidth: "बार की चौड़ाई:",
+    normalized: "सामान्यीकृत",
+    absolute: "मूल वज़न",
+    full: "पूरा",
+    display: "दिखाएँ:",
+    actionPct: "Action %",
+    actionEv: "Action EV",
+    exportCsv: "सारांश CSV फ़ाइल में एक्सपोर्ट करें",
+    all: "सभी",
+    hand: "हैंड",
+    strategy: "रणनीति",
+    weightBar: "वज़न (बार)",
+    weight: "वज़न",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (बार)",
+    combos: "Combos",
+    noReport: (chanceType: string) => `${chanceType === "turn" ? "Turn" : "River"} रिपोर्ट उपलब्ध नहीं है`,
+    noResults: "कोई परिणाम नहीं",
+    action: (name: string): string => name,
+  },
 } as const;
 
 export default defineComponent({

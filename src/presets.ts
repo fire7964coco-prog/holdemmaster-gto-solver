@@ -15,6 +15,7 @@ export type Preset = {
   categoryFr: string;
   categoryId: string;
   categoryMs: string;
+  categoryHi: string;
   title: string;
   titleEn: string;
   titleJa: string;
@@ -26,6 +27,7 @@ export type Preset = {
   titleFr: string;
   titleId: string;
   titleMs: string;
+  titleHi: string;
   board: string; // 예: "Ah 7d 2c"
   lesson: string; // 이 스팟에서 배우는 것
   lessonEn: string;
@@ -38,6 +40,7 @@ export type Preset = {
   lessonFr: string;
   lessonId: string;
   lessonMs: string;
+  lessonHi: string;
   oopLabel: string;
   oopLabelEn: string;
   oopLabelJa: string;
@@ -49,6 +52,7 @@ export type Preset = {
   oopLabelFr: string;
   oopLabelId: string;
   oopLabelMs: string;
+  oopLabelHi: string;
   ipLabel: string;
   ipLabelEn: string;
   ipLabelJa: string;
@@ -60,6 +64,7 @@ export type Preset = {
   ipLabelFr: string;
   ipLabelId: string;
   ipLabelMs: string;
+  ipLabelHi: string;
   oopRange: string;
   ipRange: string;
   startingPot: number;
@@ -73,7 +78,7 @@ export type Preset = {
 
 /* 현재 언어에 맞는 프리셋 문구 — 화면에서는 preset.title 대신 이걸 쓸 것 */
 export const presetTitleOf = (
-  preset: Pick<Preset, "title" | "titleEn" | "titleJa" | "titleEs" | "titlePt" | "titleDe" | "titleZh" | "titleZhHant" | "titleFr" | "titleId" | "titleMs">
+  preset: Pick<Preset, "title" | "titleEn" | "titleJa" | "titleEs" | "titlePt" | "titleDe" | "titleZh" | "titleZhHant" | "titleFr" | "titleId" | "titleMs" | "titleHi">
 ) =>
   i18n.locale === "ko"
     ? preset.title
@@ -95,9 +100,11 @@ export const presetTitleOf = (
     ? preset.titleId
     : i18n.locale === "ms"
     ? preset.titleMs
+    : i18n.locale === "hi"
+    ? preset.titleHi
     : preset.titleEn;
 export const presetLessonOf = (
-  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId" | "lessonMs">
+  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId" | "lessonMs" | "lessonHi">
 ) =>
   i18n.locale === "ko"
     ? preset.lesson
@@ -119,9 +126,11 @@ export const presetLessonOf = (
     ? preset.lessonId
     : i18n.locale === "ms"
     ? preset.lessonMs
+    : i18n.locale === "hi"
+    ? preset.lessonHi
     : preset.lessonEn;
 export const presetCategoryOf = (
-  preset: Pick<Preset, "category" | "categoryEn" | "categoryJa" | "categoryEs" | "categoryPt" | "categoryDe" | "categoryZh" | "categoryZhHant" | "categoryFr" | "categoryId" | "categoryMs">
+  preset: Pick<Preset, "category" | "categoryEn" | "categoryJa" | "categoryEs" | "categoryPt" | "categoryDe" | "categoryZh" | "categoryZhHant" | "categoryFr" | "categoryId" | "categoryMs" | "categoryHi">
 ) =>
   i18n.locale === "ko"
     ? preset.category
@@ -143,9 +152,11 @@ export const presetCategoryOf = (
     ? preset.categoryId
     : i18n.locale === "ms"
     ? preset.categoryMs
+    : i18n.locale === "hi"
+    ? preset.categoryHi
     : preset.categoryEn;
 export const oopLabelOf = (
-  preset: Pick<Preset, "oopLabel" | "oopLabelEn" | "oopLabelJa" | "oopLabelEs" | "oopLabelPt" | "oopLabelDe" | "oopLabelZh" | "oopLabelZhHant" | "oopLabelFr" | "oopLabelId" | "oopLabelMs">
+  preset: Pick<Preset, "oopLabel" | "oopLabelEn" | "oopLabelJa" | "oopLabelEs" | "oopLabelPt" | "oopLabelDe" | "oopLabelZh" | "oopLabelZhHant" | "oopLabelFr" | "oopLabelId" | "oopLabelMs" | "oopLabelHi">
 ) =>
   i18n.locale === "ko"
     ? preset.oopLabel
@@ -167,9 +178,11 @@ export const oopLabelOf = (
     ? preset.oopLabelId
     : i18n.locale === "ms"
     ? preset.oopLabelMs
+    : i18n.locale === "hi"
+    ? preset.oopLabelHi
     : preset.oopLabelEn;
 export const ipLabelOf = (
-  preset: Pick<Preset, "ipLabel" | "ipLabelEn" | "ipLabelJa" | "ipLabelEs" | "ipLabelPt" | "ipLabelDe" | "ipLabelZh" | "ipLabelZhHant" | "ipLabelFr" | "ipLabelId" | "ipLabelMs">
+  preset: Pick<Preset, "ipLabel" | "ipLabelEn" | "ipLabelJa" | "ipLabelEs" | "ipLabelPt" | "ipLabelDe" | "ipLabelZh" | "ipLabelZhHant" | "ipLabelFr" | "ipLabelId" | "ipLabelMs" | "ipLabelHi">
 ) =>
   i18n.locale === "ko"
     ? preset.ipLabel
@@ -191,6 +204,8 @@ export const ipLabelOf = (
     ? preset.ipLabelId
     : i18n.locale === "ms"
     ? preset.ipLabelMs
+    : i18n.locale === "hi"
+    ? preset.ipLabelHi
     : preset.ipLabelEn;
 /** id로 제목 찾기 (트레이너 등 id만 있는 곳용) */
 export const presetTitleById = (id: string) => {
@@ -227,6 +242,9 @@ const BB_VS_SB =
   "99-22,AJs-A2s,KTs-K2s,QTs-Q2s,J5s+,T6s+,95s+,85s+,74s+,64s+,53s+,43s,ATo-A2o,K8o+,Q8o+,J8o+,T7o+,97o+,87o,76o";
 
 const SRP = {
+    categoryHi: "Single Raised Pot — BTN vs BB (बुनियाद)",
+    oopLabelHi: "BB (caller)",
+    ipLabelHi: "BTN (opener)",
   category: "싱글레이즈팟 — BTN vs BB (기본기)",
   categoryEn: "Single Raised Pot — BTN vs BB (Fundamentals)",
   categoryJa: "シングルレイズポット — BTN vs BB（基本）",
@@ -271,6 +289,9 @@ const SRP = {
 };
 
 const TBP = {
+    categoryHi: "3-Bet Pot — BB 3-bet, BTN call (कम SPR)",
+    oopLabelHi: "BB (3-bettor)",
+    ipLabelHi: "BTN (caller)",
   category: "3벳팟 — BB 3벳 vs BTN 콜 (낮은 SPR)",
   categoryEn: "3-Bet Pot — BB 3-Bets, BTN Calls (Low SPR)",
   categoryJa: "3ベットポット — BB 3ベット vs BTN コール（低SPR）",
@@ -315,6 +336,9 @@ const TBP = {
 };
 
 const SBBB = {
+    categoryHi: "Blind vs Blind — SB vs BB (चौड़ी ranges)",
+    oopLabelHi: "SB (opener)",
+    ipLabelHi: "BB (caller)",
   category: "블라인드전 — SB vs BB (와이드 레인지)",
   categoryEn: "Blind vs Blind — SB vs BB (Wide Ranges)",
   categoryJa: "ブラインド戦（BvB） — SB vs BB（ワイドレンジ）",
@@ -358,8 +382,12 @@ const SBBB = {
   unitScale: 10,
 };
 
+// hi lessons use the root-node observations in main-site gto-solver-series-spec §4-B.
+// Do not back-translate retired claims from older locale lessons (see hi_번역_C.md).
 export const PRESETS: Preset[] = [
   {
+    titleHi: "सूखा A-high board",
+    lessonHi: "A-high board पर BB पहली बारी में 98.2% check करता है। यह preview केवल उसी पहले फ़ैसले को दिखाता है; इससे BB के check के बाद BTN की c-bet आवृत्ति नहीं पढ़ सकते। BB की range में कौन-से हैंड check करते हैं, देखें।",
     ...SRP,
     id: "srp-dry-ace",
     title: "드라이 A하이 보드",
@@ -396,6 +424,8 @@ export const PRESETS: Preset[] = [
       "Spot klasik untuk range advantage. Perhatikan betapa luas range yang digunakan BTN untuk c-bet kecil selepas BB check — kad As menghentam range opener sepenuhnya.",
   },
   {
+    titleHi: "सूखा K-high board",
+    lessonHi: "BB इस K-high board पर पहली बारी में 99.8% check करता है। BB की equity 46.3% है, लेकिन EQR 80.7% है। दोनों आँकड़ों का फ़र्क़ देखें: equity होना और उसे EV में बदल पाना एक ही बात नहीं है।",
     ...SRP,
     id: "srp-dry-king",
     title: "드라이 K하이 보드",
@@ -432,6 +462,8 @@ export const PRESETS: Preset[] = [
       "Bandingkan dengan board A-high. Board K-high masih memihak BTN, tetapi check menjadi sedikit lebih kerap. Tahu kenapa?",
   },
   {
+    titleHi: "जुड़ा हुआ Broadway board, two-tone",
+    lessonHi: "इस जुड़े हुए Q-J-T board पर भी BB पहली बारी में 99.9% check करता है। बहुत-से draws होना अपने-आप donk bet करने की वजह नहीं बनता। किसी हैंड के बजाय दोनों पूरी ranges की बनावट देखें।",
     ...SRP,
     id: "srp-broadway",
     title: "브로드웨이 연결 투톤",
@@ -468,6 +500,8 @@ export const PRESETS: Preset[] = [
       "Board yang nampak seperti mengenai kedua-dua range. Namun di sinilah BB merealisasikan equity paling rendah antara 13 spot — 77.9% berbanding 119.4% milik BTN — dan check 99.9%. Panel kategori tangan menunjukkan sebabnya.",
   },
   {
+    titleHi: "जुड़ा हुआ middle board, two-tone",
+    lessonHi: "9-8-7 पर BB की पहली बारी की donk-bet आवृत्ति 23.7% है। फिर भी उसकी equity 48.5% है, इसलिए उसे पूरी range का फ़ायदा कहना सही नहीं होगा। यह preview BTN की अगली c-bet रणनीति नहीं दिखाता।",
     ...SRP,
     id: "srp-middle-connected",
     title: "미들 연결 투톤",
@@ -504,6 +538,8 @@ export const PRESETS: Preset[] = [
       "Tekstur klasik yang memihak caller. Frekuensi c-bet BTN menjunam — spot ini menunjukkan dengan tepat kenapa “sentiasa c-bet” itu salah.",
   },
   {
+    titleHi: "Monotone board (एक ही suit)",
+    lessonHi: "तीनों board कार्ड एक ही suit के हैं। BB पहली बारी में 88.8% check करता है और कुल 11.2% bet करता है। Flush और flush draw वाले हैंड की रणनीति की तुलना करें; हर हैंड एक जैसा नहीं खेलता।",
     ...SRP,
     id: "srp-monotone",
     title: "몬톤 보드 (같은 무늬 3장)",
@@ -540,6 +576,8 @@ export const PRESETS: Preset[] = [
       "Perhatikan kenapa bet besar semakin hilang dan digantikan bet kecil serta check. Lihat betapa kerapnya flush yang sudah jadi pun sekadar check.",
   },
   {
+    titleHi: "Paired board",
+    lessonHi: "Board पर दो 6 होने के बावजूद BB पहली बारी में 97.0% check करता है। Trips, pairs और बिना pair वाले हैंड की रणनीति अलग-अलग देखें। केवल paired board होने से बार-बार bet करना तय नहीं होता।",
     ...SRP,
     id: "srp-paired",
     title: "페어 보드",
@@ -576,6 +614,8 @@ export const PRESETS: Preset[] = [
       "Tiada siapa yang berinteraksi dengan board ini, jadi kadar bluff meningkat. Gunakan jadual terperinci untuk mencari tangan mana yang bet sebagai bluff.",
   },
   {
+    titleHi: "नीचा rainbow board",
+    lessonHi: "BB पहली बारी में 96.8% check करता है। इस ट्री में flop पर केवल 33% pot का bet उपलब्ध है। Preview में check के बाद की शाखा नहीं है, इसलिए इससे check-raise की आवृत्ति का दावा नहीं कर सकते।",
     ...SRP,
     id: "srp-low-rainbow",
     title: "로우 레인보우 보드",
@@ -615,6 +655,8 @@ export const PRESETS: Preset[] = [
       "Perang overcard — BB kerap check-raise pada tekstur ini. Ikuti bar aksi di bahagian atas selepas bet untuk melihat jawapan lawan.",
   },
   {
+    titleHi: "A-high board, 3-bettor को फ़ायदा",
+    lessonHi: "BB की equity 68.9% है और वह पहली बारी में अपनी पूरी range से bet करता है: 33% pot का bet 57.8%, और 66% pot का bet 42.2%। दोनों sizes इस्तेमाल होते हैं; केवल कम SPR से छोटे bet की वजह तय नहीं होती।",
     ...TBP,
     id: "3bp-ace-king",
     title: "3벳터 우위 A하이 보드",
@@ -651,6 +693,8 @@ export const PRESETS: Preset[] = [
       "Flop terbaik untuk 3-bettor, yang range-nya penuh dengan AK, AA dan KK. Pada SPR rendah, bet kecil menekan keseluruhan range lawan.",
   },
   {
+    titleHi: "Draws वाला two-tone board",
+    lessonHi: "BB इस Q-T-7 board पर पहली बारी में 66% pot का bet 98.4% इस्तेमाल करता है; 33% pot का bet 0.7% और check 0.8% है। A-K-2 वाले 3-bet pot से तुलना करें: SPR समान होने पर भी size का चुनाव बदलता है।",
     ...TBP,
     id: "3bp-dynamic",
     title: "다이나믹 투톤 보드",
@@ -694,6 +738,8 @@ export const PRESETS: Preset[] = [
       "Pot 3-bet di board yang turut menyebelahi caller — namun 3-bettor tetap tidak memperlahankan permainannya: 98.4% daripada range-nya bet dengan saiz dua pertiga pot yang sama. Lihat tangan mana yang membentuk 0.8% yang check.",
   },
   {
+    titleHi: "नीचा सूखा board",
+    lessonHi: "नीचे और सूखे board पर भी BB पहली बारी में 66% pot का bet 97.8% इस्तेमाल करता है। इस जगह strategy बड़े bet पर बहुत केंद्रित है; इसे केवल छोटे bet या बहुत कम हैंड से bet करने वाली रणनीति न मानें।",
     ...TBP,
     id: "3bp-low",
     title: "로우 드라이 보드",
@@ -730,6 +776,8 @@ export const PRESETS: Preset[] = [
       "Board yang hampir sepenuhnya terlepas daripada range 3-bettor — namun Overpair dan tangan A-high tetap menekan. Equity vs fold equity.",
   },
   {
+    titleHi: "K-high board पर T",
+    lessonHi: "SB पहली बारी में 67.4% bet और 32.6% check करता है। दोनों ranges चौड़ी हैं। यहाँ flop पर केवल 33% pot का bet उपलब्ध है, इसलिए यह परिणाम छोटे और बड़े sizes के बीच चुनाव नहीं दिखाता।",
     ...SBBB,
     id: "sb-king-mid",
     title: "K하이 미들킥 보드",
@@ -770,6 +818,8 @@ export const PRESETS: Preset[] = [
       "Dalam blind vs blind, range kedua-dua pemain luas, jadi kedua-duanya sampai ke flop dalam keadaan lemah. Bandingkan frekuensinya dengan spot Board kering K-high di BTN vs BB.",
   },
   {
+    titleHi: "जुड़ा हुआ low board, two-tone",
+    lessonHi: "7-6-5 पर SB पहली बारी में 90.4% check और 9.6% bet करता है। SB की equity 49.6% है, लेकिन EQR 85.3% तक गिरता है। चौड़ी range के साथ OOP खेलते समय equity को EV में बदलने की मुश्किल देखें।",
     ...SBBB,
     id: "sb-connected",
     title: "로우 연결 투톤",
@@ -807,6 +857,8 @@ export const PRESETS: Preset[] = [
       "Dua range luas berlanggar di board yang sangat bersambung: Two Pair, straight dan draw bertaburan di merata-rata tempat. Di sinilah panel kategori tangan paling menyerlah.",
   },
   {
+    titleHi: "दो Ace वाला board",
+    lessonHi: "SB पहली बारी में 33% pot का bet 79.6% इस्तेमाल करता है; 75% pot का bet 0.5% और check 19.8% है। यहाँ दोनों sizes उपलब्ध हैं, पर छोटे bet का इस्तेमाल कहीं ज़्यादा है। सभी दिखाई गई आवृत्तियाँ अलग-अलग round की गई हैं।",
     ...SBBB,
     id: "sb-paired-ace",
     title: "A 페어 보드",

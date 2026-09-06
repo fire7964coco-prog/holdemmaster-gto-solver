@@ -390,6 +390,35 @@ export const DRAW_LABELS_MS: Record<DrawKey, string> = {
   no_draw: "Tiada draw",
 };
 
+// hi: the main site's Hindi corpus retains Latin poker hand-category terms.
+// Explicit tables keep the chosen terminology visible to locale extraction/review tools.
+export const MADE_LABELS_HI: Record<MadeKey, string> = {
+  straight_flush: "Straight Flush",
+  quads: "Quads",
+  full_house: "Full House",
+  flush: "Flush",
+  straight: "Straight",
+  trips: "Set/Trips",
+  two_pair: "Two Pair",
+  overpair: "Overpair",
+  top_pair: "Top Pair",
+  second_pair: "Second Pair",
+  weak_pair: "कमज़ोर Pair",
+  underpair: "Underpair",
+  ace_high: "Ace-High",
+  king_high: "King-High",
+  nothing: "बना हुआ हैंड नहीं",
+};
+
+export const DRAW_LABELS_HI: Record<DrawKey, string> = {
+  combo_draw: "Combo Draw",
+  flush_draw: "Flush Draw",
+  oesd: "OESD",
+  gutshot: "Gutshot",
+  backdoor_fd: "Backdoor FD",
+  no_draw: "Draw नहीं",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -412,6 +441,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_ID
     : i18n.locale === "ms"
     ? MADE_LABELS_MS
+    : i18n.locale === "hi"
+    ? MADE_LABELS_HI
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -434,6 +465,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_ID
     : i18n.locale === "ms"
     ? DRAW_LABELS_MS
+    : i18n.locale === "hi"
+    ? DRAW_LABELS_HI
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

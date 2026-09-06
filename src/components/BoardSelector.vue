@@ -151,6 +151,13 @@ const M = {
     // 말레이어도 명사 복수 변화가 없다 — ko·ja·zh·id와 같이 ${n}만 갈아끼운다
     warnBody: (n: number) => `Tree yang disunting mengandaikan board dengan ${n} kad.`,
   },
+  hi: {
+    placeholder: "जैसे, AsKd7c",
+    clear: "साफ़ करें",
+    randomFlop: "रैंडम Flop",
+    warnLabel: "ध्यान दें:",
+    warnBody: (n: number) => `संपादित tree ${n} कार्ड वाले Board के लिए है।`,
+  },
 } as const;
 
 export default defineComponent({

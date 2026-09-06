@@ -153,6 +153,19 @@ const M = {
     playerLabel: "플레이어:",
     oopHint: "첫 액션 차례인 플레이어의 전략입니다",
   },
+  hi: {
+
+    backToList: "← वापस",
+    pot: "Pot",
+    stack: "Stack",
+    flopOnlyNote: "यहाँ केवल flop की रणनीति है। Turn और river भी देखना चाहते हैं? →",
+    solveThisSpot: "इस स्पॉट की गणना खुद करें",
+    readArticle: "विश्लेषण पढ़ें",
+    loadError: (e: string) => `पहले से गणना किए गए परिणाम लोड नहीं हुए: ${e}`,
+    loading: "परिणाम लोड हो रहे हैं…",
+    playerLabel: "खिलाड़ी:",
+    oopHint: "पहले action करने वाले खिलाड़ी की रणनीति",
+  },
   en: {
     backToList: "← Back",
     pot: "Pot",

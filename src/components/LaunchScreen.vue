@@ -113,6 +113,12 @@ const M = {
     titleLine2: "GTO Trainer.",
     footer: "Solver GTO gratis · Bisa offline",
   },
+  hi: {
+    greeting: "आपका स्वागत है",
+    titleLine1: "HoldemMaster",
+    titleLine2: "GTO सॉल्वर में।",
+    footer: "मुफ़्त GTO सॉल्वर · ऑफ़लाइन भी चलता है",
+  },
   ms: {
     greeting: "Selamat datang ke",
     titleLine1: "HoldemMaster",

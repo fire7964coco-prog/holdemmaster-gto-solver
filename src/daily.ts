@@ -145,7 +145,8 @@ export const recordDaily = (lossBb: number) => {
 export const dailyCardDate = () => {
   const key = todayKey();
   if (i18n.locale === "de") return key.split("-").reverse().join(".");
-  if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms")
+  // hi: DD/MM/YYYY with Latin digits, same in the image and copied text.
+  if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi")
     return key.split("-").reverse().join("/");
   if (i18n.locale === "zh" || i18n.locale === "zh-hant") return key;
   return key.replace(/-/g, ".");
@@ -157,6 +158,19 @@ export const dailyCardDate = () => {
  */
 export const dailyShareText = (verdict: string) => {
   const date = todayKey().replace(/-/g, ".").slice(2);
+  if (i18n.locale === "hi") {
+    const hiDate = todayKey().split("-").reverse().join("/");
+    return [
+      `[आज का GTO सवाल · ${hiDate}]`,
+      `मेरा परिणाम: ${verdict} (EV नुकसान ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `लगातार ${dailyState.streak} दिन अभ्यास` : "",
+      "",
+      "यही सवाल हल करें → https://solver.holdemmaster.com/?view=trainer&lang=hi",
+      "(HoldemMaster GTO Solver · हर दिन 1 सवाल)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
   if (i18n.locale === "ja") {
     return [
       `[今日のGTO問題・${date}]`,

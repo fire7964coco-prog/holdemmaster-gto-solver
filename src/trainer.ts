@@ -132,6 +132,9 @@ const actionName = (name: string) =>
     ? actionLabelsZhHant[name] ?? name
     : i18n.locale === "es" || i18n.locale === "pt"
     ? actionLabelsEs[name] ?? name
+    // hi deliberately keeps Latin action terms, including the normalized All-in label.
+    : i18n.locale === "hi"
+    ? actionLabelsEn[name] ?? name
     : actionLabelsEn[name] ?? name;
 
 export const trainerCategory = (
@@ -144,7 +147,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi",
     Record<TrainerCategory, string>
   > = {
     ko: {
@@ -153,6 +156,13 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "3벳팟",
       blind: "블라인드전",
     },
+    hi: {
+
+      all: "सभी",
+      srp: "Single Raised",
+      "3bp": "3-Bet Pot",
+      blind: "Blind vs Blind",
+  },
     en: {
       all: "All",
       srp: "Single Raised",

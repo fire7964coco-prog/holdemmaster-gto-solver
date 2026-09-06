@@ -451,6 +451,22 @@ const M = {
     addedLines: "Line ditambah:",
     removedLines: "Line dibuang:",
   },
+  hi: {
+    treeError: "त्रुटि: Tree नहीं बन सका (क्या लोड किया गया tree खराब है?)",
+    pot: "Pot",
+    stack: "Stack",
+    noActions: "(कोई action नहीं)",
+    wins: "जीता",
+    invalidTerminals: "अमान्य अंतिम nodes:",
+    addBetAction: "Bet जोड़ें",
+    removeNode: "चुना हुआ node हटाएँ",
+    betAmount: "Bet की राशि:",
+    potRate: (pct: string) => `(${pct}% pot)`,
+    saveEdits: "बदलाव सेव करें",
+    cancelEdits: "बदलाव रद्द करें",
+    addedLines: "जोड़ी गई lines:",
+    removedLines: "हटाई गई lines:",
+  },
 } as const;
 
 export default defineComponent({

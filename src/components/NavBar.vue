@@ -68,6 +68,7 @@
           <option value="fr">Français</option>
           <option value="id">Bahasa Indonesia</option>
           <option value="ms">Bahasa Melayu</option>
+          <option value="hi">हिन्दी</option>
           <!-- ⚠ 간체·번체는 «별개 언어»다 (용어 자체가 다르다 — 기계 변환 금지).
                두 이름 모두 «자기 글자»로 적어야 그 언어 사용자가 알아본다 -->
           <option value="zh">简体中文</option>
@@ -179,6 +180,13 @@ const M = {
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Pilih bahasa",
+  },
+  hi: {
+    solver: "सॉल्वर",
+    results: "परिणाम",
+    community: "HoldemMaster",
+    communitySuffix: " कम्युनिटी",
+    langSwitchLabel: "भाषा चुनें",
   },
   ms: {
     // «solver»는 말레이시아 GTO 매체도 영어 그대로 쓴다 (리서치 §1-3)

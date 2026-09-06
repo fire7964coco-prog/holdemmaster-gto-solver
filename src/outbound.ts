@@ -107,6 +107,8 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   // 개별 `/ms/blog/...` 해설 글 404 → 홈만 등재. 랜딩·해설 링크는 화면에서 숨겨진다.
   // 🔴 본체가 `/ms/solver`를 열면 여기와 ms-verify.js가 같이 낡는다 — 언어 작업마다 다시 잴 것
   ms: { "": "/ms" },
+  // 2026-09-05 HTTP: /hi 200; /hi/solver and /hi/community 404.
+  hi: { "": "/hi" },
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {
