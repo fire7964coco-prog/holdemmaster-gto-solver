@@ -20,13 +20,14 @@
       :class="
         'w-20 ml-2 px-2 py-1 rounded-lg text-sm text-center ' +
         (numThreads < 1 ||
-        numThreads > (isSafari ? 1 : 64) ||
+        numThreads > (isSingleThread ? 1 : 64) ||
         numThreads % 1 !== 0
           ? 'input-error'
           : '')
       "
       min="1"
-      max="64"
+      :max="isSingleThread ? 1 : 64"
+      :disabled="isSingleThread || isTreeBuilding || store.isSolverRunning || store.isFinalizing"
     />
     <button
       class="ml-3 button-base button-blue"
@@ -35,10 +36,10 @@
         store.isSolverRunning ||
         store.isFinalizing ||
         numThreads < 1 ||
-        numThreads > (isSafari ? 1 : 64) ||
+        numThreads > (isSingleThread ? 1 : 64) ||
         numThreads % 1 !== 0
       "
-      @click="buildTree"
+      @click="buildTree()"
     >
       {{ L.buildTree }}
     </button>
@@ -196,14 +197,7 @@
     <div class="flex mt-6 gap-3">
       <button
         class="button-base button-blue"
-        :disabled="
-          store.hasSolverRun ||
-          memoryUsageSelected > maxMemoryUsage ||
-          targetExploitability <= 0 ||
-          maxIterations < 0 ||
-          maxIterations % 1 !== 0 ||
-          maxIterations > 100000
-        "
+        :disabled="!canRun"
         @click="runSolver"
       >
         {{ L.runSolver }}
@@ -264,8 +258,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
-import { init, handler } from "../global-worker";
+import { computed, defineComponent, onUnmounted, ref } from "vue";
+import { init, handler, onWorkerFailure, terminate } from "../global-worker";
+import { clearSolverRetry, reportSolverError } from "../errors";
 import { encodeSpotUrl } from "../spot-share";
 import { i18n, pick, localizeNumber } from "../i18n";
 import {
@@ -1176,6 +1171,7 @@ const checkConfig = (
 type TreeStatusState =
   | { type: "notLoaded" }
   | { type: "building" }
+  | { type: "failed" }
   | { type: "error"; message: string }
   | { type: "built"; threads: number };
 
@@ -1191,7 +1187,9 @@ export default defineComponent({
     const tmpConfig = useTmpConfigStore();
     const L = computed(() => M[i18n.locale]);
 
-    const numThreads = ref((!isSafari && navigator.hardwareConcurrency) || 1);
+    const isSingleThread = ref(Boolean(isSafari) ||
+      typeof SharedArrayBuffer === "undefined" || !globalThis.crossOriginIsolated);
+    const numThreads = ref(isSingleThread.value ? 1 : Math.min(navigator.hardwareConcurrency || 1, 64));
     const targetExploitability = ref(0.3);
     const maxIterations = ref(1000);
 
@@ -1215,6 +1213,7 @@ export default defineComponent({
       const l = L.value;
       if (state.type === "notLoaded") return l.statusNotLoaded;
       if (state.type === "building") return l.statusBuilding;
+      if (state.type === "failed") return l.statusError(l.statusNotLoaded);
       if (state.type === "error") return l.statusError(state.message);
       return l.statusBuilt(state.threads);
     });
@@ -1226,6 +1225,12 @@ export default defineComponent({
         return memoryUsage.value;
       }
     });
+
+    // The toast retry calls runSolver directly, so it must share the button gate.
+    const canRun = computed(() => isTreeBuilt.value && !isTreeBuilding.value &&
+      !store.hasSolverRun && memoryUsageSelected.value <= maxMemoryUsage &&
+      targetExploitability.value > 0 && maxIterations.value >= 0 &&
+      maxIterations.value % 1 === 0 && maxIterations.value <= 100000);
 
     const iterationText = computed(() => {
       if (currentIteration.value === -1) {
@@ -1254,13 +1259,46 @@ export default defineComponent({
       }
     });
 
-    const buildTree = async () => {
+    const recoverFromFailure = (error: unknown) => {
+      terminate();
+      isTreeBuilt.value = false;
+      store.isSolverPaused = false;
+      store.isSolverFinished = false;
+      terminateFlag.value = false;
+      pauseFlag.value = false;
+      startTime = 0;
+      treeStatusState.value = { type: "failed" };
+      // The editor stores are untouched. A failed/terminated engine must be rebuilt.
+      reportSolverError(error, async () => {
+        isSingleThread.value = true;
+        numThreads.value = 1;
+        store.navView = "solver";
+        store.sideView = "run-solver";
+        if (await buildTree(true)) await runSolver();
+      });
+    };
+
+    const stopListening = onWorkerFailure((error) => {
+      // Active calls reject through their guard and reach the catch/finally below.
+      if (!isTreeBuilding.value && !store.isSolverRunning && !store.isFinalizing) {
+        recoverFromFailure(error);
+      }
+    });
+    onUnmounted(() => {
+      stopListening();
+      clearSolverRetry();
+      terminate();
+    });
+
+    const buildTree = async (forceSingleThread = false) => {
+      if (isTreeBuilding.value || store.isSolverRunning || store.isFinalizing) return false;
+      clearSolverRetry();
       isTreeBuilt.value = false;
 
       const configError = checkConfig(config);
       if (configError !== null) {
         treeStatusState.value = { type: "error", message: configError };
-        return;
+        return false;
       }
 
       saveConfigTmp();
@@ -1269,64 +1307,76 @@ export default defineComponent({
       store.isSolverFinished = false;
       treeStatusState.value = { type: "building" };
 
-      await init(numThreads.value);
-      if (!handler) return;
+      try {
+        const mode = await init(numThreads.value, forceSingleThread || isSingleThread.value);
+        isSingleThread.value = mode === "st";
+        if (isSingleThread.value) numThreads.value = 1;
+        if (!handler) throw new Error("SOLVER_WORKER_UNAVAILABLE");
 
-      const errorString = await handler.init(
-        tmpConfig.rangeRaw[0],
-        tmpConfig.rangeRaw[1],
-        new Uint8Array(tmpConfig.board),
-        tmpConfig.startingPot,
-        tmpConfig.effectiveStack,
-        tmpConfig.rakePercent / 100,
-        tmpConfig.rakeCap,
-        tmpConfig.donkOption,
-        convertBetString(tmpConfig.oopFlopBet),
-        convertBetString(tmpConfig.oopFlopRaise),
-        convertBetString(tmpConfig.oopTurnBet),
-        convertBetString(tmpConfig.oopTurnRaise),
-        tmpConfig.donkOption ? convertBetString(tmpConfig.oopTurnDonk) : "",
-        convertBetString(tmpConfig.oopRiverBet),
-        convertBetString(tmpConfig.oopRiverRaise),
-        tmpConfig.donkOption ? convertBetString(tmpConfig.oopRiverDonk) : "",
-        convertBetString(tmpConfig.ipFlopBet),
-        convertBetString(tmpConfig.ipFlopRaise),
-        convertBetString(tmpConfig.ipTurnBet),
-        convertBetString(tmpConfig.ipTurnRaise),
-        convertBetString(tmpConfig.ipRiverBet),
-        convertBetString(tmpConfig.ipRiverRaise),
-        tmpConfig.addAllInThreshold / 100,
-        tmpConfig.forceAllInThreshold / 100,
-        tmpConfig.mergingThreshold / 100,
-        tmpConfig.addedLines,
-        tmpConfig.removedLines
-      );
+        const errorString = await handler.init(
+          tmpConfig.rangeRaw[0],
+          tmpConfig.rangeRaw[1],
+          new Uint8Array(tmpConfig.board),
+          tmpConfig.startingPot,
+          tmpConfig.effectiveStack,
+          tmpConfig.rakePercent / 100,
+          tmpConfig.rakeCap,
+          tmpConfig.donkOption,
+          convertBetString(tmpConfig.oopFlopBet),
+          convertBetString(tmpConfig.oopFlopRaise),
+          convertBetString(tmpConfig.oopTurnBet),
+          convertBetString(tmpConfig.oopTurnRaise),
+          tmpConfig.donkOption ? convertBetString(tmpConfig.oopTurnDonk) : "",
+          convertBetString(tmpConfig.oopRiverBet),
+          convertBetString(tmpConfig.oopRiverRaise),
+          tmpConfig.donkOption ? convertBetString(tmpConfig.oopRiverDonk) : "",
+          convertBetString(tmpConfig.ipFlopBet),
+          convertBetString(tmpConfig.ipFlopRaise),
+          convertBetString(tmpConfig.ipTurnBet),
+          convertBetString(tmpConfig.ipTurnRaise),
+          convertBetString(tmpConfig.ipRiverBet),
+          convertBetString(tmpConfig.ipRiverRaise),
+          tmpConfig.addAllInThreshold / 100,
+          tmpConfig.forceAllInThreshold / 100,
+          tmpConfig.mergingThreshold / 100,
+          tmpConfig.addedLines,
+          tmpConfig.removedLines
+        );
 
-      if (errorString) {
+        if (errorString) {
+          treeStatusState.value = { type: "error", message: errorString };
+          terminate();
+          return false;
+        }
+
+        saveConfig();
+
+        memoryUsage.value = await handler.memoryUsage(false);
+        memoryUsageCompressed.value = await handler.memoryUsage(true);
+
+        if (
+          memoryUsage.value > maxMemoryUsage &&
+          memoryUsageCompressed.value <= maxMemoryUsage
+        ) {
+          isCompressionEnabled.value = true;
+        }
+
+        isTreeBuilt.value = true;
+        treeStatusState.value = { type: "built", threads: numThreads.value };
+        return true;
+      } catch (error) {
+        recoverFromFailure(error);
+        return false;
+      } finally {
         isTreeBuilding.value = false;
-        treeStatusState.value = { type: "error", message: errorString };
-        return;
+        store.isSolverRunning = false;
+        store.isFinalizing = false;
       }
-
-      saveConfig();
-
-      memoryUsage.value = await handler.memoryUsage(false);
-      memoryUsageCompressed.value = await handler.memoryUsage(true);
-
-      if (
-        memoryUsage.value > maxMemoryUsage &&
-        memoryUsageCompressed.value <= maxMemoryUsage
-      ) {
-        isCompressionEnabled.value = true;
-      }
-
-      isTreeBuilding.value = false;
-      isTreeBuilt.value = true;
-      treeStatusState.value = { type: "built", threads: numThreads.value };
     };
 
     const runSolver = async () => {
-      if (!handler) return;
+      if (!canRun.value) return;
+      clearSolverRetry();
 
       terminateFlag.value = false;
       pauseFlag.value = false;
@@ -1338,66 +1388,82 @@ export default defineComponent({
 
       startTime = performance.now();
 
-      await handler.allocateMemory(isCompressionEnabled.value);
+      try {
+        if (!handler) throw new Error("SOLVER_WORKER_UNAVAILABLE");
+        await handler.allocateMemory(isCompressionEnabled.value);
 
-      currentIteration.value = 0;
-      exploitability.value = Math.max(await handler.exploitability(), 0);
-      exploitabilityUpdated = true;
+        currentIteration.value = 0;
+        exploitability.value = Math.max(await handler.exploitability(), 0);
+        exploitabilityUpdated = true;
 
-      await resumeSolver();
+        await resumeSolver();
+      } catch (error) {
+        recoverFromFailure(error);
+      } finally {
+        store.isSolverRunning = false;
+        store.isFinalizing = false;
+      }
     };
 
     const resumeSolver = async () => {
-      if (!handler) return;
-
+      if (store.isFinalizing || isTreeBuilding.value) return;
       store.isSolverRunning = true;
       store.isSolverPaused = false;
 
-      if (startTime === 0) {
-        startTime = performance.now();
-      }
-
-      const target = (config.startingPot * targetExploitability.value) / 100;
-
-      while (
-        !terminateFlag.value &&
-        currentIteration.value < maxIterations.value &&
-        exploitability.value > target
-      ) {
-        if (pauseFlag.value) {
-          const end = performance.now();
-          elapsedTimeMs.value += end - startTime;
-          startTime = 0;
-          pauseFlag.value = false;
-          store.isSolverRunning = false;
-          store.isSolverPaused = true;
-          return;
+      try {
+        if (!handler) throw new Error("SOLVER_WORKER_UNAVAILABLE");
+        if (startTime === 0) {
+          startTime = performance.now();
         }
 
-        await handler.iterate(currentIteration.value);
-        ++currentIteration.value;
-        exploitabilityUpdated = false;
+        const target = (config.startingPot * targetExploitability.value) / 100;
 
-        if (currentIteration.value % 10 === 0) {
+        while (
+          !terminateFlag.value &&
+          currentIteration.value < maxIterations.value &&
+          exploitability.value > target
+        ) {
+          if (pauseFlag.value) {
+            const end = performance.now();
+            elapsedTimeMs.value += end - startTime;
+            startTime = 0;
+            pauseFlag.value = false;
+            store.isSolverRunning = false;
+            store.isSolverPaused = true;
+            return;
+          }
+
+          await handler.iterate(currentIteration.value);
+          ++currentIteration.value;
+          exploitabilityUpdated = false;
+
+          if (currentIteration.value % 10 === 0) {
+            exploitability.value = Math.max(await handler.exploitability(), 0);
+            exploitabilityUpdated = true;
+          }
+        }
+
+        if (!exploitabilityUpdated) {
           exploitability.value = Math.max(await handler.exploitability(), 0);
-          exploitabilityUpdated = true;
         }
+
+        store.isSolverRunning = false;
+        store.isFinalizing = true;
+
+        await handler.finalize();
+
+        store.isFinalizing = false;
+        store.isSolverFinished = true;
+
+        const end = performance.now();
+        elapsedTimeMs.value += end - startTime;
+        startTime = 0;
+      } catch (error) {
+        recoverFromFailure(error);
+      } finally {
+        store.isSolverRunning = false;
+        store.isFinalizing = false;
       }
-
-      if (!exploitabilityUpdated) {
-        exploitability.value = Math.max(await handler.exploitability(), 0);
-      }
-
-      store.isSolverRunning = false;
-      store.isFinalizing = true;
-
-      await handler.finalize();
-
-      store.isFinalizing = false;
-      store.isSolverFinished = true;
-
-      const end = performance.now();
-      elapsedTimeMs.value += end - startTime;
     };
 
     /* 스팟 공유 링크 */
@@ -1445,7 +1511,7 @@ export default defineComponent({
       L,
       UNITS,
       numThreads,
-      isSafari,
+      isSingleThread,
       targetExploitability,
       shareCopied,
       shareError,
@@ -1461,6 +1527,7 @@ export default defineComponent({
       terminateFlag,
       pauseFlag,
       memoryUsageSelected,
+      canRun,
       iterationText,
       exploitabilityText,
       timeText,

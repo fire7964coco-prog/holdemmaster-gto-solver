@@ -5,8 +5,11 @@ type ModST = typeof import("../pkg/solver-st/solver.js");
 type ModMT = typeof import("../pkg/solver-mt/solver.js");
 type Mod = ModST | ModMT;
 
-const createHandler = (mod: Mod) => {
+export type SolverMode = "mt" | "st";
+
+const createHandler = (mod: Mod, mode: SolverMode) => {
   return {
+    mode,
     game: mod.GameManager.new(),
 
     init(
@@ -128,29 +131,64 @@ const createHandler = (mod: Mod) => {
 };
 
 const isMTSupported = () => {
+  if (typeof SharedArrayBuffer === "undefined" || !globalThis.crossOriginIsolated) {
+    return false;
+  }
   const browser = detect();
   return !(browser && (browser.name === "safari" || browser.os === "iOS"));
 };
 
 let mod: Mod | null = null;
+let mode: SolverMode = "st";
+const poolWorkers = new Set<Worker>();
+
+const terminatePoolWorkers = () => {
+  poolWorkers.forEach((worker) => worker.terminate());
+  poolWorkers.clear();
+};
+
 export type Handler = ReturnType<typeof createHandler>;
 
-const initHandler = async (num_threads: number) => {
-  if (isMTSupported()) {
-    mod = await import("../pkg/solver-mt/solver.js");
-    await mod.default();
-    await (mod as ModMT).initThreadPool(num_threads);
-  } else {
-    mod = await import("../pkg/solver-st/solver.js");
-    await mod.default();
+const initHandler = async (num_threads: number, forceSingleThread = false) => {
+  if (!forceSingleThread && isMTSupported()) {
+    // The generated helper only keeps its workers after Promise.all succeeds.
+    // Track partial pools here so a rejected init cannot leave children running.
+    const NativeWorker = globalThis.Worker;
+    try {
+      const mt = await import("../pkg/solver-mt/solver.js");
+      await mt.default();
+      globalThis.Worker = class extends NativeWorker {
+        constructor(url: string | URL, options?: WorkerOptions) {
+          super(url, options);
+          poolWorkers.add(this);
+        }
+      };
+      await mt.initThreadPool(num_threads);
+      mod = mt;
+      mode = "mt";
+      return Comlink.proxy(createHandler(mt, mode));
+    } catch {
+      // exitThreadPool panics if the Rust pool never finished initializing.
+      terminatePoolWorkers();
+    } finally {
+      globalThis.Worker = NativeWorker;
+    }
   }
 
-  return Comlink.proxy(createHandler(mod));
+  const st = await import("../pkg/solver-st/solver.js");
+  await st.default();
+  mod = st;
+  mode = "st";
+  return Comlink.proxy(createHandler(st, mode));
 };
 
 const beforeTerminate = async () => {
-  if (isMTSupported()) {
-    await (mod as ModMT).exitThreadPool();
+  try {
+    if (mode === "mt" && mod) {
+      await (mod as ModMT).exitThreadPool();
+    }
+  } finally {
+    terminatePoolWorkers();
   }
 };
 

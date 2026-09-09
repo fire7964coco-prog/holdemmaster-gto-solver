@@ -21,6 +21,14 @@
           >{{ L.body2 }}
         </p>
         <div class="mt-2.5 flex gap-2 flex-wrap">
+          <button
+            v-if="errorState.solverRetry"
+            type="button"
+            class="button-base button-blue max-w-full whitespace-normal break-words px-3 py-1"
+            @click="retrySolverSingleThread"
+          >
+            {{ retrySingleThreadLabel }}
+          </button>
           <button class="button-blue px-3 py-1" @click="copy">
             {{ copied ? L.copied : L.copyButton }}
           </button>
@@ -38,8 +46,13 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
-import { errorState, errorReportText, dismissErrorToast } from "../errors";
-import { i18n } from "../i18n";
+import {
+  errorState,
+  errorReportText,
+  dismissErrorToast,
+  retrySolverSingleThread,
+} from "../errors";
+import { i18n, pick } from "../i18n";
 
 const M = {
   ko: {
@@ -209,6 +222,23 @@ const M = {
 export default defineComponent({
   setup() {
     const L = computed(() => M[i18n.locale]);
+    const retrySingleThreadLabel = computed(() =>
+      // i18n.ts pick() 순서: ko, en, ja, es, pt, de, zh, zh-hant, fr, id, ms, hi.
+      pick(
+        "단일 스레드로 다시 시도",
+        "Retry with a single thread",
+        "シングルスレッドで再試行",
+        "Reintentar con un solo hilo",
+        "Tentar novamente com uma thread",
+        "Mit einem Thread erneut versuchen",
+        "使用单线程重试",
+        "使用單執行緒重試",
+        "Réessayer avec un seul thread",
+        "Coba lagi dengan satu thread",
+        "Cuba semula dengan satu thread",
+        "एक थ्रेड से फिर कोशिश करें"
+      )
+    );
     const copied = ref(false);
 
     const copy = async () => {
@@ -221,7 +251,15 @@ export default defineComponent({
       }
     };
 
-    return { errorState, copied, copy, dismissErrorToast, L };
+    return {
+      errorState,
+      copied,
+      copy,
+      dismissErrorToast,
+      retrySolverSingleThread,
+      retrySingleThreadLabel,
+      L,
+    };
   },
 });
 </script>

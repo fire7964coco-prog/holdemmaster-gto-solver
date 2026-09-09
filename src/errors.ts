@@ -30,11 +30,15 @@ export type ErrorRecord = {
   where: string;
 };
 
+type SolverRetry = () => Promise<void>;
+
 export const errorState = reactive({
   /** 이 기기에 쌓인 오류 개수 */
   count: 0,
   /** 이번 방문에서 오류가 났는가 — 신고 안내를 띄울지 판단 */
   toast: false,
+  /** 현재 계산 실패만 재시도한다. 입력·콜백은 오류 기록에 저장하지 않는다. */
+  solverRetry: null as SolverRetry | null,
 });
 
 const read = (): ErrorRecord[] => {
@@ -93,6 +97,28 @@ const record = (msg: string, stack: string) => {
   errorState.toast = true;
 };
 
+/** 잡아서 복구한 계산 오류도 기존 기기 내 오류 기록에 남긴다. */
+export const reportSolverError = (error: unknown, retry: SolverRetry) => {
+  const reason = error as { message?: unknown; stack?: unknown } | null;
+  record(String(reason?.message ?? error), String(reason?.stack ?? ""));
+  errorState.solverRetry = retry;
+  // 같은 오류가 10초 안에 재발해 기록이 생략돼도 재시도 안내는 다시 보여준다.
+  errorState.toast = true;
+};
+
+export const clearSolverRetry = () => {
+  errorState.solverRetry = null;
+};
+
+export const retrySolverSingleThread = async () => {
+  const retry = errorState.solverRetry;
+  if (!retry) return;
+  // 첫 await 전에 제거해야 같은 버튼을 빠르게 두 번 눌러도 한 번만 실행된다.
+  clearSolverRetry();
+  errorState.toast = false;
+  await retry();
+};
+
 /** 신고용 본문 — 사용자가 복사해서 커뮤니티나 문의로 보낼 수 있게 */
 export const errorReportText = () => {
   const records = read();
@@ -126,10 +152,12 @@ export const clearErrors = () => {
   }
   errorState.count = 0;
   errorState.toast = false;
+  clearSolverRetry();
 };
 
 export const dismissErrorToast = () => {
   errorState.toast = false;
+  clearSolverRetry();
 };
 
 export const setupErrorCapture = () => {
