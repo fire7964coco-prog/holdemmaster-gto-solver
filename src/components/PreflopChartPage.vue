@@ -16,6 +16,11 @@
       </button>
     </div>
 
+    <p
+      class="text-sm text-neutral-400 mb-3 whitespace-normal break-words"
+      data-testid="preflop-source-note"
+    >{{ L.provenanceNote }}</p>
+
     <p class="text-sm md:text-base text-neutral-400 mb-4">{{ active.intro }}</p>
 
     <!-- 포지션 탭(오픈) / 조합 탭(수비·vs 3벳) -->
@@ -116,7 +121,7 @@
           </span>
           <span class="flex items-center gap-1.5">
             <span
-              class="inline-block w-3 h-3 rounded-sm bg-neutral-800 border border-neutral-600 bg-bottom bg-no-repeat"
+              class="inline-block shrink-0 w-3 h-3 rounded-sm bg-neutral-800 border border-neutral-600 bg-bottom bg-no-repeat"
               :style="{
                 'background-image': `linear-gradient(${yellow500} 0% 100%)`,
                 'background-size': '100% 50%',
@@ -275,16 +280,14 @@ const M = {
     how3bet2:
       "빨강+초록이 칸을 다 채우지 못하면 그만큼 폴드입니다. 두 색이 함께면 4벳과 " +
       "콜을 혼합합니다. 오픈 레인지에 없는 핸드는 이 상황 자체가 생기지 않아 비어 있습니다.",
-    intro:
-      "포지션별 오픈 레인지(RFI) — 앞 사람이 모두 폴드했을 때 어떤 핸드로 " +
-      "레이즈해야 할까요? 6맥스 캐시 100bb, 오픈 2.5bb 기준입니다. " +
-      "부분 채움은 혼합 빈도(가끔만 오픈)를 뜻합니다.",
+    intro: "포지션별 오픈 레인지(RFI) — 앞 사람이 모두 폴드했을 때 어떤 핸드로 레이즈해야 할까요? 6맥스 캐시 100bb, 오픈 2.5bb 기준입니다. 부분 채움은 공개 자료마다 오픈 여부가 갈린 경계 핸드입니다(채움 높이 = 여는 쪽 자료의 비중).",
+    provenanceNote: "공개 자료 합의 + 내부 유도 차트 — 솔버 계산값이 아닙니다. 출처는 아래 «이 차트는 어떻게 만들었나요?».",
     introDefend:
       "상대가 먼저 오픈 레이즈했을 때의 대응 — 자주 나오는 조합들입니다. " +
       "빨강은 3벳, 초록은 콜, 두 색이 쌓인 높이가 수비 빈도입니다. " +
       "6맥스 캐시 100bb, 오픈 2.5bb(SB 오픈은 3bb) 기준.",
     legendOpen: "오픈 (100%)",
-    legendMixed: "혼합 빈도 (채움 높이 = 오픈 %)",
+    legendMixed: "경계 핸드 (채움 높이 = 여는 자료 비중)",
     legendFold: "폴드",
     legend3bet: "3벳",
     legendCall: "콜",
@@ -304,25 +307,21 @@ const M = {
     statPercent: "오픈 비율",
     statCombos: "오픈 콤보",
     statHands: "오픈 핸드",
-    statMixed: "혼합 핸드",
+    statMixed: "경계 핸드",
     copy: "레인지 텍스트 복사",
     copied: "✓ 복사됨",
     sendOop: "① OOP 레인지로 보내기",
     sendIp: "② IP 레인지로 보내기",
     howTitle: "읽는 법",
     how1: "좌상단→우하단 대각선이 페어, 그 위(오른쪽)가 수티드, 아래(왼쪽)가 오프수트입니다.",
-    how2: "혼합 빈도 핸드(부분 채움)는 «항상»이 아니라 그 비율만큼만 오픈합니다. 경계 핸드라 어느 쪽을 택해도 EV 차이가 작습니다.",
+    how2: "부분 채움 핸드는 자료마다 오픈 여부가 갈린 경계 핸드입니다. 채움 높이는 여는 쪽 자료의 비중을 나타내며, 솔버 계산 결과가 아닙니다.",
     how3: "[레인지로 보내기]를 누르면 이 레인지가 커스텀 스팟의 레인지 입력에 채워집니다 — 플랍 이후를 직접 계산해 보세요.",
     howDefend2:
       "빨강+초록이 칸을 다 채우지 못하면 그만큼 폴드가 섞인 핸드입니다. 두 색이 함께 있는 칸은 3벳과 콜을 그 비율로 혼합합니다.",
     howDefend3:
       "[레인지 복사]로 얻은 텍스트를 커스텀 스팟의 ①/② 레인지 입력에 붙여넣으면 이 수비 레인지로 플랍 이후를 직접 계산할 수 있습니다.",
     sourceTitle: "이 차트는 어떻게 만들었나요?",
-    sourceBody:
-      "공개된 무료 GTO 자료 여러 개를 " +
-      "핸드 단위로 교차 검증해 «합의 레인지»를 만들고, 자료마다 판단이 갈리는 경계 " +
-      "핸드는 혼합 빈도로 표기했습니다. BTN·SB는 이 앱의 교육 예제에 쓰이는 " +
-      "솔버 검증 레인지와도 대조했습니다.",
+    sourceBody: "공개된 무료 GTO 자료 여러 개를 핸드 단위로 교차 검증해 «합의 레인지»를 만들고, 자료마다 판단이 갈리는 경계 핸드는 여는 쪽 자료의 비중(75/50/25%)으로 표기했습니다. BTN·SB는 이 앱의 교육 예제에 쓰이는 솔버 검증 레인지와도 대조했습니다.",
     sourceList:
       "교차 검증에 쓴 공개 자료: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt(about-poker.com) · BeyondGTO · ThinkGTO(BB vs SB 실측 빈도) · " +
@@ -354,10 +353,11 @@ const M = {
     note3bet: "ये आँकड़े आपकी opening range के हिस्से हैं, सभी हैंड के नहीं। 4-bet की value range मुख्यतः QQ+/AK है, जिसमें A5s-A4s जैसे कुछ bluffs मिलते हैं। IP होने पर calling range में pairs, suited broadways और connectors भी शामिल रहते हैं।",
     squeezeNote: "Opener और caller दोनों pot में हों, तब किया गया 3-bet squeeze कहलाता है (यहाँ लगभग 11–12bb)। Caller की मौजूदगी में कुल defend range heads-up से छोटी होती है और 3-bet में value हैंड का हिस्सा बढ़ता है। Overcall में ऐसे suited, connected हैंड काम आते हैं जो multiway pot में nuts बना सकें।",
     how3bet2: "लाल और हरे हिस्से के बाद बचा खाली हिस्सा fold है। दोनों रंग वाले खाने में 4-bet और call मिलते हैं। Opening range से बाहर के हैंड इस स्थिति तक नहीं पहुँचते, इसलिए उनके खाने खाली हैं।",
-    intro: "पोज़िशन के हिसाब से opening ranges (RFI): आपके पहले सभी fold कर दें, तो किन हैंड से raise करें? आधार: 6-max cash, 100bb, 2.5bb open। आधे-अधूरे भरे खाने mixed-frequency opens दिखाते हैं।",
+    intro: "पोज़िशन के हिसाब से opening ranges (RFI): आपके पहले सभी fold कर दें, तो किन हैंड से raise करें? आधार: 6-max cash, 100bb, 2.5bb open। आंशिक रूप से भरे खाने उन सीमांत हैंड को दिखाते हैं जिन पर सार्वजनिक स्रोतों में मतभेद है (भराव की ऊँचाई = open करने की सलाह देने वाले स्रोतों का अनुपात)।",
+    provenanceNote: "सार्वजनिक स्रोतों की सहमति + आंतरिक निष्कर्षों पर आधारित चार्ट; सॉल्वर की गणना का नतीजा नहीं। स्रोत नीचे «यह चार्ट कैसे बनाया गया?» में देखें।",
     introDefend: "आपसे पहले किसी के open-raise करने पर की रणनीति — आम matchups। लाल = 3-bet, हरा = call; दोनों रंगों की कुल ऊँचाई defend की आवृत्ति है। आधार: 6-max cash, 100bb, 2.5bb open (SB से 3bb)।",
     legendOpen: "Open (100%)",
-    legendMixed: "मिश्रित आवृत्ति (भराव की ऊँचाई = open %)",
+    legendMixed: "सीमांत हैंड (भराव की ऊँचाई = open की सलाह देने वाले स्रोतों का अनुपात)",
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
@@ -372,7 +372,7 @@ const M = {
     statPercent: "Open %",
     statCombos: "Open किए गए combos",
     statHands: "Open किए गए हैंड",
-    statMixed: "मिश्रित हैंड",
+    statMixed: "सीमांत हैंड",
     copy: "Range टेक्स्ट कॉपी करें",
     copied: "✓ कॉपी हो गया",
     sendOop: "① OOP Range में भेजें",
@@ -380,12 +380,12 @@ const M = {
     howTitle: "इसे कैसे पढ़ें",
     how1: "ऊपर बाएँ से नीचे दाएँ जाने वाली तिरछी लाइन पर pairs हैं। उसके ऊपर (दाएँ) suited और नीचे (बाएँ) offsuit हैंड हैं।",
     // hi: consensus-source disagreement is not proof of a solver-derived near-indifference EV.
-    how2: "आधा-अधूरा भराव बताता है कि यह हैंड हर बार open नहीं होता। इस चार्ट में स्रोतों के मतभेद को mixed frequency से दिखाया गया है; इसे हर हैंड की सॉल्वर से निकली सटीक आवृत्ति न मानें।",
+    how2: "आंशिक रूप से भरे खाने उन सीमांत हैंड को दिखाते हैं जिन्हें open करना चाहिए या नहीं, इस पर स्रोतों में मतभेद है। भराव की ऊँचाई open करने की सलाह देने वाले स्रोतों का अनुपात है। यह न तो कितनी बार open करना है, इसका निर्देश है और न ही सॉल्वर से रणनीति की गणना का नतीजा।",
     how3: "[Range में भेजें] बटन यह range [अपना स्पॉट] के range editor में लोड करते हैं। फिर postflop रणनीति की गणना खुद करके देखें।",
     howDefend2: "लाल और हरे हिस्से के बाद बचा खाली हिस्सा fold है। दोनों रंग वाले खाने में दिए गए अनुपात से 3-bet और call मिलते हैं।",
     howDefend3: "कॉपी की गई range को [अपना स्पॉट] के range इनपुट (① / ②) में पेस्ट करें और इस defend range के साथ postflop रणनीति की गणना करें।",
     sourceTitle: "यह चार्ट कैसे बनाया गया?",
-    sourceBody: "हमने मुफ़्त उपलब्ध कई GTO स्रोतों की हैंड-दर-हैंड तुलना करके एक consensus range बनाई। जिन हैंड पर स्रोतों में मतभेद था, उन्हें mixed frequency दी गई। BTN और SB को इस ऐप के अभ्यास स्पॉट में इस्तेमाल होने वाली solver-verified ranges से भी मिलाया गया।",
+    sourceBody: "हमने मुफ़्त उपलब्ध कई GTO स्रोतों की हैंड-दर-हैंड तुलना करके एक consensus range बनाई। जिन सीमांत हैंड पर स्रोतों में मतभेद था, उन्हें open करने की सलाह देने वाले स्रोतों के अनुपात (75/50/25%) से दिखाया गया। BTN और SB को इस ऐप के अभ्यास स्पॉट में इस्तेमाल होने वाली solver-verified ranges से भी मिलाया गया।",
     sourceList: "तुलना किए गए सार्वजनिक स्रोत: nlh.poker · Preflop Wizard · HoldemPro · The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB की solved frequencies) · GTO Gecko · RiverOdds (defense anchors) · GTO Wizard blog · FreeBetRange (IP defense और squeeze के सिद्धांत) · 888poker · Run It Once (3-bet के सामने आवृत्तियाँ) + हमारे अभ्यास स्पॉट की ranges (संग्रह: 2026-08)",
     phase2: "आगे और matchups व स्थितियाँ जोड़ी जाएँगी।",
   },
@@ -437,16 +437,14 @@ const M = {
       "If red + green don't fill the cell, the rest is folded. Cells with both " +
       "colors mix 4-bets and calls. Hands outside the opening range never face " +
       "this spot, so they are blank.",
-    intro:
-      "Opening ranges by position (RFI) — which hands should you raise when " +
-      "everyone folds to you? Based on 6-max cash, 100bb, 2.5bb open. " +
-      "Partially filled cells are mixed-frequency opens.",
+    intro: "Opening ranges by position (RFI) — which hands should you raise when everyone folds to you? Based on 6-max cash, 100bb, 2.5bb open. Partially filled cells mark borderline hands where public sources disagree on opening (fill height = share of sources favoring an open).",
+    provenanceNote: "Public-source consensus + internal derivation — not solver output. See “How was this chart built?” below.",
     introDefend:
       "How to respond when someone open-raises before you — the most " +
       "common matchups. Red is 3-bet, green is call, and the stacked height is " +
       "your total defend frequency. 6-max cash, 100bb, 2.5bb open (3bb for SB opens).",
     legendOpen: "Open (100%)",
-    legendMixed: "Mixed frequency (fill height = open %)",
+    legendMixed: "Borderline hands (fill = share of sources favoring an open)",
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
@@ -468,25 +466,21 @@ const M = {
     statPercent: "Open %",
     statCombos: "Combos opened",
     statHands: "Hands opened",
-    statMixed: "Mixed hands",
+    statMixed: "Borderline hands",
     copy: "Copy range text",
     copied: "✓ Copied",
     sendOop: "① Send to OOP Range",
     sendIp: "② Send to IP Range",
     howTitle: "How to read this",
     how1: "The top-left to bottom-right diagonal is pairs; above it (right) is suited, below it (left) is offsuit.",
-    how2: "Mixed-frequency hands (partial fill) are opened only that fraction of the time — they are borderline, so either choice loses little EV.",
+    how2: "Partially filled cells mark borderline hands where sources disagree on whether to open. Fill height represents the share of sources favoring an open, not a solver result.",
     how3: "The [Send to Range] buttons load this range into the custom-spot range editor — try solving the postflop play yourself.",
     howDefend2:
       "If red + green don't fill the whole cell, the rest is folded. Cells showing both colors mix 3-bets and calls at those ratios.",
     howDefend3:
       "Paste a copied range into the custom-spot range inputs (① / ②) to solve the postflop play with this defense range yourself.",
     sourceTitle: "How was this chart built?",
-    sourceBody:
-      "We cross-checked several " +
-      "freely published GTO resources hand by hand to build a consensus range, " +
-      "marking hands the sources disagree on as mixed frequencies. BTN and SB " +
-      "were also checked against the solver-verified ranges used by this app's Study Spots.",
+    sourceBody: "We cross-checked several freely published GTO resources hand by hand to build a consensus range, marking borderline hands the sources disagree on with the share of sources favoring an open (75/50/25%). BTN and SB were also checked against the solver-verified ranges used by this app's Study Spots.",
     sourceList:
       "Public sources cross-checked: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB solved frequencies) · " +
@@ -540,16 +534,14 @@ const M = {
     how3bet2:
       "赤＋緑がマスを満たさない分はフォールドです。両色が重なるマスは4ベットとコールを" +
       "混合します。オープンレンジにないハンドはこの状況自体が起こらないため空欄です。",
-    intro:
-      "ポジション別のオープンレンジ（RFI）です — 前の全員がフォールドしたとき、どのハンドで" +
-      "レイズすべきでしょうか？6maxキャッシュゲーム100bb、オープン2.5bbが基準です。" +
-      "部分的な塗りは混合頻度（ときどきだけオープン）を表します。",
+    intro: "ポジション別のオープンレンジ（RFI）です — 前の全員がフォールドしたとき、どのハンドでレイズすべきでしょうか？6maxキャッシュゲーム100bb、オープン2.5bbが基準です。部分的な塗りは公開資料で判断が分かれる境界ハンドを表します（塗りの高さ＝オープンを推す資料の割合）。",
+    provenanceNote: "公開資料の合意＋内部導出。ソルバーの計算結果ではありません。出典は下の「このレンジ表はどうやって作られていますか？」。",
     introDefend:
       "相手が先にオープンレイズしたときの対応 — よく出る組み合わせです。" +
       "赤は3ベット、緑はコール、2色を積み上げた高さがディフェンス頻度です。" +
       "6maxキャッシュゲーム100bb、オープン2.5bb（SBオープンは3bb）が基準です。",
     legendOpen: "オープン (100%)",
-    legendMixed: "混合頻度（塗りの高さ = オープン%）",
+    legendMixed: "境界ハンド（高さ＝オープンを推す資料の割合）",
     legendFold: "フォールド",
     legend3bet: "3ベット",
     legendCall: "コール",
@@ -569,25 +561,21 @@ const M = {
     statPercent: "オープン率",
     statCombos: "オープンコンボ",
     statHands: "オープンハンド",
-    statMixed: "混合ハンド",
+    statMixed: "境界ハンド",
     copy: "レンジテキストをコピー",
     copied: "✓ コピーしました",
     sendOop: "① OOPレンジへ送る",
     sendIp: "② IPレンジへ送る",
     howTitle: "読み方",
     how1: "左上→右下の対角線がペア、その上（右側）がスーテッド、下（左側）がオフスートです。",
-    how2: "混合頻度のハンド（部分的な塗り）は「常に」ではなく、その割合だけオープンします。境界ハンドなので、どちらを選んでもEVの差はわずかです。",
+    how2: "部分的な塗りは、オープンするかどうかで資料の判断が分かれる境界ハンドです。塗りの高さはオープンを推す資料の割合であり、実際にオープンする割合やソルバーの戦略計算結果ではありません。",
     how3: "[レンジへ送る]を押すと、このレンジがカスタムスポットのレンジ入力に読み込まれます — フロップ以降を自分で計算してみましょう。",
     howDefend2:
       "赤＋緑がマスを満たさない分はフォールドが混ざるハンドです。両色が重なるマスは3ベットとコールをその比率で混合します。",
     howDefend3:
       "コピーしたレンジをカスタムスポットの①/②のレンジ入力に貼り付けると、このディフェンスレンジでフロップ以降を自分で計算できます。",
     sourceTitle: "このレンジ表はどうやって作られていますか？",
-    sourceBody:
-      "公開されている無料のGTO資料を複数、" +
-      "ハンド単位で相互検証して「合意レンジ」を作り、資料ごとに判断が分かれる境界ハンドは" +
-      "混合頻度として表記しました。BTN・SBは、本アプリの学習スポットに使われている" +
-      "ソルバー検証済みレンジとも照合しています。",
+    sourceBody: "公開されている無料のGTO資料を複数、ハンド単位で相互検証して「合意レンジ」を作り、資料ごとに判断が分かれる境界ハンドはオープンを推す資料の割合（75/50/25%）で表記しました。BTN・SBは、本アプリの学習スポットに使われているソルバー検証済みレンジとも照合しています。",
     sourceList:
       "相互検証に使った公開資料：nlh.poker・Preflop Wizard・HoldemPro・" +
       "The Felt (about-poker.com)・BeyondGTO・ThinkGTO（BB vs SBの実測頻度）・" +
@@ -642,16 +630,14 @@ const M = {
       "Si el rojo + verde no llenan la celda, el resto se retira. Las celdas con ambos colores " +
       "mezclan 4-bets y calls. Las manos fuera del rango de apertura nunca enfrentan este spot, " +
       "por eso están en blanco.",
-    intro:
-      "Rangos de apertura por posición (RFI) — ¿con qué manos deberías subir cuando todos se " +
-      "retiran antes que tú? Basado en cash 6-max, 100bb, open de 2.5bb. Las celdas parcialmente " +
-      "llenas son opens de frecuencia mixta.",
+    intro: "Rangos de apertura por posición (RFI) — ¿con qué manos deberías subir cuando todos se retiran antes que tú? Basado en cash 6-max, 100bb, open de 2.5bb. Las celdas parcialmente llenas indican manos límite sobre las que las fuentes públicas difieren (altura = proporción de fuentes que recomiendan abrir).",
+    provenanceNote: "Tabla basada en el consenso de fuentes públicas + deducciones internas; no es un resultado calculado por un solver. Fuentes abajo, en «¿Cómo se construyó esta tabla?».",
     introDefend:
       "Cómo responder cuando alguien abre antes que tú — los enfrentamientos más comunes. El rojo " +
       "es 3-bet, el verde es call, y la altura total de la barra es tu frecuencia de defensa. " +
       "Cash 6-max, 100bb, open de 2.5bb (3bb para opens de SB).",
     legendOpen: "Open (100%)",
-    legendMixed: "Frecuencia mixta (altura = % de open)",
+    legendMixed: "Manos límite (altura = proporción de fuentes que recomiendan abrir)",
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
@@ -671,24 +657,21 @@ const M = {
     statPercent: "% de open",
     statCombos: "Combos abiertos",
     statHands: "Manos que abres",
-    statMixed: "Manos mixtas",
+    statMixed: "Manos límite",
     copy: "Copiar texto del rango",
     copied: "✓ Copiado",
     sendOop: "① Enviar al rango OOP",
     sendIp: "② Enviar al rango IP",
     howTitle: "Cómo leerlo",
     how1: "La diagonal de arriba-izquierda a abajo-derecha son los pares; arriba (derecha) es suited, abajo (izquierda) es offsuit.",
-    how2: "Las manos de frecuencia mixta (relleno parcial) se abren solo esa fracción de las veces — son manos límite, así que cualquiera de las dos opciones pierde poco EV.",
+    how2: "Las celdas parcialmente llenas indican manos límite sobre las que las fuentes difieren en si conviene abrir. La altura refleja la proporción de fuentes que recomiendan abrir; no indica cuántas veces debes abrir ni procede de un cálculo de estrategia del solver.",
     how3: "Los botones [Enviar al rango] cargan este rango en el editor del spot personalizado — intenta resolver tú mismo el juego postflop.",
     howDefend2:
       "Si el rojo + verde no llenan toda la celda, el resto se retira. Las celdas con ambos colores mezclan 3-bets y calls en esas proporciones.",
     howDefend3:
       "Pega un rango copiado en los campos de rango del spot personalizado (① / ②) para resolver tú mismo el postflop con este rango de defensa.",
     sourceTitle: "¿Cómo se construyó esta tabla?",
-    sourceBody:
-      "Cotejamos a mano varios recursos GTO publicados gratuitamente para construir un rango de " +
-      "consenso, marcando como frecuencia mixta las manos en las que las fuentes difieren. BTN y SB " +
-      "también se contrastaron con los rangos verificados por solver que usan los Spots de estudio de esta app.",
+    sourceBody: "Cotejamos a mano varios recursos GTO publicados gratuitamente para construir un rango de consenso, marcando las manos límite en las que las fuentes difieren con la proporción de fuentes que recomiendan abrir (75/50/25%). BTN y SB también se contrastaron con los rangos verificados por solver que usan los Spots de estudio de esta app.",
     sourceList:
       "Fuentes públicas cotejadas: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (frecuencias resueltas de BB vs SB) · " +
@@ -743,16 +726,14 @@ const M = {
       "Se o vermelho + verde não preencherem a célula, o resto dá fold. As células com as duas cores " +
       "misturam 4-bets e calls. As mãos fora do range de abertura nunca enfrentam este spot, " +
       "por isso estão em branco.",
-    intro:
-      "Ranges de abertura por posição (RFI) — com que mãos você deve abrir quando todos " +
-      "dão fold antes de você? Baseado em cash 6-max, 100bb, open de 2,5bb. As células " +
-      "parcialmente preenchidas são opens de frequência mista.",
+    intro: "Ranges de abertura por posição (RFI) — com que mãos você deve abrir quando todos dão fold antes de você? Baseado em cash 6-max, 100bb, open de 2,5bb. As células parcialmente preenchidas indicam mãos limítrofes sobre as quais as fontes públicas divergem (altura do preenchimento = proporção de fontes que recomendam abrir).",
+    provenanceNote: "Tabela baseada no consenso de fontes públicas + deduções internas; não é um resultado calculado por um solver. Fontes abaixo, em «Como esta tabela foi montada?».",
     introDefend:
       "Como responder quando alguém abre antes de você — os confrontos mais comuns. O vermelho " +
       "é 3-bet, o verde é call, e a altura total da barra é a sua frequência de defesa. " +
       "Cash 6-max, 100bb, open de 2,5bb (3bb para opens da SB).",
     legendOpen: "Open (100%)",
-    legendMixed: "Frequência mista (altura = % de open)",
+    legendMixed: "Mãos limítrofes (altura = proporção de fontes que recomendam abrir)",
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
@@ -772,24 +753,21 @@ const M = {
     statPercent: "% de open",
     statCombos: "Combos de open",
     statHands: "Mãos que você abre",
-    statMixed: "Mãos mistas",
+    statMixed: "Mãos limítrofes",
     copy: "Copiar texto do range",
     copied: "✓ Copiado",
     sendOop: "① Enviar para o range OOP",
     sendIp: "② Enviar para o range IP",
     howTitle: "Como ler",
     how1: "A diagonal de cima à esquerda até embaixo à direita são os pares; acima (à direita) é suited, abaixo (à esquerda) é offsuit.",
-    how2: "As mãos de frequência mista (preenchimento parcial) só abrem essa fração das vezes — são mãos limítrofes, então qualquer uma das duas opções perde pouco EV.",
+    how2: "As células parcialmente preenchidas indicam mãos limítrofes para as quais as fontes divergem sobre abrir ou não. A altura mostra a proporção de fontes que recomendam abrir; não diz quantas vezes você deve abrir nem resulta de um cálculo de estratégia feito pelo solver.",
     how3: "Os botões [Enviar para o range] carregam este range no editor do spot personalizado — tente resolver você mesmo o jogo pós-flop.",
     howDefend2:
       "Se o vermelho + verde não preencherem a célula inteira, o resto dá fold. As células com as duas cores misturam 3-bets e calls nessas proporções.",
     howDefend3:
       "Cole um range copiado nos campos de range do spot personalizado (① / ②) para resolver você mesmo o pós-flop com este range de defesa.",
     sourceTitle: "Como esta tabela foi montada?",
-    sourceBody:
-      "Cruzamos mão a mão vários materiais de GTO publicados gratuitamente para montar um range de " +
-      "consenso, marcando como frequência mista as mãos em que as fontes divergem. BTN e SB " +
-      "também foram confrontados com os ranges verificados por solver que os Spots de estudo deste app usam.",
+    sourceBody: "Cruzamos mão a mão vários materiais de GTO publicados gratuitamente para montar um range de consenso, marcando as mãos limítrofes em que as fontes divergem com a proporção de fontes que recomendam abrir (75/50/25%). BTN e SB também foram confrontados com os ranges verificados por solver que os Spots de estudo deste app usam.",
     sourceList:
       "Fontes públicas cruzadas: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (frequências resolvidas de BB vs SB) · " +
@@ -847,16 +825,14 @@ const M = {
       "Füllen Rot und Grün die Zelle nicht ganz, wird der Rest gefoldet. Zellen mit beiden Farben " +
       "mischen 4-Bet und Call. Hände außerhalb der Open-Range geraten nie in diesen Spot und " +
       "bleiben deshalb leer.",
-    intro:
-      "Open-Ranges nach Position (RFI) – mit welchen Händen solltest du eröffnen, wenn vor dir alle " +
-      "folden? Basis: 6-max Cashgame, 100bb, Open auf 2,5bb. Teilweise gefüllte Zellen sind Opens " +
-      "mit gemischter Frequenz.",
+    intro: "Open-Ranges nach Position (RFI) – mit welchen Händen solltest du eröffnen, wenn vor dir alle folden? Basis: 6-max Cashgame, 100bb, Open auf 2,5bb. Teilweise gefüllte Zellen zeigen Grenzhände, bei denen die öffentlichen Quellen uneinig sind (Füllhöhe = Anteil der Quellen, die zum Open raten).",
+    provenanceNote: "Konsens öffentlicher Quellen + interne Ableitungen; keine Berechnung durch einen Solver. Quellen unten unter „Wie ist diese Tabelle entstanden?“.",
     introDefend:
       "Wie du reagierst, wenn vor dir jemand öffnet – die häufigsten Konstellationen. Rot ist " +
       "3-Bet, Grün ist Call, und die Gesamthöhe des Balkens ist deine Verteidigungsfrequenz. " +
       "6-max Cashgame, 100bb, Open auf 2,5bb (3bb bei Opens der SB).",
     legendOpen: "Open (100%)",
-    legendMixed: "Gemischte Frequenz (Füllhöhe = Open-%)",
+    legendMixed: "Grenzhände (Füllhöhe = Anteil der Quellen, die zum Open raten)",
     legendFold: "Fold",
     legend3bet: "3-Bet",
     legendCall: "Call",
@@ -877,7 +853,7 @@ const M = {
     statPercent: "Open-Anteil",
     statCombos: "Open-Combos",
     statHands: "Hände, die du eröffnest",
-    statMixed: "Gemischte Hände",
+    statMixed: "Grenzhände",
     copy: "Range-Text kopieren",
     copied: "✓ Kopiert",
     sendOop: "① An OOP-Range senden",
@@ -885,8 +861,7 @@ const M = {
     howTitle: "So liest du das",
     how1:
       "Die Diagonale von links oben nach rechts unten sind die Paare; darüber (rechts) steht suited, darunter (links) offsuit.",
-    how2:
-      "Hände mit gemischter Frequenz (teilweise gefüllt) werden nur in diesem Anteil der Fälle eröffnet – es sind Grenzhände, bei denen beide Optionen kaum EV kosten.",
+    how2: "Teilweise gefüllte Zellen zeigen Grenzhände, bei denen die Quellen uneinig sind, ob du eröffnen solltest. Die Füllhöhe zeigt den Anteil der Quellen, die zum Open raten; sie ist keine Vorgabe dafür, wie oft du eröffnen sollst, und kein Ergebnis einer Strategieberechnung durch einen Solver.",
     how3:
       "Die Buttons [① An OOP-Range senden] / [② An IP-Range senden] laden diese Range in den Editor des eigenen Spots – versuche dich selbst am Postflop-Spiel.",
     howDefend2:
@@ -894,11 +869,7 @@ const M = {
     howDefend3:
       "Füge eine kopierte Range in die Range-Felder des eigenen Spots (① / ②) ein, um mit dieser Verteidigungs-Range den Postflop selbst zu rechnen.",
     sourceTitle: "Wie ist diese Tabelle entstanden?",
-    sourceBody:
-      "Wir haben mehrere frei veröffentlichte GTO-Materialien Hand für Hand abgeglichen und daraus " +
-      "eine Konsens-Range gebaut; Hände, bei denen die Quellen auseinandergehen, sind als " +
-      "gemischte Frequenz markiert. BTN und SB wurden zusätzlich mit den solvergeprüften Ranges " +
-      "abgeglichen, die die Lernspots dieser App verwenden.",
+    sourceBody: "Wir haben mehrere frei veröffentlichte GTO-Materialien Hand für Hand abgeglichen und daraus eine Konsens-Range gebaut; Grenzhände, bei denen die Quellen auseinandergehen, sind mit dem Anteil der Quellen, die zum Open raten (75/50/25%), markiert. BTN und SB wurden zusätzlich mit den solvergeprüften Ranges abgeglichen, die die Lernspots dieser App verwenden.",
     sourceList:
       "Abgeglichene öffentliche Quellen: nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (gelöste BB-vs-SB-Frequenzen) · " +
@@ -954,15 +925,14 @@ const M = {
     how3bet2:
       "红色加绿色没把格子填满，剩下的那部分就是弃牌。两种颜色同时出现，表示按这个比例混着 4bet 和跟注。" +
       "不在开池范围里的手牌，压根碰不到这个局面，所以留空。",
-    intro:
-      "按位置分的开池范围（RFI）——前面的人全都弃牌时，你该拿哪些牌加注？" +
-      "基准是 6 人桌现金局 100bb、开池 2.5bb。格子只填了一部分，表示这手牌用的是混合频率（只在一部分时候开池）。",
+    intro: "按位置分的开池范围（RFI）——前面的人全都弃牌时，你该拿哪些牌加注？基准是 6 人桌现金局 100bb、开池 2.5bb。格子部分填充表示公开资料对是否开池有分歧的边缘手牌（填充高度 = 支持开池的资料占比）。",
+    provenanceNote: "公开资料共识 + 内部推导，并非求解器计算结果。出处见下方“这张表是怎么做出来的？”。",
     introDefend:
       "别人先开池加注时你该怎么应对——这里列的是最常遇到的几种组合。" +
       "红色是 3bet，绿色是跟注，两色叠起来的高度就是你的防守频率。" +
       "基准：6 人桌现金局 100bb，开池 2.5bb（SB 开池按 3bb）。",
     legendOpen: "开池（100%）",
-    legendMixed: "混合频率（填充高度 = 开池 %）",
+    legendMixed: "边缘手牌（填充高度 = 支持开池的资料占比）",
     legendFold: "弃牌",
     legend3bet: "3bet",
     legendCall: "跟注",
@@ -981,7 +951,7 @@ const M = {
     statPercent: "开池比例",
     statCombos: "开池组合数",
     statHands: "开池手牌数",
-    statMixed: "混合频率手牌",
+    statMixed: "边缘手牌",
     // ⚠ 이 문구는 EquityPage.rangeNote가 «글자 그대로» 인용한다 — 고치면 그쪽도 같이 고칠 것
     copy: "复制范围文本",
     copied: "✓ 已复制",
@@ -989,9 +959,7 @@ const M = {
     sendIp: "② 发送到 IP 范围",
     howTitle: "怎么看",
     how1: "左上到右下的那条对角线是口袋对子；对角线上方（右边）是同花（s），下方（左边）是非同花（o）。",
-    how2:
-      "混合频率的手牌（格子只填了一部分）不是“每次都开池”，而是只按那个比例开池。" +
-      "它们是边缘牌，选哪边 EV 差别都很小。",
+    how2: "部分填充的格子表示各份资料对是否开池有分歧的边缘手牌。填充高度表示支持开池的资料占比，并非求解器的计算结果。",
     how3:
       "点[① 发送到 OOP 范围]/[② 发送到 IP 范围]，这个范围就会填进自定义牌局的范围输入框——" +
       "翻牌之后的打法你可以自己算算看。",
@@ -1001,9 +969,7 @@ const M = {
     howDefend3:
       "把复制好的范围文本粘进自定义牌局的 ①/② 范围输入框，就能用这套防守范围自己算翻牌之后的打法。",
     sourceTitle: "这张表是怎么做出来的？",
-    sourceBody:
-      "我们把多份公开免费的 GTO 资料逐手对照，做出一份“共识范围”；各家判断不一致的边缘牌，" +
-      "则标成混合频率。BTN 和 SB 还多做了一步：拿本应用教学案例用的范围（经求解器验证）又对照了一遍。",
+    sourceBody: "我们把多份公开免费的 GTO 资料逐手对照，做出一份“共识范围”；各家判断不一致的边缘牌，则按支持开池的资料占比（75/50/25%）标注。BTN 和 SB 还多做了一步：拿本应用教学案例用的范围（经求解器验证）又对照了一遍。",
     sourceList:
       "交叉验证用到的公开资料：nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt（about-poker.com）· BeyondGTO · ThinkGTO（BB vs SB 的实测频率）· " +
@@ -1059,15 +1025,14 @@ const M = {
     how3bet2:
       "紅色加綠色沒把格子填滿，剩下的那部分就是蓋牌。兩種顏色同時出現，表示按這個比例混著 4bet 和跟注。" +
       "不在開池範圍裡的手牌，根本碰不到這個局面，所以留空。",
-    intro:
-      "按位置分的開池範圍（RFI）——前面的人全都蓋牌時，你該拿哪些牌加注？" +
-      "基準：6 人現金桌 100bb，開池 2.5bb。格子只填了一部分，表示這手牌用的是混合頻率（只在一部分時候開池）。",
+    intro: "按位置分的開池範圍（RFI）——前面的人全都蓋牌時，你該拿哪些牌加注？基準：6 人現金桌 100bb，開池 2.5bb。格子部分填充表示公開資料對是否開池有分歧的邊緣手牌（填充高度 = 支持開池的資料占比）。",
+    provenanceNote: "公開資料共識 + 內部推導，並非解算器計算結果。出處見下方「這張表是怎麼做出來的？」。",
     introDefend:
       "別人先開池加注時你該怎麼應對——這裡列的是最常遇到的幾種組合。" +
       "紅色是 3bet，綠色是跟注，兩色疊起來的高度就是你的防守頻率。" +
       "基準：6 人現金桌 100bb，開池 2.5bb（SB 開池按 3bb）。",
     legendOpen: "開池（100%）",
-    legendMixed: "混合頻率（填充高度 = 開池 %）",
+    legendMixed: "邊緣手牌（填充高度 = 支持開池的資料占比）",
     legendFold: "蓋牌",
     legend3bet: "3bet",
     legendCall: "跟注",
@@ -1086,7 +1051,7 @@ const M = {
     statPercent: "開池比例",
     statCombos: "開池組合數",
     statHands: "開池手牌數",
-    statMixed: "混合頻率手牌",
+    statMixed: "邊緣手牌",
     // ⚠ 이 문구는 EquityPage.rangeNote가 «글자 그대로» 인용한다 — 고치면 그쪽도 같이 고칠 것
     copy: "複製範圍文字",
     copied: "✓ 已複製",
@@ -1094,9 +1059,7 @@ const M = {
     sendIp: "② 填入 IP 範圍",
     howTitle: "怎麼看",
     how1: "左上到右下的那條對角線是口袋對；對角線上方（右邊）是同花（s），下方（左邊）是不同花（o）。",
-    how2:
-      "混合頻率的手牌（格子只填了一部分）不是「每次都開池」，而是只按那個比例開池。" +
-      "它們是邊緣牌，選哪邊 EV 差別都很小。",
+    how2: "部分填充的格子表示各份資料對是否開池有分歧的邊緣手牌。填充高度表示支持開池的資料占比，並非解算器的計算結果。",
     how3:
       "按下[① 填入 OOP 範圍]/[② 填入 IP 範圍]，這個範圍就會填進自訂牌局的範圍輸入框——" +
       "翻牌之後的打法你可以自己算算看。",
@@ -1106,9 +1069,7 @@ const M = {
     howDefend3:
       "把複製好的範圍文字貼進自訂牌局的 ①/② 範圍輸入框，就能用這套防守範圍自己算翻牌之後的打法。",
     sourceTitle: "這張表是怎麼做出來的？",
-    sourceBody:
-      "我們把多份公開免費的 GTO 資料逐手對照，做出一份「共識範圍」；各家判斷不一致的邊緣牌，" +
-      "則標成混合頻率。BTN 和 SB 還多做了一步：又和本應用程式教學案例所用的範圍（經解算器驗證）對照了一遍。",
+    sourceBody: "我們把多份公開免費的 GTO 資料逐手對照，做出一份「共識範圍」；各家判斷不一致的邊緣牌，則按支持開池的資料占比（75/50/25%）標示。BTN 和 SB 還多做了一步：又和本應用程式教學案例所用的範圍（經解算器驗證）對照了一遍。",
     sourceList:
       "交叉驗證用到的公開資料：nlh.poker · Preflop Wizard · HoldemPro · " +
       "The Felt（about-poker.com）· BeyondGTO · ThinkGTO（BB vs SB 的實測頻率）· " +
@@ -1166,16 +1127,14 @@ const M = {
       "Si le rouge + le vert ne remplissent pas la case, le reste est foldé. Les cases " +
       "bicolores mixent 4-bet et call. Les mains hors de la range d'open ne rencontrent " +
       "jamais ce spot, donc elles restent vides.",
-    intro:
-      "Les ranges d'open par position (RFI) — quelles mains relancer quand tout le monde " +
-      "a foldé avant toi ? Base : cash game 6-max, 100bb, open 2,5bb. " +
-      "Les cases partiellement remplies sont des opens à fréquence mixte.",
+    intro: "Les ranges d'open par position (RFI) — quelles mains relancer quand tout le monde a foldé avant toi ? Base : cash game 6-max, 100bb, open 2,5bb. Les cases partiellement remplies indiquent des mains limites sur lesquelles les sources publiques divergent (hauteur = part des sources favorables à l'open).",
+    provenanceNote: "Consensus de sources publiques + déductions internes — pas un résultat calculé par un solver. Sources ci-dessous : « Comment ce chart a-t-il été construit ? ».",
     introDefend:
       "Comment réagir quand quelqu'un ouvre avant toi — les configurations les plus " +
       "courantes. Rouge = 3-bet, vert = call, et la hauteur empilée est ta fréquence totale " +
       "de défense. Cash game 6-max, 100bb, open 2,5bb (3bb pour un open de SB).",
     legendOpen: "Open (100 %)",
-    legendMixed: "Fréquence mixte (hauteur = % d'open)",
+    legendMixed: "Mains limites (hauteur = part des sources favorables à l'open)",
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
@@ -1195,7 +1154,7 @@ const M = {
     statPercent: "% d'open",
     statCombos: "Combos ouverts",
     statHands: "Mains ouvertes",
-    statMixed: "Mains mixtes",
+    statMixed: "Mains limites",
     // ⚠ EquityPage.rangeNote가 이 버튼 이름을 «글자까지» 그대로 인용한다
     copy: "Copier la range en texte",
     copied: "✓ Copié",
@@ -1204,18 +1163,14 @@ const M = {
     sendIp: "② Envoyer vers Range IP",
     howTitle: "Comment lire ce chart",
     how1: "La diagonale, du coin en haut à gauche au coin en bas à droite, ce sont les paires ; au-dessus de la diagonale, le suited ; en dessous, l'offsuit.",
-    how2: "Les mains à fréquence mixte (remplissage partiel) ne sont ouvertes que cette fraction du temps — elles sont limites, donc les deux choix perdent peu d'EV.",
+    how2: "Les cases partiellement remplies indiquent des mains limites pour lesquelles les sources divergent sur le choix d'ouvrir ou non. La hauteur représente la part des sources favorables à l'open, pas une consigne sur le nombre de fois où ouvrir ni le résultat d'un calcul de stratégie par un solver.",
     how3: "Les boutons [Envoyer vers Range] chargent cette range dans l'éditeur du spot personnalisé — essaie de calculer toi-même le jeu postflop.",
     howDefend2:
       "Si le rouge + le vert ne remplissent pas toute la case, le reste est foldé. Les cases bicolores mixent 3-bet et call à ces ratios.",
     howDefend3:
       "Colle une range copiée dans les champs de range du spot personnalisé (① / ②) pour calculer toi-même le jeu postflop avec cette range de défense.",
     sourceTitle: "Comment ce chart a-t-il été construit ?",
-    sourceBody:
-      "Nous avons recoupé main par main plusieurs ressources GTO publiées librement pour " +
-      "construire une range de consensus, en marquant comme fréquences mixtes les mains où " +
-      "les sources divergent. BTN et SB ont aussi été comparés aux ranges vérifiées au solver " +
-      "des Spots d'étude de cette app.",
+    sourceBody: "Nous avons recoupé main par main plusieurs ressources GTO publiées librement pour construire une range de consensus, en indiquant, pour les mains limites où les sources divergent, la part des sources favorables à l'open (75/50/25 %). BTN et SB ont aussi été comparés aux ranges vérifiées au solver des Spots d'étude de cette app.",
     // ⚠ 날짜도 언어다 — fr는 MM/YYYY (브리프 §표기 JJ/MM/AAAA와 같은 결)
     sourceList:
       "Sources publiques recoupées : nlh.poker · Preflop Wizard · HoldemPro · " +
@@ -1273,16 +1228,14 @@ const M = {
     how3bet2:
       "Jika merah + hijau tidak memenuhi kotak, sisanya di-fold. Kotak dua warna mencampur " +
       "4-bet dan call. Hand di luar range open tidak pernah sampai ke spot ini, jadi tetap kosong.",
-    intro:
-      "Range open per posisi (RFI) — hand mana yang di-raise saat semua orang sudah fold " +
-      "sebelum Anda? Asumsi: cash game 6-max, 100bb, open 2,5bb. " +
-      "Kotak yang terisi sebagian adalah open dengan frekuensi campuran.",
+    intro: "Range open per posisi (RFI) — hand mana yang di-raise saat semua orang sudah fold sebelum Anda? Asumsi: cash game 6-max, 100bb, open 2,5bb. Kotak yang terisi sebagian menandai hand marginal yang keputusan open-nya berbeda antarsumber publik (tinggi isian = porsi sumber yang mendukung open).",
+    provenanceNote: "Konsensus sumber publik + derivasi internal — bukan hasil perhitungan solver. Lihat “Bagaimana chart ini dibuat?” di bawah.",
     introDefend:
       "Cara merespons saat ada yang open sebelum Anda — matchup yang paling umum. " +
       "Merah = 3-bet, hijau = call, dan tinggi isian kotak (merah + hijau) adalah total frekuensi defend Anda. " +
       "Cash game 6-max, 100bb, open 2,5bb (3bb untuk open dari SB).",
     legendOpen: "Open (100%)",
-    legendMixed: "Frekuensi campuran (tinggi = % open)",
+    legendMixed: "Hand marginal (tinggi = porsi sumber yang mendukung open)",
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
@@ -1302,7 +1255,7 @@ const M = {
     statPercent: "% open",
     statCombos: "Combo di-open",
     statHands: "Hand di-open",
-    statMixed: "Hand campuran",
+    statMixed: "Hand marginal",
     // ⚠ EquityPage.rangeNote가 이 버튼 이름을 «글자까지» 그대로 인용한다
     copy: "Salin teks range",
     copied: "✓ Tersalin",
@@ -1311,17 +1264,14 @@ const M = {
     sendIp: "② Kirim ke Range IP",
     howTitle: "Cara membaca chart ini",
     how1: "Diagonal dari kiri atas ke kanan bawah adalah pair; di atas diagonal adalah suited; di bawahnya offsuit.",
-    how2: "Hand dengan frekuensi campuran (terisi sebagian) hanya di-open sebagian waktu — hand ini marginal, jadi kedua pilihan hanya kehilangan sedikit EV.",
+    how2: "Kotak yang terisi sebagian menandai hand marginal yang keputusan open-nya berbeda antarsumber. Tinggi isian menunjukkan porsi sumber yang mendukung open, bukan hasil perhitungan solver.",
     how3: "Tombol [Kirim ke Range] memuat range ini ke editor Spot kustom — coba hitung sendiri permainan postflop-nya.",
     howDefend2:
       "Jika merah + hijau tidak memenuhi seluruh kotak, sisanya di-fold. Kotak dua warna mencampur 3-bet dan call dengan rasio tersebut.",
     howDefend3:
       "Tempel range yang disalin ke kolom range Spot kustom (① / ②) untuk menghitung sendiri permainan postflop dengan range defend ini.",
     sourceTitle: "Bagaimana chart ini dibuat?",
-    sourceBody:
-      "Kami membandingkan hand demi hand beberapa sumber GTO yang tersedia untuk umum untuk membangun range konsensus, lalu menandai hand yang berbeda antarsumber sebagai " +
-      "frekuensi campuran. BTN dan SB juga dibandingkan dengan range hasil verifikasi solver " +
-      "dari Spot belajar di aplikasi ini.",
+    sourceBody: "Kami membandingkan hand demi hand beberapa sumber GTO yang tersedia untuk umum untuk membangun range konsensus, lalu menandai hand marginal yang berbeda antarsumber dengan porsi sumber yang mendukung open (75/50/25%). BTN dan SB juga dibandingkan dengan range hasil verifikasi solver dari Spot belajar di aplikasi ini.",
     // 날짜도 언어다 — id는 MM/YYYY (브리프 §표기 DD/MM/YYYY와 같은 결)
     sourceList:
       "Sumber publik yang dibandingkan: nlh.poker · Preflop Wizard · HoldemPro · " +
@@ -1377,16 +1327,14 @@ const M = {
     how3bet2:
       "Jika merah + hijau tidak memenuhi kotak, selebihnya di-fold. Kotak dua warna mencampurkan " +
       "4-bet dengan call. Tangan di luar range open tidak pernah sampai ke spot ini, jadi ia kekal kosong.",
-    intro:
-      "Range open mengikut posisi (RFI) — tangan mana yang patut anda raise apabila semua orang " +
-      "sudah fold sebelum anda? Andaian: cash game 6-max, 100bb, open 2.5bb. " +
-      "Kotak yang terisi separuh ialah open dengan frekuensi campuran.",
+    intro: "Range open mengikut posisi (RFI) — tangan mana yang patut anda raise apabila semua orang sudah fold sebelum anda? Andaian: cash game 6-max, 100bb, open 2.5bb. Kotak yang terisi sebahagian menandakan tangan marginal yang keputusan open-nya berbeza antara sumber awam (tinggi isian = bahagian sumber yang menyokong open).",
+    provenanceNote: "Konsensus sumber awam + terbitan dalaman — bukan hasil pengiraan solver. Lihat “Bagaimana carta ini dibina?” di bawah.",
     introDefend:
       "Cara bertindak balas apabila ada yang open sebelum anda — matchup yang paling kerap berlaku. " +
       "Merah = 3-bet, hijau = call, dan tinggi isian kotak (merah + hijau) ialah jumlah frekuensi defend anda. " +
       "Cash game 6-max, 100bb, open 2.5bb (3bb untuk open dari SB).",
     legendOpen: "Open (100%)",
-    legendMixed: "Frekuensi campuran (tinggi = % open)",
+    legendMixed: "Tangan marginal (tinggi = bahagian sumber yang menyokong open)",
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
@@ -1406,7 +1354,7 @@ const M = {
     statPercent: "% open",
     statCombos: "Combo di-open",
     statHands: "Tangan di-open",
-    statMixed: "Tangan campuran",
+    statMixed: "Tangan marginal",
     // ⚠ EquityPage.rangeNote가 이 버튼 이름을 «글자까지» 그대로 인용한다
     copy: "Salin teks range",
     copied: "✓ Disalin",
@@ -1415,17 +1363,14 @@ const M = {
     sendIp: "② Hantar ke Range IP",
     howTitle: "Cara membaca carta ini",
     how1: "Garis pepenjuru dari kiri atas ke kanan bawah ialah pair; di atas pepenjuru ialah suited; di bawahnya offsuit.",
-    how2: "Tangan dengan frekuensi campuran (terisi separuh) hanya di-open sebahagian masa — tangan ini marginal, jadi kedua-dua pilihan hanya kehilangan sedikit EV.",
+    how2: "Kotak yang terisi sebahagian menandakan tangan marginal yang keputusan open-nya berbeza antara sumber. Tinggi isian menunjukkan bahagian sumber yang menyokong open, bukan hasil pengiraan solver.",
     how3: "Butang [Hantar ke Range] memuatkan range ini ke editor Spot tersuai — cuba kira sendiri permainan postflop-nya.",
     howDefend2:
       "Jika merah + hijau tidak memenuhi seluruh kotak, selebihnya di-fold. Kotak dua warna mencampurkan 3-bet dengan call mengikut nisbah tersebut.",
     howDefend3:
       "Tampal range yang disalin ke ruangan range Spot tersuai (① / ②) untuk mengira sendiri permainan postflop dengan range defend ini.",
     sourceTitle: "Bagaimana carta ini dibina?",
-    sourceBody:
-      "Kami membandingkan beberapa sumber GTO yang terbuka kepada umum, tangan demi tangan, untuk membina range konsensus, lalu menandakan tangan yang berbeza antara sumber sebagai " +
-      "frekuensi campuran. BTN dan SB turut dibandingkan dengan range yang disahkan solver " +
-      "daripada Spot belajar dalam aplikasi ini.",
+    sourceBody: "Kami membandingkan beberapa sumber GTO yang terbuka kepada umum, tangan demi tangan, untuk membina range konsensus, lalu menandakan tangan marginal yang berbeza antara sumber mengikut bahagian sumber yang menyokong open (75/50/25%). BTN dan SB turut dibandingkan dengan range yang disahkan solver daripada Spot belajar dalam aplikasi ini.",
     // 날짜도 언어다 — ms는 DD/MM/YYYY 계열이라 여기서는 MM/YYYY (리서치 §1-2)
     sourceList:
       "Sumber awam yang dibandingkan: nlh.poker · Preflop Wizard · HoldemPro · " +
