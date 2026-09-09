@@ -261,7 +261,7 @@
 import { computed, defineComponent, onUnmounted, ref } from "vue";
 import { init, handler, onWorkerFailure, terminate } from "../global-worker";
 import { clearSolverRetry, reportSolverError } from "../errors";
-import { encodeSpotUrl } from "../spot-share";
+import { encodeSpotUrl, InvalidSpotLinesError } from "../spot-share";
 import { i18n, pick, localizeNumber } from "../i18n";
 import {
   useStore,
@@ -895,6 +895,22 @@ const maxMemoryUsage = 3.9 * 1024 * 1024 * 1024; // 3.9 GB
 const browser = detect();
 const isSafari = browser && (browser.name === "safari" || browser.os === "iOS");
 
+// 계산 전 검사와 공유 거부가 같은 기존 12언어 문구를 사용한다.
+const invalidLineMessage = () => pick(
+  "잘못된 라인이 있습니다 (손상된 설정을 불러왔나요?)",
+  "Invalid line found (loaded broken configurations?)",
+  "無効なラインが見つかりました(破損した設定を読み込みましたか?)",
+  "Se encontró una línea inválida (¿cargaste una configuración dañada?)",
+  "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)",
+  "Ungültige Line gefunden (beschädigte Einstellungen geladen?)",
+  "发现了无效的线路（是不是加载了损坏的设置？）",
+  "發現了無效的線路（是不是載入了損壞的設定？）",
+  "Ligne invalide trouvée (configuration corrompue chargée ?)",
+  "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
+  "Line tidak sah ditemui (memuatkan tetapan yang rosak?)",
+  "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)"
+);
+
 const checkConfig = (
   config: ReturnType<typeof useConfigStore>
 ): string | null => {
@@ -1131,17 +1147,7 @@ const checkConfig = (
     removedLinesArray.includes(ROOT_LINE_STRING) ||
     removedLinesArray.includes(INVALID_LINE_STRING)
   ) {
-    return pick(
-      "잘못된 라인이 있습니다 (손상된 설정을 불러왔나요?)",
-      "Invalid line found (loaded broken configurations?)",
-      "無効なラインが見つかりました(破損した設定を読み込みましたか?)",
-      "Se encontró una línea inválida (¿cargaste una configuración dañada?)",
-      "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)",
-      "Ungültige Line gefunden (beschädigte Einstellungen geladen?)"
-    ,
-      "发现了无效的线路（是不是加载了损坏的设置？）", "發現了無效的線路（是不是載入了損壞的設定？）",
-      "Ligne invalide trouvée (configuration corrompue chargée ?)", "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
-      "Line tidak sah ditemui (memuatkan tetapan yang rosak?)", "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)");
+    return invalidLineMessage();
   }
 
   if (
@@ -1472,7 +1478,15 @@ export default defineComponent({
 
     const copySpotUrl = async () => {
       shareError.value = "";
-      const url = encodeSpotUrl();
+      shareCopied.value = false;
+      let url: string | null;
+      try {
+        url = encodeSpotUrl();
+      } catch (error) {
+        if (!(error instanceof InvalidSpotLinesError)) throw error;
+        shareError.value = invalidLineMessage();
+        return;
+      }
       if (!url) {
         shareError.value = pick(
           "공유하려면 OOP·IP 레인지와 보드 3장을 먼저 입력하세요.",
@@ -1485,6 +1499,23 @@ export default defineComponent({
           "想分享牌局的话，请先填好 OOP 和 IP 范围，并选好至少 3 张公共牌。", "想分享牌局的話，請先填好 OOP 和 IP 範圍，並選好至少 3 張公共牌。",
           "Pour partager un spot, renseigne d'abord les ranges OOP et IP et au moins 3 cartes de board.", "Untuk membagikan spot, isi dulu range OOP dan IP serta minimal 3 kartu board.",
           "Untuk berkongsi spot, isi dahulu range OOP dan IP serta sekurang-kurangnya 3 kad board.", "स्पॉट शेयर करने से पहले OOP और IP की range तथा Board के कम से कम 3 कार्ड दर्ज करें।");
+        return;
+      }
+      if (url.length > 8192) {
+        shareError.value = pick(
+          "공유 링크가 너무 깁니다 — 트리 설정을 줄이거나 설정 파일로 내보내 주세요",
+          "The share link is too long — simplify the tree settings or export them as a configuration file.",
+          "共有リンクが長すぎます。ツリー設定を減らすか、設定ファイルとしてエクスポートしてください。",
+          "El enlace para compartir es demasiado largo — simplifica la configuración del árbol o expórtala como archivo de configuración.",
+          "O link de compartilhamento é muito longo — simplifique as configurações da árvore ou exporte-as como arquivo de configuração.",
+          "Der Freigabelink ist zu lang — vereinfache die Baumeinstellungen oder exportiere sie als Konfigurationsdatei.",
+          "分享链接太长，请精简树设置或导出为配置文件。",
+          "分享連結太長，請精簡樹設定或匯出為設定檔。",
+          "Le lien de partage est trop long — simplifie les paramètres de l'arbre ou exporte-les dans un fichier de configuration.",
+          "Tautan berbagi terlalu panjang — sederhanakan pengaturan tree atau ekspor sebagai file konfigurasi.",
+          "Pautan perkongsian terlalu panjang — ringkaskan tetapan tree atau eksport sebagai fail konfigurasi.",
+          "शेयर लिंक बहुत लंबा है — ट्री की सेटिंग कम करें या उन्हें कॉन्फ़िगरेशन फ़ाइल के रूप में एक्सपोर्ट करें।"
+        );
         return;
       }
       try {
