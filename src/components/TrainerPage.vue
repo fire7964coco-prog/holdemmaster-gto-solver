@@ -1816,7 +1816,7 @@ const M = {
     cardHintAfter: " खेल सकते हैं। कार्ड में जवाब नहीं दिखता।",
     verdictBest: "सर्वोत्तम",
     verdictGood: "स्वीकार्य",
-    verdictMiss: "गलती",
+    verdictMiss: "नुकसान वाला चुनाव",
     promptCopy: "नीचे दिया गया टेक्स्ट कॉपी करें",
     shareText: "आज की GTO चुनौती — खुद आज़माएँ: https://solver.holdemmaster.com/?view=trainer&lang=hi",
     confirmReset: "इस डिवाइस का पूरा ट्रेनर इतिहास हटाएँ?",

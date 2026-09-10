@@ -34,7 +34,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "카드를 지정하지 않고 건너뛴 경로는 고정할 수 없습니다. 카드를 먼저 선택해 주세요.",
     engineError: "전략을 고정하지 못했습니다. 입력값을 확인하고 다시 풀어 주세요.",
     assumption: "고정 가정 하의 값",
-    banner: "상대 전략을 고정한 착취 전략 — 균형(GTO) 전략이 아니다 · 고정 노드 {count}개",
+    banner: "전략 일부를 고정하고 다시 푼 결과 — 균형(GTO) 전략이 아닙니다 · 고정 노드 {count}개",
     noReach: "이 노드의 도달 가중치가 0이어서 초기 빈도를 표시할 수 없습니다.",
   },
   en: {
@@ -51,7 +51,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "A path with an unspecified card cannot be locked. Select the card first.",
     engineError: "The strategy could not be locked. Check the input values and solve again.",
     assumption: "Values under the fixed-strategy assumption",
-    banner: "Exploitative strategy with the opponent’s strategy fixed — not an equilibrium (GTO) strategy · {count} locked nodes",
+    banner: "Solved with part of the strategy fixed — not an equilibrium (GTO) strategy · {count} locked nodes",
     noReach: "This node’s reach weight is 0, so initial frequencies are unavailable.",
   },
   ja: {
@@ -68,7 +68,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "カード未指定の経路は固定できません。カードを選んでください。",
     engineError: "戦略を固定できませんでした。入力を確認して再計算してください。",
     assumption: "固定条件下の値",
-    banner: "相手戦略を固定した搾取戦略 — 均衡（GTO）戦略ではありません · 固定ノード{count}個",
+    banner: "戦略の一部を固定して再計算した結果 — 均衡（GTO）戦略ではありません · 固定ノード{count}個",
     noReach: "このノードの到達ウェイトは0です。初期頻度を表示できません。",
   },
   es: {
@@ -85,7 +85,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "No se puede fijar una ruta con una carta sin elegir. Elige primero la carta.",
     engineError: "No se pudo fijar la estrategia. Revisa los valores y vuelve a calcular.",
     assumption: "Valores bajo el supuesto de estrategia fija",
-    banner: "Estrategia explotadora con la estrategia rival fijada — no es una estrategia de equilibrio (GTO) · {count} nodos fijados",
+    banner: "Resultado recalculado con parte de la estrategia fijada — no es una estrategia de equilibrio (GTO) · {count} nodos fijados",
     noReach: "El peso de llegada a este nodo es 0; las frecuencias iniciales no están disponibles.",
   },
   pt: {
@@ -102,7 +102,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "Não é possível fixar um caminho com uma carta não escolhida. Escolha a carta primeiro.",
     engineError: "Não foi possível fixar a estratégia. Confira os valores e calcule de novo.",
     assumption: "Valores sob a hipótese de estratégia fixa",
-    banner: "Estratégia exploradora com a estratégia do adversário fixada — não é uma estratégia de equilíbrio (GTO) · {count} nós fixados",
+    banner: "Resultado recalculado com parte da estratégia fixada — não é uma estratégia de equilíbrio (GTO) · {count} nós fixados",
     noReach: "O peso de chegada a este nó é 0; as frequências iniciais não estão disponíveis.",
   },
   de: {
@@ -119,7 +119,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "Ein Pfad mit einer nicht gewählten Karte kann nicht fixiert werden. Wähle zuerst die Karte.",
     engineError: "Die Strategie konnte nicht fixiert werden. Prüfe die Werte und berechne erneut.",
     assumption: "Werte unter der Annahme einer fixierten Strategie",
-    banner: "Exploitative Strategie bei fixierter gegnerischer Strategie – keine Gleichgewichtsstrategie (GTO) · {count} fixierte Knoten",
+    banner: "Neu berechnet mit teilweise fixierter Strategie – keine Gleichgewichtsstrategie (GTO) · {count} fixierte Knoten",
     noReach: "Das Erreichungsgewicht dieses Knotens ist 0; anfängliche Häufigkeiten sind nicht verfügbar.",
   },
   zh: {
@@ -136,7 +136,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "路径中有未指定的牌，无法固定策略。请先选择牌。",
     engineError: "无法固定策略。请检查输入值后重新计算。",
     assumption: "固定策略假设下的数值",
-    banner: "固定对手策略的剥削策略——不是均衡（GTO）策略 · 已固定节点：{count}",
+    banner: "固定部分策略后重新计算的结果——不是均衡（GTO）策略 · 已固定节点：{count}",
     noReach: "此节点的到达权重为0，无法显示初始频率。",
   },
   "zh-hant": {
@@ -153,7 +153,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "路徑中有未指定的牌，無法固定策略。請先選擇牌。",
     engineError: "無法固定策略。請檢查輸入值後重新計算。",
     assumption: "固定策略假設下的數值",
-    banner: "固定對手策略的剝削策略——不是均衡（GTO）策略 · 已固定節點：{count}",
+    banner: "固定部分策略後重新計算的結果——不是均衡（GTO）策略 · 已固定節點：{count}",
     noReach: "此節點的到達權重為0，無法顯示初始頻率。",
   },
   fr: {
@@ -170,7 +170,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "Un chemin avec une carte non choisie ne peut pas être fixé. Choisis d’abord la carte.",
     engineError: "La stratégie n’a pas pu être fixée. Vérifie les valeurs, puis relance le calcul.",
     assumption: "Valeurs sous l’hypothèse d’une stratégie fixée",
-    banner: "Stratégie d’exploitation avec stratégie adverse fixée — ce n’est pas une stratégie d’équilibre (GTO) · {count} nœuds fixés",
+    banner: "Résultat recalculé avec une partie de la stratégie fixée — ce n’est pas une stratégie d’équilibre (GTO) · {count} nœuds fixés",
     noReach: "Le poids d’atteinte de ce nœud est de 0 ; les fréquences initiales ne sont pas disponibles.",
   },
   id: {
@@ -187,7 +187,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "Strategi pada jalur dengan kartu yang belum dipilih tidak dapat dikunci. Pilih kartunya terlebih dahulu.",
     engineError: "Strategi tidak dapat dikunci. Periksa nilai input, lalu hitung ulang.",
     assumption: "Nilai dengan asumsi strategi yang dikunci",
-    banner: "Strategi eksploitatif dengan strategi lawan dikunci — bukan strategi ekuilibrium (GTO) · {count} node dikunci",
+    banner: "Hasil hitung ulang dengan sebagian strategi dikunci — bukan strategi ekuilibrium (GTO) · {count} node dikunci",
     noReach: "Bobot untuk mencapai node ini adalah 0; frekuensi awal tidak tersedia.",
   },
   ms: {
@@ -204,7 +204,7 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     skippedChance: "Strategi pada laluan dengan kad yang belum dipilih tidak boleh dikunci. Pilih kad dahulu.",
     engineError: "Strategi tidak dapat dikunci. Semak nilai input dan kira semula.",
     assumption: "Nilai berdasarkan andaian strategi dikunci",
-    banner: "Strategi eksploitatif dengan strategi lawan dikunci — bukan strategi keseimbangan (GTO) · {count} nod dikunci",
+    banner: "Hasil kira semula dengan sebahagian strategi dikunci — bukan strategi keseimbangan (GTO) · {count} nod dikunci",
     noReach: "Pemberat untuk mencapai nod ini ialah 0; kekerapan awal tidak tersedia.",
   },
   hi: {
@@ -214,15 +214,15 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
     remove: "लॉक हटाकर फिर गणना करें",
     before: "लॉक करने से पहले",
     after: "लॉक करने के बाद",
-    frequency: "फ़्रीक्वेंसी",
+    frequency: "आवृत्ति",
     comparison: "पहले और बाद की तुलना",
     exploitability: "Exploitability",
     sumError: "हर action के लिए 0–100 का पूर्णांक दें। कुल 100 होना चाहिए।",
     skippedChance: "बिना कार्ड चुने आगे बढ़े रास्ते की रणनीति लॉक नहीं कर सकते। पहले कार्ड चुनें।",
     engineError: "रणनीति लॉक नहीं हो सकी। मान जाँचकर फिर गणना करें।",
     assumption: "लॉक की गई रणनीति की मान्यता के तहत मान",
-    banner: "प्रतिद्वंद्वी की रणनीति लॉक करने पर बनी exploitative रणनीति — यह संतुलन (GTO) रणनीति नहीं है · {count} लॉक किए गए नोड",
-    noReach: "इस नोड तक पहुँचने का वज़न 0 है; शुरुआती फ़्रीक्वेंसी उपलब्ध नहीं है।",
+    banner: "रणनीति का एक हिस्सा लॉक करके फिर से की गई गणना का नतीजा — यह संतुलन (GTO) रणनीति नहीं है · {count} लॉक किए गए नोड",
+    noReach: "इस नोड तक पहुँचने का वज़न 0 है; शुरुआती आवृत्ति उपलब्ध नहीं है।",
   },
 };
 
