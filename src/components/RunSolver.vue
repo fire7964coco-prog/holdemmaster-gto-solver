@@ -32,7 +32,7 @@
     <button
       class="ml-3 button-base button-blue"
       :disabled="
-        isTreeBuilding ||
+        isTreeBuilding || lockStore.busy ||
         store.isSolverRunning ||
         store.isFinalizing ||
         numThreads < 1 ||
@@ -198,7 +198,7 @@
       <button
         class="button-base button-blue"
         :disabled="!canRun"
-        @click="runSolver"
+        @click="runSolver()"
       >
         {{ L.runSolver }}
       </button>
@@ -251,6 +251,9 @@
       {{ iterationText }}
       <br />
       {{ exploitabilityText }}
+      <span v-if="lockStore.resultLockCount > 0 && exploitabilityText" data-testid="nodelock-run-qualifier">
+        · {{ lockLabels.assumption }}
+      </span>
       <br />
       {{ timeText }}
     </div>
@@ -258,15 +261,19 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onUnmounted, ref } from "vue";
+import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { init, handler, onWorkerFailure, terminate } from "../global-worker";
 import { clearSolverRetry, reportSolverError } from "../errors";
 import { encodeSpotUrl, InvalidSpotLinesError } from "../spot-share";
 import { i18n, pick, localizeNumber } from "../i18n";
+import { captureSnapshot, NodeLockError, sameHistory, useNodeLockStore } from "../node-lock";
+import type { NodeLock } from "../node-lock";
+import { nodeLockLabels } from "../node-lock-labels";
 import {
   useStore,
   useConfigStore,
   useTmpConfigStore,
+  useSavedConfigStore,
   saveConfig,
   saveConfigTmp,
 } from "../store";
@@ -1191,6 +1198,9 @@ export default defineComponent({
     const store = useStore();
     const config = useConfigStore();
     const tmpConfig = useTmpConfigStore();
+    const savedConfig = useSavedConfigStore();
+    const lockStore = useNodeLockStore();
+    const lockLabels = computed(nodeLockLabels);
     const L = computed(() => M[i18n.locale]);
 
     const isSingleThread = ref(Boolean(isSafari) ||
@@ -1213,6 +1223,8 @@ export default defineComponent({
 
     let startTime = 0;
     let exploitabilityUpdated = false;
+    let solveEpoch = lockStore.epoch;
+    let comparisonTargets: NodeLock[] | null = null;
 
     const treeStatus = computed(() => {
       const state = treeStatusState.value;
@@ -1234,7 +1246,7 @@ export default defineComponent({
 
     // The toast retry calls runSolver directly, so it must share the button gate.
     const canRun = computed(() => isTreeBuilt.value && !isTreeBuilding.value &&
-      !store.hasSolverRun && memoryUsageSelected.value <= maxMemoryUsage &&
+      !store.hasSolverRun && !lockStore.busy && memoryUsageSelected.value <= maxMemoryUsage &&
       targetExploitability.value > 0 && maxIterations.value >= 0 &&
       maxIterations.value % 1 === 0 && maxIterations.value <= 100000);
 
@@ -1251,7 +1263,7 @@ export default defineComponent({
         return "";
       } else {
         const valueText = localizeNumber(exploitability.value.toFixed(2));
-        const percent = (exploitability.value * 100) / config.startingPot;
+        const percent = (exploitability.value * 100) / savedConfig.startingPot;
         const percentText = localizeNumber(`${percent.toFixed(2)}%`);
         return L.value.exploitabilityLine(valueText, percentText);
       }
@@ -1267,9 +1279,13 @@ export default defineComponent({
 
     const recoverFromFailure = (error: unknown) => {
       terminate();
+      lockStore.reset();
+      comparisonTargets = null;
       isTreeBuilt.value = false;
       store.isSolverPaused = false;
       store.isSolverFinished = false;
+      store.isSolverRunning = false;
+      store.isFinalizing = false;
       terminateFlag.value = false;
       pauseFlag.value = false;
       startTime = 0;
@@ -1294,12 +1310,43 @@ export default defineComponent({
       stopListening();
       clearSolverRetry();
       terminate();
+      lockStore.reset();
     });
 
+    // Preset/shared/preflop range loads all publish through pendingRangeText.
+    // Observe synchronously, before RangeEditor consumes the pending strings.
+    watch(() => store.pendingRangeText.slice(), (ranges) => {
+      if (!ranges.some(Boolean)) return;
+      const hadLocks = lockStore.locks.length > 0 || lockStore.appliedLocks.length > 0 ||
+        lockStore.resultLockCount > 0 || lockStore.busy;
+      if (hadLocks) {
+        lockStore.reset();
+        comparisonTargets = null;
+        terminate();
+        isTreeBuilt.value = false;
+        store.isSolverFinished = false;
+        store.isSolverPaused = false;
+        store.isSolverRunning = false;
+        store.isFinalizing = false;
+        treeStatusState.value = { type: "notLoaded" };
+        startTime = 0;
+      } else {
+        // Preserve an ordinary solve's epoch and existing navigation behavior.
+        lockStore.before = null;
+        lockStore.after = null;
+        lockStore.error = "";
+        comparisonTargets = null;
+      }
+    }, { flush: "sync" });
+
     const buildTree = async (forceSingleThread = false) => {
-      if (isTreeBuilding.value || store.isSolverRunning || store.isFinalizing) return false;
+      if (isTreeBuilding.value || store.isSolverRunning || store.isFinalizing || lockStore.busy) return false;
       clearSolverRetry();
       isTreeBuilt.value = false;
+      lockStore.reset();
+      comparisonTargets = null;
+      store.isSolverFinished = false;
+      store.isSolverPaused = false;
 
       const configError = checkConfig(config);
       if (configError !== null) {
@@ -1380,49 +1427,105 @@ export default defineComponent({
       }
     };
 
-    const runSolver = async () => {
-      if (!canRun.value) return;
+    const runSolver = async (withLocks = false) => {
+      if (withLocks) {
+        if (!isTreeBuilt.value || isTreeBuilding.value || store.isSolverRunning ||
+          store.isFinalizing || store.isSolverPaused || memoryUsageSelected.value > maxMemoryUsage ||
+          targetExploitability.value <= 0 || !Number.isInteger(maxIterations.value) ||
+          maxIterations.value < 0 || maxIterations.value > 100000) {
+          lockStore.error = "LOCK_INVALID_STATE";
+          lockStore.busy = false;
+          return;
+        }
+      } else if (!canRun.value) return;
       clearSolverRetry();
-
-      terminateFlag.value = false;
-      pauseFlag.value = false;
-      currentIteration.value = -1;
-      exploitability.value = Number.POSITIVE_INFINITY;
-      elapsedTimeMs.value = -1;
-
-      store.isSolverRunning = true;
-
-      startTime = performance.now();
-
+      const epoch = lockStore.epoch;
+      solveEpoch = epoch;
       try {
         if (!handler) throw new Error("SOLVER_WORKER_UNAVAILABLE");
-        await handler.allocateMemory(isCompressionEnabled.value);
+        const remote = handler;
+        const requested = lockStore.locks.map(lock => ({ ...lock,
+          history: [...lock.history], strategy: [...lock.strategy] }));
+        if (withLocks) {
+          comparisonTargets = [...lockStore.appliedLocks, ...requested];
+          // Capture while the preceding finalized solution still exists.
+          const before = store.isSolverFinished
+            ? await captureSnapshot(remote, comparisonTargets, exploitability.value, lockStore.resultLockCount)
+            : null;
+          if (epoch !== lockStore.epoch) return;
+          lockStore.before = before;
+          lockStore.after = null;
+        } else {
+          comparisonTargets = null;
+        }
+        if (epoch !== lockStore.epoch) return;
+        terminateFlag.value = false;
+        pauseFlag.value = false;
+        currentIteration.value = -1;
+        exploitability.value = Number.POSITIVE_INFINITY;
+        elapsedTimeMs.value = -1;
+        store.isSolverFinished = false;
+        store.isSolverRunning = true;
+        startTime = performance.now();
+        await remote.allocateMemory(isCompressionEnabled.value);
+        if (epoch !== lockStore.epoch) return;
+        // Allocation resets regrets, but retains the engine's locking map.
+        // Record each successful change, including when a later lock fails.
+        for (const previous of [...lockStore.appliedLocks]) {
+          const code = await remote.unlockStrategy(Uint32Array.from(previous.history));
+          if (epoch !== lockStore.epoch) return;
+          if (code) throw new NodeLockError(code);
+          lockStore.appliedLocks = lockStore.appliedLocks.filter(lock => !sameHistory(lock.history, previous.history));
+        }
+        for (const lock of requested) {
+          if (lock.history.some(index => !Number.isInteger(index) || index < 0 || index > 0xffffffff)) {
+            throw new NodeLockError("LOCK_INVALID_HISTORY");
+          }
+          const code = await remote.lockStrategy(Uint32Array.from(lock.history), Float32Array.from(lock.strategy));
+          if (epoch !== lockStore.epoch) return;
+          if (code) throw new NodeLockError(code);
+          lockStore.appliedLocks.push(lock);
+        }
+        if (epoch !== lockStore.epoch) return;
+        lockStore.resultLockCount = lockStore.appliedLocks.length;
 
         currentIteration.value = 0;
-        exploitability.value = Math.max(await handler.exploitability(), 0);
+        const initialExploitability = await remote.exploitability();
+        if (epoch !== lockStore.epoch) return;
+        exploitability.value = Math.max(initialExploitability, 0);
         exploitabilityUpdated = true;
 
         await resumeSolver();
       } catch (error) {
-        recoverFromFailure(error);
+        if (epoch !== lockStore.epoch) return;
+        if (error instanceof NodeLockError) {
+          lockStore.error = error.code;
+          lockStore.resultLockCount = lockStore.appliedLocks.length;
+          startTime = 0;
+        } else recoverFromFailure(error);
       } finally {
-        store.isSolverRunning = false;
-        store.isFinalizing = false;
+        if (epoch === lockStore.epoch) {
+          store.isSolverRunning = false;
+          store.isFinalizing = false;
+          if (!store.isSolverPaused) lockStore.busy = false;
+        }
       }
     };
 
     const resumeSolver = async () => {
-      if (store.isFinalizing || isTreeBuilding.value) return;
+      const epoch = solveEpoch;
+      if (epoch !== lockStore.epoch || store.isFinalizing || isTreeBuilding.value) return;
       store.isSolverRunning = true;
       store.isSolverPaused = false;
 
       try {
         if (!handler) throw new Error("SOLVER_WORKER_UNAVAILABLE");
+        const remote = handler;
         if (startTime === 0) {
           startTime = performance.now();
         }
 
-        const target = (config.startingPot * targetExploitability.value) / 100;
+        const target = (savedConfig.startingPot * targetExploitability.value) / 100;
 
         while (
           !terminateFlag.value &&
@@ -1439,24 +1542,37 @@ export default defineComponent({
             return;
           }
 
-          await handler.iterate(currentIteration.value);
+          await remote.iterate(currentIteration.value);
+          if (epoch !== lockStore.epoch) return;
           ++currentIteration.value;
           exploitabilityUpdated = false;
 
           if (currentIteration.value % 10 === 0) {
-            exploitability.value = Math.max(await handler.exploitability(), 0);
+            const currentExploitability = await remote.exploitability();
+            if (epoch !== lockStore.epoch) return;
+            exploitability.value = Math.max(currentExploitability, 0);
             exploitabilityUpdated = true;
           }
         }
 
         if (!exploitabilityUpdated) {
-          exploitability.value = Math.max(await handler.exploitability(), 0);
+          const finalExploitability = await remote.exploitability();
+          if (epoch !== lockStore.epoch) return;
+          exploitability.value = Math.max(finalExploitability, 0);
         }
 
         store.isSolverRunning = false;
         store.isFinalizing = true;
 
-        await handler.finalize();
+        await remote.finalize();
+        if (epoch !== lockStore.epoch) return;
+
+        lockStore.currentExploitability = exploitability.value;
+        if (comparisonTargets) {
+          const after = await captureSnapshot(remote, comparisonTargets, exploitability.value, lockStore.resultLockCount);
+          if (epoch !== lockStore.epoch) return;
+          lockStore.after = after;
+        }
 
         store.isFinalizing = false;
         store.isSolverFinished = true;
@@ -1465,12 +1581,24 @@ export default defineComponent({
         elapsedTimeMs.value += end - startTime;
         startTime = 0;
       } catch (error) {
-        recoverFromFailure(error);
+        if (epoch !== lockStore.epoch) return;
+        if (error instanceof NodeLockError) {
+          // finalize succeeded; only the optional comparison snapshot failed.
+          lockStore.error = error.code;
+          store.isSolverFinished = true;
+        } else recoverFromFailure(error);
       } finally {
-        store.isSolverRunning = false;
-        store.isFinalizing = false;
+        if (epoch === lockStore.epoch) {
+          store.isSolverRunning = false;
+          store.isFinalizing = false;
+          if (!store.isSolverPaused) lockStore.busy = false;
+        }
       }
     };
+
+    watch(() => lockStore.solveRequest, (request) => {
+      if (request > 0 && lockStore.busy) void runSolver(true);
+    });
 
     /* 스팟 공유 링크 */
     const shareCopied = ref(false);
@@ -1539,6 +1667,8 @@ export default defineComponent({
     );
     return {
       store,
+      lockStore,
+      lockLabels,
       L,
       UNITS,
       numThreads,

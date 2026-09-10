@@ -15,18 +15,47 @@
           : L.paused
       }}
     </div>
+    <ResultLock
+      v-if="lockStore.busy || lockStore.error || lockStore.locks.length"
+      :selected-spot="null"
+      :history="[]"
+      path-label="ROOT"
+      :results="null"
+      :cards="cards"
+      :navigation-busy="false"
+    />
   </div>
 
   <div v-else class="flex flex-col h-full">
+    <div
+      v-if="lockStore.resultLockCount > 0"
+      data-testid="nodelock-banner"
+      role="status"
+      class="shrink-0 px-3 py-2 text-sm text-amber-200 bg-amber-950 border-b border-amber-700 break-words"
+    >
+      {{ lockLabels.banner.replace('{count}', String(lockStore.resultLockCount)) }}
+      <span data-testid="nodelock-exploitability-qualifier" class="block mt-1">
+        {{ lockLabels.exploitability }}: {{ lockExploitabilityText }} · {{ lockLabels.assumption }}
+      </span>
+    </div>
     <ResultNav
       ref="resultNav"
       :is-handler-updated="isHandlerUpdated"
-      :is-locked="isLocked"
+      :is-locked="isLocked || lockStore.busy"
       :cards="cards"
       :dealt-card="dealtCard"
       @update:is-handler-updated="(value) => (isHandlerUpdated = value)"
       @update:is-locked="(value) => (isLocked = value)"
       @trigger-update="onUpdateSpot"
+    />
+
+    <ResultLock
+      :selected-spot="selectedSpot"
+      :history="selectedHistory"
+      :path-label="selectedPathLabel"
+      :results="results"
+      :cards="cards"
+      :navigation-busy="isLocked"
     />
 
     <ResultMiddle
@@ -152,7 +181,9 @@
 import { computed, defineComponent, nextTick, ref } from "vue";
 import { useSavedConfigStore, useStore } from "../store";
 import { handler } from "../global-worker";
-import { i18n } from "../i18n";
+import { i18n, localizeNumber } from "../i18n";
+import { useNodeLockStore } from "../node-lock";
+import { nodeLockLabels } from "../node-lock-labels";
 
 import {
   Results,
@@ -166,6 +197,7 @@ import {
 } from "../result-types";
 
 import ResultNav from "./ResultNav.vue";
+import ResultLock from "./ResultLock.vue";
 import ResultMiddle from "./ResultMiddle.vue";
 import ResultBasics from "./ResultBasics.vue";
 import ResultTable from "./ResultTable.vue";
@@ -253,6 +285,7 @@ const M = {
 export default defineComponent({
   components: {
     ResultNav,
+    ResultLock,
     ResultMiddle,
     ResultBasics,
     ResultTable,
@@ -265,6 +298,14 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
+    const lockStore = useNodeLockStore();
+    const lockLabels = computed(nodeLockLabels);
+    const lockExploitabilityText = computed(() => {
+      const value = lockStore.currentExploitability;
+      if (value === null || !Number.isFinite(value)) return "—";
+      const scale = store.displayUnitScale;
+      return localizeNumber((value / scale).toPrecision(4) + (scale > 1 ? "bb" : ""));
+    });
     const savedConfig = useSavedConfigStore();
     const L = computed(() => M[i18n.locale]);
     const resultNav = ref<{ playPath: (path: number[]) => Promise<boolean> } | null>(
@@ -280,6 +321,8 @@ export default defineComponent({
     const dealtCard = ref(-1);
 
     const selectedSpot = ref<Spot | null>(null);
+    const selectedHistory = ref<number[]>([]);
+    const selectedPathLabel = ref("ROOT");
     const selectedChance = ref<SpotChance | null>(null);
     const currentBoard = ref<number[]>([]);
     const results = ref<Results | null>(null);
@@ -318,6 +361,9 @@ export default defineComponent({
       selectedChance.value = null;
       results.value = null;
       chanceReports.value = null;
+      selectedHistory.value = [];
+      selectedPathLabel.value = "ROOT";
+      isLocked.value = false;
     };
 
     // 프리셋 미리보기 데이터 추출용 훅 (도구/e2e/preset-export.js가 사용).
@@ -347,7 +393,9 @@ export default defineComponent({
       newCurrentBoard: number[],
       newResults: Results,
       newChanceReports: ChanceReports | null,
-      newTotalBetAmount: number[]
+      newTotalBetAmount: number[],
+      newHistory: number[],
+      newPathLabel: string
     ) => {
       dealtCard.value = -1;
       selectedSpot.value = newSelectedSpot;
@@ -356,6 +404,8 @@ export default defineComponent({
       results.value = newResults;
       chanceReports.value = newChanceReports;
       totalBetAmount.value = newTotalBetAmount;
+      selectedHistory.value = newHistory;
+      selectedPathLabel.value = newPathLabel;
       isLocked.value = false;
 
       chanceMode.value = newSelectedChance?.player ?? "";
@@ -457,6 +507,9 @@ export default defineComponent({
 
     return {
       store,
+      lockStore,
+      lockLabels,
+      lockExploitabilityText,
       L,
       resultNav,
       isHandlerUpdated,
@@ -464,6 +517,8 @@ export default defineComponent({
       cards,
       dealtCard,
       selectedSpot,
+      selectedHistory,
+      selectedPathLabel,
       selectedChance,
       currentBoard,
       results,
