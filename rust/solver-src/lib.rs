@@ -21,6 +21,53 @@ use rayon_adapter::THREAD_POOL;
 #[wasm_bindgen]
 pub struct GameManager {
     game: PostFlopGame,
+    // The crate's State is private: 0 = not allocated, 1 = allocated, 2 = solved.
+    phase: u8,
+}
+
+impl GameManager {
+    // Validate one step at a time before play() can panic. Every allocated-game
+    // path, including an error, leaves the interpreter at the root.
+    fn with_strategy_node<T>(
+        &mut self,
+        history: &[usize],
+        allow_solved: bool,
+        operation: impl FnOnce(&mut PostFlopGame) -> Result<T, &'static str>,
+    ) -> Result<T, &'static str> {
+        if self.phase == 0 {
+            return Err("LOCK_NOT_ALLOCATED");
+        }
+        self.game.back_to_root();
+        let result = (|| {
+            if !allow_solved && self.phase == 2 {
+                return Err("LOCK_ALREADY_SOLVED");
+            }
+            for &action in history {
+                if self.game.is_terminal_node() {
+                    return Err("LOCK_TERMINAL_NODE");
+                }
+                if self.game.is_chance_node() {
+                    // play() uses card IDs here, not indices into available_actions()
+                    // (which groups isomorphic cards). Reject before shifting/casting.
+                    if action >= 52 || self.game.possible_cards() & (1u64 << action) == 0 {
+                        return Err("LOCK_INVALID_HISTORY");
+                    }
+                } else if action >= self.num_actions() {
+                    return Err("LOCK_INVALID_HISTORY");
+                }
+                self.game.play(action);
+            }
+            if self.game.is_terminal_node() {
+                return Err("LOCK_TERMINAL_NODE");
+            }
+            if self.game.is_chance_node() {
+                return Err("LOCK_CHANCE_NODE");
+            }
+            operation(&mut self.game)
+        })();
+        self.game.back_to_root();
+        result
+    }
 }
 
 #[inline]
@@ -81,6 +128,7 @@ impl GameManager {
     pub fn new() -> Self {
         Self {
             game: PostFlopGame::new(),
+            phase: 0,
         }
     }
 
@@ -114,6 +162,10 @@ impl GameManager {
         added_lines: &str,
         removed_lines: &str,
     ) -> Option<String> {
+        self.phase = 0;
+        // update_config() retains the crate's lock map, even when node indices
+        // and hand counts change. A new configuration must start without it.
+        self.game = PostFlopGame::new();
         let (turn, river, state) = match board.len() {
             3 => (NOT_DEALT, NOT_DEALT, BoardState::Flop),
             4 => (board[3], NOT_DEALT, BoardState::Turn),
@@ -209,6 +261,7 @@ impl GameManager {
 
     pub fn allocate_memory(&mut self, enable_compression: bool) {
         self.game.allocate_memory(enable_compression);
+        self.phase = 1;
     }
 
     pub fn solve_step(&self, current_iteration: u32) {
@@ -239,10 +292,62 @@ impl GameManager {
                 finalize(&mut self.game);
             }
         }
+        self.phase = 2;
     }
 
     pub fn apply_history(&mut self, history: &[usize]) {
         self.game.apply_history(history);
+    }
+
+    /// Locks action-major probabilities in private_cards(player) order.
+    /// Returns "" on success, otherwise an English error code (no wasm panic).
+    /// JS uses -1 for every action of an unlocked hand. All values <= 0 also
+    /// leave that hand unlocked: an all-zero hand does NOT mean a 0% lock.
+    /// To lock an action at 0%, give another action of that hand a positive value.
+    /// Positive values are normalized per hand by the crate.
+    pub fn lock_strategy(&mut self, history: &[usize], strategy: &[f32]) -> String {
+        self.with_strategy_node(history, false, |game| {
+            let num_hands = game.num_private_hands(game.current_player());
+            if strategy.len() != game.available_actions().len() * num_hands {
+                return Err("LOCK_INVALID_STRATEGY_LENGTH");
+            }
+            if strategy.iter().any(|value| !value.is_finite()) {
+                return Err("LOCK_NONFINITE_STRATEGY");
+            }
+            game.lock_current_strategy(strategy);
+            Ok(())
+        })
+        .err()
+        .unwrap_or("")
+        .to_string()
+    }
+
+    /// Removes a lock before finalize(); returns "" or an English error code.
+    pub fn unlock_strategy(&mut self, history: &[usize]) -> String {
+        self.with_strategy_node(history, false, |game| {
+            game.unlock_current_strategy();
+            Ok(())
+        })
+        .err()
+        .unwrap_or("")
+        .to_string()
+    }
+
+    /// Returns normalized locks (-1 for unlocked hands), or [] for no lock/error.
+    /// Reading is allowed both before and after finalize().
+    pub fn locking_strategy(&mut self, history: &[usize]) -> Box<[f32]> {
+        self.with_strategy_node(history, true, |game| {
+            Ok(game.current_locking_strategy().unwrap_or_default())
+        })
+        .unwrap_or_default()
+        .into_boxed_slice()
+    }
+
+    /// Returns the current strategy before/after finalize(), or [] for an error.
+    pub fn strategy_at(&mut self, history: &[usize]) -> Box<[f32]> {
+        self.with_strategy_node(history, true, |game| Ok(game.strategy()))
+            .unwrap_or_default()
+            .into_boxed_slice()
     }
 
     pub fn total_bet_amount(&mut self, append: &[usize]) -> Box<[u32]> {

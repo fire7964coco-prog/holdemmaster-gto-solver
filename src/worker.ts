@@ -100,6 +100,22 @@ const createHandler = (mod: Mod, mode: SolverMode) => {
       this.game.apply_history(history);
     },
 
+    lockStrategy(history: Uint32Array, strategy: Float32Array): string {
+      return this.game.lock_strategy(history, strategy);
+    },
+
+    unlockStrategy(history: Uint32Array): string {
+      return this.game.unlock_strategy(history);
+    },
+
+    lockingStrategy(history: Uint32Array): Float32Array {
+      return this.game.locking_strategy(history);
+    },
+
+    strategyAt(history: Uint32Array): Float32Array {
+      return this.game.strategy_at(history);
+    },
+
     totalBetAmount(append: Uint32Array) {
       return this.game.total_bet_amount(append);
     },
