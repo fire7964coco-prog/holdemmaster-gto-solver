@@ -15,6 +15,8 @@ import { defineComponent, reactive } from "vue";
 const EmptyPage = defineComponent({ name: "EmptyPage", render: () => null });
 
 export const TrainerPage = EmptyPage;
+export const CustomTrainerEntry = EmptyPage;
+export const createCustomTrainerCapture = () => null;
 export const PresetsPage = EmptyPage;
 
 /** 계정 기능 없음 — 로그인 복귀 처리도 없다 */

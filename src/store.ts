@@ -101,6 +101,12 @@ export const useStore = defineStore("app", {
     isFinalizing: false,
     isSolverPaused: false,
     isSolverFinished: false,
+    // Metadata belongs to the completed solve, not subsequent input edits.
+    solverResultMeta: null as null | {
+      targetExploitabilityPct: number;
+      achievedExploitabilityPct: number;
+      unitScale: number;
+    },
     // 프리셋 로더 → RangeEditor로 레인지 텍스트를 전달하는 채널 (적용 후 비워짐)
     pendingRangeText: ["", ""] as [string, string],
     // RangeEditor가 최신 레인지 텍스트를 미러링 (스팟 공유 링크용)

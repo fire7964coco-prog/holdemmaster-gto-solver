@@ -345,7 +345,7 @@ export const makeTrainerQuestion = (
 };
 
 export const evaluateTrainerAction = (
-  question: TrainerQuestion,
+  question: Pick<TrainerQuestion, "node" | "handIndex">,
   selectedAction: number
 ): TrainerEvaluation => {
   const { node, handIndex } = question;

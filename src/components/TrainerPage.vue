@@ -1,5 +1,7 @@
 <template>
+  <CustomTrainerPage v-if="customTrainerState.active" />
   <div
+    v-else
     id="trainer-top"
     :class="'max-w-5xl flex flex-col ' + (evaluation ? 'pb-24 md:pb-10' : 'pb-10')"
   >
@@ -32,6 +34,12 @@
         >
           {{ trainerCategoryLabel(item) }}
         </button>
+        <button
+          type="button"
+          data-testid="custom-trainer-tab"
+          class="button-base filter-btn bg-neutral-700 hover:bg-neutral-600"
+          @click="customTrainerState.active = true"
+        >{{ customLabels.tab }}</button>
         <button
           v-if="reviewAttempts.length"
           :class="
@@ -549,6 +557,9 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
+import CustomTrainerPage from "./CustomTrainerPage.vue";
+import { customTrainerState } from "../custom-trainer";
+import { M as customTrainerLabels } from "../custom-trainer-labels";
 import { noteTrainerSolved } from "../pwa";
 import {
   dailyState,
@@ -1926,6 +1937,7 @@ const M = {
 } as const;
 
 export default defineComponent({
+  components: { CustomTrainerPage },
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale]);
@@ -2359,6 +2371,8 @@ export default defineComponent({
     };
 
     return {
+      customTrainerState,
+      customLabels: computed(() => customTrainerLabels[i18n.locale]),
       categories,
       category,
       bank,

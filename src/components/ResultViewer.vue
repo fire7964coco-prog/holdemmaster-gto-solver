@@ -27,6 +27,11 @@
   </div>
 
   <div v-else class="flex flex-col h-full">
+    <CustomTrainerEntry
+      v-if="FEATURE_TRAINER"
+      :capture="captureForPractice"
+      :disabled="isLocked || lockStore.busy || isCapturing || !store.solverResultMeta || !results"
+    />
     <div
       v-if="lockStore.resultLockCount > 0"
       data-testid="nodelock-banner"
@@ -40,6 +45,7 @@
     </div>
     <ResultNav
       ref="resultNav"
+      :inert="isCapturing || undefined"
       :is-handler-updated="isHandlerUpdated"
       :is-locked="isLocked || lockStore.busy"
       :cards="cards"
@@ -55,7 +61,7 @@
       :path-label="selectedPathLabel"
       :results="results"
       :cards="cards"
-      :navigation-busy="isLocked"
+      :navigation-busy="isLocked || isCapturing"
     />
 
     <ResultMiddle
@@ -184,6 +190,7 @@ import { handler } from "../global-worker";
 import { i18n, localizeNumber } from "../i18n";
 import { useNodeLockStore } from "../node-lock";
 import { nodeLockLabels } from "../node-lock-labels";
+import { CustomTrainerEntry, createCustomTrainerCapture, FEATURE_TRAINER } from "@features";
 
 import {
   Results,
@@ -284,6 +291,7 @@ const M = {
 
 export default defineComponent({
   components: {
+    CustomTrainerEntry,
     ResultNav,
     ResultLock,
     ResultMiddle,
@@ -316,6 +324,7 @@ export default defineComponent({
 
     const isHandlerUpdated = ref(false);
     const isLocked = ref(false);
+    const isCapturing = ref(false);
 
     const cards = ref<number[][]>([[], []]);
     const dealtCard = ref(-1);
@@ -385,6 +394,41 @@ export default defineComponent({
       if (!resultNav.value || !(await resultNav.value.playPath(path))) return null;
       await nextTick();
       return exportCurrent();
+    };
+
+    const captureForPractice = async () => {
+      const meta = store.solverResultMeta;
+      const remote = handler;
+      if (!FEATURE_TRAINER || !remote || !meta || !store.isSolverFinished ||
+        isLocked.value || lockStore.busy || isCapturing.value || !results.value) {
+        throw new Error("SNAPSHOT_UNAVAILABLE");
+      }
+      const epoch = lockStore.epoch;
+      const frozenConfig = JSON.parse(JSON.stringify(savedConfig.$state,
+        (_key, value) => value instanceof Float32Array ? Array.from(value) : value));
+      const originalHistory = selectedChance.value
+        ? selectedHistory.value.slice(0, selectedChance.value.index - 1)
+        : [...selectedHistory.value];
+      const capture = createCustomTrainerCapture({
+        remote,
+        configSnapshot: frozenConfig,
+        locks: JSON.parse(JSON.stringify(lockStore.appliedLocks)),
+        ...meta,
+        cards: cards.value.map(side => [...side]),
+        startingPot: savedConfig.startingPot,
+        effectiveStack: savedConfig.effectiveStack,
+        board: [...savedConfig.board],
+        originalHistory,
+        assertCurrent: () => {
+          if (handler !== remote || lockStore.epoch !== epoch ||
+            !store.isSolverFinished || store.solverResultMeta !== meta) {
+            throw new Error("SNAPSHOT_INVALIDATED");
+          }
+        },
+        release: () => { isCapturing.value = false; },
+      });
+      isCapturing.value = true;
+      return capture;
     };
 
     const onUpdateSpot = (
@@ -502,10 +546,14 @@ export default defineComponent({
     };
 
     const onDealCard = (card: number) => {
+      if (isCapturing.value) return;
       dealtCard.value = card;
     };
 
     return {
+      FEATURE_TRAINER,
+      captureForPractice,
+      isCapturing,
       store,
       lockStore,
       lockLabels,

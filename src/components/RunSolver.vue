@@ -1427,6 +1427,7 @@ export default defineComponent({
       }
     };
 
+    let solutionUnitScale = store.displayUnitScale;
     const runSolver = async (withLocks = false) => {
       if (withLocks) {
         if (!isTreeBuilt.value || isTreeBuilding.value || store.isSolverRunning ||
@@ -1464,6 +1465,10 @@ export default defineComponent({
         currentIteration.value = -1;
         exploitability.value = Number.POSITIVE_INFINITY;
         elapsedTimeMs.value = -1;
+        solutionUnitScale = withLocks
+          ? store.solverResultMeta?.unitScale ?? store.displayUnitScale
+          : store.displayUnitScale;
+        store.solverResultMeta = null;
         store.isSolverFinished = false;
         store.isSolverRunning = true;
         startTime = performance.now();
@@ -1568,6 +1573,12 @@ export default defineComponent({
         if (epoch !== lockStore.epoch) return;
 
         lockStore.currentExploitability = exploitability.value;
+        store.solverResultMeta = {
+          // Round-trip through chips leaves float noise (pot 3: 0.10000000000000002).
+          targetExploitabilityPct: Number(((target * 100) / savedConfig.startingPot).toPrecision(12)),
+          achievedExploitabilityPct: (exploitability.value * 100) / savedConfig.startingPot,
+          unitScale: solutionUnitScale,
+        };
         if (comparisonTargets) {
           const after = await captureSnapshot(remote, comparisonTargets, exploitability.value, lockStore.resultLockCount);
           if (epoch !== lockStore.epoch) return;
