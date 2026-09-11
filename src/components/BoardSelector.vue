@@ -21,10 +21,17 @@
 
   <div class="flex flex-wrap mt-4 mx-1 gap-3">
     <input
+      id="board-text-input"
       v-model="boardText"
       type="text"
+      name="board"
+      autocomplete="off"
+      :spellcheck="false"
+      :aria-label="L.placeholder"
+      :aria-invalid="boardTextError"
       :placeholder="L.placeholder"
       class="w-40 px-2 py-1 rounded-lg text-sm"
+      :class="{ 'input-error': boardTextError }"
       @focus="($event.target as HTMLInputElement).select()"
       @change="onBoardTextChange"
     />
@@ -52,7 +59,8 @@
 <script lang="ts">
 import { computed, defineComponent, onUnmounted, ref } from "vue";
 import { useConfigStore } from "../store";
-import { cardText, parseCardString } from "../utils";
+import { cardText } from "../utils";
+import { parseBoardInput } from "../board-input";
 import { i18n } from "../i18n";
 
 import BoardSelectorCard from "./BoardSelectorCard.vue";
@@ -168,6 +176,7 @@ export default defineComponent({
   setup() {
     const config = useConfigStore();
     const boardText = ref("");
+    const boardTextError = ref(false);
     const L = computed(() => M[i18n.locale]);
 
     // 좁은 화면이면 13열이 폭에 맞게 줄어든다 (데스크톱은 기존 40px 그대로)
@@ -202,6 +211,7 @@ export default defineComponent({
     };
 
     const setBoardTextFromButtons = () => {
+      boardTextError.value = false;
       boardText.value = config.board
         .map(cardText)
         .map(({ rank, suitLetter }) => rank + suitLetter)
@@ -209,18 +219,12 @@ export default defineComponent({
     };
 
     const onBoardTextChange = () => {
-      config.board = [];
-
-      const cardIds = boardText.value
-        // Allow pasting in things like [Ah Kd Qc], by reformatting to Ah,Kd,Qc
-        .trim()
-        .replace(/[^A-Za-z0-9\s,]/g, "")
-        .replace(/\s+/g, ",")
-        .split(",")
-        .map(parseCardString)
-        .filter((cardId): cardId is number => cardId !== null);
-
-      new Set(cardIds).forEach((cardId) => toggleCard(cardId, false));
+      const cardIds = parseBoardInput(boardText.value);
+      if (cardIds === null) {
+        boardTextError.value = true;
+        return;
+      }
+      config.board = cardIds;
       setBoardTextFromButtons();
     };
 
@@ -247,6 +251,7 @@ export default defineComponent({
       L,
       config,
       boardText,
+      boardTextError,
       cardWidth,
       cardFontSize,
       cardRatio,

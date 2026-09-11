@@ -1,12 +1,24 @@
 <template>
   <div class="range-editor flex flex-col md:flex-row md:flex-wrap gap-4 mt-1">
     <div class="shrink-0 w-full md:w-[34rem] max-w-full min-w-0">
-      <table class="w-full table-fixed select-none snug" @mouseleave="dragEnd">
-        <tr v-for="row in 13" :key="row" class="h-7 md:h-9">
+      <div class="range-cell-summary md:hidden" aria-live="polite" aria-atomic="true">
+        <strong>{{ activeCell ? cellText(activeCell.row, activeCell.col) : '—' }}</strong>
+        <span>· {{ L.weight }} {{ activeCell ? $n(cellValue(activeCell.row, activeCell.col).toString()) + '%' : '—' }}</span>
+      </div>
+      <table class="w-full table-fixed select-none snug" role="grid" :aria-label="player === 0 ? 'OOP' : 'IP'" @mouseleave="dragEnd">
+        <tr v-for="row in 13" :key="row" class="h-7 md:h-9" role="row">
           <td
             v-for="col in 13"
             :key="col"
-            class="relative w-7 md:w-[2.625rem] border border-neutral-700"
+            class="relative md:w-[2.625rem] border border-neutral-700"
+            :class="{ 'range-cell-active': activeCell?.row === row && activeCell?.col === col }"
+            role="gridcell"
+            :tabindex="(activeCell?.row ?? 1) === row && (activeCell?.col ?? 1) === col ? 0 : -1"
+            :aria-selected="cellValue(row, col) > 0"
+            :aria-label="`${cellText(row, col)} · ${L.weight} ${$n(cellValue(row, col).toString())}%`"
+            :data-range-cell="`${row}-${col}`"
+            @focus="activeCell = { row, col }"
+            @keydown="onCellKeydown($event, row, col)"
             @mousedown="dragStart(row, col)"
             @mouseup="dragEnd"
             @mouseenter="mouseEnter(row, col)"
@@ -51,6 +63,11 @@
           <input
             v-model="rangeText"
             type="text"
+            :name="`range-${player}`"
+            :aria-label="player === 0 ? 'OOP' : 'IP'"
+            :aria-invalid="!!rangeTextError"
+            autocomplete="off"
+            :spellcheck="false"
             :class="
               'min-w-0 flex-grow px-2 py-1 rounded-lg text-sm ' +
               (rangeTextError ? 'input-error' : '')
@@ -64,7 +81,7 @@
           </button>
         </div>
 
-        <div v-if="rangeTextError" class="mt-1 text-red-400">
+        <div v-if="rangeTextError" class="mt-1 text-red-400" role="status">
           {{ L.errorPrefix }} {{ rangeTextError }}
         </div>
       </div>
@@ -75,6 +92,7 @@
           <input
             v-model="weight"
             type="range"
+            :aria-label="L.weight"
             class="ml-2 w-28 sm:w-40 align-middle"
             min="0"
             max="100"
@@ -84,6 +102,7 @@
           <input
             v-model="weight"
             type="number"
+            :aria-label="L.weight"
             :class="
               'w-16 ml-2 px-2 py-1 rounded-lg text-sm text-center ' +
               (weight < 0 || weight > 100 ? 'input-error' : '')
@@ -262,6 +281,7 @@ export default defineComponent({
     const rangeTextError = ref("");
     const weight = ref(100);
     const numCombos = ref(0);
+    const activeCell = ref<{ row: number; col: number } | null>(null);
 
     let draggingMode: DraggingMode = "none";
 
@@ -323,6 +343,7 @@ export default defineComponent({
     };
 
     const dragStart = (row: number, col: number) => {
+      activeCell.value = { row, col };
       const idx = 13 * (row - 1) + col - 1;
 
       if (rangeStore[idx] !== weight.value) {
@@ -340,10 +361,34 @@ export default defineComponent({
 
     const mouseEnter = (row: number, col: number) => {
       if (draggingMode === "enabling") {
+        activeCell.value = { row, col };
         update(row, col, weight.value);
       } else if (draggingMode === "disabling") {
+        activeCell.value = { row, col };
         update(row, col, 0);
       }
+    };
+
+    const onCellKeydown = (event: KeyboardEvent, row: number, col: number) => {
+      if (event.key === " " || event.key === "Enter") {
+        event.preventDefault();
+        if (!event.repeat) {
+          dragStart(row, col);
+          dragEnd();
+        }
+        return;
+      }
+      const movement: Record<string, [number, number]> = {
+        ArrowUp: [-1, 0], ArrowDown: [1, 0],
+        ArrowLeft: [0, -1], ArrowRight: [0, 1],
+      };
+      const delta = movement[event.key];
+      if (!delta) return;
+      event.preventDefault();
+      const nextRow = Math.min(13, Math.max(1, row + delta[0]));
+      const nextCol = Math.min(13, Math.max(1, col + delta[1]));
+      const table = (event.currentTarget as HTMLElement).closest("table");
+      table?.querySelector<HTMLElement>(`[data-range-cell="${nextRow}-${nextCol}"]`)?.focus();
     };
 
     const onWeightChange = () => {
@@ -389,6 +434,8 @@ export default defineComponent({
       rangeTextError,
       weight,
       numCombos,
+      activeCell,
+      onCellKeydown,
       onRangeTextChange,
       dragStart,
       dragEnd,
@@ -402,6 +449,33 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.range-cell-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.range-editor td {
+  touch-action: manipulation;
+}
+.range-editor td.range-cell-active::after,
+.range-editor td:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 2px rgb(var(--c-brand));
+}
+.range-editor td:focus-visible {
+  outline: 2px solid rgb(var(--c-brand));
+  outline-offset: 1px;
+}
+@media (min-width: 768px) {
+  .range-cell-summary { display: none; }
+}
 .range-weight > div {
   display: flex;
   flex-wrap: wrap;

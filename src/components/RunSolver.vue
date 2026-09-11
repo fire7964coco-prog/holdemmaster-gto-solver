@@ -31,6 +31,7 @@
     />
     <button
       class="ml-3 button-base button-blue"
+      :class="{ 'button-primary': !isTreeBuilt }"
       :disabled="
         isTreeBuilding || lockStore.busy ||
         store.isSolverRunning ||
@@ -196,7 +197,7 @@
 
     <div class="flex flex-wrap mt-5 gap-2">
       <button
-        class="button-base button-blue"
+        class="button-base button-blue button-primary"
         :disabled="!canRun"
         @click="runSolver()"
       >
@@ -1189,12 +1190,13 @@ type TreeStatusState =
   | { type: "built"; threads: number };
 
 export default defineComponent({
+  emits: ["board-required"],
   components: {
     Tippy,
     QuestionMarkCircleIcon,
   },
 
-  setup() {
+  setup(_, { emit }) {
     const store = useStore();
     const config = useConfigStore();
     const tmpConfig = useTmpConfigStore();
@@ -1351,6 +1353,7 @@ export default defineComponent({
       const configError = checkConfig(config);
       if (configError !== null) {
         treeStatusState.value = { type: "error", message: configError };
+        if (config.board.length < 3) emit("board-required", configError);
         return false;
       }
 

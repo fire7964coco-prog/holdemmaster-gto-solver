@@ -35,6 +35,8 @@
             'transition-colors hover:bg-neutral-700 hover:text-brand ' +
             (store.navView === 'results' ? 'app-nav-active bg-neutral-700 text-brand' : '')
           "
+          :disabled="!store.isSolverFinished"
+          :aria-disabled="!store.isSolverFinished"
           @click="store.navView = 'results'"
         >
           <ChartBarIcon class="hidden md:block shrink-0 w-6 h-6" />

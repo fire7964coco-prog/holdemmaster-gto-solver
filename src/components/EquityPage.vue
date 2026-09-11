@@ -12,7 +12,8 @@
             <button
               :class="targetChip('hero')"
               data-testid="equity-target-hero"
-              @click="target = 'hero'"
+              :aria-pressed="target === 'hero'"
+              @click="selectTarget('hero')"
             >
               {{ L.fill }}
             </button>
@@ -23,6 +24,7 @@
               :key="i"
               :card="hero[i - 1]"
               :active="target === 'hero' && hero.length === i - 1"
+              :aria-label="slotLabel('hero', hero[i - 1])"
               @click="onSlotClick('hero', i - 1)"
             />
             <span class="text-xs text-neutral-500 ml-1">{{ L.heroHint }}</span>
@@ -34,10 +36,18 @@
           <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
             <div class="section-title">{{ L.villainTitle }}</div>
             <div class="flex flex-wrap gap-1.5">
-              <button :class="modeChip('hand')" @click="setVillainMode('hand')">
+              <button
+                :class="modeChip('hand')"
+                :aria-pressed="villainMode === 'hand'"
+                @click="setVillainMode('hand')"
+              >
                 {{ L.modeHand }}
               </button>
-              <button :class="modeChip('range')" @click="setVillainMode('range')">
+              <button
+                :class="modeChip('range')"
+                :aria-pressed="villainMode === 'range'"
+                @click="setVillainMode('range')"
+              >
                 {{ L.modeRange }}
               </button>
             </div>
@@ -49,12 +59,14 @@
               :key="i"
               :card="villainHand[i - 1]"
               :active="target === 'villain' && villainHand.length === i - 1"
+              :aria-label="slotLabel('villain', villainHand[i - 1])"
               @click="onSlotClick('villain', i - 1)"
             />
             <button
               :class="targetChip('villain') + ' ml-1'"
               data-testid="equity-target-villain"
-              @click="target = 'villain'"
+              :aria-pressed="target === 'villain'"
+              @click="selectTarget('villain')"
             >
               {{ L.fill }}
             </button>
@@ -62,8 +74,13 @@
 
           <div v-else>
             <textarea
+              ref="rangeInput"
               v-model="rangeText"
               rows="3"
+              name="equity-range"
+              autocomplete="off"
+              :spellcheck="false"
+              :aria-label="L.villainTitle + ' · ' + L.modeRange"
               data-testid="equity-range-input"
               class="w-full px-2 py-1.5 rounded-lg text-sm font-mono"
               :placeholder="L.rangePlaceholder"
@@ -90,7 +107,8 @@
             <button
               :class="targetChip('board')"
               data-testid="equity-target-board"
-              @click="target = 'board'"
+              :aria-pressed="target === 'board'"
+              @click="selectTarget('board')"
             >
               {{ L.fill }}
             </button>
@@ -101,15 +119,46 @@
               :key="i"
               :card="board[i - 1]"
               :active="target === 'board' && board.length === i - 1"
+              :aria-label="slotLabel('board', board[i - 1])"
               @click="onSlotClick('board', i - 1)"
             />
             <span class="text-xs text-neutral-500 ml-1">{{ boardHint }}</span>
           </div>
         </div>
 
-        <!-- 카드판 (BoardSelector와 같은 관례: ♠♥♦♣ 네 줄, A→2) -->
-        <div class="max-w-full mb-3">
-          <div v-for="suit in 4" :key="suit" class="flex">
+        <!-- 모바일에서는 선택 맥락을 카드판에 붙이고 각 무늬를 7+6장으로 펼친다. -->
+        <div ref="cardPicker" class="equity-card-picker max-w-full mb-3">
+          <div class="equity-selection-summary" data-testid="equity-selection-summary">
+            <button
+              v-for="selection in selectionSummary"
+              :key="selection.target"
+              type="button"
+              class="equity-selection-target"
+              :class="{ 'equity-selection-active': target === selection.target }"
+              :aria-pressed="target === selection.target"
+              :aria-label="selection.label + ' · ' + selection.cards.map(cardSymbol).join(' ')"
+              :title="selection.label"
+              @click="selectTarget(selection.target)"
+            >
+              <span class="equity-selection-label">{{ selection.label }}</span>
+              <span class="equity-selection-cards" aria-live="polite">
+                <template v-if="selection.target === 'villain' && villainMode === 'range'">
+                  {{ L.modeRange }}
+                </template>
+                <template v-else-if="selection.cards.length">
+                  <span
+                    v-for="card in selection.cards"
+                    :key="card"
+                    :class="cardText(card).colorClass"
+                  >
+                    {{ cardSymbol(card) }}
+                  </span>
+                </template>
+                <template v-else>—</template>
+              </span>
+            </button>
+          </div>
+          <div v-for="suit in 4" :key="suit" class="equity-card-row flex">
             <BoardSelectorCard
               v-for="rank in 13"
               :key="rank"
@@ -119,6 +168,8 @@
               :ratio="cardRatio"
               :card-id="56 - 4 * rank - suit"
               :is-selected="isUsed(56 - 4 * rank - suit)"
+              :aria-pressed="isUsed(56 - 4 * rank - suit)"
+              :aria-label="cardSymbol(56 - 4 * rank - suit)"
               :data-card="56 - 4 * rank - suit"
               @click="place(56 - 4 * rank - suit)"
             />
@@ -128,7 +179,7 @@
         <!-- ④ 계산 -->
         <div class="flex flex-wrap items-center gap-2">
           <button
-            class="button-base button-blue"
+            class="button-base button-blue button-primary"
             data-testid="equity-run"
             :disabled="!canCompute || running"
             @click="run"
@@ -183,7 +234,7 @@
             <!-- 에퀴티 막대: 노랑(내 쪽) / 회색(상대) -->
             <div class="h-3 w-full rounded-full overflow-hidden bg-neutral-700 my-3">
               <div
-                class="h-full bg-yellow-400 transition-all"
+                class="h-full bg-yellow-400"
                 :style="{ width: result.equity.toFixed(2) + '%' }"
               ></div>
             </div>
@@ -243,6 +294,7 @@
 <script lang="ts">
 import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { i18n } from "../i18n";
+import { cardText } from "../utils";
 import { noteToolUsed } from "../pwa";
 import {
   ALL_HANDS_RANGE,
@@ -999,6 +1051,8 @@ export default defineComponent({
     const villainMode = ref<"hand" | "range">("hand");
     const rangeText = ref("");
     const target = ref<Target>("hero");
+    const cardPicker = ref<HTMLElement | null>(null);
+    const rangeInput = ref<HTMLTextAreaElement | null>(null);
 
     const running = ref(false);
     const progress = ref(0);
@@ -1011,6 +1065,35 @@ export default defineComponent({
 
     const slotsOf = (t: Target) =>
       t === "hero" ? hero : t === "villain" ? villainHand : board;
+
+    const selectionSummary = computed(() => [
+      { target: "hero" as Target, label: L.value.heroTitle, cards: hero.value },
+      { target: "villain" as Target, label: L.value.villainTitle, cards: villainHand.value },
+      { target: "board" as Target, label: L.value.boardTitle, cards: board.value },
+    ]);
+
+    const cardSymbol = (card: number) => {
+      const text = cardText(card);
+      return text.rank + text.suit;
+    };
+
+    const slotLabel = (t: Target, card?: number) =>
+      selectionSummary.value.find((item) => item.target === t)?.label +
+      (card === undefined ? " · " + L.value.fill : " · " + cardSymbol(card));
+
+    const scrollToPicker = () => {
+      if (isNarrow.value) cardPicker.value?.scrollIntoView({ block: "start" });
+    };
+
+    const selectTarget = (t: Target) => {
+      if (t === "villain" && villainMode.value === "range") {
+        rangeInput.value?.scrollIntoView({ block: "center" });
+        rangeInput.value?.focus({ preventScroll: true });
+        return;
+      }
+      target.value = t;
+      scrollToPicker();
+    };
 
     const fillOrder = computed<Target[]>(() =>
       villainMode.value === "hand" ? ["hero", "villain", "board"] : ["hero", "board"]
@@ -1065,6 +1148,7 @@ export default defineComponent({
       const card = slotsOf(t).value[index];
       if (card === undefined) target.value = t;
       else removeCard(card);
+      scrollToPicker();
     };
 
     const clearAll = () => {
@@ -1174,7 +1258,7 @@ export default defineComponent({
 
     onUnmounted(stop);
 
-    /* ── 카드판 크기 (BoardSelector와 같은 규칙) ───────────── */
+    /* ── 카드판 크기: 데스크톱 13열, 모바일 7+6열 ─────────── */
 
     const isNarrow = ref(false);
     const updateNarrow = () => {
@@ -1185,10 +1269,10 @@ export default defineComponent({
     onUnmounted(() => window.removeEventListener("resize", updateNarrow));
 
     const cardWidth = computed(() =>
-      isNarrow.value ? "calc((100vw - 2rem) / 13 - 0.25rem)" : "30px"
+      isNarrow.value ? "calc((100vw - 2rem) / 7 - 0.25rem)" : "30px"
     );
-    const cardFontSize = computed(() => (isNarrow.value ? "0.6rem" : "0.8rem"));
-    const cardRatio = computed(() => (isNarrow.value ? 1.9 : 1.4));
+    const cardFontSize = computed(() => (isNarrow.value ? "0.85rem" : "0.8rem"));
+    const cardRatio = computed(() => (isNarrow.value ? 1.15 : 1.4));
 
     const chipBase =
       "rounded-lg px-2 py-0.5 text-xs font-semibold transition-colors shrink-0 ";
@@ -1201,6 +1285,13 @@ export default defineComponent({
       villainMode,
       rangeText,
       target,
+      cardPicker,
+      rangeInput,
+      selectionSummary,
+      cardText,
+      cardSymbol,
+      slotLabel,
+      selectTarget,
       running,
       progress,
       result,
@@ -1242,5 +1333,51 @@ export default defineComponent({
 }
 .equity-page button.bg-yellow-500 {
   @apply bg-brand text-brand-ink;
+}
+.equity-page .text-xs {
+  font-size: 13px;
+}
+.equity-selection-summary {
+  display: none;
+}
+@media (max-width: 767px) {
+  .equity-selection-summary {
+    @apply sticky top-0 z-10 grid gap-1 rounded-lg border border-neutral-700 bg-neutral-900;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+    height: 56px;
+    padding: 3px;
+    margin-bottom: 6px;
+  }
+  .equity-selection-target {
+    @apply min-w-0 rounded-md border border-transparent px-1 text-left text-neutral-400 hover:bg-neutral-800;
+    touch-action: manipulation;
+  }
+  .equity-selection-active {
+    @apply border-brand bg-neutral-800 text-brand;
+  }
+  .equity-selection-label {
+    @apply block truncate text-xs font-semibold;
+    line-height: 18px;
+  }
+  .equity-selection-cards {
+    @apply flex items-center gap-0.5 overflow-hidden whitespace-nowrap text-xs font-semibold text-neutral-200;
+    min-height: 20px;
+  }
+  .equity-card-row {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    margin-bottom: 4px;
+  }
+  .equity-card-row :deep(button) {
+    scroll-margin-top: 62px;
+    touch-action: manipulation;
+  }
+  .equity-page :deep([data-testid^="card-slot"]) {
+    min-width: 40px;
+  }
+  .equity-page button.rounded-lg {
+    min-height: 40px;
+    touch-action: manipulation;
+  }
 }
 </style>

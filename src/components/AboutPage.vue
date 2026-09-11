@@ -30,7 +30,7 @@
         <!-- 교육예제·트레이너·오늘의문제는 트레이너 빌드 전용 (npokers에는 화면 자체가 없다) -->
         <button
           v-if="FEATURE_TRAINER"
-          class="button-base button-blue"
+          class="button-base button-blue button-primary"
           @click="store.sideView = 'presets'"
         >
           {{ L.ctaPresets }}
@@ -38,7 +38,7 @@
         <!-- npokers에서는 프리플랍 차트가 첫 번째(흰) 버튼을 물려받는다 -->
         <button
           v-else
-          class="button-base button-blue"
+          class="button-base button-blue button-primary"
           @click="store.sideView = 'preflop'"
         >
           {{ L.ctaPreflop }}

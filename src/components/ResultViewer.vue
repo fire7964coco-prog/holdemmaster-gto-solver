@@ -64,6 +64,20 @@
         :capture="captureForPractice"
         :disabled="isLocked || lockStore.busy || isCapturing || !store.solverResultMeta || !results"
       />
+      <div
+        v-if="resultNav?.navigationPath.length"
+        ref="pathDiv"
+        class="result-current-path"
+        tabindex="0"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <template v-for="(part, index) in resultNav.navigationPath" :key="index">
+          <span v-if="index" class="result-path-arrow" aria-hidden="true">→</span>
+          <span :class="{ 'result-path-current': index === resultNav.navigationPath.length - 1 }">{{ part }}</span>
+        </template>
+      </div>
     </div>
 
     <ResultMiddle
@@ -186,7 +200,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, nextTick, ref } from "vue";
+import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import { useSavedConfigStore, useStore } from "../store";
 import { handler } from "../global-worker";
 import { i18n, localizeNumber } from "../i18n";
@@ -318,9 +332,16 @@ export default defineComponent({
     });
     const savedConfig = useSavedConfigStore();
     const L = computed(() => M[i18n.locale]);
-    const resultNav = ref<{ playPath: (path: number[]) => Promise<boolean> } | null>(
+    const resultNav = ref<{
+      playPath: (path: number[]) => Promise<boolean>;
+      navigationPath: string[];
+    } | null>(
       null
     );
+    const pathDiv = ref<HTMLDivElement | null>(null);
+    watch(() => resultNav.value?.navigationPath.join(" → "), () => {
+      if (pathDiv.value) pathDiv.value.scrollLeft = pathDiv.value.scrollWidth;
+    }, { flush: "post" });
 
     /* Navigation */
 
@@ -562,6 +583,7 @@ export default defineComponent({
       lockExploitabilityText,
       L,
       resultNav,
+      pathDiv,
       isHandlerUpdated,
       isLocked,
       cards,
@@ -594,3 +616,31 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.result-current-path {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  overflow-x: auto;
+  white-space: nowrap;
+  color: rgb(var(--c-text-secondary));
+  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+}
+.result-current-path > span { flex-shrink: 0; }
+.result-current-path:focus-visible { outline: 2px solid rgb(var(--c-brand)); outline-offset: 2px; }
+.result-path-arrow { color: rgb(var(--c-text-muted)); }
+.result-path-current { color: rgb(var(--c-brand)); font-weight: 700; }
+@media (max-width: 767px) {
+  .result-current-path { flex-basis: 100%; min-height: 24px; margin-left: 0; }
+  /* One summary instance, moved ahead of the matrix only at mobile widths. */
+  .result-details { display: contents; }
+  .result-details > * { width: calc(100% - 12px); margin: 0 6px; }
+  .result-details > .action-summary { order: -1; margin-top: 6px; }
+  .result-details > .result-table { margin-bottom: 10px; }
+}
+</style>

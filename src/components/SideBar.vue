@@ -1,9 +1,13 @@
 <template>
   <aside
-    class="flex flex-row md:flex-col shrink-0 w-full md:w-56 my-0 md:my-2 overflow-x-auto md:overflow-x-visible md:overflow-y-auto border-b md:border-b-0 md:border-r border-neutral-700"
+    class="app-sidebar flex flex-col shrink-0 w-full md:w-56 my-0 md:my-2 md:overflow-y-auto border-b md:border-b-0 md:border-r border-neutral-700"
   >
-    <div class="side-bar-group md:mb-1">
-    <div class="side-bar-label">
+    <div class="mobile-menu-groups md:hidden">
+      <button :aria-pressed="!isCustom" :class="{ 'menu-group-active': !isCustom }" @click="openGroup(false)">{{ L.exploreLabel }}</button>
+      <button :aria-pressed="isCustom" :class="{ 'menu-group-active': isCustom }" @click="openGroup(true)">{{ L.customLabel }}{{ L.customLabelSuffix }}</button>
+    </div>
+    <div class="side-bar-group md:mb-1" :class="{ 'mobile-group-active': !isCustom }">
+    <div class="side-bar-label hidden md:block">
       {{ L.exploreLabel }}<span class="hidden md:inline">{{ L.exploreLabelSuffix }}</span>
     </div>
 
@@ -55,8 +59,8 @@
 
     </div>
 
-    <div class="side-bar-group">
-    <div class="side-bar-label">
+    <div class="side-bar-group" :class="{ 'mobile-group-active': isCustom }">
+    <div class="side-bar-label hidden md:block">
       {{ L.customLabel }}<span class="hidden md:inline">{{ L.customLabelSuffix }}</span>
     </div>
 
@@ -65,6 +69,7 @@
       @click="store.sideView = 'oop-range'"
     >
       ① {{ L.oopRange }}
+      <span class="step-status" :class="{ 'step-next': nextStep === 0 }" aria-hidden="true">{{ readySteps[0] ? '✓' : '○' }}</span>
       <span class="hidden md:flex mt-1 justify-center">
         <RangeMiniViewer :player="0" compact />
       </span>
@@ -72,6 +77,7 @@
 
     <button :class="itemStyle('ip-range')" @click="store.sideView = 'ip-range'">
       ② {{ L.ipRange }}
+      <span class="step-status" :class="{ 'step-next': nextStep === 1 }" aria-hidden="true">{{ readySteps[1] ? '✓' : '○' }}</span>
       <span class="hidden md:flex mt-1 justify-center">
         <RangeMiniViewer :player="1" compact />
       </span>
@@ -79,6 +85,7 @@
 
     <button :class="itemStyle('board')" @click="store.sideView = 'board'">
       ③ {{ L.board }}
+      <span class="step-status" :class="{ 'step-next': nextStep === 2 }" aria-hidden="true">{{ readySteps[2] ? '✓' : '○' }}</span>
       <span class="hidden md:flex mt-1 justify-center font-semibold">
         <span
           v-for="(item, i) in boardTexts"
@@ -97,6 +104,7 @@
       @click="store.sideView = 'tree-config'"
     >
       ④ {{ L.betSize }}
+      <span class="step-status" aria-hidden="true">✓</span>
       <span class="hidden md:inline text-xs text-neutral-500">{{ L.betSizeSub }}</span>
     </button>
 
@@ -105,13 +113,14 @@
       @click="store.sideView = 'run-solver'"
     >
       ⑤ {{ L.run }}
+      <span class="step-status" :class="{ 'step-next': nextStep === 4 }" aria-hidden="true">{{ readySteps[4] ? '✓' : '○' }}</span>
     </button>
     </div>
   </aside>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import { SideView, useStore, useConfigStore } from "../store";
 import { cardText } from "../utils";
 import { i18n } from "../i18n";
@@ -457,6 +466,30 @@ export default defineComponent({
     const store = useStore();
     const config = useConfigStore();
     const L = computed(() => M[i18n.locale]);
+    const customViews: SideView[] = ["oop-range", "ip-range", "board", "tree-config", "run-solver"];
+    const isCustom = computed(() => customViews.includes(store.sideView));
+    const lastExplore = ref<SideView>("about");
+    const lastCustom = ref<SideView>("oop-range");
+    const readySteps = computed(() => [config.range[0].some(Boolean), config.range[1].some(Boolean), config.board.length >= 3, true, store.isSolverFinished]);
+    const nextStep = computed(() => readySteps.value.findIndex(ready => !ready));
+    watch(() => store.sideView, async view => {
+      if (customViews.includes(view)) lastCustom.value = view;
+      else lastExplore.value = view;
+      await nextTick();
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        const item = document.querySelector<HTMLElement>(".mobile-group-active .side-bar-item.text-blue-300");
+        const group = item?.parentElement;
+        if (item && group) {
+          const itemBounds = item.getBoundingClientRect();
+          const groupBounds = group.getBoundingClientRect();
+          if (itemBounds.left < groupBounds.left) group.scrollLeft += itemBounds.left - groupBounds.left;
+          else if (itemBounds.right > groupBounds.right) group.scrollLeft += itemBounds.right - groupBounds.right;
+        }
+      }
+    }, { immediate: true });
+    const openGroup = (custom: boolean) => {
+      store.sideView = custom ? lastCustom.value : lastExplore.value;
+    };
 
     const boardTexts = computed(() => {
       if (config.board.length === 0) {
@@ -471,6 +504,10 @@ export default defineComponent({
       boardTexts,
       L,
       FEATURE_TRAINER,
+      isCustom,
+      readySteps,
+      nextStep,
+      openGroup,
       itemStyle: (view: SideView) => {
         return (
           "side-bar-item " +
@@ -489,6 +526,7 @@ export default defineComponent({
    (마지막 py-1.5는 2026-08-18 «에퀴티 계산기» 항목을 넣으며. 항목당 4px × 11개 = 44px 확보)
    ⚠ 여기서 항목을 또 늘리면 여백으로는 더 못 짜낸다 — 다른 항목을 빼거나 구조를 바꿀 것 */
 .side-bar-item {
+  position: relative;
   @apply block shrink-0 whitespace-nowrap mx-1 my-1 px-3 py-2 rounded-md text-sm;
   @apply md:shrink md:whitespace-normal md:mx-2 md:my-0.5 md:px-3 md:py-1.5 md:rounded-md md:text-[0.8125rem];
   @apply text-left select-none;
@@ -507,9 +545,19 @@ export default defineComponent({
    ⚠ 높이 예산: 테두리 4 + 패딩 8 + 간격 6 = +18px를 aside 여백 my-4→my-2(-16px)와
    구분선 제거(-3px)로 회수 — 1280×720에서 ⑤가 보이는지는 sidebar-fit-verify가 판정 */
 .side-bar-group {
-  @apply contents;
+  @apply hidden;
   @apply md:block md:mx-1 md:py-1 md:rounded-lg;
   @apply md:border md:border-neutral-700 md:bg-surface-1;
+}
+.mobile-menu-groups { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 4px; padding: 4px 8px; background: rgb(var(--c-bg-1)); }
+.mobile-menu-groups button { min-height: 40px; padding: 4px 8px; border: 1px solid rgb(var(--c-line)); border-radius: 6px; color: rgb(var(--c-text-secondary)); font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
+.mobile-menu-groups .menu-group-active { color: rgb(var(--c-brand)); background: rgb(var(--c-bg-3)); border-color: rgb(var(--c-brand)); }
+.step-status { display: inline-block; margin-left: 5px; color: rgb(var(--c-text-muted)); font-size: 12px; }
+.step-next { color: rgb(var(--c-brand)); }
+.step-next::after { content: ""; display: inline-block; width: 4px; height: 4px; margin: 0 0 2px 3px; border-radius: 50%; background: currentColor; }
+@media (max-width: 767px) {
+  .side-bar-group.mobile-group-active { display: flex; min-width: 0; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+  .side-bar-item { min-height: 40px; margin-top: 2px; margin-bottom: 3px; }
 }
 /* 패널 도입으로 항목 폭이 18px 줄어 EN «Equity Calculator Win %»가 두 줄로 접혔다
    (2026-08-19 사용자 실기기에서 발견 — 125% 배율에서 접힘). 그룹 여백을 줄이고(mx-2→mx-1)
@@ -523,6 +571,9 @@ export default defineComponent({
   box-shadow: inset 2px 0 0 rgb(var(--c-brand));
 }
 @media (min-width: 768px) {
+  .mobile-menu-groups { display: none; }
+  .side-bar-item .step-status { position: absolute; right: 5px; top: 4px; font-size: 10px; }
+  .side-bar-item:has(.step-status) { padding-right: 20px; }
   .side-bar-item:has(table) {
     display: flex;
     align-items: center;

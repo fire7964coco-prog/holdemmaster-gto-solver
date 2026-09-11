@@ -1,6 +1,7 @@
 <template>
   <div
-    class="w-full h-[22.5rem] px-1 border border-neutral-600 rounded-md shadow shadow-black/40 text-sm overflow-x-auto overflow-y-scroll select-none"
+    class="db-item-list w-full px-1 border border-neutral-600 rounded-md shadow shadow-black/40 text-sm overflow-x-auto select-none"
+    :class="data.length === 0 ? 'py-2' : 'h-[22.5rem] overflow-y-scroll'"
     @click="unselect"
     @keydown.f2="renameItem()"
     @keydown.delete="deleteItem(true)"
@@ -22,6 +23,8 @@
         <!-- Open/Close button -->
         <button
           :class="item0.opened ? 'bottom-arrow' : 'right-arrow'"
+          :aria-label="item0.path[0]"
+          :aria-expanded="item0.opened"
           @click="toggleGroup(item0)"
         >
           &nbsp;
@@ -83,6 +86,8 @@
               <!-- Open/Close button -->
               <button
                 :class="item1.opened ? 'bottom-arrow' : 'right-arrow'"
+                :aria-label="item1.path[1]"
+                :aria-expanded="item1.opened"
                 @click="toggleGroup(item1)"
               >
                 &nbsp;
@@ -148,6 +153,8 @@
                     <!-- Open/Close button -->
                     <button
                       :class="item2.opened ? 'bottom-arrow' : 'right-arrow'"
+                      :aria-label="item2.path[2]"
+                      :aria-expanded="item2.opened"
                       @click="toggleGroup(item2)"
                     >
                       &nbsp;
@@ -436,7 +443,7 @@
         @change="importJson"
       />
       <button
-        class="button-base button-green button-overrides"
+        class="button-base button-green button-overrides button-json"
         :disabled="errorOccured || isEditing"
         @click="importJsonInput?.click()"
       >
@@ -446,7 +453,7 @@
       <a
         ref="exportJsonButton"
         :class="
-          'button-base button-green button-overrides text-center select-none ' +
+          'button-base button-green button-overrides button-json text-center select-none ' +
           (errorOccured || isEditing
             ? 'cursor-default pointer-events-none opacity-40'
             : 'cursor-pointer')
@@ -1601,8 +1608,9 @@ input.peer:checked ~ .peer-checked\:bg-blue-600 {
   background-color: rgb(var(--c-brand));
   color: rgb(var(--c-brand-ink));
 }
-.button-green {
-  @apply bg-brand text-brand-ink hover:bg-brand-hover active:bg-brand disabled:bg-brand;
+.button-json {
+  @apply bg-transparent text-neutral-400 border-transparent hover:text-neutral-100 hover:bg-neutral-800 active:bg-neutral-700 disabled:bg-transparent;
+  font-size: 13px;
 }
 input.input-error {
   @apply ring-1 ring-red-600 border-red-600 bg-red-950;

@@ -694,6 +694,44 @@ export default defineComponent({
       return `${label} ${formatted}`;
     };
 
+    // Display-only path: keep the lock/export history and its label unchanged.
+    const navigationPath = computed(() => {
+      const index = selectedChanceIndex.value !== -1
+        ? selectedChanceIndex.value
+        : selectedSpotIndex.value;
+      if (index < 0 || index >= spots.value.length) return [];
+      const path = spots.value.slice(1, index).map((spot) => {
+        if (spot.type === "player") {
+          const action = spot.actions[spot.selectedIndex];
+          return `${spotPlayerLabel(spot.player)} ${action ? actionText(spot, action.name, action.amount) : "?"}`;
+        }
+        if (spot.type === "chance") {
+          const card = spot.selectedIndex < 0 ? null : cardText(spot.selectedIndex);
+          return `${spotPlayerLabel(spot.player)} ${card ? card.rank + card.suit : "?"}`;
+        }
+        return spotPlayerLabel(spot.player);
+      });
+      path.push(spotPlayerLabel(spots.value[index].player));
+      return path;
+    });
+
+    const revealSpot = (index: number) => {
+      const nav = navDiv.value;
+      const child = nav?.children[index] as HTMLElement | undefined;
+      if (!nav || !child) return;
+      const viewport = nav.getBoundingClientRect();
+      const card = child.getBoundingClientRect();
+      const inset = 8;
+      const delta = card.right > viewport.right - inset
+        ? card.right - viewport.right + inset
+        : card.left < viewport.left + inset
+        ? card.left - viewport.left - inset
+        : 0;
+      // Only move this horizontal strip. Ancestor scrollIntoView can also move
+      // the page, while smooth scrolling leaves the new action clipped briefly.
+      if (delta) nav.scrollTo({ left: nav.scrollLeft + delta, behavior: "auto" });
+    };
+
     let selectedSpotIndexTmp = -1;
     let selectedChanceIndexTmp = -1;
 
@@ -956,15 +994,8 @@ export default defineComponent({
 
       // scroll to selected spot
       await nextTick();
-      if (navDiv.value) {
-        const selectedChild = navDiv.value.children[selectedSpotIndex.value];
-        if (selectedChild) {
-          selectedChild.scrollIntoView({
-            behavior: "smooth",
-            inline: "center",
-          });
-        }
-      }
+      revealSpot(spots.value[spotIndex]?.type === "chance"
+        ? spotIndex : selectedSpotIndex.value);
     };
 
     const getResults = async (
@@ -1278,7 +1309,7 @@ export default defineComponent({
       await deal(card);
     });
 
-    context.expose({ playPath });
+    context.expose({ playPath, navigationPath });
 
     const spotCards = (spot: SpotRoot | SpotChance) => {
       if (spot.type === "root") {

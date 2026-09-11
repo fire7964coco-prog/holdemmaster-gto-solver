@@ -5,14 +5,18 @@
          자리가 모자라면 잘리는 대신 아래로 내려가게 한다. -->
     <div class="flex flex-col md:flex-row md:flex-wrap gap-4">
       <div class="tree-config-form shrink-0 max-w-full min-w-0">
-        <div class="mb-2 text-xs text-neutral-500">
+        <div class="mb-2 text-[13px] text-neutral-400">
           {{ L.chipNote }}
         </div>
         <div class="flex flex-col sm:flex-row sm:flex-wrap my-1 gap-0 sm:gap-6">
           <div>
             <div class="my-1">
-              <span class="inline-block w-[7.5rem]">{{ L.startingPot }}</span>
+              <label for="tree-startingPot" class="inline-block w-[7.5rem]">{{ L.startingPot }}</label>
               <input
+                id="tree-startingPot"
+                name="startingPot"
+                autocomplete="off"
+                :spellcheck="false"
                 v-model="config.startingPot"
                 type="number"
                 @input="onAmountEdit"
@@ -31,8 +35,12 @@
             </div>
 
             <div class="my-1">
-              <span class="inline-block w-[7.5rem]">{{ L.effectiveStack }}</span>
+              <label for="tree-effectiveStack" class="inline-block w-[7.5rem]">{{ L.effectiveStack }}</label>
               <input
+                id="tree-effectiveStack"
+                name="effectiveStack"
+                autocomplete="off"
+                :spellcheck="false"
                 v-model="config.effectiveStack"
                 type="number"
                 @input="onAmountEdit"
@@ -53,8 +61,12 @@
 
           <div>
             <div class="my-1">
-              <span class="inline-block w-20">{{ L.rake }}</span>
+              <label for="tree-rakePercent" class="inline-block w-20">{{ L.rake }}</label>
               <input
+                id="tree-rakePercent"
+                name="rakePercent"
+                autocomplete="off"
+                :spellcheck="false"
                 v-model="config.rakePercent"
                 type="number"
                 :class="
@@ -72,8 +84,12 @@
             </div>
 
             <div class="my-1">
-              <span class="inline-block w-20">{{ L.rakeCap }}</span>
+              <label for="tree-rakeCap" class="inline-block w-20">{{ L.rakeCap }}</label>
               <input
+                id="tree-rakeCap"
+                name="rakeCap"
+                autocomplete="off"
+                :spellcheck="false"
                 v-model="config.rakeCap"
                 type="number"
                 :class="
@@ -155,8 +171,13 @@
             <div>
               <div class="my-1 underline">{{ L.flop }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.bet }}</span>
+                <label for="tree-oopFlopBet" class="inline-block w-14">{{ L.bet }}</label>
                 <input
+                  id="tree-oopFlopBet"
+                  :aria-label="[L.oopBetSizes, L.flop, L.bet].join(' · ')"
+                  name="oopFlopBet"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.oopFlopBet"
                   type="text"
                   :class="
@@ -172,8 +193,13 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.raise }}</span>
+                <label for="tree-oopFlopRaise" class="inline-block w-14">{{ L.raise }}</label>
                 <input
+                  id="tree-oopFlopRaise"
+                  :aria-label="[L.oopBetSizes, L.flop, L.raise].join(' · ')"
+                  name="oopFlopRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.oopFlopRaise"
                   type="text"
                   :class="
@@ -193,8 +219,13 @@
             <div>
               <div class="my-1 underline">{{ L.turn }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.bet }}</span>
+                <label for="tree-oopTurnBet" class="inline-block w-14">{{ L.bet }}</label>
                 <input
+                  id="tree-oopTurnBet"
+                  :aria-label="[L.oopBetSizes, L.turn, L.bet].join(' · ')"
+                  name="oopTurnBet"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.oopTurnBet"
                   type="text"
                   :class="
@@ -210,8 +241,13 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.raise }}</span>
+                <label for="tree-oopTurnRaise" class="inline-block w-14">{{ L.raise }}</label>
                 <input
+                  id="tree-oopTurnRaise"
+                  :aria-label="[L.oopBetSizes, L.turn, L.raise].join(' · ')"
+                  name="oopTurnRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.oopTurnRaise"
                   type="text"
                   :class="
@@ -227,8 +263,13 @@
                 %
               </div>
               <div v-if="config.donkOption" class="my-1">
-                <span class="inline-block w-14">{{ L.donk }}</span>
+                <label for="tree-oopTurnDonk" class="inline-block w-14">{{ L.donk }}</label>
                 <input
+                  id="tree-oopTurnDonk"
+                  :aria-label="[L.oopBetSizes, L.turn, L.donk].join(' · ')"
+                  name="oopTurnDonk"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.oopTurnDonk"
                   type="text"
                   :class="
@@ -248,8 +289,13 @@
             <div>
               <div class="my-1 underline">{{ L.river }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.bet }}</span>
+                <label for="tree-oopRiverBet" class="inline-block w-14">{{ L.bet }}</label>
                 <input
+                  id="tree-oopRiverBet"
+                  :aria-label="[L.oopBetSizes, L.river, L.bet].join(' · ')"
+                  name="oopRiverBet"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.oopRiverBet"
                   type="text"
                   :class="
@@ -265,8 +311,13 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.raise }}</span>
+                <label for="tree-oopRiverRaise" class="inline-block w-14">{{ L.raise }}</label>
                 <input
+                  id="tree-oopRiverRaise"
+                  :aria-label="[L.oopBetSizes, L.river, L.raise].join(' · ')"
+                  name="oopRiverRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.oopRiverRaise"
                   type="text"
                   :class="
@@ -282,8 +333,13 @@
                 %
               </div>
               <div v-if="config.donkOption" class="my-1">
-                <span class="inline-block w-14">{{ L.donk }}</span>
+                <label for="tree-oopRiverDonk" class="inline-block w-14">{{ L.donk }}</label>
                 <input
+                  id="tree-oopRiverDonk"
+                  :aria-label="[L.oopBetSizes, L.river, L.donk].join(' · ')"
+                  name="oopRiverDonk"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.oopRiverDonk"
                   type="text"
                   :class="
@@ -309,6 +365,7 @@
               <button
                 class="mt-3 button-base button-blue button-arrow"
                 :disabled="errorIp.length > 0 || hasEdit"
+                :aria-label="L.ipBetSizes + ' → ' + L.oopBetSizes"
                 @click="ipToOop"
               >
                 ↑
@@ -316,6 +373,7 @@
               <button
                 class="mt-3 button-base button-blue button-arrow"
                 :disabled="errorOop.length > 0 || hasEdit"
+                :aria-label="L.oopBetSizes + ' → ' + L.ipBetSizes"
                 @click="oopToIp"
               >
                 ↓
@@ -327,8 +385,13 @@
             <div>
               <div class="my-1 underline">{{ L.flop }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.bet }}</span>
+                <label for="tree-ipFlopBet" class="inline-block w-14">{{ L.bet }}</label>
                 <input
+                  id="tree-ipFlopBet"
+                  :aria-label="[L.ipBetSizes, L.flop, L.bet].join(' · ')"
+                  name="ipFlopBet"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.ipFlopBet"
                   type="text"
                   :class="
@@ -344,8 +407,13 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.raise }}</span>
+                <label for="tree-ipFlopRaise" class="inline-block w-14">{{ L.raise }}</label>
                 <input
+                  id="tree-ipFlopRaise"
+                  :aria-label="[L.ipBetSizes, L.flop, L.raise].join(' · ')"
+                  name="ipFlopRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.ipFlopRaise"
                   type="text"
                   :class="
@@ -365,8 +433,13 @@
             <div>
               <div class="my-1 underline">{{ L.turn }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.bet }}</span>
+                <label for="tree-ipTurnBet" class="inline-block w-14">{{ L.bet }}</label>
                 <input
+                  id="tree-ipTurnBet"
+                  :aria-label="[L.ipBetSizes, L.turn, L.bet].join(' · ')"
+                  name="ipTurnBet"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.ipTurnBet"
                   type="text"
                   :class="
@@ -382,8 +455,13 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.raise }}</span>
+                <label for="tree-ipTurnRaise" class="inline-block w-14">{{ L.raise }}</label>
                 <input
+                  id="tree-ipTurnRaise"
+                  :aria-label="[L.ipBetSizes, L.turn, L.raise].join(' · ')"
+                  name="ipTurnRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.ipTurnRaise"
                   type="text"
                   :class="
@@ -403,8 +481,13 @@
             <div>
               <div class="my-1 underline">{{ L.river }}</div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.bet }}</span>
+                <label for="tree-ipRiverBet" class="inline-block w-14">{{ L.bet }}</label>
                 <input
+                  id="tree-ipRiverBet"
+                  :aria-label="[L.ipBetSizes, L.river, L.bet].join(' · ')"
+                  name="ipRiverBet"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.ipRiverBet"
                   type="text"
                   :class="
@@ -420,8 +503,13 @@
                 %
               </div>
               <div class="my-1">
-                <span class="inline-block w-14">{{ L.raise }}</span>
+                <label for="tree-ipRiverRaise" class="inline-block w-14">{{ L.raise }}</label>
                 <input
+                  id="tree-ipRiverRaise"
+                  :aria-label="[L.ipBetSizes, L.river, L.raise].join(' · ')"
+                  name="ipRiverRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
                   v-model="config.ipRiverRaise"
                   type="text"
                   :class="
@@ -459,7 +547,7 @@
           <div>
             <div class="my-1">
               <div class="inline-block w-48">
-                {{ L.addAllInLabel }}
+                <label for="tree-addAllInThreshold">{{ L.addAllInLabel }}</label>
                 <Tippy
                   class="inline-block cursor-help"
                   max-width="420px"
@@ -476,6 +564,8 @@
                 </Tippy>
               </div>
               <input
+                id="tree-addAllInThreshold"
+                name="addAllInThreshold"
                 v-model="config.addAllInThreshold"
                 type="number"
                 :class="
@@ -491,7 +581,7 @@
 
             <div class="my-1">
               <div class="inline-block w-48">
-                {{ L.forceAllInLabel }}
+                <label for="tree-forceAllInThreshold">{{ L.forceAllInLabel }}</label>
                 <Tippy
                   class="inline-block cursor-help"
                   max-width="500px"
@@ -519,6 +609,8 @@
                 </Tippy>
               </div>
               <input
+                id="tree-forceAllInThreshold"
+                name="forceAllInThreshold"
                 v-model="config.forceAllInThreshold"
                 type="number"
                 :class="
@@ -534,7 +626,7 @@
 
             <div class="my-1">
               <div class="inline-block w-48">
-                {{ L.mergingLabel }}
+                <label for="tree-mergingThreshold">{{ L.mergingLabel }}</label>
                 <Tippy
                   class="inline-block cursor-help"
                   max-width="500px"
@@ -562,6 +654,8 @@
                 </Tippy>
               </div>
               <input
+                id="tree-mergingThreshold"
+                name="mergingThreshold"
                 v-model="config.mergingThreshold"
                 type="number"
                 :class="
@@ -2028,7 +2122,7 @@ input {
     flex: 1 1 8.5rem;
     margin: 0;
   }
-  .bet-grid > div > .my-1:not(.underline) > span {
+  .bet-grid > div > .my-1:not(.underline) > label {
     width: auto;
     flex: none;
   }

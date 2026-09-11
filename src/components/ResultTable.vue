@@ -10,6 +10,7 @@
           <div class="text-sm">{{ L.barWidth }}</div>
           <select
             v-model="displayOptions.barWidth"
+            :aria-label="L.barWidth"
             class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
             @change="updateDisplayOptions"
           >
@@ -28,6 +29,7 @@
           <div class="text-sm">{{ L.display }}</div>
           <select
             v-model="(displayOptions as DisplayOptionsBasics).content"
+            :aria-label="L.display"
             class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
             @change="updateDisplayOptions"
           >
@@ -44,6 +46,7 @@
               'rounded-lg shadow cursor-pointer transition-colors active:bg-neutral-600'
             "
             download="summary.csv"
+            :aria-label="L.exportCsv"
             @click="exportSummary"
           >
             <ArrowTopRightOnSquareIcon class="w-5 h-5" />
@@ -64,6 +67,7 @@
               v-for="column in columns"
               :key="column.label"
               scope="col"
+              :aria-sort="column.type === 'bar' ? undefined : sortKey.key === columnIndex(column) ? (sortKey.order === 'asc' ? 'ascending' : 'descending') : 'none'"
               :class="
                 'whitespace-nowrap select-none ' +
                 (column.type === 'card'
@@ -80,15 +84,23 @@
                     ? '6'
                     : '3.5') + 'rem',
               }"
-              @click="column.type !== 'bar' && sortBy(columnIndex(column))"
             >
+              <button
+                v-if="column.type !== 'bar'"
+                type="button"
+                class="result-sort-button"
+                @click="sortBy(columnIndex(column))"
+              >
               <span
                 v-if="sortKey.key === columnIndex(column)"
                 class="inline-block text-xs pr-1"
+                aria-hidden="true"
               >
                 {{ sortKey.order === "asc" ? "▲" : "▼" }}
               </span>
               <span>{{ column.label }}</span>
+              </button>
+              <span v-else>{{ column.label }}</span>
             </th>
           </tr>
 
@@ -109,8 +121,14 @@
               :style="{
                 height: column.type === 'bar' ? 'calc(1.9rem + 1px)' : 'auto',
               }"
-              @click="column.type !== 'bar' && sortBy(columnIndex(column))"
             >
+              <component
+                :is="column.type === 'bar' ? 'div' : 'button'"
+                :type="column.type === 'bar' ? undefined : 'button'"
+                :class="column.type === 'bar' ? 'h-full' : 'result-sort-button'"
+                :aria-label="column.type === 'bar' ? undefined : column.label"
+                @click="column.type !== 'bar' && sortBy(columnIndex(column))"
+              >
               <template v-if="column.type === 'card'">
                 <span>{{ hoverContent?.name ?? L.all }}</span>
               </template>
@@ -134,7 +152,7 @@
               </template>
 
               <template v-else>
-                <div class="inline-block w-12 text-right">
+                <span class="inline-block w-12 text-right">
                   <span
                     v-if="column.type === 'weight'"
                     :data-set="
@@ -179,10 +197,10 @@
                     <span>{{ strTmp.slice(0, -evDigits) }}</span>
                     <span class="text-xs">{{ strTmp.slice(-evDigits) }}</span>
                   </span>
-                </div>
+                </span>
               </template>
 
-              <div
+              <span
                 v-if="
                   summary &&
                   (column.type === 'action' || column.type === 'action-ev')
@@ -191,7 +209,8 @@
                 :style="{
                   background: actionBarBg(column.index, summary),
                 }"
-              ></div>
+              ></span>
+              </component>
             </th>
           </tr>
         </thead>
@@ -1493,6 +1512,26 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.result-sort-button {
+  display: flex;
+  width: 100%;
+  /* The existing table cells add 1px padding above and below the button. */
+  min-height: calc(1.9rem - 1px);
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.result-sort-button:hover { background: rgb(var(--c-bg-3)); }
+.result-sort-button:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid rgb(var(--c-brand));
+  outline-offset: -2px;
+}
 .header-divider::before {
   content: "";
   @apply absolute left-0 -bottom-px w-full border-b border-neutral-700;

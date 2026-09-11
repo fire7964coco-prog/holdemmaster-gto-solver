@@ -10,17 +10,20 @@
       <SideBar class="md:h-[calc(100%-2rem)]" />
 
       <div
+        ref="solverContent"
         class="solver-content flex-grow min-w-0 min-h-0 my-2 md:my-4 px-3 md:px-6 pt-2 overflow-y-auto md:h-[calc(100%-2rem)]"
       >
         <div class="flex">
-          <div
+          <h1
+            ref="contentHeading"
+            tabindex="-1"
             :class="
               'app-section-heading mb-3 md:mb-4 pl-2.5 pr-3 py-0.5 text-base font-semibold border-l-2 ' +
               'border-blue-600 rounded rounded-br-none'
             "
           >
             {{ header }}
-          </div>
+          </h1>
         </div>
 
         <div v-if="store.sideView === 'about'">
@@ -48,13 +51,14 @@
           <RangeEditor :player="1" />
         </div>
         <div v-show="store.sideView === 'board'">
+          <p v-if="boardNavigationError" class="mb-2 text-sm text-red-400" role="alert">{{ boardNavigationError }}</p>
           <BoardSelector />
         </div>
         <div v-show="store.sideView === 'tree-config'">
           <TreeConfig />
         </div>
         <div v-show="store.sideView === 'run-solver'">
-          <RunSolver />
+          <RunSolver @board-required="showBoardError" />
         </div>
       </div>
     </div>
@@ -64,6 +68,8 @@
     <ErrorToast />
 
     <div
+      ref="resultsContent"
+      tabindex="-1"
       v-show="store.navView === 'results'"
       class="results-workspace overflow-y-auto"
       style="height: calc(100% - 2.5rem)"
@@ -74,8 +80,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
-import { useStore } from "../store";
+import { computed, defineComponent, nextTick, ref, watch } from "vue";
+import { useStore, useConfigStore } from "../store";
 import { applySpotFromUrl } from "../spot-share";
 import { viewFromUrl } from "../pwa";
 // 빌드 2벌 분기 — npokers 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
@@ -119,6 +125,31 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
+    const config = useConfigStore();
+    const solverContent = ref<HTMLElement | null>(null);
+    const resultsContent = ref<HTMLElement | null>(null);
+    const contentHeading = ref<HTMLElement | null>(null);
+    const boardNavigationError = ref("");
+    const positions = new Map<string, number>();
+    const screenKey = computed(() => store.navView === "results" ? "results" : store.sideView);
+    watch(screenKey, async (screen, previous) => {
+      const previousContainer = previous === "results" ? resultsContent.value : solverContent.value;
+      positions.set(previous, previousContainer?.scrollTop ?? 0);
+      if (screen !== "board") boardNavigationError.value = "";
+      await nextTick();
+      const container = screen === "results" ? resultsContent.value : solverContent.value;
+      const heading = screen === "board" && boardNavigationError.value
+        ? document.getElementById("board-text-input")
+        : screen === "results" ? resultsContent.value : contentHeading.value;
+      heading?.focus({ preventScroll: true });
+      if (container) container.scrollTop = positions.get(screen) ?? 0;
+    }, { flush: "pre" });
+    watch(() => config.board.slice(), () => { boardNavigationError.value = ""; });
+    const showBoardError = (message: string) => {
+      boardNavigationError.value = message;
+      positions.delete("board");
+      store.sideView = "board";
+    };
     const HEADERS = {
       ko: {
         about: "소개",
@@ -342,6 +373,11 @@ export default defineComponent({
       store,
       header,
       clientHeight,
+      solverContent,
+      resultsContent,
+      contentHeading,
+      boardNavigationError,
+      showBoardError,
     };
   },
 });
