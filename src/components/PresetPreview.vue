@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="preset-preview min-w-0">
     <!-- 상단 바: 돌아가기 + 스팟 정보 + 직접 계산 -->
     <div class="flex flex-wrap items-center gap-2">
       <button class="button-base button-blue" @click="$emit('close')">
@@ -38,7 +38,7 @@
         v-if="articleUrl"
         :href="articleUrl"
         target="_blank"
-        class="px-1 text-blue-400 hover:underline shrink-0"
+        class="px-1 text-brand hover:underline shrink-0"
       >
         {{ L.readArticle }}
       </a>
@@ -74,9 +74,9 @@
       </div>
 
       <!-- 본문: 결과 화면과 동일한 구도 (모바일 세로 스택 / 데스크톱 좌우) -->
-      <div class="flex flex-col md:flex-row mt-3 gap-2">
+      <div class="flex flex-col md:flex-row mt-3 gap-3">
         <!-- ResultBasics 루트가 h-full이라 높이는 래퍼에서 지정해야 함 -->
-        <div class="shrink-0 h-[24rem] md:h-[36rem] md:[flex:11]">
+        <div class="preview-matrix shrink-0 min-w-0 md:[flex:11]">
           <ResultBasics
             :cards="data.cards"
             :selected-spot="data.selectedSpot"
@@ -383,3 +383,20 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.preview-matrix {
+  height: auto;
+  aspect-ratio: 1;
+}
+@media (min-width: 768px) {
+  .preview-matrix {
+    height: clamp(26rem, 65vh, 36rem);
+    aspect-ratio: auto;
+  }
+}
+
+.button-green {
+  @apply bg-brand text-brand-ink hover:bg-brand-hover active:bg-brand-hover disabled:bg-brand;
+}
+</style>

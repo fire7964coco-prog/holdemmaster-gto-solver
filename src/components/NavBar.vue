@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="sticky flex top-0 z-30 w-full h-10 shadow-lg px-4 justify-center bg-neutral-800 text-gray-50 border-b border-neutral-700"
+    class="app-nav sticky flex top-0 z-30 w-full h-10 px-3 justify-center bg-neutral-800 text-gray-50 border-b border-neutral-700"
   >
     <div class="flex relative w-full">
       <div class="hidden md:flex items-center z-10">
@@ -21,8 +21,8 @@
         <button
           :class="
             'flex relative w-20 md:w-32 items-center justify-center font-semibold ' +
-            'transition-colors hover:bg-neutral-700 hover:text-blue-200 ' +
-            (store.navView === 'solver' ? 'bg-neutral-700 text-blue-200' : '')
+            'transition-colors hover:bg-neutral-700 hover:text-brand ' +
+            (store.navView === 'solver' ? 'app-nav-active bg-neutral-700 text-brand' : '')
           "
           @click="store.navView = 'solver'"
         >
@@ -32,8 +32,8 @@
         <button
           :class="
             'flex relative w-20 md:w-32 items-center justify-center font-semibold ' +
-            'transition-colors hover:bg-neutral-700 hover:text-blue-200 ' +
-            (store.navView === 'results' ? 'bg-neutral-700 text-blue-200' : '')
+            'transition-colors hover:bg-neutral-700 hover:text-brand ' +
+            (store.navView === 'results' ? 'app-nav-active bg-neutral-700 text-brand' : '')
           "
           @click="store.navView = 'results'"
         >
@@ -76,7 +76,7 @@
         </select>
         <a
           :href="communityUrl"
-          class="flex px-2 md:px-4 h-full items-center font-semibold hover:bg-neutral-700 text-yellow-300 text-sm md:text-base"
+          class="flex px-2 md:px-4 h-full items-center font-semibold hover:bg-neutral-700 text-brand text-sm"
           target="_blank"
         >
           {{ L.community }}<span class="hidden md:inline">{{ L.communitySuffix }}</span>
@@ -254,7 +254,12 @@ export default defineComponent({
 }
 
 .silver-spade {
-  background-image: linear-gradient(180deg,rgb(var(--c-metal-1)) 0%,rgb(var(--c-metal-3)) 45%,rgb(var(--c-metal-5)) 100%);
+  background-image: linear-gradient(
+    180deg,
+    rgb(var(--c-metal-1)) 0%,
+    rgb(var(--c-metal-3)) 45%,
+    rgb(var(--c-metal-5)) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

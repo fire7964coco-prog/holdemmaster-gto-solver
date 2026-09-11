@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col md:flex-row mt-1">
-    <div class="shrink-0 ml-0 md:ml-1 max-w-full">
-      <table class="shadow-md shadow-black/40 select-none snug" @mouseleave="dragEnd">
+  <div class="range-editor flex flex-col md:flex-row md:flex-wrap gap-4 mt-1">
+    <div class="shrink-0 w-full md:w-[34rem] max-w-full min-w-0">
+      <table class="w-full table-fixed select-none snug" @mouseleave="dragEnd">
         <tr v-for="row in 13" :key="row" class="h-7 md:h-9">
           <td
             v-for="col in 13"
@@ -46,13 +46,13 @@
         </tr>
       </table>
 
-      <div class="mt-5">
-        <div class="flex">
+      <div class="mt-3">
+        <div class="flex items-start gap-2">
           <input
             v-model="rangeText"
             type="text"
             :class="
-              'flex-grow mr-6 px-2 py-1 rounded-lg text-sm ' +
+              'min-w-0 flex-grow px-2 py-1 rounded-lg text-sm ' +
               (rangeTextError ? 'input-error' : '')
             "
             @focus="($event.target as HTMLInputElement).select()"
@@ -69,13 +69,13 @@
         </div>
       </div>
 
-      <div class="flex mt-3.5 items-center">
+      <div class="range-weight flex flex-wrap gap-2 mt-3 items-center text-sm tabular-nums">
         <div>
           {{ L.weight }}
           <input
             v-model="weight"
             type="range"
-            class="ml-3 w-40 align-middle"
+            class="ml-2 w-28 sm:w-40 align-middle"
             min="0"
             max="100"
             step="5"
@@ -85,7 +85,7 @@
             v-model="weight"
             type="number"
             :class="
-              'w-20 ml-4 px-2 py-1 rounded-lg text-sm text-center ' +
+              'w-16 ml-2 px-2 py-1 rounded-lg text-sm text-center ' +
               (weight < 0 || weight > 100 ? 'input-error' : '')
             "
             min="0"
@@ -104,7 +104,7 @@
       </div>
     </div>
 
-    <div class="flex-grow max-w-full md:max-w-[18rem] ml-0 md:ml-6 mt-4 md:mt-0">
+    <div class="flex-grow min-w-0 w-full md:w-[15rem] max-w-full md:max-w-[18rem]">
       <DbItemPicker
         store-name="ranges"
         :index="player"
@@ -400,3 +400,15 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.range-weight > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 0.5rem;
+}
+.range-editor :deep(input) {
+  max-width: 100%;
+}
+</style>

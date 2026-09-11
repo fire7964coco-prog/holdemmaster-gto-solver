@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col w-full border-l border-neutral-600 overflow-x-auto">
-    <div class="flex shrink-0 h-12 border-b border-neutral-600">
+  <div class="result-table flex flex-col w-full border-l border-neutral-600 overflow-x-auto">
+    <div class="result-table-toolbar flex shrink-0 h-12 border-b border-neutral-600">
       <div class="flex h-full px-4 items-center text-lg font-semibold">
         {{ L.summary }}
       </div>
@@ -54,7 +54,7 @@
 
     <div
       ref="tableDiv"
-      class="flex-grow overflow-y-scroll will-change-scroll"
+      class="result-table-scroll flex-grow overflow-y-scroll will-change-scroll"
       @scroll.passive="onTableScroll"
     >
       <table class="w-full h-full text-sm text-center align-middle">

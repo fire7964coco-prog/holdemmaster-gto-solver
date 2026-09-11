@@ -12,7 +12,7 @@
     </button>
   </div>
 
-  <div class="flex my-1 items-center">
+  <div class="solver-run-toolbar flex flex-wrap my-1 items-center gap-y-2 text-sm">
     {{ L.numThreadsLabel }}
     <input
       v-model="numThreads"
@@ -56,9 +56,9 @@
     {{ shareError }}
   </div>
 
-  <div class="my-1">{{ L.statusLabel }} {{ treeStatus }}</div>
+  <div class="my-2 text-sm text-ink-secondary">{{ L.statusLabel }} {{ treeStatus }}</div>
 
-  <div v-if="isTreeBuilt" class="mt-3">
+  <div v-if="isTreeBuilt" class="solver-run-settings mt-3 max-w-3xl text-sm tabular-nums">
     <div>
       {{ L.precisionMode }}
       <Tippy
@@ -194,7 +194,7 @@
       />
     </div>
 
-    <div class="flex mt-6 gap-3">
+    <div class="flex flex-wrap mt-5 gap-2">
       <button
         class="button-base button-blue"
         :disabled="!canRun"
@@ -232,7 +232,7 @@
       </button>
     </div>
 
-    <div v-if="store.hasSolverRun" class="mt-6">
+    <div v-if="store.hasSolverRun" class="mt-5">
       <div class="flex items-center">
         <span
           v-if="store.isSolverRunning || store.isFinalizing"
@@ -1710,3 +1710,15 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.solver-run-toolbar {
+  @apply rounded-lg border border-neutral-700 bg-surface-2 p-3;
+}
+.solver-run-settings {
+  @apply rounded-lg border border-neutral-700 bg-surface-1 p-3 md:p-4;
+}
+.button-green {
+  @apply bg-surface-3 text-ink-primary hover:bg-surface-4 active:bg-surface-4 disabled:bg-surface-3;
+}
+</style>

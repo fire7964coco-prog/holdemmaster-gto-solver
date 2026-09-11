@@ -1,8 +1,8 @@
 <template>
   <div
-    class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-neutral-700 text-sm"
+    class="hand-breakdown w-full px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm"
   >
-    <div class="grid grid-cols-2 gap-x-6">
+    <div class="grid grid-cols-2 gap-x-4">
       <div>
         <div class="font-semibold text-neutral-300">{{ L.hands }}</div>
         <div v-if="breakdown.made.length === 0" class="mt-1 text-neutral-500">
@@ -11,7 +11,7 @@
         <div
           v-for="(row, i) in breakdown.made"
           :key="row.key"
-          class="mt-1.5 leading-tight"
+          class="breakdown-row mt-1.5 leading-tight"
         >
           <div class="flex justify-between">
             <span class="text-neutral-200">{{ row.label }}</span>
@@ -39,7 +39,7 @@
         <div
           v-for="(row, i) in breakdown.draws"
           :key="row.key"
-          class="mt-1.5 leading-tight"
+          class="breakdown-row mt-1.5 leading-tight"
         >
           <div class="flex justify-between">
             <span class="text-neutral-200">{{ row.label }}</span>

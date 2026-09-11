@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="flex flex-row md:flex-col shrink-0 w-full md:w-56 my-0 md:my-2 overflow-x-auto md:overflow-x-visible md:overflow-y-auto border-b md:border-b-0 md:border-r-2 border-neutral-700"
+    class="flex flex-row md:flex-col shrink-0 w-full md:w-56 my-0 md:my-2 overflow-x-auto md:overflow-x-visible md:overflow-y-auto border-b md:border-b-0 md:border-r border-neutral-700"
   >
     <div class="side-bar-group md:mb-1">
     <div class="side-bar-label">
@@ -22,10 +22,10 @@
       @click="store.sideView = 'presets'"
     >
       {{ L.presets }}
-      <span class="badge hidden md:inline text-xs font-semibold text-emerald-400">
+      <span class="badge hidden md:inline text-xs font-semibold text-brand">
         ⚡ {{ L.presetsBadge }}
       </span>
-      <span class="md:hidden text-emerald-400">⚡</span>
+      <span class="md:hidden text-brand">⚡</span>
     </button>
 
     <button
@@ -34,21 +34,21 @@
       @click="store.sideView = 'trainer'"
     >
       {{ L.trainer }}
-      <span class="badge hidden md:inline text-xs font-semibold text-blue-400">
+      <span class="badge hidden md:inline text-xs font-semibold text-brand">
         {{ L.trainerBadge }}
       </span>
     </button>
 
     <button :class="itemStyle('preflop')" @click="store.sideView = 'preflop'">
       {{ L.preflop }}
-      <span class="badge hidden md:inline text-xs font-semibold text-yellow-500">
+      <span class="badge hidden md:inline text-xs font-semibold text-brand">
         {{ L.preflopBadge }}
       </span>
     </button>
 
     <button :class="itemStyle('equity')" @click="store.sideView = 'equity'">
       {{ L.equity }}
-      <span class="badge hidden md:inline text-xs font-semibold text-emerald-400">
+      <span class="badge hidden md:inline text-xs font-semibold text-brand">
         {{ L.equityBadge }}
       </span>
     </button>
@@ -489,8 +489,8 @@ export default defineComponent({
    (마지막 py-1.5는 2026-08-18 «에퀴티 계산기» 항목을 넣으며. 항목당 4px × 11개 = 44px 확보)
    ⚠ 여기서 항목을 또 늘리면 여백으로는 더 못 짜낸다 — 다른 항목을 빼거나 구조를 바꿀 것 */
 .side-bar-item {
-  @apply block shrink-0 whitespace-nowrap mx-1 my-1 px-3 py-2 rounded-xl text-sm;
-  @apply md:shrink md:whitespace-normal md:mx-2 md:my-0.5 md:px-4 md:py-1.5 md:rounded-2xl md:text-[0.9375rem];
+  @apply block shrink-0 whitespace-nowrap mx-1 my-1 px-3 py-2 rounded-md text-sm;
+  @apply md:shrink md:whitespace-normal md:mx-2 md:my-0.5 md:px-3 md:py-1.5 md:rounded-md md:text-[0.8125rem];
   @apply text-left select-none;
   @apply transition-colors hover:bg-neutral-700;
 }
@@ -498,7 +498,7 @@ export default defineComponent({
 /* 항목이 늘 때마다(프리플랍 차트 → 에퀴티 계산기) 라벨·구분선 여백을 더 조였다 */
 .side-bar-label {
   @apply shrink-0 whitespace-nowrap self-center mx-1 px-2 text-xs font-semibold text-neutral-500 select-none;
-  @apply md:self-auto md:whitespace-normal md:mx-2 md:mt-0.5 md:mb-0.5 md:px-4;
+  @apply md:self-auto md:whitespace-normal md:mx-2 md:mt-0.5 md:mb-0.5 md:px-3;
   @apply md:text-[0.6875rem] md:uppercase md:tracking-wider;
 }
 
@@ -508,13 +508,41 @@ export default defineComponent({
    구분선 제거(-3px)로 회수 — 1280×720에서 ⑤가 보이는지는 sidebar-fit-verify가 판정 */
 .side-bar-group {
   @apply contents;
-  @apply md:block md:mx-1 md:py-0.5 md:rounded-2xl;
-  @apply md:border md:border-neutral-700 md:bg-neutral-800/40;
+  @apply md:block md:mx-1 md:py-1 md:rounded-lg;
+  @apply md:border md:border-neutral-700 md:bg-surface-1;
 }
 /* 패널 도입으로 항목 폭이 18px 줄어 EN «Equity Calculator Win %»가 두 줄로 접혔다
    (2026-08-19 사용자 실기기에서 발견 — 125% 배율에서 접힘). 그룹 여백을 줄이고(mx-2→mx-1)
    뱃지는 줄바꿈 금지 — 항목이 늘면 여기가 또 첫 파열점이다 */
 .side-bar-item .badge {
   @apply whitespace-nowrap;
+}
+/* Keep the existing state class contract; change only the navigation accent. */
+.side-bar-item.text-blue-300 {
+  @apply text-brand bg-surface-3;
+  box-shadow: inset 2px 0 0 rgb(var(--c-brand));
+}
+@media (min-width: 768px) {
+  .side-bar-item:has(table) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .side-bar-item:has(table) > span {
+    margin-top: 0;
+    flex: none;
+  }
+  .side-bar-item :deep(table) {
+    width: 52px;
+    height: 52px;
+    box-shadow: none;
+  }
+  .side-bar-item :deep(table tr) {
+    height: 4px;
+  }
+  .side-bar-item :deep(table td) {
+    width: 4px;
+  }
 }
 </style>

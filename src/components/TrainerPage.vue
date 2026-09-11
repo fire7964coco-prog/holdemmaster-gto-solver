@@ -3,7 +3,7 @@
   <div
     v-else
     id="trainer-top"
-    :class="'max-w-5xl flex flex-col ' + (evaluation ? 'pb-24 md:pb-10' : 'pb-10')"
+    :class="'trainer-page max-w-5xl min-w-0 flex flex-col ' + (evaluation ? 'pb-24 md:pb-10' : 'pb-10')"
   >
     <div
       v-if="loadError"
@@ -198,11 +198,11 @@
       <!-- 좌: 문제 / 우: 채점. 답을 봐도 문제가 화면에서 사라지지 않게 나란히 둔다 -->
       <div
         v-if="question"
-        class="order-3 md:order-4 mt-3 md:mt-5 grid gap-4 lg:grid-cols-[1.15fr_1fr] items-start"
+        class="order-3 md:order-4 mt-3 md:mt-4 grid gap-3 lg:grid-cols-[1.15fr_1fr] items-start"
       >
-      <div class="rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5">
+      <div class="trainer-card rounded-lg border border-neutral-700 bg-neutral-800 p-3 md:p-4">
         <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span class="text-sm font-semibold text-blue-300">
+          <span class="text-sm font-semibold text-brand">
             {{ presetTitle }}
           </span>
           <span class="text-xs text-neutral-500">
@@ -229,7 +229,7 @@
         </div>
 
         <div
-          class="mt-3 md:mt-4 rounded-lg border border-neutral-700/70 bg-neutral-900/50 py-3 md:py-4 flex flex-row items-start md:items-center justify-center gap-6 md:gap-10"
+          class="mt-3 rounded-lg border border-neutral-700/70 bg-surface-1 py-3 flex flex-row items-start md:items-center justify-center gap-6 md:gap-8"
         >
           <div class="text-center">
             <div class="text-xs text-neutral-500 mb-1">{{ L.boardLabel }}</div>
@@ -272,15 +272,15 @@
           {{ evaluation ? L.yourChoice : L.prompt }}
         </div>
         <!-- 채점 전에는 액션 이름만. 채점 후에는 버튼 자체가 결과표가 된다 -->
-        <div class="grid gap-2 mt-2">
+        <div class="grid gap-2 mt-2 md:grid-cols-2">
           <button
             v-for="(action, index) in question.node.selectedSpot.actions"
             :key="index"
             :disabled="!!evaluation"
             :class="
-              'flex items-center justify-between rounded-lg border px-4 py-2.5 font-semibold transition ' +
+              'flex min-w-0 items-center justify-between gap-2 rounded-md border px-3 py-2.5 text-sm font-semibold transition ' +
               (evaluation && evaluation.selectedAction === index
-                ? 'border-yellow-400 bg-yellow-900/50 text-yellow-200'
+                ? 'border-brand bg-brand/10 text-brand'
                 : evaluation
                 ? 'border-neutral-700 bg-neutral-800 text-neutral-400'
                 : 'border-neutral-600 bg-neutral-700 hover:bg-neutral-600')
@@ -310,7 +310,7 @@
       <!-- 오른쪽: 채점 결과. 아직 안 골랐으면 자리만 잡아둔다(레이아웃이 튀지 않게) -->
       <div
         id="trainer-detail"
-        class="rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5"
+        class="trainer-card rounded-lg border border-neutral-700 bg-neutral-800 p-3 md:p-4"
       >
         <template v-if="evaluation">
           <!-- 모바일은 하단 고정 바가 같은 내용을 이고 있어 여기선 감춘다 -->
@@ -451,7 +451,7 @@
               v-if="articleUrl"
               :href="articleUrl"
               target="_blank"
-              class="text-sm text-blue-400 hover:underline"
+              class="text-sm text-brand hover:underline"
             >
               {{ L.readArticle }}
             </a>
@@ -2460,7 +2460,7 @@ export default defineComponent({
   @apply rounded px-2 py-0.5 text-xs font-semibold;
 }
 .link-like {
-  @apply text-blue-400 underline font-semibold;
+  @apply text-brand underline underline-offset-2 font-semibold;
 }
 /* 모바일에서 필터가 두 줄로 76px를 먹어 문제를 아래로 밀었다 */
 .filter-btn {
@@ -2472,5 +2472,12 @@ export default defineComponent({
 }
 .filter-row::-webkit-scrollbar {
   display: none;
+}
+.trainer-card {
+  @apply bg-surface-2;
+}
+
+.button-green {
+  @apply bg-brand text-brand-ink hover:bg-brand-hover active:bg-brand-hover disabled:bg-brand;
 }
 </style>

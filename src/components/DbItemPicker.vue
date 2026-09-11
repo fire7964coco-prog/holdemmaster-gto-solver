@@ -1596,6 +1596,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* Saved-item selection is chrome; the range and action colors stay unchanged. */
+input.peer:checked ~ .peer-checked\:bg-blue-600 {
+  background-color: rgb(var(--c-brand));
+  color: rgb(var(--c-brand-ink));
+}
+.button-green {
+  @apply bg-brand text-brand-ink hover:bg-brand-hover active:bg-brand disabled:bg-brand;
+}
 input.input-error {
   @apply ring-1 ring-red-600 border-red-600 bg-red-950;
 }

@@ -915,3 +915,14 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+/* Navigation colors are chrome; the node's action colors stay unchanged. */
+.border-blue-600,
+.hover\:border-blue-600:hover {
+  border-color: rgb(var(--c-brand));
+}
+.text-blue-300 {
+  color: rgb(var(--c-brand));
+}
+</style>

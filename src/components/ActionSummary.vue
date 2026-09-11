@@ -1,12 +1,12 @@
 <template>
-  <div v-if="tiles.length > 0" class="w-full grid grid-cols-4 gap-1.5">
+  <div v-if="tiles.length > 0" class="action-summary w-full grid grid-cols-4 gap-1.5">
     <div
       v-for="tile in tiles"
       :key="tile.index"
       class="rounded-md px-2.5 py-1.5 border border-black/30 leading-tight"
       :style="{ 'background-color': tile.bg }"
     >
-      <div class="text-xs font-semibold text-white/90 truncate">
+      <div class="action-summary-label text-xs font-semibold text-white/90">
         {{ tile.label }}
       </div>
       <div class="flex items-end justify-between mt-0.5">

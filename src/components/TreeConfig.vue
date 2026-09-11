@@ -1,14 +1,14 @@
 <template>
-  <div v-if="!isEditMode">
+  <div v-if="!isEditMode" class="tree-config text-sm tabular-nums">
     <!-- ⚠ flex-wrap 필수 — 라벨이 긴 언어(es·pt)에서는 왼쪽 열이 넓어져
          오른쪽 «저장된 설정» 패널이 화면 밖으로 잘려 나갔다 (2026-08-21 pt 눈검수).
          자리가 모자라면 잘리는 대신 아래로 내려가게 한다. -->
-    <div class="flex flex-col md:flex-row md:flex-wrap">
-      <div class="shrink-0">
+    <div class="flex flex-col md:flex-row md:flex-wrap gap-4">
+      <div class="tree-config-form shrink-0 max-w-full min-w-0">
         <div class="mb-2 text-xs text-neutral-500">
           {{ L.chipNote }}
         </div>
-        <div class="flex flex-col sm:flex-row my-1 gap-0 sm:gap-8">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap my-1 gap-0 sm:gap-6">
           <div>
             <div class="my-1">
               <span class="inline-block w-[7.5rem]">{{ L.startingPot }}</span>
@@ -455,7 +455,7 @@
           </div>
         </div>
 
-        <div class="flex mt-6 gap-4">
+        <div class="flex flex-wrap mt-4 gap-3">
           <div>
             <div class="my-1">
               <div class="inline-block w-48">
@@ -626,7 +626,7 @@
         </div>
       </div>
 
-      <div class="flex-grow max-w-full md:max-w-[18rem] mt-4 md:mt-1 ml-0 md:ml-6">
+      <div class="flex-grow min-w-0 w-full md:w-[15rem] max-w-full md:max-w-[18rem] mt-1">
         <DbItemPicker
           store-name="configurations"
           :value="dbValue"
@@ -2040,5 +2040,27 @@ input {
 
 .button-arrow {
   @apply px-2 py-1 text-lg;
+}
+.tree-config-form {
+  @apply rounded-lg border border-neutral-700 bg-surface-1 p-3;
+}
+.tree-config .bet-grid {
+  column-gap: 1rem;
+}
+@media (min-width: 768px) {
+  .bet-grid > div {
+    @apply rounded-md bg-surface-2 px-2 py-1;
+  }
+}
+@media (max-width: 767px) {
+  .tree-config-form {
+    padding: 0.625rem;
+  }
+  .tree-config-form .bet-grid > div > .underline {
+    width: 2.25rem;
+  }
+  .tree-config-form .bet-grid > div > .my-1:not(.underline) {
+    flex-basis: 7.5rem;
+  }
 }
 </style>

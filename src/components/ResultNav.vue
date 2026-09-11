@@ -1,23 +1,23 @@
 <template>
   <div
     ref="navDiv"
-    class="flex shrink-0 h-[10.5rem] gap-1 p-1 overflow-x-auto whitespace-nowrap snug"
+    class="result-nav flex shrink-0 gap-1 p-1 overflow-x-auto whitespace-nowrap snug"
   >
     <div
       v-for="spot in spots"
       :key="spot.index"
       :class="
-        'flex flex-col relative h-full px-1 py-0.5 justify-start ' +
-        'rounded-lg bg-neutral-800 shadow-md shadow-black/40 border-[3px] transition group ' +
+        'result-node flex flex-col relative h-full px-1 py-0.5 justify-start ' +
+        'rounded-lg bg-neutral-800 border transition group ' +
         (spot.type === 'chance'
           ? isSelectedChanceSkipped && spot.index > selectedChanceIndex
             ? ''
             : 'hover:border-red-600 '
-          : 'hover:border-blue-600 ') +
+          : 'hover:border-brand ') +
         (spot.index === selectedChanceIndex
           ? 'border-red-600 cursor-default'
           : spot.index === selectedSpotIndex
-          ? 'border-blue-600 cursor-default'
+          ? 'border-brand cursor-default'
           : spot.type === 'chance' &&
             isSelectedChanceSkipped &&
             spot.index > selectedChanceIndex

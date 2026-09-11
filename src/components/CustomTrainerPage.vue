@@ -1,7 +1,7 @@
 <template>
-  <section id="custom-trainer-top" class="custom-trainer max-w-5xl pb-10">
+  <section id="custom-trainer-top" class="custom-trainer max-w-3xl pb-10">
     <div class="flex flex-wrap items-center gap-2">
-      <h2 class="text-lg font-bold text-blue-300">{{ L.tab }}</h2>
+      <h2 class="text-base font-semibold text-brand">{{ L.tab }}</h2>
       <button type="button" data-testid="custom-trainer-presets" class="custom-button ml-auto bg-neutral-700" @click="leave">
         {{ L.presetTab }}
       </button>
@@ -22,15 +22,15 @@
       <article v-if="bank" data-testid="custom-trainer-bank" :data-bank-id="bank.id" :data-node-count="bank.nodes.length" class="mt-3">
         <p data-testid="custom-trainer-source" class="text-xs leading-relaxed text-neutral-400">{{ source }}</p>
         <p v-if="bank.lockCount" data-testid="custom-trainer-lock-label" class="mt-2 rounded-lg border border-amber-700/70 bg-amber-950/50 px-3 py-2 text-sm font-semibold text-amber-200">{{ L.lockAssumption }}</p>
-        <div v-if="question" data-testid="custom-trainer-question" :data-question-id="question.id" :data-bank-id="bank.id" :data-node-id="question.node.nodeId" :data-hand-pair="question.handPair" class="mt-3 rounded-xl border border-neutral-700 bg-neutral-800 p-4">
+        <div v-if="question" data-testid="custom-trainer-question" :data-question-id="question.id" :data-bank-id="bank.id" :data-node-id="question.node.nodeId" :data-hand-pair="question.handPair" class="mt-3 rounded-lg border border-neutral-700 bg-surface-2 p-3 md:p-4">
           <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-            <b class="text-blue-300">{{ question.player.toUpperCase() }}</b>
+            <b class="text-brand">{{ question.player.toUpperCase() }}</b>
             <span class="text-neutral-300">{{ L.pot }} {{ amount(question.node.selectedSpot.pot ?? question.node.startingPot) }} · {{ L.stack }} {{ amount(question.node.selectedSpot.stack ?? question.node.effectiveStack) }}</span>
           </div>
           <p v-if="question.node.history.length" class="mt-2 text-xs leading-relaxed text-neutral-400">
             {{ L.line }}: {{ question.node.history.map(item => `${item.player.toUpperCase()} ${actionLabel(item)}`).join(" → ") }}
           </p>
-          <div class="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-3 rounded-lg bg-neutral-900/60 p-3">
+          <div class="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-3 rounded-lg bg-surface-1 p-3">
             <div class="text-center">
               <p class="mb-1 text-xs text-neutral-400">{{ L.board }}</p>
               <div class="flex justify-center gap-1 text-2xl font-bold">
@@ -45,8 +45,8 @@
             </div>
           </div>
           <p class="mt-4 text-sm font-semibold">{{ L.prompt }}</p>
-          <div class="mt-2 grid gap-2">
-            <button v-for="(action, index) in question.node.selectedSpot.actions" :key="index" type="button" :data-testid="`custom-trainer-action-${index}`" :disabled="!!evaluation || saving" :class="['custom-button border text-left', evaluation?.selectedAction === index ? 'border-yellow-400 bg-yellow-900/40 text-yellow-200' : 'border-neutral-600 bg-neutral-700']" @click="choose(index)">
+          <div class="mt-2 grid gap-2 md:grid-cols-2">
+            <button v-for="(action, index) in question.node.selectedSpot.actions" :key="index" type="button" :data-testid="`custom-trainer-action-${index}`" :disabled="!!evaluation || saving" :class="['custom-button border text-left', evaluation?.selectedAction === index ? 'border-brand bg-brand/10 text-brand' : 'border-neutral-600 bg-neutral-700']" @click="choose(index)">
               {{ actionLabel(action) }}
             </button>
           </div>
@@ -66,7 +66,7 @@
             </div>
           </div>
           <div class="mt-4 flex flex-wrap gap-2">
-            <button type="button" data-testid="custom-trainer-next" :disabled="saving" class="custom-button button-blue flex-1" @click="nextQuestion">{{ L.next }}</button>
+            <button type="button" data-testid="custom-trainer-next" :disabled="saving" class="custom-button button-blue w-full sm:w-auto" @click="nextQuestion">{{ L.next }}</button>
             <button v-if="reviewMode || reviewAttempts.length" type="button" data-testid="custom-trainer-review" :disabled="saving" class="custom-button bg-neutral-700" @click="toggleReview">{{ reviewMode ? L.practice : L.review }}<span v-if="!reviewMode"> ({{ reviewAttempts.length }})</span></button>
           </div>
         </div>
@@ -235,8 +235,22 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.custom-trainer { min-width: 0; overflow-wrap: anywhere; }
-.custom-button { @apply rounded-lg px-3 py-2 text-sm font-semibold transition; min-height: 44px; white-space: normal; }
-.custom-button:disabled { cursor: default; }
-.custom-button:not(:disabled):hover { filter: brightness(1.13); }
+.custom-trainer {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.custom-button {
+  @apply rounded-lg px-3 py-2 text-sm font-semibold transition;
+  min-height: 44px;
+  white-space: normal;
+}
+.custom-button:disabled {
+  cursor: default;
+}
+.custom-button:not(:disabled):hover {
+  filter: brightness(1.13);
+}
+.custom-trainer {
+  font-variant-numeric: tabular-nums;
+}
 </style>

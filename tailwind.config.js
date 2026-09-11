@@ -13,6 +13,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        surface: Object.fromEntries([0, 1, 2, 3, 4].map((level) => [level, v(`bg-${level}`)])),
+        ink: { primary: v("text-primary"), secondary: v("text-secondary"), muted: v("text-muted") },
+        line: v("line"),
         white: v("white"),
         neutral: scale("neutral"),
         yellow: scale("yellow"),

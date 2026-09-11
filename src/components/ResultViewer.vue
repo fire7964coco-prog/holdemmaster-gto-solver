@@ -26,17 +26,12 @@
     />
   </div>
 
-  <div v-else class="flex flex-col h-full">
-    <CustomTrainerEntry
-      v-if="FEATURE_TRAINER"
-      :capture="captureForPractice"
-      :disabled="isLocked || lockStore.busy || isCapturing || !store.solverResultMeta || !results"
-    />
+  <div v-else class="result-viewer flex flex-col h-full min-w-0">
     <div
       v-if="lockStore.resultLockCount > 0"
       data-testid="nodelock-banner"
       role="status"
-      class="shrink-0 px-3 py-2 text-sm text-amber-200 bg-amber-950 border-b border-amber-700 break-words"
+      class="result-lock-banner shrink-0 px-3 py-2 text-sm text-amber-200 bg-amber-950 border-b border-amber-700 break-words"
     >
       {{ lockLabels.banner.replace('{count}', String(lockStore.resultLockCount)) }}
       <span data-testid="nodelock-exploitability-qualifier" class="block mt-1">
@@ -55,14 +50,21 @@
       @trigger-update="onUpdateSpot"
     />
 
-    <ResultLock
-      :selected-spot="selectedSpot"
-      :history="selectedHistory"
-      :path-label="selectedPathLabel"
-      :results="results"
-      :cards="cards"
-      :navigation-busy="isLocked || isCapturing"
-    />
+    <div class="result-toolbar">
+      <ResultLock
+        :selected-spot="selectedSpot"
+        :history="selectedHistory"
+        :path-label="selectedPathLabel"
+        :results="results"
+        :cards="cards"
+        :navigation-busy="isLocked || isCapturing"
+      />
+      <CustomTrainerEntry
+        v-if="FEATURE_TRAINER"
+        :capture="captureForPractice"
+        :disabled="isLocked || lockStore.busy || isCapturing || !store.solverResultMeta || !results"
+      />
+    </div>
 
     <ResultMiddle
       :display-mode="displayMode"
@@ -78,11 +80,11 @@
 
     <div
       v-if="store.navView === 'results' && selectedSpot && results"
-      class="flex flex-col md:flex-row flex-grow min-h-0 overflow-y-auto md:overflow-y-visible"
+      class="result-body flex flex-col md:flex-row flex-grow min-h-0 overflow-y-auto md:overflow-y-visible"
     >
       <template v-if="displayMode === 'basics'">
         <ResultBasics
-          class="shrink-0 h-[24rem] md:h-auto md:shrink md:[flex:11]"
+          class="result-matrix shrink-0 md:shrink md:[flex:11]"
           :cards="cards"
           :selected-spot="selectedSpot"
           :selected-chance="selectedChance"
@@ -96,7 +98,7 @@
         />
 
         <!-- GTO Wizard식 우측 스택: 액션 빈도 타일 → 핸드/드로우 분류 → 상세 표 -->
-        <div class="flex flex-col shrink-0 md:shrink md:[flex:9] md:min-h-0 min-w-0 my-2 mx-2 md:ml-0 gap-2">
+        <div class="result-details flex flex-col shrink-0 md:shrink md:[flex:9] md:min-h-0 min-w-0 gap-2">
           <ActionSummary
             :results="results"
             :selected-spot="selectedSpot"
@@ -136,7 +138,7 @@
 
       <template v-else-if="displayMode === 'compare'">
         <ResultBasics
-          class="shrink-0 h-[24rem] md:h-auto md:shrink md:[flex:5]"
+          class="result-matrix shrink-0 md:shrink md:[flex:5]"
           :cards="cards"
           :selected-spot="selectedSpot"
           :selected-chance="selectedChance"
@@ -156,7 +158,7 @@
         />
 
         <ResultBasics
-          class="shrink-0 h-[24rem] md:h-auto md:shrink md:[flex:5]"
+          class="result-matrix shrink-0 md:shrink md:[flex:5]"
           :cards="cards"
           :selected-spot="selectedSpot"
           :selected-chance="selectedChance"

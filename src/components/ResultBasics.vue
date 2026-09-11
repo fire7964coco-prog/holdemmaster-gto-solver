@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full">
+  <div class="result-basics w-full h-full">
     <table
       class="w-full h-full table-fixed select-none snug"
       :style="{

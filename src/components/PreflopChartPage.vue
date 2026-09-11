@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-6 max-w-5xl">
+  <div class="preflop-page pb-6 max-w-5xl min-w-0">
     <!--
       모드별로 다른 것(탭·격자·범례·통계·안내문·버튼·설명)은 전부 script의 `modes`
       서술자에 데이터로 들어 있다. 새 모드를 추가할 때 여기에 분기를 더하지 말고
@@ -9,6 +9,7 @@
       <button
         v-for="m in modes"
         :key="m.key"
+        class="preflop-mode"
         :class="modeStyle(m.key)"
         @click="mode = m.key"
       >
@@ -21,7 +22,7 @@
       data-testid="preflop-source-note"
     >{{ L.provenanceNote }}</p>
 
-    <p class="text-sm md:text-base text-neutral-400 mb-4">{{ active.intro }}</p>
+    <p class="text-sm text-ink-secondary mb-3">{{ active.intro }}</p>
 
     <!-- 포지션 탭(오픈) / 조합 탭(수비·vs 3벳) -->
     <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4">
@@ -29,9 +30,9 @@
         v-for="tab in active.tabs"
         :key="tab.key"
         :class="
-          'px-3 md:px-4 py-1.5 rounded-xl text-sm md:text-[0.9375rem] font-semibold transition-colors ' +
+          'px-3 py-1.5 rounded-md text-sm font-semibold transition-colors ' +
           (tab.active
-            ? 'bg-yellow-500 text-neutral-900'
+            ? 'bg-brand text-brand-ink'
             : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700')
         "
         @click="tab.select()"
@@ -40,7 +41,7 @@
         <span
           :class="
             'ml-1 text-xs font-normal ' +
-            (tab.active ? 'text-neutral-700' : 'text-neutral-500')
+            (tab.active ? 'text-brand-ink/75' : 'text-neutral-500')
           "
         >
           {{ $n(tab.percent) }}%
@@ -48,11 +49,11 @@
       </button>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-4 lg:gap-6">
+    <div class="flex flex-col lg:flex-row gap-4">
       <!-- 13×13 격자 -->
       <div class="shrink-0 w-full max-w-[26rem] lg:max-w-[28rem]">
         <table
-          class="w-full border-collapse shadow-md select-none"
+          class="w-full border-collapse select-none"
           data-testid="preflop-grid"
         >
           <tr v-for="row in 13" :key="row">
@@ -1784,3 +1785,16 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.preflop-page {
+  font-variant-numeric: tabular-nums;
+}
+.preflop-mode.bg-neutral-700 {
+  @apply bg-brand/10 text-brand;
+  box-shadow: inset 0 -2px 0 rgb(var(--c-brand));
+}
+.button-green {
+  @apply bg-brand text-brand-ink hover:bg-brand-hover active:bg-brand-hover disabled:bg-brand;
+}
+</style>

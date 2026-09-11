@@ -1,21 +1,21 @@
 <template>
-  <div class="md:min-w-[1080px]" :style="{ height: clientHeight + 'px' }">
+  <div class="solver-shell min-w-0" :style="{ height: clientHeight + 'px' }">
     <NavBar />
 
     <div
       v-show="store.navView === 'solver'"
-      class="flex flex-col md:flex-row w-full mx-auto max-w-screen-xl"
+      class="solver-workspace flex flex-col md:flex-row w-full mx-auto max-w-screen-xl"
       style="height: calc(100% - 2.5rem)"
     >
       <SideBar class="md:h-[calc(100%-2rem)]" />
 
       <div
-        class="flex-grow min-h-0 my-2 md:my-4 px-3 md:px-6 pt-2 overflow-y-auto md:h-[calc(100%-2rem)]"
+        class="solver-content flex-grow min-w-0 min-h-0 my-2 md:my-4 px-3 md:px-6 pt-2 overflow-y-auto md:h-[calc(100%-2rem)]"
       >
         <div class="flex">
           <div
             :class="
-              'mb-3 md:mb-5 pl-2 pr-3 pb-0.5 text-base md:text-lg font-bold border-l-8 border-b-2 ' +
+              'app-section-heading mb-3 md:mb-4 pl-2.5 pr-3 py-0.5 text-base font-semibold border-l-2 ' +
               'border-blue-600 rounded rounded-br-none'
             "
           >
@@ -65,10 +65,10 @@
 
     <div
       v-show="store.navView === 'results'"
-      class="overflow-y-auto"
+      class="results-workspace overflow-y-auto"
       style="height: calc(100% - 2.5rem)"
     >
-      <ResultViewer style="height: calc(max(100%, 720px - 2.5rem))" />
+      <ResultViewer class="result-workspace-content" />
     </div>
   </div>
 </template>

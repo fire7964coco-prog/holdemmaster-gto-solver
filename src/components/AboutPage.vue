@@ -1,24 +1,24 @@
 <template>
-  <div class="max-w-3xl">
+  <div class="app-home max-w-3xl">
     <!-- 히어로 -->
-    <div>
+    <div class="home-intro">
       <!-- 은색 스페이드 심볼 -->
       <div
-        class="silver-text text-6xl md:text-7xl leading-none select-none"
+        class="silver-text text-4xl leading-none select-none"
         aria-hidden="true"
       >
         ♠
       </div>
-      <div class="mt-4 text-sm font-semibold text-neutral-500 tracking-wide">
+      <div class="mt-2 text-xs font-semibold text-ink-secondary tracking-wide">
         {{ L.community }}
       </div>
       <h1
-        class="silver-text mt-1.5 text-4xl md:text-5xl font-bold tracking-tight leading-[1.15]"
+        class="mt-2 text-[1.75rem] md:text-[2rem] font-semibold tracking-tight leading-[1.2] text-ink-primary"
       >
         {{ L.heroTitle1 }}<br />
         {{ L.heroTitle2 }}
       </h1>
-      <p class="mt-4 text-base md:text-lg text-neutral-400 leading-relaxed">
+      <p class="mt-3 text-sm text-ink-secondary leading-relaxed">
         <!-- 아래에 «홈 화면에 설치» 버튼이 붙으므로 «설치 파일»이라고 못박는다 -->
         <!-- ⚠ 사이에 공백을 두지 않는다 — 모바일(390px)에서는 <br>이 숨겨져서
              그 공백만 남는다. 공백이 필요한 언어는 heroSub2 «앞»에 직접 넣는다
@@ -26,11 +26,11 @@
         {{ L.heroSub1 }}<br class="hidden md:block" />{{ L.heroSub2 }}
       </p>
 
-      <div class="flex flex-wrap items-center gap-3 mt-7">
+      <div class="flex flex-wrap items-center gap-2 mt-5">
         <!-- 교육예제·트레이너·오늘의문제는 트레이너 빌드 전용 (npokers에는 화면 자체가 없다) -->
         <button
           v-if="FEATURE_TRAINER"
-          class="px-5 py-2.5 rounded-full bg-white text-neutral-900 text-sm font-semibold transition hover:bg-neutral-200"
+          class="button-base button-blue"
           @click="store.sideView = 'presets'"
         >
           {{ L.ctaPresets }}
@@ -38,21 +38,21 @@
         <!-- npokers에서는 프리플랍 차트가 첫 번째(흰) 버튼을 물려받는다 -->
         <button
           v-else
-          class="px-5 py-2.5 rounded-full bg-white text-neutral-900 text-sm font-semibold transition hover:bg-neutral-200"
+          class="button-base button-blue"
           @click="store.sideView = 'preflop'"
         >
           {{ L.ctaPreflop }}
         </button>
         <button
           v-if="FEATURE_TRAINER"
-          class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5"
+          class="button-base bg-surface-3 text-ink-primary border border-neutral-700 hover:bg-surface-4"
           @click="store.sideView = 'trainer'"
         >
           {{ L.ctaTrainer }}
         </button>
         <button
           v-else
-          class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5"
+          class="button-base bg-surface-3 text-ink-primary border border-neutral-700 hover:bg-surface-4"
           @click="store.sideView = 'equity'"
         >
           {{ L.ctaEquity }}
@@ -60,7 +60,7 @@
         <!-- 매일 하나뿐이라 «오늘 건 풀었나»가 돌아올 이유가 된다 -->
         <button
           v-if="FEATURE_TRAINER"
-          class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5 flex items-center gap-2"
+          class="button-base bg-surface-3 text-ink-primary border border-neutral-700 hover:bg-surface-4 flex items-center gap-2"
           @click="store.sideView = 'trainer'"
         >
           {{ L.ctaDaily }}
@@ -68,7 +68,7 @@
           <span v-else class="text-brand">●</span>
         </button>
         <button
-          class="px-5 py-2.5 rounded-full text-sm font-semibold text-neutral-200 border border-white/15 transition hover:bg-white/5"
+          class="button-base bg-surface-3 text-ink-primary border border-neutral-700 hover:bg-surface-4"
           @click="store.sideView = 'guide'"
         >
           {{ L.ctaGuide }}
@@ -77,8 +77,8 @@
         <button
           v-if="canShowInstallButton()"
           :class="
-            'px-5 py-2.5 rounded-full text-sm font-semibold transition ' +
-            'text-brand-ink bg-brand hover:bg-brand-hover flex items-center gap-2'
+            'button-base bg-surface-3 border border-neutral-700 hover:bg-surface-4 ' +
+            'text-ink-primary flex items-center gap-2'
           "
           @click="requestInstall"
         >
@@ -99,9 +99,9 @@
 
     <!-- 특징 -->
     <!-- 특징: 헤어라인 나열 → 패널로 묶어 다른 화면(트레이너·사용법)과 결을 맞춤 -->
-    <div class="panel mt-10 md:mt-14">
+    <div class="panel mt-4">
       <!-- 본문 폭이 48rem이라 4열은 «데스크톱 솔 / 버 수준»처럼 어색하게 끊긴다 -->
-      <div class="grid grid-cols-2 gap-x-8 gap-y-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
         <div v-for="f in L.features" :key="f.title">
           <div class="text-sm font-semibold text-neutral-100">{{ f.title }}</div>
           <div class="mt-1 text-[0.8125rem] leading-relaxed text-neutral-500">
@@ -112,12 +112,12 @@
     </div>
 
     <!-- 시작 안내 -->
-    <div class="panel mt-6">
+    <div class="panel mt-4">
       <div class="section-title">{{ L.stepsTitle }}</div>
-      <div class="mt-3.5 space-y-3">
+      <div class="mt-3 space-y-2.5">
         <div v-for="(s, i) in L.steps" :key="i" class="flex items-baseline gap-3">
           <span
-            class="shrink-0 w-5 text-right text-sm font-semibold text-yellow-300/90 tabular-nums"
+            class="shrink-0 w-5 text-right text-sm font-semibold text-brand tabular-nums"
             >{{ i + 1 }}</span
           >
           <span class="text-sm text-neutral-300">{{ s }}</span>
@@ -142,7 +142,7 @@
     </div>
 
     <!-- 알아둘 점 + 크레딧 -->
-    <div class="mt-12 pt-5 border-t border-white/10 text-[0.8125rem] leading-relaxed text-neutral-500">
+    <div class="mt-6 pt-4 border-t border-white/10 text-[0.8125rem] leading-relaxed text-neutral-500">
       <p>
         {{ L.notes }}
       </p>
@@ -957,6 +957,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.home-intro {
+  @apply rounded-lg border border-neutral-700 bg-surface-1 p-4 md:p-5;
+}
+.app-home h1 {
+  text-wrap: balance;
+}
+.app-home p {
+  text-wrap: pretty;
+}
+
 /* 애플식 메탈릭 실버 — 위에서 아래로 밝은 은색 → 어두운 은색 */
 .silver-text {
   background-image: linear-gradient(

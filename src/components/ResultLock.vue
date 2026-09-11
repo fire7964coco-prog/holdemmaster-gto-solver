@@ -1,9 +1,9 @@
 <template>
-  <section v-if="visible" class="nodelock relative shrink-0 min-w-0 border-b border-neutral-700 bg-neutral-900 text-sm">
+  <section v-if="visible" class="nodelock relative shrink-0 min-w-0 text-sm">
     <button
       type="button"
       data-testid="nodelock-toggle"
-      class="flex w-full min-w-0 items-center gap-2 px-3 py-2 text-left font-semibold hover:bg-neutral-800"
+      class="nodelock-trigger flex min-w-0 max-w-full items-center gap-2 px-3 py-2 text-left font-semibold"
       :aria-expanded="opened"
       aria-controls="nodelock-content"
       @click="opened = !opened"
@@ -17,7 +17,7 @@
       v-show="opened"
       id="nodelock-content"
       data-testid="nodelock-panel"
-      class="absolute inset-x-0 top-full z-20 max-h-[45vh] min-w-0 space-y-3 overflow-y-auto overscroll-contain border-b border-neutral-700 bg-neutral-900 px-3 pb-3 pt-1 shadow-xl"
+      class="nodelock-popover absolute left-0 top-full min-w-0 space-y-3 overflow-y-auto overscroll-contain p-3"
     >
       <p v-if="lockStore.error" data-testid="nodelock-error" role="alert" class="break-words rounded bg-red-950 p-2 text-red-200">
         {{ L.engineError }}
@@ -33,7 +33,7 @@
         <p v-if="initialUnavailable && !currentLock" data-testid="nodelock-no-reach" class="break-words text-amber-200">{{ L.noReach }}</p>
         <fieldset :disabled="editorDisabled" class="min-w-0 space-y-2">
           <legend class="sr-only">{{ L.frequency }}</legend>
-          <label v-for="(action, index) in editableSpot.actions" :key="index" class="grid min-w-0 grid-cols-[minmax(0,1fr)_6rem] items-center gap-3">
+          <label v-for="(action, index) in editableSpot.actions" :key="index" class="nodelock-action grid min-w-0 grid-cols-[minmax(0,1fr)_6rem] items-center gap-3">
             <span class="min-w-0 break-all font-mono" :style="{ color: action.color }">{{ action.name }}:{{ action.amount }}</span>
             <span class="flex min-w-0 items-center gap-1">
               <input
@@ -52,18 +52,20 @@
             </span>
           </label>
         </fieldset>
+        <div class="nodelock-submit">
         <p data-testid="nodelock-sum" class="text-right tabular-nums text-neutral-300">Σ {{ totalText }}</p>
         <p v-if="!validDistribution" data-testid="nodelock-sum-error" role="status" class="break-words text-amber-200">{{ L.sumError }}</p>
         <button
           type="submit"
           data-testid="nodelock-apply"
           :disabled="editorDisabled || !validDistribution"
-          class="max-w-full whitespace-normal break-words rounded bg-amber-700 px-3 py-2 font-semibold text-white hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-50"
+          class="nodelock-apply max-w-full whitespace-normal break-words rounded bg-brand px-3 py-2 font-semibold text-brand-ink hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
         >{{ L.apply }}</button>
+        </div>
       </form>
 
-      <ul v-if="lockStore.locks.length" data-testid="nodelock-list" class="min-w-0 space-y-2 border-t border-neutral-700 pt-3">
-        <li v-for="(lock, index) in lockStore.locks" :key="JSON.stringify(lock.history)" class="min-w-0 rounded bg-neutral-800 p-2">
+      <ul v-if="lockStore.locks.length" data-testid="nodelock-list" class="nodelock-list min-w-0 border-t border-neutral-700 pt-3">
+        <li v-for="(lock, index) in lockStore.locks" :key="JSON.stringify(lock.history)" class="nodelock-saved min-w-0 rounded bg-neutral-800 p-2">
           <p class="break-all font-mono text-xs">{{ lock.label }}</p>
           <p class="mt-1 break-words text-xs text-neutral-300">{{ distributionText(lock) }}</p>
           <button
@@ -293,3 +295,98 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.nodelock-trigger {
+  min-height: 34px;
+  border: 1px solid rgb(var(--c-brand) / 70%);
+  border-radius: 6px;
+  color: rgb(var(--c-brand-hover));
+  background: rgb(var(--c-brand) / 8%);
+  line-height: 1.4;
+}
+.nodelock-trigger:hover,
+.nodelock-trigger[aria-expanded="true"] {
+  background: rgb(var(--c-brand) / 16%);
+  border-color: rgb(var(--c-brand));
+}
+.nodelock-trigger > span {
+  line-height: 1.4;
+}
+.nodelock-popover {
+  z-index: 60;
+  width: min(36rem, 100%);
+  max-height: min(620px, 65vh);
+  margin-top: 4px;
+  background: rgb(var(--c-bg-2));
+  border: 1px solid rgb(var(--c-brand) / 45%);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 35%);
+  font-size: 13px;
+}
+.nodelock-action {
+  padding: 6px 8px;
+  background: rgb(var(--c-bg-1));
+  border: 1px solid rgb(var(--c-line));
+  border-radius: 5px;
+}
+.nodelock-action > span:first-child {
+  font-size: 12px;
+}
+.nodelock-submit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 2px;
+}
+.nodelock-submit [role="status"] {
+  flex-basis: 100%;
+}
+.nodelock-apply {
+  line-height: 1.4;
+  min-height: 34px;
+}
+.nodelock-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.nodelock-saved {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 10px;
+  flex: 1 1 220px;
+  border: 1px solid rgb(var(--c-line));
+  background: rgb(var(--c-bg-1));
+}
+.nodelock-saved > p {
+  margin: 0;
+}
+.nodelock-saved > p:nth-child(2) {
+  grid-column: 1;
+}
+.nodelock-saved > button {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  margin: 0;
+  font-size: 12px;
+}
+[data-testid="nodelock-comparison"] {
+  font-variant-numeric: tabular-nums;
+}
+[data-testid="nodelock-comparison"] th,
+[data-testid="nodelock-comparison"] td {
+  line-height: 1.4;
+}
+@media (max-width: 767px) {
+  .nodelock-popover {
+    max-height: 65vh;
+  }
+  .nodelock-action {
+    gap: 8px;
+  }
+}
+</style>

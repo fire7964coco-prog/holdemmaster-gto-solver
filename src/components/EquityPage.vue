@@ -1,13 +1,13 @@
 <template>
-  <div class="pb-6 max-w-5xl">
-    <p class="text-sm md:text-base text-neutral-400 mb-4">{{ L.intro }}</p>
+  <div class="equity-page pb-6 max-w-5xl min-w-0">
+    <p class="text-sm text-ink-secondary mb-3">{{ L.intro }}</p>
 
-    <div class="flex flex-col lg:flex-row gap-4 lg:gap-6">
+    <div class="flex flex-col lg:flex-row gap-4">
       <!-- 좌: 입력 (① 내 핸드 → ② 상대 → ③ 보드 → 카드판 → ④ 계산) -->
       <div class="shrink-0 w-full lg:w-[27rem]">
         <!-- ① 내 핸드 -->
         <div class="panel mb-3">
-          <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
             <div class="section-title">{{ L.heroTitle }}</div>
             <button
               :class="targetChip('hero')"
@@ -17,7 +17,7 @@
               {{ L.fill }}
             </button>
           </div>
-          <div class="panel-inner flex items-center gap-2">
+          <div class="panel-inner flex flex-wrap items-center gap-2">
             <CardSlot
               v-for="i in 2"
               :key="i"
@@ -31,9 +31,9 @@
 
         <!-- ② 상대 -->
         <div class="panel mb-3">
-          <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
             <div class="section-title">{{ L.villainTitle }}</div>
-            <div class="flex gap-1.5">
+            <div class="flex flex-wrap gap-1.5">
               <button :class="modeChip('hand')" @click="setVillainMode('hand')">
                 {{ L.modeHand }}
               </button>
@@ -43,7 +43,7 @@
             </div>
           </div>
 
-          <div v-if="villainMode === 'hand'" class="panel-inner flex items-center gap-2">
+          <div v-if="villainMode === 'hand'" class="panel-inner flex flex-wrap items-center gap-2">
             <CardSlot
               v-for="i in 2"
               :key="i"
@@ -85,7 +85,7 @@
 
         <!-- ③ 보드 -->
         <div class="panel mb-3">
-          <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
             <div class="section-title">{{ L.boardTitle }}</div>
             <button
               :class="targetChip('board')"
@@ -170,7 +170,7 @@
           </div>
 
           <div v-else>
-            <div class="flex items-end gap-3 mb-1">
+            <div class="flex flex-wrap items-end gap-3 mb-1">
               <div class="text-4xl font-bold text-yellow-400 tabular-nums">
                 <span data-testid="equity-result">{{ $n(result.equity.toFixed(1)) }}</span
                 >%
@@ -1235,3 +1235,12 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.equity-page {
+  font-variant-numeric: tabular-nums;
+}
+.equity-page button.bg-yellow-500 {
+  @apply bg-brand text-brand-ink;
+}
+</style>

@@ -1,9 +1,9 @@
 <template>
-  <div class="min-w-0 shrink-0 px-3 py-2">
+  <div class="custom-trainer-entry min-w-0 shrink-0">
     <button
       type="button"
       data-testid="result-custom-train"
-      class="button-base button-blue whitespace-normal text-left text-sm"
+      class="button-base button-blue practice-button whitespace-normal text-left text-sm"
       :disabled="disabled || busy"
       :aria-busy="busy"
       @click="start"

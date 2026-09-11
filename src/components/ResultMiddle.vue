@@ -1,13 +1,13 @@
 <template>
-  <div class="flex shrink-0 h-12 border-y border-neutral-600 overflow-x-auto">
+  <div class="result-middle flex shrink-0 border-y border-neutral-600 overflow-x-auto">
     <button
       v-for="mode in ['basics', 'graphs', 'compare'] as const"
       :key="mode"
       :class="
-        'flex shrink-0 w-16 md:w-[9%] h-full items-center justify-center font-semibold text-sm md:text-lg transition ' +
+        'result-mode flex shrink-0 items-center justify-center font-semibold text-sm transition ' +
         (chanceMode === ''
           ? displayMode === mode
-            ? 'bg-neutral-700 text-blue-300 underline'
+            ? 'result-mode-active bg-neutral-700 text-brand'
             : 'hover:bg-neutral-700'
           : displayMode === mode
           ? 'bg-red-950 underline'
@@ -19,8 +19,8 @@
     </button>
     <button
       :class="
-        'flex shrink-0 w-16 md:w-[9%] h-full items-center justify-center font-semibold text-sm md:text-lg transition enabled:hover:bg-neutral-700 ' +
-        (displayMode === 'chance' ? 'bg-neutral-700 text-blue-300 underline' : '')
+        'result-mode flex shrink-0 items-center justify-center font-semibold text-sm transition enabled:hover:bg-neutral-700 ' +
+        (displayMode === 'chance' ? 'result-mode-active bg-neutral-700 text-brand' : '')
       "
       :disabled="chanceMode === ''"
       @click="updateDisplayMode('chance')"
@@ -29,7 +29,7 @@
     </button>
 
     <div
-      class="flex ml-auto shrink-0 h-full px-4 items-center justify-start gap-2 snug"
+      class="result-options flex ml-auto shrink-0 items-center justify-start gap-2 snug"
     >
       <div
         v-if="['basics', 'graphs'].includes(displayMode)"

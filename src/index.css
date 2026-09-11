@@ -10,6 +10,17 @@
  * 도입 시점 값은 Tailwind 3.3.3 기본 팔레트와 정확히 같다 (값 무변경 증명: 도구/e2e/t39-token-diff.js).
  */
 :root {
+  /* D1: chrome has its own surfaces; strategy/chart palette below stays intact. */
+  --c-bg-0: 18 19 21;
+  --c-bg-1: 24 25 27;
+  --c-bg-2: 31 32 35;
+  --c-bg-3: 40 41 44;
+  --c-bg-4: 53 54 58;
+  --c-text-primary: 241 241 239;
+  --c-text-secondary: 188 190 194;
+  --c-text-muted: 150 153 158;
+  --c-line: 61 63 67;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --c-white: 255 255 255;
 
   /* 홀덤마스터 브랜드 앰버 (bg-brand·text-brand-ink 등으로 사용) */
@@ -71,9 +82,26 @@
 }
 
 body {
-  @apply bg-neutral-900 text-neutral-200;
-  font-family: system-ui, "Noto Sans", "Open Sans", Roboto, sans-serif;
+  background: rgb(var(--c-bg-0));
+  color: rgb(var(--c-text-primary));
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  color-scheme: dark;
 }
+
+html:lang(ja) { --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", Meiryo, sans-serif; }
+html:lang(zh-Hans) { --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+html:lang(zh-Hant) { --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif; }
+html:lang(hi) { --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Nirmala UI", "Mangal", sans-serif; }
+
+button, input, select, textarea { font: inherit; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid rgb(var(--c-brand));
+  outline-offset: 2px;
+}
+input[type="number"], table, .tabular-nums { font-variant-numeric: tabular-nums; }
+* { scrollbar-width: thin; scrollbar-color: rgb(var(--c-bg-4)) rgb(var(--c-bg-1)); }
 
 input[type="text"],
 input[type="number"],
@@ -81,13 +109,19 @@ select,
 textarea {
   @apply bg-neutral-800 border border-neutral-600 text-neutral-100;
   @apply placeholder-neutral-500;
+  background-color: rgb(var(--c-bg-1));
+  border-color: rgb(var(--c-line));
+  color: rgb(var(--c-text-primary));
 }
 
 input[type="radio"],
 input[type="checkbox"],
 input[type="range"] {
-  accent-color: rgb(var(--c-blue-500));
+  accent-color: rgb(var(--c-brand));
 }
+
+/* Tailwind forms paints custom check/radio controls with currentColor. */
+input[type="radio"], input[type="checkbox"] { color: rgb(var(--c-brand)); }
 
 option {
   @apply bg-neutral-800 text-neutral-100;
@@ -100,32 +134,44 @@ option {
  *      ③ 핵심 대상은 «안쪽 패널»로 한 번 더 감싸 시선을 모을 것
  */
 .panel {
-  @apply rounded-xl border border-neutral-700 bg-neutral-800 p-4 md:p-5;
+  @apply rounded-lg border p-4;
+  border-color: rgb(var(--c-line));
+  background: rgb(var(--c-bg-2));
 }
 /** 패널 안에서 한 단계 더 들어간 영역 — 보드·핸드처럼 시선을 모을 대상 */
 .panel-inner {
-  @apply rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2.5;
+  @apply rounded-md border px-3 py-2.5;
+  border-color: rgb(var(--c-line));
+  background: rgb(var(--c-bg-1));
 }
-/** 섹션 제목 — 왼쪽 파란 막대 (사이드바·결과 화면과 같은 강조색) */
+/** Section accents use the existing brand; data series keep their own colors. */
 .section-title {
   @apply flex items-center gap-2 text-base font-bold text-neutral-100;
-  @apply border-l-4 border-blue-600 pl-2.5;
+  @apply border-l-2 border-brand pl-2.5;
 }
 .stat-chip {
   @apply inline-flex items-baseline gap-1 rounded-lg border border-neutral-700 bg-neutral-800;
   @apply px-2.5 py-1 text-xs text-neutral-500;
+  color: rgb(var(--c-text-muted));
+  background: rgb(var(--c-bg-1));
+  border-color: rgb(var(--c-line));
 }
 .stat-chip b {
   @apply text-sm font-semibold tabular-nums text-neutral-200;
 }
 
 .button-base {
-  @apply rounded-lg shadow px-3.5 py-1.5 text-white text-sm font-semibold;
+  @apply rounded-lg px-3.5 py-1.5 text-white text-sm font-semibold;
   @apply transition-colors disabled:opacity-40;
+  max-width: 100%;
+  line-height: 1.4;
+  min-height: 34px;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .button-blue {
-  @apply bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-600;
+  @apply bg-brand text-brand-ink hover:bg-brand-hover active:bg-brand disabled:bg-brand;
 }
 
 .button-red {
@@ -142,6 +188,122 @@ input.input-error {
 
 .text-shadow {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* D1 application chrome. Legacy utility hooks remain available to e2e callers. */
+.app-nav { background: rgb(var(--c-bg-1)); border-color: rgb(var(--c-line)); }
+.app-nav .app-nav-active { background: rgb(var(--c-bg-3)); box-shadow: inset 0 -2px rgb(var(--c-brand)); }
+.app-nav .text-lg { font-size: 1rem; }
+.app-section-heading.border-blue-600 { border-color: rgb(var(--c-brand)); color: rgb(var(--c-text-primary)); }
+.solver-content { font-size: 14px; }
+.solver-content > .flex:first-child { min-width: 0; }
+.app-section-heading { overflow-wrap: anywhere; }
+.result-workspace-content { height: 100%; }
+.result-viewer { font-size: 13px; }
+.result-nav { height: 124px; padding: 6px 8px; background: rgb(var(--c-bg-0)); gap: 6px; }
+.result-node { min-width: 112px; flex-shrink: 0; background: rgb(var(--c-bg-2)); border-radius: 6px; }
+.result-node.border-brand { box-shadow: inset 0 2px rgb(var(--c-brand)); }
+.result-node button { min-height: 22px; }
+.result-toolbar {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  flex-shrink: 0;
+  padding: 5px 8px;
+  background: rgb(var(--c-bg-1));
+  border-top: 1px solid rgb(var(--c-line));
+}
+.result-toolbar .nodelock { position: static; max-width: 100%; }
+.result-toolbar .custom-trainer-entry { max-width: 100%; }
+.practice-button.button-blue {
+  color: rgb(var(--c-text-primary));
+  background: rgb(var(--c-bg-3));
+  border: 1px solid rgb(var(--c-line));
+  font-size: 13px;
+}
+.practice-button.button-blue:hover { background: rgb(var(--c-bg-4)); }
+.result-lock-banner { font-size: 12px; line-height: 1.4; }
+.result-lock-banner span { line-height: 1.4; }
+.result-middle {
+  flex-wrap: wrap;
+  align-items: stretch;
+  min-height: 44px;
+  overflow: visible;
+  background: rgb(var(--c-bg-1));
+  border-color: rgb(var(--c-line));
+}
+.result-mode { padding: 8px 16px; min-height: 42px; color: rgb(var(--c-text-secondary)); }
+.result-mode:disabled { display: none; }
+.result-mode-active { background: rgb(var(--c-bg-2)); color: rgb(var(--c-brand)); box-shadow: inset 0 -2px rgb(var(--c-brand)); }
+.result-options { padding: 3px 8px; max-width: 100%; flex-wrap: wrap; }
+.result-options > div { min-width: 0; height: auto; }
+.result-options .text-sm, .result-table-toolbar .text-sm { font-size: 11px; color: rgb(var(--c-text-muted)); }
+.result-options select, .result-table-toolbar select {
+  width: auto;
+  max-width: 100%;
+  padding: 1px 22px 1px 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 4px;
+  box-shadow: none;
+  background-color: rgb(var(--c-bg-3));
+}
+.result-body { gap: 8px; padding: 8px; }
+.result-matrix { min-width: 0; }
+.result-basics table { font-variant-numeric: tabular-nums; }
+.result-details { margin: 0; }
+.hand-breakdown { background: rgb(var(--c-bg-2)); border-color: rgb(var(--c-line)); font-size: 12px; }
+.hand-breakdown .breakdown-row { margin-top: 5px; }
+.hand-breakdown .breakdown-row > .flex { gap: 6px; line-height: 1.3; }
+.hand-breakdown .breakdown-row > .flex > span { line-height: 1.3; }
+.hand-breakdown .breakdown-row > .flex > span:last-child { flex-shrink: 0; }
+.action-summary { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+.action-summary-label { overflow-wrap: anywhere; line-height: 1.3; }
+.action-summary .text-lg { font-size: 18px; line-height: 1.2; }
+.action-summary > div > .flex { gap: 6px; }
+.result-table { border: 1px solid rgb(var(--c-line)); border-radius: 6px; background: rgb(var(--c-bg-1)); }
+.result-table-toolbar { height: auto; min-height: 42px; flex-wrap: wrap; align-items: center; border-color: rgb(var(--c-line)); }
+.result-table-toolbar > div:first-child { padding: 4px 10px; font-size: 14px; }
+.result-table-toolbar > .snug { gap: 8px; padding: 3px 8px; min-width: 0; max-width: 100%; height: auto; flex-wrap: wrap; }
+.result-table-toolbar > .snug > div { height: auto; min-width: 0; }
+.result-table-scroll { min-height: 0; overflow: auto; }
+.result-table-scroll table { font-size: 12px; }
+.result-table-scroll td, .result-table-scroll th { font-variant-numeric: tabular-nums; }
+
+@media (min-width: 768px) {
+  /* Short windows still need room below the two sticky summary header rows. */
+  .result-details { overflow-y: auto; overscroll-behavior-y: contain; }
+  .result-details > .result-table { min-height: 13rem; }
+}
+
+@media (max-width: 767px) {
+  .result-workspace-content { height: auto; min-height: 100%; }
+  .result-nav { height: 112px; }
+  .result-node { min-width: 104px; }
+  .result-toolbar { padding: 6px; gap: 6px; }
+  .nodelock-trigger, .practice-button.button-blue { font-size: 12px; }
+  .result-middle { display: flex; }
+  .result-mode { flex: 1; padding: 6px 8px; min-height: 36px; }
+  .result-options { width: 100%; margin-left: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; padding: 5px 8px; border-top: 1px solid rgb(var(--c-line)); }
+  .result-options > div { align-items: stretch; }
+  .result-options select { width: 100%; min-width: 0; min-height: 28px; }
+  .result-body { flex: none; overflow: visible; padding: 0; gap: 10px; }
+  .result-matrix { height: auto; aspect-ratio: 1; flex: none; }
+  .result-basics table { --pair-font-size: clamp(10px, 3.2vw, 14px) !important; --value-font-size: clamp(9px, 2.8vw, 12px) !important; }
+  .result-basics .text-shadow { text-shadow: 0 1px 1px rgb(0 0 0 / 60%); }
+  .result-basics td > div:nth-child(2) { left: 1px; }
+  .result-details { margin: 0 6px 10px; }
+  .action-summary { grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); }
+  .result-table { flex: none; height: 360px; min-height: 0; }
+  .result-table-scroll { overscroll-behavior-x: contain; }
+  .result-table-toolbar > .snug { gap: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; }
 }
 
 .spinner {

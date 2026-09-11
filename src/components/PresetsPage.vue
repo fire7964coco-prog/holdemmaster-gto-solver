@@ -6,20 +6,20 @@
     @load="loadFromPreview"
   />
 
-  <div v-else class="max-w-3xl">
+  <div v-else class="presets-page max-w-4xl">
     <div
-      class="flex pl-2.5 pr-3 py-1 text-cyan-300 bg-cyan-950 border-2 border-cyan-700 rounded-md"
+      class="flex pl-3 pr-3 py-2 text-ink-secondary bg-surface-2 border border-neutral-700 rounded-lg text-sm"
     >
       <InformationCircleIcon class="inline w-5 h-5 mt-[0.1875rem] mr-1.5 shrink-0" />
       <div>
-        <span class="font-semibold text-emerald-300">{{ L.infoBtn1 }}</span
+        <span class="font-semibold text-brand">{{ L.infoBtn1 }}</span
         >{{ L.infoText1
         }}<span class="font-semibold">{{ L.infoBtn2 }}</span
         >{{ L.infoText2 }}
       </div>
     </div>
 
-    <div v-for="group in grouped" :key="group.category" class="mt-6">
+    <div v-for="group in grouped" :key="group.category" class="mt-4">
       <!-- 일본어 분류명은 전각이라 같은 글자 크기면 넘친다. 문구를 줄이는 대신
            그 언어에서만 한 단계 작게 쓴다 — 언어마다 화면이 달라도 된다 (사용자 결정 2026-08-21) -->
       <div :class="[isJa ? 'text-sm' : 'text-base', 'font-bold text-neutral-200']">
@@ -36,13 +36,13 @@
       <div
         v-for="p in group.items"
         :key="p.id"
-        class="mt-2 px-4 py-3 rounded-lg bg-neutral-800 border border-neutral-700"
+        class="mt-2 px-3 py-3 rounded-lg bg-neutral-800 border border-neutral-700 preset-card"
       >
         <!--
           모바일에서는 세로로 쌓는다. 버튼 3개가 shrink-0이라 좁은 화면에서
           제목이 최소 폭까지 눌려 «드/라/이/A/하/이/보/드»처럼 한 글자씩 세로로 깨졌다.
         -->
-        <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
+        <div class="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-3">
           <div class="flex items-center gap-3 min-w-0">
             <span class="font-semibold">{{ presetTitleOf(p) }}</span>
             <span class="font-bold tracking-wide shrink-0">
@@ -55,12 +55,12 @@
               </span>
             </span>
           </div>
-          <span class="md:ml-auto flex items-center gap-1.5 shrink-0">
+          <span class="lg:ml-auto flex flex-wrap items-center gap-1.5 shrink-0">
             <a
               v-if="articleUrl(p)"
               :href="articleUrl(p)"
               target="_blank"
-              class="px-2 text-sm text-blue-400 hover:underline"
+              class="px-2 text-sm text-brand hover:underline"
             >
               {{ L.articleLink }}
             </a>
@@ -429,3 +429,13 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.preset-card {
+  @apply bg-surface-2;
+}
+
+.button-green {
+  @apply bg-brand text-brand-ink hover:bg-brand-hover active:bg-brand-hover disabled:bg-brand;
+}
+</style>
