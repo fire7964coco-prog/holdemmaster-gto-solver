@@ -97,32 +97,29 @@ import { ComputerDesktopIcon, ChartBarIcon } from "@heroicons/vue/24/solid";
 import { mainSiteUrl } from "../outbound";
 import { BRAND_NAME, IS_NPOKERS } from "../brand";
 import { i18n, setLocale } from "../i18n";
+import { navResults } from "../nav-labels";
 
 const M = {
   ko: {
     solver: "솔버",
-    results: "결과",
     community: "홀덤마스터",
     communitySuffix: " 커뮤니티",
     langSwitchLabel: "언어 선택",
   },
   en: {
     solver: "Solver",
-    results: "Results",
     community: "HoldemMaster",
     communitySuffix: " Community",
     langSwitchLabel: "Select language",
   },
   ja: {
     solver: "ソルバー",
-    results: "結果",
     community: "HoldemMaster",
     communitySuffix: " コミュニティ",
     langSwitchLabel: "言語を選択",
   },
   es: {
     solver: "Solver",
-    results: "Resultados",
     community: "Comunidad",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
     communitySuffix: " HoldemMaster",
@@ -130,7 +127,6 @@ const M = {
   },
   pt: {
     solver: "Solver",
-    results: "Resultados",
     community: "Comunidade",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
     communitySuffix: " HoldemMaster",
@@ -138,7 +134,6 @@ const M = {
   },
   de: {
     solver: "Solver",
-    results: "Ergebnisse",
     community: "HoldemMaster",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
     communitySuffix: " Community",
@@ -147,7 +142,6 @@ const M = {
   zh: {
     // 「求解器」= solver의 중국어 정착역 (dpskill·中扑网 실사용 — 리서치 §2)
     solver: "求解器",
-    results: "结果",
     community: "HoldemMaster",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일).
     //   중국어 조판에서도 한자와 라틴문자 사이는 띄우는 것이 표준이다
@@ -158,7 +152,6 @@ const M = {
     // 「解算器」= solver의 대만 정착역 (본체 브리프 §7-C. 본체 번체 포스팅 42편에서 解算器 25회 ·
     // 求解器 0회 — 간체의 「求解器」와 «일부러» 다르다)
     solver: "解算器",
-    results: "結果",
     community: "HoldemMaster",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
     //   「社群」= 대만·홍콩 표기. 본체 /zh-hant 페이지도 「德州撲克大師社群」이다(社區 0회)
@@ -168,7 +161,6 @@ const M = {
   fr: {
     // «solver»는 프랑스 포커 매체의 지배적 표기다 (le solver — 리서치 §1-1. solveur는 안 쓴다)
     solver: "Solver",
-    results: "Résultats",
     community: "Communauté",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
     communitySuffix: " HoldemMaster",
@@ -177,7 +169,6 @@ const M = {
   id: {
     // «solver»는 본체 id 코퍼스가 영어 그대로 쓴다(26회 — 리서치 §1-1)
     solver: "Solver",
-    results: "Hasil",
     community: "Komunitas",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
     communitySuffix: " HoldemMaster",
@@ -185,7 +176,6 @@ const M = {
   },
   hi: {
     solver: "सॉल्वर",
-    results: "परिणाम",
     community: "HoldemMaster",
     communitySuffix: " कम्युनिटी",
     langSwitchLabel: "भाषा चुनें",
@@ -193,7 +183,6 @@ const M = {
   ms: {
     // «solver»는 말레이시아 GTO 매체도 영어 그대로 쓴다 (리서치 §1-3)
     solver: "Solver",
-    results: "Hasil",
     community: "Komuniti",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
     communitySuffix: " HoldemMaster",
@@ -207,7 +196,8 @@ export default defineComponent({
     ChartBarIcon,
   },
   setup() {
-    const L = computed(() => M[i18n.locale]);
+    // 왼쪽 탭 이름은 nav-labels.ts가 정본 — 계산 완료 뒤 RunSolver의 이동 버튼과 글자가 같아야 한다
+    const L = computed(() => ({ ...M[i18n.locale], results: navResults[i18n.locale] }));
     const onLocaleChange = (event: Event) => {
       const value = (event.target as HTMLSelectElement).value;
       if (

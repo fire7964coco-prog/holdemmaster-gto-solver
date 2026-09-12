@@ -1671,4 +1671,16 @@ input.input-error {
 .button-overrides {
   @apply px-0;
 }
+
+/* «삭제»는 되돌릴 수 없는 하나뿐인데 채움 빨강이라 패널에서 «저장»보다 먼저 눈에 들어왔다
+   (2026-09-12 눈검수). 채움 → 테두리로 무게를 낮추되, 빨강 글자·테두리로 «위험한 동작»이라는
+   뜻은 남긴다. 이 파일의 삭제만 바꾼다 — TreeEditor·EquityPage의 button-red는 건드리지 않는다. */
+.button-red.button-overrides {
+  @apply bg-transparent text-red-400 hover:bg-red-950 active:bg-red-900;
+  box-shadow: inset 0 0 0 1px rgb(153 27 27);
+}
+.button-red.button-overrides:disabled {
+  @apply bg-transparent text-neutral-400;
+  box-shadow: inset 0 0 0 1px rgb(var(--c-line));
+}
 </style>

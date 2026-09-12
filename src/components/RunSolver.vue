@@ -98,11 +98,7 @@
         />
         <span class="inline-block w-[6.75rem] ml-1">{{ L.fp32Label }}</span>
         {{
-          L.ramNeeded(
-            memoryUsage >= 1023.5 * 1024 * 1024
-              ? $n((memoryUsage / (1024 * 1024 * 1024)).toFixed(2)) + UNITS.gb
-              : (memoryUsage / (1024 * 1024)).toFixed(0) + UNITS.mb
-          )
+          L.ramNeeded(formatMemory(memoryUsage))
         }}
         {{ memoryUsage > maxMemoryUsage ? L.limitExceeded : "" }}
       </label>
@@ -119,12 +115,7 @@
         />
         <span class="inline-block w-[6.75rem] ml-1">{{ L.int16Label }}</span>
         {{
-          L.ramNeeded(
-            memoryUsageCompressed >= 1023.5 * 1024 * 1024
-              ? $n((memoryUsageCompressed / (1024 * 1024 * 1024)).toFixed(2)) +
-                  UNITS.gb
-              : (memoryUsageCompressed / (1024 * 1024)).toFixed(0) + UNITS.mb
-          )
+          L.ramNeeded(formatMemory(memoryUsageCompressed))
         }}
         {{ memoryUsageCompressed > maxMemoryUsage ? L.limitExceeded : "" }}
       </label>
@@ -257,6 +248,19 @@
       </span>
       <br />
       {{ timeText }}
+
+      <!-- 계산이 끝나도 결과로 가는 길이 상단 탭밖에 없었다 — 처음 쓰는 사람은 여기서 멈춘다.
+           글자는 상단 탭과 **같은 문자열**을 쓴다(nav-labels.ts) — 어디로 가는 버튼인지 바로 알게.
+           표시 조건은 상단 «결과» 탭의 활성 조건과 같다(store.isSolverFinished). -->
+      <div v-if="store.isSolverFinished" class="mt-4">
+        <button
+          class="button-base button-blue button-primary"
+          data-testid="goto-results"
+          @click="store.navView = 'results'"
+        >
+          {{ navResultsLabel }} →
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -267,6 +271,7 @@ import { init, handler, onWorkerFailure, terminate } from "../global-worker";
 import { clearSolverRetry, reportSolverError } from "../errors";
 import { encodeSpotUrl, InvalidSpotLinesError } from "../spot-share";
 import { i18n, pick, localizeNumber } from "../i18n";
+import { navResults } from "../nav-labels";
 import { captureSnapshot, NodeLockError, sameHistory, useNodeLockStore } from "../node-lock";
 import type { NodeLock } from "../node-lock";
 import { nodeLockLabels } from "../node-lock-labels";
@@ -1679,12 +1684,28 @@ export default defineComponent({
     const UNITS = computed(() =>
       i18n.locale === "fr" ? { gb: "\u00a0Go", mb: "\u00a0Mo" } : { gb: " GB", mb: " MB" }
     );
+
+    // 1 MB 미만을 toFixed(0)으로 자르면 «RAM 0 MB 필요»가 된다 — 리버 단일 노드 같은
+    // 작은 트리에서 실제로 그랬다(2026-09-12 실측: 두 정밀도 모드 다 0 MB).
+    // «고장»으로 읽히므로 작을수록 자릿수를 늘린다. 소수점은 언어별 구분자를 따른다.
+    const formatMemory = (bytes: number) => {
+      if (bytes >= 1023.5 * 1024 * 1024) {
+        return localizeNumber((bytes / (1024 * 1024 * 1024)).toFixed(2)) + UNITS.value.gb;
+      }
+      const mb = bytes / (1024 * 1024);
+      const digits = mb >= 10 ? 0 : mb >= 1 ? 1 : 2;
+      return localizeNumber(mb.toFixed(digits)) + UNITS.value.mb;
+    };
+
+    const navResultsLabel = computed(() => navResults[i18n.locale]);
     return {
       store,
       lockStore,
       lockLabels,
       L,
       UNITS,
+      formatMemory,
+      navResultsLabel,
       numThreads,
       isSingleThread,
       targetExploitability,

@@ -6,7 +6,7 @@
       <button :aria-pressed="!isCustom" :class="{ 'menu-group-active': !isCustom }" @click="openGroup(false)">{{ L.exploreLabel }}</button>
       <button :aria-pressed="isCustom" :class="{ 'menu-group-active': isCustom }" @click="openGroup(true)">{{ L.customLabel }}{{ L.customLabelSuffix }}</button>
     </div>
-    <div class="side-bar-group md:mb-1" :class="{ 'mobile-group-active': !isCustom }">
+    <div class="side-bar-group md:mb-1" :class="{ 'mobile-group-active': !isCustom }" @scroll.passive="onMenuScroll">
     <div class="side-bar-label hidden md:block">
       {{ L.exploreLabel }}<span class="hidden md:inline">{{ L.exploreLabelSuffix }}</span>
     </div>
@@ -59,7 +59,7 @@
 
     </div>
 
-    <div class="side-bar-group" :class="{ 'mobile-group-active': isCustom }">
+    <div class="side-bar-group" :class="{ 'mobile-group-active': isCustom }" @scroll.passive="onMenuScroll">
     <div class="side-bar-label hidden md:block">
       {{ L.customLabel }}<span class="hidden md:inline">{{ L.customLabelSuffix }}</span>
     </div>
@@ -480,13 +480,23 @@ export default defineComponent({
         const item = document.querySelector<HTMLElement>(".mobile-group-active .side-bar-item.text-blue-300");
         const group = item?.parentElement;
         if (item && group) {
-          const itemBounds = item.getBoundingClientRect();
-          const groupBounds = group.getBoundingClientRect();
-          if (itemBounds.left < groupBounds.left) group.scrollLeft += itemBounds.left - groupBounds.left;
-          else if (itemBounds.right > groupBounds.right) group.scrollLeft += itemBounds.right - groupBounds.right;
+          // 가운데로 붙인다 — 예전엔 «보일 만큼만» 움직여 활성 항목이 언제나 가장자리에
+          // 딱 붙고, 옆 항목은 마지막 한 글자만 남았다(«지 ✓») — 스크롤줄이 아니라
+          // 글자가 깨진 것처럼 보였다. 양쪽을 고르게 보여 주면 «더 있다»가 읽힌다.
+          const target = item.offsetLeft - (group.clientWidth - item.offsetWidth) / 2;
+          group.scrollLeft = Math.max(0, Math.min(target, group.scrollWidth - group.clientWidth));
+          syncMenuFade(group);
         }
       }
     }, { immediate: true });
+    // 양끝 페이드는 «더 스크롤할 게 있다»를 뜻한다 — 끝까지 갔으면 그쪽은 끄다.
+    const syncMenuFade = (group: HTMLElement) => {
+      const max = group.scrollWidth - group.clientWidth;
+      group.classList.toggle("fade-start", group.scrollLeft > 4);
+      group.classList.toggle("fade-end", group.scrollLeft < max - 4);
+    };
+    const onMenuScroll = (event: Event) => syncMenuFade(event.currentTarget as HTMLElement);
+
     const openGroup = (custom: boolean) => {
       store.sideView = custom ? lastCustom.value : lastExplore.value;
     };
@@ -508,6 +518,7 @@ export default defineComponent({
       readySteps,
       nextStep,
       openGroup,
+      onMenuScroll,
       itemStyle: (view: SideView) => {
         return (
           "side-bar-item " +
@@ -556,7 +567,16 @@ export default defineComponent({
 .step-next { color: rgb(var(--c-brand)); }
 .step-next::after { content: ""; display: inline-block; width: 4px; height: 4px; margin: 0 0 2px 3px; border-radius: 50%; background: currentColor; }
 @media (max-width: 767px) {
-  .side-bar-group.mobile-group-active { display: flex; min-width: 0; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+  .side-bar-group.mobile-group-active {
+    display: flex; min-width: 0; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain;
+    /* 페이드 폭은 스크롤 위치로 켜진다(fade-start / fade-end) —
+       끝에 닿은 쪽까지 흐리면 «더 있는 줄»처럼 보여 거짓말이 된다. */
+    --fade-l: 0px; --fade-r: 0px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+  }
+  .side-bar-group.fade-start { --fade-l: 16px; }
+  .side-bar-group.fade-end { --fade-r: 16px; }
   .side-bar-item { min-height: 40px; margin-top: 2px; margin-bottom: 3px; }
 }
 /* 패널 도입으로 항목 폭이 18px 줄어 EN «Equity Calculator Win %»가 두 줄로 접혔다
