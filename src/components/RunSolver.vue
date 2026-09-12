@@ -1087,7 +1087,7 @@ const checkConfig = (
 
   if (config.addAllInThreshold < 0) {
     return pick(
-      "올인 추가 기준값이 잘못되었습니다",
+      "올인 추가 임계값이 잘못되었습니다",
       "Invalid add all-in threshold",
       "オールイン追加のしきい値が無効です",
       "Umbral para agregar all-in inválido",
@@ -1101,7 +1101,7 @@ const checkConfig = (
 
   if (config.forceAllInThreshold < 0) {
     return pick(
-      "강제 올인 기준값이 잘못되었습니다",
+      "강제 올인 임계값이 잘못되었습니다",
       "Invalid force all-in threshold",
       "強制オールインのしきい値が無効です",
       "Umbral de all-in forzado inválido",
@@ -1115,7 +1115,7 @@ const checkConfig = (
 
   if (config.mergingThreshold < 0) {
     return pick(
-      "병합 기준값이 잘못되었습니다",
+      "병합 임계값이 잘못되었습니다",
       "Invalid merging threshold",
       "マージのしきい値が無効です",
       "Umbral de fusión inválido",

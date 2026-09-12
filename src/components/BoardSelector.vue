@@ -22,6 +22,7 @@
   <div class="flex flex-wrap mt-4 mx-1 gap-3">
     <input
       id="board-text-input"
+      data-testid="board-input"
       v-model="boardText"
       type="text"
       name="board"
@@ -29,6 +30,7 @@
       :spellcheck="false"
       :aria-label="L.placeholder"
       :aria-invalid="boardTextError"
+      :aria-describedby="boardTextError ? 'board-input-error' : undefined"
       :placeholder="L.placeholder"
       class="w-40 px-2 py-1 rounded-lg text-sm"
       :class="{ 'input-error': boardTextError }"
@@ -42,6 +44,10 @@
       {{ L.randomFlop }}
     </button>
   </div>
+
+  <p v-if="boardTextError" id="board-input-error" data-testid="board-input-error" class="mt-2 mx-1 text-red-400 text-sm" role="alert">
+    {{ L.inputError }}
+  </p>
 
   <div
     v-if="
@@ -67,6 +73,7 @@ import BoardSelectorCard from "./BoardSelectorCard.vue";
 
 const M = {
   ko: {
+    inputError: "읽지 못했습니다. 카드는 AsKd7c 또는 As Kd 7c 처럼 3~5장을 적어 주세요. 이전 보드는 그대로 둡니다.",
     placeholder: "예: AsKd7c",
     clear: "초기화",
     randomFlop: "랜덤 플랍",
@@ -75,6 +82,7 @@ const M = {
       `편집된 트리는 보드 카드 ${n}장을 전제로 합니다.`,
   },
   en: {
+    inputError: "Could not read the cards. Enter 3–5 cards, such as AsKd7c or As Kd 7c. Your previous board is kept.",
     placeholder: "e.g., AsKd7c",
     clear: "Clear",
     randomFlop: "Random Flop",
@@ -83,6 +91,7 @@ const M = {
       `The edited tree assumes a ${n}-card board.`,
   },
   ja: {
+    inputError: "読み取れませんでした。AsKd7c または As Kd 7c のように3〜5枚を入力してください。前のボードは変わりません。",
     placeholder: "例: AsKd7c",
     clear: "クリア",
     randomFlop: "ランダムフロップ",
@@ -91,6 +100,7 @@ const M = {
       `編集されたツリーはボードカード${n}枚を前提としています。`,
   },
   es: {
+    inputError: "No se pudieron leer las cartas. Escribe entre 3 y 5 cartas, como AsKd7c o As Kd 7c. Se conserva el board anterior.",
     placeholder: "ej. AsKd7c",
     clear: "Borrar",
     randomFlop: "Flop aleatorio",
@@ -99,6 +109,7 @@ const M = {
       `El árbol editado asume un board de ${n} carta${n === 1 ? "" : "s"}.`,
   },
   pt: {
+    inputError: "Não foi possível ler as cartas. Digite de 3 a 5 cartas, como AsKd7c ou As Kd 7c. O board anterior é mantido.",
     placeholder: "ex.: AsKd7c",
     clear: "Limpar",
     randomFlop: "Flop aleatório",
@@ -107,6 +118,7 @@ const M = {
       `A árvore editada pressupõe um board de ${n} carta${n === 1 ? "" : "s"}.`,
   },
   de: {
+    inputError: "Die Karten konnten nicht gelesen werden. Gib 3–5 Karten ein, etwa AsKd7c oder As Kd 7c. Dein bisheriges Board bleibt erhalten.",
     placeholder: "z. B. AsKd7c",
     clear: "Leeren",
     randomFlop: "Zufälliger Flop",
@@ -116,6 +128,7 @@ const M = {
       `Der bearbeitete Spielbaum setzt ein Board mit ${n} Karte${n === 1 ? "" : "n"} voraus.`,
   },
   zh: {
+    inputError: "无法读取。请输入 3–5 张牌，例如 AsKd7c 或 As Kd 7c。原来的公共牌保持不变。",
     placeholder: "例：AsKd7c",
     // clearBoard()는 config.board를 «통째로» 비운다 — 「重置」(초기값으로)가 아니라 「清空」이 맞다
     // (독일어 검수에서 얻은 교훈: 라벨을 쓰기 전에 그 함수가 진짜 뭘 하는지 코드를 볼 것)
@@ -126,6 +139,7 @@ const M = {
     warnBody: (n: number) => `编辑过的决策树以 ${n} 张公共牌为前提。`,
   },
   "zh-hant": {
+    inputError: "無法讀取。請輸入 3–5 張牌，例如 AsKd7c 或 As Kd 7c。原本的公共牌保持不變。",
     placeholder: "例：AsKd7c",
     // clearBoard()는 config.board를 «통째로» 비운다 — 「重設」(초기값으로)이 아니라 「清空」이 맞다
     clear: "清空",
@@ -135,6 +149,7 @@ const M = {
     warnBody: (n: number) => `編輯過的決策樹以 ${n} 張公共牌為前提。`,
   },
   fr: {
+    inputError: "Impossible de lire les cartes. Saisis 3 à 5 cartes, comme AsKd7c ou As Kd 7c. Le board précédent est conservé.",
     placeholder: "ex. AsKd7c",
     clear: "Effacer",
     randomFlop: "Flop aléatoire",
@@ -144,6 +159,7 @@ const M = {
       `L'arbre édité suppose un board de ${n} carte${n === 1 ? "" : "s"}.`,
   },
   id: {
+    inputError: "Kartu tidak dapat dibaca. Masukkan 3–5 kartu, seperti AsKd7c atau As Kd 7c. Board sebelumnya tetap dipertahankan.",
     placeholder: "mis. AsKd7c",
     clear: "Bersihkan",
     randomFlop: "Flop acak",
@@ -152,6 +168,7 @@ const M = {
     warnBody: (n: number) => `Tree yang diedit mengasumsikan board ${n} kartu.`,
   },
   ms: {
+    inputError: "Kad tidak dapat dibaca. Masukkan 3–5 kad, seperti AsKd7c atau As Kd 7c. Board sebelumnya dikekalkan.",
     placeholder: "cth. AsKd7c",
     clear: "Kosongkan",
     randomFlop: "Flop rawak",
@@ -160,6 +177,7 @@ const M = {
     warnBody: (n: number) => `Tree yang disunting mengandaikan board dengan ${n} kad.`,
   },
   hi: {
+    inputError: "कार्ड पढ़े नहीं जा सके। AsKd7c या As Kd 7c की तरह 3–5 कार्ड लिखें। पिछला Board वैसा ही रहेगा।",
     placeholder: "जैसे, AsKd7c",
     clear: "साफ़ करें",
     randomFlop: "रैंडम Flop",

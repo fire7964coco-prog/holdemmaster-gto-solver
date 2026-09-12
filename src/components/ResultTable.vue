@@ -524,6 +524,7 @@ const M = {
           Bet: "벳",
           Raise: "레이즈",
           "All-in": "올인",
+          Allin: "올인",
         } as Record<string, string>
       )[name] ?? name,
   },
@@ -549,7 +550,8 @@ const M = {
     noReport: (chanceType: string) =>
       `No ${chanceType === "turn" ? "turn" : "river"} report available`,
     noResults: "No results",
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   ja: {
     summary: "サマリー",
@@ -582,6 +584,7 @@ const M = {
           Bet: "ベット",
           Raise: "レイズ",
           "All-in": "オールイン",
+          Allin: "オールイン",
         } as Record<string, string>
       )[name] ?? name,
   },
@@ -607,7 +610,8 @@ const M = {
     noReport: (chanceType: string) =>
       `No hay reporte de ${chanceType === "turn" ? "turn" : "river"}`,
     noResults: "Sin resultados",
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   pt: {
     summary: "Resumo",
@@ -631,7 +635,8 @@ const M = {
     noReport: (chanceType: string) =>
       `Não há relatório de ${chanceType === "turn" ? "turn" : "river"}`,
     noResults: "Sem resultados",
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   de: {
     summary: "Übersicht",
@@ -655,7 +660,8 @@ const M = {
     noReport: (chanceType: string) =>
       `Kein ${chanceType === "turn" ? "Turn" : "River"}-Report vorhanden`,
     noResults: "Keine Ergebnisse vorhanden",
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   zh: {
     summary: "汇总",
@@ -691,6 +697,7 @@ const M = {
           Bet: "下注",
           Raise: "加注",
           "All-in": "全下",
+          Allin: "全下",
         } as Record<string, string>
       )[name] ?? name,
   },
@@ -730,6 +737,7 @@ const M = {
           Bet: "下注",
           Raise: "加注",
           "All-in": "全下",
+          Allin: "全下",
         } as Record<string, string>
       )[name] ?? name,
   },
@@ -757,7 +765,8 @@ const M = {
       `Aucun rapport ${chanceType === "turn" ? "turn" : "river"} disponible`,
     noResults: "Aucun résultat",
     // 액션명은 영어 유지 — trainer.ts actionName과 같은 결정 (리서치 §3)
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   id: {
     summary: "Ringkasan",
@@ -784,7 +793,8 @@ const M = {
       `Laporan ${chanceType === "turn" ? "turn" : "river"} tidak tersedia`,
     noResults: "Tidak ada hasil",
     // 액션명은 영어 유지 — 인니 코퍼스 check/call/raise/fold 영어 (인니어화_리서치 §2)
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   ms: {
     summary: "Ringkasan",
@@ -812,7 +822,8 @@ const M = {
       `Tiada laporan ${chanceType === "turn" ? "turn" : "river"}`,
     noResults: "Tiada hasil",
     // 액션명은 영어 유지 — 말레이 코퍼스도 check/call/raise/fold 영어 (리서치 §2)
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   hi: {
     summary: "सारांश",
@@ -835,7 +846,8 @@ const M = {
     combos: "Combos",
     noReport: (chanceType: string) => `${chanceType === "turn" ? "Turn" : "River"} रिपोर्ट उपलब्ध नहीं है`,
     noResults: "कोई परिणाम नहीं",
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
 } as const;
 

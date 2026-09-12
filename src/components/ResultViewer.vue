@@ -1,14 +1,20 @@
 <template>
   <div v-if="!store.isSolverFinished">
-    <div class="flex w-full max-w-screen-xl mx-auto px-4 py-6 items-center">
+    <div v-if="!store.hasSolverRun && !store.isSolverRunning && !store.isFinalizing" class="result-empty w-full max-w-screen-xl mx-auto px-4 py-6">
+      <p class="whitespace-pre-line leading-relaxed" data-testid="result-empty-message">{{ L.notRun }}</p>
+      <div class="flex flex-wrap gap-2 mt-4">
+        <button v-if="FEATURE_TRAINER" class="button-base button-blue" data-testid="result-empty-presets" @click="openSetup('presets')">{{ L.viewPresets }}</button>
+        <!-- npokers(독립 빌드)에는 교육 예제 메뉴가 없다 — 본진으로 나가는 외부 링크는 정해진 결정이 아니라 버튼을 두지 않는다(W1 Fable 리뷰) -->
+        <button class="button-base button-blue" data-testid="result-empty-range" @click="openSetup('oop-range')">{{ L.startRange }}</button>
+      </div>
+    </div>
+    <div v-else class="flex w-full max-w-screen-xl mx-auto px-4 py-6 items-center">
       <span
         v-if="store.isSolverRunning || store.isFinalizing"
         class="spinner inline-block mr-3"
       ></span>
       {{
-        !store.hasSolverRun
-          ? L.notRun
-          : store.isSolverRunning
+        store.isSolverRunning
           ? L.running
           : store.isFinalizing
           ? L.finalizing
@@ -232,73 +238,97 @@ import ActionSummary from "./ActionSummary.vue";
 
 const M = {
   ko: {
-    notRun: "솔버가 실행되지 않았습니다.",
+    startRange: "① 레인지부터 설정하기",
+    viewPresets: "교육 예제 보기",
+    notRun: "아직 직접 계산한 결과가 없습니다.\n교육 예제의 결과는 「교육 예제」 메뉴에서 바로 볼 수 있고,\n내 스팟을 계산하려면 ①~⑤를 채운 뒤 「계산 실행」을 누르세요.",
     running: "솔버 실행 중...",
     finalizing: "마무리 중...",
     paused: "솔버가 일시정지되었습니다.",
   },
   en: {
-    notRun: "Solver not run yet.",
+    startRange: "① Start with ranges",
+    viewPresets: "View Study Spots",
+    notRun: "You haven’t calculated your own results yet.\nYou can view example results directly in the “Study Spots” menu.\nTo calculate your own spot, complete ①~⑤, then press “Run Solver”.",
     running: "Running the solver…",
     finalizing: "Finalizing…",
     paused: "Solver paused.",
   },
   ja: {
-    notRun: "ソルバーはまだ実行されていません。",
+    startRange: "① レンジから設定",
+    viewPresets: "学習スポットを見る",
+    notRun: "自分で計算した結果はまだありません。\n例題の結果は「学習スポット」ですぐに見られます。\n自分のスポットは①~⑤を入力し、「ソルバーを実行」を押してください。",
     running: "ソルバーを実行中…",
     finalizing: "仕上げ処理中…",
     paused: "ソルバーは一時停止中です。",
   },
   es: {
-    notRun: "El solver aún no se ha ejecutado.",
+    startRange: "① Empezar por los rangos",
+    viewPresets: "Ver spots de estudio",
+    notRun: "Aún no has calculado tus propios resultados.\nPuedes ver los resultados de los ejemplos directamente en el menú «Spots de estudio».\nPara calcular tu spot, completa ①~⑤ y pulsa «Calcular».",
     running: "Ejecutando el solver…",
     finalizing: "Finalizando…",
     paused: "El solver está en pausa.",
   },
   pt: {
-    notRun: "O solver ainda não foi executado.",
+    startRange: "① Começar pelos ranges",
+    viewPresets: "Ver spots de estudo",
+    notRun: "Você ainda não calculou seus próprios resultados.\nVocê pode ver os resultados dos exemplos diretamente no menu “Spots de estudo”.\nPara calcular seu spot, preencha ①~⑤ e clique em “Calcular”.",
     running: "Executando o solver…",
     finalizing: "Finalizando…",
     paused: "O solver está pausado.",
   },
   de: {
-    notRun: "Der Solver wurde noch nicht gestartet.",
+    startRange: "① Mit Ranges beginnen",
+    viewPresets: "Lernspots ansehen",
+    notRun: "Du hast noch keine eigenen Ergebnisse berechnet.\nDie Ergebnisse der Beispiele findest du direkt im Menü „Lernspots“.\nUm deinen eigenen Spot zu berechnen, fülle ①~⑤ aus und klicke auf „Berechnen“.",
     running: "Der Solver rechnet…",
     finalizing: "Wird abgeschlossen…",
     paused: "Der Solver ist pausiert.",
   },
   zh: {
-    notRun: "求解器还没有运行。",
+    startRange: "① 从范围开始设置",
+    viewPresets: "查看教学案例",
+    notRun: "你还没有自己计算的结果。\n示例结果可以直接在“教学案例”菜单查看。\n要计算自己的牌局，请填好 ①~⑤，再点击“运行求解器”。",
     running: "求解器计算中…",
     finalizing: "即将完成…",
     paused: "求解器已暂停。",
   },
   "zh-hant": {
-    notRun: "解算器還沒有執行。",
+    startRange: "① 從範圍開始設定",
+    viewPresets: "查看教學案例",
+    notRun: "你還沒有自己計算的結果。\n範例結果可以直接在“教學案例”選單查看。\n要計算自己的牌局，請填好 ①~⑤，再按“執行解算器”。",
     running: "解算器計算中…",
     finalizing: "即將完成…",
     paused: "解算器已暫停。",
   },
   fr: {
-    notRun: "Le solver n'a pas encore été lancé.",
+    startRange: "① Commencer par les ranges",
+    viewPresets: "Voir les spots d’étude",
+    notRun: "Tu n’as pas encore calculé tes propres résultats.\nTu peux consulter ceux des exemples directement dans le menu « Spots d’étude ».\nPour calculer ton spot, remplis ①~⑤, puis clique sur « Calculer ».",
     running: "Calcul en cours…",
     finalizing: "Finalisation…",
     paused: "Solver en pause.",
   },
   id: {
-    notRun: "Solver belum dijalankan.",
+    startRange: "① Mulai dari range",
+    viewPresets: "Lihat spot belajar",
+    notRun: "Kamu belum menghitung hasil untuk spot sendiri.\nHasil contoh bisa langsung dilihat di menu “Spot belajar”.\nUntuk menghitung spot sendiri, lengkapi ①~⑤ lalu tekan “Hitung”.",
     running: "Menghitung…",
     finalizing: "Menyelesaikan…",
     paused: "Solver dijeda.",
   },
   ms: {
-    notRun: "Solver belum dijalankan.",
+    startRange: "① Mula dengan range",
+    viewPresets: "Lihat spot belajar",
+    notRun: "Anda belum mengira hasil untuk spot sendiri.\nHasil contoh boleh dilihat terus dalam menu “Spot belajar”.\nUntuk mengira spot sendiri, lengkapkan ①~⑤ kemudian tekan “Kira”.",
     running: "Sedang mengira…",
     finalizing: "Sedang menyelesaikan…",
     paused: "Solver dijeda.",
   },
   hi: {
-    notRun: "अभी तक सॉल्वर नहीं चलाया गया है।",
+    startRange: "① Range से सेटिंग शुरू करें",
+    viewPresets: "अभ्यास स्पॉट देखें",
+    notRun: "आपने अभी अपने spot की गणना नहीं की है।\nउदाहरणों के परिणाम सीधे “अभ्यास स्पॉट” मेन्यू में देख सकते हैं।\nअपने spot की गणना के लिए ①~⑤ भरें, फिर “गणना करें” दबाएँ।",
     running: "सॉल्वर चल रहा है…",
     finalizing: "अंतिम चरण पूरा हो रहा है…",
     paused: "सॉल्वर रुका हुआ है।",
@@ -332,6 +362,10 @@ export default defineComponent({
     });
     const savedConfig = useSavedConfigStore();
     const L = computed(() => M[i18n.locale]);
+    const openSetup = (view: "presets" | "oop-range") => {
+      store.navView = "solver";
+      store.sideView = view;
+    };
     const resultNav = ref<{
       playPath: (path: number[]) => Promise<boolean>;
       navigationPath: string[];
@@ -582,6 +616,7 @@ export default defineComponent({
       lockLabels,
       lockExploitabilityText,
       L,
+      openSetup,
       resultNav,
       pathDiv,
       isHandlerUpdated,

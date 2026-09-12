@@ -338,6 +338,7 @@ const M = {
           Bet: "벳",
           Raise: "레이즈",
           "All-in": "올인",
+          Allin: "올인",
         } as Record<string, string>
       )[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
@@ -357,7 +358,8 @@ const M = {
           end: "End",
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% pot)`,
   },
@@ -384,6 +386,7 @@ const M = {
           Bet: "ベット",
           Raise: "レイズ",
           "All-in": "オールイン",
+          Allin: "オールイン",
         } as Record<string, string>
       )[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
@@ -403,7 +406,8 @@ const M = {
           end: "Fin",
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% del bote)`,
   },
@@ -421,7 +425,8 @@ const M = {
           end: "Fim",
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% do pote)`,
   },
@@ -439,7 +444,8 @@ const M = {
           end: "Ende",
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% vom Pot)`,
   },
@@ -469,6 +475,7 @@ const M = {
           Bet: "下注",
           Raise: "加注",
           "All-in": "全下",
+          Allin: "全下",
         } as Record<string, string>
       )[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
@@ -499,6 +506,7 @@ const M = {
           Bet: "下注",
           Raise: "加注",
           "All-in": "全下",
+          Allin: "全下",
         } as Record<string, string>
       )[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
@@ -519,7 +527,8 @@ const M = {
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
     // 액션명은 영어 유지 — trainer.ts actionName과 같은 결정 (리서치 §3)
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
     // ⚠ % 앞 공백은 U+202F — trainer.ts trainerActionLabel의 «(N % du pot)»와 글자까지 같다
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent} % du pot)`,
@@ -539,7 +548,8 @@ const M = {
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
     // 액션명은 영어 유지 — 인니 코퍼스 check/call/raise/fold 영어 (인니어화_리서치 §2)
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
     // ⚠ trainer.ts trainerActionLabel의 기본 분기 «(N% pot)»와 글자까지 같다 (id 전용 분기 없음)
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% pot)`,
@@ -559,7 +569,8 @@ const M = {
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
     // 액션명은 영어 유지 — 말레이 코퍼스도 check/call/raise/fold 영어 (리서치 §2)
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
     // ⚠ trainer.ts trainerActionLabel의 기본 분기 «(N% pot)»와 글자까지 같다 (ms 전용 분기 없음)
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% pot)`,
@@ -578,7 +589,8 @@ const M = {
           end: "समाप्त",
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) => `${label} ${formatted} (${percent}% pot)`,
   },
 } as const;

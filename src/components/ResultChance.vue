@@ -123,6 +123,7 @@ const M = {
           Bet: "벳",
           Raise: "레이즈",
           "All-in": "올인",
+          Allin: "올인",
         } as Record<string, string>
       )[name] ?? name,
   },
@@ -130,7 +131,8 @@ const M = {
     strategyCombos: "Strategy (Combos)",
     strategy: "Strategy",
     equity: "Equity",
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   ja: {
     strategyCombos: "戦略 (コンボ)",
@@ -145,6 +147,7 @@ const M = {
           Bet: "ベット",
           Raise: "レイズ",
           "All-in": "オールイン",
+          Allin: "オールイン",
         } as Record<string, string>
       )[name] ?? name,
   },
@@ -152,20 +155,23 @@ const M = {
     strategyCombos: "Estrategia (combos)",
     strategy: "Estrategia",
     equity: "Equity",
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   pt: {
     strategyCombos: "Estratégia (combos)",
     strategy: "Estratégia",
     equity: "Equity",
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   de: {
     strategyCombos: "Strategie (Combos)",
     strategy: "Strategie",
     equity: "Equity",
     // 액션명은 독일에서도 영어 그대로 (본체 브리프 §1 — der Check/der Call/der Raise)
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   zh: {
     // 중국어 조판은 전각 괄호（）— 반각 ()를 쓰면 앞뒤가 붙어 보인다 (본체 브리프 §6)
@@ -185,6 +191,7 @@ const M = {
           Bet: "下注",
           Raise: "加注",
           "All-in": "全下",
+          Allin: "全下",
         } as Record<string, string>
       )[name] ?? name,
   },
@@ -204,6 +211,7 @@ const M = {
           Bet: "下注",
           Raise: "加注",
           "All-in": "全下",
+          Allin: "全下",
         } as Record<string, string>
       )[name] ?? name,
   },
@@ -212,27 +220,31 @@ const M = {
     strategy: "Stratégie",
     equity: "Equity",
     // 액션명은 영어 유지 — trainer.ts actionName과 같은 결정 (리서치 §3)
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   id: {
     strategyCombos: "Strategi (combo)",
     strategy: "Strategi",
     equity: "Equity",
     // 액션명은 영어 유지 — 인니 코퍼스 check/call/raise/fold 영어
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   ms: {
     strategyCombos: "Strategi (combo)",
     strategy: "Strategi",
     equity: "Equity",
     // 액션명은 영어 유지 — 말레이 코퍼스도 check/call/raise/fold 영어
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
   hi: {
     strategyCombos: "रणनीति (Combos)",
     strategy: "रणनीति",
     equity: "Equity",
-    action: (name: string): string => name,
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
 } as const;
 

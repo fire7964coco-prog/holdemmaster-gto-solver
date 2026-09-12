@@ -8,7 +8,7 @@
   >
     <!-- No saved items -->
     <div v-if="data.length === 0" class="item-toplevel">
-      <span class="inline-block px-1">{{
+      <span :data-testid="storeName === 'ranges' ? 'db-empty-ranges' : 'db-empty-configs'" class="inline-block px-1 whitespace-normal break-words">{{
         storeName === "ranges" ? L.noSavedRanges : L.noSavedConfigs
       }}</span>
     </div>
@@ -492,8 +492,8 @@ import { XMarkIcon } from "@heroicons/vue/20/solid";
 
 const M = {
   ko: {
-    noSavedRanges: "(저장된 레인지 없음)",
-    noSavedConfigs: "(저장된 설정 없음)",
+    noSavedRanges: "저장한 레인지가 아직 없습니다. 「저장」을 누르고 이름을 적으면 지금 레인지가 여기 남고, 다음에 「불러오기」로 꺼내 쓸 수 있습니다.",
+    noSavedConfigs: "저장한 설정이 아직 없습니다. 「저장」을 누르고 이름을 적으면 지금 설정이 여기 남고, 다음에 「불러오기」로 꺼내 쓸 수 있습니다.",
     emptyGroup: "(빈 그룹)",
     errorReload: "문제가 발생했습니다. 페이지를 새로고침해 주세요.",
     load: "불러오기",
@@ -507,8 +507,8 @@ const M = {
     importFailed: "오류: 가져오기에 실패했습니다.",
   },
   en: {
-    noSavedRanges: "(No saved ranges)",
-    noSavedConfigs: "(No saved configurations)",
+    noSavedRanges: "You have no saved ranges yet. Click “Save” and enter a name to keep your current range here. Use “Load” to bring it back next time.",
+    noSavedConfigs: "You have no saved configurations yet. Click “Save” and enter a name to keep your current configuration here. Use “Load” to bring it back next time.",
     emptyGroup: "(Empty group)",
     errorReload: "An error occurred. Please reload the page.",
     load: "Load",
@@ -522,8 +522,8 @@ const M = {
     importFailed: "Error: Import failed.",
   },
   ja: {
-    noSavedRanges: "(保存されたレンジはありません)",
-    noSavedConfigs: "(保存された設定はありません)",
+    noSavedRanges: "保存したレンジはまだありません。「保存」を押して名前を付けると今のレンジがここに残り、次回は「読み込み」で使えます。",
+    noSavedConfigs: "保存した設定はまだありません。「保存」を押して名前を付けると今の設定がここに残り、次回は「読み込み」で使えます。",
     emptyGroup: "(空のグループ)",
     errorReload: "問題が発生しました。ページを再読み込みしてください。",
     load: "読み込み",
@@ -537,8 +537,8 @@ const M = {
     importFailed: "エラー: インポートに失敗しました。",
   },
   es: {
-    noSavedRanges: "(No hay rangos guardados)",
-    noSavedConfigs: "(No hay configuraciones guardadas)",
+    noSavedRanges: "Aún no tienes rangos guardados. Pulsa “Guardar” y escribe un nombre para conservar aquí el rango actual. La próxima vez puedes recuperarlo con “Cargar”.",
+    noSavedConfigs: "Aún no tienes configuraciones guardadas. Pulsa “Guardar” y escribe un nombre para conservar aquí la configuración actual. La próxima vez puedes recuperarla con “Cargar”.",
     emptyGroup: "(Grupo vacío)",
     errorReload: "Ocurrió un error. Recarga la página.",
     load: "Cargar",
@@ -552,8 +552,8 @@ const M = {
     importFailed: "Error: la importación falló.",
   },
   pt: {
-    noSavedRanges: "(Nenhum range salvo)",
-    noSavedConfigs: "(Nenhuma configuração salva)",
+    noSavedRanges: "Você ainda não tem ranges salvos. Clique em “Salvar” e dê um nome para manter o range atual aqui. Da próxima vez, use “Carregar” para recuperá-lo.",
+    noSavedConfigs: "Você ainda não tem configurações salvas. Clique em “Salvar” e dê um nome para manter a configuração atual aqui. Da próxima vez, use “Carregar” para recuperá-la.",
     emptyGroup: "(Grupo vazio)",
     errorReload: "Ocorreu um erro. Recarregue a página.",
     load: "Carregar",
@@ -567,8 +567,8 @@ const M = {
     importFailed: "Erro: a importação falhou.",
   },
   de: {
-    noSavedRanges: "(Keine gespeicherten Ranges)",
-    noSavedConfigs: "(Keine gespeicherten Einstellungen)",
+    noSavedRanges: "Du hast noch keine Ranges gespeichert. Klicke auf „Speichern“ und gib einen Namen ein, um die aktuelle Range hier abzulegen. Mit „Laden“ kannst du sie später wieder verwenden.",
+    noSavedConfigs: "Du hast noch keine Einstellungen gespeichert. Klicke auf „Speichern“ und gib einen Namen ein, um die aktuellen Einstellungen hier abzulegen. Mit „Laden“ kannst du sie später wieder verwenden.",
     emptyGroup: "(Leere Gruppe)",
     errorReload: "Es ist ein Fehler aufgetreten. Lade die Seite neu.",
     load: "Laden",
@@ -582,8 +582,8 @@ const M = {
     importFailed: "Fehler: Der Import ist fehlgeschlagen.",
   },
   zh: {
-    noSavedRanges: "（没有已保存的范围）",
-    noSavedConfigs: "（没有已保存的设置）",
+    noSavedRanges: "还没有保存的范围。点击“保存”并输入名称，当前范围就会保存在这里，下次可用“加载”再次使用。",
+    noSavedConfigs: "还没有保存的设置。点击“保存”并输入名称，当前设置就会保存在这里，下次可用“加载”再次使用。",
     emptyGroup: "（空分组）",
     errorReload: "出错了，请刷新页面。",
     load: "加载",
@@ -600,8 +600,8 @@ const M = {
   //   加载→載入 · 保存→儲存 · 设置→設定 · 分组→群組 · 添加→新增 · 导入/导出→匯入/匯出 ·
   //   重命名→重新命名 · 刷新→重新整理. 글자만 번체로 바꾸면 «대륙 말투»가 그대로 남는다
   "zh-hant": {
-    noSavedRanges: "（沒有已儲存的範圍）",
-    noSavedConfigs: "（沒有已儲存的設定）",
+    noSavedRanges: "還沒有儲存的範圍。按下「儲存」並輸入名稱，目前的範圍就會留在這裡，下次可用「載入」再次使用。",
+    noSavedConfigs: "還沒有儲存的設定。按下「儲存」並輸入名稱，目前的設定就會留在這裡，下次可用「載入」再次使用。",
     emptyGroup: "（空群組）",
     errorReload: "發生錯誤，請重新整理頁面。",
     load: "載入",
@@ -615,8 +615,8 @@ const M = {
     importFailed: "錯誤：匯入失敗。",
   },
   fr: {
-    noSavedRanges: "(Aucune range enregistrée)",
-    noSavedConfigs: "(Aucune configuration enregistrée)",
+    noSavedRanges: "Tu n'as pas encore de range enregistrée. Clique sur « Enregistrer » et saisis un nom pour garder ta range actuelle ici. Tu pourras la retrouver avec « Charger » la prochaine fois.",
+    noSavedConfigs: "Tu n'as pas encore de configuration enregistrée. Clique sur « Enregistrer » et saisis un nom pour garder ta configuration actuelle ici. Tu pourras la retrouver avec « Charger » la prochaine fois.",
     emptyGroup: "(Groupe vide)",
     errorReload: "Une erreur est survenue. Recharge la page.",
     load: "Charger",
@@ -630,8 +630,8 @@ const M = {
     importFailed: "Erreur : échec de l'import.",
   },
   id: {
-    noSavedRanges: "(Belum ada range tersimpan)",
-    noSavedConfigs: "(Belum ada konfigurasi tersimpan)",
+    noSavedRanges: "Anda belum menyimpan range. Tekan “Simpan” lalu beri nama untuk menyimpan range saat ini di sini. Gunakan “Muat” untuk memakainya lagi nanti.",
+    noSavedConfigs: "Anda belum menyimpan konfigurasi. Tekan “Simpan” lalu beri nama untuk menyimpan konfigurasi saat ini di sini. Gunakan “Muat” untuk memakainya lagi nanti.",
     emptyGroup: "(Grup kosong)",
     errorReload: "Terjadi kesalahan. Muat ulang halaman.",
     load: "Muat",
@@ -645,8 +645,8 @@ const M = {
     importFailed: "Error: impor gagal.",
   },
   ms: {
-    noSavedRanges: "(Tiada range disimpan)",
-    noSavedConfigs: "(Tiada tetapan disimpan)",
+    noSavedRanges: "Anda belum menyimpan range. Tekan “Simpan” dan namakan untuk menyimpan range semasa di sini. Gunakan “Muat” untuk menggunakannya semula nanti.",
+    noSavedConfigs: "Anda belum menyimpan tetapan. Tekan “Simpan” dan namakan untuk menyimpan tetapan semasa di sini. Gunakan “Muat” untuk menggunakannya semula nanti.",
     emptyGroup: "(Kumpulan kosong)",
     errorReload: "Ralat berlaku. Sila muat semula halaman.",
     load: "Muat",
@@ -660,8 +660,8 @@ const M = {
     importFailed: "Ralat: import gagal.",
   },
   hi: {
-    noSavedRanges: "(कोई range सेव नहीं है)",
-    noSavedConfigs: "(कोई सेटिंग सेव नहीं है)",
+    noSavedRanges: "अभी कोई range सेव नहीं है। “सेव करें” दबाकर नाम लिखें, तो मौजूदा range यहाँ रहेगी और अगली बार आप “लोड करें” से उसे फिर इस्तेमाल कर सकते हैं।",
+    noSavedConfigs: "अभी कोई सेटिंग सेव नहीं है। “सेव करें” दबाकर नाम लिखें, तो मौजूदा सेटिंग यहाँ रहेगी और अगली बार आप “लोड करें” से उसे फिर इस्तेमाल कर सकते हैं।",
     emptyGroup: "(खाली समूह)",
     errorReload: "त्रुटि हुई। पेज फिर से लोड करें।",
     load: "लोड करें",

@@ -5,7 +5,8 @@
          자리가 모자라면 잘리는 대신 아래로 내려가게 한다. -->
     <div class="flex flex-col md:flex-row md:flex-wrap gap-4">
       <div class="tree-config-form shrink-0 max-w-full min-w-0">
-        <div class="mb-2 text-[13px] text-neutral-400">
+        <h3 class="mb-2 font-semibold" data-testid="tree-basic-heading">{{ L.basicSettings }}</h3>
+        <div class="mb-2 max-w-[36rem] text-[13px] text-neutral-400" data-testid="tree-chip-note">
           {{ L.chipNote }}
         </div>
         <div class="flex flex-col sm:flex-row sm:flex-wrap my-1 gap-0 sm:gap-6">
@@ -55,52 +56,6 @@
                 :disabled="hasEdit"
                 min="0"
                 :max="MAX_AMOUNT"
-              />
-            </div>
-          </div>
-
-          <div>
-            <div class="my-1">
-              <label for="tree-rakePercent" class="inline-block w-20">{{ L.rake }}</label>
-              <input
-                id="tree-rakePercent"
-                name="rakePercent"
-                autocomplete="off"
-                :spellcheck="false"
-                v-model="config.rakePercent"
-                type="number"
-                :class="
-                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
-                  (config.rakePercent < 0 || config.rakePercent > 100
-                    ? 'input-error'
-                    : '')
-                "
-                :disabled="hasEdit"
-                min="0"
-                max="100"
-                step="0.5"
-              />
-              %
-            </div>
-
-            <div class="my-1">
-              <label for="tree-rakeCap" class="inline-block w-20">{{ L.rakeCap }}</label>
-              <input
-                id="tree-rakeCap"
-                name="rakeCap"
-                autocomplete="off"
-                :spellcheck="false"
-                v-model="config.rakeCap"
-                type="number"
-                :class="
-                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
-                  (config.rakeCap < 0 || config.rakeCap > 3 * MAX_AMOUNT
-                    ? 'input-error'
-                    : '')
-                "
-                :disabled="hasEdit"
-                min="0"
-                :max="3 * MAX_AMOUNT"
               />
             </div>
           </div>
@@ -543,8 +498,65 @@
           </div>
         </div>
 
-        <div class="flex flex-wrap mt-4 gap-3">
-          <div>
+        <details
+          class="tree-advanced mt-4 max-w-[36rem] border-t border-neutral-700 pt-3"
+          data-testid="tree-advanced"
+          :open="advancedOpen"
+          @toggle="onAdvancedToggle"
+        >
+          <summary
+            class="cursor-pointer list-none rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
+            data-testid="tree-advanced-summary"
+          >
+            <span class="font-semibold" data-testid="tree-advanced-label">{{ L.advancedSettings }}</span>
+            <span class="block md:inline md:ml-2 text-xs text-neutral-500" data-testid="tree-advanced-hint">{{ L.advancedHint }}</span>
+          </summary>
+          <div class="mt-3">
+            <div class="my-1">
+              <label for="tree-rakePercent" class="inline-block w-20">{{ L.rake }}</label>
+              <input
+                id="tree-rakePercent"
+                name="rakePercent"
+                autocomplete="off"
+                :spellcheck="false"
+                v-model="config.rakePercent"
+                type="number"
+                :class="
+                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
+                  (config.rakePercent < 0 || config.rakePercent > 100
+                    ? 'input-error'
+                    : '')
+                "
+                :disabled="hasEdit"
+                min="0"
+                max="100"
+                step="0.5"
+              />
+              %
+            </div>
+
+            <div class="my-1">
+              <label for="tree-rakeCap" class="inline-block w-20">{{ L.rakeCap }}</label>
+              <input
+                id="tree-rakeCap"
+                name="rakeCap"
+                autocomplete="off"
+                :spellcheck="false"
+                v-model="config.rakeCap"
+                type="number"
+                :class="
+                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
+                  (config.rakeCap < 0 || config.rakeCap > 3 * MAX_AMOUNT
+                    ? 'input-error'
+                    : '')
+                "
+                :disabled="hasEdit"
+                min="0"
+                :max="3 * MAX_AMOUNT"
+              />
+            </div>
+          </div>
+          <div class="mt-3">
             <div class="my-1">
               <div class="inline-block w-48">
                 <label for="tree-addAllInThreshold">{{ L.addAllInLabel }}</label>
@@ -669,7 +681,9 @@
               %
             </div>
           </div>
+        </details>
 
+        <div class="mt-4">
           <div class="flex justify-center flex-grow">
             <div class="flex flex-col justify-center gap-3">
               <button
@@ -792,7 +806,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
 import { useStore, useConfigStore } from "../store";
 import {
   MAX_AMOUNT,
@@ -810,8 +824,11 @@ import { i18n, pick } from "../i18n";
 
 const M = {
   ko: {
+    advancedHint: "레이크 · 올인 · 병합 — 보통은 그대로 둬도 됩니다",
+    advancedSettings: "상세 설정 ▸",
+    basicSettings: "기본 설정",
     chipNote:
-      "정수 칩 단위로 입력합니다. bb 환산이 필요하면 10칩=1bb 사용을 권장합니다.",
+      "금액은 정수 칩으로 넣습니다. bb로 생각하려면 10칩 = 1bb로 넣으세요 (예: 팟 55 = 5.5bb, 스택 1000 = 100bb). 결과 화면의 팟·스택도 넣은 칩 숫자 그대로 나옵니다.",
     startingPot: "스타팅 팟:",
     effectiveStack: "유효 스택:",
     rake: "레이크:",
@@ -867,8 +884,11 @@ const M = {
       '편집된 트리를 초기화하려면 "편집 초기화 & 잠금 해제" 버튼을 클릭하세요.',
   },
   en: {
+    advancedHint: "Rake · All-in · Merging — you can usually leave these unchanged",
+    advancedSettings: "Advanced settings ▸",
+    basicSettings: "Basic settings",
     chipNote:
-      "Enter amounts in integer chips (custom spots use arbitrary chip units). To think in big blinds, we recommend 10 chips = 1bb.",
+      "Enter amounts in integer chips. To think in bb, use 10 chips = 1bb (e.g., pot 55 = 5.5bb, stack 1000 = 100bb). The results screen also shows pot·stack using the chip amounts you entered.",
     startingPot: "Starting Pot:",
     effectiveStack: "Effective Stack:",
     rake: "Rake:",
@@ -924,8 +944,11 @@ const M = {
       "To discard the edited tree, click the “Clear Edits & Unlock” button.",
   },
   ja: {
+    advancedHint: "レーキ · オールイン · マージ — 通常はそのままで使えます",
+    advancedSettings: "詳細設定 ▸",
+    basicSettings: "基本設定",
     chipNote:
-      "金額は整数チップ単位で入力します(カスタムスポットでは任意のチップ単位を使用)。bbで考える場合は10チップ=1bbを推奨します。",
+      "金額は整数チップで入力します。bbで考えるなら10チップ = 1bbにしてください（例：ポット55 = 5.5bb、スタック1000 = 100bb）。結果のポット·スタックも入力したチップ数で表示されます。",
     startingPot: "スターティングポット:",
     effectiveStack: "有効スタック:",
     rake: "レーキ:",
@@ -982,8 +1005,11 @@ const M = {
       "編集されたツリーを破棄するには「編集をクリア & ロック解除」ボタンをクリックしてください。",
   },
   es: {
+    advancedHint: "Rake · All-in · Fusión — normalmente puedes dejarlos como están",
+    advancedSettings: "Ajustes avanzados ▸",
+    basicSettings: "Ajustes básicos",
     chipNote:
-      "Ingresa los montos en fichas enteras (los spots personalizados usan unidades de ficha arbitrarias). Para pensar en ciegas grandes, recomendamos 10 fichas = 1bb.",
+      "Ingresa los montos en fichas enteras. Para pensar en bb, usa 10 fichas = 1bb (ej.: bote 55 = 5.5bb, stack 1000 = 100bb). La pantalla de resultados también muestra bote·stack con las cantidades de fichas que ingresaste.",
     startingPot: "Bote inicial:",
     effectiveStack: "Stack efectivo:",
     rake: "Rake:",
@@ -1039,8 +1065,11 @@ const M = {
       'Para descartar el árbol editado, haz clic en el botón «Borrar cambios y desbloquear».',
   },
   pt: {
+    advancedHint: "Rake · All-in · Fusão — normalmente você pode deixar como está",
+    advancedSettings: "Configurações avançadas ▸",
+    basicSettings: "Configurações básicas",
     chipNote:
-      "Informe os valores em fichas inteiras (os spots personalizados usam unidades de ficha arbitrárias). Para raciocinar em big blinds, recomendamos 10 fichas = 1bb.",
+      "Informe os valores em fichas inteiras. Para pensar em bb, use 10 fichas = 1bb (ex.: pote 55 = 5.5bb, stack 1000 = 100bb). A tela de resultados também mostra pote·stack com as quantidades de fichas que você informou.",
     startingPot: "Pote inicial:",
     effectiveStack: "Stack efetivo:",
     rake: "Rake:",
@@ -1098,8 +1127,11 @@ const M = {
       'Para descartar a árvore editada, clique no botão “Descartar alterações e desbloquear”.',
   },
   de: {
+    advancedHint: "Rake · All-in · Zusammenfassen — meist kannst du diese Werte so lassen",
+    advancedSettings: "Erweiterte Einstellungen ▸",
+    basicSettings: "Grundeinstellungen",
     chipNote:
-      "Gib die Werte in ganzen Chips ein (eigene Spots nutzen frei wählbare Chip-Einheiten). Wenn du in Big Blinds denken willst, empfehlen wir 10 Chips = 1bb.",
+      "Gib die Beträge in ganzen Chips ein. Wenn du in bb denken willst, verwende 10 Chips = 1bb (z. B.: Pot 55 = 5.5bb, Stack 1000 = 100bb). Auch im Ergebnis werden Pot·Stack mit den eingegebenen Chip-Beträgen angezeigt.",
     startingPot: "Start-Pot:",
     effectiveStack: "Effektiver Stack:",
     rake: "Rake:",
@@ -1156,8 +1188,11 @@ const M = {
       "Um den bearbeiteten Spielbaum zu verwerfen, klicke auf den Button „Änderungen verwerfen & entsperren“.",
   },
   zh: {
+    advancedHint: "抽水 · 全下 · 合并 — 通常保持原样就可以",
+    advancedSettings: "详细设置 ▸",
+    basicSettings: "基本设置",
     chipNote:
-      "金额按整数筹码填写（自定义牌局用的是任意筹码单位）。想按大盲来算的话，建议把 10 筹码当作 1bb。",
+      "金额按整数筹码填写。想按 bb 来算，就按 10 筹码 = 1bb 输入（例：底池 55 = 5.5bb，筹码 1000 = 100bb）。结果页的底池·筹码也会按你输入的筹码数原样显示。",
     startingPot: "起始底池：",
     effectiveStack: "有效筹码：",
     // rake = 「抽水」(본체 브리프 §1C·§0.5-3). ⚠ 「台费」는 자리·시간당 고정요금이라 다른 말이다
@@ -1219,8 +1254,11 @@ const M = {
     boardMismatchHint: "想丢掉编辑过的决策树，点“清除修改并解锁”按钮即可。",
   },
   "zh-hant": {
+    advancedHint: "抽水 · 全下 · 合併 — 通常保持原樣就可以",
+    advancedSettings: "詳細設定 ▸",
+    basicSettings: "基本設定",
     chipNote:
-      "金額按整數籌碼填寫（自訂牌局用的是任意籌碼單位）。想按大盲來算的話，建議把 10 籌碼當作 1bb。",
+      "金額按整數籌碼填寫。想按 bb 來算，就按 10 籌碼 = 1bb 輸入（例：底池 55 = 5.5bb，籌碼 1000 = 100bb）。結果頁的底池·籌碼也會按你輸入的籌碼數原樣顯示。",
     startingPot: "起始底池：",
     effectiveStack: "有效籌碼：",
     // rake = 「抽水」(본체 브리프 §7-C·§7-E). ⚠ 「台費」는 자리·시간당 고정요금이라 다른 말이다
@@ -1283,8 +1321,11 @@ const M = {
     boardMismatchHint: "想丟掉編輯過的決策樹，按下「清除修改並解鎖」按鈕即可。",
   },
   fr: {
+    advancedHint: "Rake · All-in · Fusion — tu peux généralement les laisser tels quels",
+    advancedSettings: "Réglages avancés ▸",
+    basicSettings: "Réglages de base",
     chipNote:
-      "Les montants se saisissent en jetons entiers (les spots personnalisés utilisent une unité de jetons arbitraire). Pour raisonner en big blinds, on recommande 10 jetons = 1bb.",
+      "Saisis les montants en jetons entiers. Pour raisonner en bb, utilise 10 jetons = 1bb (ex. : pot 55 = 5.5bb, stack 1000 = 100bb). L’écran des résultats affiche aussi les valeurs pot·stack avec les montants en jetons que tu as saisis.",
     startingPot: "Pot initial :",
     effectiveStack: "Stack effectif :",
     rake: "Rake :",
@@ -1346,8 +1387,11 @@ const M = {
   },
   // 인도네시아어 — bet size·pot·stack·street·all-in·raise·donk는 코퍼스대로 영어. 인용부호는 표준 라틴 “ ”.
   id: {
+    advancedHint: "Rake · All-in · Penggabungan — biasanya bisa dibiarkan seperti ini",
+    advancedSettings: "Pengaturan lanjutan ▸",
+    basicSettings: "Pengaturan dasar",
     chipNote:
-      "Masukkan jumlah dalam chip bilangan bulat (spot kustom memakai satuan chip bebas). Untuk berpikir dalam big blind, kami sarankan 10 chip = 1bb.",
+      "Masukkan jumlah dalam chip bilangan bulat. Untuk menghitung dalam bb, gunakan 10 chip = 1bb (contoh: pot 55 = 5.5bb, stack 1000 = 100bb). Layar hasil juga menampilkan pot·stack dengan jumlah chip yang kamu masukkan.",
     startingPot: "Pot awal:",
     effectiveStack: "Stack efektif:",
     rake: "Rake:",
@@ -1410,8 +1454,11 @@ const M = {
   // 말레이어 — bet size·pot·stack·street·all-in·raise·donk는 리서치 §2대로 영어. 인용부호는 “ ”.
   // ⚠ 숫자는 «영어식»(소수점 «.», 천단위 «,») — id·fr·pt·de처럼 뒤집지 않는다 (리서치 §1-2)
   ms: {
+    advancedHint: "Rake · All-in · Penggabungan — biasanya boleh dibiarkan seperti ini",
+    advancedSettings: "Tetapan lanjutan ▸",
+    basicSettings: "Tetapan asas",
     chipNote:
-      "Masukkan jumlah cip dalam nombor bulat (spot tersuai menggunakan unit cip bebas). Untuk berfikir dalam big blind, kami cadangkan 10 cip = 1bb.",
+      "Masukkan jumlah cip dalam nombor bulat. Untuk mengira dalam bb, gunakan 10 cip = 1bb (contoh: pot 55 = 5.5bb, stack 1000 = 100bb). Skrin keputusan juga memaparkan pot·stack dengan jumlah cip yang anda masukkan.",
     startingPot: "Pot permulaan:",
     effectiveStack: "Stack efektif:",
     rake: "Rake:",
@@ -1472,8 +1519,11 @@ const M = {
       "Untuk membuang tree yang disunting, klik “Kosongkan & Buka Kunci”.",
   },
   hi: {
+    advancedHint: "Rake · All-in · Bet मिलाना — आम तौर पर इन्हें ऐसे ही छोड़ सकते हैं",
+    advancedSettings: "विस्तृत सेटिंग ▸",
+    basicSettings: "बुनियादी सेटिंग",
     chipNote:
-      "राशि chips में पूर्णांक मान के रूप में दर्ज करें (कस्टम स्पॉट में chip की इकाई आप तय करते हैं)। Big blind में हिसाब रखने के लिए 10 chips = 1bb रखना सुविधाजनक है।",
+      "राशि chips में पूर्णांक मान के रूप में दर्ज करें। bb में हिसाब रखने के लिए 10 chips = 1bb रखें (उदाहरण: pot 55 = 5.5bb, stack 1000 = 100bb)। नतीजों की स्क्रीन पर भी pot·stack आपके दर्ज किए हुए chips के मान में ही दिखेंगे।",
     startingPot: "शुरुआती Pot:",
     effectiveStack: "Effective Stack:",
     rake: "Rake:",
@@ -1571,6 +1621,32 @@ export default defineComponent({
     const L = computed(() => M[i18n.locale]);
 
     const isEditMode = ref(false);
+    const advancedOpen = ref(false);
+    const onAdvancedToggle = (event: Event) => {
+      advancedOpen.value = (event.target as HTMLDetailsElement).open;
+    };
+
+    // Keep invalid advanced inputs discoverable, including settings loaded from storage
+    // and a return from the run screen. Expansion is local UI state, never persisted.
+    watch(
+      () => [
+        config.rakePercent,
+        config.rakeCap,
+        config.addAllInThreshold,
+        config.forceAllInThreshold,
+        config.mergingThreshold,
+        store.sideView,
+      ],
+      () => {
+        if (
+          config.rakePercent < 0 || config.rakePercent > 100 ||
+          config.rakeCap < 0 || config.rakeCap > 3 * MAX_AMOUNT ||
+          config.addAllInThreshold < 0 || config.forceAllInThreshold < 0 ||
+          config.mergingThreshold < 0
+        ) advancedOpen.value = true;
+      },
+      { immediate: true }
+    );
 
     const hasEdit = computed(
       () => config.addedLines.length > 0 || config.removedLines.length > 0
@@ -2062,6 +2138,8 @@ export default defineComponent({
       L,
       onAmountEdit,
       isEditMode,
+      advancedOpen,
+      onAdvancedToggle,
       addedLinesArray,
       removedLinesArray,
       hasEdit,
@@ -2134,6 +2212,9 @@ input {
 
 .button-arrow {
   @apply px-2 py-1 text-lg;
+}
+.tree-advanced > summary::-webkit-details-marker {
+  display: none;
 }
 .tree-config-form {
   @apply rounded-lg border border-neutral-700 bg-surface-1 p-3;

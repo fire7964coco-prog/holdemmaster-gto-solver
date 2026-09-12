@@ -67,6 +67,7 @@
         </select>
         <span
           v-if="displayPlayer === 'oop'"
+          data-testid="preset-oop-hint"
           class="basis-full md:basis-auto text-xs text-neutral-400"
         >
           {{ L.oopHint }}
@@ -151,20 +152,7 @@ const M = {
     loadError: (e: string) => `미리 계산된 결과를 불러오지 못했습니다: ${e}`,
     loading: "결과 불러오는 중...",
     playerLabel: "플레이어:",
-    oopHint: "첫 액션 차례인 플레이어의 전략입니다",
-  },
-  hi: {
-
-    backToList: "← वापस",
-    pot: "Pot",
-    stack: "Stack",
-    flopOnlyNote: "यहाँ केवल flop की रणनीति है। Turn और river भी देखना चाहते हैं? →",
-    solveThisSpot: "इस स्पॉट की गणना खुद करें",
-    readArticle: "विश्लेषण पढ़ें",
-    loadError: (e: string) => `पहले से गणना किए गए परिणाम लोड नहीं हुए: ${e}`,
-    loading: "परिणाम लोड हो रहे हैं…",
-    playerLabel: "खिलाड़ी:",
-    oopHint: "पहले action करने वाले खिलाड़ी की रणनीति",
+    oopHint: "먼저 행동하는 쪽(OOP)의 전략입니다. 상대(IP) 쪽을 보려면 위 「플레이어」를 IP로 바꾸세요.",
   },
   en: {
     backToList: "← Back",
@@ -176,7 +164,7 @@ const M = {
     loadError: (e: string) => `Couldn't load the precomputed results: ${e}`,
     loading: "Loading results…",
     playerLabel: "Player:",
-    oopHint: "Strategy for the player who acts first",
+    oopHint: "This is the strategy of the player who acts first (OOP). To see the opponent (IP), set “Player” above to IP.",
   },
   ja: {
     backToList: "← 一覧へ",
@@ -188,7 +176,7 @@ const M = {
     loadError: (e: string) => `計算済みの結果を読み込めませんでした: ${e}`,
     loading: "結果を読み込み中…",
     playerLabel: "プレイヤー:",
-    oopHint: "最初にアクションするプレイヤーの戦略です",
+    oopHint: "先に行動する側(OOP)の戦略です。相手(IP)側を見るには、上の「プレイヤー」をIPにしてください。",
   },
   es: {
     backToList: "← Lista",
@@ -200,7 +188,7 @@ const M = {
     loadError: (e: string) => `No se pudieron cargar los resultados precalculados: ${e}`,
     loading: "Cargando resultados…",
     playerLabel: "Jugador:",
-    oopHint: "Estrategia del jugador que actúa primero",
+    oopHint: "Es la estrategia del jugador que actúa primero (OOP). Para ver al rival (IP), cambia “Jugador” arriba a IP.",
   },
   pt: {
     backToList: "← Lista",
@@ -212,7 +200,7 @@ const M = {
     loadError: (e: string) => `Não foi possível carregar os resultados pré-calculados: ${e}`,
     loading: "Carregando resultados…",
     playerLabel: "Jogador:",
-    oopHint: "Estratégia do jogador que age primeiro",
+    oopHint: "Esta é a estratégia de quem age primeiro (OOP). Para ver o adversário (IP), mude “Jogador” acima para IP.",
   },
   de: {
     backToList: "← Zurück",
@@ -225,7 +213,7 @@ const M = {
       `Die vorberechneten Ergebnisse konnten nicht geladen werden: ${e}`,
     loading: "Ergebnisse werden geladen…",
     playerLabel: "Spieler:",
-    oopHint: "Strategie des Spielers, der zuerst am Zug ist",
+    oopHint: "Das ist die Strategie des Spielers, der zuerst handelt (OOP). Um den Gegner (IP) zu sehen, stelle oben „Spieler“ auf IP.",
   },
   zh: {
     backToList: "← 列表",
@@ -238,7 +226,7 @@ const M = {
     loadError: (e: string) => `无法加载预先算好的结果：${e}`,
     loading: "正在加载结果…",
     playerLabel: "玩家：",
-    oopHint: "这是先行动一方的策略",
+    oopHint: "这是先行动一方(OOP)的策略。要看对手(IP)一方，请将上方“玩家”改为 IP。",
   },
   "zh-hant": {
     backToList: "← 列表",
@@ -252,7 +240,7 @@ const M = {
     loadError: (e: string) => `無法載入預先算好的結果：${e}`,
     loading: "正在載入結果…",
     playerLabel: "玩家：",
-    oopHint: "這是先行動一方的策略",
+    oopHint: "這是先行動一方(OOP)的策略。要看對手(IP)一方，請將上方「玩家」改為 IP。",
   },
   fr: {
     backToList: "← Liste",
@@ -267,7 +255,7 @@ const M = {
     loading: "Chargement des résultats…",
     playerLabel: "Joueur :",
     // «parler» = 프랑스 포커에서 «액션할 차례»의 관용 표현 (c'est à toi de parler)
-    oopHint: "La stratégie du joueur qui parle en premier",
+    oopHint: "C'est la stratégie du joueur qui parle en premier (OOP). Pour voir l'adversaire (IP), passe « Joueur » sur IP au-dessus.",
   },
   id: {
     backToList: "← Kembali",
@@ -281,7 +269,7 @@ const M = {
     loadError: (e: string) => `Gagal memuat hasil yang sudah dihitung (coba muat ulang halaman): ${e}`,
     loading: "Memuat hasil…",
     playerLabel: "Pemain:",
-    oopHint: "Strategi pemain yang bertindak lebih dulu",
+    oopHint: "Ini strategi pemain yang bertindak lebih dulu (OOP). Untuk melihat sisi lawan (IP), ubah “Pemain” di atas ke IP.",
   },
   ms: {
     backToList: "← Kembali",
@@ -295,7 +283,20 @@ const M = {
     loadError: (e: string) => `Gagal memuatkan hasil yang telah dikira (sila muat semula halaman): ${e}`,
     loading: "Sedang memuatkan hasil…",
     playerLabel: "Pemain:",
-    oopHint: "Strategi pemain yang bertindak dahulu",
+    oopHint: "Ini strategi pemain yang bertindak dahulu (OOP). Untuk melihat pihak lawan (IP), tukar “Pemain” di atas kepada IP.",
+  },
+  hi: {
+
+    backToList: "← वापस",
+    pot: "Pot",
+    stack: "Stack",
+    flopOnlyNote: "यहाँ केवल flop की रणनीति है। Turn और river भी देखना चाहते हैं? →",
+    solveThisSpot: "इस स्पॉट की गणना खुद करें",
+    readArticle: "विश्लेषण पढ़ें",
+    loadError: (e: string) => `पहले से गणना किए गए परिणाम लोड नहीं हुए: ${e}`,
+    loading: "परिणाम लोड हो रहे हैं…",
+    playerLabel: "खिलाड़ी:",
+    oopHint: "यह पहले action करने वाले खिलाड़ी (OOP) की रणनीति है। प्रतिद्वंद्वी (IP) की ओर देखने के लिए ऊपर “खिलाड़ी” को IP पर बदलें।",
   },
 } as const;
 

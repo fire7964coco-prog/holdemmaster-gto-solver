@@ -37,11 +37,15 @@
           "
           :disabled="!store.isSolverFinished"
           :aria-disabled="!store.isSolverFinished"
+          :title="!store.isSolverFinished ? L.resultsDisabledHint : undefined"
+          :aria-describedby="!store.isSolverFinished ? 'results-disabled-hint' : undefined"
+          data-testid="nav-results"
           @click="store.navView = 'results'"
         >
           <ChartBarIcon class="hidden md:block shrink-0 w-6 h-6" />
           <span class="text-sm md:text-base md:pl-3">{{ L.results }}</span>
         </button>
+        <span v-if="!store.isSolverFinished" id="results-disabled-hint" class="sr-only">{{ L.resultsDisabledHint }}</span>
       </div>
 
       <div class="flex ml-auto h-full items-center z-10">
@@ -101,24 +105,28 @@ import { navResults } from "../nav-labels";
 
 const M = {
   ko: {
+    resultsDisabledHint: "⑤ 계산 실행이 끝나면 열립니다",
     solver: "솔버",
     community: "홀덤마스터",
     communitySuffix: " 커뮤니티",
     langSwitchLabel: "언어 선택",
   },
   en: {
+    resultsDisabledHint: "Opens when ⑤ Run Solver is finished",
     solver: "Solver",
     community: "HoldemMaster",
     communitySuffix: " Community",
     langSwitchLabel: "Select language",
   },
   ja: {
+    resultsDisabledHint: "⑤「ソルバーを実行」が完了すると開きます",
     solver: "ソルバー",
     community: "HoldemMaster",
     communitySuffix: " コミュニティ",
     langSwitchLabel: "言語を選択",
   },
   es: {
+    resultsDisabledHint: "Se abre cuando termina ⑤ Calcular",
     solver: "Solver",
     community: "Comunidad",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
@@ -126,6 +134,7 @@ const M = {
     langSwitchLabel: "Seleccionar idioma",
   },
   pt: {
+    resultsDisabledHint: "Abre quando ⑤ Calcular termina",
     solver: "Solver",
     community: "Comunidade",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
@@ -133,6 +142,7 @@ const M = {
     langSwitchLabel: "Selecionar idioma",
   },
   de: {
+    resultsDisabledHint: "Öffnet sich, sobald ⑤ Berechnen abgeschlossen ist",
     solver: "Solver",
     community: "HoldemMaster",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
@@ -140,6 +150,7 @@ const M = {
     langSwitchLabel: "Sprache wählen",
   },
   zh: {
+    resultsDisabledHint: "⑤ 运行求解器完成后即可打开",
     // 「求解器」= solver의 중국어 정착역 (dpskill·中扑网 실사용 — 리서치 §2)
     solver: "求解器",
     community: "HoldemMaster",
@@ -149,6 +160,7 @@ const M = {
     langSwitchLabel: "选择语言",
   },
   "zh-hant": {
+    resultsDisabledHint: "⑤ 執行解算器完成後即可開啟",
     // 「解算器」= solver의 대만 정착역 (본체 브리프 §7-C. 본체 번체 포스팅 42편에서 解算器 25회 ·
     // 求解器 0회 — 간체의 「求解器」와 «일부러» 다르다)
     solver: "解算器",
@@ -159,6 +171,7 @@ const M = {
     langSwitchLabel: "選擇語言",
   },
   fr: {
+    resultsDisabledHint: "S’ouvre une fois ⑤ Calculer terminé",
     // «solver»는 프랑스 포커 매체의 지배적 표기다 (le solver — 리서치 §1-1. solveur는 안 쓴다)
     solver: "Solver",
     community: "Communauté",
@@ -167,6 +180,7 @@ const M = {
     langSwitchLabel: "Choisir la langue",
   },
   id: {
+    resultsDisabledHint: "Terbuka setelah ⑤ Hitung selesai",
     // «solver»는 본체 id 코퍼스가 영어 그대로 쓴다(26회 — 리서치 §1-1)
     solver: "Solver",
     community: "Komunitas",
@@ -174,19 +188,21 @@ const M = {
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Pilih bahasa",
   },
-  hi: {
-    solver: "सॉल्वर",
-    community: "HoldemMaster",
-    communitySuffix: " कम्युनिटी",
-    langSwitchLabel: "भाषा चुनें",
-  },
   ms: {
+    resultsDisabledHint: "Dibuka selepas ⑤ Kira selesai",
     // «solver»는 말레이시아 GTO 매체도 영어 그대로 쓴다 (리서치 §1-3)
     solver: "Solver",
     community: "Komuniti",
     // ⚠ 앞의 공백은 U+00A0 — 이 자리는 flex라 일반 공백이 잘린다 (ko/en/ja도 동일)
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Pilih bahasa",
+  },
+  hi: {
+    resultsDisabledHint: "⑤ गणना करें पूरा होने पर खुलेगा",
+    solver: "सॉल्वर",
+    community: "HoldemMaster",
+    communitySuffix: " कम्युनिटी",
+    langSwitchLabel: "भाषा चुनें",
   },
 } as const;
 
