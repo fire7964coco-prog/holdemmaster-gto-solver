@@ -262,6 +262,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   background-color: rgb(var(--c-bg-3));
 }
 .result-body { gap: 8px; padding: 8px; }
+/* 2026-09-12 사장님: «결과창이 꽉 차서 잘린 느낌» → 데스크톱은 여백 + 얇은 프레임(굵은 테두리 대신 · 소개/트레이너 카드 문법과 동일). 모바일은 아래 @media에서 padding 0 유지 */
+@media (min-width: 768px) {
+  .result-body { gap: 12px; padding: 12px 14px 14px; }
+  .result-matrix { padding: 8px; border: 1px solid rgb(var(--c-line)); border-radius: 8px; background: rgb(var(--c-bg-1)); min-height: 0; }
+  .result-details { min-height: 0; }
+  .result-details > * { border-radius: 8px; }
+}
 .result-matrix { min-width: 0; }
 .result-basics table { font-variant-numeric: tabular-nums; }
 .result-details { margin: 0; }
