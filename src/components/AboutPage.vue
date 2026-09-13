@@ -99,7 +99,7 @@
 
     <!-- 특징 -->
     <!-- 특징: 헤어라인 나열 → 패널로 묶어 다른 화면(트레이너·사용법)과 결을 맞춤 -->
-    <div class="panel mt-4">
+    <div class="panel mt-4" data-w2="features">
       <!-- 본문 폭이 48rem이라 4열은 «데스크톱 솔 / 버 수준»처럼 어색하게 끊긴다 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
         <div v-for="f in L.features" :key="f.title">
@@ -108,11 +108,19 @@
             {{ f.desc }}
           </div>
         </div>
+        <div data-w2="lock-feature">
+          <div class="text-sm font-semibold text-neutral-100" data-w2="lock-feature-title">
+            {{ L.featureLockTitle }}
+          </div>
+          <div class="mt-1 text-[0.8125rem] leading-relaxed text-neutral-500" data-w2="lock-feature-desc">
+            {{ L.featureLockDesc }}
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- 시작 안내 -->
-    <div class="panel mt-4">
+    <div class="panel mt-4" data-w2="steps">
       <div class="section-title">{{ L.stepsTitle }}</div>
       <div class="mt-3 space-y-2.5">
         <div v-for="(s, i) in L.steps" :key="i" class="flex items-baseline gap-3">
@@ -121,6 +129,14 @@
             >{{ i + 1 }}</span
           >
           <span class="text-sm text-neutral-300">{{ s }}</span>
+        </div>
+        <div class="flex items-baseline gap-3" data-w2="lock-step">
+          <span class="shrink-0 w-5 text-right text-sm font-semibold text-brand tabular-nums">
+            {{ L.steps.length + 1 }}
+          </span>
+          <span class="text-sm text-neutral-300" data-w2="lock-step-text">
+            {{ FEATURE_TRAINER ? L.step5Trainer : L.step5Solver }}
+          </span>
         </div>
       </div>
       <!-- 본체 랜딩(정보형 콘텐츠)으로 연결 — 앱은 도구, 랜딩은 설명 역할 분담 -->
@@ -203,6 +219,10 @@ const M = {
       { title: "빠른 계산", desc: "멀티스레드로 데스크톱 솔버 수준" },
       { title: "GTO 트레이너", desc: "문제를 풀고 팟 대비 EV 손실로 채점받기" },
     ],
+    featureLockTitle: "전략 고정(노드락)",
+    featureLockDesc: "상대 전략을 내가 정해 놓고 다시 계산 — 상대가 실수하면 내 전략이 어떻게 바뀌는지",
+    step5Trainer: "계산이 끝나면 「이 노드의 전략 고정」으로 상대 전략을 바꿔 보고, 「이 스팟으로 연습」으로 그 스팟을 문제로 풀어보세요",
+    step5Solver: "계산이 끝나면 「이 노드의 전략 고정」으로 상대 전략을 바꿔 보세요",
     stepsTitle: "처음이라면",
     steps: [
       "교육 예제에서 아무 스팟이나 [결과 바로 보기] — 기다림 없이 결과가 나옵니다",
@@ -242,6 +262,10 @@ const M = {
       { title: "Fast Solving", desc: "Multithreaded — desktop-solver speed" },
       { title: "GTO Trainer", desc: "Play spots, graded on EV loss relative to the pot" },
     ],
+    featureLockTitle: "Strategy locking (node lock)",
+    featureLockDesc: "Set the opponent’s strategy and solve again — see how your strategy changes when the opponent makes mistakes",
+    step5Trainer: "After solving, use [Lock this node’s strategy] to try changing the opponent’s strategy, then [Practice this spot] to answer questions about that spot",
+    step5Solver: "After solving, use [Lock this node’s strategy] to try changing the opponent’s strategy",
     stepsTitle: "New here?",
     steps: [
       "Open any spot under Study Spots and hit [View results] — solutions appear instantly",
@@ -282,6 +306,10 @@ const M = {
       { title: "高速計算", desc: "マルチスレッドでデスクトップソルバー級" },
       { title: "GTOトレーナー", desc: "問題を解いてポット比のEVロスで採点" },
     ],
+    featureLockTitle: "戦略固定（ノードロック）",
+    featureLockDesc: "相手の戦略を決めて再計算 — 相手のミスで自分の戦略がどう変わるかを見る",
+    step5Trainer: "計算が終わったら[このノードの戦略を固定]で相手の戦略を変え、[このスポットで練習]でそのスポットを問題として解いてみましょう",
+    step5Solver: "計算が終わったら[このノードの戦略を固定]で相手の戦略を変えてみましょう",
     stepsTitle: "初めての方へ",
     steps: [
       "学習スポットからどれか一つを開いて[結果をすぐ見る]を押してください — 待ち時間なしで結果が表示されます",
@@ -321,6 +349,10 @@ const M = {
       { title: "Cálculo rápido", desc: "Multihilo — velocidad de solver de escritorio" },
       { title: "Entrenador GTO", desc: "Juega spots; tu nota sale de la pérdida de EV respecto al bote" },
     ],
+    featureLockTitle: "Estrategia fija (node lock)",
+    featureLockDesc: "Define la estrategia del rival y vuelve a calcular — mira cómo cambia tu estrategia cuando el rival comete errores",
+    step5Trainer: "Al terminar el cálculo, prueba a cambiar la estrategia del rival con [Fijar la estrategia de este nodo] y resuelve ejercicios de ese spot con [Practicar este spot]",
+    step5Solver: "Al terminar el cálculo, prueba a cambiar la estrategia del rival con [Fijar la estrategia de este nodo]",
     stepsTitle: "¿Primera vez aquí?",
     steps: [
       "Abre cualquier spot en Spots de estudio y toca [Ver resultados] — las soluciones aparecen al instante",
@@ -361,6 +393,10 @@ const M = {
       { title: "Cálculo rápido", desc: "Multithread — velocidade de solver de desktop" },
       { title: "Treinador GTO", desc: "Jogue spots; sua nota vem da perda de EV em relação ao pote" },
     ],
+    featureLockTitle: "Estratégia fixa (node lock)",
+    featureLockDesc: "Defina a estratégia do adversário e calcule de novo — veja como sua estratégia muda quando ele comete erros",
+    step5Trainer: "Quando o cálculo terminar, experimente mudar a estratégia do adversário com [Fixar a estratégia deste nó] e responda a questões desse spot com [Praticar este spot]",
+    step5Solver: "Quando o cálculo terminar, experimente mudar a estratégia do adversário com [Fixar a estratégia deste nó]",
     stepsTitle: "É a sua primeira vez aqui?",
     steps: [
       "Abra qualquer spot em Spots de estudo e use [Ver resultados] — as soluções aparecem na hora",
@@ -406,6 +442,10 @@ const M = {
       { title: "Schnelles Solving", desc: "Multithreaded – Tempo eines Desktop-Solvers" },
       { title: "GTO-Trainer", desc: "Spots spielen, benotet nach EV-Verlust im Verhältnis zum Pot" },
     ],
+    featureLockTitle: "Strategie fixieren (Node Lock)",
+    featureLockDesc: "Lege die Strategie des Gegners fest und berechne neu – sieh, wie sich deine Strategie ändert, wenn er Fehler macht",
+    step5Trainer: "Wenn die Berechnung fertig ist, ändere mit [Strategie dieses Knotens fixieren] die Strategie des Gegners und löse mit [Diesen Spot üben] Aufgaben zu diesem Spot",
+    step5Solver: "Wenn die Berechnung fertig ist, probiere mit [Strategie dieses Knotens fixieren] eine andere Strategie des Gegners aus",
     stepsTitle: "Neu hier?",
     steps: [
       "Öffne einen beliebigen Spot unter Lernspots und starte [Ergebnisse ansehen] – die Lösung erscheint sofort",
@@ -448,6 +488,10 @@ const M = {
       { title: "算得快", desc: "多线程——接近桌面版求解器的速度" },
       { title: "GTO 训练器", desc: "做题，按占底池的 EV 损失打分" },
     ],
+    featureLockTitle: "固定策略（node lock）",
+    featureLockDesc: "自己设定对手策略后重新计算——看看对手犯错时，你的策略会怎么变",
+    step5Trainer: "计算结束后，用“固定此节点的策略”试着改变对手的策略，再用“用这个场景练习”把这个场景变成题目来练习",
+    step5Solver: "计算结束后，用“固定此节点的策略”试着改变对手的策略",
     stepsTitle: "第一次来？",
     steps: [
       "在教学案例里随便打开一个牌局，点[直接看结果]——不用等，结果马上出来",
@@ -496,6 +540,10 @@ const M = {
       { title: "算得快", desc: "多執行緒——接近桌面版解算器的速度" },
       { title: "GTO 訓練器", desc: "做題，按佔底池的 EV 損失評分" },
     ],
+    featureLockTitle: "固定策略（node lock）",
+    featureLockDesc: "自己設定對手策略後重新計算——看看對手犯錯時，你的策略會怎麼變",
+    step5Trainer: "計算結束後，用「固定此節點的策略」試著改變對手的策略，再用「用這個場景練習」把這個場景變成題目來練習",
+    step5Solver: "計算結束後，用「固定此節點的策略」試著改變對手的策略",
     stepsTitle: "第一次來？",
     steps: [
       "在教學案例裡隨便打開一個牌局，按下[⚡ 直接看結果]——不用等，結果馬上出來",
@@ -540,6 +588,10 @@ const M = {
       { title: "Calcul rapide", desc: "Multithread — la vitesse d'un solver de bureau" },
       { title: "Trainer GTO", desc: "Joue des spots, notés sur la perte d'EV par rapport au pot" },
     ],
+    featureLockTitle: "Stratégie fixée (node lock)",
+    featureLockDesc: "Définis la stratégie adverse et recalcule — vois comment ta stratégie change quand ton adversaire fait des erreurs",
+    step5Trainer: "Une fois le calcul terminé, essaie de changer la stratégie adverse avec [Fixer la stratégie de ce nœud], puis résous des exercices sur ce spot avec [Travailler ce spot]",
+    step5Solver: "Une fois le calcul terminé, essaie de changer la stratégie adverse avec [Fixer la stratégie de ce nœud]",
     stepsTitle: "Nouveau ici ?",
     // 버튼 이름 인용은 PresetsPage.viewResults·SideBar와 «글자까지» 같아야 한다
     steps: [
@@ -585,6 +637,10 @@ const M = {
       { title: "Perhitungan cepat", desc: "Multithread — secepat solver desktop" },
       { title: "Trainer GTO", desc: "Mainkan spot dan dapatkan skor kerugian EV relatif terhadap pot" },
     ],
+    featureLockTitle: "Node lock",
+    featureLockDesc: "Tentukan strategi lawan dan hitung ulang — lihat bagaimana strategi Anda berubah saat lawan membuat kesalahan",
+    step5Trainer: "Setelah perhitungan selesai, coba ubah strategi lawan dengan [Kunci strategi di node ini], lalu kerjakan soal dari spot itu dengan [Latih spot ini]",
+    step5Solver: "Setelah perhitungan selesai, coba ubah strategi lawan dengan [Kunci strategi di node ini]",
     stepsTitle: "Baru di sini?",
     // 버튼 이름 인용은 PresetsPage.viewResults·SideBar와 «글자까지» 같아야 한다
     steps: [
@@ -607,6 +663,54 @@ const M = {
     creditBrand: "HoldemMaster",
     creditMid2: ". Kode sumber lengkap hasil modifikasi dipublikasikan di",
     creditAfter: " dengan lisensi yang sama.",
+  },
+  ms: {
+    community: "Komuniti HoldemMaster",
+    heroTitle1: "Strategi GTO,",
+    heroTitle2: "terus dalam pelayar anda.",
+    heroSub1: "Tiada pemasangan, tiada bayaran. Masukkan range dan board anda,",
+    heroSub2: " dan strategi optimum dikira terus pada peranti anda sendiri.",
+    ctaPresets: "Lihat Spot belajar",
+    ctaTrainer: "Trainer GTO",
+    ctaDaily: "Cabaran Harian",
+    dailyDone: "Selesai",
+    ctaGuide: "Cara guna",
+    ctaInstall: "Tambah ke skrin utama",
+    installNote:
+      "Selepas dipasang, Spot belajar dan Trainer GTO tersimpan pada peranti anda, jadi anda boleh terus berlatih walaupun di luar talian. Ini pintasan pelayar, bukan program — ia tidak pernah meminta sebarang kebenaran.",
+    installSafe: "Selamatkah?",
+    features: [
+      { title: "Percuma", desc: "Semua ciri, tanpa had penggunaan" },
+      { title: "Belajar luar talian", desc: "Tambah ke skrin utama dan berlatih tanpa sambungan internet" },
+      { title: "Pengiraan pantas", desc: "Multithread — sepantas solver desktop" },
+      { title: "Trainer GTO", desc: "Main spot dan dapatkan skor kerugian EV berbanding pot" },
+    ],
+    featureLockTitle: "Node lock",
+    featureLockDesc: "Tetapkan strategi pihak lawan dan kira semula — lihat bagaimana strategi anda berubah apabila pihak lawan melakukan kesilapan",
+    step5Trainer: "Selepas pengiraan selesai, cuba ubah strategi pihak lawan melalui [Kunci strategi pada nod ini], kemudian jawab soalan daripada spot itu melalui [Berlatih spot ini]",
+    step5Solver: "Selepas pengiraan selesai, cuba ubah strategi pihak lawan melalui [Kunci strategi pada nod ini]",
+    stepsTitle: "Baru di sini?",
+    // 버튼 이름 인용은 PresetsPage.viewResults·SideBar와 «글자까지» 같아야 한다
+    steps: [
+      "Buka mana-mana spot dalam Spot belajar lalu tekan [Lihat hasil] — penyelesaiannya terus muncul",
+      "Baca Cara guna untuk belajar membaca skrin hasil",
+      "Cuba Trainer GTO — ia menunjukkan dengan tepat berapa bb yang anda rugi pada setiap keputusan",
+      "Selepas anda biasa, kira tangan anda sendiri dengan Spot tersuai (①–⑤)",
+    ],
+    // ⚠ 이 세 줄이 가리키는 본체 /ms/solver는 없다 (2026-09-03 실측 404) —
+    //   AboutPage 템플릿의 v-if="landingUrl"이 통째로 숨긴다. 본체에 /ms/solver가 생기면
+    //   outbound.ts LOCALE_PATHS.ms에 "/solver" 한 줄만 더하면 살아난다
+    landingBefore:
+      "Mahu faham dahulu apa itu solver GTO dan cara membaca hasilnya? Lihat",
+    landingLink: "panduan solver HoldemMaster",
+    landingAfter: ".",
+    notes:
+      "Pada iOS dan Safari, batasan pelayar memaksa pengiraan satu thread, jadi lebih perlahan — pada macOS kami syorkan Chrome. Memori yang tersedia dihadkan kepada 4 GB (had WebAssembly), jadi spot besar lebih baik dikira pada PC.",
+    creditBefore: "Aplikasi ini dibina berasaskan",
+    creditMid1: " (karya Wataru Inariba, AGPL-3.0), diterjemah dan ditambah baik oleh",
+    creditBrand: "HoldemMaster",
+    creditMid2: ". Keseluruhan kod sumber yang diubah suai diterbitkan di",
+    creditAfter: " di bawah lesen yang sama.",
   },
   hi: {
     community: "HoldemMaster कम्युनिटी",
@@ -635,6 +739,10 @@ const M = {
        title: "GTO Trainer",
        desc: "स्पॉट खेलें और pot के अनुपात में EV नुकसान पर अपना प्रदर्शन देखें",
      }],
+    featureLockTitle: "रणनीति लॉक (node lock)",
+    featureLockDesc: "विरोधी की रणनीति तय करके फिर गणना करें — देखें कि विरोधी की गलतियों से आपकी रणनीति कैसे बदलती है",
+    step5Trainer: "गणना पूरी होने पर [इस नोड की रणनीति लॉक करें] से विरोधी की रणनीति बदलकर देखें और [इस स्पॉट का अभ्यास करें] से उसी स्पॉट के सवाल हल करें",
+    step5Solver: "गणना पूरी होने पर [इस नोड की रणनीति लॉक करें] से विरोधी की रणनीति बदलकर देखें",
     stepsTitle: "पहली बार इस्तेमाल कर रहे हैं?",
     steps: ["अभ्यास स्पॉट में कोई स्पॉट खोलें और [परिणाम देखें] दबाएँ — परिणाम तुरंत दिखेंगे", "परिणाम स्क्रीन समझने के लिए [कैसे इस्तेमाल करें] गाइड पढ़ें।", "GTO Trainer आज़माएँ — देखें कि हर फ़ैसले में कितने bb का EV नुकसान होता है", "तैयार होने पर अपना स्पॉट (①–⑤) में खुद के हैंड की गणना करें"],
     landingBefore: "पहले समझना चाहते हैं कि GTO सॉल्वर क्या है और इसके परिणाम कैसे पढ़ें? देखें: ",
@@ -646,50 +754,6 @@ const M = {
     creditBrand: "HoldemMaster",
     creditMid2: " ने किया है। संशोधित सोर्स कोड पूरा का पूरा ",
     creditAfter: " पर उसी लाइसेंस के तहत उपलब्ध है।",
-  },
-  ms: {
-    community: "Komuniti HoldemMaster",
-    heroTitle1: "Strategi GTO,",
-    heroTitle2: "terus dalam pelayar anda.",
-    heroSub1: "Tiada pemasangan, tiada bayaran. Masukkan range dan board anda,",
-    heroSub2: " dan strategi optimum dikira terus pada peranti anda sendiri.",
-    ctaPresets: "Lihat Spot belajar",
-    ctaTrainer: "Trainer GTO",
-    ctaDaily: "Cabaran Harian",
-    dailyDone: "Selesai",
-    ctaGuide: "Cara guna",
-    ctaInstall: "Tambah ke skrin utama",
-    installNote:
-      "Selepas dipasang, Spot belajar dan Trainer GTO tersimpan pada peranti anda, jadi anda boleh terus berlatih walaupun di luar talian. Ini pintasan pelayar, bukan program — ia tidak pernah meminta sebarang kebenaran.",
-    installSafe: "Selamatkah?",
-    features: [
-      { title: "Percuma", desc: "Semua ciri, tanpa had penggunaan" },
-      { title: "Belajar luar talian", desc: "Tambah ke skrin utama dan berlatih tanpa sambungan internet" },
-      { title: "Pengiraan pantas", desc: "Multithread — sepantas solver desktop" },
-      { title: "Trainer GTO", desc: "Main spot dan dapatkan skor kerugian EV berbanding pot" },
-    ],
-    stepsTitle: "Baru di sini?",
-    // 버튼 이름 인용은 PresetsPage.viewResults·SideBar와 «글자까지» 같아야 한다
-    steps: [
-      "Buka mana-mana spot dalam Spot belajar lalu tekan [Lihat hasil] — penyelesaiannya terus muncul",
-      "Baca Cara guna untuk belajar membaca skrin hasil",
-      "Cuba Trainer GTO — ia menunjukkan dengan tepat berapa bb yang anda rugi pada setiap keputusan",
-      "Selepas anda biasa, kira tangan anda sendiri dengan Spot tersuai (①–⑤)",
-    ],
-    // ⚠ 이 세 줄이 가리키는 본체 /ms/solver는 없다 (2026-09-03 실측 404) —
-    //   AboutPage 템플릿의 v-if="landingUrl"이 통째로 숨긴다. 본체에 /ms/solver가 생기면
-    //   outbound.ts LOCALE_PATHS.ms에 "/solver" 한 줄만 더하면 살아난다
-    landingBefore:
-      "Mahu faham dahulu apa itu solver GTO dan cara membaca hasilnya? Lihat",
-    landingLink: "panduan solver HoldemMaster",
-    landingAfter: ".",
-    notes:
-      "Pada iOS dan Safari, batasan pelayar memaksa pengiraan satu thread, jadi lebih perlahan — pada macOS kami syorkan Chrome. Memori yang tersedia dihadkan kepada 4 GB (had WebAssembly), jadi spot besar lebih baik dikira pada PC.",
-    creditBefore: "Aplikasi ini dibina berasaskan",
-    creditMid1: " (karya Wataru Inariba, AGPL-3.0), diterjemah dan ditambah baik oleh",
-    creditBrand: "HoldemMaster",
-    creditMid2: ". Keseluruhan kod sumber yang diubah suai diterbitkan di",
-    creditAfter: " di bawah lesen yang sama.",
   },
 } as const;
 
@@ -883,6 +947,24 @@ const N =
           ],
         },
         // ⚠ 트레이너 어휘 금지(Trainer·Jurulatih·latihan·berlatih·Spot belajar·Cabaran) — npokers-verify FORBIDDEN ms
+        ms: {
+          community: "npokers.com",
+          ctaPreflop: "Carta preflop",
+          ctaEquity: "Kalkulator equity",
+          installNote:
+            "Selepas dipasang, aplikasi tersimpan pada peranti anda dan tetap boleh dibuka di luar talian. Ini pintasan pelayar, bukan program — ia tidak pernah meminta sebarang kebenaran.",
+          features: [
+            { title: "Percuma", desc: "Semua ciri, tanpa had penggunaan" },
+            { title: "Luar talian", desc: "Tambah ke skrin utama dan guna tanpa sambungan internet" },
+            { title: "Pengiraan pantas", desc: "Multithread — sepantas solver desktop" },
+            { title: "Carta & equity", desc: "Range open dan defend, serta equity tangan dan range" },
+          ],
+          steps: [
+            "Mulakan dengan Carta preflop untuk melihat range open dan defend",
+            "Baca Cara guna untuk belajar membaca skrin hasil",
+            "Selepas anda biasa, kira tangan anda sendiri dengan Spot tersuai (①–⑤)",
+          ],
+        },
         hi: {
           community: "npokers.com",
           ctaPreflop: "Preflop चार्ट",
@@ -902,24 +984,6 @@ const N =
              desc: "Open और बचाव की range, साथ में हैंड और range की equity",
            }],
           steps: ["Preflop चार्ट में open और बचाव की range देखें", "परिणाम स्क्रीन समझने के लिए [कैसे इस्तेमाल करें] गाइड पढ़ें।", "तैयार होने पर अपना स्पॉट (①–⑤) में खुद के हैंड की गणना करें"],
-        },
-        ms: {
-          community: "npokers.com",
-          ctaPreflop: "Carta preflop",
-          ctaEquity: "Kalkulator equity",
-          installNote:
-            "Selepas dipasang, aplikasi tersimpan pada peranti anda dan tetap boleh dibuka di luar talian. Ini pintasan pelayar, bukan program — ia tidak pernah meminta sebarang kebenaran.",
-          features: [
-            { title: "Percuma", desc: "Semua ciri, tanpa had penggunaan" },
-            { title: "Luar talian", desc: "Tambah ke skrin utama dan guna tanpa sambungan internet" },
-            { title: "Pengiraan pantas", desc: "Multithread — sepantas solver desktop" },
-            { title: "Carta & equity", desc: "Range open dan defend, serta equity tangan dan range" },
-          ],
-          steps: [
-            "Mulakan dengan Carta preflop untuk melihat range open dan defend",
-            "Baca Cara guna untuk belajar membaca skrin hasil",
-            "Selepas anda biasa, kira tangan anda sendiri dengan Spot tersuai (①–⑤)",
-          ],
         },
       }
     : null;

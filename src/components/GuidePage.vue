@@ -125,6 +125,27 @@
       </tr>
     </table>
 
+    <!-- 전략 고정: 두 빌드 공통 -->
+    <h3 class="guide-h" data-w2="lock-title">{{ L.lockTitle }}</h3>
+    <table class="guide-table" data-w2="lock-table">
+      <tr>
+        <td class="term">{{ L.lockTerm1 }}</td>
+        <td>{{ L.lockDef1 }}</td>
+      </tr>
+      <tr>
+        <td class="term">{{ L.lockTerm2 }}</td>
+        <td>{{ L.lockDef2 }}</td>
+      </tr>
+      <tr>
+        <td class="term">{{ L.lockTerm3 }}</td>
+        <td>{{ L.lockDef3 }}</td>
+      </tr>
+      <tr>
+        <td class="term">{{ L.lockTerm4 }}</td>
+        <td>{{ L.lockDef4 }}</td>
+      </tr>
+    </table>
+
     <!-- GTO 트레이너 -->
     <template v-if="FEATURE_TRAINER">
     <h3 class="guide-h">{{ L.trainerTitle }}</h3>
@@ -161,6 +182,13 @@
       <tr>
         <td class="term">{{ L.filterTerm }}</td>
         <td>{{ L.filterDef }}</td>
+      </tr>
+      <tr data-w2="myspot-row">
+        <td class="term">{{ L.myspotTerm }}</td>
+        <td>
+          <span data-w2="myspot-def">{{ L.myspotDef }}</span>
+          <div class="hint" data-w2="myspot-hint">{{ L.myspotHint }}</div>
+        </td>
       </tr>
     </table>
     </template>
@@ -370,6 +398,16 @@ const M = {
     rTerm5: "오른쪽 아래 표",
     rDef5: "핸드별 비중·에퀴티·EV·액션% 숫자. 열 제목 클릭=정렬",
 
+    lockTitle: "전략 고정(노드락) — 상대가 실수하면 내 전략은 어떻게 바뀌나",
+    lockTerm1: "어디서",
+    lockDef1: "직접 계산을 마친 결과 화면. 맨 위 액션 흐름에서 노드를 고르고 「이 노드의 전략 고정」을 누릅니다. 교육 예제의 [결과 바로 보기]에서는 고정이 안 됩니다 — [이 스팟 직접 계산하기]로 한 번 돌린 뒤 쓰세요.",
+    lockTerm2: "어떻게",
+    lockDef2: "액션마다 비율(%)이 현재 전략대로 채워져 있습니다. 원하는 대로 고쳐 합계를 100으로 맞추고 「고정하고 다시 풀기」. 예: 상대가 플랍에서 절대 안 접는다 → 폴드 0, 나머지 100. 여러 노드를 고정할 수 있습니다.",
+    lockTerm3: "결과 읽기",
+    lockDef3: "결과 위에 노란 띠가 붙습니다. 고정 뒤의 전략은 균형(GTO)이 아니라 «상대가 그렇게 친다는 가정 아래의 최선»입니다. 창 안의 「고정 전/후 비교」에서 빈도·EV·오차가 얼마나 달라졌는지 보세요.",
+    lockTerm4: "되돌리기",
+    lockDef4: "「해제하고 다시 풀기」로 하나씩, 「전체 해제하고 다시 풀기」로 모두 풉니다. 새 스팟을 계산하면 고정은 자동으로 사라집니다. 카드를 정하지 않고 건너뛴 턴·리버 경로는 고정할 수 없습니다.",
+
     trainerTitle: "GTO 트레이너 — 눈으로 보는 것에서 직접 풀어보는 것으로",
     trainerIntroBefore: "결과 화면을 읽는 게 익숙해졌다면",
     trainerBtn: "GTO 트레이너",
@@ -394,6 +432,10 @@ const M = {
       " 저장됩니다. 홀덤마스터 계정으로 로그인하면 기록을 계정에 보관해 다른 기기에서도 이어서 풀 수 있습니다 — 로그인은 선택이며, 모든 기능은 로그인 없이 쓸 수 있습니다",
     filterTerm: "필터",
     filterDef: "싱글레이즈팟 / 3벳팟 / 블라인드전 중 약한 상황만 골라 연습",
+
+    myspotTerm: "내 스팟",
+    myspotDef: "직접 계산을 마친 결과 화면에서 「이 스팟으로 연습」을 누르면 그 스팟으로 문제를 만들어 트레이너 「내 스팟」 탭에서 바로 풀 수 있습니다. 채점은 교육 예제와 같은 기준입니다.",
+    myspotHint: "문제와 기록은 이 기기에만 남고(최근 20개 스팟 · 스팟마다 500번), 계정에는 올라가지 않아 다른 기기에서는 이어서 풀 수 없습니다. 같은 스팟을 다시 저장하면 이전 기록은 지워집니다. 전략을 고정한 채 계산한 결과로 만든 문제에는 «전략 일부 고정 가정» 표시가 붙습니다.",
 
     installTitle: "홈 화면에 설치하고 오프라인에서 공부하기",
     install1:
@@ -543,6 +585,16 @@ const M = {
     rDef5:
       "Per-hand weight, equity, EV, and action % — click a column header to sort",
 
+    lockTitle: "Strategy locking (node lock) — how does your strategy change when the opponent makes mistakes?",
+    lockTerm1: "Where",
+    lockDef1: "On the results screen after solving a spot yourself. Select a node in the action line at the top, then choose “Lock this node’s strategy”. In Study Spots, [View results] shows the solution immediately, but those results cannot be locked — run [Solve this spot yourself] first.",
+    lockTerm2: "How",
+    lockDef2: "Each action’s percentage (%) starts at its current strategy value. Change the values to add up to 100, then choose “Lock and solve again”. For example: the opponent never folds on the flop → fold 0, other actions total 100. You can lock several nodes.",
+    lockTerm3: "Reading results",
+    lockDef3: "A yellow banner appears above the results. The strategy after locking is the best response under the assumption that the opponent plays that way, rather than a GTO equilibrium. In “Before/after comparison” in the panel, see how frequencies, EV, and error have changed.",
+    lockTerm4: "Undoing locks",
+    lockDef4: "Use “Unlock and solve again” for one node or “Unlock all and solve again” for all nodes. Locks disappear automatically when you solve a new spot. You cannot lock turn or river paths where you skipped choosing a card.",
+
     trainerTitle: "GTO Trainer — from watching to playing",
     trainerIntroBefore:
       "Once you're comfortable reading the results screen, move on to the",
@@ -570,6 +622,10 @@ const M = {
     filterTerm: "Filters",
     filterDef:
       "Drill just your weak areas: single raised pots, 3-bet pots, or blind vs blind",
+
+    myspotTerm: "My spots",
+    myspotDef: "After solving a spot yourself, choose “Practice this spot” on the results screen to create questions from it and start playing them immediately in the Trainer’s “My spots” tab. Grading uses the same criteria as the Study Spots.",
+    myspotHint: "Questions and history stay on this device only (20 most recent spots · 500 attempts per spot). They are not saved to your account, so you cannot continue on another device. Saving the same spot again clears its previous history. Questions made from results calculated with a locked strategy are marked “Assumes part of the strategy is fixed”.",
 
     installTitle: "Install to your home screen and study offline",
     install1:
@@ -724,6 +780,16 @@ const M = {
     rDef5:
       "ハンドごとのウェイト・エクイティ・EV・アクション%の数値。列見出しをクリックで並べ替え",
 
+    lockTitle: "戦略固定（ノードロック）— 相手のミスで自分の戦略はどう変わる？",
+    lockTerm1: "使う場所",
+    lockDef1: "自分で計算を終えた結果画面で使います。上部のアクションの流れでノードを選び、「このノードの戦略を固定」を押します。学習スポットの[結果をすぐ見る]は結果がすぐに表示されますが、固定はできません。先に[このスポットを自分で計算する]を実行してください。",
+    lockTerm2: "使い方",
+    lockDef2: "各アクションの割合(%)には現在の戦略の値が入っています。自由に変えて合計を100にし、「固定して再計算」を押します。例：相手がフロップで絶対に降りない → フォールド0、残りの合計100。複数のノードを固定できます。",
+    lockTerm3: "結果の読み方",
+    lockDef3: "結果の上に黄色い帯が出ます。固定後の戦略は均衡(GTO)ではなく、相手がそのように打つと仮定した場合の最善です。パネル内の「固定前後の比較」で、頻度・EV・誤差の変化を確認できます。",
+    lockTerm4: "元に戻す",
+    lockDef4: "「解除して再計算」で1つずつ、「全解除して再計算」ですべて解除します。新しいスポットを計算すると固定は自動で消えます。カードを選ばずに進めたターン・リバーの経路は固定できません。",
+
     trainerTitle: "GTOトレーナー — 見るだけから自分で解く段階へ",
     trainerIntroBefore: "結果画面の読み方に慣れてきたら",
     trainerBtn: "GTOトレーナー",
@@ -750,6 +816,10 @@ const M = {
     filterTerm: "フィルター",
     filterDef:
       "シングルレイズポット / 3ベットポット / ブラインド戦から、苦手な状況だけ選んで練習",
+
+    myspotTerm: "自分のスポット",
+    myspotDef: "自分で計算を終えた結果画面で「このスポットで練習」を押すと、そのスポットから問題を作り、トレーナーの「自分のスポット」タブですぐに解けます。採点基準は学習スポットと同じです。",
+    myspotHint: "問題と記録はこの端末だけに保存されます（最新20スポット・各500回分）。アカウントには保存されず、別の端末では続けられません。同じスポットを再保存すると以前の記録は消えます。戦略を固定して計算した結果から作った問題には「戦略の一部を固定した仮定」と表示されます。",
 
     installTitle: "ホーム画面にインストールしてオフラインで学習",
     install1:
@@ -904,6 +974,16 @@ const M = {
     rDef5:
       "Peso, equity, EV y % de acción por mano — haz clic en el encabezado de una columna para ordenar",
 
+    lockTitle: "Estrategia fija (node lock) — ¿cómo cambia tu estrategia cuando el rival comete errores?",
+    lockTerm1: "Dónde",
+    lockDef1: "En la pantalla de resultados, después de resolver un spot tú mismo. Elige un nodo en la línea de acciones de arriba y pulsa «Fijar la estrategia de este nodo». En los Spots de estudio, [Ver resultados] muestra la solución de inmediato, pero esos resultados no se pueden fijar — ejecuta primero [Resolver este spot tú mismo].",
+    lockTerm2: "Cómo",
+    lockDef2: "El porcentaje (%) de cada acción parte de su valor en la estrategia actual. Cámbialos para que sumen 100 y pulsa «Fijar y recalcular». Por ejemplo: el rival nunca hace fold en el flop → fold 0, las demás acciones suman 100. Puedes fijar varios nodos.",
+    lockTerm3: "Leer los resultados",
+    lockDef3: "Aparece una franja amarilla sobre los resultados. La estrategia tras fijarla es la mejor respuesta suponiendo que el rival juega así, en lugar de un equilibrio GTO. En «Comparación antes/después», dentro del panel, puedes ver cuánto han cambiado las frecuencias, el EV y el error.",
+    lockTerm4: "Deshacer",
+    lockDef4: "Usa «Quitar y recalcular» para un nodo o «Quitar todas y recalcular» para todos. Las fijaciones desaparecen automáticamente al calcular un spot nuevo. No puedes fijar líneas de turn o river si has avanzado sin elegir la carta.",
+
     trainerTitle: "Entrenador GTO — de mirar a jugar",
     trainerIntroBefore:
       "Cuando ya te sientas cómodo leyendo la pantalla de resultados, pasa al",
@@ -931,6 +1011,10 @@ const M = {
     filterTerm: "Filtros",
     filterDef:
       "Practica solo tus puntos débiles: single raised pots, botes de 3-bet o guerra de ciegas",
+
+    myspotTerm: "Mis spots",
+    myspotDef: "Después de resolver un spot tú mismo, pulsa «Practicar este spot» en los resultados para crear ejercicios de ese spot y empezar a resolverlos de inmediato en la pestaña «Mis spots» del Entrenador. Se evalúan con los mismos criterios que los Spots de estudio.",
+    myspotHint: "Los ejercicios y el historial solo quedan en este dispositivo (20 spots más recientes · 500 intentos por spot). No se guardan en tu cuenta, así que no puedes continuar en otro dispositivo. Guardar de nuevo el mismo spot borra su historial anterior. Los ejercicios creados a partir de resultados calculados con una estrategia fijada llevan la indicación «Supone parte de la estrategia fijada».",
 
     installTitle: "Instálalo en tu pantalla de inicio y estudia offline",
     install1:
@@ -1086,6 +1170,16 @@ const M = {
     rDef5:
       "Peso, equity, EV e % de ação por mão — clique no cabeçalho de uma coluna para ordenar",
 
+    lockTitle: "Estratégia fixa (node lock) — como sua estratégia muda quando o adversário erra?",
+    lockTerm1: "Onde",
+    lockDef1: "Na tela de resultados, depois de calcular um spot você mesmo. Escolha um nó na linha de ações no topo e toque em “Fixar a estratégia deste nó”. Nos Spots de estudo, [Ver resultados] mostra a solução na hora, mas esses resultados não podem ser fixados — execute primeiro [Resolver este spot você mesmo].",
+    lockTerm2: "Como",
+    lockDef2: "A porcentagem (%) de cada ação começa com seu valor na estratégia atual. Altere os valores para que somem 100 e toque em “Fixar e calcular de novo”. Por exemplo: o adversário nunca dá fold no flop → fold 0, as outras ações somam 100. Você pode fixar vários nós.",
+    lockTerm3: "Ler os resultados",
+    lockDef3: "Uma faixa amarela aparece acima dos resultados. A estratégia após a fixação é a melhor resposta supondo que o adversário jogue daquele jeito, em vez de um equilíbrio GTO. Em “Comparação antes/depois”, dentro do painel, veja quanto mudaram as frequências, o EV e o erro.",
+    lockTerm4: "Desfazer",
+    lockDef4: "Use “Remover e calcular de novo” para um nó ou “Remover todas e calcular de novo” para todos. As fixações desaparecem automaticamente quando você calcula um novo spot. Não é possível fixar linhas de turn ou river em que você avançou sem escolher a carta.",
+
     trainerTitle: "Treinador GTO — de assistir para jogar",
     trainerIntroBefore:
       "Quando já estiver confortável lendo a tela de resultados, passe para o",
@@ -1113,6 +1207,10 @@ const M = {
     filterTerm: "Filtros",
     filterDef:
       "Pratique só os seus pontos fracos: single raised pots, potes de 3-bet ou blind vs blind",
+
+    myspotTerm: "Meus spots",
+    myspotDef: "Depois de calcular um spot você mesmo, toque em “Praticar este spot” nos resultados para criar questões desse spot e começar a respondê-las na hora na aba “Meus spots” do Treinador. A avaliação usa os mesmos critérios dos Spots de estudo.",
+    myspotHint: "As questões e o histórico ficam apenas neste dispositivo (20 spots mais recentes · 500 tentativas por spot). Não são salvos na sua conta, então não é possível continuar em outro dispositivo. Salvar o mesmo spot novamente apaga o histórico anterior. Questões criadas a partir de resultados calculados com uma estratégia fixada recebem a indicação “Pressupõe parte da estratégia fixada”.",
 
     installTitle: "Instale na sua tela de início e estude offline",
     install1:
@@ -1269,6 +1367,16 @@ const M = {
     rDef5:
       "Gewicht, Equity, EV und Aktions-% je Hand – klicke auf eine Spaltenüberschrift, um zu sortieren",
 
+    lockTitle: "Strategie fixieren (Node Lock) – wie ändert sich deine Strategie, wenn der Gegner Fehler macht?",
+    lockTerm1: "Wo",
+    lockDef1: "Im Ergebnisbildschirm, nachdem du einen Spot selbst berechnet hast. Wähle oben in der Aktionsfolge einen Knoten und dann „Strategie dieses Knotens fixieren“. Bei den Lernspots zeigt [Ergebnisse ansehen] die Lösung sofort, aber diese Ergebnisse lassen sich nicht fixieren – führe zuerst [Diesen Spot selbst berechnen] aus.",
+    lockTerm2: "Wie",
+    lockDef2: "Der Anteil (%) jeder Aktion ist mit dem Wert der aktuellen Strategie vorbelegt. Ändere die Werte so, dass sie zusammen 100 ergeben, und wähle „Fixieren und neu berechnen“. Beispiel: Der Gegner foldet am Flop nie → Fold 0, übrige Aktionen zusammen 100. Du kannst mehrere Knoten fixieren.",
+    lockTerm3: "Ergebnisse lesen",
+    lockDef3: "Über den Ergebnissen erscheint ein gelber Hinweisbalken. Die Strategie nach dem Fixieren ist die beste Antwort unter der Annahme, dass der Gegner so spielt, statt eines GTO-Gleichgewichts. Unter „Vorher/Nachher-Vergleich“ im Fenster siehst du, wie sich Frequenzen, EV und Fehler verändert haben.",
+    lockTerm4: "Rückgängig machen",
+    lockDef4: "Mit „Lösen und neu berechnen“ löst du einen Knoten, mit „Alle lösen und neu berechnen“ alle. Wenn du einen neuen Spot berechnest, verschwinden die Fixierungen automatisch. Turn- oder River-Pfade, bei denen du die Kartenauswahl übersprungen hast, lassen sich nicht fixieren.",
+
     trainerTitle: "GTO-Trainer – vom Zuschauen zum Spielen",
     trainerIntroBefore:
       "Wenn du den Ergebnisbildschirm sicher liest, geh weiter zum",
@@ -1296,6 +1404,10 @@ const M = {
     filterTerm: "Filter",
     filterDef:
       "Übe gezielt deine Schwächen: Single Raised Pots, 3-Bet-Pots oder Blind vs Blind",
+
+    myspotTerm: "Meine Spots",
+    myspotDef: "Wähle nach deiner eigenen Berechnung im Ergebnisbildschirm „Diesen Spot üben“, um Fragen aus diesem Spot zu erstellen und sie sofort im Trainer-Tab „Meine Spots“ zu beantworten. Es gelten dieselben Bewertungskriterien wie bei den Lernspots.",
+    myspotHint: "Fragen und Verlauf bleiben nur auf diesem Gerät (20 neueste Spots · 500 Versuche je Spot). Sie werden nicht in deinem Konto gespeichert, deshalb kannst du auf einem anderen Gerät nicht weitermachen. Erneutes Speichern desselben Spots löscht den bisherigen Verlauf. Fragen aus Ergebnissen mit fixierter Strategie tragen den Hinweis „Annahme einer teilweise fixierten Strategie“.",
 
     installTitle: "Auf dem Startbildschirm installieren und offline lernen",
     install1:
@@ -1450,6 +1562,16 @@ const M = {
     rTerm5: "右下角的表格",
     rDef5: "每手牌的权重、胜率（EQ）、权益实现（EQR）、EV、动作占比。点列标题可以排序",
 
+    lockTitle: "固定策略（node lock）——对手犯错时，你的策略会怎样变化？",
+    lockTerm1: "在哪里用",
+    lockDef1: "自己计算完成后的结果页面。先在顶部动作线路里选一个节点，再点“固定此节点的策略”。教学案例的[直接看结果]会马上显示结果，但这里不能固定策略——请先运行一次[自己计算这个牌局]。",
+    lockTerm2: "怎么用",
+    lockDef2: "每个动作的比例(%)已经按当前策略填好。按你的想法修改，让合计等于100，再点“固定并重新计算”。比如：对手在翻牌圈绝不弃牌 → 弃牌0，其余动作合计100。可以固定多个节点。",
+    lockTerm3: "怎么看结果",
+    lockDef3: "结果上方会出现黄色提示条。固定后的策略不是均衡(GTO)，而是假设对手这样打时的最佳应对。在面板里的“固定前后对比”中，看看频率、EV和误差变了多少。",
+    lockTerm4: "怎么撤销",
+    lockDef4: "用“解除并重新计算”逐个解除，或用“全部解除并重新计算”一次全部解除。计算新场景时，固定会自动清除。跳过选牌的转牌或河牌线路不能固定。",
+
     trainerTitle: "GTO 训练器——从“看懂”走到“自己做”",
     trainerIntroBefore: "结果画面读顺了，就可以进",
     trainerBtn: "GTO 训练器",
@@ -1476,6 +1598,10 @@ const M = {
       "。用 HoldemMaster 账号登录，记录就会存到账号里，换台设备也能接着做——登录是可选的，所有功能不登录也能用",
     filterTerm: "筛选",
     filterDef: "在单加注底池/3bet 底池/盲位对战里，挑你弱的那类专门练",
+
+    myspotTerm: "我的场景",
+    myspotDef: "自己计算完成后，在结果页面点“用这个场景练习”，就能用这个场景生成题目，并在训练器的“我的场景”标签页马上开始练习。评分标准与教学案例相同。",
+    myspotHint: "题目和记录只保存在本设备（最近20个场景·每个场景500次），不会保存到账号，所以无法在其他设备上继续练习。重新保存同一场景会清除之前的记录。用固定策略后计算的结果生成的题目，会标注“假设部分策略固定”。",
 
     installTitle: "装到主屏幕，离线也能学",
     install1:
@@ -1632,6 +1758,16 @@ const M = {
     // EQR = equity realization = 「勝率實現」 (본체 브리프·번체 포스팅 4회. 간체의 「权益实现」과 다르다)
     rDef5: "每手牌的權重、勝率（EQ）、勝率實現（EQR）、EV、動作佔比。按欄標題可以排序",
 
+    lockTitle: "固定策略（node lock）——對手犯錯時，你的策略會怎樣變化？",
+    lockTerm1: "在哪裡用",
+    lockDef1: "自己計算完成後的結果頁面。先在頂部動作線路裡選一個節點，再按「固定此節點的策略」。教學案例的[直接看結果]會馬上顯示結果，但這裡不能固定策略——請先執行一次[自己計算這個牌局]。",
+    lockTerm2: "怎麼用",
+    lockDef2: "每個動作的比例(%)已經按目前策略填好。按你的想法修改，讓合計等於100，再按「固定並重新計算」。比如：對手在翻牌圈絕不蓋牌 → 蓋牌0，其餘動作合計100。可以固定多個節點。",
+    lockTerm3: "怎麼看結果",
+    lockDef3: "結果上方會出現黃色提示列。固定後的策略不是均衡(GTO)，而是假設對手這樣打時的最佳應對。在面板裡的「固定前後比較」中，看看頻率、EV和誤差變了多少。",
+    lockTerm4: "怎麼復原",
+    lockDef4: "用「解除並重新計算」逐個解除，或用「全部解除並重新計算」一次全部解除。計算新場景時，固定會自動清除。跳過選牌的轉牌或河牌線路不能固定。",
+
     trainerTitle: "GTO 訓練器——從「看懂」走到「自己做」",
     trainerIntroBefore: "結果畫面讀順了，就可以進",
     trainerBtn: "GTO 訓練器",
@@ -1659,6 +1795,10 @@ const M = {
       "。用 HoldemMaster 帳號登入，紀錄就會存到帳號裡，換台裝置也能接著做——登入是選用的，所有功能不登入也能用",
     filterTerm: "篩選",
     filterDef: "在單加注底池/3bet 底池/盲位對戰裡，挑你弱的那類專門練",
+
+    myspotTerm: "我的場景",
+    myspotDef: "自己計算完成後，在結果頁面按「用這個場景練習」，就能用這個場景建立題目，並在訓練器的「我的場景」分頁馬上開始練習。評分標準與教學案例相同。",
+    myspotHint: "題目和紀錄只儲存在此裝置（最近20個場景·每個場景500次），不會儲存到帳號，所以無法在其他裝置上繼續練習。重新儲存同一場景會清除之前的紀錄。用固定策略後計算的結果建立的題目，會標示「假設部分策略固定」。",
 
     installTitle: "加入主畫面，離線也能學",
     install1:
@@ -1815,6 +1955,16 @@ const M = {
     rDef5:
       "Poids, equity, EV et % d'action par main — clique sur un en-tête de colonne pour trier",
 
+    lockTitle: "Stratégie fixée (node lock) — comment ta stratégie change-t-elle quand l’adversaire fait des erreurs ?",
+    lockTerm1: "Où",
+    lockDef1: "Sur l’écran de résultats, après avoir calculé un spot toi-même. Choisis un nœud dans la ligne d’actions en haut, puis « Fixer la stratégie de ce nœud ». Dans les Spots d’étude, [Voir les résultats] affiche la solution immédiatement, mais ces résultats ne permettent pas de fixer la stratégie — lance d’abord [Calcule ce spot toi-même].",
+    lockTerm2: "Comment",
+    lockDef2: "Le pourcentage (%) de chaque action reprend la valeur de la stratégie actuelle. Modifie les valeurs pour obtenir un total de 100, puis choisis « Fixer et recalculer ». Exemple : l’adversaire ne fold jamais au flop → fold 0, les autres actions totalisent 100. Tu peux fixer plusieurs nœuds.",
+    lockTerm3: "Lire les résultats",
+    lockDef3: "Un bandeau jaune apparaît au-dessus des résultats. Après fixation, la stratégie est la meilleure réponse en supposant que l’adversaire joue ainsi, plutôt qu’un équilibre GTO. Dans « Comparaison avant/après », à l’intérieur du panneau, regarde comment les fréquences, l’EV et l’erreur ont changé.",
+    lockTerm4: "Annuler",
+    lockDef4: "Utilise « Libérer et recalculer » pour un nœud ou « Tout libérer et recalculer » pour tous. Les fixations disparaissent automatiquement quand tu calcules un nouveau spot. Tu ne peux pas fixer une ligne de turn ou de river si tu as passé l’étape du choix de la carte.",
+
     trainerTitle: "Trainer GTO — de l'observation au jeu",
     trainerIntroBefore:
       "Une fois à l'aise avec l'écran de résultats, passe au",
@@ -1844,6 +1994,10 @@ const M = {
     filterTerm: "Filtres",
     filterDef:
       "Bosse juste tes points faibles : single raised pots, pots 3-bet ou blind vs blind",
+
+    myspotTerm: "Mes spots",
+    myspotDef: "Après avoir calculé un spot toi-même, choisis « Travailler ce spot » dans les résultats pour créer des exercices de ce spot et commencer tout de suite dans l’onglet « Mes spots » du Trainer. Les critères d’évaluation sont les mêmes que pour les Spots d’étude.",
+    myspotHint: "Les exercices et l’historique restent uniquement sur cet appareil (20 spots les plus récents · 500 essais par spot). Ils ne sont pas enregistrés sur ton compte : tu ne peux donc pas continuer sur un autre appareil. Enregistrer à nouveau le même spot efface son historique précédent. Les exercices créés à partir de résultats calculés avec une stratégie fixée portent la mention « Hypothèse d’une stratégie partiellement fixée ».",
 
     installTitle: "Installe-le sur ton écran d'accueil et étudie hors ligne",
     install1:
@@ -2007,6 +2161,16 @@ const M = {
     rDef5:
       "Bobot, equity, EV, dan % aksi per hand — klik judul kolom untuk mengurutkan",
 
+    lockTitle: "Node lock — bagaimana strategi Anda berubah saat lawan membuat kesalahan?",
+    lockTerm1: "Di mana",
+    lockDef1: "Di layar hasil setelah Anda menghitung spot sendiri. Pilih node pada alur aksi di atas, lalu tekan “Kunci strategi di node ini”. Pada Spot belajar, [Lihat hasil] langsung menampilkan solusi, tetapi strategi pada hasil itu tidak dapat dikunci — jalankan [Hitung sendiri spot ini] terlebih dahulu.",
+    lockTerm2: "Caranya",
+    lockDef2: "Persentase (%) setiap aksi sudah terisi sesuai strategi saat ini. Ubah nilainya hingga berjumlah 100, lalu tekan “Kunci dan hitung ulang”. Contoh: lawan tidak pernah fold pada flop → fold 0, aksi lainnya berjumlah 100. Anda dapat mengunci beberapa node.",
+    lockTerm3: "Membaca hasil",
+    lockDef3: "Pita kuning muncul di atas hasil. Strategi setelah dikunci adalah respons terbaik dengan asumsi lawan bermain seperti itu, bukan keseimbangan GTO. Pada “Perbandingan sebelum/sesudah” di dalam panel, lihat perubahan frekuensi, EV, dan galat.",
+    lockTerm4: "Membuka kunci",
+    lockDef4: "Gunakan “Buka kunci dan hitung ulang” untuk satu node atau “Buka semua kunci dan hitung ulang” untuk semua node. Kunci hilang otomatis saat Anda menghitung spot baru. Alur turn atau river yang Anda lewati tanpa memilih kartu tidak dapat dikunci.",
+
     trainerTitle: "Trainer GTO — dari mengamati ke bermain",
     trainerIntroBefore:
       "Setelah nyaman membaca layar hasil, lanjut ke",
@@ -2036,6 +2200,10 @@ const M = {
     filterTerm: "Filter",
     filterDef:
       "Fokus ke titik lemah Anda saja: single raised pot, pot 3-bet, atau blind vs blind",
+
+    myspotTerm: "Spot saya",
+    myspotDef: "Setelah menghitung spot sendiri, tekan “Latih spot ini” di layar hasil untuk membuat soal dari spot itu dan langsung mengerjakannya di tab “Spot saya” pada Trainer. Penilaiannya memakai kriteria yang sama dengan Spot belajar.",
+    myspotHint: "Soal dan riwayat hanya tersimpan di perangkat ini (20 spot terbaru · 500 percobaan per spot). Keduanya tidak disimpan ke akun, jadi Anda tidak dapat melanjutkan di perangkat lain. Menyimpan ulang spot yang sama menghapus riwayat sebelumnya. Soal yang dibuat dari hasil perhitungan dengan strategi terkunci diberi keterangan “Mengasumsikan sebagian strategi dikunci”.",
 
     installTitle: "Pasang ke layar utama dan belajar saat offline",
     install1:
@@ -2124,139 +2292,6 @@ const M = {
     errNone: "Belum ada error yang tercatat.",
     errPrompt: "Salin teks di bawah ini",
   },
-  hi: {
-    quickTitle: "1 मिनट में शुरुआत — पहली बार यहाँ हैं तो इसे पढ़ें",
-    quickStep1Desktop: "बाईं ओर ",
-    quickStep1Mobile: "ऊपर दिए टैब में ",
-    quickStep1Btn: "अभ्यास स्पॉट",
-    quickStep1After: " चुनें",
-    quickStep2Before: "कोई स्पॉट खोलें और",
-    quickStep2Btn: "[⚡ परिणाम देखें]",
-    quickStep2After: " दबाएँ — परिणाम तुरंत दिखेंगे",
-    quickStep3: "संख्याएँ समझने के लिए नीचे “परिणाम स्क्रीन कैसे पढ़ें” देखें",
-    termsTitle: "बस ये चार शब्द समझ लें",
-    termRange: "Range",
-    defRange: "किसी खिलाड़ी के पास हो सकने वाले हैंड का समूह, जैसे AA, KK या AK। अलग-अलग हैंड का वज़न भी तय किया जा सकता है।",
-    defPos: "OOP पहले एक्शन करता है, IP बाद में। बाद में एक्शन करने पर दूसरे खिलाड़ी का फ़ैसला देखने का फ़ायदा मिलता है। BTN बनाम BB में BB, OOP होता है।",
-    termEquity: "Equity",
-    defEquity: "अभी all-in होने पर pot में आपकी अपेक्षित हिस्सेदारी — दो खिलाड़ियों में जीतने की संभावना और बराबरी की संभावना का आधा हिस्सा।",
-    defEv: "अपेक्षित मूल्य — किसी एक्शन से औसतन मिलने वाला मूल्य। जितना अधिक, उतना बेहतर।",
-    customTitleBefore: "अपना स्पॉट हल करें — ",
-    customTitleDesktop: "साइडबार",
-    customTitleMobile: "टैब",
-    customTitleAfter: " में ① → ⑤ के क्रम से चलें",
-    step1Bold: "① OOP Range / ② IP Range",
-    step1After: " — कंप्यूटर पर 13×13 ग्रिड में क्लिक करके खींचें। फ़ोन पर नीचे दिए उदाहरण कॉपी करके टेक्स्ट इनपुट में पेस्ट कर सकते हैं: ",
-    step1Hint: "22+ = सभी pocket pair · A2s+ = A2s से AKs तक · KTo+ = KTo से KQo तक। ग्रिड में तिरछी मुख्य रेखा पर pocket pair, ऊपर दाईं ओर suited और नीचे बाईं ओर offsuit हैंड हैं।",
-    exampleHeader: "पहली बार इस्तेमाल कर रहे हैं? इन्हें कॉपी करके range इनपुट में पेस्ट करें (सामान्य BTN बनाम BB 100bb — अभ्यास स्पॉट में भी यही range हैं)",
-    exOopLabel: "OOP (BB caller)",
-    exIpLabel: "IP (BTN opener)",
-    copiedLabel: "कॉपी हो गया!",
-    copyLabel: "कॉपी करें",
-    step3Bold: "③ Board",
-    step3After: " — flop के तीन कार्ड चुनें या रैंडम flop चुनने वाला बटन दबाएँ",
-    step4Bold: "④ Bet size (गेम ट्री सेटिंग)",
-    step4After: " — शुरुआत में डिफ़ॉल्ट सेटिंग रखें। बस शुरुआती pot और effective stack जाँच लें",
-    step4Hint: "अपने स्पॉट के इनपुट पूर्णांक chips में हैं। bb में समझने के लिए 10 chips = 1bb मानें (जैसे pot 55 = 5.5bb)। अभ्यास स्पॉट और ट्रेनर इसी पैमाने पर अपने आप बदलकर दिखाते हैं।",
-    step5Bold1: "⑤ गणना करें",
-    step5Mid: " — पहले “Tree बनाएँ” दबाएँ, फिर ट्री तैयार होने पर “Solver चलाएँ”। “गणना पूरी हुई!” दिखने पर ऊपर का ",
-    step5Bold2: "[परिणाम]",
-    step5After: " टैब खोलें",
-    step5Hint: "गणना आपके अपने डिवाइस पर होती है और कुछ सेकंड से कुछ मिनट लग सकते हैं। स्क्रीन ⑤ पर स्पॉट शेयर करने वाले बटन से लिंक कॉपी करके कम्युनिटी में उस पर सवाल पूछ सकते हैं।",
-    resultsTitle: "परिणाम स्क्रीन कैसे पढ़ें",
-    rTerm1: "ऊपर की एक्शन पट्टी",
-    rDef1: "अपने स्पॉट की गणना के बाद, एक्शन क्रम में कोई node चुनकर उसकी रणनीति देखें (flop → bet → call → turn…)। अभ्यास स्पॉट का preview केवल flop की पहली बारी दिखाता है।",
-    rTerm2: "13×13 ग्रिड (बाईं ओर)",
-    rDef2: "हर खाने में एक हैंड है। रंगों का बँटवारा एक्शन की आवृत्ति दिखाता है। 🟥 bet/raise (गहरा रंग = बड़ा bet) · 🟩 check/call · धुंधला खाना = range में नहीं है। GTO में एक ही हैंड से अलग-अलग आवृत्ति पर अलग एक्शन किए जा सकते हैं। इसे mixed strategy कहते हैं।",
-    rTerm3: "सारांश बॉक्स (ऊपर दाईं ओर)",
-    rDef3: "पूरी range में एक्शन की आवृत्ति (%) और combo की संख्या।",
-    rTerm4: "हैंड की श्रेणियाँ (बीच में दाईं ओर)",
-    rDef4: "हर range बोर्ड से कैसे जुड़ती है — जैसे Top Pair और draw। इससे दोनों range की बनावट की तुलना कर सकते हैं।",
-    rTerm5: "टेबल (नीचे दाईं ओर)",
-    rDef5: "हर हैंड का वज़न, equity, EV और एक्शन का %। क्रम बदलने के लिए कॉलम के शीर्षक पर क्लिक करें।",
-    trainerTitle: "GTO Trainer — अब खुद फ़ैसले लें",
-    trainerIntroBefore: "परिणाम स्क्रीन समझने के बाद",
-    trainerBtn: "GTO Trainer",
-    trainerIntroAfter: " आज़माएँ। 13 अभ्यास स्पॉट के निर्णय बिंदुओं पर आपको वास्तविक range से हैंड मिलते हैं। एक्शन चुनें और अपना मूल्यांकन देखें।",
-    gradTerm: "मूल्यांकन कैसे होता है",
-    gradBefore: "सिर्फ़ सही या ग़लत के बजाय ",
-    gradBold: "EV नुकसान (bb)",
-    gradAfter: " से मूल्यांकन होता है। GTO एक ही हैंड से कई एक्शन मिला सकता है। कम आवृत्ति वाला एक्शन अपने आप गलती नहीं है — सवाल यह है कि उससे कितना EV छूटता है।",
-    verdictTerm: "मूल्यांकन की सीमाएँ",
-    verdictBefore: "नुकसान ",
-    verdictBold: "pot के अनुपात में",
-    verdictAfter: " मापा जाता है: pot का 0.35% तक = सर्वोत्तम · 1% तक = स्वीकार्य · इससे अधिक = गलती। उदाहरण के लिए, 5.5bb single raised pot (SRP) में सीमाएँ 0.02bb और 0.06bb हैं। 22.5bb 3-bet pot में ये 0.08bb और 0.23bb हैं।",
-    verdictHint: "एक ही 0.08bb नुकसान छोटे pot में गलती और बड़े pot में स्वीकार्य हो सकता है। केवल bb से मूल्यांकन करने पर 3-bet pot में प्रदर्शन ज़रूरत से अधिक ख़राब दिखता था, इसलिए 2026-08-15 से pot के अनुपात वाला तरीका अपनाया गया। सीमाओं के न्यूनतम मान 0.02bb / 0.05bb हैं। लक्ष्य exploitability 0.5% पर गणना रोकी जाती है; बहुत छोटे EV अंतर को सटीक निष्कर्ष मानने से बचने के लिए यह गुंजाइश रखी गई है।",
-    reviewTerm: "दोबारा देखें",
-    reviewBefore: "सबसे अधिक EV नुकसान वाले हैंड [दोबारा देखें] से फिर मिलते हैं। डिफ़ॉल्ट रूप से इतिहास ",
-    reviewBold: "सिर्फ़ इस डिवाइस पर",
-    reviewAfter: " सेव होता है। HoldemMaster खाते में लॉग इन करके इसे खाते में रख सकते हैं और दूसरे डिवाइस पर जारी रख सकते हैं। लॉग इन करना ज़रूरी नहीं — उसके बिना भी सभी सुविधाएँ इस्तेमाल कर सकते हैं।",
-    filterTerm: "फ़िल्टर",
-    filterDef: "कमज़ोर हिस्सों पर ध्यान दें: single raised pot, 3-bet pot या blind बनाम blind।",
-    installTitle: "होम स्क्रीन पर जोड़ें और ऑफ़लाइन अभ्यास करें",
-    install1: "इस सॉल्वर को ऐप की तरह होम स्क्रीन पर जोड़ सकते हैं। अलग से इंस्टॉलर फ़ाइल डाउनलोड करने की ज़रूरत नहीं। Chrome या Edge में एड्रेस बार के दाईं ओर ",
-    installBold1: "इंस्टॉल आइकन",
-    install2: " इस्तेमाल करें। iPhone के Safari में ",
-    installBold2: "शेयर करें → होम स्क्रीन पर जोड़ें",
-    install3: " चुनें। इंस्टॉल होने पर 13 अभ्यास स्पॉट और ट्रेनर का डेटा डिवाइस पर सेव हो जाता है। आप ",
-    installBold3: "बिना इंटरनेट, मेट्रो में भी",
-    install4: " अभ्यास कर सकते हैं।",
-    samsung1: "* Samsung Internet या आपका डिवाइस सुरक्षा कारणों से इंस्टॉल रोक सकता है। यह जाँच ब्राउज़र या डिवाइस करता है। ",
-    samsungBold: "साइट Chrome में खोलकर",
-    samsung2: " इंस्टॉल करने की कोशिश करें। इसी ब्राउज़र में जारी रखना चाहें तो स्क्रीन पर दिए गए विकल्प पढ़कर आगे बढ़ें।",
-    offlineDataLabel: "ऑफ़लाइन अभ्यास का डेटा",
-    offlineSaved: "सेव है — अभ्यास स्पॉट और ट्रेनर बिना इंटरनेट चलेंगे",
-    offlineSaving: "सेव हो रहा है…",
-    offlineNotSaved: "सेव नहीं है",
-    offlineSaveBtn: "अभी सेव करें (~2.3MB)",
-    offlineFootnote: "अपने स्पॉट की गणना ऑफ़लाइन करने के लिए उसे कम से कम एक बार ऑनलाइन चलाना ज़रूरी है — सॉल्वर इंजन पहली बार इस्तेमाल करने पर डाउनलोड होता है।",
-    safeTitle: "इंस्टॉल करने से क्या होता है?",
-    safe1: "यहाँ इंस्टॉल करने का मतलब ",
-    safeBold: "ब्राउज़र में चलने वाले वेब ऐप का शॉर्टकट बनाना",
-    safe2: " है। Android पर इस पते से जुड़ा छोटा ऐप पैकेज दर्ज हो सकता है, लेकिन ऐप ब्राउज़र इंजन में ही चलता है। नीचे दिए तरीके खुद जाँच सकते हैं।",
-    permTerm: "डिवाइस की अनुमति नहीं माँगता",
-    permBefore: "इंस्टॉल करने के लिए कैमरा, संपर्क, SMS या लोकेशन की अनुमति नहीं माँगी जाती। अपने फ़ोन की ",
-    permBold: "सेटिंग में ऐप की अनुमतियाँ",
-    permAfter: " खोलकर जाँचें।",
-    airplaneTerm: "एयरप्लेन मोड में जाँचें",
-    airplaneBefore: "डेटा सेव होने के बाद इंटरनेट बंद करके ट्रेनर चलाकर देखें। इससे जाँच सकते हैं कि अभ्यास के लिए ",
-    airplaneBold: "आपका अपना डिवाइस ही काफ़ी है",
-    airplaneAfter: "।",
-    openTerm: "सोर्स कोड सार्वजनिक है",
-    openBefore: "यह सॉल्वर AGPL-3.0 ओपन सोर्स है (",
-    openAfter: ")।",
-    removeTerm: "आसानी से हटा सकते हैं",
-    removeDef: "दूसरे ऐप की तरह आइकन को देर तक दबाकर हटाएँ। सेव किया गया साइट डेटा हटाना हो तो ब्राउज़र की सेटिंग भी देखें।",
-    samsungNote2: "* Samsung Internet में इंस्टॉल रुकने का कारण ब्राउज़र या डिवाइस की सुरक्षा जाँच हो सकता है। संदेश ध्यान से पढ़ें। ज़रूरत हो तो साइट Chrome में खोलकर कोशिश करें।",
-    studyTitle: "अभ्यास का सुझाया क्रम",
-    study1: "13 अभ्यास स्पॉट क्रम से देखें — ये एक-दूसरे से जुड़ी स्थितियों को समझने में मदद करते हैं",
-    study2: "सोच रहे हैं कि “इस हैंड से कभी check क्यों होता है?” विवरण टेबल में हर एक्शन के EV की तुलना करें।",
-    study3: "उन्हीं स्पॉट का GTO Trainer में अभ्यास करें। कमज़ोरियों की रिपोर्ट बताती है कि किन स्थितियों में सबसे अधिक EV नुकसान होता है",
-    study4: "Range वही रखें और सिर्फ़ बोर्ड बदलकर तुलना करें (जैसे A72 और 974)",
-    study5: "असली खेल में जिन हैंड ने उलझाया, उन्हें यहाँ बनाकर दोबारा देखें",
-    troubleTitle: "परेशानी दूर करें",
-    tTerm1: "ट्री नहीं बन रहा",
-    tDef1: "जाँचें कि बोर्ड पर 3 कार्ड और दोनों range दर्ज हैं",
-    tTerm2: "गणना धीमी है",
-    tDef2: "लक्ष्य exploitability को बढ़ाकर 0.5% आज़माएँ",
-    tTerm3: "परिणाम टैब खाली है",
-    tDef3: "“गणना पूरी हुई!” दिखने के बाद इसे खोलें",
-    tTerm4: "मेमोरी की सीमा पार हो गई",
-    tDef4: "16-bit integer मोड चुनें या bet size के विकल्प कम करें",
-    tTerm5: "पूरा ग्रिड धूसर है",
-    tDef5: "यह दूसरे खिलाड़ी की बारी है — ऊपर की एक्शन पट्टी में कोई और स्थिति चुनें",
-    errTitle: "कोई समस्या मिली?",
-    err1: "स्क्रीन ख़राब दिखे या गणना अटक जाए तो त्रुटि का विवरण इस डिवाइस पर अपने आप दर्ज होता है। ",
-    errBold: "लॉग अपने आप बाहर नहीं भेजे जाते",
-    err2: "। हमें तभी दिखते हैं जब आप नीचे से कॉपी करके कम्युनिटी में पोस्ट करते हैं। इनमें त्रुटि संदेश और ब्राउज़र की जानकारी होती है, आपकी range या अभ्यास का इतिहास नहीं।",
-    errLoggedLabel: "दर्ज त्रुटियाँ",
-    errCount: (n: number) => `${n}`,
-    errCopied: "कॉपी हो गया",
-    errCopyBtn: "त्रुटि का विवरण कॉपी करें",
-    errClearBtn: "लॉग हटाएँ",
-    errNone: "अभी कोई त्रुटि दर्ज नहीं है।",
-    errPrompt: "नीचे दिया गया टेक्स्ट कॉपी करें",
-  },
   ms: {
     quickTitle: "Mula dalam 1 minit — kalau anda baru, bermula di sini",
     quickStep1Desktop: "Di sebelah kiri, klik  ",
@@ -2330,6 +2365,16 @@ const M = {
     rDef5:
       "Berat, equity, EV dan % aksi bagi setiap tangan — klik tajuk lajur untuk mengisih",
 
+    lockTitle: "Node lock — bagaimana strategi anda berubah apabila lawan membuat kesilapan?",
+    lockTerm1: "Di mana",
+    lockDef1: "Pada skrin hasil selepas anda mengira spot sendiri. Pilih node dalam laluan aksi di atas, kemudian tekan “Kunci strategi pada nod ini”. Dalam Spot belajar, [Lihat hasil] terus memaparkan jawapan, tetapi strategi dalam hasil itu tidak boleh dikunci — jalankan [Kira sendiri spot ini] dahulu.",
+    lockTerm2: "Caranya",
+    lockDef2: "Peratus (%) setiap aksi sudah diisi mengikut strategi semasa. Ubah nilainya supaya jumlahnya 100, kemudian tekan “Kunci dan kira semula”. Contoh: lawan tidak pernah fold pada flop → fold 0, aksi lain berjumlah 100. Anda boleh mengunci beberapa node.",
+    lockTerm3: "Membaca hasil",
+    lockDef3: "Jalur kuning muncul di atas hasil. Strategi selepas dikunci ialah tindak balas terbaik dengan andaian lawan bermain begitu, dan bukannya keseimbangan GTO. Dalam “Perbandingan sebelum/selepas” pada panel, lihat perubahan frekuensi, EV dan ralat.",
+    lockTerm4: "Nyahkunci",
+    lockDef4: "Guna “Nyahkunci dan kira semula” untuk satu node atau “Nyahkunci semua dan kira semula” untuk semua node. Kunci hilang secara automatik apabila anda mengira spot baharu. Laluan turn atau river yang melangkau pemilihan kad tidak boleh dikunci.",
+
     trainerTitle: "Trainer GTO — daripada memerhati kepada bermain",
     trainerIntroBefore:
       "Selepas anda selesa membaca skrin hasil, teruskan ke",
@@ -2359,6 +2404,10 @@ const M = {
     filterTerm: "Penapis",
     filterDef:
       "Fokus pada titik lemah anda sahaja: single raised pot, pot 3-bet, atau blind vs blind",
+
+    myspotTerm: "Spot saya",
+    myspotDef: "Selepas mengira spot sendiri, tekan “Berlatih spot ini” pada skrin hasil untuk menghasilkan soalan daripada spot itu dan terus menjawabnya dalam tab “Spot saya” pada Trainer GTO. Kriteria penilaiannya sama dengan Spot belajar.",
+    myspotHint: "Soalan dan rekod kekal pada peranti ini sahaja (20 spot terkini · 500 cubaan bagi setiap spot). Kedua-duanya tidak disimpan dalam akaun anda, jadi anda tidak boleh menyambung pada peranti lain. Menyimpan semula spot yang sama memadamkan rekod sebelumnya. Soalan daripada hasil yang dikira dengan strategi terkunci ditandai “Andaian sebahagian strategi dikunci”.",
 
     installTitle: "Tambah ke skrin utama dan belajar di luar talian",
     install1:
@@ -2446,6 +2495,154 @@ const M = {
     errClearBtn: "Kosongkan rekod",
     errNone: "Belum ada ralat yang tercatat.",
     errPrompt: "Salin teks di bawah",
+  },
+
+  hi: {
+    quickTitle: "1 मिनट में शुरुआत — पहली बार यहाँ हैं तो इसे पढ़ें",
+    quickStep1Desktop: "बाईं ओर ",
+    quickStep1Mobile: "ऊपर दिए टैब में ",
+    quickStep1Btn: "अभ्यास स्पॉट",
+    quickStep1After: " चुनें",
+    quickStep2Before: "कोई स्पॉट खोलें और",
+    quickStep2Btn: "[⚡ परिणाम देखें]",
+    quickStep2After: " दबाएँ — परिणाम तुरंत दिखेंगे",
+    quickStep3: "संख्याएँ समझने के लिए नीचे “परिणाम स्क्रीन कैसे पढ़ें” देखें",
+    termsTitle: "बस ये चार शब्द समझ लें",
+    termRange: "Range",
+    defRange: "किसी खिलाड़ी के पास हो सकने वाले हैंड का समूह, जैसे AA, KK या AK। अलग-अलग हैंड का वज़न भी तय किया जा सकता है।",
+    defPos: "OOP पहले एक्शन करता है, IP बाद में। बाद में एक्शन करने पर दूसरे खिलाड़ी का फ़ैसला देखने का फ़ायदा मिलता है। BTN बनाम BB में BB, OOP होता है।",
+    termEquity: "Equity",
+    defEquity: "अभी all-in होने पर pot में आपकी अपेक्षित हिस्सेदारी — दो खिलाड़ियों में जीतने की संभावना और बराबरी की संभावना का आधा हिस्सा।",
+    defEv: "अपेक्षित मूल्य — किसी एक्शन से औसतन मिलने वाला मूल्य। जितना अधिक, उतना बेहतर।",
+    customTitleBefore: "अपना स्पॉट हल करें — ",
+    customTitleDesktop: "साइडबार",
+    customTitleMobile: "टैब",
+    customTitleAfter: " में ① → ⑤ के क्रम से चलें",
+    step1Bold: "① OOP Range / ② IP Range",
+    step1After: " — कंप्यूटर पर 13×13 ग्रिड में क्लिक करके खींचें। फ़ोन पर नीचे दिए उदाहरण कॉपी करके टेक्स्ट इनपुट में पेस्ट कर सकते हैं: ",
+    step1Hint: "22+ = सभी pocket pair · A2s+ = A2s से AKs तक · KTo+ = KTo से KQo तक। ग्रिड में तिरछी मुख्य रेखा पर pocket pair, ऊपर दाईं ओर suited और नीचे बाईं ओर offsuit हैंड हैं।",
+    exampleHeader: "पहली बार इस्तेमाल कर रहे हैं? इन्हें कॉपी करके range इनपुट में पेस्ट करें (सामान्य BTN बनाम BB 100bb — अभ्यास स्पॉट में भी यही range हैं)",
+    exOopLabel: "OOP (BB caller)",
+    exIpLabel: "IP (BTN opener)",
+    copiedLabel: "कॉपी हो गया!",
+    copyLabel: "कॉपी करें",
+    step3Bold: "③ Board",
+    step3After: " — flop के तीन कार्ड चुनें या रैंडम flop चुनने वाला बटन दबाएँ",
+    step4Bold: "④ Bet size (गेम ट्री सेटिंग)",
+    step4After: " — शुरुआत में डिफ़ॉल्ट सेटिंग रखें। बस शुरुआती pot और effective stack जाँच लें",
+    step4Hint: "अपने स्पॉट के इनपुट पूर्णांक chips में हैं। bb में समझने के लिए 10 chips = 1bb मानें (जैसे pot 55 = 5.5bb)। अभ्यास स्पॉट और ट्रेनर इसी पैमाने पर अपने आप बदलकर दिखाते हैं।",
+    step5Bold1: "⑤ गणना करें",
+    step5Mid: " — पहले “Tree बनाएँ” दबाएँ, फिर ट्री तैयार होने पर “Solver चलाएँ”। “गणना पूरी हुई!” दिखने पर ऊपर का ",
+    step5Bold2: "[परिणाम]",
+    step5After: " टैब खोलें",
+    step5Hint: "गणना आपके अपने डिवाइस पर होती है और कुछ सेकंड से कुछ मिनट लग सकते हैं। स्क्रीन ⑤ पर स्पॉट शेयर करने वाले बटन से लिंक कॉपी करके कम्युनिटी में उस पर सवाल पूछ सकते हैं।",
+    resultsTitle: "परिणाम स्क्रीन कैसे पढ़ें",
+    rTerm1: "ऊपर की एक्शन पट्टी",
+    rDef1: "अपने स्पॉट की गणना के बाद, एक्शन क्रम में कोई node चुनकर उसकी रणनीति देखें (flop → bet → call → turn…)। अभ्यास स्पॉट का preview केवल flop की पहली बारी दिखाता है।",
+    rTerm2: "13×13 ग्रिड (बाईं ओर)",
+    rDef2: "हर खाने में एक हैंड है। रंगों का बँटवारा एक्शन की आवृत्ति दिखाता है। 🟥 bet/raise (गहरा रंग = बड़ा bet) · 🟩 check/call · धुंधला खाना = range में नहीं है। GTO में एक ही हैंड से अलग-अलग आवृत्ति पर अलग एक्शन किए जा सकते हैं। इसे mixed strategy कहते हैं।",
+    rTerm3: "सारांश बॉक्स (ऊपर दाईं ओर)",
+    rDef3: "पूरी range में एक्शन की आवृत्ति (%) और combo की संख्या।",
+    rTerm4: "हैंड की श्रेणियाँ (बीच में दाईं ओर)",
+    rDef4: "हर range बोर्ड से कैसे जुड़ती है — जैसे Top Pair और draw। इससे दोनों range की बनावट की तुलना कर सकते हैं।",
+    rTerm5: "टेबल (नीचे दाईं ओर)",
+    rDef5: "हर हैंड का वज़न, equity, EV और एक्शन का %। क्रम बदलने के लिए कॉलम के शीर्षक पर क्लिक करें।",
+    lockTitle: "रणनीति लॉक (node lock) — विरोधी की गलतियों से आपकी रणनीति कैसे बदलती है?",
+    lockTerm1: "कहाँ",
+    lockDef1: "खुद स्पॉट की गणना पूरी करने के बाद परिणाम स्क्रीन पर। ऊपर एक्शन क्रम में node चुनें और “इस नोड की रणनीति लॉक करें” दबाएँ। अभ्यास स्पॉट में [परिणाम देखें] से परिणाम तुरंत दिखते हैं, लेकिन वहाँ रणनीति लॉक नहीं कर सकते — पहले [इस स्पॉट की गणना खुद करें] चलाएँ।",
+    lockTerm2: "कैसे",
+    lockDef2: "हर एक्शन का अनुपात (%) मौजूदा रणनीति के अनुसार भरा होता है। इसे बदलकर कुल 100 करें और “रणनीति लॉक करके फिर गणना करें” चुनें। उदाहरण: विरोधी flop पर कभी fold नहीं करता → fold 0, बाकी एक्शन का कुल 100। आप कई node लॉक कर सकते हैं।",
+    lockTerm3: "परिणाम समझें",
+    lockDef3: "परिणाम के ऊपर पीली पट्टी दिखती है। लॉक करने के बाद की रणनीति GTO संतुलन नहीं, बल्कि विरोधी के उसी तरह खेलने की धारणा पर सबसे अच्छा जवाब है। पैनल के “पहले और बाद की तुलना” हिस्से में देखें कि आवृत्ति, EV और त्रुटि कितनी बदली है।",
+    lockTerm4: "लॉक हटाएँ",
+    lockDef4: "एक node के लिए “लॉक हटाकर फिर गणना करें” और सभी के लिए “सभी लॉक हटाकर फिर गणना करें” चुनें। नए स्पॉट की गणना करने पर लॉक अपने आप हट जाते हैं। turn या river के जिस क्रम में कार्ड चुने बिना आगे बढ़े हों, उसे लॉक नहीं कर सकते।",
+
+    trainerTitle: "GTO Trainer — अब खुद फ़ैसले लें",
+    trainerIntroBefore: "परिणाम स्क्रीन समझने के बाद",
+    trainerBtn: "GTO Trainer",
+    trainerIntroAfter: " आज़माएँ। 13 अभ्यास स्पॉट के निर्णय बिंदुओं पर आपको वास्तविक range से हैंड मिलते हैं। एक्शन चुनें और अपना मूल्यांकन देखें।",
+    gradTerm: "मूल्यांकन कैसे होता है",
+    gradBefore: "सिर्फ़ सही या ग़लत के बजाय ",
+    gradBold: "EV नुकसान (bb)",
+    gradAfter: " से मूल्यांकन होता है। GTO एक ही हैंड से कई एक्शन मिला सकता है। कम आवृत्ति वाला एक्शन अपने आप गलती नहीं है — सवाल यह है कि उससे कितना EV छूटता है।",
+    verdictTerm: "मूल्यांकन की सीमाएँ",
+    verdictBefore: "नुकसान ",
+    verdictBold: "pot के अनुपात में",
+    verdictAfter: " मापा जाता है: pot का 0.35% तक = सर्वोत्तम · 1% तक = स्वीकार्य · इससे अधिक = गलती। उदाहरण के लिए, 5.5bb single raised pot (SRP) में सीमाएँ 0.02bb और 0.06bb हैं। 22.5bb 3-bet pot में ये 0.08bb और 0.23bb हैं।",
+    verdictHint: "एक ही 0.08bb नुकसान छोटे pot में गलती और बड़े pot में स्वीकार्य हो सकता है। केवल bb से मूल्यांकन करने पर 3-bet pot में प्रदर्शन ज़रूरत से अधिक ख़राब दिखता था, इसलिए 2026-08-15 से pot के अनुपात वाला तरीका अपनाया गया। सीमाओं के न्यूनतम मान 0.02bb / 0.05bb हैं। लक्ष्य exploitability 0.5% पर गणना रोकी जाती है; बहुत छोटे EV अंतर को सटीक निष्कर्ष मानने से बचने के लिए यह गुंजाइश रखी गई है।",
+    reviewTerm: "दोबारा देखें",
+    reviewBefore: "सबसे अधिक EV नुकसान वाले हैंड [दोबारा देखें] से फिर मिलते हैं। डिफ़ॉल्ट रूप से इतिहास ",
+    reviewBold: "सिर्फ़ इस डिवाइस पर",
+    reviewAfter: " सेव होता है। HoldemMaster खाते में लॉग इन करके इसे खाते में रख सकते हैं और दूसरे डिवाइस पर जारी रख सकते हैं। लॉग इन करना ज़रूरी नहीं — उसके बिना भी सभी सुविधाएँ इस्तेमाल कर सकते हैं।",
+    filterTerm: "फ़िल्टर",
+    filterDef: "कमज़ोर हिस्सों पर ध्यान दें: single raised pot, 3-bet pot या blind बनाम blind।",
+    myspotTerm: "मेरे स्पॉट",
+    myspotDef: "खुद स्पॉट की गणना पूरी करने के बाद परिणाम स्क्रीन पर “इस स्पॉट का अभ्यास करें” दबाएँ। इससे उसी स्पॉट के सवाल बनेंगे और आप Trainer के “मेरे स्पॉट” टैब में तुरंत अभ्यास शुरू कर सकते हैं। मूल्यांकन के मानदंड अभ्यास स्पॉट जैसे ही हैं।",
+    myspotHint: "सवाल और इतिहास सिर्फ़ इस डिवाइस पर रहते हैं (सबसे हाल के 20 स्पॉट · हर स्पॉट के 500 प्रयास)। वे खाते में नहीं सहेजे जाते, इसलिए दूसरे डिवाइस पर जारी नहीं रख सकते। उसी स्पॉट को फिर से सहेजने पर पिछला इतिहास मिट जाता है। लॉक की गई रणनीति के साथ गणना किए गए परिणाम से बने सवालों पर “रणनीति का एक हिस्सा लॉक होने की धारणा” लिखा होता है।",
+
+    installTitle: "होम स्क्रीन पर जोड़ें और ऑफ़लाइन अभ्यास करें",
+    install1: "इस सॉल्वर को ऐप की तरह होम स्क्रीन पर जोड़ सकते हैं। अलग से इंस्टॉलर फ़ाइल डाउनलोड करने की ज़रूरत नहीं। Chrome या Edge में एड्रेस बार के दाईं ओर ",
+    installBold1: "इंस्टॉल आइकन",
+    install2: " इस्तेमाल करें। iPhone के Safari में ",
+    installBold2: "शेयर करें → होम स्क्रीन पर जोड़ें",
+    install3: " चुनें। इंस्टॉल होने पर 13 अभ्यास स्पॉट और ट्रेनर का डेटा डिवाइस पर सेव हो जाता है। आप ",
+    installBold3: "बिना इंटरनेट, मेट्रो में भी",
+    install4: " अभ्यास कर सकते हैं।",
+    samsung1: "* Samsung Internet या आपका डिवाइस सुरक्षा कारणों से इंस्टॉल रोक सकता है। यह जाँच ब्राउज़र या डिवाइस करता है। ",
+    samsungBold: "साइट Chrome में खोलकर",
+    samsung2: " इंस्टॉल करने की कोशिश करें। इसी ब्राउज़र में जारी रखना चाहें तो स्क्रीन पर दिए गए विकल्प पढ़कर आगे बढ़ें।",
+    offlineDataLabel: "ऑफ़लाइन अभ्यास का डेटा",
+    offlineSaved: "सेव है — अभ्यास स्पॉट और ट्रेनर बिना इंटरनेट चलेंगे",
+    offlineSaving: "सेव हो रहा है…",
+    offlineNotSaved: "सेव नहीं है",
+    offlineSaveBtn: "अभी सेव करें (~2.3MB)",
+    offlineFootnote: "अपने स्पॉट की गणना ऑफ़लाइन करने के लिए उसे कम से कम एक बार ऑनलाइन चलाना ज़रूरी है — सॉल्वर इंजन पहली बार इस्तेमाल करने पर डाउनलोड होता है।",
+    safeTitle: "इंस्टॉल करने से क्या होता है?",
+    safe1: "यहाँ इंस्टॉल करने का मतलब ",
+    safeBold: "ब्राउज़र में चलने वाले वेब ऐप का शॉर्टकट बनाना",
+    safe2: " है। Android पर इस पते से जुड़ा छोटा ऐप पैकेज दर्ज हो सकता है, लेकिन ऐप ब्राउज़र इंजन में ही चलता है। नीचे दिए तरीके खुद जाँच सकते हैं।",
+    permTerm: "डिवाइस की अनुमति नहीं माँगता",
+    permBefore: "इंस्टॉल करने के लिए कैमरा, संपर्क, SMS या लोकेशन की अनुमति नहीं माँगी जाती। अपने फ़ोन की ",
+    permBold: "सेटिंग में ऐप की अनुमतियाँ",
+    permAfter: " खोलकर जाँचें।",
+    airplaneTerm: "एयरप्लेन मोड में जाँचें",
+    airplaneBefore: "डेटा सेव होने के बाद इंटरनेट बंद करके ट्रेनर चलाकर देखें। इससे जाँच सकते हैं कि अभ्यास के लिए ",
+    airplaneBold: "आपका अपना डिवाइस ही काफ़ी है",
+    airplaneAfter: "।",
+    openTerm: "सोर्स कोड सार्वजनिक है",
+    openBefore: "यह सॉल्वर AGPL-3.0 ओपन सोर्स है (",
+    openAfter: ")।",
+    removeTerm: "आसानी से हटा सकते हैं",
+    removeDef: "दूसरे ऐप की तरह आइकन को देर तक दबाकर हटाएँ। सेव किया गया साइट डेटा हटाना हो तो ब्राउज़र की सेटिंग भी देखें।",
+    samsungNote2: "* Samsung Internet में इंस्टॉल रुकने का कारण ब्राउज़र या डिवाइस की सुरक्षा जाँच हो सकता है। संदेश ध्यान से पढ़ें। ज़रूरत हो तो साइट Chrome में खोलकर कोशिश करें।",
+    studyTitle: "अभ्यास का सुझाया क्रम",
+    study1: "13 अभ्यास स्पॉट क्रम से देखें — ये एक-दूसरे से जुड़ी स्थितियों को समझने में मदद करते हैं",
+    study2: "सोच रहे हैं कि “इस हैंड से कभी check क्यों होता है?” विवरण टेबल में हर एक्शन के EV की तुलना करें।",
+    study3: "उन्हीं स्पॉट का GTO Trainer में अभ्यास करें। कमज़ोरियों की रिपोर्ट बताती है कि किन स्थितियों में सबसे अधिक EV नुकसान होता है",
+    study4: "Range वही रखें और सिर्फ़ बोर्ड बदलकर तुलना करें (जैसे A72 और 974)",
+    study5: "असली खेल में जिन हैंड ने उलझाया, उन्हें यहाँ बनाकर दोबारा देखें",
+    troubleTitle: "परेशानी दूर करें",
+    tTerm1: "ट्री नहीं बन रहा",
+    tDef1: "जाँचें कि बोर्ड पर 3 कार्ड और दोनों range दर्ज हैं",
+    tTerm2: "गणना धीमी है",
+    tDef2: "लक्ष्य exploitability को बढ़ाकर 0.5% आज़माएँ",
+    tTerm3: "परिणाम टैब खाली है",
+    tDef3: "“गणना पूरी हुई!” दिखने के बाद इसे खोलें",
+    tTerm4: "मेमोरी की सीमा पार हो गई",
+    tDef4: "16-bit integer मोड चुनें या bet size के विकल्प कम करें",
+    tTerm5: "पूरा ग्रिड धूसर है",
+    tDef5: "यह दूसरे खिलाड़ी की बारी है — ऊपर की एक्शन पट्टी में कोई और स्थिति चुनें",
+    errTitle: "कोई समस्या मिली?",
+    err1: "स्क्रीन ख़राब दिखे या गणना अटक जाए तो त्रुटि का विवरण इस डिवाइस पर अपने आप दर्ज होता है। ",
+    errBold: "लॉग अपने आप बाहर नहीं भेजे जाते",
+    err2: "। हमें तभी दिखते हैं जब आप नीचे से कॉपी करके कम्युनिटी में पोस्ट करते हैं। इनमें त्रुटि संदेश और ब्राउज़र की जानकारी होती है, आपकी range या अभ्यास का इतिहास नहीं।",
+    errLoggedLabel: "दर्ज त्रुटियाँ",
+    errCount: (n: number) => `${n}`,
+    errCopied: "कॉपी हो गया",
+    errCopyBtn: "त्रुटि का विवरण कॉपी करें",
+    errClearBtn: "लॉग हटाएँ",
+    errNone: "अभी कोई त्रुटि दर्ज नहीं है।",
+    errPrompt: "नीचे दिया गया टेक्स्ट कॉपी करें",
   },
 } as const;
 
@@ -2554,14 +2751,6 @@ const N =
           install4: ".",
         },
         // ⚠ npokers 빌드 — Trainer·latihan·Spot belajar 어휘가 새면 npokers-verify(FORBIDDEN ms)가 잡는다
-        hi: {
-          exampleHeader: "पहली बार इस्तेमाल कर रहे हैं? इन्हें कॉपी करके range इनपुट में पेस्ट करें (सामान्य BTN बनाम BB 100bb)",
-          rDef1: "अपने स्पॉट की गणना के बाद, एक्शन क्रम में कोई node चुनकर उसकी रणनीति देखें (flop → bet → call → turn…)।",
-          step4Hint: "अपने स्पॉट के इनपुट पूर्णांक chips में हैं। bb में समझने के लिए 10 chips = 1bb मानें (जैसे pot 55 = 5.5bb)।",
-          airplaneBefore: "ऐप सेव होने के बाद इंटरनेट बंद करके इसे खोलें। इससे जाँच सकते हैं कि इसे चलाने के लिए ",
-          install3: " चुनें। इंस्टॉल होने पर ऐप डिवाइस पर सेव हो जाता है। आप ",
-          install4: " इसका इस्तेमाल कर सकते हैं।",
-        },
         ms: {
           exampleHeader:
             "Baru di sini? Salin contoh ini dan tampal ke kotak range (standard BTN vs BB 100bb)",
@@ -2571,6 +2760,14 @@ const N =
             "Matikan internet dan aplikasi tetap berjalan — bukti paling jelas bahawa pengiraan ",
           install3: ". Selepas dipasang, aplikasi tersimpan pada peranti anda, jadi anda boleh terus menggunakannya ",
           install4: ".",
+        },
+        hi: {
+          exampleHeader: "पहली बार इस्तेमाल कर रहे हैं? इन्हें कॉपी करके range इनपुट में पेस्ट करें (सामान्य BTN बनाम BB 100bb)",
+          rDef1: "अपने स्पॉट की गणना के बाद, एक्शन क्रम में कोई node चुनकर उसकी रणनीति देखें (flop → bet → call → turn…)।",
+          step4Hint: "अपने स्पॉट के इनपुट पूर्णांक chips में हैं। bb में समझने के लिए 10 chips = 1bb मानें (जैसे pot 55 = 5.5bb)।",
+          airplaneBefore: "ऐप सेव होने के बाद इंटरनेट बंद करके इसे खोलें। इससे जाँच सकते हैं कि इसे चलाने के लिए ",
+          install3: " चुनें। इंस्टॉल होने पर ऐप डिवाइस पर सेव हो जाता है। आप ",
+          install4: " इसका इस्तेमाल कर सकते हैं।",
         },
       }
     : null;
