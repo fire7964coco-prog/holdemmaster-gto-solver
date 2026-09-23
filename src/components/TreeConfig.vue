@@ -828,7 +828,7 @@ const M = {
     advancedSettings: "상세 설정 ▸",
     basicSettings: "기본 설정",
     chipNote:
-      "금액은 정수 칩으로 넣습니다. bb로 생각하려면 10칩 = 1bb로 넣으세요 (예: 팟 55 = 5.5bb, 스택 1000 = 100bb). 결과 화면의 팟·스택도 넣은 칩 숫자 그대로 나옵니다.",
+      "금액은 정수 칩으로 넣습니다. bb로 생각하려면 10칩 = 1bb로 넣으세요 (예: 팟 55 = 5.5bb, 스택 1000 = 100bb). 직접 입력해 계산한 결과는 입력한 칩 단위를 쓰고, bb 기준이 적용된 결과는 자동 환산해 표시합니다.",
     startingPot: "스타팅 팟:",
     effectiveStack: "유효 스택:",
     rake: "레이크:",
@@ -888,7 +888,7 @@ const M = {
     advancedSettings: "Advanced settings ▸",
     basicSettings: "Basic settings",
     chipNote:
-      "Enter amounts in integer chips. To think in bb, use 10 chips = 1bb (e.g., pot 55 = 5.5bb, stack 1000 = 100bb). The results screen also shows pot·stack using the chip amounts you entered.",
+      "Enter amounts in integer chips. To think in bb, use 10 chips = 1bb (e.g., pot 55 = 5.5bb, stack 1000 = 100bb). Results calculated from your inputs keep the chip scale you entered; results with a bb scale are converted automatically.",
     startingPot: "Starting Pot:",
     effectiveStack: "Effective Stack:",
     rake: "Rake:",
@@ -948,7 +948,7 @@ const M = {
     advancedSettings: "詳細設定 ▸",
     basicSettings: "基本設定",
     chipNote:
-      "金額は整数チップで入力します。bbで考えるなら10チップ = 1bbにしてください（例：ポット55 = 5.5bb、スタック1000 = 100bb）。結果のポット·スタックも入力したチップ数で表示されます。",
+      "金額は整数チップで入力します。bbで考えるなら10チップ = 1bbにしてください（例：ポット55 = 5.5bb、スタック1000 = 100bb）。自分で入力して計算した結果は入力したチップ単位のまま表示され、bb基準の結果は自動換算されます。",
     startingPot: "スターティングポット:",
     effectiveStack: "有効スタック:",
     rake: "レーキ:",
@@ -1009,7 +1009,7 @@ const M = {
     advancedSettings: "Ajustes avanzados ▸",
     basicSettings: "Ajustes básicos",
     chipNote:
-      "Ingresa los montos en fichas enteras. Para pensar en bb, usa 10 fichas = 1bb (ej.: bote 55 = 5.5bb, stack 1000 = 100bb). La pantalla de resultados también muestra bote·stack con las cantidades de fichas que ingresaste.",
+      "Ingresa los montos en fichas enteras. Para pensar en bb, usa 10 fichas = 1bb (ej.: bote 55 = 5.5bb, stack 1000 = 100bb). Los resultados calculados con tus datos conservan la escala de fichas que ingresaste; los resultados con escala en bb se convierten automáticamente.",
     startingPot: "Bote inicial:",
     effectiveStack: "Stack efectivo:",
     rake: "Rake:",
@@ -1069,7 +1069,7 @@ const M = {
     advancedSettings: "Configurações avançadas ▸",
     basicSettings: "Configurações básicas",
     chipNote:
-      "Informe os valores em fichas inteiras. Para pensar em bb, use 10 fichas = 1bb (ex.: pote 55 = 5.5bb, stack 1000 = 100bb). A tela de resultados também mostra pote·stack com as quantidades de fichas que você informou.",
+      "Informe os valores em fichas inteiras. Para pensar em bb, use 10 fichas = 1bb (ex.: pote 55 = 5.5bb, stack 1000 = 100bb). Os resultados calculados com seus dados mantêm a escala de fichas informada; os resultados com escala em bb são convertidos automaticamente.",
     startingPot: "Pote inicial:",
     effectiveStack: "Stack efetivo:",
     rake: "Rake:",
@@ -1131,7 +1131,7 @@ const M = {
     advancedSettings: "Erweiterte Einstellungen ▸",
     basicSettings: "Grundeinstellungen",
     chipNote:
-      "Gib die Beträge in ganzen Chips ein. Wenn du in bb denken willst, verwende 10 Chips = 1bb (z. B.: Pot 55 = 5.5bb, Stack 1000 = 100bb). Auch im Ergebnis werden Pot·Stack mit den eingegebenen Chip-Beträgen angezeigt.",
+      "Gib die Beträge in ganzen Chips ein. Wenn du in bb denken willst, verwende 10 Chips = 1bb (z. B.: Pot 55 = 5.5bb, Stack 1000 = 100bb). Ergebnisse aus deinen Eingaben behalten die eingegebene Chip-Skala; Ergebnisse mit einer bb-Skala werden automatisch umgerechnet.",
     startingPot: "Start-Pot:",
     effectiveStack: "Effektiver Stack:",
     rake: "Rake:",
@@ -1192,7 +1192,7 @@ const M = {
     advancedSettings: "详细设置 ▸",
     basicSettings: "基本设置",
     chipNote:
-      "金额按整数筹码填写。想按 bb 来算，就按 10 筹码 = 1bb 输入（例：底池 55 = 5.5bb，筹码 1000 = 100bb）。结果页的底池·筹码也会按你输入的筹码数原样显示。",
+      "金额按整数筹码填写。想按 bb 来算，就按 10 筹码 = 1bb 输入（例：底池 55 = 5.5bb，筹码 1000 = 100bb）。自己输入并计算的结果会保留你填写的筹码单位；按 bb 标准显示的结果会自动换算。",
     startingPot: "起始底池：",
     effectiveStack: "有效筹码：",
     // rake = 「抽水」(본체 브리프 §1C·§0.5-3). ⚠ 「台费」는 자리·시간당 고정요금이라 다른 말이다
@@ -1258,7 +1258,7 @@ const M = {
     advancedSettings: "詳細設定 ▸",
     basicSettings: "基本設定",
     chipNote:
-      "金額按整數籌碼填寫。想按 bb 來算，就按 10 籌碼 = 1bb 輸入（例：底池 55 = 5.5bb，籌碼 1000 = 100bb）。結果頁的底池·籌碼也會按你輸入的籌碼數原樣顯示。",
+      "金額按整數籌碼填寫。想按 bb 來算，就按 10 籌碼 = 1bb 輸入（例：底池 55 = 5.5bb，籌碼 1000 = 100bb）。自己輸入並計算的結果會保留你填寫的籌碼單位；按 bb 標準顯示的結果會自動換算。",
     startingPot: "起始底池：",
     effectiveStack: "有效籌碼：",
     // rake = 「抽水」(본체 브리프 §7-C·§7-E). ⚠ 「台費」는 자리·시간당 고정요금이라 다른 말이다
@@ -1325,7 +1325,7 @@ const M = {
     advancedSettings: "Réglages avancés ▸",
     basicSettings: "Réglages de base",
     chipNote:
-      "Saisis les montants en jetons entiers. Pour raisonner en bb, utilise 10 jetons = 1bb (ex. : pot 55 = 5.5bb, stack 1000 = 100bb). L’écran des résultats affiche aussi les valeurs pot·stack avec les montants en jetons que tu as saisis.",
+      "Saisis les montants en jetons entiers. Pour raisonner en bb, utilise 10 jetons = 1bb (ex. : pot 55 = 5.5bb, stack 1000 = 100bb). Les résultats calculés à partir de tes saisies conservent l’échelle de jetons choisie ; ceux affichés avec une échelle en bb sont convertis automatiquement.",
     startingPot: "Pot initial :",
     effectiveStack: "Stack effectif :",
     rake: "Rake :",
@@ -1391,7 +1391,7 @@ const M = {
     advancedSettings: "Pengaturan lanjutan ▸",
     basicSettings: "Pengaturan dasar",
     chipNote:
-      "Masukkan jumlah dalam chip bilangan bulat. Untuk menghitung dalam bb, gunakan 10 chip = 1bb (contoh: pot 55 = 5.5bb, stack 1000 = 100bb). Layar hasil juga menampilkan pot·stack dengan jumlah chip yang kamu masukkan.",
+      "Masukkan jumlah dalam chip bilangan bulat. Untuk menghitung dalam bb, gunakan 10 chip = 1bb (contoh: pot 55 = 5.5bb, stack 1000 = 100bb). Hasil yang dihitung dari input Anda tetap memakai skala chip yang dimasukkan; hasil dengan skala bb dikonversi secara otomatis.",
     startingPot: "Pot awal:",
     effectiveStack: "Stack efektif:",
     rake: "Rake:",
@@ -1458,7 +1458,7 @@ const M = {
     advancedSettings: "Tetapan lanjutan ▸",
     basicSettings: "Tetapan asas",
     chipNote:
-      "Masukkan jumlah cip dalam nombor bulat. Untuk mengira dalam bb, gunakan 10 cip = 1bb (contoh: pot 55 = 5.5bb, stack 1000 = 100bb). Skrin keputusan juga memaparkan pot·stack dengan jumlah cip yang anda masukkan.",
+      "Masukkan jumlah cip dalam nombor bulat. Untuk mengira dalam bb, gunakan 10 cip = 1bb (contoh: pot 55 = 5.5bb, stack 1000 = 100bb). Keputusan yang dikira daripada input anda kekal menggunakan skala cip yang dimasukkan; keputusan dengan skala bb ditukar secara automatik.",
     startingPot: "Pot permulaan:",
     effectiveStack: "Stack efektif:",
     rake: "Rake:",
@@ -1523,7 +1523,7 @@ const M = {
     advancedSettings: "विस्तृत सेटिंग ▸",
     basicSettings: "बुनियादी सेटिंग",
     chipNote:
-      "राशि chips में पूर्णांक मान के रूप में दर्ज करें। bb में हिसाब रखने के लिए 10 chips = 1bb रखें (उदाहरण: pot 55 = 5.5bb, stack 1000 = 100bb)। नतीजों की स्क्रीन पर भी pot·stack आपके दर्ज किए हुए chips के मान में ही दिखेंगे।",
+      "राशि chips में पूर्णांक मान के रूप में दर्ज करें। bb में हिसाब रखने के लिए 10 chips = 1bb रखें (उदाहरण: pot 55 = 5.5bb, stack 1000 = 100bb)। आपके इनपुट से निकले नतीजे दर्ज की गई chip scale में रहते हैं; bb scale वाले नतीजे अपने आप बदलकर दिखते हैं।",
     startingPot: "शुरुआती Pot:",
     effectiveStack: "Effective Stack:",
     rake: "Rake:",

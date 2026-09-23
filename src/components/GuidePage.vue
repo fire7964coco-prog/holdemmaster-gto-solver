@@ -404,7 +404,7 @@ const M = {
     lockTerm2: "어떻게",
     lockDef2: "액션마다 비율(%)이 현재 전략대로 채워져 있습니다. 원하는 대로 고쳐 합계를 100으로 맞추고 「고정하고 다시 풀기」. 예: 상대가 플랍에서 절대 안 접는다 → 폴드 0, 나머지 100. 여러 노드를 고정할 수 있습니다.",
     lockTerm3: "결과 읽기",
-    lockDef3: "결과 위에 노란 띠가 붙습니다. 고정 뒤의 전략은 균형(GTO)이 아니라 «상대가 그렇게 친다는 가정 아래의 최선»입니다. 창 안의 「고정 전/후 비교」에서 빈도·EV·오차가 얼마나 달라졌는지 보세요.",
+    lockDef3: "결과 위에 노란 띠가 붙습니다. 전략 일부를 고정하고 다시 푼 결과이므로 균형(GTO) 전략이 아닙니다. 창 안의 「고정 전/후 비교」에서 빈도·EV·오차(exploitability)가 얼마나 달라졌는지 보세요.",
     lockTerm4: "되돌리기",
     lockDef4: "「해제하고 다시 풀기」로 하나씩, 「전체 해제하고 다시 풀기」로 모두 풉니다. 새 스팟을 계산하면 고정은 자동으로 사라집니다. 카드를 정하지 않고 건너뛴 턴·리버 경로는 고정할 수 없습니다.",
 
@@ -591,7 +591,7 @@ const M = {
     lockTerm2: "How",
     lockDef2: "Each action’s percentage (%) starts at its current strategy value. Change the values to add up to 100, then choose “Lock and solve again”. For example: the opponent never folds on the flop → fold 0, other actions total 100. You can lock several nodes.",
     lockTerm3: "Reading results",
-    lockDef3: "A yellow banner appears above the results. The strategy after locking is the best response under the assumption that the opponent plays that way, rather than a GTO equilibrium. In “Before/after comparison” in the panel, see how frequencies, EV, and error have changed.",
+    lockDef3: "A yellow banner appears above the results. This result was solved again with part of the strategy fixed, so it is not an equilibrium (GTO) strategy. In “Before/after comparison” in the panel, see how frequencies, EV, and Exploitability have changed.",
     lockTerm4: "Undoing locks",
     lockDef4: "Use “Unlock and solve again” for one node or “Unlock all and solve again” for all nodes. Locks disappear automatically when you solve a new spot. You cannot lock turn or river paths where you skipped choosing a card.",
 
@@ -786,7 +786,7 @@ const M = {
     lockTerm2: "使い方",
     lockDef2: "各アクションの割合(%)には現在の戦略の値が入っています。自由に変えて合計を100にし、「固定して再計算」を押します。例：相手がフロップで絶対に降りない → フォールド0、残りの合計100。複数のノードを固定できます。",
     lockTerm3: "結果の読み方",
-    lockDef3: "結果の上に黄色い帯が出ます。固定後の戦略は均衡(GTO)ではなく、相手がそのように打つと仮定した場合の最善です。パネル内の「固定前後の比較」で、頻度・EV・誤差の変化を確認できます。",
+    lockDef3: "結果の上に黄色い帯が出ます。戦略の一部を固定して再計算した結果なので、均衡（GTO）戦略ではありません。パネル内の「固定前後の比較」で、頻度・EV・誤差(exploitability)の変化を確認できます。",
     lockTerm4: "元に戻す",
     lockDef4: "「解除して再計算」で1つずつ、「全解除して再計算」ですべて解除します。新しいスポットを計算すると固定は自動で消えます。カードを選ばずに進めたターン・リバーの経路は固定できません。",
 
@@ -980,7 +980,7 @@ const M = {
     lockTerm2: "Cómo",
     lockDef2: "El porcentaje (%) de cada acción parte de su valor en la estrategia actual. Cámbialos para que sumen 100 y pulsa «Fijar y recalcular». Por ejemplo: el rival nunca hace fold en el flop → fold 0, las demás acciones suman 100. Puedes fijar varios nodos.",
     lockTerm3: "Leer los resultados",
-    lockDef3: "Aparece una franja amarilla sobre los resultados. La estrategia tras fijarla es la mejor respuesta suponiendo que el rival juega así, en lugar de un equilibrio GTO. En «Comparación antes/después», dentro del panel, puedes ver cuánto han cambiado las frecuencias, el EV y el error.",
+    lockDef3: "Aparece una franja amarilla sobre los resultados. Es un resultado recalculado con parte de la estrategia fijada, no una estrategia de equilibrio (GTO). En «Comparación antes/después», dentro del panel, puedes ver cuánto han cambiado las frecuencias, el EV y la Exploitability.",
     lockTerm4: "Deshacer",
     lockDef4: "Usa «Quitar y recalcular» para un nodo o «Quitar todas y recalcular» para todos. Las fijaciones desaparecen automáticamente al calcular un spot nuevo. No puedes fijar líneas de turn o river si has avanzado sin elegir la carta.",
 
@@ -1176,7 +1176,7 @@ const M = {
     lockTerm2: "Como",
     lockDef2: "A porcentagem (%) de cada ação começa com seu valor na estratégia atual. Altere os valores para que somem 100 e toque em “Fixar e calcular de novo”. Por exemplo: o adversário nunca dá fold no flop → fold 0, as outras ações somam 100. Você pode fixar vários nós.",
     lockTerm3: "Ler os resultados",
-    lockDef3: "Uma faixa amarela aparece acima dos resultados. A estratégia após a fixação é a melhor resposta supondo que o adversário jogue daquele jeito, em vez de um equilíbrio GTO. Em “Comparação antes/depois”, dentro do painel, veja quanto mudaram as frequências, o EV e o erro.",
+    lockDef3: "Uma faixa amarela aparece acima dos resultados. É um resultado recalculado com parte da estratégia fixada, não uma estratégia de equilíbrio (GTO). Em “Comparação antes/depois”, dentro do painel, veja quanto mudaram as frequências, o EV e a Exploitability.",
     lockTerm4: "Desfazer",
     lockDef4: "Use “Remover e calcular de novo” para um nó ou “Remover todas e calcular de novo” para todos. As fixações desaparecem automaticamente quando você calcula um novo spot. Não é possível fixar linhas de turn ou river em que você avançou sem escolher a carta.",
 
@@ -1373,7 +1373,7 @@ const M = {
     lockTerm2: "Wie",
     lockDef2: "Der Anteil (%) jeder Aktion ist mit dem Wert der aktuellen Strategie vorbelegt. Ändere die Werte so, dass sie zusammen 100 ergeben, und wähle „Fixieren und neu berechnen“. Beispiel: Der Gegner foldet am Flop nie → Fold 0, übrige Aktionen zusammen 100. Du kannst mehrere Knoten fixieren.",
     lockTerm3: "Ergebnisse lesen",
-    lockDef3: "Über den Ergebnissen erscheint ein gelber Hinweisbalken. Die Strategie nach dem Fixieren ist die beste Antwort unter der Annahme, dass der Gegner so spielt, statt eines GTO-Gleichgewichts. Unter „Vorher/Nachher-Vergleich“ im Fenster siehst du, wie sich Frequenzen, EV und Fehler verändert haben.",
+    lockDef3: "Über den Ergebnissen erscheint ein gelber Hinweisbalken. Dieses Ergebnis wurde mit teilweise fixierter Strategie neu berechnet und ist keine Gleichgewichtsstrategie (GTO). Unter „Vorher/Nachher-Vergleich“ im Fenster siehst du, wie sich Häufigkeit, EV und Exploitability verändert haben.",
     lockTerm4: "Rückgängig machen",
     lockDef4: "Mit „Lösen und neu berechnen“ löst du einen Knoten, mit „Alle lösen und neu berechnen“ alle. Wenn du einen neuen Spot berechnest, verschwinden die Fixierungen automatisch. Turn- oder River-Pfade, bei denen du die Kartenauswahl übersprungen hast, lassen sich nicht fixieren.",
 
@@ -1568,7 +1568,7 @@ const M = {
     lockTerm2: "怎么用",
     lockDef2: "每个动作的比例(%)已经按当前策略填好。按你的想法修改，让合计等于100，再点“固定并重新计算”。比如：对手在翻牌圈绝不弃牌 → 弃牌0，其余动作合计100。可以固定多个节点。",
     lockTerm3: "怎么看结果",
-    lockDef3: "结果上方会出现黄色提示条。固定后的策略不是均衡(GTO)，而是假设对手这样打时的最佳应对。在面板里的“固定前后对比”中，看看频率、EV和误差变了多少。",
+    lockDef3: "结果上方会出现黄色提示条。这是固定部分策略后重新计算的结果，不是均衡（GTO）策略。在面板里的“固定前后对比”中，看看频率、EV和可剥削度变了多少。",
     lockTerm4: "怎么撤销",
     lockDef4: "用“解除并重新计算”逐个解除，或用“全部解除并重新计算”一次全部解除。计算新场景时，固定会自动清除。跳过选牌的转牌或河牌线路不能固定。",
 
@@ -1764,7 +1764,7 @@ const M = {
     lockTerm2: "怎麼用",
     lockDef2: "每個動作的比例(%)已經按目前策略填好。按你的想法修改，讓合計等於100，再按「固定並重新計算」。比如：對手在翻牌圈絕不蓋牌 → 蓋牌0，其餘動作合計100。可以固定多個節點。",
     lockTerm3: "怎麼看結果",
-    lockDef3: "結果上方會出現黃色提示列。固定後的策略不是均衡(GTO)，而是假設對手這樣打時的最佳應對。在面板裡的「固定前後比較」中，看看頻率、EV和誤差變了多少。",
+    lockDef3: "結果上方會出現黃色提示列。這是固定部分策略後重新計算的結果，不是均衡（GTO）策略。在面板裡的「固定前後比較」中，看看頻率、EV和可剝削度變了多少。",
     lockTerm4: "怎麼復原",
     lockDef4: "用「解除並重新計算」逐個解除，或用「全部解除並重新計算」一次全部解除。計算新場景時，固定會自動清除。跳過選牌的轉牌或河牌線路不能固定。",
 
@@ -1957,11 +1957,11 @@ const M = {
 
     lockTitle: "Stratégie fixée (node lock) — comment ta stratégie change-t-elle quand l’adversaire fait des erreurs ?",
     lockTerm1: "Où",
-    lockDef1: "Sur l’écran de résultats, après avoir calculé un spot toi-même. Choisis un nœud dans la ligne d’actions en haut, puis « Fixer la stratégie de ce nœud ». Dans les Spots d’étude, [Voir les résultats] affiche la solution immédiatement, mais ces résultats ne permettent pas de fixer la stratégie — lance d’abord [Calcule ce spot toi-même].",
+    lockDef1: "Sur l’écran de résultats, après avoir calculé un spot toi-même. Choisis un nœud dans la ligne d’actions en haut, puis « Fixer la stratégie de ce nœud ». Dans les Spots d'étude, [Voir les résultats] affiche la solution immédiatement, mais ces résultats ne permettent pas de fixer la stratégie — lance d’abord [Calcule ce spot toi-même].",
     lockTerm2: "Comment",
     lockDef2: "Le pourcentage (%) de chaque action reprend la valeur de la stratégie actuelle. Modifie les valeurs pour obtenir un total de 100, puis choisis « Fixer et recalculer ». Exemple : l’adversaire ne fold jamais au flop → fold 0, les autres actions totalisent 100. Tu peux fixer plusieurs nœuds.",
     lockTerm3: "Lire les résultats",
-    lockDef3: "Un bandeau jaune apparaît au-dessus des résultats. Après fixation, la stratégie est la meilleure réponse en supposant que l’adversaire joue ainsi, plutôt qu’un équilibre GTO. Dans « Comparaison avant/après », à l’intérieur du panneau, regarde comment les fréquences, l’EV et l’erreur ont changé.",
+    lockDef3: "Un bandeau jaune apparaît au-dessus des résultats. C’est un résultat recalculé avec une partie de la stratégie fixée, pas une stratégie d’équilibre (GTO). Dans « Comparaison avant/après », à l’intérieur du panneau, regarde comment la fréquence, l’EV et l’Exploitabilité ont changé.",
     lockTerm4: "Annuler",
     lockDef4: "Utilise « Libérer et recalculer » pour un nœud ou « Tout libérer et recalculer » pour tous. Les fixations disparaissent automatiquement quand tu calcules un nouveau spot. Tu ne peux pas fixer une ligne de turn ou de river si tu as passé l’étape du choix de la carte.",
 
@@ -1996,7 +1996,7 @@ const M = {
       "Bosse juste tes points faibles : single raised pots, pots 3-bet ou blind vs blind",
 
     myspotTerm: "Mes spots",
-    myspotDef: "Après avoir calculé un spot toi-même, choisis « Travailler ce spot » dans les résultats pour créer des exercices de ce spot et commencer tout de suite dans l’onglet « Mes spots » du Trainer. Les critères d’évaluation sont les mêmes que pour les Spots d’étude.",
+    myspotDef: "Après avoir calculé un spot toi-même, choisis « Travailler ce spot » dans les résultats pour créer des exercices de ce spot et commencer tout de suite dans l’onglet « Mes spots » du Trainer. Les critères d’évaluation sont les mêmes que pour les Spots d'étude.",
     myspotHint: "Les exercices et l’historique restent uniquement sur cet appareil (20 spots les plus récents · 500 essais par spot). Ils ne sont pas enregistrés sur ton compte : tu ne peux donc pas continuer sur un autre appareil. Enregistrer à nouveau le même spot efface son historique précédent. Les exercices créés à partir de résultats calculés avec une stratégie fixée portent la mention « Hypothèse d’une stratégie partiellement fixée ».",
 
     installTitle: "Installe-le sur ton écran d'accueil et étudie hors ligne",
@@ -2167,7 +2167,7 @@ const M = {
     lockTerm2: "Caranya",
     lockDef2: "Persentase (%) setiap aksi sudah terisi sesuai strategi saat ini. Ubah nilainya hingga berjumlah 100, lalu tekan “Kunci dan hitung ulang”. Contoh: lawan tidak pernah fold pada flop → fold 0, aksi lainnya berjumlah 100. Anda dapat mengunci beberapa node.",
     lockTerm3: "Membaca hasil",
-    lockDef3: "Pita kuning muncul di atas hasil. Strategi setelah dikunci adalah respons terbaik dengan asumsi lawan bermain seperti itu, bukan keseimbangan GTO. Pada “Perbandingan sebelum/sesudah” di dalam panel, lihat perubahan frekuensi, EV, dan galat.",
+    lockDef3: "Pita kuning muncul di atas hasil. Ini adalah hasil hitung ulang dengan sebagian strategi dikunci, bukan strategi ekuilibrium (GTO). Pada “Perbandingan sebelum/sesudah” di dalam panel, lihat perubahan frekuensi, EV, dan Exploitability.",
     lockTerm4: "Membuka kunci",
     lockDef4: "Gunakan “Buka kunci dan hitung ulang” untuk satu node atau “Buka semua kunci dan hitung ulang” untuk semua node. Kunci hilang otomatis saat Anda menghitung spot baru. Alur turn atau river yang Anda lewati tanpa memilih kartu tidak dapat dikunci.",
 
@@ -2371,7 +2371,7 @@ const M = {
     lockTerm2: "Caranya",
     lockDef2: "Peratus (%) setiap aksi sudah diisi mengikut strategi semasa. Ubah nilainya supaya jumlahnya 100, kemudian tekan “Kunci dan kira semula”. Contoh: lawan tidak pernah fold pada flop → fold 0, aksi lain berjumlah 100. Anda boleh mengunci beberapa node.",
     lockTerm3: "Membaca hasil",
-    lockDef3: "Jalur kuning muncul di atas hasil. Strategi selepas dikunci ialah tindak balas terbaik dengan andaian lawan bermain begitu, dan bukannya keseimbangan GTO. Dalam “Perbandingan sebelum/selepas” pada panel, lihat perubahan frekuensi, EV dan ralat.",
+    lockDef3: "Jalur kuning muncul di atas hasil. Ini ialah hasil kira semula dengan sebahagian strategi dikunci, bukan strategi keseimbangan (GTO). Dalam “Perbandingan sebelum/selepas” pada panel, lihat perubahan kekerapan, EV dan Exploitability.",
     lockTerm4: "Nyahkunci",
     lockDef4: "Guna “Nyahkunci dan kira semula” untuk satu node atau “Nyahkunci semua dan kira semula” untuk semua node. Kunci hilang secara automatik apabila anda mengira spot baharu. Laluan turn atau river yang melangkau pemilihan kad tidak boleh dikunci.",
 
@@ -2553,7 +2553,7 @@ const M = {
     lockTerm2: "कैसे",
     lockDef2: "हर एक्शन का अनुपात (%) मौजूदा रणनीति के अनुसार भरा होता है। इसे बदलकर कुल 100 करें और “रणनीति लॉक करके फिर गणना करें” चुनें। उदाहरण: विरोधी flop पर कभी fold नहीं करता → fold 0, बाकी एक्शन का कुल 100। आप कई node लॉक कर सकते हैं।",
     lockTerm3: "परिणाम समझें",
-    lockDef3: "परिणाम के ऊपर पीली पट्टी दिखती है। लॉक करने के बाद की रणनीति GTO संतुलन नहीं, बल्कि विरोधी के उसी तरह खेलने की धारणा पर सबसे अच्छा जवाब है। पैनल के “पहले और बाद की तुलना” हिस्से में देखें कि आवृत्ति, EV और त्रुटि कितनी बदली है।",
+    lockDef3: "परिणाम के ऊपर पीली पट्टी दिखती है। यह रणनीति का एक हिस्सा लॉक करके फिर से की गई गणना का नतीजा है, संतुलन (GTO) रणनीति नहीं। पैनल के “पहले और बाद की तुलना” हिस्से में देखें कि आवृत्ति, EV और Exploitability कितनी बदली हैं।",
     lockTerm4: "लॉक हटाएँ",
     lockDef4: "एक node के लिए “लॉक हटाकर फिर गणना करें” और सभी के लिए “सभी लॉक हटाकर फिर गणना करें” चुनें। नए स्पॉट की गणना करने पर लॉक अपने आप हट जाते हैं। turn या river के जिस क्रम में कार्ड चुने बिना आगे बढ़े हों, उसे लॉक नहीं कर सकते।",
 

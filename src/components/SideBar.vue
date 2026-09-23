@@ -114,7 +114,7 @@
       @click="store.sideView = 'run-solver'"
     >
       ⑤ {{ L.run }}
-      <span class="step-status" :class="{ 'step-next': nextStep === 4 }" :title="readySteps[4] ? L.stepComplete : L.stepNeeded" aria-hidden="true">{{ readySteps[4] ? '✓' : '○' }}</span>
+      <span class="step-status" :class="{ 'step-next': nextStep === 4 }" :title="readySteps[4] ? L.stepRunComplete : L.stepRunNeeded" aria-hidden="true">{{ readySteps[4] ? '✓' : '○' }}</span>
     </button>
     </div>
   </aside>
@@ -131,9 +131,11 @@ import RangeMiniViewer from "./RangeMiniViewer.vue";
 
 const M = {
   ko: {
-    stepDefaults: "기본값 사용 중 — 안 바꿔도 계산됩니다",
+    stepDefaults: "기본 설정",
     stepNeeded: "입력 필요",
     stepComplete: "입력 완료",
+    stepRunNeeded: "계산 실행",
+    stepRunComplete: "계산 완료",
     stepLegend: "✓ 입력 완료 · ○ 입력 필요 · 노란 점 = 다음 할 일",
     exploreLabel: "둘러보기",
     exploreLabelSuffix: " · 학습",
@@ -157,9 +159,11 @@ const M = {
     run: "계산 실행",
   },
   en: {
-    stepDefaults: "Using defaults — you can calculate without changing them",
+    stepDefaults: "Default settings",
     stepNeeded: "Input needed",
     stepComplete: "Input complete",
+    stepRunNeeded: "Run Solver",
+    stepRunComplete: "Solver finished",
     stepLegend: "✓ Input complete · ○ Input needed · Yellow dot = next task",
     exploreLabel: "Explore",
     exploreLabelSuffix: " & Study",
@@ -189,9 +193,11 @@ const M = {
   },
   // ⚠ ja도 ko/en과 같은 한 줄 제약 — 라벨을 늘리면 wrap 검사·sidebar-fit로 확인할 것
   ja: {
-    stepDefaults: "初期値を使用中 — 変更せず計算できます",
+    stepDefaults: "初期設定",
     stepNeeded: "入力が必要",
     stepComplete: "入力済み",
+    stepRunNeeded: "ソルバーを実行",
+    stepRunComplete: "計算が完了しました",
     stepLegend: "✓ 入力済み · ○ 入力が必要 · 黄色の点 = 次にすること",
     exploreLabel: "学習",
     exploreLabelSuffix: "・ツール",
@@ -218,9 +224,11 @@ const M = {
   },
   // ⚠ es도 같은 한 줄 제약 — 스페인어 라벨은 길어지기 쉬우니 늘리면 sidebar-fit로 확인할 것
   es: {
-    stepDefaults: "Valores predeterminados — puedes calcular sin cambiarlos",
+    stepDefaults: "Valores predeterminados",
     stepNeeded: "Faltan datos",
     stepComplete: "Datos completos",
+    stepRunNeeded: "Calcular",
+    stepRunComplete: "Cálculo terminado",
     stepLegend: "✓ Datos completos · ○ Faltan datos · Punto amarillo = siguiente tarea",
     exploreLabel: "Explorar",
     exploreLabelSuffix: " y estudiar",
@@ -248,9 +256,11 @@ const M = {
     run: "Calcular",
   },
   pt: {
-    stepDefaults: "Valores padrão em uso — você pode calcular sem alterá-los",
+    stepDefaults: "Valores padrão",
     stepNeeded: "Faltam dados",
     stepComplete: "Dados completos",
+    stepRunNeeded: "Calcular",
+    stepRunComplete: "Cálculo concluído",
     stepLegend: "✓ Dados completos · ○ Faltam dados · Ponto amarelo = próxima tarefa",
     exploreLabel: "Explorar",
     exploreLabelSuffix: " e estudar",
@@ -278,9 +288,11 @@ const M = {
   // (1280×720에서 648/648, 기존과 동일) 접힘 없음을 확인한 뒤 확정한 문구다.
   // 늘리려면 반드시 sidebar-fit-verify.js를 다시 돌릴 것.
   de: {
-    stepDefaults: "Standardwerte aktiv — du kannst sie unverändert berechnen lassen",
+    stepDefaults: "Standardwerte",
     stepNeeded: "Eingabe nötig",
     stepComplete: "Eingabe vollständig",
+    stepRunNeeded: "Berechnen",
+    stepRunComplete: "Berechnung abgeschlossen",
     stepLegend: "✓ Eingabe vollständig · ○ Eingabe nötig · Gelber Punkt = nächste Aufgabe",
     exploreLabel: "Entdecken",
     exploreLabelSuffix: " & Lernen",
@@ -312,9 +324,11 @@ const M = {
   // 미리 재고 확정한 것이다 (1280×720에서 648/648, 접힘 0건). 한자는 글자당 폭이 커서
   // 짧아 보여도 두 자만 늘리면 접힌다 — 고칠 땐 sidebar-fit-verify.js를 반드시 다시 돌릴 것.
   zh: {
-    stepDefaults: "正在使用默认值 — 不修改也能计算",
+    stepDefaults: "默认值",
     stepNeeded: "需要输入",
     stepComplete: "输入完成",
+    stepRunNeeded: "运行求解器",
+    stepRunComplete: "计算完成",
     stepLegend: "✓ 输入完成 · ○ 需要输入 · 黄点 = 下一步",
     exploreLabel: "探索",
     exploreLabelSuffix: " · 学习",
@@ -350,9 +364,11 @@ const M = {
   // 번체는 간체와 «글자 폭»이 같지만 글자 «수»가 달라진 항목이 있어 다시 쟀다
   // (自定义牌局 4자 → 自訂牌局 3자 · 运行求解器 → 執行解算器).
   "zh-hant": {
-    stepDefaults: "正在使用預設值 — 不修改也能計算",
+    stepDefaults: "預設值",
     stepNeeded: "需要輸入",
     stepComplete: "輸入完成",
+    stepRunNeeded: "執行解算器",
+    stepRunComplete: "計算完成",
     stepLegend: "✓ 輸入完成 · ○ 需要輸入 · 黃點 = 下一步",
     exploreLabel: "探索",
     exploreLabelSuffix: " · 學習",
@@ -386,9 +402,11 @@ const M = {
   // 1차 후보에서 두 개가 접혔다: «Immédiat» 뱃지(전 해상도) → Direct ·
   // «Tableaux préflop»(선택 시 ⑤가 화면 밖) → Charts préflop (프랑스 실사용어 chart préflop)
   fr: {
-    stepDefaults: "Valeurs par défaut — tu peux calculer sans les modifier",
+    stepDefaults: "Valeurs par défaut",
     stepNeeded: "Saisie requise",
     stepComplete: "Saisie complète",
+    stepRunNeeded: "Calculer",
+    stepRunComplete: "Calcul terminé",
     stepLegend: "✓ Saisie complète · ○ Saisie requise · Point jaune = prochaine tâche",
     exploreLabel: "Explorer",
     exploreLabelSuffix: " et étudier",
@@ -418,9 +436,11 @@ const M = {
   // id 라벨은 id-sidebar-premeasure.js로 4해상도 + 선택 상태 12뷰 실측 후 확정 (2026-09-02, 15뷰 전부 PASS).
   // 도구명 Trainer·용어 Range·Board·Equity·Bet size는 본체 id 코퍼스가 영어 그대로 쓴다(리서치 §2).
   id: {
-    stepDefaults: "Memakai nilai default — bisa dihitung tanpa mengubahnya",
+    stepDefaults: "Nilai default",
     stepNeeded: "Perlu input",
     stepComplete: "Input lengkap",
+    stepRunNeeded: "Hitung",
+    stepRunComplete: "Perhitungan selesai",
     stepLegend: "✓ Input lengkap · ○ Perlu input · Titik kuning = tugas berikutnya",
     exploreLabel: "Jelajahi",
     exploreLabelSuffix: " & pelajari",
@@ -449,9 +469,11 @@ const M = {
   // ms 라벨은 ms-sidebar-premeasure.js 실측으로 확정 (리서치 §3). id와 어휘가 겹쳐 보여도
   // 인니어(kustom·Instan·Pengaturan·Hitung)를 쓰지 않는다 — 말레이 표준어로 새로 잡았다.
   ms: {
-    stepDefaults: "Menggunakan nilai lalai — boleh dikira tanpa mengubahnya",
+    stepDefaults: "Nilai lalai",
     stepNeeded: "Input diperlukan",
     stepComplete: "Input lengkap",
+    stepRunNeeded: "Kira",
+    stepRunComplete: "Pengiraan selesai",
     stepLegend: "✓ Input lengkap · ○ Input diperlukan · Titik kuning = tugas seterusnya",
     exploreLabel: "Teroka",
     exploreLabelSuffix: " & belajar",
@@ -479,9 +501,11 @@ const M = {
     run: "Kira",
   },
   hi: {
-    stepDefaults: "डिफ़ॉल्ट मान इस्तेमाल हो रहे हैं — बदले बिना गणना कर सकते हैं",
+    stepDefaults: "डिफ़ॉल्ट मान",
     stepNeeded: "जानकारी चाहिए",
     stepComplete: "जानकारी पूरी",
+    stepRunNeeded: "गणना करें",
+    stepRunComplete: "गणना पूरी हुई",
     stepLegend: "✓ जानकारी पूरी · ○ जानकारी चाहिए · पीला बिंदु = अगला काम",
     exploreLabel: "जानें",
     exploreLabelSuffix: " और सीखें",

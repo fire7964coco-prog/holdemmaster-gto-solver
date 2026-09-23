@@ -304,7 +304,7 @@ const M = {
   fr: {
     startRange: "① Commencer par les ranges",
     viewPresets: "Voir les spots d’étude",
-    notRun: "Tu n’as pas encore calculé tes propres résultats.\nTu peux consulter ceux des exemples directement dans le menu « Spots d’étude ».\nPour calculer ton spot, remplis ①~⑤, puis clique sur « Calculer ».",
+    notRun: "Tu n’as pas encore calculé tes propres résultats.\nTu peux consulter ceux des exemples directement dans le menu « Spots d'étude ».\nPour calculer ton spot, remplis ①~⑤, puis clique sur « Calculer ».",
     running: "Calcul en cours…",
     finalizing: "Finalisation…",
     paused: "Solver en pause.",
@@ -312,7 +312,7 @@ const M = {
   id: {
     startRange: "① Mulai dari range",
     viewPresets: "Lihat spot belajar",
-    notRun: "Kamu belum menghitung hasil untuk spot sendiri.\nHasil contoh bisa langsung dilihat di menu “Spot belajar”.\nUntuk menghitung spot sendiri, lengkapi ①~⑤ lalu tekan “Hitung”.",
+    notRun: "Anda belum menghitung hasil untuk spot sendiri.\nHasil contoh bisa langsung dilihat di menu “Spot belajar”.\nUntuk menghitung spot sendiri, lengkapi ①~⑤ lalu tekan “Hitung”.",
     running: "Menghitung…",
     finalizing: "Menyelesaikan…",
     paused: "Solver dijeda.",
@@ -328,7 +328,7 @@ const M = {
   hi: {
     startRange: "① Range से सेटिंग शुरू करें",
     viewPresets: "अभ्यास स्पॉट देखें",
-    notRun: "आपने अभी अपने spot की गणना नहीं की है।\nउदाहरणों के परिणाम सीधे “अभ्यास स्पॉट” मेन्यू में देख सकते हैं।\nअपने spot की गणना के लिए ①~⑤ भरें, फिर “गणना करें” दबाएँ।",
+    notRun: "आपने अभी अपने स्पॉट की गणना नहीं की है।\nउदाहरणों के परिणाम सीधे “अभ्यास स्पॉट” मेन्यू में देख सकते हैं।\nअपने स्पॉट की गणना के लिए ①~⑤ भरें, फिर “गणना करें” दबाएँ।",
     running: "सॉल्वर चल रहा है…",
     finalizing: "अंतिम चरण पूरा हो रहा है…",
     paused: "सॉल्वर रुका हुआ है।",

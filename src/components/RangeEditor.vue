@@ -147,7 +147,7 @@ import DbItemPicker from "./DbItemPicker.vue";
 
 const M = {
   ko: {
-    mobileHint: "칸을 누르면 핸드 이름과 비중이 위에 크게 표시됩니다. 비중은 표 아래 막대로 바꿉니다.",
+    mobileHint: "표 아래 막대로 비중을 정한 뒤 칸을 누르면 적용됩니다. 누른 핸드 이름과 비중은 위에 크게 표시됩니다.",
     clear: "초기화",
     errorPrefix: "오류:",
     weight: "비중:",
@@ -156,7 +156,7 @@ const M = {
       `레인지를 해석할 수 없습니다: ${range || "(빈 문자열)"}`,
   },
   en: {
-    mobileHint: "Tap a cell to see its hand name and weight in large text above. Adjust the weight with the slider below the grid.",
+    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. The hand name and weight you tapped appear in large text above.",
     clear: "Clear",
     errorPrefix: "Error:",
     weight: "Weight:",
@@ -165,7 +165,7 @@ const M = {
       `Failed to parse range: ${range || "(empty string)"}`,
   },
   ja: {
-    mobileHint: "マスを押すとハンド名とウェイトが上に大きく表示されます。ウェイトは表の下のスライダーで変えられます。",
+    mobileHint: "表の下のスライダーでウェイトを決めてから、マスを押すと適用されます。押したハンド名とウェイトは上に大きく表示されます。",
     clear: "クリア",
     errorPrefix: "エラー:",
     weight: "ウェイト:",
@@ -174,7 +174,7 @@ const M = {
       `レンジを解析できません: ${range || "(空の文字列)"}`,
   },
   es: {
-    mobileHint: "Toca una celda para ver el nombre de la mano y su peso en grande arriba. Cambia el peso con la barra bajo la tabla.",
+    mobileHint: "Ajusta el peso con la barra bajo la tabla y luego toca una celda para aplicarlo. El nombre y el peso de la mano que tocaste aparecen en grande arriba.",
     clear: "Borrar",
     errorPrefix: "Error:",
     weight: "Peso:",
@@ -183,7 +183,7 @@ const M = {
       `No se pudo interpretar el rango: ${range || "(cadena vacía)"}`,
   },
   pt: {
-    mobileHint: "Toque em uma célula para ver o nome da mão e o peso em destaque acima. Ajuste o peso pela barra abaixo da tabela.",
+    mobileHint: "Defina o peso pela barra abaixo da tabela e depois toque em uma célula para aplicá-lo. O nome e o peso da mão tocada aparecem em destaque acima.",
     clear: "Limpar",
     errorPrefix: "Erro:",
     weight: "Peso:",
@@ -192,7 +192,7 @@ const M = {
       `Não foi possível interpretar o range: ${range || "(texto vazio)"}`,
   },
   de: {
-    mobileHint: "Tippe auf ein Feld, um Handname und Gewicht darüber groß zu sehen. Mit dem Schieberegler unter der Tabelle änderst du das Gewicht.",
+    mobileHint: "Stelle das Gewicht mit dem Schieberegler unter der Tabelle ein und tippe dann auf ein Feld, um es anzuwenden. Handname und Gewicht des angetippten Felds werden darüber groß angezeigt.",
     clear: "Leeren",
     errorPrefix: "Fehler:",
     weight: "Gewicht:",
@@ -201,7 +201,7 @@ const M = {
       `Die Range konnte nicht gelesen werden: ${range || "(leerer Text)"}`,
   },
   zh: {
-    mobileHint: "点选格子后，手牌名称和权重会在上方放大显示。用表格下方的滑块调整权重。",
+    mobileHint: "先用表格下方的滑块设定权重，再点选格子即可应用。所点手牌的名称和权重会在上方放大显示。",
     // clearRange()는 격자·비중·입력칸을 전부 비운다 (BoardSelector와 같은 뜻의 「清空」)
     clear: "清空",
     errorPrefix: "错误：",
@@ -211,7 +211,7 @@ const M = {
       `无法解析这个范围：${range || "（空）"}`,
   },
   "zh-hant": {
-    mobileHint: "點選格子後，手牌名稱和權重會在上方放大顯示。用表格下方的滑桿調整權重。",
+    mobileHint: "先用表格下方的滑桿設定權重，再點選格子即可套用。所點手牌的名稱和權重會在上方放大顯示。",
     // clearRange()는 격자·비중·입력칸을 전부 비운다 (BoardSelector와 같은 뜻의 「清空」)
     clear: "清空",
     errorPrefix: "錯誤：",
@@ -221,7 +221,7 @@ const M = {
       `無法解析這個範圍：${range || "（空）"}`,
   },
   fr: {
-    mobileHint: "Touche une case pour voir le nom de la main et son poids en grand au-dessus. Ajuste le poids avec le curseur sous la grille.",
+    mobileHint: "Règle le poids avec le curseur sous la grille, puis touche une case pour l’appliquer. Le nom et le poids de la main touchée s’affichent en grand au-dessus.",
     clear: "Effacer",
     errorPrefix: "Erreur :",
     weight: "Poids :",
@@ -230,7 +230,7 @@ const M = {
       `Impossible d'interpréter la range : ${range || "(chaîne vide)"}`,
   },
   id: {
-    mobileHint: "Ketuk kotak untuk melihat nama hand dan bobotnya dalam ukuran besar di atas. Ubah bobot dengan penggeser di bawah tabel.",
+    mobileHint: "Atur bobot dengan penggeser di bawah tabel, lalu ketuk kotak untuk menerapkannya. Nama hand dan bobot pada kotak yang diketuk ditampilkan dalam ukuran besar di atas.",
     clear: "Bersihkan",
     errorPrefix: "Error:",
     weight: "Bobot:",
@@ -239,7 +239,7 @@ const M = {
       `Range tidak bisa dibaca: ${range || "(kosong)"}`,
   },
   ms: {
-    mobileHint: "Ketik kotak untuk melihat nama tangan dan wajarannya dalam saiz besar di atas. Laraskan wajaran dengan peluncur di bawah jadual.",
+    mobileHint: "Tetapkan wajaran dengan peluncur di bawah jadual, kemudian ketik kotak untuk menerapkannya. Nama tangan dan wajaran pada kotak yang diketuk dipaparkan dalam saiz besar di atas.",
     clear: "Kosongkan",
     errorPrefix: "Ralat:",
     weight: "Wajaran:",
@@ -248,7 +248,7 @@ const M = {
       `Range tidak dapat dibaca: ${range || "(kosong)"}`,
   },
   hi: {
-    mobileHint: "खाने पर टैप करने से हैंड का नाम और वज़न ऊपर बड़े अक्षरों में दिखते हैं। वज़न बदलने के लिए तालिका के नीचे का स्लाइडर इस्तेमाल करें।",
+    mobileHint: "तालिका के नीचे के स्लाइडर से वज़न तय करें, फिर उसे लागू करने के लिए खाने पर टैप करें। टैप किए गए हैंड का नाम और वज़न ऊपर बड़े अक्षरों में दिखते हैं।",
     clear: "साफ़ करें",
     errorPrefix: "त्रुटि:",
     weight: "वज़न:",
