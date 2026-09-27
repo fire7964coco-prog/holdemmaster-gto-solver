@@ -147,7 +147,7 @@ import DbItemPicker from "./DbItemPicker.vue";
 
 const M = {
   ko: {
-    mobileHint: "표 아래 막대로 비중을 정한 뒤 칸을 누르면 적용됩니다. 누른 핸드 이름과 비중은 위에 크게 표시됩니다.",
+    mobileHint: "표 아래 막대로 비중을 정한 뒤 칸을 누르면 적용됩니다. 같은 비중이 이미 들어 있는 칸을 누르면 지워집니다. 누른 핸드 이름과 비중은 위에 크게 표시됩니다.",
     clear: "초기화",
     errorPrefix: "오류:",
     weight: "비중:",
@@ -156,7 +156,7 @@ const M = {
       `레인지를 해석할 수 없습니다: ${range || "(빈 문자열)"}`,
   },
   en: {
-    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. The hand name and weight you tapped appear in large text above.",
+    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. Tapping a cell that already has that weight clears it. The hand name and weight you tapped appear in large text above.",
     clear: "Clear",
     errorPrefix: "Error:",
     weight: "Weight:",
@@ -165,7 +165,7 @@ const M = {
       `Failed to parse range: ${range || "(empty string)"}`,
   },
   ja: {
-    mobileHint: "表の下のスライダーでウェイトを決めてから、マスを押すと適用されます。押したハンド名とウェイトは上に大きく表示されます。",
+    mobileHint: "表の下のスライダーでウェイトを決めてから、マスを押すと適用されます。同じウェイトがすでに入っているマスを押すと消えます。押したハンド名とウェイトは上に大きく表示されます。",
     clear: "クリア",
     errorPrefix: "エラー:",
     weight: "ウェイト:",
@@ -174,7 +174,7 @@ const M = {
       `レンジを解析できません: ${range || "(空の文字列)"}`,
   },
   es: {
-    mobileHint: "Ajusta el peso con la barra bajo la tabla y luego toca una celda para aplicarlo. El nombre y el peso de la mano que tocaste aparecen en grande arriba.",
+    mobileHint: "Ajusta el peso con la barra bajo la tabla y luego toca una celda para aplicarlo. Si tocas una celda que ya tiene ese peso, se borra. El nombre y el peso de la mano que tocaste aparecen en grande arriba.",
     clear: "Borrar",
     errorPrefix: "Error:",
     weight: "Peso:",
@@ -183,7 +183,7 @@ const M = {
       `No se pudo interpretar el rango: ${range || "(cadena vacía)"}`,
   },
   pt: {
-    mobileHint: "Defina o peso pela barra abaixo da tabela e depois toque em uma célula para aplicá-lo. O nome e o peso da mão tocada aparecem em destaque acima.",
+    mobileHint: "Defina o peso pela barra abaixo da tabela e depois toque em uma célula para aplicá-lo. Tocar em uma célula que já tem esse peso a apaga. O nome e o peso da mão tocada aparecem em destaque acima.",
     clear: "Limpar",
     errorPrefix: "Erro:",
     weight: "Peso:",
@@ -192,7 +192,7 @@ const M = {
       `Não foi possível interpretar o range: ${range || "(texto vazio)"}`,
   },
   de: {
-    mobileHint: "Stelle das Gewicht mit dem Schieberegler unter der Tabelle ein und tippe dann auf ein Feld, um es anzuwenden. Handname und Gewicht des angetippten Felds werden darüber groß angezeigt.",
+    mobileHint: "Stelle das Gewicht mit dem Schieberegler unter der Tabelle ein und tippe dann auf ein Feld, um es anzuwenden. Tippst du auf ein Feld, das dieses Gewicht schon hat, wird es gelöscht. Handname und Gewicht des angetippten Felds werden darüber groß angezeigt.",
     clear: "Leeren",
     errorPrefix: "Fehler:",
     weight: "Gewicht:",
@@ -201,7 +201,7 @@ const M = {
       `Die Range konnte nicht gelesen werden: ${range || "(leerer Text)"}`,
   },
   zh: {
-    mobileHint: "先用表格下方的滑块设定权重，再点选格子即可应用。所点手牌的名称和权重会在上方放大显示。",
+    mobileHint: "先用表格下方的滑块设定权重，再点选格子即可应用。点选已经是该权重的格子会将其清除。所点手牌的名称和权重会在上方放大显示。",
     // clearRange()는 격자·비중·입력칸을 전부 비운다 (BoardSelector와 같은 뜻의 「清空」)
     clear: "清空",
     errorPrefix: "错误：",
@@ -211,7 +211,7 @@ const M = {
       `无法解析这个范围：${range || "（空）"}`,
   },
   "zh-hant": {
-    mobileHint: "先用表格下方的滑桿設定權重，再點選格子即可套用。所點手牌的名稱和權重會在上方放大顯示。",
+    mobileHint: "先用表格下方的滑桿設定權重，再點選格子即可套用。點選已經是該權重的格子會將其清除。所點手牌的名稱和權重會在上方放大顯示。",
     // clearRange()는 격자·비중·입력칸을 전부 비운다 (BoardSelector와 같은 뜻의 「清空」)
     clear: "清空",
     errorPrefix: "錯誤：",
@@ -221,7 +221,7 @@ const M = {
       `無法解析這個範圍：${range || "（空）"}`,
   },
   fr: {
-    mobileHint: "Règle le poids avec le curseur sous la grille, puis touche une case pour l’appliquer. Le nom et le poids de la main touchée s’affichent en grand au-dessus.",
+    mobileHint: "Règle le poids avec le curseur sous la grille, puis touche une case pour l’appliquer. Toucher une case qui a déjà ce poids l’efface. Le nom et le poids de la main touchée s’affichent en grand au-dessus.",
     clear: "Effacer",
     errorPrefix: "Erreur :",
     weight: "Poids :",
@@ -230,7 +230,7 @@ const M = {
       `Impossible d'interpréter la range : ${range || "(chaîne vide)"}`,
   },
   id: {
-    mobileHint: "Atur bobot dengan penggeser di bawah tabel, lalu ketuk kotak untuk menerapkannya. Nama hand dan bobot pada kotak yang diketuk ditampilkan dalam ukuran besar di atas.",
+    mobileHint: "Atur bobot dengan penggeser di bawah tabel, lalu ketuk kotak untuk menerapkannya. Mengetuk kotak yang sudah berbobot sama akan menghapusnya. Nama hand dan bobot pada kotak yang diketuk ditampilkan dalam ukuran besar di atas.",
     clear: "Bersihkan",
     errorPrefix: "Error:",
     weight: "Bobot:",
@@ -239,7 +239,7 @@ const M = {
       `Range tidak bisa dibaca: ${range || "(kosong)"}`,
   },
   ms: {
-    mobileHint: "Tetapkan wajaran dengan peluncur di bawah jadual, kemudian ketik kotak untuk menerapkannya. Nama tangan dan wajaran pada kotak yang diketuk dipaparkan dalam saiz besar di atas.",
+    mobileHint: "Tetapkan wajaran dengan peluncur di bawah jadual, kemudian ketik kotak untuk menerapkannya. Mengetik kotak yang sudah mempunyai wajaran yang sama akan memadamkannya. Nama tangan dan wajaran pada kotak yang diketuk dipaparkan dalam saiz besar di atas.",
     clear: "Kosongkan",
     errorPrefix: "Ralat:",
     weight: "Wajaran:",
@@ -248,7 +248,7 @@ const M = {
       `Range tidak dapat dibaca: ${range || "(kosong)"}`,
   },
   hi: {
-    mobileHint: "तालिका के नीचे के स्लाइडर से वज़न तय करें, फिर उसे लागू करने के लिए खाने पर टैप करें। टैप किए गए हैंड का नाम और वज़न ऊपर बड़े अक्षरों में दिखते हैं।",
+    mobileHint: "तालिका के नीचे के स्लाइडर से वज़न तय करें, फिर उसे लागू करने के लिए खाने पर टैप करें। जिस खाने में पहले से वही वज़न हो, उस पर टैप करने से वह हट जाता है। टैप किए गए हैंड का नाम और वज़न ऊपर बड़े अक्षरों में दिखते हैं।",
     clear: "साफ़ करें",
     errorPrefix: "त्रुटि:",
     weight: "वज़न:",
