@@ -33,12 +33,22 @@ export function evaluateFlopDecision(
   const hands = file.players[player].hands;
   const h = hands.findIndex(([a, b]) => handIndex(a, b) === index);
   if (h < 0 || file.players[player].weights[h] === 0) throw new ReviewError("HAND_NOT_IN_RANGE", "Hand absent from root range", { hand, player });
-  if (rangeAt(file, path, player)[index] === 0) throw new ReviewError("UNREACHABLE_HAND", "Hand has zero reach on this line", { hand, path });
-  const opponent = (player ^ 1) as 0 | 1;
-  const other = rangeAt(file, path, opponent);
-  if (!file.players[opponent].hands.some(([a, b]) =>
-    !hand.includes(a) && !hand.includes(b) && other[handIndex(a, b)] > 0)) {
-    throw new ReviewError("NO_COMPATIBLE_HANDS", "No reached opponent hand is compatible", { hand, path });
+  const unavailableActions = node.actions.flatMap((action, a) => node.evAvailable[a * hands.length + h] ? [] : [{ index: a, action }]);
+  if (unavailableActions.length > 0) {
+    throw new ReviewError("EV_MISSING", "Action EV is unavailable", {
+      hand, path, unavailableActions, source: node.evAvailabilitySource,
+      legacyZeroAmbiguity: file.header.version === 1,
+    });
+  }
+  // v2 availability comes from the engine's unquantized compatible opponent mass.
+  // Rechecking u8 reach can erase tiny positive support and contradict that signal.
+  if (file.header.version === 1) {
+    const opponent = (player ^ 1) as 0 | 1;
+    const other = rangeAt(file, path, opponent);
+    if (!file.players[opponent].hands.some(([a, b]) =>
+      !hand.includes(a) && !hand.includes(b) && other[handIndex(a, b)] > 0)) {
+      throw new ReviewError("NO_COMPATIBLE_HANDS", "No reached opponent hand is compatible", { hand, path });
+    }
   }
   const match = typeof selected === "number" ? null : matchAction(file, path, selected);
   const selectedAction = typeof selected === "number" ? selected : match!.actionIndex;
@@ -68,6 +78,7 @@ export function evaluateFlopDecision(
     goodBb: Math.max(potBb * policy.GOOD_LOSS_RATIO, policy.GOOD_LOSS_FLOOR_BB) };
   const grade: "best" | "good" | "bad" = evLossBb <= limits.bestBb ? "best" : evLossBb <= limits.goodBb ? "good" : "bad";
   return { actions, evLossBb, grade, potBb, limits, selectedAction, bestAction: best.index, match,
+    evAvailabilitySource: node.evAvailabilitySource,
     // Each stored action EV has a rounding uncertainty of half a stored unit.
     evResolutionBb: 1 / file.header.evScale / file.header.unit };
 }

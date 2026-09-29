@@ -3,6 +3,8 @@ import { assertDistinctCards, cardName, Flop } from "./flop-canon";
 
 export type ReviewPlayer = 0 | 1;
 export type Hmr1Hand = readonly [number, number];
+export const HMR1_EV_MISSING = -32768;
+export type Hmr1EvAvailabilitySource = "legacy-nonfold-zero-heuristic" | "explicit-sentinel";
 
 export interface Hmr1NodeHeader {
   readonly path: readonly number[];
@@ -13,7 +15,10 @@ export interface Hmr1NodeHeader {
 }
 
 export interface Hmr1Header {
-  readonly version: 1;
+  readonly version: 1 | 2;
+  /** Required in v2; absent in v1. The i16 sentinel is not a numeric EV. */
+  readonly evMissing?: typeof HMR1_EV_MISSING;
+  readonly evSemantics?: "counterfactual";
   readonly scenario: string;
   readonly flop: string;
   readonly flopCards: Flop;
@@ -41,8 +46,12 @@ export interface Hmr1Player {
 export interface Hmr1Node extends Hmr1NodeHeader {
   /** Quantized action-major probabilities; index = action * hand count + hand. */
   readonly strategy: Uint8Array;
-  /** Quantized action-major EVs; chips = value / header.evScale. */
+  /** Raw action-major i16 values. Divide by evScale only where evAvailable is 1. */
   readonly ev: Int16Array;
+  /** Action-major 1/0 availability, including genuine zero EVs in v2. */
+  readonly evAvailable: Uint8Array;
+  /** v1 cannot distinguish an absent EV row from genuine/rounded non-fold zeros. */
+  readonly evAvailabilitySource: Hmr1EvAvailabilitySource;
 }
 
 export interface Hmr1File {
@@ -91,7 +100,10 @@ export function getNode(file: Hmr1File, path: readonly number[]): Hmr1Node {
 
 function parseHeader(value: unknown): Hmr1Header {
   const raw = record(value, "header");
-  if (raw.version !== 1) invalid("Unsupported HMR1 version", { version: raw.version });
+  if (raw.version !== 1 && raw.version !== 2) invalid("Unsupported HMR1 version", { version: raw.version });
+  if (raw.version === 2 && (raw.evMissing !== HMR1_EV_MISSING || raw.evSemantics !== "counterfactual")) {
+    invalid("Invalid HMR1 v2 EV contract", { evMissing: raw.evMissing, evSemantics: raw.evSemantics });
+  }
   if (!Array.isArray(raw.flopCards)) invalid("Missing flop cards");
   assertDistinctCards(raw.flopCards, 3);
   const flopCards: Flop = [raw.flopCards[0], raw.flopCards[1], raw.flopCards[2]];
@@ -146,7 +158,9 @@ function parseHeader(value: unknown): Hmr1Header {
   const pot = numeric(raw.pot, "pot", 1, true);
   if (!Number.isSafeInteger(pot + 2 * stack)) invalid("Chip totals exceed exact integer arithmetic");
   return {
-    version: 1, scenario: nonempty(raw.scenario, "scenario"), flop, flopCards,
+    version: raw.version,
+    ...(raw.version === 2 ? { evMissing: HMR1_EV_MISSING, evSemantics: "counterfactual" as const } : {}),
+    scenario: nonempty(raw.scenario, "scenario"), flop, flopCards,
     flopWeight: numeric(raw.flopWeight, "flopWeight", 1, true),
     pot, stack, unit, evScale,
     flopBet: nonempty(raw.flopBet, "flopBet"), laterBet: nonempty(raw.laterBet, "laterBet"),
@@ -225,7 +239,18 @@ export function parseHmr1(bytes: Uint8Array | null | undefined): Hmr1File {
     for (let i = 0; i < count; i++) {
       ev[i] = view.getInt16(position, true);
       position += 2;
-      if (ev[i] === -32768) invalid("EV is outside the HMR1 writer range", { path: metadata.path, index: i });
+      if (header.version === 1 && ev[i] === HMR1_EV_MISSING) invalid("EV is outside the HMR1 v1 writer range", { path: metadata.path, index: i });
+    }
+    const evAvailable = new Uint8Array(count);
+    if (header.version === 2) {
+      for (let i = 0; i < count; i++) evAvailable[i] = ev[i] === HMR1_EV_MISSING ? 0 : 1;
+    } else {
+      // v1 has no absence bit: be conservative when every non-fold EV is zero.
+      // Fold's real zero does not establish that the other actions have values.
+      for (let h = 0; h < handCount; h++) {
+        const present = metadata.actions.some((action, a) => action !== "Fold" && ev[a * handCount + h] !== 0);
+        if (present) for (let a = 0; a < metadata.actions.length; a++) evAvailable[a * handCount + h] = 1;
+      }
     }
     for (let h = 0; h < handCount; h++) {
       if (players[metadata.player].weights[h] <= 0) continue;
@@ -233,7 +258,8 @@ export function parseHmr1(bytes: Uint8Array | null | undefined): Hmr1File {
       for (let a = 0; a < metadata.actions.length; a++) sum += strategy[a * handCount + h];
       if (Math.abs(sum - 255) > 3) invalid("Invalid quantized strategy sum", { path: metadata.path, hand: h, sum });
     }
-    const node: Hmr1Node = { ...metadata, strategy, ev };
+    const node: Hmr1Node = { ...metadata, strategy, ev, evAvailable,
+      evAvailabilitySource: header.version === 2 ? "explicit-sentinel" : "legacy-nonfold-zero-heuristic" };
     nodesByPath.set(pathKey(node.path), node);
     return node;
   });

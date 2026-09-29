@@ -800,6 +800,159 @@ impl PostFlopGame {
         ret
     }
 
+    /// Returns action EVs even when this player's earlier actions gave a hand
+    /// zero reach. Uses the solved, frozen strategy and opponent-compatible reach.
+    /// The layout is the same as [`expected_values_detail`](Self::expected_values_detail).
+    ///
+    /// Returns `NaN` for every action (including Fold) of a board-conflicting hand
+    /// or a hand with zero compatible opponent mass. A finite zero is a real EV.
+    /// Panics for bunching, which this export API deliberately does not support,
+    /// and under the same state/cache conditions as `expected_values_detail`.
+    /// Existing `expected_values_detail` behavior is unchanged.
+    pub fn expected_values_detail_counterfactual(&self, player: usize) -> Vec<f32> {
+        if self.state != State::Solved {
+            panic!("Game is not solved");
+        }
+
+        if !self.is_normalized_weight_cached {
+            panic!("Normalized weights are not cached");
+        }
+
+        if self.bunching_num_dead_cards != 0 {
+            panic!("Counterfactual EV export does not support bunching");
+        }
+
+        // This denominator depends only on the opponent, so it remains defined
+        // after an earlier action reduced this player's reach to exactly zero.
+        let mut board_mask = self.card_config.flop.iter().fold(0u64, |m, &c| m | (1u64 << c));
+        if self.turn != NOT_DEALT {
+            board_mask |= 1u64 << self.turn;
+        }
+        if self.river != NOT_DEALT {
+            board_mask |= 1u64 << self.river;
+        }
+        let opponent = player ^ 1;
+        let mut sum = 0.0f64;
+        let mut by_card = [0.0f64; 52];
+        for (&(c1, c2), &weight) in self.private_cards[opponent].iter().zip(&self.weights[opponent]) {
+            if ((1u64 << c1) | (1u64 << c2)) & board_mask == 0 {
+                sum += weight as f64;
+                by_card[c1 as usize] += weight as f64;
+                by_card[c2 as usize] += weight as f64;
+            }
+        }
+        let compatible: Vec<f64> = self.private_cards[player].iter().enumerate().map(|(i, &(c1, c2))| {
+            let hand_mask = (1u64 << c1) | (1u64 << c2);
+            if hand_mask & board_mask != 0 {
+                return 0.0;
+            }
+            let same = self.same_hand_index[player][i];
+            let same_weight = if same == u16::MAX { 0.0 } else { self.weights[opponent][same as usize] as f64 };
+            let mut mass = sum + same_weight - by_card[c1 as usize] - by_card[c2 as usize];
+            // Near complete card removal, subtraction can leave a rounding
+            // residue. Direct nonnegative summation distinguishes zero support
+            // from a real, very small compatible weight without an EV cutoff.
+            if mass <= sum * 1.0e-12 {
+                mass = self.private_cards[opponent].iter().zip(&self.weights[opponent])
+                    .filter(|(& (a, b), _)| ((1u64 << a) | (1u64 << b)) & (board_mask | hand_mask) == 0)
+                    .map(|(_, &w)| w as f64).sum();
+            }
+            mass
+        }).collect();
+
+        let node = self.node();
+        let num_hands = self.num_private_hands(player);
+
+        let mut chance_factor = 1;
+        if self.card_config.turn == NOT_DEALT && self.turn != NOT_DEALT {
+            chance_factor *= 45 - self.bunching_num_dead_cards;
+        }
+        if self.card_config.river == NOT_DEALT && self.river != NOT_DEALT {
+            chance_factor *= 44 - self.bunching_num_dead_cards;
+        }
+
+        let num_combinations = match self.bunching_num_dead_cards {
+            0 => self.num_combinations,
+            _ => self.bunching_num_combinations,
+        };
+
+        let mut have_actions = false;
+        let mut normalizer = (num_combinations * chance_factor as f64) as f32;
+
+        let mut ret = if node.is_terminal() {
+            normalizer = num_combinations as f32;
+            let mut ret = Vec::with_capacity(num_hands);
+            let mut cfreach = self.weights[player ^ 1].clone();
+            self.apply_swap(&mut cfreach, player ^ 1, true);
+            self.evaluate(ret.spare_capacity_mut(), &node, player, &cfreach);
+            unsafe { ret.set_len(num_hands) };
+            ret
+        } else if node.is_chance() && node.cfvalue_storage_player() == Some(player) {
+            if self.is_compression_enabled {
+                let slice = node.cfvalues_chance_compressed();
+                let scale = node.cfvalue_chance_scale();
+                decode_signed_slice(slice, scale)
+            } else {
+                node.cfvalues_chance().to_vec()
+            }
+        } else if node.has_cfvalues_ip() && player == PLAYER_IP as usize {
+            if self.is_compression_enabled {
+                let slice = node.cfvalues_ip_compressed();
+                let scale = node.cfvalue_ip_scale();
+                decode_signed_slice(slice, scale)
+            } else {
+                node.cfvalues_ip().to_vec()
+            }
+        } else if player == self.current_player() {
+            have_actions = true;
+            if self.is_compression_enabled {
+                let slice = node.cfvalues_compressed();
+                let scale = node.cfvalue_scale();
+                decode_signed_slice(slice, scale)
+            } else {
+                node.cfvalues().to_vec()
+            }
+        } else {
+            self.cfvalues_cache[player].to_vec()
+        };
+
+        let starting_pot = self.tree_config.starting_pot;
+        let total_bet_amount = self.total_bet_amount();
+        let bias = (total_bet_amount[player] - total_bet_amount[player ^ 1]).max(0);
+
+        ret.chunks_exact_mut(num_hands)
+            .enumerate()
+            .for_each(|(action, row)| {
+                let is_fold = have_actions && self.node().play(action).prev_action == Action::Fold;
+                self.apply_swap(row, player, false);
+                row.iter_mut()
+                    .zip(self.weights[player].iter())
+                    .zip(self.normalized_weights[player].iter())
+                    .zip(compatible.iter())
+                    .for_each(|(((v, &w_raw), &w_normalized), &opponent_mass)| {
+                        if opponent_mass <= 0.0 {
+                            *v = f32::NAN;
+                        } else if is_fold {
+                            *v = 0.0;
+                        } else {
+                            // Retain the legacy operation order wherever it was
+                            // defined, including its f32 rounding, for exact
+                            // compatibility. Only missing reach uses the new ratio.
+                            let offset = starting_pot as f32 * 0.5 + (self.node().amount + bias) as f32;
+                            if w_raw > 0.0 && w_normalized > 0.0 {
+                                *v *= normalizer * (w_raw / w_normalized);
+                                *v += offset;
+                            } else {
+                                *v = ((*v as f64 * normalizer as f64) / opponent_mass + offset as f64) as f32;
+                            }
+                            assert!(v.is_finite(), "Non-finite counterfactual EV with positive opponent support");
+                        }
+                    });
+            });
+
+        ret
+    }
+
     /// Returns the strategy of the current player.
     ///
     /// The return value is a vector of the length of `#(actions) * #(private hands)`.
