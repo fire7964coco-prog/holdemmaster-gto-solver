@@ -44,6 +44,9 @@
         <div v-if="store.sideView === 'equity'">
           <EquityPage />
         </div>
+        <div v-show="store.sideView === 'oop-range' || store.sideView === 'ip-range'">
+          <SpotPicker />
+        </div>
         <div v-show="store.sideView === 'oop-range'">
           <RangeEditor :player="0" />
         </div>
@@ -95,6 +98,7 @@ import GuidePage from "./GuidePage.vue";
 import PreflopChartPage from "./PreflopChartPage.vue";
 import EquityPage from "./EquityPage.vue";
 import RangeEditor from "./RangeEditor.vue";
+import SpotPicker from "./SpotPicker.vue";
 import BoardSelector from "./BoardSelector.vue";
 import TreeConfig from "./TreeConfig.vue";
 import RunSolver from "./RunSolver.vue";
@@ -114,6 +118,7 @@ export default defineComponent({
     PreflopChartPage,
     EquityPage,
     RangeEditor,
+    SpotPicker,
     BoardSelector,
     TreeConfig,
     RunSolver,
