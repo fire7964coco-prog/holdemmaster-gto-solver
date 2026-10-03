@@ -22,8 +22,8 @@ function same(a: readonly number[], b: readonly number[]) {
 /** HMR1 omits these settings. This function only supports its known precompute2 producer profile. */
 function requireProducerProfile(file: Hmr1File) {
   const h = file.header;
-  if (h.targetPct !== 1 || h.exploitPct > 1) {
-    throw new ReviewError("UNSUPPORTED_ACCURACY", "Review requires a converged one-percent file");
+  if (h.targetPct <= 0 || h.targetPct > 1 || h.exploitPct > h.targetPct) {
+    throw new ReviewError("UNSUPPORTED_ACCURACY", "Review requires a converged file with target at most one percent");
   }
   const scenarios = ["srp-btn-bb", "srp-sb-bb", "srp-co-bb", "srp-hj-bb", "srp-utg-bb"];
   const sb = h.scenario === "srp-sb-bb";
@@ -122,6 +122,6 @@ export function buildTurnInput(
     riverRaise: [file.header.raise, file.header.raise] as [string, string],
     turnDonk: null, riverDonk: null,
     addAllinThreshold: 1.5, forceAllinThreshold: 0.2, mergingThreshold: 0.1,
-    rakeRate: 0, rakeCap: 0, targetExploitabilityPct: 1,
+    rakeRate: 0, rakeCap: 0, targetExploitabilityPct: file.header.targetPct,
   };
 }

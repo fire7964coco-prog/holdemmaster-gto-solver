@@ -10,11 +10,14 @@
  *   FEATURE_TRAINER로 숨겨져 있고, 이 스텁은 타입과 참조를 만족시키는 안전망이다.
  */
 import { defineComponent, reactive } from "vue";
+import type { Locale } from "../i18n"; // R2_REVIEW_ONLY
 
 /** 렌더될 일 없는 빈 화면 (sideView가 trainer/presets로 갈 길이 모두 막혀 있다) */
 const EmptyPage = defineComponent({ name: "EmptyPage", render: () => null });
 
 export const TrainerPage = EmptyPage;
+export const HandReviewPage = EmptyPage; // R2_REVIEW_ONLY
+export const handReviewLabels = (_locale: Locale) => ({ title: "", navTitle: "" }); // R2_REVIEW_ONLY
 export const CustomTrainerEntry = EmptyPage;
 export const createCustomTrainerCapture = () => null;
 export const PresetsPage = EmptyPage;

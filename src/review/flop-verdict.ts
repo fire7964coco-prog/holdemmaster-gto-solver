@@ -22,8 +22,8 @@ export function evaluateFlopDecision(
 ) {
   assertDistinctCards(hand, 2);
   assertDistinctCards([...file.header.flopCards, ...hand], 5);
-  if (file.header.targetPct !== 1 || file.header.exploitPct > 1) {
-    throw new ReviewError("UNSUPPORTED_ACCURACY", "Review requires a converged one-percent file");
+  if (file.header.targetPct <= 0 || file.header.targetPct > 1 || file.header.exploitPct > file.header.targetPct) {
+    throw new ReviewError("UNSUPPORTED_ACCURACY", "Review requires a converged file with target at most one percent");
   }
   const state = flopLine(file, path);
   if (state.kind !== "decision" || state.player === null) throw new ReviewError("NOT_DECISION", "Verdict requires a decision node");

@@ -12,6 +12,7 @@
       <div
         ref="solverContent"
         class="solver-content flex-grow min-w-0 min-h-0 my-2 md:my-4 px-3 md:px-6 pt-2 overflow-y-auto md:h-[calc(100%-2rem)]"
+        :style="isHandReview ? { display: 'flex', flexDirection: 'column', flex: '1 1 0%', overflow: 'hidden' } : undefined /* R2_REVIEW_ONLY */"
       >
         <div class="flex">
           <h1
@@ -38,6 +39,11 @@
         <div v-if="store.sideView === 'trainer'">
           <TrainerPage />
         </div>
+        <!-- R2_REVIEW_ONLY_START -->
+        <div v-if="isHandReview" class="flex-1 min-h-0">
+          <HandReviewPage />
+        </div>
+        <!-- R2_REVIEW_ONLY_END -->
         <div v-if="store.sideView === 'preflop'">
           <PreflopChartPage />
         </div>
@@ -89,6 +95,7 @@ import { applySpotFromUrl } from "../spot-share";
 import { viewFromUrl } from "../pwa";
 // 빌드 2벌 분기 — npokers 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
 import { TrainerPage, PresetsPage, bootstrapAccount } from "@features";
+import { HandReviewPage, handReviewLabels, FEATURE_TRAINER } from "@features"; // R2_REVIEW_ONLY
 import { i18n } from "../i18n";
 
 import NavBar from "./NavBar.vue";
@@ -115,6 +122,7 @@ export default defineComponent({
     GuidePage,
     PresetsPage,
     TrainerPage,
+    HandReviewPage, // R2_REVIEW_ONLY
     PreflopChartPage,
     EquityPage,
     RangeEditor,
@@ -130,6 +138,7 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
+    const isHandReview = computed(() => FEATURE_TRAINER && store.sideView === "hand-review"); // R2_REVIEW_ONLY
     const config = useConfigStore();
     const solverContent = ref<HTMLElement | null>(null);
     const resultsContent = ref<HTMLElement | null>(null);
@@ -332,6 +341,7 @@ export default defineComponent({
     } as const;
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];
+      if (store.sideView === "hand-review") return FEATURE_TRAINER ? handReviewLabels(i18n.locale).title : ""; // R2_REVIEW_ONLY
       const base = messages[store.sideView];
       return store.sideView === "tree-config" && store.treeEditOpen
         ? `${base} > ${messages.treeEdit}`
@@ -376,6 +386,7 @@ export default defineComponent({
 
     return {
       store,
+      isHandReview, // R2_REVIEW_ONLY
       header,
       clientHeight,
       solverContent,

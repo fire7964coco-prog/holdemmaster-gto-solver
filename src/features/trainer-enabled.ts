@@ -14,6 +14,9 @@
  *   한쪽만 고치면 npokers 빌드가 빌드 타임 또는 런타임에 깨진다.
  */
 export { default as TrainerPage } from "../components/TrainerPage.vue";
+export { default as HandReviewPage } from "../components/HandReviewPage.vue";
+export { handReviewLabels } from "../hand-review-labels";
+export { HAND_REVIEW_LAUNCHED } from "../hand-review-data";
 export { default as CustomTrainerEntry } from "../components/CustomTrainerEntry.vue";
 export { createCustomTrainerCapture } from "../custom-trainer-capture";
 export { default as PresetsPage } from "../components/PresetsPage.vue";

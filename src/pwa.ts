@@ -206,6 +206,7 @@ const VIEWS: SideView[] = [
   "guide",
   // npokers 빌드에는 이 두 화면이 없다 — ?view=trainer로 들어와도 소개 화면으로 떨어진다
   ...(FEATURE_TRAINER ? (["presets", "trainer"] as SideView[]) : []),
+  ...(FEATURE_TRAINER ? (["hand-review"] as SideView[]) : []), // R2_REVIEW_ONLY
   "preflop",
   "equity",
   "oop-range",

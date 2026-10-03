@@ -1,7 +1,7 @@
 # R1 / R1b calculation API
 
 These modules perform no I/O, worker calls, DOM access, or runtime imports of Vue/the app.
-The caller owns loading bytes and presenting diagnostics. No application entry point imports them.
+The caller owns loading bytes and presenting diagnostics. The R2 hand-review screen now consumes them.
 
 1. `canonicalizeFlop(actualFlop)` returns the ascending representative, its `.bin` filename,
    and actual-to-file `perm` / `inversePerm`. Keep this exact permutation for the whole hand.
@@ -33,6 +33,8 @@ The caller owns loading bytes and presenting diagnostics. No application entry p
    the four `BEST/GOOD_LOSS_RATIO/FLOOR_BB` exports from `trainer.ts` and supplies them as
    `trainerPolicy`. Their types are imported here, with no copied numeric defaults. A runtime
    import from trainer would initialize Vue/i18n and defeat this package's pure-Node contract.
+   Converged targets in (0, 1]% are accepted, including R2's 0.3% corpus; exploitPct must
+   not exceed the file's own targetPct. The old 1% corpus/API remains supported.
    Missing EV (`EV_MISSING`), no compatible opponent, unsupported accuracy, and possibly saturated
    EV fail distinctly. Zero hero reach alone does not block a decision with available EVs. Every
    action must have an EV, including unselected alternatives needed to find the best action.
@@ -41,7 +43,8 @@ The caller owns loading bytes and presenting diagnostics. No application entry p
    `evResolutionBb` records HMR1's EV quantization step; grades use the stored values. The existing
    thresholds and grading formula are unchanged; R1b does not implement the pending frequency rule.
 7. `buildTurnInput(file, completedFlopPath, actualBoard)` returns canonical board/ranges, starting
-   pot, effective stack and tree settings. It removes all board-blocked hands on copies and rejects
+   pot, effective stack and tree settings (targetExploitabilityPct follows the file's target).
+   It removes all board-blocked hands on copies and rejects
    empty or mutually incompatible ranges. It does not start a solve.
 
 For a five-card board, `buildTurnInput` also requires a `RiverContinuation`: the caller's solved

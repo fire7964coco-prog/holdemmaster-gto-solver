@@ -43,6 +43,17 @@
       </span>
     </button>
 
+    <!-- R2_REVIEW_ONLY_START -->
+    <button
+      v-if="FEATURE_TRAINER && HAND_REVIEW_LAUNCHED"
+      :class="itemStyle('hand-review')"
+      data-testid="nav-hand-review"
+      @click="store.sideView = 'hand-review'"
+    >
+      {{ reviewNavTitle }}
+    </button>
+
+    <!-- R2_REVIEW_ONLY_END -->
     <button :class="itemStyle('preflop')" @click="store.sideView = 'preflop'">
       {{ L.preflop }}
       <span class="badge hidden md:inline text-xs font-semibold text-brand">
@@ -126,6 +137,7 @@ import { SideView, useStore, useConfigStore } from "../store";
 import { cardText } from "../utils";
 import { i18n } from "../i18n";
 import { FEATURE_TRAINER } from "@features";
+import { handReviewLabels, HAND_REVIEW_LAUNCHED } from "@features"; // R2_REVIEW_ONLY
 
 import RangeMiniViewer from "./RangeMiniViewer.vue";
 
@@ -539,6 +551,7 @@ export default defineComponent({
     const store = useStore();
     const config = useConfigStore();
     const L = computed(() => M[i18n.locale]);
+    const reviewNavTitle = computed(() => FEATURE_TRAINER ? handReviewLabels(i18n.locale).navTitle : ""); // R2_REVIEW_ONLY
     const customViews: SideView[] = ["oop-range", "ip-range", "board", "tree-config", "run-solver"];
     const isCustom = computed(() => customViews.includes(store.sideView));
     const lastExplore = ref<SideView>("about");
@@ -586,6 +599,8 @@ export default defineComponent({
       store,
       boardTexts,
       L,
+      reviewNavTitle, // R2_REVIEW_ONLY
+      HAND_REVIEW_LAUNCHED, // R2_REVIEW_ONLY
       FEATURE_TRAINER,
       isCustom,
       readySteps,

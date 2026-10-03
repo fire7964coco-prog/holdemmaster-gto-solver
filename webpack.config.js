@@ -189,6 +189,12 @@ module.exports = (envArgs = {}) => {
     },
   },
   plugins: [
+    // Strip marked additions at read time, before Vue/TS, while keeping module
+    // identifiers unchanged. Trainer builds never run this source transform.
+    ...(isNpokers ? [new (require("./build/npokers-review-exclude-loader").ExcludeReviewPlugin)([
+      "src/components/App.vue", "src/components/SideBar.vue", "src/store.ts",
+      "src/pwa.ts", "src/features/trainer-disabled.ts",
+    ].map(file => path.resolve(__dirname, file)))] : []),
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       // npokers 빌드는 계정 기능이 통째로 빠지므로 키를 아예 주입하지 않는다
