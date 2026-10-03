@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { sanitizeBetString } from "./utils";
+import { SPOT_BET_SIZES } from "./preflop-spots";
 
 export type NavView = "solver" | "results";
 
@@ -147,20 +148,21 @@ export const useConfigStore = defineStore("config", {
     rakePercent: 0,
     rakeCap: 0,
     donkOption: false,
-    oopFlopBet: "",
-    oopFlopRaise: "",
-    oopTurnBet: "",
-    oopTurnRaise: "",
+    // 처음부터 벳 사이즈를 채워 둔다 — 빈칸이면 벳 없는 트리가 풀린다 (사장님 ○ 10-03)
+    oopFlopBet: SPOT_BET_SIZES.flopBet as string,
+    oopFlopRaise: SPOT_BET_SIZES.raise as string,
+    oopTurnBet: SPOT_BET_SIZES.laterBet as string,
+    oopTurnRaise: SPOT_BET_SIZES.raise as string,
     oopTurnDonk: "",
-    oopRiverBet: "",
-    oopRiverRaise: "",
+    oopRiverBet: SPOT_BET_SIZES.laterBet as string,
+    oopRiverRaise: SPOT_BET_SIZES.raise as string,
     oopRiverDonk: "",
-    ipFlopBet: "",
-    ipFlopRaise: "",
-    ipTurnBet: "",
-    ipTurnRaise: "",
-    ipRiverBet: "",
-    ipRiverRaise: "",
+    ipFlopBet: SPOT_BET_SIZES.flopBet as string,
+    ipFlopRaise: SPOT_BET_SIZES.raise as string,
+    ipTurnBet: SPOT_BET_SIZES.laterBet as string,
+    ipTurnRaise: SPOT_BET_SIZES.raise as string,
+    ipRiverBet: SPOT_BET_SIZES.laterBet as string,
+    ipRiverRaise: SPOT_BET_SIZES.raise as string,
     addAllInThreshold: 150,
     forceAllInThreshold: 20,
     mergingThreshold: 10,
