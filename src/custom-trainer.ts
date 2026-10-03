@@ -37,6 +37,17 @@ export type CustomTrainerBank = {
   configSnapshot: unknown;
   locks: unknown[];
   nodes: TrainerDecision[];
+  /** Saved from a hand review (④). Absent for solver captures. */
+  origin?: CustomTrainerOrigin;
+};
+
+export type CustomTrainerOrigin = {
+  kind: "review";
+  street: "flop" | "turn" | "river";
+  /** Review rule: an action the solver uses at least this often is never a mistake. */
+  frequencyFloor: number;
+  /** Seat names shown instead of OOP/IP, e.g. ["BB", "BTN"]. */
+  seats: [string, string];
 };
 
 export type CustomTrainerQuestion = Omit<TrainerQuestion, "category"> & {
@@ -104,6 +115,12 @@ export function isCustomTrainerBank(value: unknown): value is CustomTrainerBank 
       bank.board.some(card => !Number.isInteger(card) || card < 0 || card > 51) ||
       new Set(bank.board).size !== bank.board.length ||
       !Array.isArray(bank.nodes) || !bank.nodes.length || bank.nodes.length > 3) return false;
+    if (bank.origin !== undefined && (bank.origin.kind !== "review" ||
+      !["flop", "turn", "river"].includes(bank.origin.street) ||
+      !Number.isFinite(bank.origin.frequencyFloor) ||
+      bank.origin.frequencyFloor <= 0 || bank.origin.frequencyFloor >= 1 ||
+      !Array.isArray(bank.origin.seats) || bank.origin.seats.length !== 2 ||
+      bank.origin.seats.some(seat => typeof seat !== "string" || !seat))) return false;
     return bank.nodes.every(node => {
       if (node.selectedSpot.type !== "player" ||
         !["oop", "ip"].includes(node.selectedSpot.player) ||
@@ -289,4 +306,20 @@ export function customLossLimits(node: TrainerDecision) {
 export function classifyCustomTrainerLoss(node: TrainerDecision, loss: number) {
   const limits = customLossLimits(node);
   return loss <= limits.bestBb ? "best" : loss <= limits.goodBb ? "good" : "bad";
+}
+
+/** Same as classifyCustomTrainerLoss, plus the review frequency rule for review banks. */
+export function classifyCustomTrainerAnswer(
+  bank: CustomTrainerBank,
+  node: TrainerDecision,
+  handIndex: number,
+  selectedAction: number,
+  loss: number
+) {
+  const raw = classifyCustomTrainerLoss(node, loss);
+  const floor = bank.origin?.frequencyFloor;
+  const hands = node.cards[node.selectedSpot.player === "oop" ? 0 : 1].length;
+  const frequency = node.results.strategy[selectedAction * hands + handIndex] ?? 0;
+  const mixed = raw === "bad" && floor !== undefined && frequency >= floor;
+  return { kind: mixed ? "good" as const : raw, mixed };
 }

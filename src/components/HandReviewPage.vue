@@ -322,6 +322,27 @@
           >
             {{ L.evMissingNote }}
           </p>
+          <div class="review-practice" v-if="selectedRow.player === heroPlayer">
+            <button
+              data-testid="review-practice"
+              :data-ready="practiceReady"
+              :disabled="!practiceReady || practiceBusy"
+              :aria-busy="practiceBusy"
+              @click="practiceSelected"
+            >
+              {{ practiceBusy ? L.practiceBusy : L.practiceSpot }}
+            </button>
+            <p
+              v-if="!practiceReady"
+              class="review-note"
+              data-testid="review-practice-unavailable"
+            >
+              {{ L.practiceUnavailable }}
+            </p>
+            <p v-if="practiceError" role="alert" class="review-note">
+              {{ L.practiceError }}
+            </p>
+          </div>
           <div
             class="review-frequency"
             v-for="(action, i) in selectedRow.node.actions"
@@ -396,9 +417,11 @@
 import {
   computed,
   defineComponent,
+  nextTick,
   onBeforeUnmount,
   ref,
   shallowRef,
+  watch,
 } from "vue";
 import { i18n, localizeNumber } from "../i18n";
 import { M } from "../hand-review-labels";
@@ -438,9 +461,14 @@ import {
   gridFor,
   handClass,
   REVIEW_REACH_FLOOR,
+  REVIEW_FREQUENCY_FLOOR,
   ReviewNode,
   ReviewVerdict,
 } from "../hand-review-model";
+import { canPractice, createReviewPracticeBank } from "../hand-review-practice";
+import { customTrainerState } from "../custom-trainer";
+import { saveCustomTrainerBank } from "../custom-trainer-db";
+import { useStore } from "../store";
 
 type Street = "flop" | "turn" | "river";
 type Row = {
@@ -571,6 +599,16 @@ export default defineComponent({
         !!(heroCards.value.length || board.value.length || records.value.length)
     );
     const selectedRow = computed(() => records.value[selected.value] ?? null);
+    const store = useStore();
+    const practiceBusy = ref(false),
+      practiceError = ref(false);
+    const practiceReady = computed(
+      () =>
+        !!selectedRow.value &&
+        selectedRow.value.player === heroPlayer.value &&
+        canPractice(selectedRow.value.node)
+    );
+    watch(selectedRow, () => (practiceError.value = false));
     const grid = computed(() =>
       selectedRow.value ? gridFor(selectedRow.value.node) : []
     );
@@ -946,6 +984,63 @@ export default defineComponent({
     function cancelSolve() {
       void undo();
     }
+    // ④ The selected decision becomes a «my spot» practice bank (same data, same review rule).
+    async function practiceSelected() {
+      const row = selectedRow.value,
+        index = selected.value,
+        map = mapping.value;
+      if (!row || !map || !file.value || !practiceReady.value || practiceBusy.value)
+        return;
+      practiceBusy.value = true;
+      practiceError.value = false;
+      try {
+        const accuracy =
+          row.street === "flop"
+            ? {
+                targetPct: file.value.header.targetPct,
+                achievedPct: file.value.header.exploitPct,
+              }
+            : solveResults[row.street];
+        if (!accuracy) throw new Error("REVIEW_PRACTICE_NO_ACCURACY");
+        const prior = records.value.slice(0, index);
+        const bank = await createReviewPracticeBank({
+          spotId: spotId.value,
+          street: row.street,
+          heroPlayer: heroPlayer.value,
+          board: board.value.slice(
+            0,
+            row.street === "flop" ? 3 : row.street === "turn" ? 4 : 5
+          ),
+          inversePerm: map.inversePerm,
+          node: row.node,
+          line: prior.map((r) => ({
+            player: r.player,
+            action: r.node.actions[r.match.actionIndex],
+          })),
+          linePath: prior.map((r) => r.match.actionIndex),
+          startingPot: spot.value.startingPot,
+          effectiveStack: spot.value.effectiveStack,
+          unit: SPOT_UNIT_SCALE,
+          targetPct: accuracy.targetPct,
+          achievedPct: accuracy.achievedPct,
+          frequencyFloor: REVIEW_FREQUENCY_FLOOR,
+          seats: [spot.value.oop, spot.value.ip],
+        });
+        if (!bank) throw new Error("REVIEW_PRACTICE_EMPTY");
+        await saveCustomTrainerBank(bank);
+        // Same hand-off as CustomTrainerEntry: remount the practice page on this bank.
+        customTrainerState.active = false;
+        await nextTick();
+        customTrainerState.selectedBankId = bank.id;
+        customTrainerState.active = true;
+        store.navView = "solver";
+        store.sideView = "trainer";
+      } catch {
+        practiceError.value = true;
+      } finally {
+        practiceBusy.value = false;
+      }
+    }
     async function retry() {
       if (board.value.length === 3) await loadFlop();
       else {
@@ -1014,6 +1109,10 @@ export default defineComponent({
       cardPrompt,
       complete,
       selectedRow,
+      practiceBusy,
+      practiceError,
+      practiceReady,
+      practiceSelected,
       grid,
       heroClass,
       totals,
@@ -1249,6 +1348,15 @@ p {
 }
 .review-grade.bad {
   color: #f47d83;
+}
+.review-practice {
+  margin: 8px 0;
+}
+.review-practice button {
+  background: rgb(var(--c-brand));
+  border-color: rgb(var(--c-brand));
+  color: #171717;
+  font-weight: 700;
 }
 .review-note {
   font-size: 10px;

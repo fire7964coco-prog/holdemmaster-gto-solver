@@ -2,7 +2,10 @@
   <section id="custom-trainer-top" class="custom-trainer max-w-3xl pb-10">
     <div class="flex flex-wrap items-center gap-2">
       <h2 class="text-base font-semibold text-brand">{{ L.tab }}</h2>
-      <button type="button" data-testid="custom-trainer-presets" class="custom-button ml-auto bg-neutral-700" @click="leave">
+      <button v-if="bank?.origin" type="button" data-testid="custom-trainer-back-review" class="custom-button ml-auto bg-neutral-700" @click="backToReview">
+        {{ L.backToReview }}
+      </button>
+      <button type="button" data-testid="custom-trainer-presets" :class="['custom-button bg-neutral-700', bank?.origin ? '' : 'ml-auto']" @click="leave">
         {{ L.presetTab }}
       </button>
     </div>
@@ -24,11 +27,11 @@
         <p v-if="bank.lockCount" data-testid="custom-trainer-lock-label" class="mt-2 rounded-lg border border-amber-700/70 bg-amber-950/50 px-3 py-2 text-sm font-semibold text-amber-200">{{ L.lockAssumption }}</p>
         <div v-if="question" data-testid="custom-trainer-question" :data-question-id="question.id" :data-bank-id="bank.id" :data-node-id="question.node.nodeId" :data-hand-pair="question.handPair" class="mt-3 rounded-lg border border-neutral-700 bg-surface-2 p-3 md:p-4">
           <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-            <b class="text-brand">{{ question.player.toUpperCase() }}</b>
+            <b class="text-brand">{{ seatName(question.player) }}</b>
             <span class="text-neutral-300">{{ L.pot }} {{ amount(question.node.selectedSpot.pot ?? question.node.startingPot) }} · {{ L.stack }} {{ amount(question.node.selectedSpot.stack ?? question.node.effectiveStack) }}</span>
           </div>
           <p v-if="question.node.history.length" class="mt-2 text-xs leading-relaxed text-neutral-400">
-            {{ L.line }}: {{ question.node.history.map(item => `${item.player.toUpperCase()} ${actionLabel(item)}`).join(" → ") }}
+            {{ L.line }}: {{ question.node.history.map(item => `${seatName(item.player)} ${actionLabel(item)}`).join(" → ") }}
           </p>
           <div class="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-3 rounded-lg bg-surface-1 p-3">
             <div class="text-center">
@@ -55,6 +58,7 @@
               <b :class="verdictKind === 'best' ? 'text-emerald-300' : verdictKind === 'good' ? 'text-blue-300' : 'text-orange-300'">{{ verdict }}</b>
               <span class="text-sm text-neutral-300">{{ L.evLoss }} {{ displayValue(evaluation.evLossBb) }}</span>
             </div>
+            <p v-if="answer.mixed" data-testid="custom-trainer-mixed" class="mt-1 text-xs text-neutral-400">{{ R.mixedAction }}</p>
             <div class="mt-3 grid gap-2 text-sm">
               <div v-for="action in evaluation.actions" :key="action.index" class="rounded-lg bg-neutral-900/60 px-3 py-2">
                 <b :class="action.isBest ? 'text-emerald-300' : 'text-neutral-300'">{{ actionLabel(question.node.selectedSpot.actions[action.index]) }} <span v-if="action.isBest">✓</span></b>
@@ -80,18 +84,22 @@
 
 <script lang="ts">
 import { computed, defineComponent, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
-import { customTrainerState, customLossLimits, classifyCustomTrainerLoss, makeCustomTrainerQuestion, restoreCustomTrainerQuestion } from "../custom-trainer";
+import { customTrainerState, customLossLimits, classifyCustomTrainerAnswer, makeCustomTrainerQuestion, restoreCustomTrainerQuestion } from "../custom-trainer";
 import type { CustomTrainerBank, CustomTrainerQuestion, CustomTrainerAttempt } from "../custom-trainer";
 import { listCustomTrainerBanks, deleteCustomTrainerBank, getCustomTrainerAttempts, addCustomTrainerAttempt } from "../custom-trainer-db";
 import { evaluateTrainerAction, trainerActionLabel, trainerCardPair } from "../trainer";
 import type { TrainerEvaluation } from "../trainer";
 import { M } from "../custom-trainer-labels";
+import { M as REVIEW_LABELS } from "../hand-review-labels";
+import { useStore } from "../store";
 import { i18n, localizeNumber } from "../i18n";
 import { cardText, formatAmount } from "../utils";
 
 export default defineComponent({
   setup() {
     const L = computed(() => M[i18n.locale]);
+    const R = computed(() => REVIEW_LABELS[i18n.locale]);
+    const store = useStore();
     const banks = ref<CustomTrainerBank[]>([]);
     const bank = computed(() => banks.value.find(item => item.id === customTrainerState.selectedBankId) ?? null);
     const question = ref<CustomTrainerQuestion | null>(null);
@@ -112,9 +120,14 @@ export default defineComponent({
     const boardCards = computed(() => question.value?.node.currentBoard.map(cardText) ?? []);
     const handCards = computed(() => question.value ? trainerCardPair(question.value.handPair) : []);
     const limits = computed(() => question.value ? customLossLimits(question.value.node) : { potBb: 0, bestBb: 0, goodBb: 0 });
-    const verdictKind = computed(() => question.value && evaluation.value ? classifyCustomTrainerLoss(question.value.node, evaluation.value.evLossBb) : "best");
+    const answer = computed(() => question.value && evaluation.value && bank.value
+      ? classifyCustomTrainerAnswer(bank.value, question.value.node, question.value.handIndex, evaluation.value.selectedAction, evaluation.value.evLossBb)
+      : { kind: "best" as const, mixed: false });
+    const verdictKind = computed(() => answer.value.kind);
     const verdict = computed(() => verdictKind.value === "best" ? L.value.verdictBest : verdictKind.value === "good" ? L.value.verdictGood : L.value.verdictBad);
-    const source = computed(() => bank.value ? L.value.source
+    const source = computed(() => bank.value ? (bank.value.origin
+      ? L.value.reviewSource.replace("{method}", bank.value.origin.street === "flop" ? R.value.precomputed : R.value.onDevice)
+      : L.value.source)
       .replace("{target}", number(String(bank.value.targetExploitabilityPct)))
       .replace("{achieved}", number(String(Number(bank.value.achievedExploitabilityPct.toPrecision(3))))) : "");
     const bankTitle = (item: CustomTrainerBank) => {
@@ -133,7 +146,7 @@ export default defineComponent({
         if (seen.has(attempt.questionId)) return false;
         seen.add(attempt.questionId);
         const restored = restoreCustomTrainerQuestion(bank.value!, attempt);
-        return restored && classifyCustomTrainerLoss(restored.node, attempt.evLossBb) === "bad";
+        return restored && classifyCustomTrainerAnswer(bank.value!, restored.node, restored.handIndex, attempt.selectedAction, attempt.evLossBb).kind === "bad";
       });
     });
     const nextQuestion = () => {
@@ -227,7 +240,9 @@ export default defineComponent({
       }
     };
     const leave = () => { customTrainerState.active = false; };
-    return { L, customTrainerState, banks, bank, question, evaluation, attempts, loading, saving, error, reviewMode, reviewAttempts,
+    const backToReview = () => { store.sideView = "hand-review"; };
+    const seatName = (player: "oop" | "ip") => bank.value?.origin?.seats[player === "oop" ? 0 : 1] ?? player.toUpperCase();
+    return { L, R, answer, backToReview, seatName, customTrainerState, banks, bank, question, evaluation, attempts, loading, saving, error, reviewMode, reviewAttempts,
       number, amount, displayValue, percent, source, bankTitle, actionLabel, boardCards, handCards, limits, verdictKind, verdict,
       choose, nextQuestion, toggleReview, deleteSpot, leave };
   },

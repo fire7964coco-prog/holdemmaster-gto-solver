@@ -29,6 +29,7 @@ export const M = {
     navTitle: "핸드 복기", cancel: "취소",
     noCompatibleHands: "이 보드에서 가능한 핸드가 없습니다.", otherSize: "다른 크기",
     unanalysed: "분석 못 함", scopeTitle: "계산 기준",
+    practiceSpot: "이 자리 연습하기", practiceBusy: "연습 문제를 만드는 중…", practiceUnavailable: "내 레인지에서 이 자리에 오는 핸드가 없어 연습 문제를 만들 수 없습니다.", practiceError: "연습 문제를 저장하지 못했습니다. 다시 시도해 주세요.",
   },
   en: {
     title: "Hand review", situation: "Situation", hero: "Your seat", opener: "Opening seat", preflop: "Preflop",
@@ -56,6 +57,7 @@ export const M = {
     navTitle: "Hand review", cancel: "Cancel",
     noCompatibleHands: "No hands are compatible with this board.", otherSize: "Other size",
     unanalysed: "Not analysed", scopeTitle: "Review assumptions",
+    practiceSpot: "Practice this spot", practiceBusy: "Creating practice questions…", practiceUnavailable: "No hand in your range reaches this spot, so practice questions cannot be created.", practiceError: "Could not save practice questions. Please try again.",
   },
   ja: {
     title: "ハンド振り返り", situation: "状況", hero: "自分の席", opener: "オープンした席", preflop: "プリフロップ",
@@ -83,6 +85,7 @@ export const M = {
     navTitle: "ハンド振り返り", cancel: "キャンセル",
     noCompatibleHands: "このボードで使えるハンドがありません。", otherSize: "別のサイズ",
     unanalysed: "分析不可", scopeTitle: "計算の前提",
+    practiceSpot: "このスポットを練習", practiceBusy: "練習問題を作成中…", practiceUnavailable: "自分のレンジでこのスポットに来るハンドがないため、練習問題を作れません。", practiceError: "練習問題を保存できませんでした。もう一度お試しください。",
   },
   es: {
     title: "Revisar mano", situation: "Situación", hero: "Tu posición", opener: "Posición que abre", preflop: "Preflop",
@@ -110,6 +113,7 @@ export const M = {
     navTitle: "Revisar mano", cancel: "Cancelar",
     noCompatibleHands: "No hay manos compatibles con este board.", otherSize: "Otro tamaño",
     unanalysed: "Sin analizar", scopeTitle: "Supuestos del análisis",
+    practiceSpot: "Practicar este spot", practiceBusy: "Creando preguntas…", practiceUnavailable: "Ninguna mano de tu rango llega a este spot, así que no se pueden crear preguntas.", practiceError: "No se pudieron guardar las preguntas. Inténtalo de nuevo.",
   },
   pt: {
     title: "Revisar mão", situation: "Situação", hero: "Sua posição", opener: "Posição que abre", preflop: "Pré-flop",
@@ -137,6 +141,7 @@ export const M = {
     navTitle: "Revisar mão", cancel: "Cancelar",
     noCompatibleHands: "Não há mãos compatíveis com este board.", otherSize: "Outro tamanho",
     unanalysed: "Sem análise", scopeTitle: "Premissas da análise",
+    practiceSpot: "Praticar este spot", practiceBusy: "Criando questões…", practiceUnavailable: "Nenhuma mão do seu range chega a este spot, então não é possível criar questões.", practiceError: "Não foi possível salvar as questões. Tente novamente.",
   },
   de: {
     title: "Handanalyse", situation: "Situation", hero: "Deine Position", opener: "Eröffnende Position", preflop: "Preflop",
@@ -164,6 +169,7 @@ export const M = {
     navTitle: "Handanalyse", cancel: "Abbrechen",
     noCompatibleHands: "Keine Hand passt zu diesem Board.", otherSize: "Andere Größe",
     unanalysed: "Nicht analysiert", scopeTitle: "Annahmen der Analyse",
+    practiceSpot: "Diesen Spot üben", practiceBusy: "Übungsfragen werden erstellt…", practiceUnavailable: "Keine Hand deiner Range erreicht diesen Spot, daher können keine Übungsfragen erstellt werden.", practiceError: "Übungsfragen konnten nicht gespeichert werden. Bitte versuche es erneut.",
   },
   zh: {
     title: "手牌复盘", situation: "场景", hero: "我的位置", opener: "开池位置", preflop: "翻牌前",
@@ -191,6 +197,7 @@ export const M = {
     navTitle: "手牌复盘", cancel: "取消",
     noCompatibleHands: "此公共牌下没有可用的手牌。", otherSize: "其他尺度",
     unanalysed: "无法分析", scopeTitle: "计算前提",
+    practiceSpot: "练习这个场景", practiceBusy: "正在生成练习题…", practiceUnavailable: "你的范围中没有手牌会到达这个场景，无法生成练习题。", practiceError: "无法保存练习题，请重试。",
   },
   "zh-hant": {
     title: "手牌檢討", situation: "情境", hero: "我的位置", opener: "開池位置", preflop: "翻牌前",
@@ -218,6 +225,7 @@ export const M = {
     navTitle: "手牌檢討", cancel: "取消",
     noCompatibleHands: "此公共牌下沒有可用的手牌。", otherSize: "其他尺度",
     unanalysed: "無法分析", scopeTitle: "計算前提",
+    practiceSpot: "練習這個場景", practiceBusy: "正在產生練習題…", practiceUnavailable: "你的範圍中沒有手牌會到達這個場景，無法產生練習題。", practiceError: "無法儲存練習題，請重試。",
   },
   fr: {
     title: "Revoir une main", situation: "Situation", hero: "Ta position", opener: "Position d’ouverture", preflop: "Préflop",
@@ -245,6 +253,7 @@ export const M = {
     navTitle: "Revoir une main", cancel: "Annuler",
     noCompatibleHands: "Aucune main compatible avec ce board.", otherSize: "Autre sizing",
     unanalysed: "Non analysé", scopeTitle: "Hypothèses de l’analyse",
+    practiceSpot: "Travailler ce spot", practiceBusy: "Création des exercices…", practiceUnavailable: "Aucune main de ta range n’arrive à ce spot : impossible de créer des exercices.", practiceError: "Impossible d’enregistrer les exercices. Réessaie.",
   },
   id: {
     title: "Tinjau hand", situation: "Situasi", hero: "Posisi Anda", opener: "Posisi pembuka", preflop: "Preflop",
@@ -272,6 +281,7 @@ export const M = {
     navTitle: "Tinjau hand", cancel: "Batal",
     noCompatibleHands: "Tidak ada hand yang sesuai dengan board ini.", otherSize: "Ukuran lain",
     unanalysed: "Tidak dianalisis", scopeTitle: "Asumsi analisis",
+    practiceSpot: "Latih spot ini", practiceBusy: "Membuat soal latihan…", practiceUnavailable: "Tidak ada hand di range Anda yang mencapai spot ini, jadi soal latihan tidak dapat dibuat.", practiceError: "Soal latihan tidak dapat disimpan. Coba lagi.",
   },
   ms: {
     title: "Semak hand", situation: "Keadaan", hero: "Kedudukan anda", opener: "Kedudukan pembuka", preflop: "Preflop",
@@ -299,6 +309,7 @@ export const M = {
     navTitle: "Semak hand", cancel: "Batal",
     noCompatibleHands: "Tiada hand yang serasi dengan board ini.", otherSize: "Saiz lain",
     unanalysed: "Belum dianalisis", scopeTitle: "Andaian semakan",
+    practiceSpot: "Berlatih spot ini", practiceBusy: "Membuat soalan latihan…", practiceUnavailable: "Tiada hand dalam range anda yang sampai ke spot ini, jadi soalan latihan tidak dapat dibuat.", practiceError: "Soalan latihan tidak dapat disimpan. Cuba lagi.",
   },
   hi: {
     title: "हैंड की समीक्षा", situation: "स्थिति", hero: "आपकी पोज़िशन", opener: "Open करने की पोज़िशन", preflop: "Preflop",
@@ -326,6 +337,7 @@ export const M = {
     navTitle: "हैंड समीक्षा", cancel: "रद्द करें",
     noCompatibleHands: "इस Board के साथ कोई हैंड संभव नहीं है।", otherSize: "अन्य साइज़",
     unanalysed: "विश्लेषण नहीं हुआ", scopeTitle: "समीक्षा की मान्यताएँ",
+    practiceSpot: "इस स्पॉट का अभ्यास करें", practiceBusy: "अभ्यास के सवाल बनाए जा रहे हैं…", practiceUnavailable: "आपकी रेंज का कोई हैंड इस स्पॉट तक नहीं पहुँचता, इसलिए अभ्यास के सवाल नहीं बन सकते।", practiceError: "अभ्यास के सवाल सहेजे नहीं जा सके। फिर से कोशिश करें।",
   },
 } as const;
 

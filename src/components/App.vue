@@ -40,7 +40,7 @@
           <TrainerPage />
         </div>
         <!-- R2_REVIEW_ONLY_START -->
-        <div v-if="isHandReview" class="flex-1 min-h-0">
+        <div v-if="reviewMounted" v-show="isHandReview" class="flex-1 min-h-0">
           <HandReviewPage />
         </div>
         <!-- R2_REVIEW_ONLY_END -->
@@ -139,6 +139,9 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const isHandReview = computed(() => FEATURE_TRAINER && store.sideView === "hand-review"); // R2_REVIEW_ONLY
+    // 복기 → 연습 → 돌아오기에서 입력한 판이 지워지지 않게, 한 번 연 복기 화면은 숨기기만 한다. // R2_REVIEW_ONLY
+    const reviewMounted = ref(false); // R2_REVIEW_ONLY
+    watch(isHandReview, (open) => { if (open) reviewMounted.value = true; }, { immediate: true }); // R2_REVIEW_ONLY
     const config = useConfigStore();
     const solverContent = ref<HTMLElement | null>(null);
     const resultsContent = ref<HTMLElement | null>(null);
@@ -387,6 +390,7 @@ export default defineComponent({
     return {
       store,
       isHandReview, // R2_REVIEW_ONLY
+      reviewMounted, // R2_REVIEW_ONLY
       header,
       clientHeight,
       solverContent,
