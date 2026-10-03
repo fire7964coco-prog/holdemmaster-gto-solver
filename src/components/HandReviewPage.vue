@@ -518,8 +518,10 @@ export default defineComponent({
     const statusLabel = (code: string) =>
       code === "SCENARIO_NOT_READY"
         ? L.value.unavailableScenario
-        : code === "THREE_BET" || code === "MULTIWAY"
+        : code === "THREE_BET"
         ? L.value.comingSoon
+        : code === "MULTIWAY"
+        ? L.value.notSupported
         : code === "MISSING_FILE"
         ? L.value.fileMissing
         : code === "EV_MISSING"
