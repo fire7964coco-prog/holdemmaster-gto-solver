@@ -1,7 +1,6 @@
 /** F1: app-owned draft/state; all review reads/writes go through the main-site API. */
 import { ref } from "vue";
 import { getSupabase, hasStoredSession, isClientLoaded } from "./account";
-import { getTrainerAttempts } from "./db";
 import { setLocale, type Locale } from "./i18n";
 import { solverReviewsUrl } from "./outbound";
 import { feedbackFeatures } from "./solver-feedback-features";
@@ -21,7 +20,7 @@ export type FeedbackDraft = {
 };
 export type FeedbackInput = {
   locale: Locale; kind: "review"; body: string; downside?: string;
-  rating?: number | null; nickname?: string; hasUsage?: boolean;
+  rating?: number | null; nickname?: string;
 };
 export type FeedbackResult = { ok: boolean; error?: string };
 export type FeedbackContext = FeedbackResult & {
@@ -107,11 +106,9 @@ export async function getFeedbackContext(locale: Locale): Promise<FeedbackContex
 export async function postFeedback(input: FeedbackInput): Promise<FeedbackResult> {
   const token = await accessToken();
   if (!token) return { ok: false, error: "login" };
-  let hasUsage = false;
-  try { hasUsage = (await getTrainerAttempts(1)).length > 0; } catch { /* optional display signal */ }
   // Explicit allowlist: no device/user metadata, no direct Supabase insert or RPC.
   return request(token, input.locale, { locale: input.locale, kind: "review", body: input.body,
-    downside: input.downside, rating: input.rating, nickname: input.nickname, hasUsage });
+    downside: input.downside, rating: input.rating, nickname: input.nickname });
 }
 
 /** Called only after bootstrapAccount has recovered the existing OAuth session. */

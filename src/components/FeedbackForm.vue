@@ -77,7 +77,7 @@
 
               <p v-if="hasLink" id="feedback-link-warning" data-feedback-link-warning class="feedback-warning" role="status">{{ L.linkWarn }}</p>
 
-              <div v-if="authenticated && contextReady && showNickname" class="feedback-name">
+              <div v-if="authenticated && contextReady" class="feedback-name">
                 <p v-if="emailNameNeedsChange" class="feedback-warning">{{ L.nicknameEmailWarn }}</p>
                 <template v-if="nicknameEditing">
                   <label class="feedback-field" for="feedback-nickname">
@@ -91,7 +91,7 @@
                 </template>
                 <div v-else class="feedback-posting-as">
                   <span>{{ L.postingAs(nickname) }}</span>
-                  <button v-if="nicknameRequired" type="button" data-feedback-nickname-change class="feedback-text-button" :disabled="busy" @click="editNickname">{{ L.change }}</button>
+                  <button type="button" data-feedback-nickname-change class="feedback-text-button" :disabled="busy" @click="editNickname">{{ L.change }}</button>
                 </div>
               </div>
             </template>
@@ -161,7 +161,6 @@ export default defineComponent({
     const hasLink = computed(() => LINK_PATTERN.test(body.value) || LINK_PATTERN.test(downside.value));
     const errorText = computed(() => L.value.errors[error.value] || L.value.errors.unavailable);
     const emailNameNeedsChange = computed(() => nicknameRequired.value && looksLikeEmail.value && (!nicknameConfirmed.value || nickname.value === originalNickname.value));
-    const showNickname = computed(() => nicknameRequired.value || !editing.value);
     const landingUrl = computed(() => feedbackLandingUrl(locale.value));
     const viewportStyle = computed(() => viewportHeight.value ? { height: `${viewportHeight.value}px`, top: `${viewportTop.value}px` } : {});
     let initializing = false;
@@ -328,7 +327,7 @@ export default defineComponent({
         persist(false);
         const result = await postFeedback({
           locale: locale.value, kind: "review", body: body.value, downside: downside.value,
-          rating: rating.value, ...(showNickname.value ? { nickname: nickname.value } : {}),
+          rating: rating.value, nickname: nickname.value,
         });
         if (result.ok) {
           saved.value = true;
@@ -424,7 +423,7 @@ export default defineComponent({
       feedbackOpen, locale, L, A, body, downside, rating, nickname, nicknameEdit,
       nicknameEditing, nicknameRequired, emailNameNeedsChange, editing, authenticated, contextReady,
       loginStage, downsideOpen, busy, loading, saved, error, errorText, panel,
-      bodyInput, nicknameInput, bodyCount, downsideCount, hasLink, showNickname,
+      bodyInput, nicknameInput, bodyCount, downsideCount, hasLink,
       landingUrl, viewportStyle, dismiss, trapKeys, markEdited, editNickname,
       saveNickname, submit, login, cancelLogin,
     };
