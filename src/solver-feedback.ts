@@ -1,6 +1,6 @@
 /** F1: app-owned draft/state; all review reads/writes go through the main-site API. */
 import { ref } from "vue";
-import { getSupabase, hasStoredSession, isClientLoaded } from "./account";
+import { getSupabase, hasStoredSession, isClientLoaded, takeLoginPurpose } from "./account";
 import { setLocale, type Locale } from "./i18n";
 import { solverReviewsUrl } from "./outbound";
 import { feedbackFeatures } from "./solver-feedback-features";
@@ -113,8 +113,10 @@ export async function postFeedback(input: FeedbackInput): Promise<FeedbackResult
 
 /** Called only after bootstrapAccount has recovered the existing OAuth session. */
 export async function resumeFeedbackDraft(): Promise<void> {
+  // Only the login round trip started from the feedback form may resume its draft.
+  const fromFeedbackLogin = takeLoginPurpose() === "feedback";
   const draft = loadFeedbackDraft();
-  if (!draft?.pendingSubmit || !(await getFeedbackSession())) return;
+  if (!fromFeedbackLogin || !draft?.pendingSubmit || !(await getFeedbackSession())) return;
   setLocale(draft.locale);
   feedbackResumePending.value = true;
   openFeedback();

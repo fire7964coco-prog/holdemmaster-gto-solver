@@ -993,6 +993,7 @@ export default defineComponent({
         return;
       practiceBusy.value = true;
       practiceError.value = false;
+      const token = epoch;
       try {
         const accuracy =
           row.street === "flop"
@@ -1028,6 +1029,8 @@ export default defineComponent({
         });
         if (!bank) throw new Error("REVIEW_PRACTICE_EMPTY");
         await saveCustomTrainerBank(bank);
+        // A new hand/undo/leaving the page while saving wins: the bank stays in «my spots», no screen jump.
+        if (token !== epoch || store.sideView !== "hand-review") return;
         // Same hand-off as CustomTrainerEntry: remount the practice page on this bank.
         customTrainerState.active = false;
         await nextTick();
@@ -1036,7 +1039,7 @@ export default defineComponent({
         store.navView = "solver";
         store.sideView = "trainer";
       } catch {
-        practiceError.value = true;
+        if (token === epoch) practiceError.value = true;
       } finally {
         practiceBusy.value = false;
       }
@@ -1766,6 +1769,16 @@ p {
   }
   .review-record-list {
     min-height: 37px;
+  }
+}
+/* Short phones (≤760px tall, e.g. 375×667): the fixed rows left the results ~0px tall.
+   Let the page scroll and give results their natural height; the picker stays sticky. */
+@media (max-width: 767px) and (max-height: 760px) {
+  .review-page {
+    overflow-y: auto;
+  }
+  .review-columns {
+    flex: none;
   }
 }
 </style>

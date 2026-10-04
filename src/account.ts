@@ -151,7 +151,26 @@ export const onAuthChange = (handler: (user: AccountUser | null) => void) => {
  * ⚠ Supabase 대시보드 Authentication → URL Configuration → Redirect URLs에
  *   solver 주소가 등록돼 있어야 한다(미등록 시 로그인 후 되돌아오지 못함).
  */
-export const signIn = async (provider: "google" | "kakao") => {
+const LOGIN_PURPOSE_KEY = "solver.login.purpose.v1";
+const LOGIN_PURPOSE_TTL_MS = 15 * 60 * 1000;
+
+/** 이번 로그인 왕복을 시작한 화면(같은 탭 sessionStorage · 복귀 때 한 번만 꺼낸다). */
+export const takeLoginPurpose = (): "feedback" | null => {
+  try {
+    const raw = sessionStorage.getItem(LOGIN_PURPOSE_KEY);
+    sessionStorage.removeItem(LOGIN_PURPOSE_KEY);
+    const d = JSON.parse(raw ?? "null");
+    return d?.purpose === "feedback" && Number.isFinite(d.at) && Date.now() - d.at >= 0 &&
+      Date.now() - d.at <= LOGIN_PURPOSE_TTL_MS ? "feedback" : null;
+  } catch { return null; }
+};
+
+export const signIn = async (provider: "google" | "kakao", purpose?: "feedback") => {
+  // 다른 화면에서 시작한 로그인이 중단된 후기 초안을 자동 제출하지 않도록 매번 덮어쓴다.
+  try {
+    if (purpose) sessionStorage.setItem(LOGIN_PURPOSE_KEY, JSON.stringify({ purpose, at: Date.now() }));
+    else sessionStorage.removeItem(LOGIN_PURPOSE_KEY);
+  } catch { /* storage may be unavailable: no purpose means no auto-submit */ }
   const supabase = await getClient();
   if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能", "Les comptes sont désactivés dans cette version", "Fitur akun dinonaktifkan di versi ini", "Ciri akaun tidak tersedia dalam versi ini", "इस संस्करण में खाते की सुविधा उपलब्ध नहीं है"));
   const { error } = await supabase.auth.signInWithOAuth({

@@ -350,7 +350,7 @@ export default defineComponent({
       if (busy.value || (provider === "kakao" && locale.value !== "ko")) return;
       if (!persist(true)) { error.value = "unavailable"; return; }
       busy.value = true;
-      try { await signIn(provider); }
+      try { await signIn(provider, "feedback"); }
       catch { error.value = "unavailable"; }
       finally { busy.value = false; }
     };
@@ -410,7 +410,10 @@ export default defineComponent({
       finally {
         if (generation === currentGeneration) loading.value = false;
       }
-      if (resume && resumeClaimed && authenticated.value && contextReady.value && !emailNameNeedsChange.value && !!nickname.value && !error.value) await submit();
+      // A first public name must be seen and confirmed by a click; a draft owned by another account is never sent.
+      const sameOwner = !usableDraft?.nicknameUserId || usableDraft.nicknameUserId === accountId;
+      if (resume && resumeClaimed && authenticated.value && contextReady.value && sameOwner && !nicknameRequired.value &&
+        !emailNameNeedsChange.value && !!nickname.value && !error.value) await submit();
     };
 
     watch(feedbackOpen, (open) => {
