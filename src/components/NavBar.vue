@@ -49,6 +49,14 @@
       </div>
 
       <div class="flex ml-auto h-full items-center z-10">
+        <!-- F1_FEEDBACK_ONLY_START -->
+        <button v-if="feedbackFeatures.feedback" type="button" data-testid="feedback-menu"
+          class="flex shrink-0 items-center justify-center w-11 md:w-auto md:px-3 h-full text-sm text-neutral-300 hover:text-brand hover:bg-neutral-700"
+          :aria-label="feedbackMenu" :title="feedbackMenu" @click="openFeedback">
+          <svg class="w-5 h-5 xl:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-9l-5 3v-3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="M7 9h10M7 13h7"/></svg>
+          <span class="hidden xl:inline">{{ feedbackMenu }}</span>
+        </button>
+        <!-- F1_FEEDBACK_ONLY_END -->
         <!-- 언어 선택 — 🔴 npokers(독립 앱) 빌드에만 둔다 (사용자 결정 2026-08-27).
              트레이너 빌드는 본진(holdemmaster.com)이 언어별 랜딩에서 «?lang=xx»를 붙여 보낸다.
              여기서 언어를 또 고르면 그 값이 localStorage를 덮어써서 네비바의 본진 링크까지
@@ -102,6 +110,9 @@ import { mainSiteUrl } from "../outbound";
 import { BRAND_NAME, IS_NPOKERS } from "../brand";
 import { i18n, setLocale } from "../i18n";
 import { navResults } from "../nav-labels";
+import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
+import { openFeedback } from "../solver-feedback"; // F1_FEEDBACK_ONLY
+import { appLabels } from "../solver-feedback-labels"; // F1_FEEDBACK_ONLY
 
 const M = {
   ko: {
@@ -233,6 +244,7 @@ export default defineComponent({
     };
     return {
       store: useStore(),
+      feedbackFeatures, openFeedback, feedbackMenu: computed(() => appLabels[i18n.locale].menu), // F1_FEEDBACK_ONLY
       // 간판은 빌드별로 다르다 (src/brand.ts — 트레이너 빌드/우리 커뮤니티용 vs npokers 빌드)
       brandName: computed(() => BRAND_NAME[i18n.locale]),
       // 언어 셀렉터는 npokers 빌드 전용 — 트레이너는 본진 언어에 페깅한다(위 템플릿 주석)

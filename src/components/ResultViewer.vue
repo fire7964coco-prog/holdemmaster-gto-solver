@@ -32,7 +32,9 @@
     />
   </div>
 
-  <div v-else class="result-viewer flex flex-col h-full min-w-0">
+  <div v-else class="result-viewer flex flex-col h-full min-w-0"
+    :class="{ 'feedback-enabled-result': feedbackFeatures.feedback } /* F1_FEEDBACK_ONLY */"
+  >
     <div
       v-if="lockStore.resultLockCount > 0"
       data-testid="nodelock-banner"
@@ -202,6 +204,9 @@
         />
       </template>
     </div>
+    <!-- F1_FEEDBACK_ONLY_START -->
+    <FeedbackEntry v-if="feedbackFeatures.feedback" :compact="displayMode === 'compare' || lockStore.resultLockCount > 0 || lockStore.locks.length > 0" />
+    <!-- F1_FEEDBACK_ONLY_END -->
   </div>
 </template>
 
@@ -213,6 +218,8 @@ import { i18n, localizeNumber } from "../i18n";
 import { useNodeLockStore } from "../node-lock";
 import { nodeLockLabels } from "../node-lock-labels";
 import { CustomTrainerEntry, createCustomTrainerCapture, FEATURE_TRAINER } from "@features";
+import FeedbackEntry from "./FeedbackEntry.vue"; // F1_FEEDBACK_ONLY
+import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 
 import {
   Results,
@@ -337,6 +344,7 @@ const M = {
 
 export default defineComponent({
   components: {
+    FeedbackEntry, // F1_FEEDBACK_ONLY
     CustomTrainerEntry,
     ResultNav,
     ResultLock,
@@ -608,6 +616,7 @@ export default defineComponent({
     };
 
     return {
+      feedbackFeatures, // F1_FEEDBACK_ONLY
       FEATURE_TRAINER,
       captureForPractice,
       isCapturing,

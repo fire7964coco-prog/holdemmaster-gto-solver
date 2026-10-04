@@ -75,6 +75,9 @@
     <InstallBanner />
     <LaunchScreen />
     <ErrorToast />
+    <!-- F1_FEEDBACK_ONLY_START -->
+    <FeedbackForm v-if="feedbackFeatures.feedback && feedbackOpen" />
+    <!-- F1_FEEDBACK_ONLY_END -->
 
     <div
       ref="resultsContent"
@@ -113,6 +116,10 @@ import ResultViewer from "./ResultViewer.vue";
 import InstallBanner from "./InstallBanner.vue";
 import LaunchScreen from "./LaunchScreen.vue";
 import ErrorToast from "./ErrorToast.vue";
+import FeedbackForm from "./FeedbackForm.vue"; // F1_FEEDBACK_ONLY
+import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
+import { feedbackOpen, resumeFeedbackDraft } from "../solver-feedback"; // F1_FEEDBACK_ONLY
+declare const __F1_TEST_BUILD__: boolean; // F1_FEEDBACK_ONLY
 
 export default defineComponent({
   components: {
@@ -134,10 +141,12 @@ export default defineComponent({
     InstallBanner,
     LaunchScreen,
     ErrorToast,
+    FeedbackForm, // F1_FEEDBACK_ONLY
   },
 
   setup() {
     const store = useStore();
+    if (__F1_TEST_BUILD__) void import("../solver-feedback-test").then(m => m.installFeedbackTestHooks(store)); // F1_FEEDBACK_ONLY
     const isHandReview = computed(() => FEATURE_TRAINER && store.sideView === "hand-review"); // R2_REVIEW_ONLY
     // 복기 → 연습 → 돌아오기에서 입력한 판이 지워지지 않게, 한 번 연 복기 화면은 숨기기만 한다. // R2_REVIEW_ONLY
     const reviewMounted = ref(false); // R2_REVIEW_ONLY
@@ -355,6 +364,7 @@ export default defineComponent({
     // (앱 진입 화면은 소개라, 트레이너 화면에서만 처리하면 인증 코드를 놓친다)
     void bootstrapAccount().then((returned) => {
       if (returned) store.sideView = "trainer";
+      if (returned && feedbackFeatures.feedback) void resumeFeedbackDraft(); // F1_FEEDBACK_ONLY
     });
 
     // 공유 링크(?spot=)로 들어온 경우 설정을 적용하고 실행 화면으로
@@ -389,6 +399,7 @@ export default defineComponent({
 
     return {
       store,
+      feedbackFeatures, feedbackOpen, // F1_FEEDBACK_ONLY
       isHandReview, // R2_REVIEW_ONLY
       reviewMounted, // R2_REVIEW_ONLY
       header,

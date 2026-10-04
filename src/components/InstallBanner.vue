@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="pwa.showBanner"
+    :data-feedback-install="feedbackFeatures.feedback ? '' : undefined /* F1_FEEDBACK_ONLY */"
     :class="
       'fixed z-40 bottom-0 inset-x-0 md:bottom-4 md:right-4 md:left-auto md:w-[26rem] ' +
       'border-t md:border md:rounded-lg border-neutral-600 bg-neutral-800 shadow-2xl ' +
@@ -16,6 +17,9 @@
 
       <div class="flex-grow min-w-0">
         <div class="font-semibold text-neutral-100">{{ L.title }}</div>
+        <!-- F1_FEEDBACK_ONLY_START -->
+        <FeedbackSummary v-if="feedbackFeatures.summary" />
+        <!-- F1_FEEDBACK_ONLY_END -->
 
         <!--
           삼성 인터넷: 설치 자체는 되지만 Play 프로텍트가 「안전하지 않은 앱」으로 막는다.
@@ -76,6 +80,8 @@
 import { computed, defineComponent } from "vue";
 import { pwa, promptInstall, dismissBanner, openInChrome } from "../pwa";
 import { i18n } from "../i18n";
+import FeedbackSummary from "./FeedbackSummary.vue"; // F1_FEEDBACK_ONLY
+import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 
 const M = {
   ko: {
@@ -492,11 +498,15 @@ const N =
 
 
 export default defineComponent({
+  components: { FeedbackSummary }, // F1_FEEDBACK_ONLY
   setup() {
     const L = computed(() =>
       N ? { ...M[i18n.locale], ...N[i18n.locale] } : M[i18n.locale]
     );
-    return { pwa, promptInstall, dismissBanner, openInChrome, L };
+    return {
+      feedbackFeatures, // F1_FEEDBACK_ONLY
+      pwa, promptInstall, dismissBanner, openInChrome, L,
+    };
   },
 });
 </script>

@@ -117,3 +117,10 @@ export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {
   if (localized === undefined) return ""; // 이 언어에 등가 페이지 없음 → 링크 숨김
   return trackOutbound(`${MAIN_SITE}${localized}`, placement);
 };
+
+/** F1 success link. ms/hi landing files exist as of 2026-10-04; keep legacy callers unchanged while F1 is off. */
+export const solverReviewsUrl = (locale: string) => {
+  const localized = locale === "ko" ? "/solver" : LOCALE_PATHS[locale]?.["/solver"]
+    ?? (locale === "ms" || locale === "hi" ? `/${locale}/solver` : "");
+  return localized ? `${trackOutbound(`${MAIN_SITE}${localized}`, "about-landing")}#solver-reviews` : "";
+};

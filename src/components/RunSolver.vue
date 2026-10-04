@@ -270,6 +270,9 @@ import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { init, handler, onWorkerFailure, terminate } from "../global-worker";
 import { clearSolverRetry, reportSolverError } from "../errors";
 import { encodeSpotUrl, InvalidSpotLinesError } from "../spot-share";
+import { beginFeedbackSolve, recordFeedbackSolve } from "../solver-feedback"; // F1_FEEDBACK_ONLY
+import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
+import { shareSpotThroughMain } from "../solver-feedback-share"; // F1_FEEDBACK_ONLY
 import { i18n, pick, localizeNumber } from "../i18n";
 import { navResults } from "../nav-labels";
 import { captureSnapshot, NodeLockError, sameHistory, useNodeLockStore } from "../node-lock";
@@ -1447,6 +1450,7 @@ export default defineComponent({
           return;
         }
       } else if (!canRun.value) return;
+      beginFeedbackSolve(); // F1_FEEDBACK_ONLY
       clearSolverRetry();
       const epoch = lockStore.epoch;
       solveEpoch = epoch;
@@ -1595,6 +1599,7 @@ export default defineComponent({
 
         store.isFinalizing = false;
         store.isSolverFinished = true;
+        recordFeedbackSolve(); // F1_FEEDBACK_ONLY
 
         const end = performance.now();
         elapsedTimeMs.value += end - startTime;
@@ -1605,6 +1610,7 @@ export default defineComponent({
           // finalize succeeded; only the optional comparison snapshot failed.
           lockStore.error = error.code;
           store.isSolverFinished = true;
+          recordFeedbackSolve(); // F1_FEEDBACK_ONLY
         } else recoverFromFailure(error);
       } finally {
         if (epoch === lockStore.epoch) {
@@ -1666,6 +1672,7 @@ export default defineComponent({
         return;
       }
       try {
+        if (feedbackFeatures.share) url = await shareSpotThroughMain(url); // F1_FEEDBACK_ONLY
         await navigator.clipboard.writeText(url);
       } catch {
         const ta = document.createElement("textarea");

@@ -136,12 +136,14 @@ class GenerateServiceWorkerPlugin {
 module.exports = (envArgs = {}) => {
   const target = envArgs.target === "npokers" ? "npokers" : "trainer";
   const isNpokers = target === "npokers";
+  // Explicit, isolated QA artifact. Normal builds have no query-param escape hatch.
+  const isFeedbackTestBuild = !isNpokers && process.env.F1_TEST_BUILD === "1";
 
   return {
   mode: "production",
   entry: "./src/index.ts",
   output: {
-    path: path.resolve(__dirname, isNpokers ? "dist-npokers" : "dist"),
+    path: path.resolve(__dirname, isNpokers ? "dist-npokers" : isFeedbackTestBuild ? "dist-feedback-test" : "dist"),
     filename: "[contenthash].js",
   },
   module: {
@@ -194,6 +196,8 @@ module.exports = (envArgs = {}) => {
     ...(isNpokers ? [new (require("./build/npokers-review-exclude-loader").ExcludeReviewPlugin)([
       "src/components/App.vue", "src/components/SideBar.vue", "src/store.ts",
       "src/pwa.ts", "src/features/trainer-disabled.ts",
+      "src/components/NavBar.vue", "src/components/RunSolver.vue",
+      "src/components/ResultViewer.vue", "src/components/InstallBanner.vue", "src/outbound.ts",
     ].map(file => path.resolve(__dirname, file)))] : []),
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
@@ -201,6 +205,7 @@ module.exports = (envArgs = {}) => {
       __SUPABASE_URL__: JSON.stringify(isNpokers ? "" : env.SUPABASE_URL ?? ""),
       __SUPABASE_ANON_KEY__: JSON.stringify(isNpokers ? "" : env.SUPABASE_ANON_KEY ?? ""),
       __APP_TARGET__: JSON.stringify(target),
+      __F1_TEST_BUILD__: JSON.stringify(isFeedbackTestBuild),
       // 오류 신고에 찍히는 빌드 번호 — 어느 배포에서 난 문제인지 구분한다
       __BUILD_ID__: JSON.stringify(
         new Date().toISOString().slice(0, 16).replace("T", " ")
