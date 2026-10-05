@@ -337,7 +337,7 @@
               class="review-note"
               data-testid="review-practice-unavailable"
             >
-              {{ practiceReferenceOnly ? L.practiceReferenceOnly : L.practiceUnavailable }}
+              {{ L.practiceUnavailable }}
             </p>
             <p v-if="practiceError" role="alert" class="review-note">
               {{ L.practiceError }}
@@ -602,15 +602,10 @@ export default defineComponent({
     const store = useStore();
     const practiceBusy = ref(false),
       practiceError = ref(false);
-    // «참고만» (reach product < 5%) values are too noisy to grade, so they are not practiced either (사장님 10-05).
-    const practiceReferenceOnly = computed(
-      () => !!selectedRow.value?.verdict?.referenceOnly
-    );
     const practiceReady = computed(
       () =>
         !!selectedRow.value &&
         selectedRow.value.player === heroPlayer.value &&
-        !practiceReferenceOnly.value &&
         canPractice(selectedRow.value.node)
     );
     watch(selectedRow, () => (practiceError.value = false));
@@ -1030,6 +1025,8 @@ export default defineComponent({
           targetPct: accuracy.targetPct,
           achievedPct: accuracy.achievedPct,
           frequencyFloor: REVIEW_FREQUENCY_FLOOR,
+          // «참고만» spots are practiced but never graded as mistakes (사장님 10-05 · Q1-06).
+          referenceOnly: row.verdict?.referenceOnly === true,
           seats: [spot.value.oop, spot.value.ip],
         });
         if (!bank) throw new Error("REVIEW_PRACTICE_EMPTY");
@@ -1120,7 +1117,6 @@ export default defineComponent({
       practiceBusy,
       practiceError,
       practiceReady,
-      practiceReferenceOnly,
       practiceSelected,
       grid,
       heroClass,

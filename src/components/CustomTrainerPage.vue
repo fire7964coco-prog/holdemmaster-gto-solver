@@ -53,12 +53,13 @@
               {{ actionLabel(action) }}
             </button>
           </div>
-          <div v-if="evaluation" data-testid="custom-trainer-verdict" :data-loss="evaluation.evLossBb" :data-best-limit="limits.bestBb" :data-good-limit="limits.goodBb" :data-verdict="verdictKind" class="mt-4 border-t border-neutral-700 pt-3" aria-live="polite">
+          <div v-if="evaluation" data-testid="custom-trainer-verdict" :data-loss="evaluation.evLossBb" :data-best-limit="limits.bestBb" :data-good-limit="limits.goodBb" :data-verdict="verdictKind" :data-reference="answer.reference" class="mt-4 border-t border-neutral-700 pt-3" aria-live="polite">
             <div class="flex flex-wrap items-baseline justify-between gap-2">
-              <b :class="verdictKind === 'best' ? 'text-emerald-300' : verdictKind === 'good' ? 'text-blue-300' : 'text-orange-300'">{{ verdict }}</b>
+              <b :class="answer.reference ? 'text-neutral-300' : verdictKind === 'best' ? 'text-emerald-300' : verdictKind === 'good' ? 'text-blue-300' : 'text-orange-300'">{{ answer.reference ? R.referenceOnly : verdict }}</b>
               <span class="text-sm text-neutral-300">{{ L.evLoss }} {{ displayValue(evaluation.evLossBb) }}</span>
             </div>
-            <p v-if="answer.mixed" data-testid="custom-trainer-mixed" class="mt-1 text-xs text-neutral-400">{{ R.mixedAction }}</p>
+            <p v-if="answer.reference" data-testid="custom-trainer-reference" class="mt-1 text-xs text-neutral-400">{{ R.practiceReferenceNote }}</p>
+            <p v-else-if="answer.mixed" data-testid="custom-trainer-mixed" class="mt-1 text-xs text-neutral-400">{{ R.mixedAction }}</p>
             <div class="mt-3 grid gap-2 text-sm">
               <div v-for="action in evaluation.actions" :key="action.index" class="rounded-lg bg-neutral-900/60 px-3 py-2">
                 <b :class="action.isBest ? 'text-emerald-300' : 'text-neutral-300'">{{ actionLabel(question.node.selectedSpot.actions[action.index]) }} <span v-if="action.isBest">✓</span></b>
@@ -122,7 +123,7 @@ export default defineComponent({
     const limits = computed(() => question.value ? customLossLimits(question.value.node) : { potBb: 0, bestBb: 0, goodBb: 0 });
     const answer = computed(() => question.value && evaluation.value && bank.value
       ? classifyCustomTrainerAnswer(bank.value, question.value.node, question.value.handIndex, evaluation.value.selectedAction, evaluation.value.evLossBb)
-      : { kind: "best" as const, mixed: false });
+      : { kind: "best" as const, mixed: false, reference: false });
     const verdictKind = computed(() => answer.value.kind);
     const verdict = computed(() => verdictKind.value === "best" ? L.value.verdictBest : verdictKind.value === "good" ? L.value.verdictGood : L.value.verdictBad);
     const source = computed(() => bank.value ? (bank.value.origin
@@ -146,7 +147,8 @@ export default defineComponent({
         if (seen.has(attempt.questionId)) return false;
         seen.add(attempt.questionId);
         const restored = restoreCustomTrainerQuestion(bank.value!, attempt);
-        return restored && classifyCustomTrainerAnswer(bank.value!, restored.node, restored.handIndex, attempt.selectedAction, attempt.evLossBb).kind === "bad";
+        const graded = restored && classifyCustomTrainerAnswer(bank.value!, restored.node, restored.handIndex, attempt.selectedAction, attempt.evLossBb);
+        return !!graded && graded.kind === "bad" && !graded.reference;
       });
     });
     const nextQuestion = () => {

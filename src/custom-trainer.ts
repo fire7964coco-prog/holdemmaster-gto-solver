@@ -48,6 +48,8 @@ export type CustomTrainerOrigin = {
   frequencyFloor: number;
   /** Seat names shown instead of OOP/IP, e.g. ["BB", "BTN"]. */
   seats: [string, string];
+  /** Review «reference only» spot (reach product < 5%): shown as reference, never counted as a mistake. */
+  referenceOnly?: true;
 };
 
 export type CustomTrainerQuestion = Omit<TrainerQuestion, "category"> & {
@@ -120,7 +122,8 @@ export function isCustomTrainerBank(value: unknown): value is CustomTrainerBank 
       !Number.isFinite(bank.origin.frequencyFloor) ||
       bank.origin.frequencyFloor <= 0 || bank.origin.frequencyFloor >= 1 ||
       !Array.isArray(bank.origin.seats) || bank.origin.seats.length !== 2 ||
-      bank.origin.seats.some(seat => typeof seat !== "string" || !seat))) return false;
+      bank.origin.seats.some(seat => typeof seat !== "string" || !seat) ||
+      (bank.origin.referenceOnly !== undefined && bank.origin.referenceOnly !== true))) return false;
     return bank.nodes.every(node => {
       if (node.selectedSpot.type !== "player" ||
         !["oop", "ip"].includes(node.selectedSpot.player) ||
@@ -321,5 +324,5 @@ export function classifyCustomTrainerAnswer(
   const hands = node.cards[node.selectedSpot.player === "oop" ? 0 : 1].length;
   const frequency = node.results.strategy[selectedAction * hands + handIndex] ?? 0;
   const mixed = raw === "bad" && floor !== undefined && frequency >= floor;
-  return { kind: mixed ? "good" as const : raw, mixed };
+  return { kind: mixed ? "good" as const : raw, mixed, reference: bank.origin?.referenceOnly === true };
 }

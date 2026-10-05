@@ -28,7 +28,7 @@ export const M = {
     navTitle: "핸드 복기", cancel: "취소",
     noCompatibleHands: "내 카드와 겹치지 않는 상대 핸드가 이 자리에 없습니다.", otherSize: "다른 크기",
     unanalysed: "분석 못 함", scopeTitle: "계산 기준",
-    practiceSpot: "이 자리 연습하기", practiceBusy: "연습 문제를 만드는 중…", practiceUnavailable: "연습 문제를 만들 수 없습니다. 내 레인지에서 이 자리에 오는 핸드가 없거나, 액션별 EV가 없거나, 고를 액션이 하나뿐입니다.", practiceReferenceOnly: "도달 비중이 낮아 계산값을 믿기 어려운 자리라 연습 문제로 만들지 않습니다.", practiceError: "연습 문제를 저장하지 못했습니다. 다시 시도해 주세요.",
+    practiceSpot: "이 자리 연습하기", practiceBusy: "연습 문제를 만드는 중…", practiceUnavailable: "연습 문제를 만들 수 없습니다. 내 레인지에서 이 자리에 오는 핸드가 없거나, 액션별 EV가 없거나, 고를 액션이 하나뿐입니다.", practiceReferenceNote: "도달 비중이 낮아 계산값을 믿기 어려운 자리입니다. 참고로만 보고, 틀린 문제 복습에는 넣지 않습니다.", practiceError: "연습 문제를 저장하지 못했습니다. 다시 시도해 주세요.",
   },
   en: {
     title: "Hand review", situation: "Situation", hero: "Your seat", opener: "Opening seat", preflop: "Preflop",
@@ -55,7 +55,7 @@ export const M = {
     navTitle: "Hand review", cancel: "Cancel",
     noCompatibleHands: "No opponent hand in this spot is compatible with your cards.", otherSize: "Other size",
     unanalysed: "Not analysed", scopeTitle: "Review assumptions",
-    practiceSpot: "Practice this spot", practiceBusy: "Creating practice questions…", practiceUnavailable: "Practice questions cannot be created: no hand in your range reaches this spot, action EVs are missing, or there is only one action to choose.", practiceReferenceOnly: "This spot is reached too rarely for reliable values, so it is not turned into practice questions.", practiceError: "Could not save practice questions. Please try again.",
+    practiceSpot: "Practice this spot", practiceBusy: "Creating practice questions…", practiceUnavailable: "Practice questions cannot be created: no hand in your range reaches this spot, action EVs are missing, or there is only one action to choose.", practiceReferenceNote: "This spot is reached too rarely for reliable values. Use it as a reference only; it is not added to your mistake review.", practiceError: "Could not save practice questions. Please try again.",
   },
   ja: {
     title: "ハンド振り返り", situation: "状況", hero: "自分の席", opener: "オープンした席", preflop: "プリフロップ",
@@ -82,7 +82,7 @@ export const M = {
     navTitle: "ハンド振り返り", cancel: "キャンセル",
     noCompatibleHands: "このスポットに、自分のカードと重ならない相手のハンドがありません。", otherSize: "別のサイズ",
     unanalysed: "分析不可", scopeTitle: "計算の前提",
-    practiceSpot: "このスポットを練習", practiceBusy: "練習問題を作成中…", practiceUnavailable: "練習問題を作れません。自分のレンジでこのスポットに来るハンドがないか、アクションごとのEVがないか、選べるアクションが1つしかありません。", practiceReferenceOnly: "到達比率が低く計算値の信頼性が低いスポットのため、練習問題にしません。", practiceError: "練習問題を保存できませんでした。もう一度お試しください。",
+    practiceSpot: "このスポットを練習", practiceBusy: "練習問題を作成中…", practiceUnavailable: "練習問題を作れません。自分のレンジでこのスポットに来るハンドがないか、アクションごとのEVがないか、選べるアクションが1つしかありません。", practiceReferenceNote: "到達比率が低く、計算値の信頼性が低いスポットです。参考としてのみ表示し、間違えた問題の復習には入れません。", practiceError: "練習問題を保存できませんでした。もう一度お試しください。",
   },
   es: {
     title: "Revisar mano", situation: "Situación", hero: "Tu posición", opener: "Posición que abre", preflop: "Preflop",
@@ -109,7 +109,7 @@ export const M = {
     navTitle: "Revisar mano", cancel: "Cancelar",
     noCompatibleHands: "En este spot no hay manos rivales compatibles con tus cartas.", otherSize: "Otro tamaño",
     unanalysed: "Sin analizar", scopeTitle: "Supuestos del análisis",
-    practiceSpot: "Practicar este spot", practiceBusy: "Creando preguntas…", practiceUnavailable: "No se pueden crear preguntas: ninguna mano de tu rango llega a este spot, faltan los EV por acción o solo hay una acción posible.", practiceReferenceOnly: "Este spot se alcanza muy pocas veces y sus valores no son fiables, así que no se convierte en preguntas.", practiceError: "No se pudieron guardar las preguntas. Inténtalo de nuevo.",
+    practiceSpot: "Practicar este spot", practiceBusy: "Creando preguntas…", practiceUnavailable: "No se pueden crear preguntas: ninguna mano de tu rango llega a este spot, faltan los EV por acción o solo hay una acción posible.", practiceReferenceNote: "Este spot se alcanza muy pocas veces y sus valores no son fiables. Úsalo solo como referencia; no se añade al repaso de errores.", practiceError: "No se pudieron guardar las preguntas. Inténtalo de nuevo.",
   },
   pt: {
     title: "Revisar mão", situation: "Situação", hero: "Sua posição", opener: "Posição que abre", preflop: "Pré-flop",
@@ -136,7 +136,7 @@ export const M = {
     navTitle: "Revisar mão", cancel: "Cancelar",
     noCompatibleHands: "Neste spot não há mãos do oponente compatíveis com as suas cartas.", otherSize: "Outro tamanho",
     unanalysed: "Sem análise", scopeTitle: "Premissas da análise",
-    practiceSpot: "Praticar este spot", practiceBusy: "Criando questões…", practiceUnavailable: "Não é possível criar questões: nenhuma mão do seu range chega a este spot, faltam os EVs por ação ou há apenas uma ação possível.", practiceReferenceOnly: "Este spot é alcançado raramente e seus valores não são confiáveis, então não vira questões.", practiceError: "Não foi possível salvar as questões. Tente novamente.",
+    practiceSpot: "Praticar este spot", practiceBusy: "Criando questões…", practiceUnavailable: "Não é possível criar questões: nenhuma mão do seu range chega a este spot, faltam os EVs por ação ou há apenas uma ação possível.", practiceReferenceNote: "Este spot é alcançado raramente e seus valores não são confiáveis. Use apenas como referência; ele não entra na revisão de erros.", practiceError: "Não foi possível salvar as questões. Tente novamente.",
   },
   de: {
     title: "Handanalyse", situation: "Situation", hero: "Deine Position", opener: "Eröffnende Position", preflop: "Preflop",
@@ -163,7 +163,7 @@ export const M = {
     navTitle: "Handanalyse", cancel: "Abbrechen",
     noCompatibleHands: "In diesem Spot ist keine gegnerische Hand mit deinen Karten kompatibel.", otherSize: "Andere Größe",
     unanalysed: "Nicht analysiert", scopeTitle: "Annahmen der Analyse",
-    practiceSpot: "Diesen Spot üben", practiceBusy: "Übungsfragen werden erstellt…", practiceUnavailable: "Es können keine Übungsfragen erstellt werden: Keine Hand deiner Range erreicht diesen Spot, die EVs pro Aktion fehlen oder es gibt nur eine mögliche Aktion.", practiceReferenceOnly: "Dieser Spot wird zu selten erreicht, um verlässliche Werte zu haben, daher werden keine Übungsfragen daraus erstellt.", practiceError: "Übungsfragen konnten nicht gespeichert werden. Bitte versuche es erneut.",
+    practiceSpot: "Diesen Spot üben", practiceBusy: "Übungsfragen werden erstellt…", practiceUnavailable: "Es können keine Übungsfragen erstellt werden: Keine Hand deiner Range erreicht diesen Spot, die EVs pro Aktion fehlen oder es gibt nur eine mögliche Aktion.", practiceReferenceNote: "Dieser Spot wird zu selten erreicht, um verlässliche Werte zu haben. Nur zur Orientierung – er kommt nicht in die Fehlerwiederholung.", practiceError: "Übungsfragen konnten nicht gespeichert werden. Bitte versuche es erneut.",
   },
   zh: {
     title: "手牌复盘", situation: "场景", hero: "我的位置", opener: "开池位置", preflop: "翻牌前",
@@ -190,7 +190,7 @@ export const M = {
     navTitle: "手牌复盘", cancel: "取消",
     noCompatibleHands: "此场景中没有与你的手牌不重叠的对手手牌。", otherSize: "其他尺度",
     unanalysed: "无法分析", scopeTitle: "计算前提",
-    practiceSpot: "练习这个场景", practiceBusy: "正在生成练习题…", practiceUnavailable: "无法生成练习题：你的范围中没有手牌会到达这个场景，或缺少各行动的EV，或只有一个可选行动。", practiceReferenceOnly: "该场景到达比例过低，计算值不够可靠，因此不生成练习题。", practiceError: "无法保存练习题，请重试。",
+    practiceSpot: "练习这个场景", practiceBusy: "正在生成练习题…", practiceUnavailable: "无法生成练习题：你的范围中没有手牌会到达这个场景，或缺少各行动的EV，或只有一个可选行动。", practiceReferenceNote: "该场景到达比例过低，计算值不够可靠。仅供参考，不会加入错题复习。", practiceError: "无法保存练习题，请重试。",
   },
   "zh-hant": {
     title: "手牌檢討", situation: "情境", hero: "我的位置", opener: "開池位置", preflop: "翻牌前",
@@ -217,7 +217,7 @@ export const M = {
     navTitle: "手牌檢討", cancel: "取消",
     noCompatibleHands: "此場景中沒有與你的手牌不重疊的對手手牌。", otherSize: "其他尺度",
     unanalysed: "無法分析", scopeTitle: "計算前提",
-    practiceSpot: "練習這個場景", practiceBusy: "正在產生練習題…", practiceUnavailable: "無法產生練習題：你的範圍中沒有手牌會到達這個場景，或缺少各行動的EV，或只有一個可選行動。", practiceReferenceOnly: "該場景到達比例過低，計算值不夠可靠，因此不產生練習題。", practiceError: "無法儲存練習題，請重試。",
+    practiceSpot: "練習這個場景", practiceBusy: "正在產生練習題…", practiceUnavailable: "無法產生練習題：你的範圍中沒有手牌會到達這個場景，或缺少各行動的EV，或只有一個可選行動。", practiceReferenceNote: "該場景到達比例過低，計算值不夠可靠。僅供參考，不會加入錯題複習。", practiceError: "無法儲存練習題，請重試。",
   },
   fr: {
     title: "Revoir une main", situation: "Situation", hero: "Ta position", opener: "Position d’ouverture", preflop: "Préflop",
@@ -244,7 +244,7 @@ export const M = {
     navTitle: "Revoir une main", cancel: "Annuler",
     noCompatibleHands: "Dans ce spot, aucune main adverse n’est compatible avec tes cartes.", otherSize: "Autre sizing",
     unanalysed: "Non analysé", scopeTitle: "Hypothèses de l’analyse",
-    practiceSpot: "Travailler ce spot", practiceBusy: "Création des exercices…", practiceUnavailable: "Impossible de créer des exercices : aucune main de ta range n’arrive à ce spot, les EV par action manquent, ou il n’y a qu’une seule action possible.", practiceReferenceOnly: "Ce spot est atteint trop rarement pour des valeurs fiables : il n’est pas transformé en exercices.", practiceError: "Impossible d’enregistrer les exercices. Réessaie.",
+    practiceSpot: "Travailler ce spot", practiceBusy: "Création des exercices…", practiceUnavailable: "Impossible de créer des exercices : aucune main de ta range n’arrive à ce spot, les EV par action manquent, ou il n’y a qu’une seule action possible.", practiceReferenceNote: "Ce spot est atteint trop rarement pour des valeurs fiables. À titre indicatif seulement : il n’est pas ajouté à la révision des erreurs.", practiceError: "Impossible d’enregistrer les exercices. Réessaie.",
   },
   id: {
     title: "Tinjau hand", situation: "Situasi", hero: "Posisi Anda", opener: "Posisi pembuka", preflop: "Preflop",
@@ -271,7 +271,7 @@ export const M = {
     navTitle: "Tinjau hand", cancel: "Batal",
     noCompatibleHands: "Tidak ada hand lawan di spot ini yang kompatibel dengan kartu Anda.", otherSize: "Ukuran lain",
     unanalysed: "Tidak dianalisis", scopeTitle: "Asumsi analisis",
-    practiceSpot: "Latih spot ini", practiceBusy: "Membuat soal latihan…", practiceUnavailable: "Soal latihan tidak dapat dibuat: tidak ada hand di range Anda yang mencapai spot ini, EV per aksi tidak tersedia, atau hanya ada satu aksi yang bisa dipilih.", practiceReferenceOnly: "Spot ini terlalu jarang dicapai sehingga nilainya kurang andal, jadi tidak dijadikan soal latihan.", practiceError: "Soal latihan tidak dapat disimpan. Coba lagi.",
+    practiceSpot: "Latih spot ini", practiceBusy: "Membuat soal latihan…", practiceUnavailable: "Soal latihan tidak dapat dibuat: tidak ada hand di range Anda yang mencapai spot ini, EV per aksi tidak tersedia, atau hanya ada satu aksi yang bisa dipilih.", practiceReferenceNote: "Spot ini terlalu jarang dicapai sehingga nilainya kurang andal. Gunakan hanya sebagai referensi; spot ini tidak dimasukkan ke ulasan kesalahan.", practiceError: "Soal latihan tidak dapat disimpan. Coba lagi.",
   },
   ms: {
     title: "Semak hand", situation: "Keadaan", hero: "Kedudukan anda", opener: "Kedudukan pembuka", preflop: "Preflop",
@@ -298,7 +298,7 @@ export const M = {
     navTitle: "Semak hand", cancel: "Batal",
     noCompatibleHands: "Tiada hand lawan di spot ini yang serasi dengan kad anda.", otherSize: "Saiz lain",
     unanalysed: "Tidak dapat dianalisis", scopeTitle: "Andaian semakan",
-    practiceSpot: "Berlatih spot ini", practiceBusy: "Membuat soalan latihan…", practiceUnavailable: "Soalan latihan tidak dapat dibuat: tiada hand dalam range anda yang sampai ke spot ini, EV setiap aksi tiada, atau hanya ada satu aksi untuk dipilih.", practiceReferenceOnly: "Spot ini terlalu jarang dicapai sehingga nilainya kurang boleh dipercayai, jadi ia tidak dijadikan soalan latihan.", practiceError: "Soalan latihan tidak dapat disimpan. Cuba lagi.",
+    practiceSpot: "Berlatih spot ini", practiceBusy: "Membuat soalan latihan…", practiceUnavailable: "Soalan latihan tidak dapat dibuat: tiada hand dalam range anda yang sampai ke spot ini, EV setiap aksi tiada, atau hanya ada satu aksi untuk dipilih.", practiceReferenceNote: "Spot ini terlalu jarang dicapai sehingga nilainya kurang boleh dipercayai. Gunakan sebagai rujukan sahaja; ia tidak dimasukkan ke ulang kaji kesilapan.", practiceError: "Soalan latihan tidak dapat disimpan. Cuba lagi.",
   },
   hi: {
     title: "हैंड की समीक्षा", situation: "स्थिति", hero: "आपकी पोज़िशन", opener: "Open करने की पोज़िशन", preflop: "Preflop",
@@ -325,7 +325,7 @@ export const M = {
     navTitle: "हैंड समीक्षा", cancel: "रद्द करें",
     noCompatibleHands: "इस स्पॉट में विरोधी का कोई भी हैंड आपके कार्ड के साथ संभव नहीं है।", otherSize: "अन्य साइज़",
     unanalysed: "विश्लेषण नहीं हुआ", scopeTitle: "समीक्षा की मान्यताएँ",
-    practiceSpot: "इस स्पॉट का अभ्यास करें", practiceBusy: "अभ्यास के सवाल बनाए जा रहे हैं…", practiceUnavailable: "अभ्यास के सवाल नहीं बन सकते: आपकी रेंज का कोई हैंड इस स्पॉट तक नहीं पहुँचता, हर एक्शन का EV उपलब्ध नहीं है, या चुनने के लिए सिर्फ़ एक ही एक्शन है।", practiceReferenceOnly: "यह स्पॉट बहुत कम बार आता है, इसलिए इसके मान भरोसेमंद नहीं हैं; इसे अभ्यास के सवाल में नहीं बदला जाता।", practiceError: "अभ्यास के सवाल सहेजे नहीं जा सके। फिर से कोशिश करें।",
+    practiceSpot: "इस स्पॉट का अभ्यास करें", practiceBusy: "अभ्यास के सवाल बनाए जा रहे हैं…", practiceUnavailable: "अभ्यास के सवाल नहीं बन सकते: आपकी रेंज का कोई हैंड इस स्पॉट तक नहीं पहुँचता, हर एक्शन का EV उपलब्ध नहीं है, या चुनने के लिए सिर्फ़ एक ही एक्शन है।", practiceReferenceNote: "यह स्पॉट बहुत कम बार आता है, इसलिए इसके मान भरोसेमंद नहीं हैं। इसे सिर्फ़ संदर्भ के लिए देखें; यह गलतियों के रिव्यू में नहीं जोड़ा जाता।", practiceError: "अभ्यास के सवाल सहेजे नहीं जा सके। फिर से कोशिश करें।",
   },
 } as const;
 

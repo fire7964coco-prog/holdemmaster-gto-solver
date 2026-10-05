@@ -26,6 +26,7 @@ export type ReviewPracticeSource = {
   targetPct: number;
   achievedPct: number;
   frequencyFloor: number;
+  referenceOnly?: boolean;
   seats: [string, string];
 };
 
@@ -128,6 +129,7 @@ export async function createReviewPracticeBank(src: ReviewPracticeSource): Promi
     configSnapshot: { review: src.spotId, street: src.street },
     locks: [],
     nodes: [decision],
-    origin: { kind: "review", street: src.street, frequencyFloor: src.frequencyFloor, seats: [...src.seats] },
+    origin: { kind: "review", street: src.street, frequencyFloor: src.frequencyFloor, seats: [...src.seats],
+      ...(src.referenceOnly ? { referenceOnly: true as const } : {}) },
   };
 }
