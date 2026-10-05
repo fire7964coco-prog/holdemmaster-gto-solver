@@ -233,7 +233,7 @@ export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = {
     after: "Kilitledikten sonra",
     frequency: "Sıklık",
     comparison: "Önce/sonra karşılaştırması",
-    exploitability: "Sapma",
+    exploitability: "Exploitability",
     sumError: "Her aksiyon için 0–100 arası bir tam sayı gir; toplam 100 olmalı.",
     skippedChance: "Kartı belirtilmemiş bir yol kilitlenemez. Önce kartı seç.",
     engineError: "Strateji kilitlenemedi. Girdiğin değerleri kontrol et ve yeniden hesapla.",

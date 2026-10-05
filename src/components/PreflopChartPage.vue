@@ -1383,7 +1383,7 @@ const M = {
   },
   tr: {
     modeRfi: "Açılış (RFI)",
-    modeDefend: "Open'a karşı (savunma)",
+    modeDefend: "Açılışa karşı (savunma)",
     mode3bet: "3-bet'e karşı (açılıştan sonra)",
     mode4bet: "4-bet'e karşı (3-bet'ten sonra)",
     intro4bet:
@@ -1398,14 +1398,14 @@ const M = {
     copy5bet: "5-bet range'ini kopyala",
     note4bet:
       "İstatistikler 3-bet range'inin içindeki paylardır. 100bb'de 5-bet fiilen " +
-      "all-in demektir — value ağırlıkla AA·KK'dır (ara sıra call ile tuzak kurulur), " +
-      "QQ·AK ise 5-bet ile call'u karma oynar. Call kararını pot oranı değil equity " +
+      "all-in demektir — value ağırlıkla AA ve KK ile yapılır (ara sıra call ile tuzak kurulur), " +
+      "QQ ve AK ise 5-bet ile call arasında karma oynanır. Call kararını pot oranı değil equity " +
       "realization belirler: düşük SPR'de pozisyon dışı oynarsın, bu yüzden yalnızca çiftler " +
       "ve en iyi suited eller devam eder — ama her şeyi fold etme, çünkü rakibin " +
       "4-bet range'inde A5s–A4s gibi blöfler de var.",
     how4bet2:
-      "Kırmızı + yeşil kareyi doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte " +
-      "olduğu karelerde 5-bet ve call karma oynanır. 3-bet range'inin dışındaki eller bu " +
+      "Kırmızı + yeşil hücreyi doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte " +
+      "olduğu hücrelerde 5-bet ve call karma oynanır. 3-bet range'inin dışındaki eller bu " +
       "spota hiç gelmez, bu yüzden boştur.",
     intro3bet:
       "Open-raise'ine 3-bet geldiğinde nasıl cevap vereceğin — kırmızı 4-bet, yeşil " +
@@ -1418,7 +1418,7 @@ const M = {
     copy4bet: "4-bet range'ini kopyala",
     note3bet:
       "İstatistikler tüm ellerin değil, açılış range'inin içindeki paylardır. 4-bet value'su " +
-      "QQ+/AK etrafında toplanır, A5s-A4s gibi birkaç blöf de karışır. Pozisyondayken " +
+      "QQ+/AK etrafında toplanır, A5s–A4s gibi birkaç blöf de karışır. Pozisyondayken " +
       "call range'i geniş kalır: çiftler, suited broadway'ler ve connector'lar.",
     squeezeNote:
       "Squeeze, pot'ta hem açan hem de call eden biri varken yapılan 3-bet'tir (burada " +
@@ -1426,10 +1426,10 @@ const M = {
       "3-bet'i value'ya doğru iter. Overcall'larda multiway pot'ta nuts yapabilen suited, " +
       "connected eller öne çıkar.",
     how3bet2:
-      "Kırmızı + yeşil kareyi doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte " +
-      "olduğu karelerde 4-bet ve call karma oynanır. Açılış range'inin dışındaki eller bu " +
+      "Kırmızı + yeşil hücreyi doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte " +
+      "olduğu hücrelerde 4-bet ve call karma oynanır. Açılış range'inin dışındaki eller bu " +
       "spota hiç gelmez, bu yüzden boştur.",
-    intro: "Pozisyona göre açılış range'leri (RFI) — herkes sana kadar fold ettiğinde hangi ellerle raise yapmalısın? Temel: 6-max cash, 100bb, 2,5bb open. Kısmen dolu kareler, açılıp açılmaması konusunda herkese açık kaynakların ayrıştığı sınırdaki elleri gösterir (dolgu yüksekliği = açmayı öneren kaynakların payı).",
+    intro: "Pozisyona göre açılış range'leri (RFI) — herkes sana kadar fold ettiğinde hangi ellerle raise yapmalısın? Temel: 6-max cash, 100bb, 2,5bb open. Kısmen dolu hücreler, açılıp açılmaması konusunda herkese açık kaynakların ayrıştığı sınırdaki elleri gösterir (dolgu yüksekliği = açmayı öneren kaynakların payı).",
     provenanceNote: "Herkese açık kaynakların uzlaşısı + kendi türettiğimiz kısımlar — solver çıktısı değil. Kaynaklar için aşağıdaki “Bu tablo nasıl hazırlandı?” bölümüne bak.",
     introDefend:
       "Senden önce biri open-raise yaptığında nasıl cevap vereceğin — en sık görülen " +
@@ -1440,7 +1440,7 @@ const M = {
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
-    legendMixedDefend: "Dolgu yüksekliği = sıklık (bölünmüş kareler karma)",
+    legendMixedDefend: "Dolgu yüksekliği = sıklık (bölünmüş hücreler karma)",
     stat3bet: "3-bet oranı",
     statCall: "Call oranı",
     statTotal: "Toplam savunma",
@@ -1465,10 +1465,10 @@ const M = {
     sendIp: "② IP range'e gönder",
     howTitle: "Nasıl okunur",
     how1: "Sol üstten sağ alta inen köşegen çiftlerdir; üstü (sağ) suited, altı (sol) offsuit ellerdir.",
-    how2: "Kısmen dolu kareler, açılıp açılmaması konusunda kaynakların ayrıştığı sınırdaki elleri gösterir. Dolgu yüksekliği açmayı öneren kaynakların payını gösterir; solver sonucu değildir.",
+    how2: "Kısmen dolu hücreler, açılıp açılmaması konusunda kaynakların ayrıştığı sınırdaki elleri gösterir. Dolgu yüksekliği açmayı öneren kaynakların payını gösterir; solver sonucu değildir.",
     how3: "[Range'e gönder] düğmeleri bu range'i özel spot range düzenleyicisine yükler — postflop oyunu kendin çözmeyi dene.",
     howDefend2:
-      "Kırmızı + yeşil kareyi tamamen doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte göründüğü karelerde 3-bet ve call bu oranlarda karma oynanır.",
+      "Kırmızı + yeşil hücreyi tamamen doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte göründüğü hücrelerde 3-bet ve call bu oranlarda karma oynanır.",
     howDefend3:
       "Kopyaladığın range'i özel spot range alanlarına (① / ②) yapıştır ve bu savunma range'iyle postflop oyunu kendin çöz.",
     sourceTitle: "Bu tablo nasıl hazırlandı?",

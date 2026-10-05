@@ -675,8 +675,8 @@ const M = {
     importFailed: "त्रुटि: इंपोर्ट नहीं हो सका।",
   },
   tr: {
-    noSavedRanges: "Henüz kayıtlı range yok. Şu anki range'i burada tutmak için “Kaydet”e dokun ve bir ad gir. Sonraki sefer “Yükle” ile geri getirebilirsin.",
-    noSavedConfigs: "Henüz kayıtlı ayar yok. Şu anki ayarı burada tutmak için “Kaydet”e dokun ve bir ad gir. Sonraki sefer “Yükle” ile geri getirebilirsin.",
+    noSavedRanges: "Henüz kayıtlı range yok. Şu anki range'i burada tutmak için “Kaydet” düğmesine dokun ve bir ad gir. Sonraki sefer “Yükle” ile geri getirebilirsin.",
+    noSavedConfigs: "Henüz kayıtlı ayar yok. Şu anki ayarı burada tutmak için “Kaydet” düğmesine dokun ve bir ad gir. Sonraki sefer “Yükle” ile geri getirebilirsin.",
     emptyGroup: "(Boş grup)",
     errorReload: "Bir hata oluştu. Sayfayı yeniden yükle.",
     load: "Yükle",
@@ -1547,7 +1547,7 @@ export default defineComponent({
           `已经有同名的项目，无法创建分组“${itemsToAdd}”`, `已經有同名的項目，無法建立群組「${itemsToAdd}」`,
           `Impossible de créer le groupe « ${itemsToAdd} » : un élément du même nom existe déjà`,
           `Tidak bisa membuat grup “${itemsToAdd}”: sudah ada item dengan nama yang sama`,
-          `Kumpulan “${itemsToAdd}” tidak dapat dibuat kerana sudah ada item dengan nama yang sama`, `"${itemsToAdd}" समूह नहीं बना सकते, क्योंकि इस नाम का आइटम पहले से मौजूद है`, `"${itemsToAdd}" grubu oluşturulamıyor: aynı adda bir öğe zaten var`);
+          `Kumpulan “${itemsToAdd}” tidak dapat dibuat kerana sudah ada item dengan nama yang sama`, `"${itemsToAdd}" समूह नहीं बना सकते, क्योंकि इस नाम का आइटम पहले से मौजूद है`, `“${itemsToAdd}” grubu oluşturulamıyor: aynı adda bir öğe zaten var`);
         return;
       }
 

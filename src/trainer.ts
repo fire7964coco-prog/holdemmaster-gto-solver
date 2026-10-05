@@ -228,9 +228,9 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
     },
     tr: {
       all: "Tümü",
-      srp: "Single Raised",
+      srp: "Single raised",
       "3bp": "3-bet pot",
-      blind: "Blind vs Blind",
+      blind: "Blind vs blind",
     },
   };
   return labels[i18n.locale][category];

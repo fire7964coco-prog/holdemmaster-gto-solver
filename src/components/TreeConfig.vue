@@ -1596,7 +1596,7 @@ const M = {
     inputHelpIntro:
       "Birden fazla bet boyutunu virgül ya da boşlukla ayırarak aşağıdaki biçimlerden herhangi biriyle girebilirsin. Boş bırakırsan bet ya da raise yapılmaz.",
     inputHelpPercent:
-      "Pot'un yüzdesini gösteren bir sayı (ör. “50”). Raise'lerde boyut, önce call edilip ardından oluşan pot'un belirtilen yüzdesi eklenerek hesaplanır. Örneğin bet'ten önce pot 100 ise ve rakip 75 bet yaparsa, %50 raise = 75 + (100 + 75 + 75) * %50 = 200 olur.",
+      "Pot'un yüzdesini gösteren bir sayı (ör. “50”). Raise'lerde boyut, önce call edilip ardından oluşan pot'un belirtilen yüzdesi eklenerek hesaplanır. Örneğin bet'ten önce pot 100 ise ve rakip 75 bet yaparsa, %50 raise = 75 + (100 + 75 + 75) × %50 = 200 olur.",
     inputHelpMultiple:
       "Önceki bet boyutunun katı (ör. “2.5x”). Yalnızca raise'lerde kullanılabilir.",
     inputHelpAllin: "All-in (ör. “a”).",
@@ -2038,7 +2038,7 @@ export default defineComponent({
           ,
             "不建议把强制全下的阈值设到 30% 以上。\n想知道这个设置是做什么的，看上面的“怎么填”。", "不建議把強制全下的門檻設到 30% 以上。\n想知道這個設定是做什麼的，請看上面的「怎麼填」。",
             "Régler le seuil de all-in forcé au-dessus de 30 % n'est pas recommandé.\nVa voir « Comment remplir » pour comprendre ce réglage.", "Menyetel ambang all-in paksa di atas 30% tidak disarankan.\nLihat teks bantuan di samping pengaturan ini untuk memahami pengaruhnya.",
-            "Menetapkan ambang all-in paksa melebihi 30% tidak disyorkan.\nLihat “Cara isi” di sebelah tetapan ini untuk memahami kesannya.", "Bet को all-in बनाने की सीमा 30% से अधिक रखना उचित नहीं है।\nयह सेटिंग कैसे काम करती है, इसके लिए मदद का टेक्स्ट देखें।", "Zorunlu all-in eşiğini %30'un üzerine ayarlaman önerilmez.\nBu ayarın ne işe yaradığını “Nasıl girilir” yardım metninde görebilirsin.")
+            "Menetapkan ambang all-in paksa melebihi 30% tidak disyorkan.\nLihat “Cara isi” di sebelah tetapan ini untuk memahami kesannya.", "Bet को all-in बनाने की सीमा 30% से अधिक रखना उचित नहीं है।\nयह सेटिंग कैसे काम करती है, इसके लिए मदद का टेक्स्ट देखें।", "Zorunlu all-in eşiğini %30'un üzerine ayarlaman önerilmez.\nBu ayarın ne işe yaradığını “Zorunlu all-in eşiği” yanındaki yardım metninde görebilirsin.")
         );
       }
       return warnings;
@@ -2063,7 +2063,7 @@ export default defineComponent({
           ,
             "发现了无效的线路（是不是加载了损坏的设置？）", "發現了無效的線路（是不是載入了損壞的設定？）",
             "Ligne invalide trouvée (configuration corrompue chargée ?)", "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
-            "Line tidak sah ditemui (memuatkan tetapan yang rosak?)", "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yükledin?)")
+            "Line tidak sah ditemui (memuatkan tetapan yang rosak?)", "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)")
         );
       }
       if (
@@ -2086,7 +2086,7 @@ export default defineComponent({
           ,
             "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
             "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
-            "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayar (bozuk bir ayar mı yükledin?)")
+            "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayar (bozuk bir ayar mı yüklendi?)")
         );
       }
       return errors;

@@ -481,8 +481,8 @@ const M = {
     potRate: (pct: string) => `(%${pct} pot)`,
     saveEdits: "Değişiklikleri kaydet",
     cancelEdits: "Değişiklikleri iptal et",
-    addedLines: "Eklenen dallar:",
-    removedLines: "Silinen dallar:",
+    addedLines: "Eklenen line'lar:",
+    removedLines: "Kaldırılan line'lar:",
   },
 } as const;
 

@@ -81,7 +81,7 @@
         </span>
         <span class="stat-chip">{{ L.totalLossLabel }} <b>{{ $n(totalLoss.toFixed(3)) }}</b>bb</span>
         <span class="stat-chip">{{ L.avgLossLabel }} <b>{{ $n(averageLoss.toFixed(3)) }}</b>bb</span>
-        <span class="stat-chip">{{ L.goodRateLabel }} <b>{{ excellentRate.toFixed(0) }}</b>%</span>
+        <span class="stat-chip">{{ L.goodRateLabel }} <template v-if="isTr">%</template><b>{{ excellentRate.toFixed(0) }}</b><template v-if="!isTr">%</template></span>
       </div>
 
       <!-- 약점 분석: 카테고리별 평균 EV 손실 -->
@@ -187,7 +187,7 @@
           <b :class="streak >= 3 ? 'text-emerald-300' : 'text-neutral-200'">{{ streak }}</b>
         </span>
         <span v-if="attempts.length">
-          {{ L.goodRateLabel }} <b class="text-neutral-200">{{ excellentRate.toFixed(0) }}</b>%
+          {{ L.goodRateLabel }} <template v-if="isTr">%</template><b class="text-neutral-200">{{ excellentRate.toFixed(0) }}</b><template v-if="!isTr">%</template>
         </span>
         <span v-if="dailyState.streak">
           {{ L.dailyStreakLabel }} <b class="text-brand">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
@@ -1971,12 +1971,12 @@ const M = {
     googleSignIn: "Google ile devam et",
     kakaoSignIn: "Kakao ile devam et",
     footerLine: (nodes: number, pct: number) =>
-      `13 örnek spot · ${nodes} karar node'u · hedef sapma %${pct}`,
+      `13 örnek spot · ${nodes} karar node'u · hedef exploitability %${pct}`,
     details: "Ayrıntılar ↓",
     toAct: "oynayacak",
     potLabel: "Pot",
     stackLabel: "Stack",
-    lineLabel: "Aksiyonlar:",
+    lineLabel: "Aksiyon sırası:",
     boardLabel: "Board",
     myHand: "Elin",
     yourChoice: "Seçimin",
@@ -2013,7 +2013,7 @@ const M = {
     resultHintBold: "her aksiyonun sıklığı ve EV'si",
     resultHintAfter: " ile seçiminin sana kaç bb'ye mal olduğu görünür.",
     gtoNoteBefore:
-      "GTO aynı elde aksiyonları karıştırır — düşük sıklıklı bir seçim otomatik olarak hata değildir. Ölçü, ",
+      "GTO aynı eli karma oynar — düşük sıklıklı bir seçim otomatik olarak hata değildir. Ölçü, ",
     gtoNoteBold: "pot'a oranla",
     gtoNoteAfter: " EV kaybıdır: ≤%0,35 En iyi oyun · ≤%1 Kabul edilebilir · daha fazlası Bu spotu tekrar et.",
     spotLimits: (pot: string, best: string, good: string) =>
@@ -2048,6 +2048,8 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale]);
+    // 굵은 숫자 뒤 «%»는 tr에서만 숫자 앞으로(%35) — 굵기 범위를 바꾸지 않으려고 $pct 대신 자리만 옮긴다
+    const isTr = computed(() => i18n.locale === "tr");
     /* 두 문장을 잇는 공백 — 서양어는 필요하고, CJK는 「。」가 이미 여백을 품고 있어
      * 넣으면 오히려 벌어진다. 템플릿의 줄바꿈에 맡기면 전 언어가 공백을 받는다 */
     const sentenceGap = computed(() =>
@@ -2537,6 +2539,7 @@ export default defineComponent({
       presetTitle,
       positionLabel,
       L,
+      isTr,
       isKo,
       trainerCategoryLabel,
       trainerActionLabel,

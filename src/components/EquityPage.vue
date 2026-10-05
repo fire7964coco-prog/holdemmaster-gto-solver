@@ -1043,7 +1043,7 @@ const M = {
     modeHand: "Ele karşı",
     modeRange: "Range'e karşı",
     // ⚠ «0.75»의 소수점은 입력 문법이다 — 쉼표로 바꾸면 파서가 못 읽는다 (localizeNumber 금지 구역)
-    rangePlaceholder: "örn. 22+,AQs+,K8s:0.75",
+    rangePlaceholder: "ör. 22+,AQs+,K8s:0.75",
     // 버튼 이름은 PreflopChartPage의 복사 버튼과 «글자까지» 같아야 한다
     rangeNote:
       "Preflop tablolarındaki [Range metnini kopyala] çıktısını yapıştır. “K8s:0.75” gibi ağırlıklı yazımlar olduğu gibi uygulanır.",
@@ -1061,7 +1061,7 @@ const M = {
     stop: "Durdur",
     clear: "Hepsini temizle",
     resultTitle: "Sonuç",
-    resultEmpty: "İki kartını ve rakibin elini ya da range'ini seç, sonra Hesapla'ya bas.",
+    resultEmpty: "İki kartını ve rakibin elini ya da range'ini seç, sonra “Hesapla” düğmesine bas.",
     vsSide: (value: string) => `Rakip %${value}`,
     win: "Kazanma",
     tie: "Beraberlik",
@@ -1079,8 +1079,8 @@ const M = {
     limitTitle: "Bu hesaplayıcının kapsamı",
     // tr: solver도 2인만 지원 — en의 «multiway는 솔버가 담당» 서술을 옮기지 않는다(hi와 같은 처리). «Özel spot» = 사이드바 customLabel
     limitBody:
-      "Bu araç yalnızca iki oyuncu arasındaki all-in equity'yi hesaplar. Range vs range ve sonraki bahis line'ları için " +
-      "Özel spot'taki solver'ı kullan. Multiway pot'lar desteklenmiyor.",
+      "Bu araç yalnızca iki oyuncu arasındaki all-in equity'yi hesaplar. Range vs range ve sonraki line'lar için " +
+      "Özel spot bölümündeki solver'ı kullan. Multiway pot'lar desteklenmiyor.",
     errors: {
       "need-hero": "Önce iki kartını seç.",
       "bad-board": "Board'da 0, 3, 4 veya 5 kart olmalı.",

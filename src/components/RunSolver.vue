@@ -908,34 +908,34 @@ const M = {
   tr: {
     sharedSpotBanner:
       "Paylaşılan spot yüklendi — hesaplamayı başlatmak için [Ağacı oluştur] → [Solver'ı çalıştır] düğmelerine bas.",
-    numThreadsLabel: "İş parçacığı sayısı:",
+    numThreadsLabel: "Thread sayısı:",
     buildTree: "Ağacı oluştur",
     copied: "Kopyalandı!",
-    shareSpot: "🔗 Spot'u paylaş",
+    shareSpot: "🔗 Spotu paylaş",
     statusLabel: "Durum:",
     statusNotLoaded: "Modül yüklenmedi",
     statusBuilding: "Ağaç oluşturuluyor…",
     statusError: (message: string) => `Hata: ${message}`,
-    statusBuilt: (threads: number) => `Ağaç oluşturuldu (${threads} iş parçacığı)`,
+    statusBuilt: (threads: number) => `Ağaç oluşturuldu (${threads} thread)`,
     precisionMode: "Hassasiyet modu:",
     precisionTipIntro:
       "Hassasiyet modu esas olarak bellek kullanımını etkiler. Bunun dışında birkaç küçük fark daha var.",
     precisionTipFp:
-      "32-bit kayan nokta (FP): bellek kullanımı sınırın (3,9GB) altındaysa önerilir. Yaklaşık 7 anlamlı basamak ve daha iyi performans sunar.",
+      "32-bit kayan nokta (FP): bellek kullanımı sınırın (3,9 GB) altındaysa önerilir. Yaklaşık 7 anlamlı basamak ve daha iyi performans sunar.",
     precisionTipInt:
-      "16-bit tam sayı: 32-bit FP modu bellek sınırını aşarsa kullanılacak alternatif. Yaklaşık 4 anlamlı basamak verir; bu yüzden %0,1'in altındaki bir hedef sapma için uygun değildir ve 32-bit FP'den daha yavaştır.",
+      "16-bit tam sayı: 32-bit FP modu bellek sınırını aşarsa kullanılacak alternatif. Yaklaşık 4 anlamlı basamak verir; bu yüzden %0,1'in altındaki bir hedef exploitability için uygun değildir ve 32-bit FP'den daha yavaştır.",
     fp32Label: "32-bit FP:",
     int16Label: "16-bit tam sayı:",
     ramNeeded: (size: string) => `${size} RAM gerekir`,
     limitExceeded: "(sınır aşıldı)",
-    ramLimit: "RAM sınırı: 3,9GB (= 4GB Wasm sınırı − 0,1GB pay)",
-    targetLabel: "Hedef sapma:",
+    ramLimit: "RAM sınırı: 3,9 GB (= 4 GB Wasm sınırı − 0,1 GB pay)",
+    targetLabel: "Hedef exploitability:",
     exploitTipIntro:
       "Nash dengesinden kabul edilebilir uzaklığı belirler. Değer ne kadar düşükse sonuç o kadar doğru olur, ama hesaplama daha uzun sürer.",
     exploitTipDetailLabel: "Ayrıntı:",
     exploitTipDetail:
-      "Nash dengesinde iki oyuncunun stratejisi de birbirine karşı MES'tir (Maximally Exploitative Strategies). Bu özellikten yola çıkarak, elde edilen strateji ile Nash dengesi arasındaki uzaklığı şöyle tanımlarız:",
-    exploitTipFormula: "Uzaklık = (Rakibin MES EV'si) - (Rakibin gerçek EV'si)",
+      "Nash dengesinde iki oyuncunun stratejisi de birbirine karşı MES (Maximally Exploitative Strategies) niteliği taşır. Bu özellikten yola çıkarak, elde edilen strateji ile Nash dengesi arasındaki uzaklığı şöyle tanımlarız:",
+    exploitTipFormula: "Uzaklık = (Rakibin MES EV'si) − (Rakibin gerçek EV'si)",
     exploitTipOutro:
       "Bu uzaklık hiçbir zaman negatif olmaz ve yalnızca elde edilen strateji bir Nash dengesinin parçasıysa sıfırdır. Exploitability, iki oyuncunun uzaklıklarının ortalamasıdır.",
     maxIterationsLabel: "Maksimum iterasyon:",

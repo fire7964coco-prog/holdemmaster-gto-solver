@@ -262,7 +262,7 @@ const SRP = {
     ipLabelHi: "BTN (opener)",
   category: "싱글레이즈팟 — BTN vs BB (기본기)",
   categoryEn: "Single Raised Pot — BTN vs BB (Fundamentals)",
-  categoryTr: "Tek raise'li pot — BTN vs BB (temeller)",
+  categoryTr: "Single raised pot — BTN vs BB (temeller)",
   categoryJa: "シングルレイズポット — BTN vs BB（基本）",
   categoryEs: "Single Raised Pot — BTN vs BB (fundamentos)",
   categoryPt: "Single Raised Pot — BTN vs BB (fundamentos)",
@@ -423,7 +423,7 @@ export const PRESETS: Preset[] = [
     lessonEn:
       "The textbook range-advantage spot. Watch how wide a range BTN c-bets small with after BB checks — the ace smashes the opener's range.",
     lessonTr:
-      "Ders kitabı gibi bir range avantajı spot'u. BB check yaptıktan sonra BTN'nin ne kadar geniş bir range ile küçük c-bet yaptığını izle — as, açan oyuncunun range'ine tam oturuyor.",
+      "Ders kitabı gibi bir range avantajı spotu. BB check yaptıktan sonra BTN'nin ne kadar geniş bir range ile küçük c-bet yaptığını izle — as, açan oyuncunun range'ine tam oturuyor.",
     titleJa: "ドライなAハイボード",
     lessonJa:
       "レンジ優位の教科書的スポットです。BBのチェック後、BTNが非常に広いレンジで小さくCベットする理由を観察しましょう（Aはオープンレイザーに有利なカードです）。",
@@ -498,14 +498,14 @@ export const PRESETS: Preset[] = [
     id: "srp-broadway",
     title: "브로드웨이 연결 투톤",
     titleEn: "Connected Broadway Board, Two-Tone",
-    titleTr: "Bağlantılı Broadway board, iki renkli",
+    titleTr: "Bağlantılı broadway board, iki renkli",
     board: "Qs Jd Ts",
     lesson:
       "양쪽 다 맞은 것처럼 보이는 보드. 그런데 BB는 13스팟 중 에퀴티 실현율이 가장 낮습니다 — 77.9%, BTN은 119.4%. BB가 99.9% 체크하는 이유를 핸드 분류 패널에서 확인하세요.",
     lessonEn:
       "A board that looks like it hits both ranges. But BB realizes less equity here than in any of the 13 spots — 77.9% against BTN's 119.4% — and checks 99.9%. The hand-category panel shows why.",
     lessonTr:
-      "İki range'e de oturuyor gibi görünen bir board. Ama BB, 13 spot içinde equity'sini en az burada gerçekleştiriyor — %77,9, BTN ise %119,4 — ve %99,9 sıklıkla check yapıyor. Nedenini el kategorisi paneli gösteriyor.",
+      "İki range'e de oturuyor gibi görünen bir board. Ama BB, 13 spot içinde equity'sini en az burada realize ediyor — %77,9, BTN ise %119,4 — ve %99,9 sıklıkla check yapıyor. Nedenini el kategorisi paneli gösteriyor.",
     titleJa: "ブロードウェイのコネクトボード（2トーン）",
     lessonJa:
       "両者に当たったように見えるボードです。ところがBBのエクイティ実現率は13スポット中で最も低く、77.9%（BTNは119.4%）。99.9%チェックになる理由を分類パネルで確かめましょう。",
@@ -847,7 +847,7 @@ export const PRESETS: Preset[] = [
     lessonEn:
       "Blind vs Blind ranges are wide, so both ranges are weak. Compare the frequencies to the BTN-vs-BB Dry King-High Board spot.",
     lessonTr:
-      "Blind vs blind'da range'ler geniş, bu yüzden iki range de zayıf. Sıklıkları BTN vs BB “Kuru K-high board” spot'uyla karşılaştır.",
+      "Blind vs blind'da range'ler geniş, bu yüzden iki range de zayıf. Sıklıkları BTN vs BB “Kuru K-high board” spotuyla karşılaştır.",
     titleJa: "KTハイボード",
     lessonJa:
       "ブラインド戦はレンジが広く、お互いに弱いのが特徴です。同じKハイボードでも、BTN vs BBのときと頻度がどう違うか比較してみましょう。",

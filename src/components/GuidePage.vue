@@ -2663,7 +2663,7 @@ const M = {
     defPos:
       "Pozisyon dışı (ilk hareket eder — dezavantaj) / pozisyonda (son hareket eder — avantaj). BTN vs BB'de OOP olan BB'dir",
     termEquity: "Equity",
-    defEquity: "Şu an all-in olsaydın pottan alacağın pay — kazanma yüzdesi artı beraberliklerin yarısı",
+    defEquity: "Şu an all-in olsaydın pot'tan alacağın pay — kazanma yüzdesi artı beraberliklerin yarısı",
     defEv: "EV (beklenen değer) — bir aksiyonun ortalamada ne kadar kazandırdığı. Büyük olan daha iyi",
 
     customTitleBefore: "Özel spot çözmek — ",
@@ -2672,13 +2672,13 @@ const M = {
     customTitleAfter: " ① → ⑤ numaraları sırayla izle",
     step1Bold: "① OOP range / ② IP range",
     step1After:
-      " — 13×13 ızgarayı tıklayıp sürükleyerek boya ya da metin olarak yaz: ",
+      " — 13×13 matrisi tıklayıp sürükleyerek boya ya da metin olarak yaz: ",
     step1Hint:
       "22+ = tüm cep çiftleri · A2s+ = A2s ile AKs arası · KTo+ = KTo ile KQo arası. 13×13 ızgarada: köşegen = cep çiftleri, sağ üst = suited, sol alt = offsuit",
     exampleHeader:
       "Yeni misin? Bunları kopyalayıp range alanlarına yapıştır (standart BTN vs BB 100bb — Örnek spotların kullandığı range'lerin aynısı)",
-    exOopLabel: "OOP (BB call)",
-    exIpLabel: "IP (BTN açış)",
+    exOopLabel: "OOP (BB, call eden)",
+    exIpLabel: "IP (BTN, açan)",
     copiedLabel: "Kopyalandı!",
     copyLabel: "Kopyala",
     step3Bold: "③ Board",
@@ -2687,22 +2687,22 @@ const M = {
     step4After:
       " — ilk başta varsayılanları değiştirme. Sadece başlangıç pot ve efektif stack değerlerini kontrol et",
     step4Hint:
-      "Özel spot değerleri, birimi keyfi olan tam sayı chip'lerdir. bb ile düşünmek için 10 chip = 1bb al (ör. pot 55 = 5,5bb). Örnek spotlar ve GTO Trainer bu ölçekle otomatik çevirir.",
+      "Özel spot değerleri, birimi keyfi olan tam sayı çiplerdir. bb ile düşünmek için 10 çip = 1bb al (ör. pot 55 = 5,5bb). Örnek spotlar ve GTO Trainer bu ölçekle otomatik çevirir.",
     step5Bold1: "⑤ Hesapla",
     step5Mid:
       " — önce “Ağacı oluştur”, o bitince “Solver'ı çalıştır” düğmesine bas. “Hesaplama bitti!” yazısı çıkınca üstteki ",
     step5Bold2: "[Sonuçlar]",
     step5After: " sekmesini aç",
     step5Hint:
-      "Hesaplama kendi cihazında yapılır ve birkaç saniyeden birkaç dakikaya kadar sürer. ⑤ ekranındaki [Spot'u paylaş] ile spot bağlantısını kopyalayıp toplulukta sorabilirsin",
+      "Hesaplama kendi cihazında yapılır ve birkaç saniyeden birkaç dakikaya kadar sürer. ⑤ ekranındaki [Spotu paylaş] ile spot bağlantısını kopyalayıp toplulukta sorabilirsin",
 
     resultsTitle: "Sonuç ekranını okumak",
     rTerm1: "Üst şerit",
     rDef1:
-      "Aksiyon dizisi için sahne seçici (flop → bet → call → turn…). O andaki stratejiyi görmek için bir node'a tıkla",
+      "Aksiyon sırası boyunca node seçici (flop → bet → call → turn…). O andaki stratejiyi görmek için bir node'a tıkla",
     rTerm2: "13×13 matris (sol)",
     rDef2:
-      "Her hücre bir eldir; içindeki renk dağılımı aksiyon sıklıklarını gösterir. 🟥 bet/raise (koyu = büyük bet) · 🟩 check/call · soluk hücre = range'de yok. GTO (Oyun Teorisi Optimali) aynı eli karma stratejiyle oynar — aksiyonları sıklığa göre böler, böylece oyunun okunamaz",
+      "Her hücre bir eldir; içindeki renk dağılımı aksiyon sıklıklarını gösterir. 🟥 bet/raise (koyu = büyük bet) · 🟩 check/call · soluk hücre = range'de yok. GTO (Oyun Teorisi Optimali) aynı eli karma stratejiyle oynar — aksiyonları sıklığa göre böler, böylece oyun tarzın okunamaz",
     rTerm3: "Kutucuklar (sağ üst)",
     rDef3: "Tüm range genelinde aksiyon sıklıkları (%) ve combo sayıları",
     rTerm4: "El kategorileri (sağ orta)",
@@ -2714,7 +2714,7 @@ const M = {
 
     lockTitle: "Strateji kilitleme (node lock) — rakip hata yapınca stratejin nasıl değişir?",
     lockTerm1: "Nerede",
-    lockDef1: "Bir spotu kendin çözdükten sonra sonuç ekranında. Üstteki aksiyon dizisinden bir node seç, ardından “Bu node'un stratejisini kilitle” seçeneğine bas. Örnek spotlarda [Sonuçları gör] çözümü hemen gösterir ama bu sonuçlar kilitlenemez — önce [Bu spotu kendin çöz] ile çöz.",
+    lockDef1: "Bir spotu kendin çözdükten sonra sonuç ekranında. Üst şeritteki aksiyon sırasından bir node seç, ardından “Bu node'un stratejisini kilitle” seçeneğine bas. Örnek spotlarda [Sonuçları gör] çözümü hemen gösterir ama bu sonuçlar kilitlenemez — önce [Bu spotu kendin çöz] ile çöz.",
     lockTerm2: "Nasıl",
     lockDef2: "Her aksiyonun yüzdesi (%) mevcut strateji değeriyle başlar. Değerleri toplamı 100 olacak şekilde değiştir, sonra “Kilitle ve yeniden hesapla” düğmesine bas. Örneğin rakip flop'ta hiç fold etmiyorsa → fold 0, diğer aksiyonların toplamı 100. Birden fazla node kilitleyebilirsin.",
     lockTerm3: "Sonuçları okumak",
@@ -2732,7 +2732,7 @@ const M = {
     gradBefore: "Doğru/yanlış diye değil, ",
     gradBold: "EV kaybına (bb)",
     gradAfter:
-      " göre puanlanırsın. GTO aynı elde birkaç aksiyonu karıştırır, bu yüzden düşük sıklıklı bir aksiyon kendiliğinden hata sayılmaz — önemli olan ne kadar EV kaybettirdiği",
+      " göre puanlanırsın. GTO aynı eli birkaç aksiyon arasında karma oynar, bu yüzden düşük sıklıklı bir aksiyon kendiliğinden hata sayılmaz — önemli olan ne kadar EV kaybettirdiği",
     verdictTerm: "Karar eşikleri",
     verdictBefore: "Eşikler ",
     verdictBold: "pot'a göre",
@@ -2748,15 +2748,15 @@ const M = {
       " saklanır. Hesabında tutmak ve diğer cihazlarda devam etmek için HoldemMaster hesabıyla giriş yap — giriş isteğe bağlıdır, her özellik giriş yapmadan da çalışır",
     filterTerm: "Filtreler",
     filterDef:
-      "Yalnızca zayıf olduğun alanlara çalış: single raised pot'lar, 3-bet pot'lar ya da blind vs blind",
+      "Yalnızca zayıf olduğun spot türlerini çalış: single raised pot'lar, 3-bet pot'lar ya da blind vs blind",
 
     myspotTerm: "Spotlarım",
     myspotDef: "Bir spotu kendin çözdükten sonra sonuç ekranında “Bu spotta pratik yap” seçeneğine bas; sorular oluşturulur ve GTO Trainer'daki “Spotlarım” sekmesinde hemen oynamaya başlarsın. Puanlama örnek spotlarla aynı ölçütleri kullanır.",
     myspotHint: "Sorular ve geçmiş yalnızca bu cihazda kalır (en son 20 spot · spot başına 500 deneme). Hesabına kaydedilmez, bu yüzden başka bir cihazda devam edemezsin. Aynı spotu yeniden kaydetmek önceki geçmişini siler. Kilitli bir stratejiyle hesaplanmış sonuçlardan yapılan sorular “Stratejinin bir kısmının sabit olduğu varsayılır” diye işaretlenir.",
 
-    installTitle: "Ana ekrana yükle ve çevrimdışı çalış",
+    installTitle: "Ana ekrana ekle ve çevrimdışı çalış",
     install1:
-      "Bu solver'ı bir uygulama gibi ana ekranına yükleyebilirsin (kurulum dosyası yok). Chrome veya Edge'de adres çubuğunun sağındaki ",
+      "Bu solver'ı bir uygulama gibi ana ekranına ekleyebilirsin (kurulum dosyası yok). Chrome veya Edge'de adres çubuğunun sağındaki ",
     installBold1: "yükleme simgesini",
     install2: " kullan; iPhone'da Safari'de ",
     installBold2: "Paylaş → Ana Ekrana Ekle",
@@ -2773,7 +2773,7 @@ const M = {
     offlineSaved: "Kaydedildi — Örnek spotlar ve GTO Trainer internetsiz çalışır",
     offlineSaving: "Kaydediliyor…",
     offlineNotSaved: "Kaydedilmedi",
-    offlineSaveBtn: "Şimdi kaydet (~2,3MB)",
+    offlineSaveBtn: "Şimdi kaydet (~2,3 MB)",
     offlineFootnote:
       "Özel spot hesaplaması, çevrimiçiyken en az bir kez çalıştırdıktan sonra çevrimdışı da çalışır — solver motoru ilk kullanımda indirilir.",
 
@@ -2806,7 +2806,7 @@ const M = {
     study1:
       "13 örnek spotu sırayla bitir — birbirinin üstüne kurulan bir seri olarak hazırlandı",
     study2:
-      "“Bu el neden check'i de karıştırıyor?” diye merak ediyorsan detay tablosunda aksiyon başına EV'leri karşılaştır",
+      "“Bu el neden bazen check de yapıyor?” diye merak ediyorsan detay tablosunda aksiyon başına EV'leri karşılaştır",
     study3:
       "Aynı spotlarda GTO Trainer ile pratik yaparak kalıcı hale getir — zayıf nokta raporu sana en çok EV kaybettiren durumları gösterir",
     study4: "Range'leri sabit tut, yalnızca board'u değiştir ve karşılaştır (ör. A72 ile 974)",
@@ -2824,7 +2824,7 @@ const M = {
     tDef4: "16-bit tam sayı moduna geç ya da daha az bet boyutu kullan",
     tTerm5: "Matris tamamen gri",
     tDef5:
-      "Rakibin hareket sırasına bakıyorsun — üst şeritten başka bir sahne seç",
+      "Rakibin hareket sırasına bakıyorsun — üst şeritten başka bir node seç",
 
     errTitle: "Düzeltmemiz gereken bir şey mi buldun?",
     err1: "Ekran bozulursa ya da hesaplama donarsa hata ayrıntıları bu cihaza otomatik kaydedilir. ",
@@ -2968,7 +2968,7 @@ const N =
           exampleHeader:
             "Yeni misin? Bunları kopyalayıp range alanlarına yapıştır (standart BTN vs BB 100bb)",
           step4Hint:
-            "Özel spot değerleri, birimi keyfi olan tam sayı chip'lerdir. bb ile düşünmek için 10 chip = 1bb al (ör. pot 55 = 5,5bb).",
+            "Özel spot değerleri, birimi keyfi olan tam sayı çiplerdir. bb ile düşünmek için 10 çip = 1bb al (ör. pot 55 = 5,5bb).",
           airplaneBefore:
             "İnterneti kapat, uygulama çalışmaya devam eder — hesaplamanın ",
           install3: " seçeneğine dokun. Yüklendikten sonra uygulama cihazına kaydedilir, böylece ",

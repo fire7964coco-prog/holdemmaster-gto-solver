@@ -343,9 +343,9 @@ const M = {
   tr: {
     startRange: "① Range'lerle başla",
     viewPresets: "Örnek spotları gör",
-    notRun: "Henüz kendi sonuçlarını hesaplamadın.\nÖrnek sonuçları doğrudan “Örnek spotlar” menüsünde görebilirsin.\nKendi spotunu hesaplamak için ①~⑤ adımlarını tamamla, sonra “Hesapla” düğmesine bas.",
+    notRun: "Henüz kendi sonuçlarını hesaplamadın.\nÖrnek sonuçları doğrudan “Örnek spotlar” menüsünde görebilirsin.\nKendi spotunu hesaplamak için ①–⑤ adımlarını tamamla, sonra ⑤ ekranında “Solver'ı çalıştır” düğmesine bas.",
     running: "Solver çalışıyor…",
-    finalizing: "Son işlemler yapılıyor…",
+    finalizing: "Tamamlanıyor…",
     paused: "Solver duraklatıldı.",
   },
 } as const;

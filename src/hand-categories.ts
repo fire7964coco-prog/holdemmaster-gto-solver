@@ -434,9 +434,9 @@ export const MADE_LABELS_TR: Record<MadeKey, string> = {
   second_pair: "Second pair",
   weak_pair: "Zayıf çift",
   underpair: "Underpair",
-  ace_high: "As high",
-  king_high: "Papaz high",
-  nothing: "El yok",
+  ace_high: "A-high",
+  king_high: "K-high",
+  nothing: "Hazır el yok",
 };
 
 export const DRAW_LABELS_TR: Record<DrawKey, string> = {

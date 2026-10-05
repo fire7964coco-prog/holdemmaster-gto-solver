@@ -304,7 +304,7 @@ const M = {
     stack: "Stack",
     flopOnlyNote: "Yalnızca flop stratejisi. Turn ve river'a da tıklayarak bakmak ister misin? →",
     solveThisSpot: "Bu spotu kendin çöz",
-    readArticle: "Yazıyı oku",
+    readArticle: "Analizi oku",
     // «미리 계산» 표현은 쓰지 않는다 (확정표 §1-8)
     loadError: (e: string) => `Sonuçlar yüklenemedi: ${e}`,
     loading: "Sonuçlar yükleniyor…",
