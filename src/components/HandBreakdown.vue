@@ -65,7 +65,7 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { aggregateBreakdown } from "../hand-categories";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 
 const M = {
   ko: {
@@ -146,6 +146,12 @@ const M = {
     draws: "Draws",
     noDraws: "Draw की जानकारी नहीं है",
   },
+  tr: {
+    hands: "Eller",
+    noHands: "Gösterilecek el yok",
+    draws: "Draw'lar",
+    noDraws: "Draw bilgisi yok",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)
@@ -193,7 +199,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     const breakdown = computed(() =>
       aggregateBreakdown(props.cards, props.weights, props.board)
     );

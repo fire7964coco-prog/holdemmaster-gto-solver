@@ -27,7 +27,7 @@ export type FeedbackLabels = {
   errors: Record<string, string>;
 };
 
-export const feedbackLabels: LocaleDict<FeedbackLabels> = { // TR-TODO: tr 블록이 들어오면 Record<Locale, …>로 되돌린다
+export const feedbackLabels: LocaleDict<FeedbackLabels> = {
   ko: {
     formTitle: "솔버 써 보니 어땠나요?",
     tabReview: "후기",
@@ -532,6 +532,48 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = { // TR-TODO: tr 블�
     locale: "थोड़ी देर बाद फिर कोशिश करें।",
   },
   },
+  tr: {
+    formTitle: "Solver'ı denedin, nasıldı?",
+    tabReview: "Yorum",
+    ratingLabel: "Puan (isteğe bağlı)",
+    placeholderReview: "Birkaç kelime yaz — iyisiyle kötüsüyle, olduğu gibi",
+    downsideToggle: "+ Daha iyi olabilecekleri de yaz",
+    downsidePlaceholder: "Daha iyi olabilecekler (isteğe bağlı)",
+    postingAs: (name) => `Paylaşan: ${name}`,
+    change: "Değiştir",
+    nicknameSave: "Adı kaydet",
+    nicknameCancel: "İptal",
+    nicknameEmailWarn: "Adın şu an e-postanın ilk kısmı. Herkese açık olmadan önce bir ad seç.",
+    submit: "Paylaş",
+    submitEdit: "Güncelle",
+    loginTitle: "Giriş yap, yazdığın olduğu gibi paylaşılsın",
+    loginGoogle: "Google ile devam et",
+    loginKakao: "Kakao ile devam et",
+    linkWarn: "Bağlantı eklenemez",
+    saved: "Paylaşıldı. Teşekkürler!",
+    errors: {
+    login: "Giriş yapman gerekiyor.",
+    unavailable: "Birazdan tekrar dene.",
+    body_short: "En az birkaç karakter yaz.",
+    body_long: "En fazla 600 karakter.",
+    downside_long: "Daha iyi olabilecekler için en fazla 200 karakter.",
+    link: "Bağlantı eklenemez.",
+    rating: "Geçersiz puan.",
+    rating_needs_body: "Birkaç kelime ekle — metinsiz puan kabul etmiyoruz.",
+    rate: "Birkaç dakika sonra tekrar dene.",
+    nickname_confirm: "Paylaşmadan önce bir ad seç.",
+    nickname_short: "Ad en az 2 karakter olmalı.",
+    nickname_long: "Ad en fazla 20 karakter olabilir.",
+    nickname_link: "Ad, adres veya e-posta içeremez.",
+    nickname_impersonation: "Resmî hesap veya ekip üyesi gibi görünen adlar kullanılamaz.",
+    image_type: "Yalnızca görsel dosyaları (jpg, png, webp).",
+    image_size: "En fazla 5 MB boyutunda bir görsel yükle.",
+    already_requested: "Yeniden incelenmesini zaten istedin.",
+    not_found: "Bulunamadı. Sayfayı yenile.",
+    bad_input: "Birazdan tekrar dene.",
+    locale: "Birazdan tekrar dene.",
+  },
+  },
 };
 
 // APP_ONLY_COPY
@@ -545,7 +587,7 @@ export type FeedbackAppLabels = {
   nicknameLabel: string;
 };
 
-export const appLabels: LocaleDict<FeedbackAppLabels> = { // TR-TODO: tr 블록이 들어오면 Record<Locale, …>로 되돌린다
+export const appLabels: LocaleDict<FeedbackAppLabels> = {
   ko: {
     menu: "후기 남기기",
     resultPrompt: "써 보니 어땠나요?",
@@ -641,5 +683,13 @@ export const appLabels: LocaleDict<FeedbackAppLabels> = { // TR-TODO: tr 블록�
     close: "बंद करें",
     viewReviews: "समीक्षाएँ देखें",
     nicknameLabel: "सार्वजनिक नाम",
+  },
+  tr: {
+    menu: "Yorum yaz",
+    resultPrompt: "Senin için nasıldı?",
+    thirdSolvePrompt: "Üçüncü hesaplamanı bitirdin. Deneyimini birkaç kelimeyle anlat",
+    close: "Kapat",
+    viewReviews: "Yorumları gör",
+    nicknameLabel: "Herkese açık ad",
   },
 };

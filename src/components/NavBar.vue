@@ -109,7 +109,7 @@ import { useStore } from "../store";
 import { ComputerDesktopIcon, ChartBarIcon } from "@heroicons/vue/24/solid";
 import { mainSiteUrl } from "../outbound";
 import { BRAND_NAME, IS_NPOKERS } from "../brand";
-import { i18n, setLocale, dictKey } from "../i18n";
+import { i18n, setLocale } from "../i18n";
 import { navResults } from "../nav-labels";
 import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 import { openFeedback } from "../solver-feedback"; // F1_FEEDBACK_ONLY
@@ -216,6 +216,14 @@ const M = {
     communitySuffix: " कम्युनिटी",
     langSwitchLabel: "भाषा चुनें",
   },
+  tr: {
+    resultsDisabledHint: "⑤ Hesapla bitince açılır",
+    solver: "Solver",
+    community: "HoldemMaster",
+    // 앞 공백 U+00A0 (확정표 §3-3)
+    communitySuffix: "\u00a0Topluluğu",
+    langSwitchLabel: "Dil seç",
+  },
 } as const;
 
 export default defineComponent({
@@ -225,7 +233,7 @@ export default defineComponent({
   },
   setup() {
     // 왼쪽 탭 이름은 nav-labels.ts가 정본 — 계산 완료 뒤 RunSolver의 이동 버튼과 글자가 같아야 한다
-    const L = computed(() => ({ ...M[dictKey(M)], results: navResults[i18n.locale] }));
+    const L = computed(() => ({ ...M[i18n.locale], results: navResults[i18n.locale] }));
     const onLocaleChange = (event: Event) => {
       const value = (event.target as HTMLSelectElement).value;
       if (
@@ -247,7 +255,7 @@ export default defineComponent({
     };
     return {
       store: useStore(),
-      feedbackFeatures, openFeedback, feedbackMenu: computed(() => (appLabels[i18n.locale] ?? appLabels.en).menu), // F1_FEEDBACK_ONLY
+      feedbackFeatures, openFeedback, feedbackMenu: computed(() => appLabels[i18n.locale].menu), // F1_FEEDBACK_ONLY
       // 간판은 빌드별로 다르다 (src/brand.ts — 트레이너 빌드/우리 커뮤니티용 vs npokers 빌드)
       brandName: computed(() => BRAND_NAME[i18n.locale]),
       // 언어 셀렉터는 npokers 빌드 전용 — 트레이너는 본진 언어에 페깅한다(위 템플릿 주석)

@@ -7,7 +7,7 @@
  *   한국어 브라우저만 한국어, 나머지는 전부 영어(포커 공용어).
  * - 문구 사전은 «각 컴포넌트 파일 안»에 둔다(const M = { ko, en }). 파일 하나에 모으면
  *   화면 작업마다 두 파일을 오가야 하고, 병렬 작업 시 충돌한다.
- *   컴포넌트에서: const L = computed(() => M[dictKey(M)]);  (2026-10-05 tr 회차부터 — 블록이 없으면 en)
+ *   컴포넌트에서: const L = computed(() => M[i18n.locale]);
  * - E2E 스크립트는 한국어 문구를 검사하므로 페이지 생성 시
  *   localStorage.setItem("solver.locale", "ko")를 미리 심는다 (헤드리스 크롬은 영어 브라우저다).
  */
@@ -190,9 +190,9 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
     description: "बिना इंस्टॉल किए अपने ब्राउज़र में मुफ़्त GTO सॉल्वर चलाएँ। Range, board और bet size के आधार पर टेक्सस होल्डम की postflop रणनीति की गणना करें। HoldemMaster की पेशकश।",
   },
   tr: {
-    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em", /* TR-TODO */
+    title: "HoldemMaster GTO Trainer — Texas Hold'em için ücretsiz GTO Solver ve Trainer",
     description:
-      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.", /* TR-TODO */
+      "Tarayıcında doğrudan çalışan ücretsiz GTO solver — kurulum gerekmez. Texas Hold'em postflop stratejisini range, board ve bet boyutuna göre hesapla. HoldemMaster tarafından.",
   },
 };
 
@@ -263,9 +263,9 @@ const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> =
     description: "बिना इंस्टॉल किए अपने ब्राउज़र में मुफ़्त GTO सॉल्वर चलाएँ। Range, board और bet size के आधार पर टेक्सस होल्डम की postflop रणनीति की गणना करें।",
   },
   tr: {
-    title: "npokers — Free Online GTO Solver for Texas Hold'em", /* TR-TODO */
+    title: "npokers — Texas Hold'em için ücretsiz online GTO Solver",
     description:
-      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.", /* TR-TODO */
+      "Tarayıcında doğrudan çalışan ücretsiz GTO solver — kurulum gerekmez. Texas Hold'em postflop stratejisini range, board ve bet boyutuna göre hesapla.",
   },
 };
 
@@ -322,15 +322,8 @@ const applyDocumentLocale = (locale: Locale) => {
 
 export const i18n = reactive({ locale: detect() });
 
-/* 🔴 tr 번역 회차 임시 안전망 (2026-10-05 뼈대 연결) — 사전에 현재 언어 블록이 «없으면» en.
- * 각 사전(const M = { ko, en, … })을 `M[i18n.locale]` 대신 `M[dictKey(M)]`로 읽는다.
- * tr 블록이 들어오면 그대로 tr을 고른다(되돌릴 필요 없음). 이 함수가 없으면 Locale에 "tr"이
- * 들어간 순간 tr 블록이 없는 사전 전부가 TS7053으로 빌드를 막는다. */
-export const dictKey = <M extends { en: unknown }>(m: M): keyof M =>
-  (Object.prototype.hasOwnProperty.call(m, i18n.locale) ? i18n.locale : "en") as keyof M;
-
-/** 언어별 라벨 파일(.ts)의 사전 타입 — tr 블록은 아직 선택. TR-TODO: 번역이 끝나면 Record<Locale, T>로 되돌린다. */
-export type LocaleDict<T> = Record<Exclude<Locale, "tr">, T> & Partial<Record<"tr", T>>;
+/** 언어별 라벨 파일(.ts)의 사전 타입 — 13개 언어 블록이 전부 있어야 빌드가 통과한다. */
+export type LocaleDict<T> = Record<Locale, T>;
 applyDocumentLocale(i18n.locale);
 
 export const setLocale = (locale: Locale) => {

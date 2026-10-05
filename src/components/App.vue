@@ -99,7 +99,7 @@ import { viewFromUrl } from "../pwa";
 // 빌드 2벌 분기 — npokers 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
 import { TrainerPage, PresetsPage, bootstrapAccount } from "@features";
 import { HandReviewPage, handReviewLabels, FEATURE_TRAINER } from "@features"; // R2_REVIEW_ONLY
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 
 import NavBar from "./NavBar.vue";
 import SideBar from "./SideBar.vue";
@@ -206,6 +206,20 @@ export default defineComponent({
         "run-solver": "Solver चलाएँ",
         treeEdit: "Tree देखें और बदलें",
   },
+      tr: {
+        about: "Hakkında",
+        guide: "Nasıl kullanılır — adım adım",
+        presets: "Örnek spotlar — tek tıkla örnekler",
+        trainer: "GTO Trainer — her kararın EV'sini gör",
+        preflop: "Preflop tabloları — açılış ve savunma range'leri",
+        equity: "Equity hesaplayıcı — el ve range equity'si",
+        "oop-range": "OOP range",
+        "ip-range": "IP range",
+        board: "Board",
+        "tree-config": "Ağaç ayarları",
+        "run-solver": "Solver'ı çalıştır",
+        treeEdit: "Ağacı önizle ve düzenle",
+      },
       en: {
         about: "About",
         guide: "How to Use — Step by Step",
@@ -352,7 +366,7 @@ export default defineComponent({
       },
     } as const;
     const header = computed(() => {
-      const messages = HEADERS[dictKey(HEADERS)];
+      const messages = HEADERS[i18n.locale];
       if (store.sideView === "hand-review") return FEATURE_TRAINER ? handReviewLabels(i18n.locale).title : ""; // R2_REVIEW_ONLY
       const base = messages[store.sideView];
       return store.sideView === "tree-config" && store.treeEditOpen

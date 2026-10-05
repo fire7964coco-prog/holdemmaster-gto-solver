@@ -79,7 +79,7 @@
 import { computed, defineComponent, nextTick, ref } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { formatAmount } from "../utils";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 import { Position } from "../preflop-charts";
 import {
   Caller,
@@ -238,6 +238,18 @@ const M = {
       `Bet size खाली थे, इसलिए डिफ़ॉल्ट मान भी भर दिए गए — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
     next: "आगे: ③ Board",
   },
+  tr: {
+    title: "Range'leri pozisyona göre doldur",
+    note: "Open yapan ve call eden pozisyonu seç, sonra aşağıdaki düğmeye bas — iki range, pot ve stack tek seferde dolar. Range'ler Preflop tablosundakilerle aynı (6-max cash, 100bb).",
+    opener: "Open",
+    caller: "Call",
+    apply: "İki range'i de doldur",
+    applied: (oop: string, ip: string, pot: string, stack: string) =>
+      `Range'ler dolduruldu: ${oop} (OOP) · ${ip} (IP). Pot ${pot}bb · Stack ${stack}bb`,
+    betsFilled: (flop: string, later: string, raise: string) =>
+      `Bet boyutları boştu, varsayılanlar da dolduruldu — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
+    next: "Sonraki: ③ Board",
+  },
 } as const;
 
 const BET_FIELDS = [
@@ -266,7 +278,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const config = useConfigStore();
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
 
     const opener = ref<Position>("BTN");
     const caller = ref<Caller>("BB");

@@ -327,10 +327,37 @@ export const M = {
     unanalysed: "विश्लेषण नहीं हुआ", scopeTitle: "समीक्षा की मान्यताएँ",
     practiceSpot: "इस स्पॉट का अभ्यास करें", practiceBusy: "अभ्यास के सवाल बनाए जा रहे हैं…", practiceUnavailable: "अभ्यास के सवाल नहीं बन सकते: आपकी रेंज का कोई हैंड इस स्पॉट तक नहीं पहुँचता, हर एक्शन का EV उपलब्ध नहीं है, या चुनने के लिए सिर्फ़ एक ही एक्शन है।", practiceReferenceNote: "यह स्पॉट बहुत कम बार आता है, इसलिए इसके मान भरोसेमंद नहीं हैं। इसे सिर्फ़ संदर्भ के लिए देखें; यह गलतियों के रिव्यू में नहीं जोड़ा जाता।", practiceError: "अभ्यास के सवाल सहेजे नहीं जा सके। फिर से कोशिश करें।",
   },
+  tr: {
+    title: "El analizi", situation: "Durum", hero: "Senin pozisyonun", opener: "Açan pozisyon", caller: "Call eden pozisyon", threeBettor: "3-bet yapan pozisyon", preflop: "Preflop",
+    singleRaised: "Open · Call", threeBet: "3-bet pot", multiway: "3+ oyuncu", notSupported: "Analiz edilemez",
+    unavailableScenario: "Bu durumun verisi henüz hazır değil.", fileMissing: "Bu flop için sonuç dosyası yok.",
+    loadFailed: "Sonuç dosyası yüklenemedi.", invalidData: "Sonuç dosyası okunamadı.",
+    unsupportedAction: "Bu aksiyon analiz edilemez.", unsupportedSize: "Bu boyut analiz edilemez.",
+    evMissing: "EV yok", referenceOnly: "Yalnızca referans", mixedAction: "Solver da kullanıyor",
+    precomputed: "Önceden hesaplanmış sonuç", onDevice: "Bu cihazda hesaplandı", flop: "Flop", turn: "Turn", river: "River",
+    chooseHand: "2 kartın", chooseFlop: "3 flop kartı", chooseTurn: "Turn kartı", chooseRiver: "River kartı",
+    result: "Sonuçlar", totalLoss: "Toplam kayıp",
+    best: "En iyi oyun", good: "Kabul edilebilir", mistake: "Bu oyunu tekrar incele",
+    noResults: "Sonuçları görmek için kartlarını seç ve aksiyonları gir.", chooseAction: "Oynanan aksiyonu seç.",
+    opponentResponse: "Rakibin senin oyununa cevabı", foldingHands: "Fold eden eller",
+    handGrid: "El tablosu", matchedSize: "Boyut eşlendi {actual} → {used}",
+    undo: "Geri al", newHand: "Yeni el", loading: "Veri yükleniyor…", solving: "Hesaplanıyor…",
+    solveFailed: "Bu street'in hesaplaması bitirilemedi.", retry: "Tekrar dene", complete: "El bitti",
+    check: "Check", fold: "Fold", call: "Call", bet: "Bet", raise: "Raise", allin: "All-in",
+    scopeNote: "Ücretsiz · Online 6-max cash, 100bb. Sonuçlar bar oyunlarına veya turnuvalara uymayabilir. 3-bet pot'lar hazırlanıyor; multiway pot'lar analiz edilemez.",
+    referenceNote: "Ulaşma payları çarpımı {threshold} altında kalan spot'lar hata sayısına ve toplam kayba dahil edilmez.",
+    evMissingNote: "Kaybı değerlendirmek için EV yok. Yalnızca sıklıklar gösteriliyor.", reach: "Ulaşma payları çarpımı",
+    pot: "Pot", heroOutsideRange: "Bu el, seçilen pozisyonun varsayılan range'inin dışında.",
+    hand: "Elin",
+    navTitle: "El analizi", cancel: "İptal",
+    noCompatibleHands: "Bu spot'ta kartlarınla çakışmayan bir rakip eli yok.", otherSize: "Diğer boyut",
+    unanalysed: "Analiz edilmedi", scopeTitle: "Analiz varsayımları",
+    practiceSpot: "Bu spot'u çalış", practiceBusy: "Pratik soruları hazırlanıyor…", practiceUnavailable: "Pratik soruları oluşturulamıyor: range'indeki hiçbir el bu spot'a ulaşmıyor, aksiyon başına EV'ler eksik ya da seçilecek tek bir aksiyon var.", practiceReferenceNote: "Bu spot'a çok nadir ulaşılıyor, değerler güvenilir değil. Yalnızca referans olarak kullan; hata tekrarına eklenmez.", practiceError: "Pratik soruları kaydedilemedi. Tekrar dene.",
+  },
 } as const;
 
 export type HandReviewLabelKey = keyof typeof M.en;
 export type HandReviewLabels = Record<HandReviewLabelKey, string>;
 // This assignment checks both the locale set and every required key at build time.
-const checkedLabels: LocaleDict<HandReviewLabels> = M; // TR-TODO: tr 블록이 들어오면 Record<Locale, …>로 되돌린다
-export const handReviewLabels = (locale: Locale): HandReviewLabels => checkedLabels[locale] ?? checkedLabels.en;
+const checkedLabels: LocaleDict<HandReviewLabels> = M;
+export const handReviewLabels = (locale: Locale): HandReviewLabels => checkedLabels[locale];

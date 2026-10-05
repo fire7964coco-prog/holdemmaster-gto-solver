@@ -60,7 +60,7 @@ import {
   formatAmount,
 } from "../utils";
 import { useStore } from "../store";
-import { i18n, localizeNumber, dictKey } from "../i18n";
+import { i18n, localizeNumber } from "../i18n";
 import {
   ChanceReports,
   Spot,
@@ -246,6 +246,14 @@ const M = {
     action: (name: string): string =>
       ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
+  tr: {
+    strategyCombos: "Strateji (combo)",
+    strategy: "Strateji",
+    equity: "Equity",
+    // 액션명은 영어 그대로 (확정표 §3-1)
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({
@@ -284,7 +292,7 @@ export default defineComponent({
 
   setup(props, context) {
     const store = useStore();
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     const chartParentDiv = ref<HTMLDivElement | null>(null);
     const chartParentDivHeight = ref(0);
 

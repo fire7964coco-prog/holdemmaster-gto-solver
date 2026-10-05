@@ -10,7 +10,7 @@
  */
 import { cardText } from "./utils";
 import { C } from "./theme";
-import { i18n, localizeNumber, dictKey } from "./i18n";
+import { i18n, localizeNumber } from "./i18n";
 
 // 카드에 그려 넣는 고정 문구 — 카드 언어는 현재 화면 언어를 따른다
 const CARD_TEXT = {
@@ -158,6 +158,18 @@ const CARD_TEXT = {
       `Kerugian EV ${bb}bb${streak > 1 ? ` · streak ${streak} hari` : ""}`,
     invite: "Cuba cabaran yang sama",
   },
+  tr: {
+    // 도구명은 brand.ts와 같은 표기 · 일일 퍼즐 = «Günün sorusu», streak = «seri»(확정표 ⑳)
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "Her gün 1 soru · herkese aynı soru",
+    heading: "Günün GTO sorusu",
+    board: "Board",
+    hand: "Elim",
+    result: (verdict: string) => `Sonucum: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `EV kaybı ${bb}bb${streak > 1 ? ` · ${streak} günlük seri` : ""}`,
+    invite: "Bugünün sorusunu sen de çöz",
+  },
 } as const;
 
 export type DailyCardInput = {
@@ -285,7 +297,7 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  const T = CARD_TEXT[dictKey(CARD_TEXT)];
+  const T = CARD_TEXT[i18n.locale];
 
   // 상단 브랜드 줄: 앰버 배지(스페이드) + 서비스명
   roundedRect(ctx, 72, 72, 92, 92, 24);

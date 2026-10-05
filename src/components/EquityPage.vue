@@ -293,7 +293,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 import { cardText } from "../utils";
 import { noteToolUsed } from "../pwa";
 import {
@@ -1032,6 +1032,65 @@ const M = {
       unknown: "Ralat berlaku semasa mengira. Cuba tekan Kira sekali lagi.",
     } as Record<string, string>,
   },
+  tr: {
+    intro:
+      "Belirli bir ele ya da bütün bir range'e karşı kazanma şansın. Preflop için board'u boş bırak; " +
+      "flop, turn veya river için 3/4/5 kart seç.",
+    heroTitle: "① Senin elin",
+    heroHint: "Aşağıdan 2 kart seç",
+    fill: "Buradan doldur",
+    villainTitle: "② Rakip",
+    modeHand: "Ele karşı",
+    modeRange: "Range'e karşı",
+    // ⚠ «0.75»의 소수점은 입력 문법이다 — 쉼표로 바꾸면 파서가 못 읽는다 (localizeNumber 금지 구역)
+    rangePlaceholder: "örn. 22+,AQs+,K8s:0.75",
+    // 버튼 이름은 PreflopChartPage의 복사 버튼과 «글자까지» 같아야 한다
+    rangeNote:
+      "Preflop tablolarındaki [Range metnini kopyala] çıktısını yapıştır. “K8s:0.75” gibi ağırlıklı yazımlar olduğu gibi uygulanır.",
+    anyTwo: "Herhangi iki kart",
+    rangeError: (token: string) => `Okunamadı: ${token}`,
+    // tr: % 앞붙임 «%12,3» · 천단위 «1.326» (확정표 §2) — 변수 뒤 접미사 없음(§6)
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos.toLocaleString("tr-TR")} combo · tüm combo'lar içinde %${percent.replace(".", ",")}`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Boş = preflop (3/4/5 kart da olur)",
+    boardHintBad: "Board'da 0, 3, 4 veya 5 kart olmalı.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Hesapla",
+    computing: "Hesaplanıyor…",
+    stop: "Durdur",
+    clear: "Hepsini temizle",
+    resultTitle: "Sonuç",
+    resultEmpty: "İki kartını ve rakibin elini ya da range'ini seç, sonra Hesapla'ya bas.",
+    vsSide: (value: string) => `Rakip %${value}`,
+    win: "Kazanma",
+    tie: "Beraberlik",
+    lose: "Kaybetme",
+    combos: "Rakip combo'ları",
+    badgeExact: "Kesin",
+    badgeApprox: "Yaklaşık (±0,2 puan)",
+    exactNote: (n: number) => `${n.toLocaleString("tr-TR")} olasılığın tamamı sayıldı`,
+    approxNote: (n: number) =>
+      `Tek tek saymak için çok fazla olasılık var — ${n.toLocaleString("tr-TR")} rastgele runout örneklendi`,
+    howTitle: "Nasıl okunur",
+    how1: "Equity = kazanma % + beraberliklerin yarısı. Şu an all-in olsaydın pot'tan alacağın pay budur.",
+    how2: "Bir range'e karşı, senin kartların veya board tarafından bloklanan combo'lar otomatik olarak çıkarılır.",
+    how3: "“Kesin” rozeti her olasılığın sayıldığı anlamına gelir; “Yaklaşık” ise rastgele bir örneklemdir.",
+    limitTitle: "Bu hesaplayıcının kapsamı",
+    // tr: solver도 2인만 지원 — en의 «multiway는 솔버가 담당» 서술을 옮기지 않는다(hi와 같은 처리). «Özel spot» = 사이드바 customLabel
+    limitBody:
+      "Bu araç yalnızca iki oyuncu arasındaki all-in equity'yi hesaplar. Range vs range ve sonraki bahis line'ları için " +
+      "Özel spot'taki solver'ı kullan. Multiway pot'lar desteklenmiyor.",
+    errors: {
+      "need-hero": "Önce iki kartını seç.",
+      "bad-board": "Board'da 0, 3, 4 veya 5 kart olmalı.",
+      "bad-card": "Geçersiz kart değeri.",
+      duplicate: "Aynı kart iki kez kullanılamaz.",
+      "empty-range": "Rakip range'i boş.",
+      "no-combos": "Kartlar çıkarıldıktan sonra rakibe hiç combo kalmadı.",
+      unknown: "Hesaplama sırasında bir şeyler ters gitti.",
+    } as Record<string, string>,
+  },
 } as const;
 
 const CAPACITY: Record<Target, number> = { hero: 2, villain: 2, board: 5 };
@@ -1040,7 +1099,7 @@ export default defineComponent({
   components: { BoardSelectorCard, CardSlot },
 
   setup() {
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
 
     // npokers 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
     noteToolUsed();

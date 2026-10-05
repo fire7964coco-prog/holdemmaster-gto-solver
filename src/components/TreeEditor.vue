@@ -260,7 +260,7 @@ import { TreeManager } from "../../pkg/tree/tree";
 
 import { CheckIcon } from "@heroicons/vue/20/solid";
 import { TrashIcon } from "@heroicons/vue/24/outline";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 
 const M = {
   ko: {
@@ -467,6 +467,23 @@ const M = {
     addedLines: "जोड़ी गई lines:",
     removedLines: "हटाई गई lines:",
   },
+  tr: {
+    treeError: "Hata: Ağaç oluşturulamadı (bozuk bir ağaç mı yüklendi?)",
+    pot: "Pot",
+    stack: "Stack",
+    noActions: "(Aksiyon yok)",
+    wins: "kazanır",
+    invalidTerminals: "Geçersiz uç node'lar:",
+    addBetAction: "Bet aksiyonu ekle",
+    removeNode: "Seçili node'u sil",
+    betAmount: "Bet miktarı:",
+    // tr «(%35 pot)» — ResultNav.betPot와 같은 꼴 (접미사 회피, 확정표 §6)
+    potRate: (pct: string) => `(%${pct} pot)`,
+    saveEdits: "Değişiklikleri kaydet",
+    cancelEdits: "Değişiklikleri iptal et",
+    addedLines: "Eklenen dallar:",
+    removedLines: "Silinen dallar:",
+  },
 } as const;
 
 export default defineComponent({
@@ -482,7 +499,7 @@ export default defineComponent({
 
   setup(_, context) {
     const navDiv = ref(null as HTMLDivElement | null);
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
 
     const config = useConfigStore();
 

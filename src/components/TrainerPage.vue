@@ -599,7 +599,7 @@ import {
   oopLabelOf,
   presetTitleById,
 } from "../presets";
-import { i18n, localizeNumber, dictKey } from "../i18n";
+import { i18n, localizeNumber } from "../i18n";
 import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
 import { cardText, formatBb } from "../utils";
@@ -1934,13 +1934,120 @@ const M = {
     syncFailed: (msg: string) => `Penyegerakan gagal: ${msg}`,
     signInFailed: (msg: string) => `Log masuk gagal: ${msg}`,
   },
+  tr: {
+    loadFailed: "GTO Trainer verileri yüklenemedi:",
+    loading: "GTO Trainer yükleniyor…",
+    review: (n: number) => `Tekrar (${n})`,
+    daily: "Günün sorusu",
+    dailyStreakLabel: "Günün sorusu",
+    done: "Tamam",
+    solved: "Çözülen",
+    // 확정표 §5-4 — «7 günlük seri» (접미사가 변수 아닌 günlük에 붙는다)
+    dayStreakSuffix: " günlük seri",
+    bestPrefix: "/ en iyi",
+    streakLabel: "Seri",
+    totalLossLabel: "Toplam EV kaybı",
+    avgLossLabel: "Ortalama EV kaybı",
+    goodRateLabel: "İyi karar oranı",
+    weaknessTitle: "Zayıf nokta bulucu",
+    // 확정표 §6 — 변수 뒤 접미사 금지 → «ortalama %{pct} pot»
+    avgOfPot: (pct: string) => `ortalama %${pct} pot`,
+    handCount: (n: number) => `(${n} el)`,
+    notSolved: "Denenmedi",
+    weakestBefore: "En büyük kayıp: ",
+    weakestAfter: " —",
+    practiceThis: "Bu spot türünü çalış",
+    weaknessHint: "Zayıf noktalarını görmek için her kategoride en az 3 el çöz.",
+    // 확정표 §6 — «{name}'ın hesabına» 대신 «라벨: 값» 꼴
+    accountBefore: "Kaydedildi — hesap: ",
+    accountAfter: "",
+    syncingNow: "Eşitleniyor…",
+    syncNow: "Şimdi eşitle",
+    signOutLabel: "Çıkış yap",
+    localOnlyBefore: "İlerlemen ",
+    localOnlyBold: "yalnızca bu cihazda",
+    localOnlyAfter:
+      " kayıtlı. Bir HoldemMaster hesabı bağlarsan her cihazda kaldığın yerden devam edebilirsin.",
+    googleSignIn: "Google ile devam et",
+    kakaoSignIn: "Kakao ile devam et",
+    footerLine: (nodes: number, pct: number) =>
+      `13 örnek spot · ${nodes} karar node'u · hedef sapma %${pct}`,
+    details: "Ayrıntılar ↓",
+    toAct: "oynayacak",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Aksiyonlar:",
+    boardLabel: "Board",
+    myHand: "Elin",
+    yourChoice: "Seçimin",
+    prompt: "Ne oynarsın?",
+    bestEvTag: " · En yüksek EV",
+    evLoss: "EV kaybı",
+    mobileDetailTitle: "Aksiyona göre sıklık ve EV",
+    mixedNote:
+      "Karma stratejiler yanlış sayılmaz — puanlama, aksiyonlar arasındaki EV farkına göre yapılır.",
+    dailyDone: "Günün sorusu tamam",
+    dailyDoneDesc:
+      "Bugün herkes aynı soruyu çözüyor. Sonucunu paylaş, diğer oyuncularla karşılaştır.",
+    makeCard: "Sonuç kartı oluştur",
+    boardShow: "Bugünün skor tablosunu gör",
+    boardHide: "Skor tablosunu gizle",
+    boardLoading: "Yükleniyor…",
+    boardCount: (n: number) => `Bugün ${n} oyuncu`,
+    boardMyRank: (r: number) => `Sıram #${r}`,
+    boardLoginHint:
+      "Adının skor tablosunda görünmesi için giriş yap — tabloyu herkes görebilir.",
+    boardUnavailable: "Skor tablosu henüz kullanılamıyor.",
+    copied: "Kopyalandı",
+    copyResult: "Sonuç metnini kopyala",
+    openCommunity: "Topluluğu aç →",
+    pasteHintBefore: "Toplulukta ",
+    pasteHintBold: "[✏️ Yaz]",
+    pasteHintAfter: " düğmesine bas ve yapıştır.",
+    keepPracticing: "Pratiğe devam",
+    nextHand: "Sonraki el",
+    readArticle: "Spot analizini oku →",
+    viewFull: "Tam çözümü gör",
+    resultTitle: "Sonuçlar",
+    resultHintBefore: "Bir aksiyon seçtiğinde burada ",
+    resultHintBold: "her aksiyonun sıklığı ve EV'si",
+    resultHintAfter: " ile seçiminin sana kaç bb'ye mal olduğu görünür.",
+    gtoNoteBefore:
+      "GTO aynı elde aksiyonları karıştırır — düşük sıklıklı bir seçim otomatik olarak hata değildir. Ölçü, ",
+    gtoNoteBold: "pot'a oranla",
+    gtoNoteAfter: " EV kaybıdır: ≤%0,35 En iyi oyun · ≤%1 Kabul edilebilir · daha fazlası Bu spotu tekrar et.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Bu spot için (pot: ${pot}bb): En iyi oyun ≤${best}bb · Kabul edilebilir ≤${good}bb.`,
+    resetHistoryLabel: "Geçmişi sıfırla",
+    cardAlt: "Günün sorusu sonuç kartı",
+    shareApps: "Paylaş",
+    saveImage: "Görseli kaydet",
+    close: "Kapat",
+    cardHintBefore:
+      "Kartını bir grup sohbetinde ya da sosyal medyada paylaş — gören herkes bugün ",
+    cardHintBold: "aynı soruyu",
+    cardHintAfter: " çözer. Kartta cevap asla görünmez.",
+    verdictBest: "En iyi oyun",
+    verdictGood: "Kabul edilebilir",
+    verdictMiss: "Bu spotu tekrar et",
+    promptCopy: "Aşağıdaki metni kopyala",
+    shareText:
+      // 커뮤니티에 붙여넣는 글 — 읽는 사람에게 말한다 (&lang=tr로 받은 사람도 터키어로 연다)
+      "Günün GTO sorusu — sen de dene: https://solver.holdemmaster.com/?view=trainer&lang=tr",
+    confirmReset: "Bu cihazdaki tüm GTO Trainer geçmişi silinsin mi?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} kaydedildi · diğer cihazlardan ${merged} alındı`,
+    syncSaved: (uploaded: number) => `${uploaded} kaydedildi`,
+    syncFailed: (msg: string) => `Eşitleme başarısız: ${msg}`,
+    signInFailed: (msg: string) => `Giriş başarısız: ${msg}`,
+  },
 } as const;
 
 export default defineComponent({
   components: { CustomTrainerPage },
   setup() {
     const store = useStore();
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     /* 두 문장을 잇는 공백 — 서양어는 필요하고, CJK는 「。」가 이미 여백을 품고 있어
      * 넣으면 오히려 벌어진다. 템플릿의 줄바꿈에 맡기면 전 언어가 공백을 받는다 */
     const sentenceGap = computed(() =>
@@ -2372,7 +2479,7 @@ export default defineComponent({
 
     return {
       customTrainerState,
-      customLabels: computed(() => customTrainerLabels[dictKey(customTrainerLabels)]),
+      customLabels: computed(() => customTrainerLabels[i18n.locale]),
       categories,
       category,
       bank,

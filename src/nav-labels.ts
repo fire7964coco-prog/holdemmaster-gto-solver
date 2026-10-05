@@ -24,5 +24,5 @@ export const navResults: Record<Locale, string> = {
   id: "Hasil",
   ms: "Hasil",
   hi: "परिणाम",
-  tr: "Results", /* TR-TODO */
+  tr: "Sonuçlar",
 };

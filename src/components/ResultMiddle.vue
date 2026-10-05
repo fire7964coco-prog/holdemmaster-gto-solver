@@ -196,7 +196,7 @@
 import { computed, defineComponent, reactive, ref, toRefs, watch } from "vue";
 import { capitalize } from "../utils";
 import * as Types from "../result-types";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 
 // display-only label maps (internal mode values remain in English)
 const M = {
@@ -504,6 +504,30 @@ const M = {
     strategyCombos: "रणनीति (Combos)",
     equity: "Equity",
   },
+  tr: {
+    modeLabels: {
+      basics: "Temel",
+      graphs: "Grafikler",
+      compare: "Karşılaştır",
+      turn: "Turn",
+      river: "River",
+    } as Record<string, string>,
+    player: "Oyuncu:",
+    auto: (player: string) => `Otomatik (${player})`,
+    barHeight: "Çubuk yüksekliği:",
+    normalized: "Normalize",
+    absolute: "Mutlak",
+    full: "Tam",
+    suit: "Renk:",
+    grouped: "Gruplu",
+    individual: "Tek tek",
+    display: "Göster:",
+    strategy: "Strateji",
+    weight: "Ağırlık",
+    chart: "Grafik:",
+    strategyCombos: "Strateji (combo)",
+    equity: "Equity",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";
@@ -552,7 +576,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     const modeLabels = computed(() => L.value.modeLabels);
     const { chanceMode } = toRefs(props);
     let displayModeOld = "basics" as Types.DisplayMode;

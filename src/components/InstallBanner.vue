@@ -79,7 +79,7 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { pwa, promptInstall, dismissBanner, openInChrome } from "../pwa";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 import FeedbackSummary from "./FeedbackSummary.vue"; // F1_FEEDBACK_ONLY
 import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 
@@ -413,6 +413,33 @@ const M = {
       "Tiada apa-apa yang dipasang pada sistem anda — ini hanya pintasan pelayar. Ia tidak meminta sebarang kebenaran, dan anda boleh membuangnya bila-bila masa dengan menekan lama ikonnya, seperti aplikasi biasa.",
     close: "Tutup",
   },
+  // 튀르키예어 — sen체. iOS 메뉴 이름은 Apple tr-tr 표기 «Ana Ekrana Ekle», 공유 버튼은 «Paylaş»(용어확정표 §3-3)
+  tr: {
+    iconAlt: "HoldemMaster GTO Trainer simgesi",
+    title: "Ana ekrana eklensin mi?",
+    samsung1: "Samsung Internet ",
+    samsungB1: "güvenlik nedeniyle kurulumu engelleyebilir",
+    samsung2: " — bu kontrol bu uygulamadan değil, tarayıcıdan gelir. ",
+    samsungB2: "Chrome'da açarsan",
+    samsung3: " uyarı çıkmadan kurulur.",
+    default1: "Tek dokunuşla açılır ve ",
+    defaultB1: "13 örnek spotun tamamını ve GTO Trainer'ı cihazına kaydeder",
+    default2: "; böylece internet bağlantısı olmadan da çalışabilirsin.",
+    ios1: "Aşağıdaki ",
+    iosB1: "Paylaş düğmesine",
+    ios2: " dokun, ardından ",
+    iosB2: "“Ana Ekrana Ekle”",
+    ios3: " seçeneğini seç. Tek dokunuşla açılır; örnek spotlar ve GTO Trainer çevrimdışı kullanım için kaydedilir.",
+    openInChrome: "Chrome'da aç",
+    install: "Ana Ekrana Ekle",
+    gotIt: "Anladım",
+    later: "Sonra",
+    samsungHint:
+      "Yine de burada kurmak istersen, izin vermek için iletişim kutusundaki adımları izle.",
+    safety:
+      "Sistemine hiçbir şey kurulmaz — bu yalnızca bir tarayıcı kısayolu. Hiçbir izin istemez; bir uygulama gibi simgesine basılı tutarak istediğin zaman kaldırabilirsin.",
+    close: "Kapat",
+  },
 } as const;
 
 /* npokers 빌드용 덮어쓰기 — 배너의 «교육 예제·트레이너 저장» 대목을 «앱 저장»으로.
@@ -493,6 +520,12 @@ const N =
           default2: " supaya anda boleh menggunakannya walaupun tiada sambungan internet.",
           ios3: ". Ia terbuka dengan satu ketikan dan tetap berfungsi walaupun di luar talian.",
         },
+        tr: {
+          iconAlt: "npokers simgesi",
+          defaultB1: "uygulamayı cihazına kaydeder",
+          default2: "; böylece internet bağlantısı olmadan da kullanabilirsin.",
+          ios3: " seçeneğini seç. Tek dokunuşla açılır ve çevrimdışı da çalışır.",
+        },
       }
     : null;
 
@@ -501,7 +534,7 @@ export default defineComponent({
   components: { FeedbackSummary }, // F1_FEEDBACK_ONLY
   setup() {
     const L = computed(() =>
-      N ? { ...M[dictKey(M)], ...N[dictKey(N)] } : M[dictKey(M)]
+      N ? { ...M[i18n.locale], ...N[i18n.locale] } : M[i18n.locale]
     );
     return {
       feedbackFeatures, // F1_FEEDBACK_ONLY

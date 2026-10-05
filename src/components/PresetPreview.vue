@@ -134,7 +134,7 @@ import {
 import { trackOutbound } from "../outbound";
 import { Results, Spot, DisplayOptions } from "../result-types";
 import { cardText, parseCardString } from "../utils";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 
 import ResultBasics from "./ResultBasics.vue";
 import ResultTable from "./ResultTable.vue";
@@ -298,6 +298,19 @@ const M = {
     playerLabel: "खिलाड़ी:",
     oopHint: "यह पहले action करने वाले खिलाड़ी (OOP) की रणनीति है। प्रतिद्वंद्वी (IP) की ओर देखने के लिए ऊपर “खिलाड़ी” को IP पर बदलें।",
   },
+  tr: {
+    backToList: "← Geri",
+    pot: "Pot",
+    stack: "Stack",
+    flopOnlyNote: "Yalnızca flop stratejisi. Turn ve river'a da tıklayarak bakmak ister misin? →",
+    solveThisSpot: "Bu spotu kendin çöz",
+    readArticle: "Yazıyı oku",
+    // «미리 계산» 표현은 쓰지 않는다 (확정표 §1-8)
+    loadError: (e: string) => `Sonuçlar yüklenemedi: ${e}`,
+    loading: "Sonuçlar yükleniyor…",
+    playerLabel: "Oyuncu:",
+    oopHint: "Bu, ilk hareket eden oyuncunun (OOP) stratejisi. Rakibi (IP) görmek için yukarıdaki “Oyuncu” ayarını IP yap.",
+  },
 } as const;
 
 type PreviewData = {
@@ -367,7 +380,7 @@ export default defineComponent({
         : trackOutbound(ARTICLE_URLS[props.preset.id] ?? "", "preset-preview")
     );
 
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
 
     return {
       data,

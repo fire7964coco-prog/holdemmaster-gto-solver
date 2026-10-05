@@ -117,7 +117,7 @@
 <script lang="ts">
 import { computed, defineComponent, h } from "vue";
 import { average, toFixed1, toFixed, toFixedAdaptive } from "../utils";
-import { localizeNumber, decimalMark, dictKey } from "../i18n";
+import { localizeNumber, decimalMark } from "../i18n";
 import { Results, Spot, SpotChance } from "../result-types";
 import { useStore } from "../store";
 import { i18n } from "../i18n";
@@ -167,6 +167,10 @@ const M = {
   },
   hi: {
     combos: "Combos",
+    equity: "Equity",
+  },
+  tr: {
+    combos: "Combo",
     equity: "Equity",
   },
   "zh-hant": {
@@ -248,7 +252,7 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     const player = computed(() => {
       if (props.selectedChance) return "chance";
       return props.selectedSpot.player;

@@ -206,7 +206,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
 import { useStore } from "../store";
-import { i18n, dictKey, pctText } from "../i18n";
+import { i18n, pctText } from "../i18n";
 import { noteToolUsed } from "../pwa";
 import {
   POSITIONS,
@@ -1381,6 +1381,106 @@ const M = {
       "+ range Spot belajar kami sendiri (dikumpulkan 08/2026)",
     phase2: "Matchup dan senario lain akan ditambah secara berperingkat.",
   },
+  tr: {
+    modeRfi: "Açılış (RFI)",
+    modeDefend: "Open'a karşı (savunma)",
+    mode3bet: "3-bet'e karşı (açılıştan sonra)",
+    mode4bet: "4-bet'e karşı (3-bet'ten sonra)",
+    intro4bet:
+      "3-bet'ine 4-bet geldiğinde nasıl cevap vereceğin — kırmızı 5-bet (all-in), yeşil " +
+      "call, geri kalan her şey fold. Sıklıklar 3-bet yapmış olmana göre verilir; bu yüzden " +
+      "hiç 3-bet yapmadığın eller boş. 6-max cash, 100bb; BB 11bb 3-bet yapar " +
+      "ve 24bb 4-bet ile karşılaşır, SB 10bb 3-bet yapar ve 22bb ile karşılaşır.",
+    legend5bet: "5-bet (all-in)",
+    legendCond4bet: "Boş = baştan hiç 3-bet yapılmayan el",
+    stat5bet: "5-bet oranı",
+    statContinue4bet: "Devam oranı (3-bet'lere göre)",
+    copy5bet: "5-bet range'ini kopyala",
+    note4bet:
+      "İstatistikler 3-bet range'inin içindeki paylardır. 100bb'de 5-bet fiilen " +
+      "all-in demektir — value ağırlıkla AA·KK'dır (ara sıra call ile tuzak kurulur), " +
+      "QQ·AK ise 5-bet ile call'u karma oynar. Call kararını pot oranı değil equity " +
+      "realization belirler: düşük SPR'de pozisyon dışı oynarsın, bu yüzden yalnızca çiftler " +
+      "ve en iyi suited eller devam eder — ama her şeyi fold etme, çünkü rakibin " +
+      "4-bet range'inde A5s–A4s gibi blöfler de var.",
+    how4bet2:
+      "Kırmızı + yeşil kareyi doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte " +
+      "olduğu karelerde 5-bet ve call karma oynanır. 3-bet range'inin dışındaki eller bu " +
+      "spota hiç gelmez, bu yüzden boştur.",
+    intro3bet:
+      "Open-raise'ine 3-bet geldiğinde nasıl cevap vereceğin — kırmızı 4-bet, yeşil " +
+      "call, geri kalan her şey fold. Sıklıklar açmış olmana göre verilir; bu yüzden " +
+      "hiç açmadığın eller boş. 6-max cash, 100bb, 2,5bb open, ~10-11bb 3-bet.",
+    legend4bet: "4-bet",
+    legendCond: "Boş = baştan hiç açılmayan el",
+    stat4bet: "4-bet oranı",
+    statContinue: "Devam oranı (açılışlara göre)",
+    copy4bet: "4-bet range'ini kopyala",
+    note3bet:
+      "İstatistikler tüm ellerin değil, açılış range'inin içindeki paylardır. 4-bet value'su " +
+      "QQ+/AK etrafında toplanır, A5s-A4s gibi birkaç blöf de karışır. Pozisyondayken " +
+      "call range'i geniş kalır: çiftler, suited broadway'ler ve connector'lar.",
+    squeezeNote:
+      "Squeeze, pot'ta hem açan hem de call eden biri varken yapılan 3-bet'tir (burada " +
+      "yaklaşık 11-12bb). Call eden oyuncu toplam savunmayı heads-up'a göre daraltır ve " +
+      "3-bet'i value'ya doğru iter. Overcall'larda multiway pot'ta nuts yapabilen suited, " +
+      "connected eller öne çıkar.",
+    how3bet2:
+      "Kırmızı + yeşil kareyi doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte " +
+      "olduğu karelerde 4-bet ve call karma oynanır. Açılış range'inin dışındaki eller bu " +
+      "spota hiç gelmez, bu yüzden boştur.",
+    intro: "Pozisyona göre açılış range'leri (RFI) — herkes sana kadar fold ettiğinde hangi ellerle raise yapmalısın? Temel: 6-max cash, 100bb, 2,5bb open. Kısmen dolu kareler, açılıp açılmaması konusunda herkese açık kaynakların ayrıştığı sınırdaki elleri gösterir (dolgu yüksekliği = açmayı öneren kaynakların payı).",
+    provenanceNote: "Herkese açık kaynakların uzlaşısı + kendi türettiğimiz kısımlar — solver çıktısı değil. Kaynaklar için aşağıdaki “Bu tablo nasıl hazırlandı?” bölümüne bak.",
+    introDefend:
+      "Senden önce biri open-raise yaptığında nasıl cevap vereceğin — en sık görülen " +
+      "eşleşmeler. Kırmızı 3-bet, yeşil call; üst üste binen yükseklik toplam " +
+      "savunma sıklığın. 6-max cash, 100bb, 2,5bb open (SB açarsa 3bb).",
+    legendOpen: "Open (%100)",
+    legendMixed: "Sınırdaki eller (dolgu = açmayı öneren kaynakların payı)",
+    legendFold: "Fold",
+    legend3bet: "3-bet",
+    legendCall: "Call",
+    legendMixedDefend: "Dolgu yüksekliği = sıklık (bölünmüş kareler karma)",
+    stat3bet: "3-bet oranı",
+    statCall: "Call oranı",
+    statTotal: "Toplam savunma",
+    copy3bet: "3-bet range'ini kopyala",
+    copyCall: "Call range'ini kopyala",
+    sbNote:
+      "SB'de BTN open'ına karşı neredeyse her zaman ya 3-bet ya fold oynarsın — pozisyon " +
+      "dışındasın ve BB hâlâ arkanda, bu yüzden call etmek iki dezavantajı birden " +
+      "sırtına yükler.",
+    ipNote:
+      "Pozisyonda olsan bile erken pozisyondan gelen açılış range'i güçlüdür ve call " +
+      "etmek, arkada kalan blind'lardan squeeze yeme riskini de getirir. Bu yüzden " +
+      "pozisyondaki savunma dar ve 3-bet ağırlıklı bir range'dir; call'lar çoğunlukla " +
+      "çiftler ve premium suited ellerle sınırlı kalır.",
+    statPercent: "Açılış oranı",
+    statCombos: "Açılan combo",
+    statHands: "Açılan el",
+    statMixed: "Sınırdaki el",
+    copy: "Range metnini kopyala",
+    copied: "✓ Kopyalandı",
+    sendOop: "① OOP range'e gönder",
+    sendIp: "② IP range'e gönder",
+    howTitle: "Nasıl okunur",
+    how1: "Sol üstten sağ alta inen köşegen çiftlerdir; üstü (sağ) suited, altı (sol) offsuit ellerdir.",
+    how2: "Kısmen dolu kareler, açılıp açılmaması konusunda kaynakların ayrıştığı sınırdaki elleri gösterir. Dolgu yüksekliği açmayı öneren kaynakların payını gösterir; solver sonucu değildir.",
+    how3: "[Range'e gönder] düğmeleri bu range'i özel spot range düzenleyicisine yükler — postflop oyunu kendin çözmeyi dene.",
+    howDefend2:
+      "Kırmızı + yeşil kareyi tamamen doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte göründüğü karelerde 3-bet ve call bu oranlarda karma oynanır.",
+    howDefend3:
+      "Kopyaladığın range'i özel spot range alanlarına (① / ②) yapıştır ve bu savunma range'iyle postflop oyunu kendin çöz.",
+    sourceTitle: "Bu tablo nasıl hazırlandı?",
+    sourceBody: "Ücretsiz yayımlanmış birkaç GTO kaynağını el el karşılaştırarak bir uzlaşı range'i oluşturduk; kaynakların ayrıştığı sınırdaki elleri, açmayı öneren kaynakların payıyla (%75/%50/%25) işaretledik. BTN ve SB ayrıca bu uygulamanın Örnek spotlar bölümünde kullanılan, solver ile doğrulanmış range'lerle de karşılaştırıldı.",
+    sourceList:
+      "Karşılaştırılan herkese açık kaynaklar: nlh.poker · Preflop Wizard · HoldemPro · " +
+      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB çözülmüş sıklıklar) · " +
+      "GTO Gecko · RiverOdds (savunma referansları) · GTO Wizard blogu · FreeBetRange " +
+      "(IP savunma ve squeeze ilkeleri) · 888poker · Run It Once (3-bet'e karşı " +
+      "sıklıklar) + kendi örnek spot range'lerimiz (toplanma: 08.2026)",
+    phase2: "Yeni eşleşmeler ve senaryolar eklemeye devam edeceğiz.",
+  },
 } as const;
 
 type ModeKey = "rfi" | "defend" | "vs3bet" | "vs4bet";
@@ -1424,7 +1524,7 @@ type ChartMode = {
 export default defineComponent({
   setup() {
     const store = useStore();
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
 
     // npokers 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
     noteToolUsed();

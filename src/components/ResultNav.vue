@@ -243,7 +243,7 @@ import { decodeResults } from "../results-decode";
 import { computed, defineComponent, nextTick, toRefs, ref, watch } from "vue";
 import { useSavedConfigStore } from "../store";
 import { useStore } from "../store";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 import { cardText, average, colorString, formatAmount } from "../utils";
 import { handler } from "../global-worker";
 import {
@@ -593,6 +593,27 @@ const M = {
       ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) => `${label} ${formatted} (${percent}% pot)`,
   },
+  tr: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    // 변수는 주어 자리 — 접미사 없음 (확정표 §6)
+    win: (player: string) => `${player} kazanır`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Son",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    // tr «(%35 pot)» — 확정표 §2-2·§6, ActionSummary·trainer.ts와 같은 꼴
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (%${percent} pot)`,
+  },
 } as const;
 
 export default defineComponent({
@@ -641,7 +662,7 @@ export default defineComponent({
 
   setup(props, context) {
     const store = useStore();
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     const navDiv = ref<HTMLDivElement | null>(null);
 
     const config = useSavedConfigStore();

@@ -48,7 +48,7 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { pwa, closeLaunch } from "../pwa";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 
 const M = {
   ko: {
@@ -119,6 +119,12 @@ const M = {
     titleLine2: "GTO सॉल्वर में।",
     footer: "मुफ़्त GTO सॉल्वर · ऑफ़लाइन भी चलता है",
   },
+  tr: {
+    greeting: "Hoş geldin",
+    titleLine1: "HoldemMaster",
+    titleLine2: "GTO Trainer'a.",
+    footer: "Ücretsiz GTO Solver · Çevrimdışı çalışır",
+  },
   ms: {
     greeting: "Selamat datang ke",
     titleLine1: "HoldemMaster",
@@ -135,7 +141,7 @@ const NPOKERS_TITLE = __APP_TARGET__ === "npokers" ? "npokers" : null;
 export default defineComponent({
   setup() {
     const L = computed(() =>
-      NPOKERS_TITLE ? { ...M[dictKey(M)], titleLine1: NPOKERS_TITLE } : M[dictKey(M)]
+      NPOKERS_TITLE ? { ...M[i18n.locale], titleLine1: NPOKERS_TITLE } : M[i18n.locale]
     );
     return { pwa, closeLaunch, L };
   },

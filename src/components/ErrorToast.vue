@@ -52,7 +52,7 @@ import {
   dismissErrorToast,
   retrySolverSingleThread,
 } from "../errors";
-import { i18n, pick, dictKey } from "../i18n";
+import { i18n, pick } from "../i18n";
 
 const M = {
   ko: {
@@ -217,11 +217,23 @@ const M = {
       "इसे कम्युनिटी पोस्ट में पेस्ट करें। इससे हमें समस्या समझने में मदद मिलेगी। शेयर करने से पहले कॉपी किया गया विवरण देख लें।",
     promptCopy: "नीचे दिया टेक्स्ट कॉपी करें",
   },
+  tr: {
+    title: "Bir hata kaydedildi",
+    body1: "Bir sorun gördüysen bize bildir. Ayrıntılar ",
+    bodyB1: "yalnızca bu cihazda",
+    body2: " saklanır — paylaşıp paylaşmamak tamamen sana kalmış.",
+    copied: "Kopyalandı",
+    copyButton: "Hata ayrıntılarını kopyala",
+    close: "Kapat",
+    copiedHint:
+      "Bir topluluk gönderisine yapıştır, sorunu düzeltmek için kullanalım. Kişisel bilgi içermez.",
+    promptCopy: "Aşağıdaki metni kopyala",
+  },
 } as const;
 
 export default defineComponent({
   setup() {
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     const retrySingleThreadLabel = computed(() =>
       // i18n.ts pick() 순서: ko, en, ja, es, pt, de, zh, zh-hant, fr, id, ms, hi, tr.
       pick(
@@ -236,7 +248,7 @@ export default defineComponent({
         "Réessayer avec un seul thread",
         "Coba lagi dengan satu thread",
         "Cuba semula dengan satu thread",
-        "एक थ्रेड से फिर कोशिश करें", "Retry with a single thread" /* TR-TODO */
+        "एक थ्रेड से फिर कोशिश करें", "Tek thread ile tekrar dene"
       )
     );
     const copied = ref(false);

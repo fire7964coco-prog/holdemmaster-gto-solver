@@ -382,7 +382,7 @@ import {
   formatAmount,
 } from "../utils";
 import { useStore } from "../store";
-import { i18n, localizeNumber, dictKey } from "../i18n";
+import { i18n, localizeNumber } from "../i18n";
 
 import {
   Results,
@@ -852,6 +852,31 @@ const M = {
     action: (name: string): string =>
       ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
+  tr: {
+    summary: "Özet",
+    barWidth: "Çubuk genişliği:",
+    normalized: "Normalize",
+    absolute: "Mutlak",
+    full: "Tam",
+    display: "Göster:",
+    actionPct: "Aksiyon %",
+    actionEv: "Aksiyon EV",
+    exportCsv: "Özeti CSV dosyası olarak dışa aktar",
+    all: "Tümü",
+    hand: "El",
+    strategy: "Strateji",
+    weightBar: "Ağırlık (çubuk)",
+    weight: "Ağırlık",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combo (çubuk)",
+    combos: "Combo",
+    noReport: (chanceType: string) =>
+      `${chanceType === "turn" ? "Turn raporu" : "River raporu"} yok`,
+    noResults: "Sonuç yok",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({
@@ -909,7 +934,7 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     // tr 격자 셀: 작은 «%»를 정수부 앞에 (확정표 §2-2)
     const isTr = computed(() => i18n.locale === "tr");
     const evScale = computed(() => props.unitScale || store.displayUnitScale);

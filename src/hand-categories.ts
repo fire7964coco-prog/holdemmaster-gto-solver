@@ -419,32 +419,33 @@ export const DRAW_LABELS_HI: Record<DrawKey, string> = {
   no_draw: "Draw नहीं",
 };
 
-// tr: 번역 전 en 복사 (TR-TODO)
+// tr: 족보는 터키어 고유명(용어확정표 §3-2). 페어 세분·draw는 터키 포커 관용대로 영어(top pair·gutshot 등),
+// 터키어로 굳은 낱말(çift·floş·as)만 터키어. set/trips를 한 칸에 담는 자리는 «Üçlü»가 둘 다 덮는다.
 export const MADE_LABELS_TR: Record<MadeKey, string> = {
-  straight_flush: "Straight Flush", /* TR-TODO */
-  quads: "Quads", /* TR-TODO */
-  full_house: "Full House", /* TR-TODO */
-  flush: "Flush", /* TR-TODO */
-  straight: "Straight", /* TR-TODO */
-  trips: "Set/Trips", /* TR-TODO */
-  two_pair: "Two Pair", /* TR-TODO */
-  overpair: "Overpair", /* TR-TODO */
-  top_pair: "Top Pair", /* TR-TODO */
-  second_pair: "Second Pair", /* TR-TODO */
-  weak_pair: "Weak Pair", /* TR-TODO */
-  underpair: "Underpair", /* TR-TODO */
-  ace_high: "Ace-High", /* TR-TODO */
-  king_high: "King-High", /* TR-TODO */
-  nothing: "No Made Hand", /* TR-TODO */
+  straight_flush: "Sıralı Floş",
+  quads: "Kare",
+  full_house: "Full",
+  flush: "Floş",
+  straight: "Kent",
+  trips: "Üçlü",
+  two_pair: "İki Çift",
+  overpair: "Overpair",
+  top_pair: "Top pair",
+  second_pair: "Second pair",
+  weak_pair: "Zayıf çift",
+  underpair: "Underpair",
+  ace_high: "As high",
+  king_high: "Papaz high",
+  nothing: "El yok",
 };
 
 export const DRAW_LABELS_TR: Record<DrawKey, string> = {
-  combo_draw: "Combo Draw", /* TR-TODO */
-  flush_draw: "Flush Draw", /* TR-TODO */
-  oesd: "OESD", /* TR-TODO */
-  gutshot: "Gutshot", /* TR-TODO */
-  backdoor_fd: "Backdoor FD", /* TR-TODO */
-  no_draw: "No Draw", /* TR-TODO */
+  combo_draw: "Combo draw",
+  flush_draw: "Floş draw",
+  oesd: "OESD",
+  gutshot: "Gutshot",
+  backdoor_fd: "Backdoor FD",
+  no_draw: "Draw yok",
 };
 
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */

@@ -72,13 +72,13 @@ const shortBrowser = () => {
         "Samsung Internet ",
         "Samsung Internet ",
         "三星浏览器 "
-      , "三星瀏覽器 ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet " /* TR-TODO */) + RegExp.$1
+      , "三星瀏覽器 ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ") + RegExp.$1
     );
-  if (/Edg\/([\d.]+)/.test(ua)) return pick("엣지 ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge " /* TR-TODO */) + RegExp.$1;
-  if (/Chrome\/([\d.]+)/.test(ua)) return pick("크롬 ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome " /* TR-TODO */) + RegExp.$1;
-  if (/Firefox\/([\d.]+)/.test(ua)) return pick("파이어폭스 ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox " /* TR-TODO */) + RegExp.$1;
-  if (/Version\/([\d.]+).*Safari/.test(ua)) return pick("사파리 ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari " /* TR-TODO */) + RegExp.$1;
-  return pick("기타 브라우저", "Other browser", "その他のブラウザ", "Otro navegador", "Outro navegador", "Anderer Browser", "其他浏览器", "其他瀏覽器", "Autre navigateur", "Browser lain", "Pelayar lain", "अन्य ब्राउज़र", "Other browser" /* TR-TODO */);
+  if (/Edg\/([\d.]+)/.test(ua)) return pick("엣지 ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ") + RegExp.$1;
+  if (/Chrome\/([\d.]+)/.test(ua)) return pick("크롬 ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ") + RegExp.$1;
+  if (/Firefox\/([\d.]+)/.test(ua)) return pick("파이어폭스 ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ") + RegExp.$1;
+  if (/Version\/([\d.]+).*Safari/.test(ua)) return pick("사파리 ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ") + RegExp.$1;
+  return pick("기타 브라우저", "Other browser", "その他のブラウザ", "Otro navegador", "Outro navegador", "Anderer Browser", "其他浏览器", "其他瀏覽器", "Autre navigateur", "Browser lain", "Pelayar lain", "अन्य ब्राउज़र", "Diğer tarayıcı");
 };
 
 const record = (msg: string, stack: string) => {
@@ -127,10 +127,10 @@ export const errorReportText = () => {
   const head = [
     // 빌드 2벌 분기 — npokers 빌드는 상표만 바꾼 제목을 쓴다 (죽은 쪽은 압축기가 제거)
     __APP_TARGET__ === "npokers"
-      ? pick("npokers 오류 기록", "npokers error log", "npokers エラーログ", "Registro de errores de npokers", "Registro de erros do npokers", "npokers-Fehlerprotokoll", "npokers 错误日志", "npokers 錯誤紀錄", "Journal d'erreurs npokers", "Log error npokers", "Log ralat npokers", "npokers त्रुटि रिकॉर्ड", "npokers error log" /* TR-TODO */)
-      : pick("홀덤마스터 트레이너 오류 기록", "HoldemMaster GTO Trainer error log", "HoldemMaster GTOトレーナー エラーログ", "Registro de errores de HoldemMaster GTO Trainer", "Registro de erros do HoldemMaster GTO Trainer", "Fehlerprotokoll des HoldemMaster GTO Trainers", "HoldemMaster GTO 训练器错误日志", "HoldemMaster GTO 訓練器錯誤紀錄", "Journal d'erreurs du HoldemMaster GTO Trainer", "Log error HoldemMaster GTO Trainer", "Log ralat HoldemMaster GTO Trainer", "HoldemMaster GTO Trainer त्रुटि रिकॉर्ड", "HoldemMaster GTO Trainer error log" /* TR-TODO */),
-    `${pick("빌드", "Build", "ビルド", "Build", "Build", "Build", "Build", "Build", "Build", "Build", "Build", "बिल्ड", "Build" /* TR-TODO */)} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen", "画面", "Pantalla", "Tela", "Bildschirm", "屏幕", "螢幕", "Écran", "Layar", "Skrin", "स्क्रीन", "Screen" /* TR-TODO */)} ${window.innerWidth}x${window.innerHeight}`,
-    `${pick("설치 실행", "Installed app", "インストール版", "App instalada", "App instalado", "Installierte App", "已安装的应用", "已安裝的應用程式", "App installée", "Aplikasi terinstal", "Aplikasi dipasang", "इंस्टॉल किया गया ऐप", "Installed app" /* TR-TODO */)}: ${standalone ? pick("예", "yes", "はい", "sí", "sim", "ja", "是", "是", "oui", "ya", "ya", "हाँ", "yes" /* TR-TODO */) : pick("아니오", "no", "いいえ", "no", "não", "nein", "否", "否", "non", "tidak", "tidak", "नहीं", "no" /* TR-TODO */)}`,
+      ? pick("npokers 오류 기록", "npokers error log", "npokers エラーログ", "Registro de errores de npokers", "Registro de erros do npokers", "npokers-Fehlerprotokoll", "npokers 错误日志", "npokers 錯誤紀錄", "Journal d'erreurs npokers", "Log error npokers", "Log ralat npokers", "npokers त्रुटि रिकॉर्ड", "npokers hata kaydı")
+      : pick("홀덤마스터 트레이너 오류 기록", "HoldemMaster GTO Trainer error log", "HoldemMaster GTOトレーナー エラーログ", "Registro de errores de HoldemMaster GTO Trainer", "Registro de erros do HoldemMaster GTO Trainer", "Fehlerprotokoll des HoldemMaster GTO Trainers", "HoldemMaster GTO 训练器错误日志", "HoldemMaster GTO 訓練器錯誤紀錄", "Journal d'erreurs du HoldemMaster GTO Trainer", "Log error HoldemMaster GTO Trainer", "Log ralat HoldemMaster GTO Trainer", "HoldemMaster GTO Trainer त्रुटि रिकॉर्ड", "HoldemMaster GTO Trainer hata kaydı"),
+    `${pick("빌드", "Build", "ビルド", "Build", "Build", "Build", "Build", "Build", "Build", "Build", "Build", "बिल्ड", "Sürüm")} ${__BUILD_ID__} · ${shortBrowser()} · ${pick("화면", "Screen", "画面", "Pantalla", "Tela", "Bildschirm", "屏幕", "螢幕", "Écran", "Layar", "Skrin", "स्क्रीन", "Ekran")} ${window.innerWidth}x${window.innerHeight}`,
+    `${pick("설치 실행", "Installed app", "インストール版", "App instalada", "App instalado", "Installierte App", "已安装的应用", "已安裝的應用程式", "App installée", "Aplikasi terinstal", "Aplikasi dipasang", "इंस्टॉल किया गया ऐप", "Yüklü uygulama")}: ${standalone ? pick("예", "yes", "はい", "sí", "sim", "ja", "是", "是", "oui", "ya", "ya", "हाँ", "evet") : pick("아니오", "no", "いいえ", "no", "não", "nein", "否", "否", "non", "tidak", "tidak", "नहीं", "hayır")}`,
     "",
   ].join("\n");
   const body = records
@@ -170,7 +170,7 @@ export const setupErrorCapture = () => {
     } else if (target && target.tagName) {
       // 이미지·스크립트 로딩 실패는 error 객체가 없다
       record(
-        `${target.tagName} ${pick("로딩 실패", "failed to load", "読み込み失敗", "no se pudo cargar", "não foi possível carregar", "konnte nicht geladen werden", "加载失败", "載入失敗", "n'a pas pu être chargé", "gagal dimuat", "gagal dimuatkan", "लोड नहीं हुआ", "failed to load" /* TR-TODO */)}`,
+        `${target.tagName} ${pick("로딩 실패", "failed to load", "読み込み失敗", "no se pudo cargar", "não foi possível carregar", "konnte nicht geladen werden", "加载失败", "載入失敗", "n'a pas pu être chargé", "gagal dimuat", "gagal dimuatkan", "लोड नहीं हुआ", "yüklenemedi")}`,
         String(target.src || target.href || "")
       );
     } else if (event.message) {
@@ -189,7 +189,7 @@ export const setupErrorCapture = () => {
   window.addEventListener("unhandledrejection", (event) => {
     const reason = event.reason;
     record(
-      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ", "Erro não tratado: ", "Unbehandelter Fehler: ", "未处理的错误：", "未處理的錯誤：", "Erreur non gérée : ", "Error tidak tertangani: ", "Ralat tidak dikendalikan: ", "हैंडल नहीं की गई त्रुटि: ", "Unhandled rejection: " /* TR-TODO */) + String(reason?.message ?? reason),
+      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ", "Erro não tratado: ", "Unbehandelter Fehler: ", "未处理的错误：", "未處理的錯誤：", "Erreur non gérée : ", "Error tidak tertangani: ", "Ralat tidak dikendalikan: ", "हैंडल नहीं की गई त्रुटि: ", "İşlenmemiş hata: ") + String(reason?.message ?? reason),
       String(reason?.stack ?? "")
     );
   });

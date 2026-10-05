@@ -446,7 +446,7 @@ import {
   shallowRef,
   watch,
 } from "vue";
-import { i18n, localizeNumber, dictKey } from "../i18n";
+import { i18n, localizeNumber } from "../i18n";
 import { M } from "../hand-review-labels";
 import {
   SRP_SPOTS,
@@ -519,7 +519,7 @@ const policy = {
 
 export default defineComponent({
   setup() {
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     const spotId = ref("srp-btn-bb"),
       heroPlayer = ref<0 | 1>(1),
       potType = ref("srp");

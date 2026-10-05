@@ -93,13 +93,13 @@ import type { TrainerEvaluation } from "../trainer";
 import { M } from "../custom-trainer-labels";
 import { M as REVIEW_LABELS } from "../hand-review-labels";
 import { useStore } from "../store";
-import { i18n, localizeNumber, dictKey, pctText } from "../i18n";
+import { i18n, localizeNumber, pctText } from "../i18n";
 import { cardText, formatAmount } from "../utils";
 
 export default defineComponent({
   setup() {
-    const L = computed(() => M[dictKey(M)]);
-    const R = computed(() => REVIEW_LABELS[dictKey(REVIEW_LABELS)]);
+    const L = computed(() => M[i18n.locale]);
+    const R = computed(() => REVIEW_LABELS[i18n.locale]);
     const store = useStore();
     const banks = ref<CustomTrainerBank[]>([]);
     const bank = computed(() => banks.value.find(item => item.id === customTrainerState.selectedBankId) ?? null);

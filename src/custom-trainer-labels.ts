@@ -158,6 +158,19 @@ export const M = {
     prompt: "आप क्या करेंगे?", next: "अगला सवाल", review: "गलतियों का अभ्यास", practice: "सामान्य अभ्यास", attemptCount: "इस स्पॉट में प्रयास: {count}",
     verdictBest: "सर्वोत्तम", verdictGood: "स्वीकार्य", verdictBad: "नुकसान वाला चुनाव", evLoss: "EV नुकसान", frequency: "आवृत्ति", actionEv: "एक्शन EV", chips: "चिप्स",
   },
-} satisfies LocaleDict<Record<string, string>>; // TR-TODO: tr 블록이 들어오면 Record<Locale, …>로 되돌린다
+  tr: {
+    entry: "Bu spotta pratik yap", busy: "Pratik soruları kaydediliyor…", tab: "Spotlarım", presetTab: "Hazır spot pratiği",
+    empty: "Bir spotu hesapladıktan sonra sonuç ekranında [Bu spotta pratik yap] seçeneğine dokun; sorular buraya kaydedilir.",
+    loading: "Spotların yükleniyor…", storageNote: "Bu cihazda son 20 spot ve her spot için son 500 deneme saklanır. Kendi spot sonuçların ayrı sayılır. Aynı spotu yeniden kaydedersen önceki çözüm değişir ve pratik geçmişi silinir.",
+    source: "Kendi yaklaşık çözümün · Hedef sapma %{target} · Ulaşılan %{achieved}", lockAssumption: "Stratejinin bir kısmının sabit olduğu varsayılır",
+    reviewSource: "El analizinden gelen spot · {method} · Hedef sapma %{target} · Ulaşılan %{achieved}", backToReview: "El analizine dön",
+    chooseSpot: "Kayıtlı spotlar", deleteSpot: "Spotu sil", deleteConfirm: "Bu spot ve pratik geçmişi bu cihazdan silinsin mi?",
+    loadError: "Kayıtlı spotlar yüklenemedi. Bu ekranı yeniden aç.", saveError: "Kaydedilemedi. Tekrar dene.",
+    captureError: "Bu sonuçlardan pratik sorusu oluşturulamadı. Hesaplamanın bittiğini kontrol et.",
+    noQuestion: "Bu spotta oynanabilir el yok.", board: "Board", hand: "Elin", pot: "Pot", stack: "Stack", line: "Aksiyon sırası",
+    prompt: "Ne oynarsın?", next: "Sonraki soru", review: "Hataları tekrar et", practice: "Normal pratik", attemptCount: "Bu spottaki deneme: {count}",
+    verdictBest: "En iyi oyun", verdictGood: "Kabul edilebilir", verdictBad: "Bu spotu tekrar et", evLoss: "EV kaybı", frequency: "Sıklık", actionEv: "Aksiyon EV'si", chips: "çip",
+  },
+} satisfies LocaleDict<Record<string, string>>;
 
 export type CustomTrainerLabelKey = keyof typeof M.ko;

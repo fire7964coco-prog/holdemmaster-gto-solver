@@ -26,7 +26,7 @@ import { computed, defineComponent } from "vue";
 import { Results, Spot, SpotPlayer } from "../result-types";
 import { useStore } from "../store";
 import { formatAmount } from "../utils";
-import { i18n, pick, localizeNumber, dictKey } from "../i18n";
+import { i18n, pick, localizeNumber } from "../i18n";
 
 const M = {
   ko: {
@@ -64,6 +64,9 @@ const M = {
   },
   hi: {
     combos: "combos",
+  },
+  tr: {
+    combos: "combo",
   },
 } as const;
 
@@ -168,7 +171,7 @@ const actionLabel = (
       Raise: "Raise",
       Allin: "All-in",
       "All-in": "All-in",
-    } /* TR-TODO */
+    } // tr: 액션명은 영어 그대로(확정표 §3-1)
   );
   const label = map[name] ?? name;
   if (!amount || amount === "0") return label;
@@ -196,7 +199,7 @@ const actionLabel = (
         "du pot",
         "dari pot",
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
-        "pot", "pot", "pot" /* TR-TODO */
+        "pot", "pot", "pot" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
       )})`
     );
   }
@@ -246,7 +249,7 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     const tiles = computed(() => {
       const spot = props.selectedSpot;
       const results = props.results;

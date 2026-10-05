@@ -227,10 +227,10 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       blind: "Blind vs Blind",
     },
     tr: {
-      all: "All", /* TR-TODO */
-      srp: "Single Raised", /* TR-TODO */
-      "3bp": "3-Bet Pot", /* TR-TODO */
-      blind: "Blind vs Blind", /* TR-TODO */
+      all: "Tümü",
+      srp: "Single Raised",
+      "3bp": "3-bet pot",
+      blind: "Blind vs Blind",
     },
   };
   return labels[i18n.locale][category];

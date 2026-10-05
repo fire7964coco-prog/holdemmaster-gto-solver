@@ -141,7 +141,7 @@ import { computed, defineComponent, ref, watch } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { ranks, rankPat } from "../utils";
 import { RangeManager } from "../../pkg/range/range";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 
 import DbItemPicker from "./DbItemPicker.vue";
 
@@ -255,6 +255,15 @@ const M = {
     combos: "combos",
     parseError: (range: string) => `Range पार्स नहीं हो सकी: ${range || "(खाली टेक्स्ट)"}`,
   },
+  tr: {
+    mobileHint: "Ağırlığı tablonun altındaki kaydırıcıyla ayarla, sonra uygulamak için bir hücreye dokun. Zaten o ağırlıkta olan bir hücreye dokunursan temizlenir. Dokunduğun elin adı ve ağırlığı yukarıda büyük yazıyla görünür.",
+    clear: "Temizle",
+    errorPrefix: "Hata:",
+    weight: "Ağırlık:",
+    combos: "combo",
+    parseError: (range: string) =>
+      `Range okunamadı: ${range || "(boş metin)"}`,
+  },
 } as const;
 
 import { C } from "../theme";
@@ -285,7 +294,7 @@ export default defineComponent({
   setup(props) {
     const appStore = useStore();
     const config = useConfigStore();
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
 
     const range = RangeManager.new();
     const rangeStore = config.range[props.player];

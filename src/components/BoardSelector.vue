@@ -67,7 +67,7 @@ import { computed, defineComponent, onUnmounted, ref } from "vue";
 import { useConfigStore } from "../store";
 import { cardText } from "../utils";
 import { parseBoardInput } from "../board-input";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 
 import BoardSelectorCard from "./BoardSelectorCard.vue";
 
@@ -184,6 +184,16 @@ const M = {
     warnLabel: "ध्यान दें:",
     warnBody: (n: number) => `संपादित tree ${n} कार्ड वाले Board के लिए है।`,
   },
+  tr: {
+    inputError: "Kartlar okunamadı. AsKd7c veya As Kd 7c gibi 3–5 kart gir. Önceki board korunuyor.",
+    placeholder: "ör. AsKd7c",
+    clear: "Temizle",
+    randomFlop: "Rastgele flop",
+    warnLabel: "Uyarı:",
+    // 접미사는 변수 아닌 «kartlık»에 붙인다 (확정표 §6)
+    warnBody: (n: number) =>
+      `Düzenlenen ağaç ${n} kartlık bir board varsayıyor.`,
+  },
 } as const;
 
 export default defineComponent({
@@ -195,7 +205,7 @@ export default defineComponent({
     const config = useConfigStore();
     const boardText = ref("");
     const boardTextError = ref(false);
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
 
     // 좁은 화면이면 13열이 폭에 맞게 줄어든다 (데스크톱은 기존 40px 그대로)
     const isNarrow = ref(false);

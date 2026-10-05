@@ -19,7 +19,7 @@ type NodeLockMessages = {
 };
 
 // AI-written drafts. Keep every locale and key in the A1b review ledger.
-export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = { // TR-TODO: tr 블록이 들어오면 Record<Locale, …>로 되돌린다
+export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = {
   ko: {
     title: "이 노드의 전략 고정",
     apply: "고정하고 다시 풀기",
@@ -224,6 +224,23 @@ export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = { // TR-TODO: tr
     banner: "रणनीति का एक हिस्सा लॉक करके फिर से की गई गणना का नतीजा — यह संतुलन (GTO) रणनीति नहीं है · {count} लॉक किए गए नोड",
     noReach: "इस नोड तक पहुँचने का वज़न 0 है; शुरुआती आवृत्ति उपलब्ध नहीं है।",
   },
+  tr: {
+    title: "Bu node'un stratejisini kilitle",
+    apply: "Kilitle ve yeniden hesapla",
+    clearAll: "Tüm kilitleri kaldır ve yeniden hesapla",
+    remove: "Kilidi kaldır ve yeniden hesapla",
+    before: "Kilitlemeden önce",
+    after: "Kilitledikten sonra",
+    frequency: "Sıklık",
+    comparison: "Önce/sonra karşılaştırması",
+    exploitability: "Sapma",
+    sumError: "Her aksiyon için 0–100 arası bir tam sayı gir; toplam 100 olmalı.",
+    skippedChance: "Kartı belirtilmemiş bir yol kilitlenemez. Önce kartı seç.",
+    engineError: "Strateji kilitlenemedi. Girdiğin değerleri kontrol et ve yeniden hesapla.",
+    assumption: "Sabit strateji varsayımıyla değerler",
+    banner: "Stratejinin bir kısmı sabitlenerek hesaplandı — denge (GTO) stratejisi değil · Kilitli node: {count}",
+    noReach: "Bu node'a ulaşma ağırlığı 0, bu yüzden başlangıç sıklıkları gösterilemiyor.",
+  },
 };
 
-export const nodeLockLabels = () => NODE_LOCK_MESSAGES[i18n.locale] ?? NODE_LOCK_MESSAGES.en;
+export const nodeLockLabels = () => NODE_LOCK_MESSAGES[i18n.locale];

@@ -330,7 +330,7 @@ import { pwa, saveOffline, checkOfflineStatus } from "../pwa";
 // 빌드 2벌 분기 — npokers 빌드에서는 FEATURE_TRAINER=false (webpack alias, src/features/ 참조)
 import { FEATURE_TRAINER } from "@features";
 import { errorState, errorReportText, clearErrors } from "../errors";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 
 const M = {
   ko: {
@@ -2644,6 +2644,201 @@ const M = {
     errNone: "अभी कोई त्रुटि दर्ज नहीं है।",
     errPrompt: "नीचे दिया गया टेक्स्ट कॉपी करें",
   },
+  tr: {
+    quickTitle: "1 dakikada başlangıç — yeniysen buradan başla",
+    quickStep1Desktop: "Soldaki menüden şuna tıkla: ",
+    quickStep1Mobile: "Üstteki sekmelerden şuna dokun: ",
+    quickStep1Btn: "Örnek spotlar",
+    quickStep1After: "",
+    quickStep2Before: "Herhangi bir spotu aç ve",
+    quickStep2Btn: "[⚡ Sonuçları gör]",
+    quickStep2After: " düğmesine bas — çözüm hemen görünür",
+    quickStep3:
+      "Sonra aşağıdaki “Sonuç ekranını okumak” bölümüyle sayıları anlamlandır",
+
+    termsTitle: "Bilmen gereken sadece dört terim",
+    termRange: "Range (el aralığı)",
+    defRange:
+      "Bir oyuncunun elinde olabilecek ellerin tamamı (ör. “muhtemelen AA, KK ya da AK var”)",
+    defPos:
+      "Pozisyon dışı (ilk hareket eder — dezavantaj) / pozisyonda (son hareket eder — avantaj). BTN vs BB'de OOP olan BB'dir",
+    termEquity: "Equity",
+    defEquity: "Şu an all-in olsaydın pottan alacağın pay — kazanma yüzdesi artı beraberliklerin yarısı",
+    defEv: "EV (beklenen değer) — bir aksiyonun ortalamada ne kadar kazandırdığı. Büyük olan daha iyi",
+
+    customTitleBefore: "Özel spot çözmek — ",
+    customTitleDesktop: "kenar çubuğundaki",
+    customTitleMobile: "sekmelerdeki",
+    customTitleAfter: " ① → ⑤ numaraları sırayla izle",
+    step1Bold: "① OOP range / ② IP range",
+    step1After:
+      " — 13×13 ızgarayı tıklayıp sürükleyerek boya ya da metin olarak yaz: ",
+    step1Hint:
+      "22+ = tüm cep çiftleri · A2s+ = A2s ile AKs arası · KTo+ = KTo ile KQo arası. 13×13 ızgarada: köşegen = cep çiftleri, sağ üst = suited, sol alt = offsuit",
+    exampleHeader:
+      "Yeni misin? Bunları kopyalayıp range alanlarına yapıştır (standart BTN vs BB 100bb — Örnek spotların kullandığı range'lerin aynısı)",
+    exOopLabel: "OOP (BB call)",
+    exIpLabel: "IP (BTN açış)",
+    copiedLabel: "Kopyalandı!",
+    copyLabel: "Kopyala",
+    step3Bold: "③ Board",
+    step3After: " — üç flop kartına tıkla ya da “Rastgele flop” düğmesine bas",
+    step4Bold: "④ Bet boyutu (Ağaç ayarları)",
+    step4After:
+      " — ilk başta varsayılanları değiştirme. Sadece başlangıç pot ve efektif stack değerlerini kontrol et",
+    step4Hint:
+      "Özel spot değerleri, birimi keyfi olan tam sayı chip'lerdir. bb ile düşünmek için 10 chip = 1bb al (ör. pot 55 = 5,5bb). Örnek spotlar ve GTO Trainer bu ölçekle otomatik çevirir.",
+    step5Bold1: "⑤ Hesapla",
+    step5Mid:
+      " — önce “Ağacı oluştur”, o bitince “Solver'ı çalıştır” düğmesine bas. “Hesaplama bitti!” yazısı çıkınca üstteki ",
+    step5Bold2: "[Sonuçlar]",
+    step5After: " sekmesini aç",
+    step5Hint:
+      "Hesaplama kendi cihazında yapılır ve birkaç saniyeden birkaç dakikaya kadar sürer. ⑤ ekranındaki [Spot'u paylaş] ile spot bağlantısını kopyalayıp toplulukta sorabilirsin",
+
+    resultsTitle: "Sonuç ekranını okumak",
+    rTerm1: "Üst şerit",
+    rDef1:
+      "Aksiyon dizisi için sahne seçici (flop → bet → call → turn…). O andaki stratejiyi görmek için bir node'a tıkla",
+    rTerm2: "13×13 matris (sol)",
+    rDef2:
+      "Her hücre bir eldir; içindeki renk dağılımı aksiyon sıklıklarını gösterir. 🟥 bet/raise (koyu = büyük bet) · 🟩 check/call · soluk hücre = range'de yok. GTO (Oyun Teorisi Optimali) aynı eli karma stratejiyle oynar — aksiyonları sıklığa göre böler, böylece oyunun okunamaz",
+    rTerm3: "Kutucuklar (sağ üst)",
+    rDef3: "Tüm range genelinde aksiyon sıklıkları (%) ve combo sayıları",
+    rTerm4: "El kategorileri (sağ orta)",
+    rDef4:
+      "Her range'in board'a nasıl bağlandığı (top pair, draw'lar…) — bu board'un kime yaradığını hızlıca okursun",
+    rTerm5: "Tablo (sağ alt)",
+    rDef5:
+      "El başına ağırlık, equity, EV ve aksiyon % — sıralamak için sütun başlığına tıkla",
+
+    lockTitle: "Strateji kilitleme (node lock) — rakip hata yapınca stratejin nasıl değişir?",
+    lockTerm1: "Nerede",
+    lockDef1: "Bir spotu kendin çözdükten sonra sonuç ekranında. Üstteki aksiyon dizisinden bir node seç, ardından “Bu node'un stratejisini kilitle” seçeneğine bas. Örnek spotlarda [Sonuçları gör] çözümü hemen gösterir ama bu sonuçlar kilitlenemez — önce [Bu spotu kendin çöz] ile çöz.",
+    lockTerm2: "Nasıl",
+    lockDef2: "Her aksiyonun yüzdesi (%) mevcut strateji değeriyle başlar. Değerleri toplamı 100 olacak şekilde değiştir, sonra “Kilitle ve yeniden hesapla” düğmesine bas. Örneğin rakip flop'ta hiç fold etmiyorsa → fold 0, diğer aksiyonların toplamı 100. Birden fazla node kilitleyebilirsin.",
+    lockTerm3: "Sonuçları okumak",
+    lockDef3: "Sonuçların üstünde sarı bir bant çıkar. Bu sonuç, stratejinin bir kısmı sabitlenerek yeniden çözüldü; bu yüzden denge (GTO) stratejisi değildir. Paneldeki “Önce/sonra karşılaştırması” bölümünde sıklıkların, EV'nin ve exploitability (sömürülebilirlik) değerinin nasıl değiştiğini gör.",
+    lockTerm4: "Kilitleri kaldırmak",
+    lockDef4: "Tek node için “Kilidi kaldır ve yeniden hesapla”, tüm node'lar için “Tüm kilitleri kaldır ve yeniden hesapla” seçeneğini kullan. Yeni bir spot çözdüğünde kilitler kendiliğinden kalkar. Kart seçmeyi atladığın turn veya river yollarını kilitleyemezsin.",
+
+    trainerTitle: "GTO Trainer — izlemekten oynamaya",
+    trainerIntroBefore:
+      "Sonuç ekranını rahatça okuyabiliyorsan sıradaki durak:",
+    trainerBtn: "GTO Trainer",
+    trainerIntroAfter:
+      ". 13 örnek spotun karar anlarında gerçek range'lerden çekilen eller dağıtılır — bir aksiyon seç, puanını hemen gör.",
+    gradTerm: "Puanlama nasıl işler",
+    gradBefore: "Doğru/yanlış diye değil, ",
+    gradBold: "EV kaybına (bb)",
+    gradAfter:
+      " göre puanlanırsın. GTO aynı elde birkaç aksiyonu karıştırır, bu yüzden düşük sıklıklı bir aksiyon kendiliğinden hata sayılmaz — önemli olan ne kadar EV kaybettirdiği",
+    verdictTerm: "Karar eşikleri",
+    verdictBefore: "Eşikler ",
+    verdictBold: "pot'a göre",
+    verdictAfter:
+      " ölçülür — pot'un %0,35'ine kadar = En iyi oyun · %1'e kadar = Kabul edilebilir · daha fazlası = Bu spotu tekrar et. Örneğin 5,5bb'lik single raised pot'ta (SRP) eşikler 0,02bb ve 0,06bb; 22,5bb'lik 3-bet pot'ta 0,08bb ve 0,23bb.",
+    verdictHint:
+      "Aynı 0,08bb küçük bir pot'ta büyük bir hata, büyük bir pot'ta önemsiz bir hatadır. Mutlak bb ile puanlama 3-bet pot'ları olduğundan kötü gösteriyordu; bu yüzden pot'a göre puanlamaya geçtik (15.08.2026). Eşiklerin alt sınırı var (0,02bb / 0,05bb): çözümler yalnızca %0,5 hedef exploitability'ye kadar yakınsar, bu yüzden bundan küçük farklar solver gürültüsünden ayırt edilemez.",
+    reviewTerm: "Tekrar",
+    reviewBefore:
+      "En çok EV kaybettiğin eller [Tekrar] düğmesiyle geri gelir. Varsayılan olarak geçmişin ",
+    reviewBold: "yalnızca bu cihazda",
+    reviewAfter:
+      " saklanır. Hesabında tutmak ve diğer cihazlarda devam etmek için HoldemMaster hesabıyla giriş yap — giriş isteğe bağlıdır, her özellik giriş yapmadan da çalışır",
+    filterTerm: "Filtreler",
+    filterDef:
+      "Yalnızca zayıf olduğun alanlara çalış: single raised pot'lar, 3-bet pot'lar ya da blind vs blind",
+
+    myspotTerm: "Spotlarım",
+    myspotDef: "Bir spotu kendin çözdükten sonra sonuç ekranında “Bu spotta pratik yap” seçeneğine bas; sorular oluşturulur ve GTO Trainer'daki “Spotlarım” sekmesinde hemen oynamaya başlarsın. Puanlama örnek spotlarla aynı ölçütleri kullanır.",
+    myspotHint: "Sorular ve geçmiş yalnızca bu cihazda kalır (en son 20 spot · spot başına 500 deneme). Hesabına kaydedilmez, bu yüzden başka bir cihazda devam edemezsin. Aynı spotu yeniden kaydetmek önceki geçmişini siler. Kilitli bir stratejiyle hesaplanmış sonuçlardan yapılan sorular “Stratejinin bir kısmının sabit olduğu varsayılır” diye işaretlenir.",
+
+    installTitle: "Ana ekrana yükle ve çevrimdışı çalış",
+    install1:
+      "Bu solver'ı bir uygulama gibi ana ekranına yükleyebilirsin (kurulum dosyası yok). Chrome veya Edge'de adres çubuğunun sağındaki ",
+    installBold1: "yükleme simgesini",
+    install2: " kullan; iPhone'da Safari'de ",
+    installBold2: "Paylaş → Ana Ekrana Ekle",
+    install3:
+      " seçeneğine dokun. Yüklendikten sonra 13 örnek spot ve GTO Trainer alıştırmaları cihazına kaydedilir, böylece ",
+    installBold3: "internetin olmadığı metroda bile",
+    install4: " çalışmaya devam edebilirsin.",
+    samsung1:
+      "* Samsung Internet'ten yüklediğinde tarayıcı ya da cihazın güvenlik nedeniyle yüklemeyi engelleyebilir. Bu kontrol bu uygulamadan değil, tarayıcıdan gelir. ",
+    samsungBold: "Siteyi Chrome'da açarsan",
+    samsung2:
+      " engel olmadan yüklenir; burada devam etmek istersen penceredeki adımları izle.",
+    offlineDataLabel: "Çevrimdışı çalışma verisi",
+    offlineSaved: "Kaydedildi — Örnek spotlar ve GTO Trainer internetsiz çalışır",
+    offlineSaving: "Kaydediliyor…",
+    offlineNotSaved: "Kaydedilmedi",
+    offlineSaveBtn: "Şimdi kaydet (~2,3MB)",
+    offlineFootnote:
+      "Özel spot hesaplaması, çevrimiçiyken en az bir kez çalıştırdıktan sonra çevrimdışı da çalışır — solver motoru ilk kullanımda indirilir.",
+
+    safeTitle: "Yüklemek güvenli mi?",
+    safe1:
+      "Evet. Buradaki “yükleme”, cihazına bir program indirmek demek değil; ",
+    safeBold: "tarayıcının içinde çalışan bir kısayol oluşturmak",
+    safe2:
+      " demek. Android'de yalnızca bu adresi gösteren ince bir sarmalayıcı kaydedilir; her şey yine tarayıcı motorunda çalışır. Şüphen varsa şu dört şeyi kendin kontrol et — doğrulamak, sözümüze güvenmekten iyidir.",
+    permTerm: "Hiç izin kullanmaz",
+    permBefore:
+      "Yükleme hiçbir izin istemez — kamera, rehber, SMS ya da konum yok. Telefonunda ",
+    permBold: "Ayarlar → Uygulama bilgisi → İzinler",
+    permAfter: " bölümünden kendin bak",
+    airplaneTerm: "Uçak moduyla doğrula",
+    airplaneBefore:
+      "İnterneti kapat, GTO Trainer çalışmaya devam eder — hesaplamanın ",
+    airplaneBold: "tamamen senin cihazında yapıldığının",
+    airplaneAfter: " en açık kanıtı",
+    openTerm: "Kaynak kodu açık",
+    openBefore: "Bu solver AGPL-3.0 lisanslı açık kaynaktır (",
+    openAfter: ")",
+    removeTerm: "Temizce kaldırılır",
+    removeDef:
+      "Diğer uygulamalar gibi basılı tutup sil, gider. Arka planda hiçbir şey çalışmaz, geride hiçbir şey kalmaz",
+    samsungNote2:
+      "* Samsung Internet'teki güvenlik engeli bir kötü amaçlı yazılım tespiti değildir — tarayıcı bu tür yükleme paketini henüz tanımıyor. Chrome'dan yüklediğinde görünmez.",
+
+    studyTitle: "Önerilen çalışma planı",
+    study1:
+      "13 örnek spotu sırayla bitir — birbirinin üstüne kurulan bir seri olarak hazırlandı",
+    study2:
+      "“Bu el neden check'i de karıştırıyor?” diye merak ediyorsan detay tablosunda aksiyon başına EV'leri karşılaştır",
+    study3:
+      "Aynı spotlarda GTO Trainer ile pratik yaparak kalıcı hale getir — zayıf nokta raporu sana en çok EV kaybettiren durumları gösterir",
+    study4: "Range'leri sabit tut, yalnızca board'u değiştir ve karşılaştır (ör. A72 ile 974)",
+    study5:
+      "Gerçek oyunlarda kafanı karıştıran elleri burada yeniden kur ve analiz et",
+
+    troubleTitle: "Sorun giderme",
+    tTerm1: "Ağaç oluşturma hatası",
+    tDef1: "3 board kartının ve iki range'in de girildiğinden emin ol",
+    tTerm2: "Hesaplama yavaş",
+    tDef2: "Hedef exploitability'yi %0,5'e çıkar",
+    tTerm3: "Sonuçlar sekmesi boş",
+    tDef3: "“Hesaplama bitti!” göründükten sonra aç",
+    tTerm4: "Bellek sınırı aşıldı",
+    tDef4: "16-bit tam sayı moduna geç ya da daha az bet boyutu kullan",
+    tTerm5: "Matris tamamen gri",
+    tDef5:
+      "Rakibin hareket sırasına bakıyorsun — üst şeritten başka bir sahne seç",
+
+    errTitle: "Düzeltmemiz gereken bir şey mi buldun?",
+    err1: "Ekran bozulursa ya da hesaplama donarsa hata ayrıntıları bu cihaza otomatik kaydedilir. ",
+    errBold: "Kayıtlar cihazından asla çıkmaz",
+    err2:
+      " — onları ancak aşağıdan kopyalayıp toplulukta paylaşırsan görürüz. Yalnızca hata mesajını ve tarayıcı türünü içerir; range'lerini ya da çalışma geçmişini asla içermez.",
+    errLoggedLabel: "Kaydedilen hatalar",
+    errCount: (n: number) => `${n}`,
+    errCopied: "Kopyalandı",
+    errCopyBtn: "Hata ayrıntılarını kopyala",
+    errClearBtn: "Kaydı temizle",
+    errNone: "Henüz kaydedilmiş hata yok.",
+    errPrompt: "Aşağıdaki metni kopyala",
+  },
 } as const;
 
 /* npokers 빌드에서 설치 문단의 «교육 예제·트레이너 저장» 대목만 «앱 저장»으로 바꾼다.
@@ -2769,6 +2964,16 @@ const N =
           install3: " चुनें। इंस्टॉल होने पर ऐप डिवाइस पर सेव हो जाता है। आप ",
           install4: " इसका इस्तेमाल कर सकते हैं।",
         },
+        tr: {
+          exampleHeader:
+            "Yeni misin? Bunları kopyalayıp range alanlarına yapıştır (standart BTN vs BB 100bb)",
+          step4Hint:
+            "Özel spot değerleri, birimi keyfi olan tam sayı chip'lerdir. bb ile düşünmek için 10 chip = 1bb al (ör. pot 55 = 5,5bb).",
+          airplaneBefore:
+            "İnterneti kapat, uygulama çalışmaya devam eder — hesaplamanın ",
+          install3: " seçeneğine dokun. Yüklendikten sonra uygulama cihazına kaydedilir, böylece ",
+          install4: " kullanmaya devam edebilirsin.",
+        },
       }
     : null;
 
@@ -2777,7 +2982,7 @@ export default defineComponent({
   setup() {
     const copied = ref("");
     const L = computed(() =>
-      N ? { ...M[dictKey(M)], ...N[dictKey(N)] } : M[dictKey(M)]
+      N ? { ...M[i18n.locale], ...N[i18n.locale] } : M[i18n.locale]
     );
     /* 두 조각을 잇는 공백 — CJK는 낱말을 띄우지 않으므로 넣으면 벌어져 보인다.
      * (같은 문장을 쓰는 PresetsPage 배너는 공백 없이 붙는다 — 화면끼리 어긋나 있었다) */

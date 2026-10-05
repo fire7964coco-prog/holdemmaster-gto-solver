@@ -194,7 +194,7 @@ import { requestInstall, canShowInstallButton } from "../pwa";
 import { dailyState, loadDailyState, FEATURE_TRAINER } from "@features";
 import { useStore } from "../store";
 import { mainSiteUrl } from "../outbound";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 
 const M = {
   ko: {
@@ -755,6 +755,50 @@ const M = {
     creditMid2: " ने किया है। संशोधित सोर्स कोड पूरा का पूरा ",
     creditAfter: " पर उसी लाइसेंस के तहत उपलब्ध है।",
   },
+  tr: {
+    community: "HoldemMaster Topluluğu",
+    heroTitle1: "GTO stratejisi,",
+    heroTitle2: "doğrudan tarayıcında.",
+    heroSub1: "Kurulum yok, ödeme yok. Range'leri ve board'u gir,",
+    heroSub2: " optimal strateji doğrudan kendi cihazında hesaplansın.",
+    ctaPresets: "Örnek spotları gör",
+    ctaTrainer: "GTO Trainer",
+    ctaDaily: "Günün sorusu",
+    dailyDone: "Tamam",
+    ctaGuide: "Nasıl kullanılır",
+    ctaInstall: "Ana Ekrana Ekle",
+    installNote:
+      "Kurduğunda örnek spotlar ve GTO Trainer cihazına kaydedilir; çevrimdışıyken de pratik yapmaya devam edebilirsin. Bu bir program değil, tarayıcı kısayolu — hiçbir izin istemez.",
+    installSafe: "Güvenli mi?",
+    features: [
+      { title: "Ücretsiz", desc: "Tüm özellikler, kullanım sınırı yok" },
+      { title: "Çevrimdışı çalışma", desc: "Ana ekrana ekle, internet bağlantısı olmadan pratik yap" },
+      { title: "Hızlı hesaplama", desc: "Çoklu iş parçacığı — masaüstü solver hızında" },
+      { title: "GTO Trainer", desc: "Spotları oyna, pot'a oranla EV kaybına göre puanlan" },
+    ],
+    featureLockTitle: "Strateji kilitleme (node lock)",
+    featureLockDesc: "Rakibin stratejisini sen belirle ve yeniden hesapla — rakip hata yaptığında senin stratejinin nasıl değiştiğini gör",
+    step5Trainer: "Hesaplama bitince [Bu node'un stratejisini kilitle] ile rakibin stratejisini değiştirmeyi dene, ardından [Bu spotla pratik yap] ile o spot'taki soruları çöz",
+    step5Solver: "Hesaplama bitince [Bu node'un stratejisini kilitle] ile rakibin stratejisini değiştirmeyi dene",
+    stepsTitle: "Yeni misin?",
+    steps: [
+      "Örnek spotlar menüsünden herhangi bir spotu aç ve [Sonuçları gör] düğmesine bas — çözüm anında gelir",
+      "Sonuç ekranını nasıl okuyacağını öğrenmek için Kılavuz'a bak",
+      "GTO Trainer'ı dene — her kararın sana kaç bb'ye mal olduğunu tam olarak gösterir",
+      "Alıştığında kendi ellerini Özel spot (①–⑤) ile hesapla",
+    ],
+    landingBefore:
+      "GTO solver'ın ne olduğunu ve sonuçların nasıl okunduğunu önce yazılı olarak öğrenmek istersen:",
+    landingLink: "HoldemMaster solver rehberi",
+    landingAfter: ".",
+    notes:
+      "iOS ve Safari'de tarayıcı kısıtlamaları yüzünden hesaplama tek iş parçacığında çalışır, bu yüzden daha yavaştır — macOS'ta Chrome öneriyoruz. Kullanılabilir bellek 4GB ile sınırlı (WebAssembly sınırı); büyük spotları kendin hesaplamak PC'de daha rahattır.",
+    creditBefore: "Bu uygulama,",
+    creditMid1: " (Wataru Inariba, AGPL-3.0) temel alınarak",
+    creditBrand: "HoldemMaster",
+    creditMid2: " tarafından yerelleştirilip geliştirildi. Değiştirilmiş kaynak kodun tamamı aynı lisansla",
+    creditAfter: " üzerinde yayımlandı.",
+  },
 } as const;
 
 /* npokers 빌드에서 위 사전을 덮어쓰는 조각 — 트레이너·교육예제·오늘의문제 언급을 걷어내고
@@ -985,13 +1029,31 @@ const N =
            }],
           steps: ["Preflop चार्ट में open और बचाव की range देखें", "परिणाम स्क्रीन समझने के लिए [कैसे इस्तेमाल करें] गाइड पढ़ें।", "तैयार होने पर अपना स्पॉट (①–⑤) में खुद के हैंड की गणना करें"],
         },
+        tr: {
+          community: "npokers.com",
+          ctaPreflop: "Preflop tabloları",
+          ctaEquity: "Equity hesaplayıcı",
+          installNote:
+            "Kurduğunda uygulama cihazına kaydedilir, çevrimdışıyken de açılır. Bu bir program değil, tarayıcı kısayolu — hiçbir izin istemez.",
+          features: [
+            { title: "Ücretsiz", desc: "Tüm özellikler, kullanım sınırı yok" },
+            { title: "Çevrimdışı", desc: "Ana ekrana ekle, internet bağlantısı olmadan kullan" },
+            { title: "Hızlı hesaplama", desc: "Çoklu iş parçacığı — masaüstü solver hızında" },
+            { title: "Tablolar ve equity", desc: "Açılış ve savunma range'leri, ayrıca el ve range equity'si" },
+          ],
+          steps: [
+            "Önce Preflop tabloları bölümünde açılış ve savunma range'lerine göz at",
+            "Sonuç ekranını nasıl okuyacağını öğrenmek için Kılavuz'a bak",
+            "Alıştığında kendi ellerini Özel spot (①–⑤) ile hesapla",
+          ],
+        },
       }
     : null;
 
 export default defineComponent({
   setup() {
     const L = computed(() =>
-      N ? { ...M[dictKey(M)], ...N[dictKey(N)] } : { ctaPreflop: "", ctaEquity: "", ...M[dictKey(M)] }
+      N ? { ...M[i18n.locale], ...N[i18n.locale] } : { ctaPreflop: "", ctaEquity: "", ...M[i18n.locale] }
     );
     /* installNote와 「안전한가요?」 버튼을 잇는 공백.
      * ⚠ 언어마다 «문장이 끝나는 방식»이 달라서 로케일 목록이 TrainerPage와 다르다:

@@ -306,15 +306,15 @@ export const dailyShareText = (verdict: string) => {
       .join("\n");
   }
   if (i18n.locale === "tr") {
-    // 날짜 DD.MM.YYYY · 소수점 «,»(localizeNumber) — 확정표 §2. 문구는 번역 전 en 복사
+    // 날짜 DD.MM.YYYY · 소수점 «,»(localizeNumber) — 확정표 §2. 변수 뒤 접미사 없음(§6)
     const trDate = todayKey().split("-").reverse().join(".");
     return [
-      `[Daily GTO Puzzle · ${trDate}]`, /* TR-TODO */
-      `My result: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`, /* TR-TODO */
-      dailyState.streak > 1 ? `${dailyState.streak}-day streak` : "", /* TR-TODO */
+      `[Günün GTO sorusu · ${trDate}]`,
+      `Sonucum: ${verdict} (EV kaybı ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak} günlük seri` : "",
       "",
-      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&lang=tr", /* TR-TODO */
-      "(HoldemMaster GTO Solver · one puzzle a day)", /* TR-TODO */
+      "Aynı soruyu sen de çöz → https://solver.holdemmaster.com/?view=trainer&lang=tr",
+      "(HoldemMaster GTO Solver · her gün bir soru)",
     ]
       .filter(Boolean)
       .join("\n");

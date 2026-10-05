@@ -135,7 +135,7 @@
 import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import { SideView, useStore, useConfigStore } from "../store";
 import { cardText } from "../utils";
-import { i18n, dictKey } from "../i18n";
+import { i18n } from "../i18n";
 import { FEATURE_TRAINER } from "@features";
 import { handReviewLabels, HAND_REVIEW_LAUNCHED } from "@features"; // R2_REVIEW_ONLY
 
@@ -540,6 +540,34 @@ const M = {
     betSizeSub: "सेटिंग",
     run: "गणना करें",
   },
+  tr: {
+    stepDefaults: "Varsayılan",
+    stepNeeded: "Veri gerekli",
+    stepComplete: "Veri girildi",
+    stepRunNeeded: "Hesapla",
+    stepRunComplete: "Hesaplama bitti",
+    stepLegend: "✓ Tamam · ○ Yapılacak · Sarı nokta = sıradaki adım",
+    exploreLabel: "Keşfet",
+    exploreLabelSuffix: " & öğren",
+    about: "Hakkında",
+    guide: "Kılavuz",
+    presets: "Örnek spotlar",
+    presetsBadge: "Anında",
+    trainer: "GTO Trainer",
+    trainerBadge: "EV puanı",
+    preflop: "Preflop tablosu",
+    preflopBadge: "Range",
+    equity: "Equity",
+    equityBadge: "Kazanma %",
+    customLabel: "Özel spot",
+    customLabelSuffix: "",
+    oopRange: "OOP range",
+    ipRange: "IP range",
+    board: "Board",
+    betSize: "Bet boyutu",
+    betSizeSub: "Ağaç ayarları",
+    run: "Hesapla",
+  },
 } as const;
 
 export default defineComponent({
@@ -550,7 +578,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const config = useConfigStore();
-    const L = computed(() => M[dictKey(M)]);
+    const L = computed(() => M[i18n.locale]);
     const reviewNavTitle = computed(() => FEATURE_TRAINER ? handReviewLabels(i18n.locale).navTitle : ""); // R2_REVIEW_ONLY
     const customViews: SideView[] = ["oop-range", "ip-range", "board", "tree-config", "run-solver"];
     const isCustom = computed(() => customViews.includes(store.sideView));
