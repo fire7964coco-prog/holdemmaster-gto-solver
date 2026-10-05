@@ -128,8 +128,8 @@ export default defineComponent({
   name: "FeedbackForm",
   setup() {
     const locale = ref<Locale>(i18n.locale);
-    const L = computed(() => feedbackLabels[locale.value]);
-    const A = computed(() => appLabels[locale.value]);
+    const L = computed(() => feedbackLabels[locale.value] ?? feedbackLabels.en);
+    const A = computed(() => appLabels[locale.value] ?? appLabels.en);
     const body = ref("");
     const downside = ref("");
     const rating = ref<number | null>(null);

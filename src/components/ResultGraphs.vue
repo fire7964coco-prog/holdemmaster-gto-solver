@@ -52,7 +52,7 @@
 import { computed, defineComponent, ref } from "vue";
 import { cardText, cardPairOrder, toFixed1, toFixedAdaptive } from "../utils";
 import { useStore } from "../store";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, dictKey } from "../i18n";
 import {
   Results,
   Spot,
@@ -189,7 +189,7 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const chartWidth = ref(0);
     const tableScrollTarget = ref<number | null>(null);
 

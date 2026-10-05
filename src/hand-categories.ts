@@ -419,6 +419,34 @@ export const DRAW_LABELS_HI: Record<DrawKey, string> = {
   no_draw: "Draw नहीं",
 };
 
+// tr: 번역 전 en 복사 (TR-TODO)
+export const MADE_LABELS_TR: Record<MadeKey, string> = {
+  straight_flush: "Straight Flush", /* TR-TODO */
+  quads: "Quads", /* TR-TODO */
+  full_house: "Full House", /* TR-TODO */
+  flush: "Flush", /* TR-TODO */
+  straight: "Straight", /* TR-TODO */
+  trips: "Set/Trips", /* TR-TODO */
+  two_pair: "Two Pair", /* TR-TODO */
+  overpair: "Overpair", /* TR-TODO */
+  top_pair: "Top Pair", /* TR-TODO */
+  second_pair: "Second Pair", /* TR-TODO */
+  weak_pair: "Weak Pair", /* TR-TODO */
+  underpair: "Underpair", /* TR-TODO */
+  ace_high: "Ace-High", /* TR-TODO */
+  king_high: "King-High", /* TR-TODO */
+  nothing: "No Made Hand", /* TR-TODO */
+};
+
+export const DRAW_LABELS_TR: Record<DrawKey, string> = {
+  combo_draw: "Combo Draw", /* TR-TODO */
+  flush_draw: "Flush Draw", /* TR-TODO */
+  oesd: "OESD", /* TR-TODO */
+  gutshot: "Gutshot", /* TR-TODO */
+  backdoor_fd: "Backdoor FD", /* TR-TODO */
+  no_draw: "No Draw", /* TR-TODO */
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -443,6 +471,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_MS
     : i18n.locale === "hi"
     ? MADE_LABELS_HI
+    : i18n.locale === "tr"
+    ? MADE_LABELS_TR
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -467,6 +497,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_MS
     : i18n.locale === "hi"
     ? DRAW_LABELS_HI
+    : i18n.locale === "tr"
+    ? DRAW_LABELS_TR
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

@@ -135,7 +135,7 @@
 import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import { SideView, useStore, useConfigStore } from "../store";
 import { cardText } from "../utils";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 import { FEATURE_TRAINER } from "@features";
 import { handReviewLabels, HAND_REVIEW_LAUNCHED } from "@features"; // R2_REVIEW_ONLY
 
@@ -550,7 +550,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const config = useConfigStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const reviewNavTitle = computed(() => FEATURE_TRAINER ? handReviewLabels(i18n.locale).navTitle : ""); // R2_REVIEW_ONLY
     const customViews: SideView[] = ["oop-range", "ip-range", "board", "tree-config", "run-solver"];
     const isCustom = computed(() => customViews.includes(store.sideView));

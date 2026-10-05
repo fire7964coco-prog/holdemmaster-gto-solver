@@ -7,7 +7,7 @@
  *   한국어 브라우저만 한국어, 나머지는 전부 영어(포커 공용어).
  * - 문구 사전은 «각 컴포넌트 파일 안»에 둔다(const M = { ko, en }). 파일 하나에 모으면
  *   화면 작업마다 두 파일을 오가야 하고, 병렬 작업 시 충돌한다.
- *   컴포넌트에서: const L = computed(() => M[i18n.locale]);
+ *   컴포넌트에서: const L = computed(() => M[dictKey(M)]);  (2026-10-05 tr 회차부터 — 블록이 없으면 en)
  * - E2E 스크립트는 한국어 문구를 검사하므로 페이지 생성 시
  *   localStorage.setItem("solver.locale", "ko")를 미리 심는다 (헤드리스 크롬은 영어 브라우저다).
  */
@@ -15,7 +15,7 @@ import { reactive } from "vue";
 
 // ⚠ "zh"(간체)와 "zh-hant"(번체)는 «별개 언어»다 — 용어 자체가 다르므로 기계 변환 금지
 // (德州扑克/德州撲克 · 求解器/解算器 · 概率/機率 · 弃牌/蓋牌).
-export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi";
+export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr";
 
 /* 🔴 2026-08-27에 키를 갈았다 — «solver.locale» → «solver.locale.pegged».
  *
@@ -48,7 +48,8 @@ const readStored = (): Locale | null => {
       value === "fr" ||
       value === "id" ||
       value === "ms" ||
-      value === "hi"
+      value === "hi" ||
+      value === "tr"
       ? value
       : null;
   } catch {
@@ -71,7 +72,8 @@ const detect = (): Locale => {
     fromUrl === "fr" ||
     fromUrl === "id" ||
     fromUrl === "ms" ||
-    fromUrl === "hi"
+    fromUrl === "hi" ||
+    fromUrl === "tr"
   ) {
     try {
       localStorage.setItem(KEY, fromUrl);
@@ -95,6 +97,8 @@ const detect = (): Locale => {
   // 말레이어(ms-MY·ms-BN·ms-SG). 인니어와 어휘가 겹치지만 «별개 언어»다 — id로 보내지 않는다(리서치 §0).
   if (lang.startsWith("ms")) return "ms";
   if (lang === "hi" || lang.startsWith("hi-")) return "hi";
+  // 터키어(tr-TR·tr-CY). 확정표 §7-3
+  if (lang.startsWith("tr")) return "tr";
   // ⚠ 중국어는 간체(zh-CN)와 번체(zh-hant)가 별개 언어다. **번체 판정이 «먼저» 와야 한다** —
   //   startsWith("zh")를 앞에 두면 zh-TW·zh-HK가 전부 간체로 새어 나간다(2026-08-22까지 실제로 그랬다).
   //   번체권 = 대만(zh-TW)·홍콩(zh-HK)·마카오(zh-MO), 그리고 명시적 문자표기 zh-Hant-*.
@@ -185,6 +189,11 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
     title: "HoldemMaster GTO Trainer — टेक्सस होल्डम के लिए मुफ़्त GTO सॉल्वर और ट्रेनर",
     description: "बिना इंस्टॉल किए अपने ब्राउज़र में मुफ़्त GTO सॉल्वर चलाएँ। Range, board और bet size के आधार पर टेक्सस होल्डम की postflop रणनीति की गणना करें। HoldemMaster की पेशकश।",
   },
+  tr: {
+    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em", /* TR-TODO */
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.", /* TR-TODO */
+  },
 };
 
 /* npokers 빌드(스토어용 순수 솔버)의 탭 제목·메타 설명 — 빌드 2벌 분기(2026-08-24).
@@ -253,6 +262,11 @@ const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> =
     title: "npokers — टेक्सस होल्डम के लिए मुफ़्त ऑनलाइन GTO सॉल्वर",
     description: "बिना इंस्टॉल किए अपने ब्राउज़र में मुफ़्त GTO सॉल्वर चलाएँ। Range, board और bet size के आधार पर टेक्सस होल्डम की postflop रणनीति की गणना करें।",
   },
+  tr: {
+    title: "npokers — Free Online GTO Solver for Texas Hold'em", /* TR-TODO */
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.", /* TR-TODO */
+  },
 };
 
 /* 빌드 2벌 분기 — 어느 사전을 쓸지는 빌드 타임에 정해진다 (webpack DefinePlugin) */
@@ -276,6 +290,8 @@ const DOC_LANG: Record<Locale, string> = {
   id: "id",
   ms: "ms",
   hi: "hi",
+  // CSS uppercase가 터키어 규칙(i→İ)을 타게 한다 — 확정표 §7-1 (사이드바 uppercase는 끄지 않는다)
+  tr: "tr",
 };
 
 /* 설치된 앱의 이름(창 제목·홈 화면 라벨)은 «매니페스트»가 정한다 — 문서 제목이 아니다.
@@ -305,6 +321,16 @@ const applyDocumentLocale = (locale: Locale) => {
 };
 
 export const i18n = reactive({ locale: detect() });
+
+/* 🔴 tr 번역 회차 임시 안전망 (2026-10-05 뼈대 연결) — 사전에 현재 언어 블록이 «없으면» en.
+ * 각 사전(const M = { ko, en, … })을 `M[i18n.locale]` 대신 `M[dictKey(M)]`로 읽는다.
+ * tr 블록이 들어오면 그대로 tr을 고른다(되돌릴 필요 없음). 이 함수가 없으면 Locale에 "tr"이
+ * 들어간 순간 tr 블록이 없는 사전 전부가 TS7053으로 빌드를 막는다. */
+export const dictKey = <M extends { en: unknown }>(m: M): keyof M =>
+  (Object.prototype.hasOwnProperty.call(m, i18n.locale) ? i18n.locale : "en") as keyof M;
+
+/** 언어별 라벨 파일(.ts)의 사전 타입 — tr 블록은 아직 선택. TR-TODO: 번역이 끝나면 Record<Locale, T>로 되돌린다. */
+export type LocaleDict<T> = Record<Exclude<Locale, "tr">, T> & Partial<Record<"tr", T>>;
 applyDocumentLocale(i18n.locale);
 
 export const setLocale = (locale: Locale) => {
@@ -337,14 +363,31 @@ export const localizeNumber = (text: string) => {
   // ⚠ 아래 fr 치환문의 "$1…%" 공백은 «U+202F 리터럴»이다 — 일반 공백으로 «고치면» 깨진다
   if (i18n.locale === "fr")
     return text.replace(/(\d)\.(\d)/g, "$1,$2").replace(/(\d)\s?%/g, "$1 %");
+  // tr(튀르키예어화 확정표 §2): 소수점 «,» + 퍼센트 기호를 «앞»으로(«%35,4» · 공백 없음).
+  //   이미 «%35» 꼴인 사전 문구는 «\d%»가 없어 다시 건드리지 않는다(이중 처리 없음).
+  //   천단위(4자리부터 «1.326»)는 이 함수가 아니라 사전 쪽 toLocaleString("tr-TR")이 맡는다.
+  if (i18n.locale === "tr")
+    return text.replace(/(\d)\.(\d)/g, "$1,$2").replace(/(\d+(?:,\d+)?)\s?%/g, "%$1");
   return i18n.locale === "pt" || i18n.locale === "de" || i18n.locale === "id"
     ? text.replace(/(\d)\.(\d)/g, "$1,$2")
     : text;
 };
 
+/**
+ * 화면에 찍히는 퍼센트 — tr만 «%35», 나머지 12언어는 지금과 글자 하나까지 같은 «35%»
+ * (튀르키예어화 확정표 §2-2 ⓐ). 템플릿에서는 전역 속성 `$pct(...)`(index.ts에서 등록).
+ * ⚠ style 문자열(width: 50%)·벳 사이즈 입력 문법(«50%»)에는 쓰지 않는다.
+ */
+export const pctText = (s: string | number) =>
+  i18n.locale === "tr" ? "%" + s : s + "%";
+
 /** 정수부·소수부를 나눠 그리는 화면(결과 표·13×13 격자)에서 쓰는 소수점 문자 */
 export const decimalMark = () =>
-  i18n.locale === "pt" || i18n.locale === "de" || i18n.locale === "fr" || i18n.locale === "id"
+  i18n.locale === "pt" ||
+  i18n.locale === "de" ||
+  i18n.locale === "fr" ||
+  i18n.locale === "id" ||
+  i18n.locale === "tr"
     ? ","
     : ".";
 
@@ -356,6 +399,8 @@ export const decimalMark = () =>
  *   기존 8인자 호출의 zh·zhHant가 한 칸씩 밀려 조용히 틀린 언어가 나온다.
  *   id(2026-09-02)도 같은 이유로 fr 뒤 «맨 끝»이다 — 기존 9인자 호출 전수에 10번째 값을 붙였다.
  *   hi(2026-09-06)는 12번째 인자로 마지막에 추가한다.
+ *   tr(2026-10-05)은 13번째 인자로 마지막에 추가한다 — 호출부 전수에 13번째 값을 붙였다
+ *   (번역 전에는 en 복사 + «TR-TODO» 주석).
  *   ms(2026-09-03)도 같은 이유로 id 뒤 «맨 끝»이다 — 기존 10인자 호출 전수에 11번째 값을 붙였다. */
 export const pick = <T>(
   ko: T,
@@ -369,7 +414,8 @@ export const pick = <T>(
   fr: T = en,
   id: T = en,
   ms: T = en,
-  hi: T = en
+  hi: T = en,
+  tr: T = en
 ): T =>
   i18n.locale === "ko"
     ? ko
@@ -393,4 +439,6 @@ export const pick = <T>(
     ? ms
     : i18n.locale === "hi"
     ? hi
+    : i18n.locale === "tr"
+    ? tr
     : en;

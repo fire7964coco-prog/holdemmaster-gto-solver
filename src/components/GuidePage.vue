@@ -330,7 +330,7 @@ import { pwa, saveOffline, checkOfflineStatus } from "../pwa";
 // 빌드 2벌 분기 — npokers 빌드에서는 FEATURE_TRAINER=false (webpack alias, src/features/ 참조)
 import { FEATURE_TRAINER } from "@features";
 import { errorState, errorReportText, clearErrors } from "../errors";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 const M = {
   ko: {
@@ -2777,7 +2777,7 @@ export default defineComponent({
   setup() {
     const copied = ref("");
     const L = computed(() =>
-      N ? { ...M[i18n.locale], ...N[i18n.locale] } : M[i18n.locale]
+      N ? { ...M[dictKey(M)], ...N[dictKey(N)] } : M[dictKey(M)]
     );
     /* 두 조각을 잇는 공백 — CJK는 낱말을 띄우지 않으므로 넣으면 벌어져 보인다.
      * (같은 문장을 쓰는 PresetsPage 배너는 공백 없이 붙는다 — 화면끼리 어긋나 있었다) */

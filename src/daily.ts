@@ -140,11 +140,12 @@ export const recordDaily = (lossBb: number) => {
  *  - 프랑스어: JJ/MM/AAAA (브리프 §표기 — 착수지시서도 DD/MM/YYYY로 못박았다)
  *  - 인도네시아어: DD/MM/YYYY (인니 표준 — 리서치 §1-4)
  *  - 말레이어: DD/MM/YYYY (말레이시아 표준 — 말레이어 리서치 §1-2)
+ *  - 튀르키예어: DD.MM.YYYY (확정표 §2-3 — 공용 yy.mm.dd는 터키 독자에게 거꾸로 읽힌다)
  *  - 나머지: YYYY.MM.DD
  */
 export const dailyCardDate = () => {
   const key = todayKey();
-  if (i18n.locale === "de") return key.split("-").reverse().join(".");
+  if (i18n.locale === "de" || i18n.locale === "tr") return key.split("-").reverse().join(".");
   // hi: DD/MM/YYYY with Latin digits, same in the image and copied text.
   if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi")
     return key.split("-").reverse().join("/");
@@ -300,6 +301,20 @@ export const dailyShareText = (verdict: string) => {
       "",
       "Cuba cabaran yang sama → https://solver.holdemmaster.com/?view=trainer&lang=ms",
       "(HoldemMaster GTO Solver · satu cabaran sehari)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "tr") {
+    // 날짜 DD.MM.YYYY · 소수점 «,»(localizeNumber) — 확정표 §2. 문구는 번역 전 en 복사
+    const trDate = todayKey().split("-").reverse().join(".");
+    return [
+      `[Daily GTO Puzzle · ${trDate}]`, /* TR-TODO */
+      `My result: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`, /* TR-TODO */
+      dailyState.streak > 1 ? `${dailyState.streak}-day streak` : "", /* TR-TODO */
+      "",
+      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&lang=tr", /* TR-TODO */
+      "(HoldemMaster GTO Solver · one puzzle a day)", /* TR-TODO */
     ]
       .filter(Boolean)
       .join("\n");

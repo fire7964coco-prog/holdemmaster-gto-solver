@@ -103,7 +103,7 @@ import {
 } from "../presets";
 import { trackOutbound } from "../outbound";
 import { notePresetOpened } from "../pwa";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 import { InformationCircleIcon } from "@heroicons/vue/20/solid";
 import PresetPreview from "./PresetPreview.vue";
@@ -406,7 +406,7 @@ export default defineComponent({
         ? ""
         : trackOutbound(ARTICLE_URLS[p.id] ?? "", "preset-card");
 
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     // 일본어 분류명은 전각이라 한 단계 작게 쓴다 (사용자 결정 2026-08-21)
     const isJa = computed(() => i18n.locale === "ja");
 

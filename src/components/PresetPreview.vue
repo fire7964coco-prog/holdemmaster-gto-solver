@@ -134,7 +134,7 @@ import {
 import { trackOutbound } from "../outbound";
 import { Results, Spot, DisplayOptions } from "../result-types";
 import { cardText, parseCardString } from "../utils";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 import ResultBasics from "./ResultBasics.vue";
 import ResultTable from "./ResultTable.vue";
@@ -367,7 +367,7 @@ export default defineComponent({
         : trackOutbound(ARTICLE_URLS[props.preset.id] ?? "", "preset-preview")
     );
 
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
 
     return {
       data,

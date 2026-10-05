@@ -117,7 +117,7 @@
 <script lang="ts">
 import { computed, defineComponent, h } from "vue";
 import { average, toFixed1, toFixed, toFixedAdaptive } from "../utils";
-import { localizeNumber, decimalMark } from "../i18n";
+import { localizeNumber, decimalMark, dictKey } from "../i18n";
 import { Results, Spot, SpotChance } from "../result-types";
 import { useStore } from "../store";
 import { i18n } from "../i18n";
@@ -193,6 +193,13 @@ const Adaptive = (props: { value: number; class: object }) => {
 const Percentage = (props: { value: number; class: object }) => {
   const str = computed(() => localizeNumber(toFixed1(props.value * 100)));
   if (isNaN(props.value)) return h("div", { class: "px-1" }, "-");
+  // tr: 작은 «%»를 정수부 «앞»에 둔다(확정표 §2-2 · ResultTable 격자와 같은 처리)
+  if (i18n.locale === "tr")
+    return h("div", { class: props.class }, [
+      h("span", { class: "text-sm" }, "%"),
+      h("span", {}, str.value.slice(0, -1)),
+      h("span", { class: "text-sm" }, str.value.slice(-1)),
+    ]);
   return h("div", { class: props.class }, [
     h("span", {}, str.value.slice(0, -1)),
     h("span", { class: "text-sm" }, str.value.slice(-1) + "%"),
@@ -241,7 +248,7 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const player = computed(() => {
       if (props.selectedChance) return "chance";
       return props.selectedSpot.player;

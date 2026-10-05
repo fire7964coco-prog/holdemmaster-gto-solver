@@ -19,7 +19,7 @@ import { createCustomTrainerBank, customTrainerState } from "../custom-trainer";
 import type { CustomTrainerCapture } from "../custom-trainer";
 import { saveCustomTrainerBank } from "../custom-trainer-db";
 import { M } from "../custom-trainer-labels";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 import { useStore } from "../store";
 
 export default defineComponent({
@@ -28,7 +28,7 @@ export default defineComponent({
     disabled: { type: Boolean, default: false },
   },
   setup(props) {
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const busy = ref(false);
     const error = ref("");
     const store = useStore();

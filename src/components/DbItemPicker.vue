@@ -486,7 +486,7 @@
 <script lang="ts">
 import { computed, defineComponent, nextTick, ref } from "vue";
 import * as Db from "../db";
-import { i18n, pick } from "../i18n";
+import { i18n, pick, dictKey } from "../i18n";
 
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 
@@ -810,7 +810,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const data = ref<(Item | Group)[]>([]);
     const selectedValue = ref(false as false | string);
 
@@ -1124,10 +1124,10 @@ export default defineComponent({
         .map((item) => item.path[item.path.length - 1])
         .filter((name) => name !== editingName.value);
       const defaultName = item.isGroup
-        ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo", "Neue Gruppe", "新建分组", "新增群組", "Nouveau groupe", "Grup baru", "Kumpulan baharu", "नया समूह")
+        ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo", "Neue Gruppe", "新建分组", "新增群組", "Nouveau groupe", "Grup baru", "Kumpulan baharu", "नया समूह", "New group" /* TR-TODO */)
         : props.storeName === "ranges"
-        ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range", "Neue Range", "新建范围", "新增範圍", "Nouvelle range", "Range baru", "Range baharu", "नई range")
-        : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração", "Neue Einstellung", "新建设置", "新增設定", "Nouvelle configuration", "Konfigurasi baru", "Tetapan baharu", "नई सेटिंग");
+        ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range", "Neue Range", "新建范围", "新增範圍", "Nouvelle range", "Range baru", "Range baharu", "नई range", "New range" /* TR-TODO */)
+        : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração", "Neue Einstellung", "新建设置", "新增設定", "Nouvelle configuration", "Konfigurasi baru", "Tetapan baharu", "नई सेटिंग", "New configuration" /* TR-TODO */);
       if (editingName.value === "") {
         let i = 2;
         let newName = defaultName;
@@ -1478,7 +1478,7 @@ export default defineComponent({
           "解析出错（JSON 格式无效）", "解析錯誤（JSON 格式無效）",
           "Erreur d'analyse (format JSON invalide)",
           "Kesalahan pembacaan (format JSON tidak valid)",
-          "Ralat pembacaan (format JSON tidak sah)", "पार्स नहीं हो सका (JSON प्रारूप अमान्य है)");
+          "Ralat pembacaan (format JSON tidak sah)", "पार्स नहीं हो सका (JSON प्रारूप अमान्य है)", "Parse error (invalid JSON format)" /* TR-TODO */);
         return;
       }
 
@@ -1494,7 +1494,7 @@ export default defineComponent({
           "数据类型不一致", "資料類型不一致",
           "Le type de données ne correspond pas",
           "Tipe data tidak cocok",
-          "Jenis data tidak sepadan", "डेटा का प्रकार मेल नहीं खाता");
+          "Jenis data tidak sepadan", "डेटा का प्रकार मेल नहीं खाता", "Data type mismatch" /* TR-TODO */);
         return;
       }
 
@@ -1510,12 +1510,12 @@ export default defineComponent({
           "版本不一致", "版本不一致",
           "La version ne correspond pas",
           "Versi tidak cocok",
-          "Versi tidak sepadan", "वर्ज़न मेल नहीं खाता");
+          "Versi tidak sepadan", "वर्ज़न मेल नहीं खाता", "Version mismatch" /* TR-TODO */);
         return;
       }
 
       if (!checkJson(obj.data)) {
-        importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos", "Ungültige Daten", "无效的数据", "無效的資料", "Données invalides", "Data tidak valid", "Data tidak sah", "अमान्य डेटा");
+        importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos", "Ungültige Daten", "无效的数据", "無效的資料", "Données invalides", "Data tidak valid", "Data tidak sah", "अमान्य डेटा", "Invalid data" /* TR-TODO */);
         return;
       }
 
@@ -1532,7 +1532,7 @@ export default defineComponent({
           `已经有同名的项目，无法创建分组“${itemsToAdd}”`, `已經有同名的項目，無法建立群組「${itemsToAdd}」`,
           `Impossible de créer le groupe « ${itemsToAdd} » : un élément du même nom existe déjà`,
           `Tidak bisa membuat grup “${itemsToAdd}”: sudah ada item dengan nama yang sama`,
-          `Kumpulan “${itemsToAdd}” tidak dapat dibuat kerana sudah ada item dengan nama yang sama`, `"${itemsToAdd}" समूह नहीं बना सकते, क्योंकि इस नाम का आइटम पहले से मौजूद है`);
+          `Kumpulan “${itemsToAdd}” tidak dapat dibuat kerana sudah ada item dengan nama yang sama`, `"${itemsToAdd}" समूह नहीं बना सकते, क्योंकि इस नाम का आइटम पहले से मौजूद है`, `Cannot create group "${itemsToAdd}" because an item with the same name already exists` /* TR-TODO */);
         return;
       }
 

@@ -79,7 +79,7 @@
 import { computed, defineComponent, nextTick, ref } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { formatAmount } from "../utils";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 import { Position } from "../preflop-charts";
 import {
   Caller,
@@ -266,7 +266,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const config = useConfigStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
 
     const opener = ref<Position>("BTN");
     const caller = ref<Caller>("BB");

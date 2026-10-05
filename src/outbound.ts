@@ -109,6 +109,8 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   ms: { "": "/ms" },
   // 2026-09-05 HTTP: /hi 200; /hi/solver and /hi/community 404.
   hi: { "": "/hi" },
+  // 2026-10-05 확정표 §9: /tr 홈만 등재 — /tr/solver는 404. 본체가 /tr/solver를 열면 여기와 tr-verify가 같이 낡는다
+  tr: { "": "/tr" },
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

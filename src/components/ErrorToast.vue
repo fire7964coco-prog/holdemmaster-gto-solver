@@ -52,7 +52,7 @@ import {
   dismissErrorToast,
   retrySolverSingleThread,
 } from "../errors";
-import { i18n, pick } from "../i18n";
+import { i18n, pick, dictKey } from "../i18n";
 
 const M = {
   ko: {
@@ -221,9 +221,9 @@ const M = {
 
 export default defineComponent({
   setup() {
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const retrySingleThreadLabel = computed(() =>
-      // i18n.ts pick() 순서: ko, en, ja, es, pt, de, zh, zh-hant, fr, id, ms, hi.
+      // i18n.ts pick() 순서: ko, en, ja, es, pt, de, zh, zh-hant, fr, id, ms, hi, tr.
       pick(
         "단일 스레드로 다시 시도",
         "Retry with a single thread",
@@ -236,7 +236,7 @@ export default defineComponent({
         "Réessayer avec un seul thread",
         "Coba lagi dengan satu thread",
         "Cuba semula dengan satu thread",
-        "एक थ्रेड से फिर कोशिश करें"
+        "एक थ्रेड से फिर कोशिश करें", "Retry with a single thread" /* TR-TODO */
       )
     );
     const copied = ref(false);

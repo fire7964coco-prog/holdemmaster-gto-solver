@@ -3,7 +3,7 @@
  * Do not rephrase. Regenerate with: node 도구/e2e/feedback-copy-labels.js
  * App-only copy is a separate dictionary below the generated block.
  */
-import type { Locale } from "./i18n";
+import type { LocaleDict } from "./i18n";
 
 export type FeedbackLabels = {
   formTitle: string;
@@ -27,7 +27,7 @@ export type FeedbackLabels = {
   errors: Record<string, string>;
 };
 
-export const feedbackLabels: Record<Locale, FeedbackLabels> = {
+export const feedbackLabels: LocaleDict<FeedbackLabels> = { // TR-TODO: tr 블록이 들어오면 Record<Locale, …>로 되돌린다
   ko: {
     formTitle: "솔버 써 보니 어땠나요?",
     tabReview: "후기",
@@ -545,7 +545,7 @@ export type FeedbackAppLabels = {
   nicknameLabel: string;
 };
 
-export const appLabels: Record<Locale, FeedbackAppLabels> = {
+export const appLabels: LocaleDict<FeedbackAppLabels> = { // TR-TODO: tr 블록이 들어오면 Record<Locale, …>로 되돌린다
   ko: {
     menu: "후기 남기기",
     resultPrompt: "써 보니 어땠나요?",

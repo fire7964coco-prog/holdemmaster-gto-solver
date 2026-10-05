@@ -10,7 +10,7 @@
  */
 import { cardText } from "./utils";
 import { C } from "./theme";
-import { i18n, localizeNumber } from "./i18n";
+import { i18n, localizeNumber, dictKey } from "./i18n";
 
 // 카드에 그려 넣는 고정 문구 — 카드 언어는 현재 화면 언어를 따른다
 const CARD_TEXT = {
@@ -285,7 +285,7 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  const T = CARD_TEXT[i18n.locale];
+  const T = CARD_TEXT[dictKey(CARD_TEXT)];
 
   // 상단 브랜드 줄: 앰버 배지(스페이드) + 서비스명
   roundedRect(ctx, 72, 72, 92, 92, 24);

@@ -147,7 +147,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr",
     Record<TrainerCategory, string>
   > = {
     ko: {
@@ -226,6 +226,12 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "Pot 3-bet",
       blind: "Blind vs Blind",
     },
+    tr: {
+      all: "All", /* TR-TODO */
+      srp: "Single Raised", /* TR-TODO */
+      "3bp": "3-Bet Pot", /* TR-TODO */
+      blind: "Blind vs Blind", /* TR-TODO */
+    },
   };
   return labels[i18n.locale][category];
 };
@@ -260,6 +266,9 @@ export const trainerActionLabel = (
       : i18n.locale === "fr"
       ? // ⚠ % 앞 공백은 U+202F 리터럴 (프랑스 조판 — 리서치 §1-3. 산문형 라벨이라 적용 대상)
         `${label} ${amount} (${pct} % du pot)`
+      : i18n.locale === "tr"
+      ? // 확정표 §6: 퍼센트 기호 앞 «%35» · 접미사 없이 «pot» (번역 확정 형식)
+        `${label} ${amount} (%${pct} pot)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return `${label} ${amount}`;

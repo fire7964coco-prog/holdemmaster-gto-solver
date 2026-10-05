@@ -93,13 +93,13 @@ import type { TrainerEvaluation } from "../trainer";
 import { M } from "../custom-trainer-labels";
 import { M as REVIEW_LABELS } from "../hand-review-labels";
 import { useStore } from "../store";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, dictKey, pctText } from "../i18n";
 import { cardText, formatAmount } from "../utils";
 
 export default defineComponent({
   setup() {
-    const L = computed(() => M[i18n.locale]);
-    const R = computed(() => REVIEW_LABELS[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
+    const R = computed(() => REVIEW_LABELS[dictKey(REVIEW_LABELS)]);
     const store = useStore();
     const banks = ref<CustomTrainerBank[]>([]);
     const bank = computed(() => banks.value.find(item => item.id === customTrainerState.selectedBankId) ?? null);
@@ -117,7 +117,8 @@ export default defineComponent({
     const number = localizeNumber;
     const displayValue = (value: number) => `${number(value.toFixed(3))} ${unit.value}`;
     const amount = (value: number) => `${number(formatAmount(value, bank.value?.unitScale ?? 1))} ${unit.value}`;
-    const percent = (value: number) => `${number(value.toFixed(1))}${i18n.locale === "fr" ? " %" : "%"}`;
+    const percent = (value: number) =>
+      i18n.locale === "fr" ? `${number(value.toFixed(1))} %` : pctText(number(value.toFixed(1)));
     const boardCards = computed(() => question.value?.node.currentBoard.map(cardText) ?? []);
     const handCards = computed(() => question.value ? trainerCardPair(question.value.handPair) : []);
     const limits = computed(() => question.value ? customLossLimits(question.value.node) : { potBb: 0, bestBb: 0, goodBb: 0 });

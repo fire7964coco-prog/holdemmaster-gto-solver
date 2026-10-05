@@ -202,7 +202,7 @@
             {{ L.clear }}
           </button>
           <span v-if="running" class="text-sm text-neutral-400 tabular-nums">
-            {{ Math.round(progress * 100) }}%
+            {{ $pct(Math.round(progress * 100)) + " " }}
           </span>
         </div>
       </div>
@@ -241,10 +241,10 @@
 
             <div class="flex flex-wrap gap-2 mb-3">
               <div class="stat-chip">
-                {{ L.win }} <b data-testid="equity-win">{{ $n(result.win.toFixed(1)) }}%</b>
+                {{ L.win }} <b data-testid="equity-win">{{ $pct($n(result.win.toFixed(1))) }}</b>
               </div>
-              <div class="stat-chip">{{ L.tie }} <b>{{ $n(result.tie.toFixed(1)) }}%</b></div>
-              <div class="stat-chip">{{ L.lose }} <b>{{ $n(result.lose.toFixed(1)) }}%</b></div>
+              <div class="stat-chip">{{ L.tie }} <b>{{ $pct($n(result.tie.toFixed(1))) }}</b></div>
+              <div class="stat-chip">{{ L.lose }} <b>{{ $pct($n(result.lose.toFixed(1))) }}</b></div>
               <div class="stat-chip">
                 {{ L.combos }} <b>{{ result.villainCombos }}</b>
               </div>
@@ -293,7 +293,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 import { cardText } from "../utils";
 import { noteToolUsed } from "../pwa";
 import {
@@ -1040,7 +1040,7 @@ export default defineComponent({
   components: { BoardSelectorCard, CardSlot },
 
   setup() {
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
 
     // npokers 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
     noteToolUsed();

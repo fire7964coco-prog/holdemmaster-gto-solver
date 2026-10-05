@@ -214,7 +214,7 @@
 import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import { useSavedConfigStore, useStore } from "../store";
 import { handler } from "../global-worker";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, dictKey } from "../i18n";
 import { useNodeLockStore } from "../node-lock";
 import { nodeLockLabels } from "../node-lock-labels";
 import { CustomTrainerEntry, createCustomTrainerCapture, FEATURE_TRAINER } from "@features";
@@ -369,7 +369,7 @@ export default defineComponent({
       return localizeNumber((value / scale).toPrecision(4) + (scale > 1 ? "bb" : ""));
     });
     const savedConfig = useSavedConfigStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const openSetup = (view: "presets" | "oop-range") => {
       store.navView = "solver";
       store.sideView = view;

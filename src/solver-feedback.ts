@@ -8,7 +8,7 @@ import { feedbackFeatures } from "./solver-feedback-features";
 const API = "https://www.holdemmaster.com/api/solver-feedback";
 export const FEEDBACK_DRAFT_KEY = "solver.feedback.draft.v1";
 export const FEEDBACK_SOLVES_KEY = "solver.feedback.solves.v1";
-const LOCALES: readonly string[] = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi"];
+const LOCALES: readonly string[] = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr"];
 export type FeedbackDraft = {
   locale: Locale;
   body: string;

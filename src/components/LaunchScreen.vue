@@ -48,7 +48,7 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { pwa, closeLaunch } from "../pwa";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 const M = {
   ko: {
@@ -135,7 +135,7 @@ const NPOKERS_TITLE = __APP_TARGET__ === "npokers" ? "npokers" : null;
 export default defineComponent({
   setup() {
     const L = computed(() =>
-      NPOKERS_TITLE ? { ...M[i18n.locale], titleLine1: NPOKERS_TITLE } : M[i18n.locale]
+      NPOKERS_TITLE ? { ...M[dictKey(M)], titleLine1: NPOKERS_TITLE } : M[dictKey(M)]
     );
     return { pwa, closeLaunch, L };
   },

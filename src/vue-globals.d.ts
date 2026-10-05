@@ -13,5 +13,7 @@ declare module "vue" {
     $n: (text: string) => string;
     /** 현재 언어의 소수점 문자 */
     $d: () => string;
+    /** 퍼센트 표기 — tr만 «%35», 나머지는 «35%» */
+    $pct: (s: string | number) => string;
   }
 }

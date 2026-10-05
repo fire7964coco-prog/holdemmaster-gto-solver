@@ -44,7 +44,7 @@
             (tab.active ? 'text-brand-ink/75' : 'text-neutral-500')
           "
         >
-          {{ $n(tab.percent) }}%
+          {{ $pct($n(tab.percent)) + " " }}
         </span>
       </button>
     </div>
@@ -206,7 +206,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
 import { useStore } from "../store";
-import { i18n } from "../i18n";
+import { i18n, dictKey, pctText } from "../i18n";
 import { noteToolUsed } from "../pwa";
 import {
   POSITIONS,
@@ -1424,7 +1424,7 @@ type ChartMode = {
 export default defineComponent({
   setup() {
     const store = useStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
 
     // npokers 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
     noteToolUsed();
@@ -1552,7 +1552,7 @@ export default defineComponent({
           stats: [
             {
               label: t.statPercent,
-              value: `${percentOf(selected.value)}%`,
+              value: pctText(percentOf(selected.value)),
               testid: "preflop-percent",
             },
             { label: t.statCombos, value: `${Math.round(s.combos)} / 1326` },
@@ -1605,13 +1605,13 @@ export default defineComponent({
           stats: [
             {
               label: t.stat3bet,
-              value: `${d.threeBetPercent.toFixed(1)}%`,
+              value: pctText(d.threeBetPercent.toFixed(1)),
               testid: "preflop-3bet",
             },
-            { label: t.statCall, value: `${d.callPercent.toFixed(1)}%` },
+            { label: t.statCall, value: pctText(d.callPercent.toFixed(1)) },
             {
               label: t.statTotal,
-              value: `${d.totalPercent.toFixed(1)}%`,
+              value: pctText(d.totalPercent.toFixed(1)),
               testid: "preflop-percent",
             },
             { label: t.statMixed, value: String(d.mixedHands) },
@@ -1655,13 +1655,13 @@ export default defineComponent({
           stats: [
             {
               label: t.stat4bet,
-              value: `${v.fourBetPercent.toFixed(1)}%`,
+              value: pctText(v.fourBetPercent.toFixed(1)),
               testid: "preflop-4bet",
             },
-            { label: t.statCall, value: `${v.callPercent.toFixed(1)}%` },
+            { label: t.statCall, value: pctText(v.callPercent.toFixed(1)) },
             {
               label: t.statContinue,
-              value: `${v.continuePercent.toFixed(1)}%`,
+              value: pctText(v.continuePercent.toFixed(1)),
               testid: "preflop-continue",
             },
             { label: t.statMixed, value: String(v.mixedHands) },
@@ -1705,13 +1705,13 @@ export default defineComponent({
           stats: [
             {
               label: t.stat5bet,
-              value: `${v4.fiveBetPercent.toFixed(1)}%`,
+              value: pctText(v4.fiveBetPercent.toFixed(1)),
               testid: "preflop-5bet",
             },
-            { label: t.statCall, value: `${v4.callPercent.toFixed(1)}%` },
+            { label: t.statCall, value: pctText(v4.callPercent.toFixed(1)) },
             {
               label: t.statContinue4bet,
-              value: `${v4.continuePercent.toFixed(1)}%`,
+              value: pctText(v4.continuePercent.toFixed(1)),
               testid: "preflop-continue",
             },
             { label: t.statMixed, value: String(v4.mixedHands) },

@@ -194,7 +194,7 @@ import { requestInstall, canShowInstallButton } from "../pwa";
 import { dailyState, loadDailyState, FEATURE_TRAINER } from "@features";
 import { useStore } from "../store";
 import { mainSiteUrl } from "../outbound";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 const M = {
   ko: {
@@ -991,7 +991,7 @@ const N =
 export default defineComponent({
   setup() {
     const L = computed(() =>
-      N ? { ...M[i18n.locale], ...N[i18n.locale] } : { ctaPreflop: "", ctaEquity: "", ...M[i18n.locale] }
+      N ? { ...M[dictKey(M)], ...N[dictKey(N)] } : { ctaPreflop: "", ctaEquity: "", ...M[dictKey(M)] }
     );
     /* installNote와 「안전한가요?」 버튼을 잇는 공백.
      * ⚠ 언어마다 «문장이 끝나는 방식»이 달라서 로케일 목록이 TrainerPage와 다르다:

@@ -99,7 +99,7 @@ import { viewFromUrl } from "../pwa";
 // 빌드 2벌 분기 — npokers 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
 import { TrainerPage, PresetsPage, bootstrapAccount } from "@features";
 import { HandReviewPage, handReviewLabels, FEATURE_TRAINER } from "@features"; // R2_REVIEW_ONLY
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 import NavBar from "./NavBar.vue";
 import SideBar from "./SideBar.vue";
@@ -352,7 +352,7 @@ export default defineComponent({
       },
     } as const;
     const header = computed(() => {
-      const messages = HEADERS[i18n.locale];
+      const messages = HEADERS[dictKey(HEADERS)];
       if (store.sideView === "hand-review") return FEATURE_TRAINER ? handReviewLabels(i18n.locale).title : ""; // R2_REVIEW_ONLY
       const base = messages[store.sideView];
       return store.sideView === "tree-config" && store.treeEditOpen

@@ -11,7 +11,7 @@
       </div>
       <div class="flex items-end justify-between mt-0.5">
         <span class="text-lg font-bold text-white tabular-nums">
-          {{ $n(tile.freq.toFixed(1)) }}%
+          {{ $pct($n(tile.freq.toFixed(1))) + " " }}
         </span>
         <span class="text-[0.65rem] text-white/70 tabular-nums">
           {{ $n(tile.combos.toFixed(1)) }}<br />{{ L.combos }}
@@ -26,7 +26,7 @@ import { computed, defineComponent } from "vue";
 import { Results, Spot, SpotPlayer } from "../result-types";
 import { useStore } from "../store";
 import { formatAmount } from "../utils";
-import { i18n, pick, localizeNumber } from "../i18n";
+import { i18n, pick, localizeNumber, dictKey } from "../i18n";
 
 const M = {
   ko: {
@@ -160,7 +160,15 @@ const actionLabel = (
       Raise: "Raise",
       Allin: "All-in",
       "All-in": "All-in",
-    }
+    }, {
+      Fold: "Fold",
+      Check: "Check",
+      Call: "Call",
+      Bet: "Bet",
+      Raise: "Raise",
+      Allin: "All-in",
+      "All-in": "All-in",
+    } /* TR-TODO */
   );
   const label = map[name] ?? name;
   if (!amount || amount === "0") return label;
@@ -188,7 +196,7 @@ const actionLabel = (
         "du pot",
         "dari pot",
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
-        "pot", "pot"
+        "pot", "pot", "pot" /* TR-TODO */
       )})`
     );
   }
@@ -238,7 +246,7 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const tiles = computed(() => {
       const spot = props.selectedSpot;
       const results = props.results;

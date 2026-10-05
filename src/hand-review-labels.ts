@@ -1,4 +1,4 @@
-import type { Locale } from "./i18n";
+import type { Locale, LocaleDict } from "./i18n";
 
 // R2 문구 전표 정본. 복기 기능 진입점 안에서만 가져온다.
 // 숫자 자리표시자를 바꾼 뒤 화면에서는 기존 localizeNumber()를 적용한다.
@@ -332,5 +332,5 @@ export const M = {
 export type HandReviewLabelKey = keyof typeof M.en;
 export type HandReviewLabels = Record<HandReviewLabelKey, string>;
 // This assignment checks both the locale set and every required key at build time.
-const checkedLabels: Record<Locale, HandReviewLabels> = M;
-export const handReviewLabels = (locale: Locale): HandReviewLabels => checkedLabels[locale];
+const checkedLabels: LocaleDict<HandReviewLabels> = M; // TR-TODO: tr 블록이 들어오면 Record<Locale, …>로 되돌린다
+export const handReviewLabels = (locale: Locale): HandReviewLabels => checkedLabels[locale] ?? checkedLabels.en;

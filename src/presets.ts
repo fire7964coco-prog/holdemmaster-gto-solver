@@ -16,6 +16,7 @@ export type Preset = {
   categoryId: string;
   categoryMs: string;
   categoryHi: string;
+  categoryTr: string;
   title: string;
   titleEn: string;
   titleJa: string;
@@ -28,6 +29,7 @@ export type Preset = {
   titleId: string;
   titleMs: string;
   titleHi: string;
+  titleTr: string;
   board: string; // 예: "Ah 7d 2c"
   lesson: string; // 이 스팟에서 배우는 것
   lessonEn: string;
@@ -41,6 +43,7 @@ export type Preset = {
   lessonId: string;
   lessonMs: string;
   lessonHi: string;
+  lessonTr: string;
   oopLabel: string;
   oopLabelEn: string;
   oopLabelJa: string;
@@ -53,6 +56,7 @@ export type Preset = {
   oopLabelId: string;
   oopLabelMs: string;
   oopLabelHi: string;
+  oopLabelTr: string;
   ipLabel: string;
   ipLabelEn: string;
   ipLabelJa: string;
@@ -65,6 +69,7 @@ export type Preset = {
   ipLabelId: string;
   ipLabelMs: string;
   ipLabelHi: string;
+  ipLabelTr: string;
   oopRange: string;
   ipRange: string;
   startingPot: number;
@@ -78,7 +83,7 @@ export type Preset = {
 
 /* 현재 언어에 맞는 프리셋 문구 — 화면에서는 preset.title 대신 이걸 쓸 것 */
 export const presetTitleOf = (
-  preset: Pick<Preset, "title" | "titleEn" | "titleJa" | "titleEs" | "titlePt" | "titleDe" | "titleZh" | "titleZhHant" | "titleFr" | "titleId" | "titleMs" | "titleHi">
+  preset: Pick<Preset, "title" | "titleEn" | "titleJa" | "titleEs" | "titlePt" | "titleDe" | "titleZh" | "titleZhHant" | "titleFr" | "titleId" | "titleMs" | "titleHi" | "titleTr">
 ) =>
   i18n.locale === "ko"
     ? preset.title
@@ -102,9 +107,11 @@ export const presetTitleOf = (
     ? preset.titleMs
     : i18n.locale === "hi"
     ? preset.titleHi
+    : i18n.locale === "tr"
+    ? preset.titleTr
     : preset.titleEn;
 export const presetLessonOf = (
-  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId" | "lessonMs" | "lessonHi">
+  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId" | "lessonMs" | "lessonHi" | "lessonTr">
 ) =>
   i18n.locale === "ko"
     ? preset.lesson
@@ -128,9 +135,11 @@ export const presetLessonOf = (
     ? preset.lessonMs
     : i18n.locale === "hi"
     ? preset.lessonHi
+    : i18n.locale === "tr"
+    ? preset.lessonTr
     : preset.lessonEn;
 export const presetCategoryOf = (
-  preset: Pick<Preset, "category" | "categoryEn" | "categoryJa" | "categoryEs" | "categoryPt" | "categoryDe" | "categoryZh" | "categoryZhHant" | "categoryFr" | "categoryId" | "categoryMs" | "categoryHi">
+  preset: Pick<Preset, "category" | "categoryEn" | "categoryJa" | "categoryEs" | "categoryPt" | "categoryDe" | "categoryZh" | "categoryZhHant" | "categoryFr" | "categoryId" | "categoryMs" | "categoryHi" | "categoryTr">
 ) =>
   i18n.locale === "ko"
     ? preset.category
@@ -154,9 +163,11 @@ export const presetCategoryOf = (
     ? preset.categoryMs
     : i18n.locale === "hi"
     ? preset.categoryHi
+    : i18n.locale === "tr"
+    ? preset.categoryTr
     : preset.categoryEn;
 export const oopLabelOf = (
-  preset: Pick<Preset, "oopLabel" | "oopLabelEn" | "oopLabelJa" | "oopLabelEs" | "oopLabelPt" | "oopLabelDe" | "oopLabelZh" | "oopLabelZhHant" | "oopLabelFr" | "oopLabelId" | "oopLabelMs" | "oopLabelHi">
+  preset: Pick<Preset, "oopLabel" | "oopLabelEn" | "oopLabelJa" | "oopLabelEs" | "oopLabelPt" | "oopLabelDe" | "oopLabelZh" | "oopLabelZhHant" | "oopLabelFr" | "oopLabelId" | "oopLabelMs" | "oopLabelHi" | "oopLabelTr">
 ) =>
   i18n.locale === "ko"
     ? preset.oopLabel
@@ -180,9 +191,11 @@ export const oopLabelOf = (
     ? preset.oopLabelMs
     : i18n.locale === "hi"
     ? preset.oopLabelHi
+    : i18n.locale === "tr"
+    ? preset.oopLabelTr
     : preset.oopLabelEn;
 export const ipLabelOf = (
-  preset: Pick<Preset, "ipLabel" | "ipLabelEn" | "ipLabelJa" | "ipLabelEs" | "ipLabelPt" | "ipLabelDe" | "ipLabelZh" | "ipLabelZhHant" | "ipLabelFr" | "ipLabelId" | "ipLabelMs" | "ipLabelHi">
+  preset: Pick<Preset, "ipLabel" | "ipLabelEn" | "ipLabelJa" | "ipLabelEs" | "ipLabelPt" | "ipLabelDe" | "ipLabelZh" | "ipLabelZhHant" | "ipLabelFr" | "ipLabelId" | "ipLabelMs" | "ipLabelHi" | "ipLabelTr">
 ) =>
   i18n.locale === "ko"
     ? preset.ipLabel
@@ -206,6 +219,8 @@ export const ipLabelOf = (
     ? preset.ipLabelMs
     : i18n.locale === "hi"
     ? preset.ipLabelHi
+    : i18n.locale === "tr"
+    ? preset.ipLabelTr
     : preset.ipLabelEn;
 /** id로 제목 찾기 (트레이너 등 id만 있는 곳용) */
 export const presetTitleById = (id: string) => {
@@ -247,6 +262,7 @@ const SRP = {
     ipLabelHi: "BTN (opener)",
   category: "싱글레이즈팟 — BTN vs BB (기본기)",
   categoryEn: "Single Raised Pot — BTN vs BB (Fundamentals)",
+  categoryTr: "Single Raised Pot — BTN vs BB (Fundamentals)", /* TR-TODO */
   categoryJa: "シングルレイズポット — BTN vs BB（基本）",
   categoryEs: "Single Raised Pot — BTN vs BB (fundamentos)",
   categoryPt: "Single Raised Pot — BTN vs BB (fundamentos)",
@@ -258,6 +274,7 @@ const SRP = {
   categoryMs: "Single Raised Pot — BTN vs BB (asas)",
   oopLabel: "BB (콜러)",
   oopLabelEn: "BB (Caller)",
+  oopLabelTr: "BB (Caller)", /* TR-TODO */
   oopLabelJa: "BB（コーラー）",
   oopLabelEs: "BB (caller)",
   oopLabelPt: "BB (caller)",
@@ -269,6 +286,7 @@ const SRP = {
   oopLabelMs: "BB (caller)",
   ipLabel: "BTN (오픈레이저)",
   ipLabelEn: "BTN (Opener)",
+  ipLabelTr: "BTN (Opener)", /* TR-TODO */
   ipLabelJa: "BTN（オープンレイザー）",
   ipLabelEs: "BTN (open-raiser)",
   ipLabelPt: "BTN (open-raiser)",
@@ -294,6 +312,7 @@ const TBP = {
     ipLabelHi: "BTN (caller)",
   category: "3벳팟 — BB 3벳 vs BTN 콜 (낮은 SPR)",
   categoryEn: "3-Bet Pot — BB 3-Bets, BTN Calls (Low SPR)",
+  categoryTr: "3-Bet Pot — BB 3-Bets, BTN Calls (Low SPR)", /* TR-TODO */
   categoryJa: "3ベットポット — BB 3ベット vs BTN コール（低SPR）",
   categoryEs: "Bote de 3-bet — BB 3-betea y BTN paga (SPR bajo)",
   categoryPt: "Pote de 3-bet — BB dá 3-bet e BTN paga (SPR baixo)",
@@ -305,6 +324,7 @@ const TBP = {
   categoryMs: "Pot 3-bet — BB 3-bet, BTN call (SPR rendah)",
   oopLabel: "BB (3벳터)",
   oopLabelEn: "BB (3-Bettor)",
+  oopLabelTr: "BB (3-Bettor)", /* TR-TODO */
   oopLabelJa: "BB（3ベッター）",
   oopLabelEs: "BB (3-bettor)",
   oopLabelPt: "BB (3-bettor)",
@@ -316,6 +336,7 @@ const TBP = {
   oopLabelMs: "BB (3-bettor)",
   ipLabel: "BTN (콜러)",
   ipLabelEn: "BTN (Caller)",
+  ipLabelTr: "BTN (Caller)", /* TR-TODO */
   ipLabelJa: "BTN（コーラー）",
   ipLabelEs: "BTN (caller)",
   ipLabelPt: "BTN (caller)",
@@ -341,6 +362,7 @@ const SBBB = {
     ipLabelHi: "BB (caller)",
   category: "블라인드전 — SB vs BB (와이드 레인지)",
   categoryEn: "Blind vs Blind — SB vs BB (Wide Ranges)",
+  categoryTr: "Blind vs Blind — SB vs BB (Wide Ranges)", /* TR-TODO */
   categoryJa: "ブラインド戦（BvB） — SB vs BB（ワイドレンジ）",
   categoryEs: "Guerra de ciegas — SB vs BB (rangos amplios)",
   categoryPt: "Blind vs Blind — SB vs BB (ranges amplos)",
@@ -352,6 +374,7 @@ const SBBB = {
   categoryMs: "Blind vs Blind — SB vs BB (range luas)",
   oopLabel: "SB (오픈레이저)",
   oopLabelEn: "SB (Opener)",
+  oopLabelTr: "SB (Opener)", /* TR-TODO */
   oopLabelJa: "SB（オープンレイザー）",
   oopLabelEs: "SB (open-raiser)",
   oopLabelPt: "SB (open-raiser)",
@@ -363,6 +386,7 @@ const SBBB = {
   oopLabelMs: "SB (opener)",
   ipLabel: "BB (콜러)",
   ipLabelEn: "BB (Caller)",
+  ipLabelTr: "BB (Caller)", /* TR-TODO */
   ipLabelJa: "BB（コーラー）",
   ipLabelEs: "BB (caller)",
   ipLabelPt: "BB (caller)",
@@ -392,11 +416,14 @@ export const PRESETS: Preset[] = [
     id: "srp-dry-ace",
     title: "드라이 A하이 보드",
     titleEn: "Dry Ace-High Board",
+    titleTr: "Dry Ace-High Board", /* TR-TODO */
     board: "Ah 7d 2c",
     lesson:
       "레인지 우위 교과서. BB 체크 후 BTN이 작은 벳을 매우 넓게 치는 이유를 관찰하세요 (A가 오픈레이저에게 유리한 카드).",
     lessonEn:
       "The textbook range-advantage spot. Watch how wide a range BTN c-bets small with after BB checks — the ace smashes the opener's range.",
+    lessonTr:
+      "The textbook range-advantage spot. Watch how wide a range BTN c-bets small with after BB checks — the ace smashes the opener's range.", /* TR-TODO */
     titleJa: "ドライなAハイボード",
     lessonJa:
       "レンジ優位の教科書的スポットです。BBのチェック後、BTNが非常に広いレンジで小さくCベットする理由を観察しましょう（Aはオープンレイザーに有利なカードです）。",
@@ -430,11 +457,14 @@ export const PRESETS: Preset[] = [
     id: "srp-dry-king",
     title: "드라이 K하이 보드",
     titleEn: "Dry King-High Board",
+    titleTr: "Dry King-High Board", /* TR-TODO */
     board: "Ks 8d 3c",
     lesson:
       "A하이 보드와 비교해보세요. K 보드도 BTN 우위지만 미묘하게 체크가 늘어납니다. 왜일까요?",
     lessonEn:
       "Compare with the ace-high board. King-high still favors BTN, but there's a bit more checking. Can you tell why?",
+    lessonTr:
+      "Compare with the ace-high board. King-high still favors BTN, but there's a bit more checking. Can you tell why?", /* TR-TODO */
     titleJa: "ドライなKハイボード",
     lessonJa:
       "Aハイボードと比較してみましょう。KハイボードでもBTN優位ですが、チェックがわずかに増えます。なぜでしょうか？",
@@ -468,11 +498,14 @@ export const PRESETS: Preset[] = [
     id: "srp-broadway",
     title: "브로드웨이 연결 투톤",
     titleEn: "Connected Broadway Board, Two-Tone",
+    titleTr: "Connected Broadway Board, Two-Tone", /* TR-TODO */
     board: "Qs Jd Ts",
     lesson:
       "양쪽 다 맞은 것처럼 보이는 보드. 그런데 BB는 13스팟 중 에퀴티 실현율이 가장 낮습니다 — 77.9%, BTN은 119.4%. BB가 99.9% 체크하는 이유를 핸드 분류 패널에서 확인하세요.",
     lessonEn:
       "A board that looks like it hits both ranges. But BB realizes less equity here than in any of the 13 spots — 77.9% against BTN's 119.4% — and checks 99.9%. The hand-category panel shows why.",
+    lessonTr:
+      "A board that looks like it hits both ranges. But BB realizes less equity here than in any of the 13 spots — 77.9% against BTN's 119.4% — and checks 99.9%. The hand-category panel shows why.", /* TR-TODO */
     titleJa: "ブロードウェイのコネクトボード（2トーン）",
     lessonJa:
       "両者に当たったように見えるボードです。ところがBBのエクイティ実現率は13スポット中で最も低く、77.9%（BTNは119.4%）。99.9%チェックになる理由を分類パネルで確かめましょう。",
@@ -506,11 +539,14 @@ export const PRESETS: Preset[] = [
     id: "srp-middle-connected",
     title: "미들 연결 투톤",
     titleEn: "Connected Middle Board, Two-Tone",
+    titleTr: "Connected Middle Board, Two-Tone", /* TR-TODO */
     board: "9h 8h 7c",
     lesson:
       "콜러(BB) 우위 보드의 대표. BTN의 C벳 빈도가 뚝 떨어지는 것을 확인하세요 — '무조건 C벳'이 왜 틀린지 배우는 스팟.",
     lessonEn:
       "The classic caller-friendly texture. BTN's c-bet frequency plummets — this spot shows exactly why “always c-bet” is wrong.",
+    lessonTr:
+      "The classic caller-friendly texture. BTN's c-bet frequency plummets — this spot shows exactly why “always c-bet” is wrong.", /* TR-TODO */
     titleJa: "ミドルのコネクトボード（2トーン）",
     lessonJa:
       "コーラー（BB）優位ボードの代表例です。BTNのCベット頻度が大きく下がることを確認しましょう — 「常にCベット」がなぜ間違いなのかを学べるスポットです。",
@@ -544,11 +580,14 @@ export const PRESETS: Preset[] = [
     id: "srp-monotone",
     title: "몬톤 보드 (같은 무늬 3장)",
     titleEn: "Monotone Board (All One Suit)",
+    titleTr: "Monotone Board (All One Suit)", /* TR-TODO */
     board: "Qs 9s 2s",
     lesson:
       "큰 벳이 드물어지고 작은 벳/체크 위주가 되는 이유. 플러시 완성 핸드도 자주 체크하는 것을 관찰하세요.",
     lessonEn:
       "Watch why big bets give way to small bets and checks. Notice how often even made flushes just check.",
+    lessonTr:
+      "Watch why big bets give way to small bets and checks. Notice how often even made flushes just check.", /* TR-TODO */
     titleJa: "モノトーンボード（同スート3枚）",
     lessonJa:
       "大きなベットが減り、小さなベットとチェックが中心になる理由を学びます。完成したフラッシュでさえ頻繁にチェックすることを観察しましょう。",
@@ -582,11 +621,14 @@ export const PRESETS: Preset[] = [
     id: "srp-paired",
     title: "페어 보드",
     titleEn: "Paired Board",
+    titleTr: "Paired Board", /* TR-TODO */
     board: "6c 6d 3h",
     lesson:
       "아무도 잘 못 맞춘 보드 → 블러프 비중이 올라갑니다. 어떤 핸드가 블러프 벳을 하는지 상세 표에서 찾아보세요.",
     lessonEn:
       "Nobody connects with this board, so the bluffing frequency goes up. Use the detail table to find which hands bet as bluffs.",
+    lessonTr:
+      "Nobody connects with this board, so the bluffing frequency goes up. Use the detail table to find which hands bet as bluffs.", /* TR-TODO */
     titleJa: "ペアボード",
     lessonJa:
       "どちらのレンジもボードとほとんど噛み合いません → ブラフの比率が上がります。どのハンドがブラフベットをするのか、詳細表で探してみましょう。",
@@ -624,10 +666,13 @@ export const PRESETS: Preset[] = [
     // 벳 2종이면 16비트로도 3.91GB(한도 3.9GB 초과)라 플랍 벳 1종으로 다이어트
     betFlop: "33",
     titleEn: "Low Rainbow Board",
+    titleTr: "Low Rainbow Board", /* TR-TODO */
     lesson:
       "오버카드 싸움. BB의 체크레이즈 빈도가 높아지는 보드 — 상단 스트립에서 벳 이후 응수를 따라가 보세요.",
     lessonEn:
       "An overcard war — BB check-raises often on this texture, so follow the top strip past a bet to see the responses.",
+    lessonTr:
+      "An overcard war — BB check-raises often on this texture, so follow the top strip past a bet to see the responses.", /* TR-TODO */
     titleJa: "ロー・レインボーボード",
     lessonJa:
       "オーバーカードの戦いです。BBのチェックレイズ頻度が高くなるボード — 上部ストリップでベット後の相手のアクションを追ってみましょう。",
@@ -661,11 +706,14 @@ export const PRESETS: Preset[] = [
     id: "3bp-ace-king",
     title: "3벳터 우위 A하이 보드",
     titleEn: "Ace-High Board, 3-Bettor's Edge",
+    titleTr: "Ace-High Board, 3-Bettor's Edge", /* TR-TODO */
     board: "Ad Ks 2h",
     lesson:
       "3벳 레인지(AK, AA, KK 다수)에 최고의 보드. 낮은 SPR에서 작은 벳으로 레인지 전체를 압박하는 패턴.",
     lessonEn:
       "The best possible flop for the 3-bettor, whose range is loaded with AK, AA and KK. At low SPR, small bets pressure the entire range.",
+    lessonTr:
+      "The best possible flop for the 3-bettor, whose range is loaded with AK, AA and KK. At low SPR, small bets pressure the entire range.", /* TR-TODO */
     titleJa: "3ベッター優位のAハイボード",
     lessonJa:
       "3ベットレンジ（AK・AA・KKが多い）にとって最高のボードです。低SPRで小さなベットを使い、レンジ全体に圧力をかけるパターンを学びます。",
@@ -699,6 +747,7 @@ export const PRESETS: Preset[] = [
     id: "3bp-dynamic",
     title: "다이나믹 투톤 보드",
     titleEn: "Dynamic Two-Tone Board",
+    titleTr: "Dynamic Two-Tone Board", /* TR-TODO */
     board: "Qh Th 7s",
     // ⚠ 빈도는 «normalizer»로 잰다 — «weights»가 아니다.
     //   화면(ActionSummary.vue)의 freq = Σ strategy×normalizer / Σ normalizer 다.
@@ -711,6 +760,8 @@ export const PRESETS: Preset[] = [
       "3벳팟인데 콜러에게도 좋은 카드가 많은 보드. 그런데 3벳터는 멈추지 않습니다 — 98.4%가 같은 2/3 사이즈로 나갑니다. 체크로 남는 0.8%가 어떤 핸드인지 보세요.",
     lessonEn:
       "A 3-bet pot on a board that suits the caller as well — and yet the 3-bettor doesn't slow down: 98.4% of the range fires the same two-thirds size. See which hands make up the 0.8% that checks.",
+    lessonTr:
+      "A 3-bet pot on a board that suits the caller as well — and yet the 3-bettor doesn't slow down: 98.4% of the range fires the same two-thirds size. See which hands make up the 0.8% that checks.", /* TR-TODO */
     titleJa: "ダイナミックな2トーンボード",
     lessonJa:
       "3ベットポットなのにコーラーにも良いカードが多いボードです。それでも3ベッターは止まりません — 98.4%が同じ2/3サイズで打ちます。チェックに残る0.8%がどんなハンドか見てみましょう。",
@@ -744,11 +795,14 @@ export const PRESETS: Preset[] = [
     id: "3bp-low",
     title: "로우 드라이 보드",
     titleEn: "Low Dry Board",
+    titleTr: "Low Dry Board", /* TR-TODO */
     board: "8d 5c 2s",
     lesson:
       "3벳 레인지가 통째로 빗나간 보드. 그래도 오버페어+A하이로 압박이 가능한 이유 — 에퀴티 vs 폴드에퀴티.",
     lessonEn:
       "A board that largely misses the 3-bettor's range — yet overpairs and ace-high hands keep the pressure on. Equity vs fold equity.",
+    lessonTr:
+      "A board that largely misses the 3-bettor's range — yet overpairs and ace-high hands keep the pressure on. Equity vs fold equity.", /* TR-TODO */
     titleJa: "ロー・ドライボード",
     lessonJa:
       "3ベットレンジがほぼ丸ごと外れるボードです。それでもオーバーペアとAハイで圧力をかけられる理由を学びます — エクイティ対フォールドエクイティです。",
@@ -782,6 +836,7 @@ export const PRESETS: Preset[] = [
     id: "sb-king-mid",
     title: "K하이 미들킥 보드",
     titleEn: "King-High with a Ten",
+    titleTr: "King-High with a Ten", /* TR-TODO */
     board: "Kh Td 6s",
     // 블라인드전 와이드 레인지는 콤보 수가 최대 → 벳 2종이면 16비트로도
     // 4.18GB(한도 초과)라 플랍 벳 1종으로 다이어트 (sb-paired-ace는 보드가
@@ -791,6 +846,8 @@ export const PRESETS: Preset[] = [
       "블라인드전은 레인지가 넓어 서로 약합니다. 같은 K 보드라도 BTN vs BB 때와 빈도가 어떻게 다른지 비교.",
     lessonEn:
       "Blind vs Blind ranges are wide, so both ranges are weak. Compare the frequencies to the BTN-vs-BB Dry King-High Board spot.",
+    lessonTr:
+      "Blind vs Blind ranges are wide, so both ranges are weak. Compare the frequencies to the BTN-vs-BB Dry King-High Board spot.", /* TR-TODO */
     titleJa: "KTハイボード",
     lessonJa:
       "ブラインド戦はレンジが広く、お互いに弱いのが特徴です。同じKハイボードでも、BTN vs BBのときと頻度がどう違うか比較してみましょう。",
@@ -824,12 +881,15 @@ export const PRESETS: Preset[] = [
     id: "sb-connected",
     title: "로우 연결 투톤",
     titleEn: "Connected Low Board, Two-Tone",
+    titleTr: "Connected Low Board, Two-Tone", /* TR-TODO */
     board: "7d 6d 5c",
     betFlop: "33", // sb-king-mid와 동일한 메모리 사유
     lesson:
       "와이드 레인지끼리 만나는 초연결 보드. 투페어·스트레이트·드로우가 쏟아집니다. 분류 패널이 화려한 스팟.",
     lessonEn:
       "Two wide ranges collide on an ultra-connected board: two-pair hands, straights, and draws everywhere. The hand-category panel shines here.",
+    lessonTr:
+      "Two wide ranges collide on an ultra-connected board: two-pair hands, straights, and draws everywhere. The hand-category panel shines here.", /* TR-TODO */
     titleJa: "ローのコネクトボード（2トーン）",
     lessonJa:
       "ワイドレンジ同士がぶつかる非常にコネクトしたボードです。ツーペア・ストレート・ドローが続出します。分類パネルがにぎやかになるスポットです。",
@@ -863,6 +923,7 @@ export const PRESETS: Preset[] = [
     id: "sb-paired-ace",
     title: "A 페어 보드",
     titleEn: "Ace-Paired Board",
+    titleTr: "Ace-Paired Board", /* TR-TODO */
     board: "As Ah 6d",
     // ⚠ 콤보 수 88/66은 «트립스»다 — «A를 든 콤보»(94/72)가 아니다.
     //   보드가 As Ah 6d라 A6는 트립스가 아니라 «에이스 풀하우스»다(AAA + 66).
@@ -873,6 +934,8 @@ export const PRESETS: Preset[] = [
       "A가 2장 깔린 특수 보드. 트립스는 드물지 않습니다 — SB가 88콤보로 BB(66콤보)보다 많아서 SB가 80.1%를 칩니다. 어느 쪽이 A를 더 들고 있는지가 이 보드의 전부입니다.",
     lessonEn:
       "Two aces on the board. Trips aren't rare — SB simply holds more of them (88 combos to BB's 66), so SB bets 80.1%. Who holds more aces is the whole story here.",
+    lessonTr:
+      "Two aces on the board. Trips aren't rare — SB simply holds more of them (88 combos to BB's 66), so SB bets 80.1%. Who holds more aces is the whole story here.", /* TR-TODO */
     titleJa: "Aペアボード",
     lessonJa:
       "Aが2枚落ちた特殊なボードです。トリップスは珍しくありません — SBが88コンボ、BBが66コンボで、Aを多く持つSBが80.1%打ちます。どちらがAを多く持つかがこのボードのすべてです。",

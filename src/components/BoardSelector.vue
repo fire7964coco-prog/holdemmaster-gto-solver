@@ -67,7 +67,7 @@ import { computed, defineComponent, onUnmounted, ref } from "vue";
 import { useConfigStore } from "../store";
 import { cardText } from "../utils";
 import { parseBoardInput } from "../board-input";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 import BoardSelectorCard from "./BoardSelectorCard.vue";
 
@@ -195,7 +195,7 @@ export default defineComponent({
     const config = useConfigStore();
     const boardText = ref("");
     const boardTextError = ref(false);
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
 
     // 좁은 화면이면 13열이 폭에 맞게 줄어든다 (데스크톱은 기존 40px 그대로)
     const isNarrow = ref(false);

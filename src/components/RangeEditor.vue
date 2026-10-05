@@ -4,7 +4,7 @@
       <p data-testid="range-mobile-hint" class="md:hidden mb-2 text-xs text-neutral-500">{{ L.mobileHint }}</p>
       <div class="range-cell-summary md:hidden" aria-live="polite" aria-atomic="true">
         <strong>{{ activeCell ? cellText(activeCell.row, activeCell.col) : '—' }}</strong>
-        <span>· {{ L.weight }} {{ activeCell ? $n(cellValue(activeCell.row, activeCell.col).toString()) + '%' : '—' }}</span>
+        <span>· {{ L.weight }} {{ activeCell ? $pct($n(cellValue(activeCell.row, activeCell.col).toString())) : '—' }}</span>
       </div>
       <table class="w-full table-fixed select-none snug" role="grid" :aria-label="player === 0 ? 'OOP' : 'IP'" @mouseleave="dragEnd">
         <tr v-for="row in 13" :key="row" class="h-7 md:h-9" role="row">
@@ -16,7 +16,7 @@
             role="gridcell"
             :tabindex="(activeCell?.row ?? 1) === row && (activeCell?.col ?? 1) === col ? 0 : -1"
             :aria-selected="cellValue(row, col) > 0"
-            :aria-label="`${cellText(row, col)} · ${L.weight} ${$n(cellValue(row, col).toString())}%`"
+            :aria-label="`${cellText(row, col)} · ${L.weight} ${$pct($n(cellValue(row, col).toString()))}`"
             :data-range-cell="`${row}-${col}`"
             @focus="activeCell = { row, col }"
             @keydown="onCellKeydown($event, row, col)"
@@ -118,8 +118,8 @@
 
         <span class="inline-block ml-auto">
           {{ $n(numCombos.toFixed(1)) }} {{ L.combos }} ({{
-            $n(((numCombos * 100) / ((52 * 51) / 2)).toFixed(1))
-          }}%)
+            $pct($n(((numCombos * 100) / ((52 * 51) / 2)).toFixed(1)))
+          }})
         </span>
       </div>
     </div>
@@ -141,7 +141,7 @@ import { computed, defineComponent, ref, watch } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { ranks, rankPat } from "../utils";
 import { RangeManager } from "../../pkg/range/range";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 import DbItemPicker from "./DbItemPicker.vue";
 
@@ -285,7 +285,7 @@ export default defineComponent({
   setup(props) {
     const appStore = useStore();
     const config = useConfigStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
 
     const range = RangeManager.new();
     const rangeStore = config.range[props.player];

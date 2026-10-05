@@ -260,7 +260,7 @@ import { TreeManager } from "../../pkg/tree/tree";
 
 import { CheckIcon } from "@heroicons/vue/20/solid";
 import { TrashIcon } from "@heroicons/vue/24/outline";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 const M = {
   ko: {
@@ -482,7 +482,7 @@ export default defineComponent({
 
   setup(_, context) {
     const navDiv = ref(null as HTMLDivElement | null);
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
 
     const config = useConfigStore();
 

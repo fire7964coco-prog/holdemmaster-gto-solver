@@ -1,4 +1,4 @@
-import { i18n, Locale } from "./i18n";
+import { i18n, LocaleDict } from "./i18n";
 
 type NodeLockMessages = {
   title: string;
@@ -19,7 +19,7 @@ type NodeLockMessages = {
 };
 
 // AI-written drafts. Keep every locale and key in the A1b review ledger.
-export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
+export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = { // TR-TODO: tr 블록이 들어오면 Record<Locale, …>로 되돌린다
   ko: {
     title: "이 노드의 전략 고정",
     apply: "고정하고 다시 풀기",
@@ -226,4 +226,4 @@ export const NODE_LOCK_MESSAGES: Record<Locale, NodeLockMessages> = {
   },
 };
 
-export const nodeLockLabels = () => NODE_LOCK_MESSAGES[i18n.locale];
+export const nodeLockLabels = () => NODE_LOCK_MESSAGES[i18n.locale] ?? NODE_LOCK_MESSAGES.en;

@@ -172,8 +172,9 @@
                       (strTmp = $n(toFixed1(summary[columnIndex(column)] * 100)))
                     "
                   >
+                    <span v-if="isTr" class="text-xs">%</span>
                     <span>{{ strTmp.slice(0, -1) }}</span>
-                    <span class="text-xs">{{ strTmp.slice(-1) }}%</span>
+                    <span class="text-xs">{{ isTr ? strTmp.slice(-1) : $pct(strTmp.slice(-1)) }}</span>
                   </span>
                   <span
                     v-else-if="column.type === 'action-ev'"
@@ -183,8 +184,9 @@
                       ))
                     "
                   >
+                    <span v-if="isTr" class="text-xs">%</span>
                     <span>{{ strTmp.slice(0, -1) }}</span>
-                    <span class="text-xs">{{ strTmp.slice(-1) }}%</span>
+                    <span class="text-xs">{{ isTr ? strTmp.slice(-1) : $pct(strTmp.slice(-1)) }}</span>
                   </span>
                   <span
                     v-else-if="column.type === 'ev'"
@@ -301,8 +303,9 @@
                       (strTmp = $n(toFixed1(item[columnIndex(column)] * 100)))
                     "
                   >
+                    <span v-if="isTr" class="text-xs">%</span>
                     <span>{{ strTmp.slice(0, -1) }}</span>
-                    <span class="text-xs">{{ strTmp.slice(-1) }}%</span>
+                    <span class="text-xs">{{ isTr ? strTmp.slice(-1) : $pct(strTmp.slice(-1)) }}</span>
                   </span>
                   <span
                     v-else-if="
@@ -379,7 +382,7 @@ import {
   formatAmount,
 } from "../utils";
 import { useStore } from "../store";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, dictKey } from "../i18n";
 
 import {
   Results,
@@ -906,7 +909,9 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
+    // tr 격자 셀: 작은 «%»를 정수부 앞에 (확정표 §2-2)
+    const isTr = computed(() => i18n.locale === "tr");
     const evScale = computed(() => props.unitScale || store.displayUnitScale);
     const displayEv = (value: number) => value / evScale.value;
     const displayOptions =
@@ -1492,6 +1497,7 @@ export default defineComponent({
     };
 
     return {
+      isTr,
       toFixed1,
       toFixed,
       toFixedAdaptive,

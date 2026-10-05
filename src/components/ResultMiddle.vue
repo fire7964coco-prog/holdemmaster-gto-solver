@@ -196,7 +196,7 @@
 import { computed, defineComponent, reactive, ref, toRefs, watch } from "vue";
 import { capitalize } from "../utils";
 import * as Types from "../result-types";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 // display-only label maps (internal mode values remain in English)
 const M = {
@@ -552,7 +552,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const modeLabels = computed(() => L.value.modeLabels);
     const { chanceMode } = toRefs(props);
     let displayModeOld = "basics" as Types.DisplayMode;

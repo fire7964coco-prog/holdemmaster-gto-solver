@@ -16,7 +16,7 @@
           <div class="flex justify-between">
             <span class="text-neutral-200">{{ row.label }}</span>
             <span class="text-neutral-300 tabular-nums">
-              {{ $n(row.pct.toFixed(1)) }}%
+              {{ $pct($n(row.pct.toFixed(1))) + " " }}
             </span>
           </div>
           <div class="mt-0.5 h-1.5 w-full rounded-sm bg-neutral-700">
@@ -44,7 +44,7 @@
           <div class="flex justify-between">
             <span class="text-neutral-200">{{ row.label }}</span>
             <span class="text-neutral-300 tabular-nums">
-              {{ $n(row.pct.toFixed(1)) }}%
+              {{ $pct($n(row.pct.toFixed(1))) + " " }}
             </span>
           </div>
           <div class="mt-0.5 h-1.5 w-full rounded-sm bg-neutral-700">
@@ -65,7 +65,7 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { aggregateBreakdown } from "../hand-categories";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 
 const M = {
   ko: {
@@ -193,7 +193,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const breakdown = computed(() =>
       aggregateBreakdown(props.cards, props.weights, props.board)
     );

@@ -1,4 +1,4 @@
-import type { Locale } from "./i18n";
+import type { LocaleDict } from "./i18n";
 
 // B1 전표 정본. 두 화면이 함께 쓰며 @features 안에서만 가져온다.
 export const M = {
@@ -158,6 +158,6 @@ export const M = {
     prompt: "आप क्या करेंगे?", next: "अगला सवाल", review: "गलतियों का अभ्यास", practice: "सामान्य अभ्यास", attemptCount: "इस स्पॉट में प्रयास: {count}",
     verdictBest: "सर्वोत्तम", verdictGood: "स्वीकार्य", verdictBad: "नुकसान वाला चुनाव", evLoss: "EV नुकसान", frequency: "आवृत्ति", actionEv: "एक्शन EV", chips: "चिप्स",
   },
-} satisfies Record<Locale, Record<string, string>>;
+} satisfies LocaleDict<Record<string, string>>; // TR-TODO: tr 블록이 들어오면 Record<Locale, …>로 되돌린다
 
 export type CustomTrainerLabelKey = keyof typeof M.ko;

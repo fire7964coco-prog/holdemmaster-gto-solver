@@ -300,7 +300,7 @@
               v-if="evaluation"
               class="text-xs font-semibold tabular-nums text-neutral-400"
             >
-              {{ $n((evaluation.actions[index].frequency * 100).toFixed(1)) }}%
+              {{ $pct($n((evaluation.actions[index].frequency * 100).toFixed(1))) + " " }}
             </span>
           </button>
         </div>
@@ -337,7 +337,7 @@
                   {{ action.label }}{{ action.isBest ? L.bestEvTag : "" }}
                 </span>
                 <span class="ml-auto tabular-nums text-xs text-neutral-500">
-                  {{ $n((action.frequency * 100).toFixed(1)) }}%
+                  {{ $pct($n((action.frequency * 100).toFixed(1))) + " " }}
                 </span>
                 <span class="w-16 text-right tabular-nums">
                   {{ $n(action.evBb.toFixed(3)) }}
@@ -599,7 +599,7 @@ import {
   oopLabelOf,
   presetTitleById,
 } from "../presets";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, dictKey } from "../i18n";
 import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
 import { cardText, formatBb } from "../utils";
@@ -1940,7 +1940,7 @@ export default defineComponent({
   components: { CustomTrainerPage },
   setup() {
     const store = useStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     /* 두 문장을 잇는 공백 — 서양어는 필요하고, CJK는 「。」가 이미 여백을 품고 있어
      * 넣으면 오히려 벌어진다. 템플릿의 줄바꿈에 맡기면 전 언어가 공백을 받는다 */
     const sentenceGap = computed(() =>
@@ -2372,7 +2372,7 @@ export default defineComponent({
 
     return {
       customTrainerState,
-      customLabels: computed(() => customTrainerLabels[i18n.locale]),
+      customLabels: computed(() => customTrainerLabels[dictKey(customTrainerLabels)]),
       categories,
       category,
       bank,

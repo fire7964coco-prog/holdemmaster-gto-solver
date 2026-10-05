@@ -83,6 +83,7 @@
           <option value="id">Bahasa Indonesia</option>
           <option value="ms">Bahasa Melayu</option>
           <option value="hi">हिन्दी</option>
+          <option value="tr">Türkçe</option>
           <!-- ⚠ 간체·번체는 «별개 언어»다 (용어 자체가 다르다 — 기계 변환 금지).
                두 이름 모두 «자기 글자»로 적어야 그 언어 사용자가 알아본다 -->
           <option value="zh">简体中文</option>
@@ -108,7 +109,7 @@ import { useStore } from "../store";
 import { ComputerDesktopIcon, ChartBarIcon } from "@heroicons/vue/24/solid";
 import { mainSiteUrl } from "../outbound";
 import { BRAND_NAME, IS_NPOKERS } from "../brand";
-import { i18n, setLocale } from "../i18n";
+import { i18n, setLocale, dictKey } from "../i18n";
 import { navResults } from "../nav-labels";
 import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 import { openFeedback } from "../solver-feedback"; // F1_FEEDBACK_ONLY
@@ -224,7 +225,7 @@ export default defineComponent({
   },
   setup() {
     // 왼쪽 탭 이름은 nav-labels.ts가 정본 — 계산 완료 뒤 RunSolver의 이동 버튼과 글자가 같아야 한다
-    const L = computed(() => ({ ...M[i18n.locale], results: navResults[i18n.locale] }));
+    const L = computed(() => ({ ...M[dictKey(M)], results: navResults[i18n.locale] }));
     const onLocaleChange = (event: Event) => {
       const value = (event.target as HTMLSelectElement).value;
       if (
@@ -238,13 +239,15 @@ export default defineComponent({
         value === "zh-hant" ||
         value === "fr" ||
         value === "id" ||
-        value === "ms"
+        value === "ms" ||
+        value === "hi" ||
+        value === "tr"
       )
         setLocale(value);
     };
     return {
       store: useStore(),
-      feedbackFeatures, openFeedback, feedbackMenu: computed(() => appLabels[i18n.locale].menu), // F1_FEEDBACK_ONLY
+      feedbackFeatures, openFeedback, feedbackMenu: computed(() => (appLabels[i18n.locale] ?? appLabels.en).menu), // F1_FEEDBACK_ONLY
       // 간판은 빌드별로 다르다 (src/brand.ts — 트레이너 빌드/우리 커뮤니티용 vs npokers 빌드)
       brandName: computed(() => BRAND_NAME[i18n.locale]),
       // 언어 셀렉터는 npokers 빌드 전용 — 트레이너는 본진 언어에 페깅한다(위 템플릿 주석)

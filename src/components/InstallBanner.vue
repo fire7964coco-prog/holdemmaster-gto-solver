@@ -79,7 +79,7 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { pwa, promptInstall, dismissBanner, openInChrome } from "../pwa";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 import FeedbackSummary from "./FeedbackSummary.vue"; // F1_FEEDBACK_ONLY
 import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 
@@ -501,7 +501,7 @@ export default defineComponent({
   components: { FeedbackSummary }, // F1_FEEDBACK_ONLY
   setup() {
     const L = computed(() =>
-      N ? { ...M[i18n.locale], ...N[i18n.locale] } : M[i18n.locale]
+      N ? { ...M[dictKey(M)], ...N[dictKey(N)] } : M[dictKey(M)]
     );
     return {
       feedbackFeatures, // F1_FEEDBACK_ONLY

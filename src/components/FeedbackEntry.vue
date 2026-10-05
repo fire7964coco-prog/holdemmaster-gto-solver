@@ -37,7 +37,7 @@ export default defineComponent({
     }, { immediate: true, flush: "post" });
     window.addEventListener("resize", measure);
     onBeforeUnmount(() => { disposed = true; observer?.disconnect(); window.removeEventListener("resize", measure); });
-    return { entry, bannerInset, labels: computed(() => appLabels[i18n.locale]), feedbackThirdSolve, openFeedback };
+    return { entry, bannerInset, labels: computed(() => (appLabels[i18n.locale] ?? appLabels.en)), feedbackThirdSolve, openFeedback };
   },
 });
 </script>

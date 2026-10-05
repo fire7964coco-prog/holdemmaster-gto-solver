@@ -191,7 +191,7 @@
                   : 'opacity-70')
               "
             >
-              [{{ $n((rates[action.index] * 100).toFixed(1)) }}%]
+              [{{ $pct($n((rates[action.index] * 100).toFixed(1))) }}]
             </span>
           </button>
         </div>
@@ -221,13 +221,13 @@
             <div class="flex w-full px-1.5">
               <span>OOP</span>
               <span class="ml-auto pl-2">
-                {{ $n((spot.equityOop * 100).toFixed(1)) }}%
+                {{ $pct($n((spot.equityOop * 100).toFixed(1))) + " " }}
               </span>
             </div>
             <div class="flex w-full px-1.5">
               <span>IP</span>
               <span class="ml-auto pl-2">
-                {{ $n(((1 - spot.equityOop) * 100).toFixed(1)) }}%
+                {{ $pct($n(((1 - spot.equityOop) * 100).toFixed(1))) + " " }}
               </span>
             </div>
           </div>
@@ -243,7 +243,7 @@ import { decodeResults } from "../results-decode";
 import { computed, defineComponent, nextTick, toRefs, ref, watch } from "vue";
 import { useSavedConfigStore } from "../store";
 import { useStore } from "../store";
-import { i18n } from "../i18n";
+import { i18n, dictKey } from "../i18n";
 import { cardText, average, colorString, formatAmount } from "../utils";
 import { handler } from "../global-worker";
 import {
@@ -641,7 +641,7 @@ export default defineComponent({
 
   setup(props, context) {
     const store = useStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const navDiv = ref<HTMLDivElement | null>(null);
 
     const config = useSavedConfigStore();

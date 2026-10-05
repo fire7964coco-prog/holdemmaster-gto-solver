@@ -60,7 +60,7 @@ import {
   formatAmount,
 } from "../utils";
 import { useStore } from "../store";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, dictKey } from "../i18n";
 import {
   ChanceReports,
   Spot,
@@ -284,7 +284,7 @@ export default defineComponent({
 
   setup(props, context) {
     const store = useStore();
-    const L = computed(() => M[i18n.locale]);
+    const L = computed(() => M[dictKey(M)]);
     const chartParentDiv = ref<HTMLDivElement | null>(null);
     const chartParentDivHeight = ref(0);
 
