@@ -22,44 +22,67 @@
       >
         <h2>{{ L.situation }}</h2>
         <p class="review-meta">
-          {{ spot.opener }} → BB · {{ L.pot }} {{ bb(spot.startingPot) }}
+          {{ spot.opener }} → {{ spot.caller }} · {{ L.pot }}
+          {{ bb(spot.startingPot) }}
         </p>
         <div class="review-settings">
-          <h3>{{ L.opener }}</h3>
-          <div class="review-options">
-            <button
-              v-for="item in spots"
-              :key="item.id"
-              :data-testid="'review-spot-' + item.id"
-              :aria-pressed="spot.id === item.id"
-              @click="chooseSpot(item.id)"
-            >
-              {{ item.opener }}
-            </button>
+          <div class="review-group">
+            <h3>{{ L.preflop }}</h3>
+            <div class="review-options review-pots">
+              <button
+                v-for="item in potTypes"
+                :key="item.id"
+                :data-testid="'review-pot-' + item.id"
+                :aria-pressed="potType === item.id"
+                @click="choosePot(item.id)"
+              >
+                {{ item.label }}
+              </button>
+            </div>
           </div>
-          <h3>{{ L.hero }}</h3>
-          <div class="review-options">
-            <button
-              v-for="p in [0, 1]"
-              :key="p"
-              :data-testid="'review-hero-' + p"
-              :aria-pressed="heroPlayer === p"
-              @click="chooseHero(p)"
-            >
-              {{ p === 0 ? spot.oop : spot.ip }}
-            </button>
+          <div class="review-group">
+            <h3>{{ L.opener }}</h3>
+            <div class="review-options">
+              <button
+                v-for="pos in OPENERS"
+                :key="pos"
+                :data-testid="'review-opener-' + pos"
+                :aria-pressed="spot.opener === pos"
+                :disabled="!spotFor(pos)"
+                @click="chooseSeats(pos, spot.caller)"
+              >
+                {{ pos }}
+              </button>
+            </div>
           </div>
-          <h3>{{ L.preflop }}</h3>
-          <div class="review-options review-pots">
-            <button
-              v-for="item in potTypes"
-              :key="item.id"
-              :data-testid="'review-pot-' + item.id"
-              :aria-pressed="potType === item.id"
-              @click="choosePot(item.id)"
-            >
-              {{ item.label }}
-            </button>
+          <div class="review-group">
+            <h3>{{ isThreeBet ? L.threeBettor : L.caller }}</h3>
+            <div class="review-options">
+              <button
+                v-for="pos in secondSeats"
+                :key="pos"
+                :data-testid="'review-caller-' + pos"
+                :aria-pressed="spot.caller === pos"
+                :disabled="!spotFor(spot.opener, pos)"
+                @click="chooseSeats(spot.opener, pos)"
+              >
+                {{ pos }}
+              </button>
+            </div>
+          </div>
+          <div class="review-group">
+            <h3>{{ L.hero }}</h3>
+            <div class="review-options">
+              <button
+                v-for="p in [0, 1]"
+                :key="p"
+                :data-testid="'review-hero-' + p"
+                :aria-pressed="heroPlayer === p"
+                @click="chooseHero(p)"
+              >
+                {{ p === 0 ? spot.oop : spot.ip }}
+              </button>
+            </div>
           </div>
         </div>
         <details class="review-scope">
@@ -425,7 +448,14 @@ import {
 } from "vue";
 import { i18n, localizeNumber } from "../i18n";
 import { M } from "../hand-review-labels";
-import { SRP_SPOTS, SPOT_UNIT_SCALE } from "../preflop-spots";
+import {
+  SRP_SPOTS,
+  THREE_BET_SPOTS,
+  THREE_BETTORS,
+  CALLERS,
+  OPENERS,
+  SPOT_UNIT_SCALE,
+} from "../preflop-spots";
 import { HAND_REVIEW_DATA, loadReviewFlop } from "../hand-review-data";
 import { Hmr1File, Hmr1Hand } from "../review/hmr1";
 import {
@@ -490,11 +520,25 @@ const policy = {
 export default defineComponent({
   setup() {
     const L = computed(() => M[i18n.locale]);
-    const spots = SRP_SPOTS.filter((s) => s.caller === "BB");
     const spotId = ref("srp-btn-bb"),
       heroPlayer = ref<0 | 1>(1),
       potType = ref("srp");
-    const spot = computed(() => spots.find((s) => s.id === spotId.value)!);
+    // 3인 이상은 복기 불가 — 자리 고르기는 오픈·콜 표를 그대로 보여 준다
+    const isThreeBet = computed(() => potType.value === "3bet");
+    const spots = computed(() =>
+      isThreeBet.value ? THREE_BET_SPOTS : SRP_SPOTS
+    );
+    const secondSeats = computed<string[]>(() =>
+      isThreeBet.value ? THREE_BETTORS : CALLERS
+    );
+    const spotFor = (opener: string, caller?: string) =>
+      spots.value.find(
+        (s) => s.opener === opener && (caller === undefined || s.caller === caller)
+      );
+    const spot = computed(
+      () =>
+        [...SRP_SPOTS, ...THREE_BET_SPOTS].find((s) => s.id === spotId.value)!
+    );
     const heroCards = ref<number[]>([]),
       board = ref<number[]>([]),
       records = shallowRef<Row[]>([]),
@@ -528,10 +572,8 @@ export default defineComponent({
     );
     const usedCards = computed(() => [...heroCards.value, ...board.value]);
     const statusCode = computed(() =>
-      potType.value !== "srp"
-        ? potType.value === "3bet"
-          ? "THREE_BET"
-          : "MULTIWAY"
+      potType.value === "multiway"
+        ? "MULTIWAY"
         : !HAND_REVIEW_DATA.readyScenarios.includes(spotId.value)
         ? "SCENARIO_NOT_READY"
         : errorCode.value
@@ -546,8 +588,6 @@ export default defineComponent({
     const statusLabel = (code: string) =>
       code === "SCENARIO_NOT_READY"
         ? L.value.unavailableScenario
-        : code === "THREE_BET"
-        ? L.value.comingSoon
         : code === "MULTIWAY"
         ? L.value.notSupported
         : code === "MISSING_FILE"
@@ -754,9 +794,12 @@ export default defineComponent({
       solveResult.value = null;
       progress.value = null;
     }
-    function chooseSpot(id: string) {
+    // 같은 자리 조합이 없으면 그 오픈의 첫 조합으로 간다
+    function chooseSeats(opener: string, caller: string) {
+      const next = spotFor(opener, caller) ?? spotFor(opener);
+      if (!next) return;
       reset();
-      spotId.value = id;
+      spotId.value = next.id;
     }
     function chooseHero(p: number) {
       reset();
@@ -765,6 +808,12 @@ export default defineComponent({
     function choosePot(id: string) {
       reset();
       potType.value = id;
+      if (!spots.value.some((s) => s.id === spotId.value))
+        spotId.value = (
+          spotFor(spot.value.opener, spot.value.caller) ??
+          spotFor("BTN", "BB") ??
+          spots.value[0]
+        ).id;
     }
     async function loadFlop() {
       const token = ++epoch;
@@ -1141,7 +1190,11 @@ export default defineComponent({
       gridBackground,
       parseAction,
       reset,
-      chooseSpot,
+      chooseSeats,
+      spotFor,
+      isThreeBet,
+      secondSeats,
+      OPENERS,
       chooseHero,
       choosePot,
       chooseCard,
@@ -1601,6 +1654,12 @@ p {
   .review-settings h3 {
     font-size: 10px;
     margin: 0;
+  }
+  /* 라벨과 버튼이 한 덩어리로 줄바꿈된다 — 라벨만 윗줄 끝에 남지 않게 */
+  .review-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
   .review-options {
     gap: 3px;

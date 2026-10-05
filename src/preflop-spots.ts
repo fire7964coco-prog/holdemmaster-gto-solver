@@ -16,6 +16,10 @@ import {
   ScenarioId,
   rangeTextFor,
   defendRangeTextFor,
+  gridFor,
+  defendGridsFor,
+  vs3betGridsFor,
+  handLabelAt,
 } from "./preflop-charts";
 
 export type Seat = Position | "BB";
@@ -46,7 +50,8 @@ export type SrpSpot = {
   /** "srp-btn-bb" — BB 수비 5개는 사전 계산 결과 파일의 상황 id와 같다 */
   id: string;
   opener: Position;
-  caller: Caller;
+  /** 3벳 팟이면 3벳한 블라인드 (SB 포함) */
+  caller: Caller | ThreeBettor;
   oop: Seat;
   ip: Seat;
   oopRange: string;
@@ -89,12 +94,50 @@ export const SRP_SPOTS: SrpSpot[] = OPENERS.flatMap((opener) =>
   callersFor(opener).map((caller) => srpSpot(opener, caller) as SrpSpot)
 );
 
+// ─── 핸드 복기 전용: 3벳 팟 (2026-10-05) ───────────────────────
+// BTN 2.5bb 오픈 → 블라인드 3벳 → BTN 콜. 3벳한 블라인드가 OOP.
+// 레인지는 차트에서 곱해 만든다: 3벳 쪽 = 3벳 빈도 · BTN = 오픈 빈도 × «3벳에 콜» 빈도.
+// 사전 계산 도구(main.rs의 3bp-*)와 글자까지 같아야 한다 (검사: spot-picker-verify.js).
+export type ThreeBettor = "BB" | "SB";
+export const THREE_BETTORS: ThreeBettor[] = ["BB", "SB"];
+
+/** 169칸 가중치(0~1) → "AKs,A5s:0.5" 꼴. 순서는 차트 격자 순 */
+const weightedText = (weights: number[]): string =>
+  weights
+    .map((w, i) => [handLabelAt(i), +w.toFixed(4)] as const)
+    .filter(([, w]) => w > 0)
+    .map(([hand, w]) => (w === 1 ? hand : `${hand}:${w}`))
+    .join(",");
+
+export const threeBetSpot = (blind: ThreeBettor): SrpSpot => {
+  const threeBet = blind === "BB" ? 110 : 100; // 차트 전제: BB 11bb · SB 10bb
+  const dead = blind === "BB" ? 5 : 10; // 3벳하지 않은 블라인드
+  const rfi = gridFor("BTN");
+  const call = vs3betGridsFor(blind === "BB" ? "btn-vs-bb-3bet" : "btn-vs-sb-3bet").call;
+  const raise = defendGridsFor(blind === "BB" ? "bb-vs-btn" : "sb-vs-btn").threeBet;
+  return {
+    id: `3bp-btn-${blind}`.toLowerCase(),
+    opener: "BTN",
+    caller: blind,
+    oop: blind,
+    ip: "BTN",
+    oopRange: weightedText(raise.map((v) => v / 100)),
+    ipRange: weightedText(call.map((c, i) => (rfi[i] * c) / 10000)),
+    startingPot: threeBet * 2 + dead,
+    effectiveStack: 1000 - threeBet,
+  };
+};
+
+export const THREE_BET_SPOTS: SrpSpot[] = THREE_BETTORS.map(threeBetSpot);
+
 /** 검증 스크립트용 훅 — spot-picker-verify.js가 사전 계산 도구의 표와 대조한다 */
 declare global {
   interface Window {
     __spots?: SrpSpot[];
+    __threeBetSpots?: SrpSpot[];
   }
 }
 if (typeof window !== "undefined") {
   window.__spots = SRP_SPOTS;
+  window.__threeBetSpots = THREE_BET_SPOTS;
 }

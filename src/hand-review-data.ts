@@ -1,6 +1,6 @@
 import { parseHmr1, Hmr1File } from "./review/hmr1";
 import { ReviewError } from "./review/errors";
-import { SrpSpot, SPOT_UNIT_SCALE } from "./preflop-spots";
+import { SPOT_UNIT_SCALE } from "./preflop-spots";
 
 // Deployment changes only this configuration. Data is served separately, never bundled.
 export const HAND_REVIEW_DATA = {
@@ -9,13 +9,13 @@ export const HAND_REVIEW_DATA = {
   maxCachedFlops: 8,
   timeoutMs: 20000,
 };
-// 출시 전에는 사이드바 메뉴를 숨긴다 — 5개 상황 계산이 다 끝나고 자료를 올린 뒤에 켠다 (사장님 09-29 «중간 공개 없음»).
+// 출시 전에는 사이드바 메뉴를 숨긴다 — 상황 계산이 다 끝나고 자료를 올린 뒤에 켠다 (사장님 09-29 «중간 공개 없음»).
 // ?view=hand-review 직접 주소로는 열린다 (검사·내부 확인용).
 export const HAND_REVIEW_LAUNCHED = false;
 const cache = new Map<string, Hmr1File>();
 
 export async function loadReviewFlop(
-  spot: SrpSpot,
+  spot: { id: string; startingPot: number; effectiveStack: number },
   fileName: string
 ): Promise<Hmr1File> {
   if (!HAND_REVIEW_DATA.readyScenarios.includes(spot.id))

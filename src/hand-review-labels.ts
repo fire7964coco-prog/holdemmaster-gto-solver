@@ -4,8 +4,8 @@ import type { Locale } from "./i18n";
 // 숫자 자리표시자를 바꾼 뒤 화면에서는 기존 localizeNumber()를 적용한다.
 export const M = {
   ko: {
-    title: "핸드 복기", situation: "상황", hero: "내 자리", opener: "오픈한 자리", preflop: "프리플랍",
-    singleRaised: "오픈 · 콜", threeBet: "3벳 팟", multiway: "3인 이상", comingSoon: "준비 중", notSupported: "복기할 수 없음",
+    title: "핸드 복기", situation: "상황", hero: "내 자리", opener: "오픈한 자리", caller: "콜한 자리", threeBettor: "3벳한 자리", preflop: "프리플랍",
+    singleRaised: "오픈 · 콜", threeBet: "3벳 팟", multiway: "3인 이상", notSupported: "복기할 수 없음",
     unavailableScenario: "이 상황의 자료는 아직 준비 중입니다.", fileMissing: "이 플랍의 결과 파일이 없습니다.",
     loadFailed: "결과 파일을 불러오지 못했습니다.", invalidData: "결과 파일을 읽을 수 없습니다.",
     unsupportedAction: "이 액션은 분석할 수 없습니다.", unsupportedSize: "이 크기는 분석할 수 없습니다.",
@@ -31,8 +31,8 @@ export const M = {
     practiceSpot: "이 자리 연습하기", practiceBusy: "연습 문제를 만드는 중…", practiceUnavailable: "연습 문제를 만들 수 없습니다. 내 레인지에서 이 자리에 오는 핸드가 없거나, 액션별 EV가 없거나, 고를 액션이 하나뿐입니다.", practiceReferenceNote: "도달 비중이 낮아 계산값을 믿기 어려운 자리입니다. 참고로만 보고, 틀린 문제 복습에는 넣지 않습니다.", practiceError: "연습 문제를 저장하지 못했습니다. 다시 시도해 주세요.",
   },
   en: {
-    title: "Hand review", situation: "Situation", hero: "Your seat", opener: "Opening seat", preflop: "Preflop",
-    singleRaised: "Open · Call", threeBet: "3-bet pot", multiway: "3+ players", comingSoon: "In preparation", notSupported: "Cannot be reviewed",
+    title: "Hand review", situation: "Situation", hero: "Your seat", opener: "Opening seat", caller: "Calling seat", threeBettor: "3-betting seat", preflop: "Preflop",
+    singleRaised: "Open · Call", threeBet: "3-bet pot", multiway: "3+ players", notSupported: "Cannot be reviewed",
     unavailableScenario: "Data for this situation is not ready yet.", fileMissing: "No result file is available for this flop.",
     loadFailed: "Could not load the result file.", invalidData: "Could not read the result file.",
     unsupportedAction: "This action cannot be analysed.", unsupportedSize: "This size cannot be analysed.",
@@ -58,8 +58,8 @@ export const M = {
     practiceSpot: "Practice this spot", practiceBusy: "Creating practice questions…", practiceUnavailable: "Practice questions cannot be created: no hand in your range reaches this spot, action EVs are missing, or there is only one action to choose.", practiceReferenceNote: "This spot is reached too rarely for reliable values. Use it as a reference only; it is not added to your mistake review.", practiceError: "Could not save practice questions. Please try again.",
   },
   ja: {
-    title: "ハンド振り返り", situation: "状況", hero: "自分の席", opener: "オープンした席", preflop: "プリフロップ",
-    singleRaised: "オープン・コール", threeBet: "3ベットポット", multiway: "3人以上", comingSoon: "準備中", notSupported: "振り返り不可",
+    title: "ハンド振り返り", situation: "状況", hero: "自分の席", opener: "オープンした席", caller: "コールした席", threeBettor: "3ベットした席", preflop: "プリフロップ",
+    singleRaised: "オープン・コール", threeBet: "3ベットポット", multiway: "3人以上", notSupported: "振り返り不可",
     unavailableScenario: "この状況のデータはまだ準備中です。", fileMissing: "このフロップの結果ファイルがありません。",
     loadFailed: "結果ファイルを取得できませんでした。", invalidData: "結果ファイルを読み取れませんでした。",
     unsupportedAction: "このアクションは分析できません。", unsupportedSize: "このサイズは分析できません。",
@@ -85,8 +85,8 @@ export const M = {
     practiceSpot: "このスポットを練習", practiceBusy: "練習問題を作成中…", practiceUnavailable: "練習問題を作れません。自分のレンジでこのスポットに来るハンドがないか、アクションごとのEVがないか、選べるアクションが1つしかありません。", practiceReferenceNote: "到達比率が低く、計算値の信頼性が低いスポットです。参考としてのみ表示し、間違えた問題の復習には入れません。", practiceError: "練習問題を保存できませんでした。もう一度お試しください。",
   },
   es: {
-    title: "Revisar mano", situation: "Situación", hero: "Tu posición", opener: "Posición que abre", preflop: "Preflop",
-    singleRaised: "Open · Call", threeBet: "Bote 3-bet", multiway: "3+ jugadores", comingSoon: "En preparación", notSupported: "No se puede revisar",
+    title: "Revisar mano", situation: "Situación", hero: "Tu posición", opener: "Posición que abre", caller: "Posición que hace call", threeBettor: "Posición que hace 3-bet", preflop: "Preflop",
+    singleRaised: "Open · Call", threeBet: "Bote 3-bet", multiway: "3+ jugadores", notSupported: "No se puede revisar",
     unavailableScenario: "Los datos de esta situación aún no están listos.", fileMissing: "No hay archivo de resultados para este flop.",
     loadFailed: "No se pudo cargar el archivo de resultados.", invalidData: "No se pudo leer el archivo de resultados.",
     unsupportedAction: "Esta acción no se puede analizar.", unsupportedSize: "Este tamaño no se puede analizar.",
@@ -112,8 +112,8 @@ export const M = {
     practiceSpot: "Practicar este spot", practiceBusy: "Creando preguntas…", practiceUnavailable: "No se pueden crear preguntas: ninguna mano de tu rango llega a este spot, faltan los EV por acción o solo hay una acción posible.", practiceReferenceNote: "Este spot se alcanza muy pocas veces y sus valores no son fiables. Úsalo solo como referencia; no se añade al repaso de errores.", practiceError: "No se pudieron guardar las preguntas. Inténtalo de nuevo.",
   },
   pt: {
-    title: "Revisar mão", situation: "Situação", hero: "Sua posição", opener: "Posição que abre", preflop: "Pré-flop",
-    singleRaised: "Open · Call", threeBet: "Pote 3-bet", multiway: "3+ jogadores", comingSoon: "Em preparação", notSupported: "Não pode ser revisado",
+    title: "Revisar mão", situation: "Situação", hero: "Sua posição", opener: "Posição que abre", caller: "Posição que dá call", threeBettor: "Posição que dá 3-bet", preflop: "Pré-flop",
+    singleRaised: "Open · Call", threeBet: "Pote 3-bet", multiway: "3+ jogadores", notSupported: "Não pode ser revisado",
     unavailableScenario: "Os dados desta situação ainda não estão prontos.", fileMissing: "Não há arquivo de resultados para este flop.",
     loadFailed: "Não foi possível carregar o arquivo de resultados.", invalidData: "Não foi possível ler o arquivo de resultados.",
     unsupportedAction: "Esta ação não pode ser analisada.", unsupportedSize: "Este tamanho não pode ser analisado.",
@@ -139,8 +139,8 @@ export const M = {
     practiceSpot: "Praticar este spot", practiceBusy: "Criando questões…", practiceUnavailable: "Não é possível criar questões: nenhuma mão do seu range chega a este spot, faltam os EVs por ação ou há apenas uma ação possível.", practiceReferenceNote: "Este spot é alcançado raramente e seus valores não são confiáveis. Use apenas como referência; ele não entra na revisão de erros.", practiceError: "Não foi possível salvar as questões. Tente novamente.",
   },
   de: {
-    title: "Handanalyse", situation: "Situation", hero: "Deine Position", opener: "Eröffnende Position", preflop: "Preflop",
-    singleRaised: "Open · Call", threeBet: "3-Bet-Pot", multiway: "3+ Spieler", comingSoon: "In Vorbereitung", notSupported: "Nicht analysierbar",
+    title: "Handanalyse", situation: "Situation", hero: "Deine Position", opener: "Eröffnende Position", caller: "Callende Position", threeBettor: "3-bettende Position", preflop: "Preflop",
+    singleRaised: "Open · Call", threeBet: "3-Bet-Pot", multiway: "3+ Spieler", notSupported: "Nicht analysierbar",
     unavailableScenario: "Die Daten für diese Situation sind noch nicht bereit.", fileMissing: "Für diesen Flop gibt es keine Ergebnisdatei.",
     loadFailed: "Die Ergebnisdatei konnte nicht geladen werden.", invalidData: "Die Ergebnisdatei konnte nicht gelesen werden.",
     unsupportedAction: "Diese Aktion kann nicht analysiert werden.", unsupportedSize: "Diese Größe kann nicht analysiert werden.",
@@ -166,8 +166,8 @@ export const M = {
     practiceSpot: "Diesen Spot üben", practiceBusy: "Übungsfragen werden erstellt…", practiceUnavailable: "Es können keine Übungsfragen erstellt werden: Keine Hand deiner Range erreicht diesen Spot, die EVs pro Aktion fehlen oder es gibt nur eine mögliche Aktion.", practiceReferenceNote: "Dieser Spot wird zu selten erreicht, um verlässliche Werte zu haben. Nur zur Orientierung – er kommt nicht in die Fehlerwiederholung.", practiceError: "Übungsfragen konnten nicht gespeichert werden. Bitte versuche es erneut.",
   },
   zh: {
-    title: "手牌复盘", situation: "场景", hero: "我的位置", opener: "开池位置", preflop: "翻牌前",
-    singleRaised: "开池 · 跟注", threeBet: "3-bet底池", multiway: "3人及以上", comingSoon: "准备中", notSupported: "无法复盘",
+    title: "手牌复盘", situation: "场景", hero: "我的位置", opener: "开池位置", caller: "跟注位置", threeBettor: "3-bet位置", preflop: "翻牌前",
+    singleRaised: "开池 · 跟注", threeBet: "3-bet底池", multiway: "3人及以上", notSupported: "无法复盘",
     unavailableScenario: "此场景的数据尚未准备好。", fileMissing: "没有此翻牌的结果文件。",
     loadFailed: "无法加载结果文件。", invalidData: "无法读取结果文件。",
     unsupportedAction: "无法分析此行动。", unsupportedSize: "无法分析此下注尺度。",
@@ -193,8 +193,8 @@ export const M = {
     practiceSpot: "练习这个场景", practiceBusy: "正在生成练习题…", practiceUnavailable: "无法生成练习题：你的范围中没有手牌会到达这个场景，或缺少各行动的EV，或只有一个可选行动。", practiceReferenceNote: "该场景到达比例过低，计算值不够可靠。仅供参考，不会加入错题复习。", practiceError: "无法保存练习题，请重试。",
   },
   "zh-hant": {
-    title: "手牌檢討", situation: "情境", hero: "我的位置", opener: "開池位置", preflop: "翻牌前",
-    singleRaised: "開池 · 跟注", threeBet: "3-bet底池", multiway: "3人以上", comingSoon: "準備中", notSupported: "無法檢討",
+    title: "手牌檢討", situation: "情境", hero: "我的位置", opener: "開池位置", caller: "跟注位置", threeBettor: "3-bet位置", preflop: "翻牌前",
+    singleRaised: "開池 · 跟注", threeBet: "3-bet底池", multiway: "3人以上", notSupported: "無法檢討",
     unavailableScenario: "此情境的資料尚未準備好。", fileMissing: "沒有此翻牌的結果檔案。",
     loadFailed: "無法載入結果檔案。", invalidData: "無法讀取結果檔案。",
     unsupportedAction: "無法分析此行動。", unsupportedSize: "無法分析此下注尺度。",
@@ -220,8 +220,8 @@ export const M = {
     practiceSpot: "練習這個場景", practiceBusy: "正在產生練習題…", practiceUnavailable: "無法產生練習題：你的範圍中沒有手牌會到達這個場景，或缺少各行動的EV，或只有一個可選行動。", practiceReferenceNote: "該場景到達比例過低，計算值不夠可靠。僅供參考，不會加入錯題複習。", practiceError: "無法儲存練習題，請重試。",
   },
   fr: {
-    title: "Revoir une main", situation: "Situation", hero: "Ta position", opener: "Position d’ouverture", preflop: "Préflop",
-    singleRaised: "Open · Call", threeBet: "Pot 3-bet", multiway: "3 joueurs ou plus", comingSoon: "En préparation", notSupported: "Impossible à revoir",
+    title: "Revoir une main", situation: "Situation", hero: "Ta position", opener: "Position d’ouverture", caller: "Position qui call", threeBettor: "Position qui 3-bet", preflop: "Préflop",
+    singleRaised: "Open · Call", threeBet: "Pot 3-bet", multiway: "3 joueurs ou plus", notSupported: "Impossible à revoir",
     unavailableScenario: "Les données de cette situation ne sont pas encore prêtes.", fileMissing: "Aucun fichier de résultats pour ce flop.",
     loadFailed: "Impossible de charger le fichier de résultats.", invalidData: "Impossible de lire le fichier de résultats.",
     unsupportedAction: "Cette action ne peut pas être analysée.", unsupportedSize: "Ce sizing ne peut pas être analysé.",
@@ -247,8 +247,8 @@ export const M = {
     practiceSpot: "Travailler ce spot", practiceBusy: "Création des exercices…", practiceUnavailable: "Impossible de créer des exercices : aucune main de ta range n’arrive à ce spot, les EV par action manquent, ou il n’y a qu’une seule action possible.", practiceReferenceNote: "Ce spot est atteint trop rarement pour des valeurs fiables. À titre indicatif seulement : il n’est pas ajouté à la révision des erreurs.", practiceError: "Impossible d’enregistrer les exercices. Réessaie.",
   },
   id: {
-    title: "Tinjau hand", situation: "Situasi", hero: "Posisi Anda", opener: "Posisi pembuka", preflop: "Preflop",
-    singleRaised: "Open · Call", threeBet: "Pot 3-bet", multiway: "3+ pemain", comingSoon: "Sedang disiapkan", notSupported: "Tidak dapat ditinjau",
+    title: "Tinjau hand", situation: "Situasi", hero: "Posisi Anda", opener: "Posisi pembuka", caller: "Posisi yang call", threeBettor: "Posisi yang 3-bet", preflop: "Preflop",
+    singleRaised: "Open · Call", threeBet: "Pot 3-bet", multiway: "3+ pemain", notSupported: "Tidak dapat ditinjau",
     unavailableScenario: "Data untuk situasi ini belum tersedia.", fileMissing: "Tidak ada berkas hasil untuk flop ini.",
     loadFailed: "Berkas hasil tidak dapat dimuat.", invalidData: "Berkas hasil tidak dapat dibaca.",
     unsupportedAction: "Aksi ini tidak dapat dianalisis.", unsupportedSize: "Ukuran ini tidak dapat dianalisis.",
@@ -274,8 +274,8 @@ export const M = {
     practiceSpot: "Latih spot ini", practiceBusy: "Membuat soal latihan…", practiceUnavailable: "Soal latihan tidak dapat dibuat: tidak ada hand di range Anda yang mencapai spot ini, EV per aksi tidak tersedia, atau hanya ada satu aksi yang bisa dipilih.", practiceReferenceNote: "Spot ini terlalu jarang dicapai sehingga nilainya kurang andal. Gunakan hanya sebagai referensi; spot ini tidak dimasukkan ke ulasan kesalahan.", practiceError: "Soal latihan tidak dapat disimpan. Coba lagi.",
   },
   ms: {
-    title: "Semak hand", situation: "Keadaan", hero: "Kedudukan anda", opener: "Kedudukan pembuka", preflop: "Preflop",
-    singleRaised: "Open · Call", threeBet: "Pot 3-bet", multiway: "3 pemain ke atas", comingSoon: "Dalam persediaan", notSupported: "Tidak boleh disemak",
+    title: "Semak hand", situation: "Keadaan", hero: "Kedudukan anda", opener: "Kedudukan pembuka", caller: "Kedudukan yang call", threeBettor: "Kedudukan yang 3-bet", preflop: "Preflop",
+    singleRaised: "Open · Call", threeBet: "Pot 3-bet", multiway: "3 pemain ke atas", notSupported: "Tidak boleh disemak",
     unavailableScenario: "Data bagi keadaan ini belum siap.", fileMissing: "Tiada fail keputusan untuk flop ini.",
     loadFailed: "Fail keputusan gagal dimuatkan.", invalidData: "Fail keputusan tidak dapat dibaca.",
     unsupportedAction: "Tindakan ini tidak dapat dianalisis.", unsupportedSize: "Saiz ini tidak dapat dianalisis.",
@@ -301,8 +301,8 @@ export const M = {
     practiceSpot: "Berlatih spot ini", practiceBusy: "Membuat soalan latihan…", practiceUnavailable: "Soalan latihan tidak dapat dibuat: tiada hand dalam range anda yang sampai ke spot ini, EV setiap aksi tiada, atau hanya ada satu aksi untuk dipilih.", practiceReferenceNote: "Spot ini terlalu jarang dicapai sehingga nilainya kurang boleh dipercayai. Gunakan sebagai rujukan sahaja; ia tidak dimasukkan ke ulang kaji kesilapan.", practiceError: "Soalan latihan tidak dapat disimpan. Cuba lagi.",
   },
   hi: {
-    title: "हैंड की समीक्षा", situation: "स्थिति", hero: "आपकी पोज़िशन", opener: "Open करने की पोज़िशन", preflop: "Preflop",
-    singleRaised: "Open · Call", threeBet: "3-bet pot", multiway: "3 या अधिक खिलाड़ी", comingSoon: "तैयारी जारी है", notSupported: "समीक्षा संभव नहीं",
+    title: "हैंड की समीक्षा", situation: "स्थिति", hero: "आपकी पोज़िशन", opener: "Open करने की पोज़िशन", caller: "Call करने की पोज़िशन", threeBettor: "3-bet करने की पोज़िशन", preflop: "Preflop",
+    singleRaised: "Open · Call", threeBet: "3-bet pot", multiway: "3 या अधिक खिलाड़ी", notSupported: "समीक्षा संभव नहीं",
     unavailableScenario: "इस स्थिति का डेटा अभी तैयार नहीं है।", fileMissing: "इस Flop की नतीजा फ़ाइल उपलब्ध नहीं है।",
     loadFailed: "नतीजा फ़ाइल लोड नहीं हो सकी।", invalidData: "नतीजा फ़ाइल पढ़ी नहीं जा सकी।",
     unsupportedAction: "इस ऐक्शन का विश्लेषण नहीं हो सकता।", unsupportedSize: "इस साइज़ का विश्लेषण नहीं हो सकता।",

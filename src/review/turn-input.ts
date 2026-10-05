@@ -25,9 +25,14 @@ function requireProducerProfile(file: Hmr1File) {
   if (h.targetPct <= 0 || h.targetPct > 1 || h.exploitPct > h.targetPct) {
     throw new ReviewError("UNSUPPORTED_ACCURACY", "Review requires a converged file with target at most one percent");
   }
-  const scenarios = ["srp-btn-bb", "srp-sb-bb", "srp-co-bb", "srp-hj-bb", "srp-utg-bb"];
-  const sb = h.scenario === "srp-sb-bb";
-  if (!scenarios.includes(h.scenario) || h.pot !== (sb ? 60 : 55) || h.stack !== (sb ? 970 : 975) ||
+  // [pot, stack] per precompute3 scenario (main.rs SCENARIOS).
+  const scenarios: Record<string, readonly [number, number]> = {
+    "srp-btn-bb": [55, 975], "srp-sb-bb": [60, 970], "srp-co-bb": [55, 975], "srp-hj-bb": [55, 975],
+    "srp-utg-bb": [55, 975], "srp-co-btn": [65, 975], "srp-hj-btn": [65, 975], "srp-utg-btn": [65, 975],
+    "srp-hj-co": [65, 975], "3bp-btn-bb": [225, 890], "3bp-btn-sb": [210, 900],
+  };
+  const profile = Object.prototype.hasOwnProperty.call(scenarios, h.scenario) ? scenarios[h.scenario] : null;
+  if (!profile || h.pot !== profile[0] || h.stack !== profile[1] ||
     h.unit !== 10 || h.flopBet.replace(/\s/g, "") !== "33%,75%" ||
     h.laterBet.replace(/\s/g, "") !== "60%" || h.raise.replace(/\s/g, "") !== "60%") {
     throw new ReviewError("UNSUPPORTED_TREE_CONFIG", "Unrecognized HMR1 producer settings");
