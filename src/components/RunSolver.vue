@@ -972,7 +972,7 @@ const invalidLineMessage = () => pick(
   "Ligne invalide trouvée (configuration corrompue chargée ?)",
   "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
   "Line tidak sah ditemui (memuatkan tetapan yang rosak?)",
-  "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk ayarlar mı yüklendi?)"
+  "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)"
 );
 
 const checkConfig = (
@@ -1232,7 +1232,7 @@ const checkConfig = (
     ,
       "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
       "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
-      "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk ayarlar mı yüklendi?)");
+      "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)");
   }
 
   return null;

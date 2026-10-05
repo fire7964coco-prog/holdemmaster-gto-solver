@@ -2674,7 +2674,7 @@ const M = {
     step1After:
       " — 13×13 matrisi tıklayıp sürükleyerek boya ya da metin olarak yaz: ",
     step1Hint:
-      "22+ = tüm cep çiftleri · A2s+ = A2s ile AKs arası · KTo+ = KTo ile KQo arası. 13×13 ızgarada: köşegen = cep çiftleri, sağ üst = suited, sol alt = offsuit",
+      "22+ = tüm cep çiftleri · A2s+ = A2s ile AKs arası · KTo+ = KTo ile KQo arası. 13×13 matriste: köşegen = cep çiftleri, sağ üst = suited, sol alt = offsuit",
     exampleHeader:
       "Yeni misin? Bunları kopyalayıp range alanlarına yapıştır (standart BTN vs BB 100bb — Örnek spotların kullandığı range'lerin aynısı)",
     exOopLabel: "OOP (BB, call eden)",

@@ -81,7 +81,7 @@
         </span>
         <span class="stat-chip">{{ L.totalLossLabel }} <b>{{ $n(totalLoss.toFixed(3)) }}</b>bb</span>
         <span class="stat-chip">{{ L.avgLossLabel }} <b>{{ $n(averageLoss.toFixed(3)) }}</b>bb</span>
-        <span class="stat-chip">{{ L.goodRateLabel }} <template v-if="isTr">%</template><b>{{ excellentRate.toFixed(0) }}</b><template v-if="!isTr">%</template></span>
+        <span class="stat-chip">{{ L.goodRateLabel }} <span v-if="isTr">%<b>{{ excellentRate.toFixed(0) }}</b></span><b v-else>{{ excellentRate.toFixed(0) }}</b><template v-if="!isTr">%</template></span>
       </div>
 
       <!-- 약점 분석: 카테고리별 평균 EV 손실 -->

@@ -1410,7 +1410,7 @@ const M = {
     intro3bet:
       "Open-raise'ine 3-bet geldiğinde nasıl cevap vereceğin — kırmızı 4-bet, yeşil " +
       "call, geri kalan her şey fold. Sıklıklar açmış olmana göre verilir; bu yüzden " +
-      "hiç açmadığın eller boş. 6-max cash, 100bb, 2,5bb open, ~10-11bb 3-bet.",
+      "hiç açmadığın eller boş. 6-max cash, 100bb, 2,5bb open, ~10–11bb 3-bet.",
     legend4bet: "4-bet",
     legendCond: "Boş = baştan hiç açılmayan el",
     stat4bet: "4-bet oranı",
@@ -1422,7 +1422,7 @@ const M = {
       "call range'i geniş kalır: çiftler, suited broadway'ler ve connector'lar.",
     squeezeNote:
       "Squeeze, pot'ta hem açan hem de call eden biri varken yapılan 3-bet'tir (burada " +
-      "yaklaşık 11-12bb). Call eden oyuncu toplam savunmayı heads-up'a göre daraltır ve " +
+      "yaklaşık 11–12bb). Call eden oyuncu toplam savunmayı heads-up'a göre daraltır ve " +
       "3-bet'i value'ya doğru iter. Overcall'larda multiway pot'ta nuts yapabilen suited, " +
       "connected eller öne çıkar.",
     how3bet2:
@@ -1655,7 +1655,8 @@ export default defineComponent({
               value: pctText(percentOf(selected.value)),
               testid: "preflop-percent",
             },
-            { label: t.statCombos, value: `${Math.round(s.combos)} / 1326` },
+            // tr만 천 단위 마침표(확정표 §2 — 1.326) · 다른 언어 출력은 그대로
+            { label: t.statCombos, value: `${Math.round(s.combos)} / ${i18n.locale === "tr" ? "1.326" : "1326"}` },
             { label: t.statHands, value: `${s.hands} / 169` },
             { label: t.statMixed, value: String(s.mixedHands) },
           ],

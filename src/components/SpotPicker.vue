@@ -240,7 +240,7 @@ const M = {
   },
   tr: {
     title: "Range'leri pozisyona göre doldur",
-    note: "Open yapan ve call eden pozisyonu seç, sonra aşağıdaki düğmeye bas — iki range, pot ve stack tek seferde dolar. Range'ler Preflop tablosundakilerle aynı (6-max cash, 100bb).",
+    note: "Açan ve call eden pozisyonu seç, sonra aşağıdaki düğmeye bas — iki range, pot ve stack tek seferde dolar. Range'ler Preflop tablosundakilerle aynı (6-max cash, 100bb).",
     opener: "Açan",
     caller: "Call eden",
     apply: "İki range'i de doldur",

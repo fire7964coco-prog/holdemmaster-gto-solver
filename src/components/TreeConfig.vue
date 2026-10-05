@@ -1621,7 +1621,7 @@ const M = {
       "Bu seçenek PioSOLVER'ın “all-in threshold” ayarına benzer. PioSOLVER, pot'a konan miktarın başlangıç stack'ine oranı eşiği aştığında bet aksiyonunu all-in ile değiştirir.",
     forceAllInHelp3:
       "Yuvarlamayı göz ardı edersek dönüşüm formülü şöyledir (s = başlangıç SPR'si, r = PioSOLVER'ın eşiği):",
-    forceAllInFormula: "Eşik = s * (1 - r) / (1 + 2 * s * r).",
+    forceAllInFormula: "Eşik = s × (1 − r) / (1 + 2 × s × r).",
     mergingLabel: "Birleştirme eşiği:",
     mergingHelp1: "Benzer boyuttaki bet aksiyonlarını tek bir aksiyonda birleştirir.",
     mergingHelp2:
