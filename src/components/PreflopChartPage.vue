@@ -1510,7 +1510,7 @@ const M = {
     intro3bet:
       "Cách phản ứng khi open-raise của bạn bị 3-bet — đỏ là 4-bet, xanh lá là " +
       "call, phần còn lại là fold. Tần suất tính với điều kiện bạn đã open, nên " +
-      "những tay bài bạn không bao giờ open được để trống. Cash 6-max, 100bb, open 2,5bb, 3-bet ~10-11bb.",
+      "những tay bài bạn không bao giờ open được để trống. Cash 6-max, 100bb, open 2,5bb, 3-bet ~10–11bb.",
     legend4bet: "4-bet",
     legendCond: "Trống = ngay từ đầu không open",
     stat4bet: "Tỷ lệ 4-bet",
@@ -1522,7 +1522,7 @@ const M = {
       "range call vẫn rộng: các đôi, broadway đồng chất và connector.",
     squeezeNote:
       "Squeeze là 3-bet khi trong pot đã có cả bên open lẫn bên call (ở đây " +
-      "khoảng 11-12bb). Bên call khiến tổng phòng thủ chặt hơn so với đối đầu tay đôi và " +
+      "khoảng 11–12bb). Bên call khiến tổng phòng thủ chặt hơn so với đối đầu tay đôi và " +
       "đẩy 3-bet nghiêng về value. Overcall ưu tiên các tay đồng chất, liền nhau " +
       "có thể thành nuts khi nhiều người (multiway).",
     how3bet2:

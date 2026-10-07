@@ -2872,8 +2872,8 @@ const M = {
       "22+ = mọi pocket pair · A2s+ = từ A2s đến AKs · KTo+ = từ KTo đến KQo. Trên ma trận: đường chéo = pocket pair, nửa trên bên phải = suited (đồng chất), nửa dưới bên trái = offsuit (khác chất)",
     exampleHeader:
       "Mới dùng lần đầu? Sao chép các range này và dán vào ô nhập range (chuẩn BTN vs BB 100bb — cũng là range mà spot mẫu dùng)",
-    exOopLabel: "OOP (BB call)",
-    exIpLabel: "IP (BTN open)",
+    exOopLabel: "OOP (BB, bên call)",
+    exIpLabel: "IP (BTN, bên open)",
     copiedLabel: "Đã sao chép!",
     copyLabel: "Sao chép",
     step3Bold: "③ Board",

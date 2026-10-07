@@ -1656,7 +1656,7 @@ const M = {
     inputHelpIntro:
       "Bạn có thể nhập nhiều cỡ cược, cách nhau bằng dấu phẩy hoặc dấu cách, theo bất kỳ dạng nào dưới đây. Nếu để trống, sẽ không có bet hay raise.",
     inputHelpPercent:
-      "Một số thể hiện phần trăm pot (vd. “50”). Với raise, cỡ cược được tính bằng cách call trước rồi cộng thêm phần trăm đã nhập của pot sau khi call. Ví dụ, nếu pot trước khi bet là 100 và đối thủ bet 75, raise 50% là 75 + (100 + 75 + 75) * 50% = 200.",
+      "Một số thể hiện phần trăm pot (vd. “50”). Với raise, cỡ cược được tính bằng cách call trước rồi cộng thêm phần trăm đã nhập của pot sau khi call. Ví dụ, nếu pot trước khi bet là 100 và đối thủ bet 75, raise 50% là 75 + (100 + 75 + 75) × 50% = 200.",
     inputHelpMultiple:
       "Bội số của cỡ cược trước đó (vd. “2.5x”). Chỉ dùng cho raise.",
     inputHelpAllin: "All-in (vd. “a”).",
@@ -1681,7 +1681,7 @@ const M = {
       "Tùy chọn này tương tự “all-in threshold” của PioSOLVER. PioSOLVER thay một hành động bet bằng all-in khi tỷ lệ giữa số chip đã cho vào pot và stack ban đầu vượt quá ngưỡng.",
     forceAllInHelp3:
       "Bỏ qua phần làm tròn, công thức quy đổi như sau (s = SPR ban đầu, r = ngưỡng của PioSOLVER):",
-    forceAllInFormula: "Ngưỡng = s * (1 - r) / (1 + 2 * s * r).",
+    forceAllInFormula: "Ngưỡng = s × (1 − r) / (1 + 2 × s × r).",
     mergingLabel: "Ngưỡng gộp:",
     mergingHelp1: "Gộp các hành động bet có cỡ gần nhau thành một.",
     mergingHelp2:
