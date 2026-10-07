@@ -159,7 +159,7 @@
       <div class="flex-grow min-w-0">
         <div class="flex flex-wrap gap-2 mb-4">
           <div v-for="s in active.stats" :key="s.label" class="stat-chip">
-            {{ s.label }} <b :data-testid="s.testid">{{ isVi && s.label === L.statCombos ? s.value : $n(s.value) }}</b>
+            {{ s.label }} <b :data-testid="s.testid">{{ (isVi || isTr) && s.label === L.statCombos ? s.value : $n(s.value) }}</b>
           </div>
         </div>
 
@@ -1628,6 +1628,7 @@ export default defineComponent({
     const L = computed(() => M[i18n.locale]);
     // vi combo counts already contain a localized thousands separator.
     const isVi = computed(() => i18n.locale === "vi");
+    const isTr = computed(() => i18n.locale === "tr");
 
     // npokers 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
     noteToolUsed();
@@ -1985,6 +1986,7 @@ export default defineComponent({
       cellActive,
       cellLabel,
       isVi,
+      isTr,
       L,
     };
   },
