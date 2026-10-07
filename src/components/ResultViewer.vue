@@ -348,6 +348,15 @@ const M = {
     finalizing: "Tamamlanıyor…",
     paused: "Solver duraklatıldı.",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    startRange: "① Start with ranges",
+    viewPresets: "View Study Spots",
+    notRun: "You haven’t calculated your own results yet.\nYou can view example results directly in the “Study Spots” menu.\nTo calculate your own spot, complete ①~⑤, then press “Run Solver”.",
+    running: "Running the solver…",
+    finalizing: "Finalizing…",
+    paused: "Solver paused.",
+  },
 } as const;
 
 export default defineComponent({

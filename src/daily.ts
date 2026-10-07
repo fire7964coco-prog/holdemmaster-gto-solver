@@ -147,7 +147,7 @@ export const dailyCardDate = () => {
   const key = todayKey();
   if (i18n.locale === "de" || i18n.locale === "tr") return key.split("-").reverse().join(".");
   // hi: DD/MM/YYYY with Latin digits, same in the image and copied text.
-  if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi")
+  if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi" || i18n.locale === "vi")
     return key.split("-").reverse().join("/");
   if (i18n.locale === "zh" || i18n.locale === "zh-hant") return key;
   return key.replace(/-/g, ".");
@@ -315,6 +315,19 @@ export const dailyShareText = (verdict: string) => {
       "",
       "Aynı soruyu sen de çöz → https://solver.holdemmaster.com/?view=trainer&lang=tr",
       "(HoldemMaster GTO Solver · her gün bir soru)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  // vi-todo: English copy; only date, number formatting and link locale differ.
+  if (i18n.locale === "vi") {
+    return [
+      `[Daily GTO Puzzle · ${dailyCardDate()}]`,
+      `My result: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak}-day streak` : "",
+      "",
+      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&lang=vi",
+      "(HoldemMaster GTO Solver · one puzzle a day)",
     ]
       .filter(Boolean)
       .join("\n");

@@ -440,6 +440,33 @@ const M = {
       "Cihazına hiçbir program yüklenmez — bu yalnızca bir tarayıcı kısayolu. Hiçbir izin istemez; bir uygulama gibi simgesine basılı tutarak istediğin zaman kaldırabilirsin.",
     close: "Kapat",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    iconAlt: "HoldemMaster GTO Trainer icon",
+    title: "Add to your home screen?",
+    samsung1: "Samsung Internet may ",
+    samsungB1: "block the install for security",
+    samsung2: " — that check comes from the browser, not from this app. ",
+    samsungB2: "Open it in Chrome",
+    samsung3: " and it installs without the warning.",
+    default1: "It opens with a single tap, and ",
+    defaultB1: "keeps all 13 Study Spots and the Trainer on your device",
+    default2: " so you can study even without an internet connection.",
+    ios1: "Tap the ",
+    iosB1: "Share button",
+    ios2: " below, then choose ",
+    iosB2: "“Add to Home Screen”",
+    ios3: ". It opens with a single tap, with the Study Spots and Trainer saved for offline use.",
+    openInChrome: "Open in Chrome",
+    install: "Add to Home Screen",
+    gotIt: "Got it",
+    later: "Later",
+    samsungHint:
+      "To install here anyway, follow the prompts in the dialog to allow it.",
+    safety:
+      "Nothing gets installed on your system — it's just a browser shortcut. It asks for no permissions, and you can remove it anytime by long-pressing the icon, just like an app.",
+    close: "Close",
+  },
 } as const;
 
 /* npokers 빌드용 덮어쓰기 — 배너의 «교육 예제·트레이너 저장» 대목을 «앱 저장»으로.
@@ -525,6 +552,13 @@ const N =
           defaultB1: "uygulamayı cihazına kaydeder",
           default2: "; böylece internet bağlantısı olmadan da kullanabilirsin.",
           ios3: " seçeneğini seç. Tek dokunuşla açılır ve çevrimdışı da çalışır.",
+        },
+        // vi-todo: English copy; translate values in this block.
+        vi: {
+          iconAlt: "npokers icon",
+          defaultB1: "keeps the app on your device",
+          default2: " so you can use it even without an internet connection.",
+          ios3: ". It opens with a single tap and works even offline.",
         },
       }
     : null;

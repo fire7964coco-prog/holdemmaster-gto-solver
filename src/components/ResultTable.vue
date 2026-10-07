@@ -877,6 +877,32 @@ const M = {
     action: (name: string): string =>
       ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    summary: "Summary",
+    barWidth: "Bar Width:",
+    normalized: "Normalized",
+    absolute: "Absolute",
+    full: "Full",
+    display: "Display:",
+    actionPct: "Action %",
+    actionEv: "Action EV",
+    exportCsv: "Export summary as a CSV file",
+    all: "All",
+    hand: "Hand",
+    strategy: "Strategy",
+    weightBar: "Weight (Bar)",
+    weight: "Weight",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (Bar)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `No ${chanceType === "turn" ? "turn" : "river"} report available`,
+    noResults: "No results",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

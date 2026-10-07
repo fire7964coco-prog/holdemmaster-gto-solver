@@ -159,7 +159,7 @@
       <div class="flex-grow min-w-0">
         <div class="flex flex-wrap gap-2 mb-4">
           <div v-for="s in active.stats" :key="s.label" class="stat-chip">
-            {{ s.label }} <b :data-testid="s.testid">{{ $n(s.value) }}</b>
+            {{ s.label }} <b :data-testid="s.testid">{{ isVi && s.label === L.statCombos ? s.value : $n(s.value) }}</b>
           </div>
         </div>
 
@@ -1481,6 +1481,107 @@ const M = {
       "sıklıklar) + kendi örnek spot range'lerimiz (toplanma: 08.2026)",
     phase2: "Yeni eşleşmeler ve senaryolar eklemeye devam edeceğiz.",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    modeRfi: "Opening (RFI)",
+    modeDefend: "vs Open (Defense)",
+    mode3bet: "vs 3-bet (after opening)",
+    mode4bet: "vs 4-bet (after 3-betting)",
+    intro4bet:
+      "How to respond when your 3-bet gets 4-bet — red is 5-bet (all-in), green " +
+      "is call, everything else is a fold. Frequencies are conditional on having 3-bet, so " +
+      "hands you never 3-bet are blank. 6-max cash, 100bb; BB 3-bets 11bb " +
+      "and faces a 24bb 4-bet; SB 3-bets 10bb and faces 22bb.",
+    legend5bet: "5-bet (all-in)",
+    legendCond4bet: "Blank = never 3-bet in the first place",
+    stat5bet: "5-bet %",
+    statContinue4bet: "Continue % (of 3-bets)",
+    copy5bet: "Copy 5-bet range",
+    note4bet:
+      "The stats are shares of your 3-betting range. At 100bb the 5-bet is " +
+      "effectively all-in — value centers on AA·KK (occasionally trapping with a " +
+      "call), and QQ·AK mix 5-bets with calls. Calls are driven by equity realization, " +
+      "not pot odds: you fight out of position at a low SPR, so only pairs and " +
+      "top suited hands continue — but don't fold everything, because their " +
+      "4-betting range mixes in bluffs like A5s–A4s.",
+    how4bet2:
+      "If red + green don't fill the cell, the rest is folded. Cells with both " +
+      "colors mix 5-bets and calls. Hands outside the 3-betting range never " +
+      "face this spot, so they are blank.",
+    intro3bet:
+      "How to respond when your open-raise gets 3-bet — red is 4-bet, green is " +
+      "call, everything else is a fold. Frequencies are conditional on having opened, so " +
+      "hands you never open are blank. 6-max cash, 100bb, 2.5bb open, ~10-11bb 3-bet.",
+    legend4bet: "4-bet",
+    legendCond: "Blank = never opened in the first place",
+    stat4bet: "4-bet %",
+    statContinue: "Continue % (of opens)",
+    copy4bet: "Copy 4-bet range",
+    note3bet:
+      "The stats are shares of your opening range, not of all hands. 4-bet value " +
+      "centers on QQ+/AK with a few bluffs like A5s-A4s mixed in. With position, " +
+      "the calling range stays wide: pairs, suited broadways, and connectors.",
+    squeezeNote:
+      "A squeeze is a 3-bet with both an opener and a caller in the pot (about " +
+      "11-12bb here). The caller makes total defense tighter than heads-up and " +
+      "pushes the 3-bet toward value. Overcalls favor suited, connected hands " +
+      "that can make the nuts multiway.",
+    how3bet2:
+      "If red + green don't fill the cell, the rest is folded. Cells with both " +
+      "colors mix 4-bets and calls. Hands outside the opening range never face " +
+      "this spot, so they are blank.",
+    intro: "Opening ranges by position (RFI) — which hands should you raise when everyone folds to you? Based on 6-max cash, 100bb, 2.5bb open. Partially filled cells mark borderline hands where public sources disagree on opening (fill height = share of sources favoring an open).",
+    provenanceNote: "Public-source consensus + internal derivation — not solver output. See “How was this chart built?” below.",
+    introDefend:
+      "How to respond when someone open-raises before you — the most " +
+      "common matchups. Red is 3-bet, green is call, and the stacked height is " +
+      "your total defend frequency. 6-max cash, 100bb, 2.5bb open (3bb for SB opens).",
+    legendOpen: "Open (100%)",
+    legendMixed: "Borderline hands (fill = share of sources favoring an open)",
+    legendFold: "Fold",
+    legend3bet: "3-bet",
+    legendCall: "Call",
+    legendMixedDefend: "Fill height = frequency (split cells are mixed)",
+    stat3bet: "3-bet %",
+    statCall: "Call %",
+    statTotal: "Total defend",
+    copy3bet: "Copy 3-bet range",
+    copyCall: "Copy call range",
+    sbNote:
+      "In the SB you're essentially 3-bet-or-fold against a BTN open — you're " +
+      "out of position with BB still left to act, so calling saddles you with " +
+      "both disadvantages at once.",
+    ipNote:
+      "Even with position, an early-position opening range is strong, and " +
+      "calling risks a squeeze from the blinds still left to act. In-position " +
+      "defense is therefore a narrow, 3-bet-centric range, with calls mostly " +
+      "limited to pairs and premium suited hands.",
+    statPercent: "Open %",
+    statCombos: "Combos opened",
+    statHands: "Hands opened",
+    statMixed: "Borderline hands",
+    copy: "Copy range text",
+    copied: "✓ Copied",
+    sendOop: "① Send to OOP Range",
+    sendIp: "② Send to IP Range",
+    howTitle: "How to read this",
+    how1: "The top-left to bottom-right diagonal is pairs; above it (right) is suited, below it (left) is offsuit.",
+    how2: "Partially filled cells mark borderline hands where sources disagree on whether to open. Fill height represents the share of sources favoring an open, not a solver result.",
+    how3: "The [Send to Range] buttons load this range into the custom-spot range editor — try solving the postflop play yourself.",
+    howDefend2:
+      "If red + green don't fill the whole cell, the rest is folded. Cells showing both colors mix 3-bets and calls at those ratios.",
+    howDefend3:
+      "Paste a copied range into the custom-spot range inputs (① / ②) to solve the postflop play with this defense range yourself.",
+    sourceTitle: "How was this chart built?",
+    sourceBody: "We cross-checked several freely published GTO resources hand by hand to build a consensus range, marking borderline hands the sources disagree on with the share of sources favoring an open (75/50/25%). BTN and SB were also checked against the solver-verified ranges used by this app's Study Spots.",
+    sourceList:
+      "Public sources cross-checked: nlh.poker · Preflop Wizard · HoldemPro · " +
+      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB solved frequencies) · " +
+      "GTO Gecko · RiverOdds (defense anchors) · GTO Wizard blog · FreeBetRange " +
+      "(IP defense & squeeze principles) · 888poker · Run It Once (vs 3-bet " +
+      "frequencies) + our own study-spot ranges (collected 2026-08)",
+    phase2: "We'll keep adding more matchups and scenarios.",
+  },
 } as const;
 
 type ModeKey = "rfi" | "defend" | "vs3bet" | "vs4bet";
@@ -1525,6 +1626,8 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale]);
+    // vi combo counts already contain a localized thousands separator.
+    const isVi = computed(() => i18n.locale === "vi");
 
     // npokers 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
     noteToolUsed();
@@ -1656,7 +1759,7 @@ export default defineComponent({
               testid: "preflop-percent",
             },
             // tr만 천 단위 마침표(확정표 §2 — 1.326) · 다른 언어 출력은 그대로
-            { label: t.statCombos, value: `${Math.round(s.combos)} / ${i18n.locale === "tr" ? "1.326" : "1326"}` },
+            { label: t.statCombos, value: `${Math.round(s.combos)} / ${i18n.locale === "tr" || i18n.locale === "vi" ? "1.326" : "1326"}` },
             { label: t.statHands, value: `${s.hands} / 169` },
             { label: t.statMixed, value: String(s.mixedHands) },
           ],
@@ -1881,6 +1984,7 @@ export default defineComponent({
       cellCall,
       cellActive,
       cellLabel,
+      isVi,
       L,
     };
   },

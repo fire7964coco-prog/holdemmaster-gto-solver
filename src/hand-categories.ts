@@ -448,6 +448,49 @@ export const DRAW_LABELS_TR: Record<DrawKey, string> = {
   no_draw: "Draw yok",
 };
 
+// vi: confirmed rank names (V1 §1-5). The current MadeKey classification has no
+// separate royal_flush, one_pair or high_card key; keep those names here without
+// changing classification or mislabelling pair subtypes / "nothing".
+export const VI_HAND_RANK_NAMES = {
+  royal_flush: "Sảnh Thượng",
+  straight_flush: "Thùng Phá Sảnh",
+  quads: "Tứ Quý",
+  full_house: "Cù Lũ",
+  flush: "Thùng",
+  straight: "Sảnh",
+  trips: "Xám",
+  two_pair: "Hai Đôi",
+  one_pair: "Đôi",
+  high_card: "Mậu Thầu",
+} as const;
+
+export const MADE_LABELS_VI: Record<MadeKey, string> = {
+  straight_flush: "Thùng Phá Sảnh",
+  quads: "Tứ Quý",
+  full_house: "Cù Lũ",
+  flush: "Thùng",
+  straight: "Sảnh",
+  trips: "Xám",
+  two_pair: "Hai Đôi",
+  overpair: "Overpair", // vi-todo
+  top_pair: "Top Pair", // vi-todo
+  second_pair: "Second Pair", // vi-todo
+  weak_pair: "Weak Pair", // vi-todo
+  underpair: "Underpair", // vi-todo
+  ace_high: "Ace-High", // vi-todo
+  king_high: "King-High", // vi-todo
+  nothing: "No Made Hand", // vi-todo
+};
+
+export const DRAW_LABELS_VI: Record<DrawKey, string> = {
+  combo_draw: "Combo Draw", // vi-todo
+  flush_draw: "Flush Draw", // vi-todo
+  oesd: "OESD", // vi-todo
+  gutshot: "Gutshot", // vi-todo
+  backdoor_fd: "Backdoor FD", // vi-todo
+  no_draw: "No Draw", // vi-todo
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -474,6 +517,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_HI
     : i18n.locale === "tr"
     ? MADE_LABELS_TR
+    : i18n.locale === "vi"
+    ? MADE_LABELS_VI
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -500,6 +545,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_HI
     : i18n.locale === "tr"
     ? DRAW_LABELS_TR
+    : i18n.locale === "vi"
+    ? DRAW_LABELS_VI
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

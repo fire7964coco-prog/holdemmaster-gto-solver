@@ -88,6 +88,7 @@
                두 이름 모두 «자기 글자»로 적어야 그 언어 사용자가 알아본다 -->
           <option value="zh">简体中文</option>
           <option value="zh-hant">繁體中文</option>
+          <option value="vi">Tiếng Việt</option>
         </select>
         <a
           :href="communityUrl"
@@ -224,6 +225,14 @@ const M = {
     communitySuffix: "\u00a0Topluluğu",
     langSwitchLabel: "Dil seç",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    resultsDisabledHint: "Opens when ⑤ Run Solver is finished",
+    solver: "Solver",
+    community: "HoldemMaster",
+    communitySuffix: " Community",
+    langSwitchLabel: "Select language",
+  },
 } as const;
 
 export default defineComponent({
@@ -249,7 +258,8 @@ export default defineComponent({
         value === "id" ||
         value === "ms" ||
         value === "hi" ||
-        value === "tr"
+        value === "tr" ||
+        value === "vi"
       )
         setLocale(value);
     };

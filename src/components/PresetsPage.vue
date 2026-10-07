@@ -150,6 +150,22 @@ const M = {
     footnote:
       "Range'ler 100bb online oyun standardına yakın tutuldu. Bir spot yükle, range'leri değiştir ve sonuçları karşılaştırarak öğren.",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    infoBtn1: "[⚡ View results]",
+    infoText1:
+      " shows the solved strategy instantly. Use ",
+    infoBtn2: "[Solve it yourself]",
+    infoText2:
+      " only when you want to tweak the ranges or explore turn and river play.",
+    pot: "Pot",
+    stack: "Stack",
+    articleLink: "Read article",
+    viewResults: "View results",
+    solveYourself: "Solve it yourself",
+    footnote:
+      "Ranges are approximations of standard 100bb online play. Load a spot, tweak the ranges, and compare — a great way to study.",
+  },
   en: {
     infoBtn1: "[⚡ View results]",
     infoText1:

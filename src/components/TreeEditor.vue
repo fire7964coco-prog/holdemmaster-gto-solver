@@ -484,6 +484,23 @@ const M = {
     addedLines: "Eklenen line'lar:",
     removedLines: "Kaldırılan line'lar:",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    treeError: "Error: Failed to build the tree (loaded a broken tree?)",
+    pot: "Pot",
+    stack: "Stack",
+    noActions: "(No actions)",
+    wins: "wins",
+    invalidTerminals: "Invalid terminal nodes:",
+    addBetAction: "Add Bet Action",
+    removeNode: "Remove Selected Node",
+    betAmount: "Bet Amount:",
+    potRate: (pct: string) => `(${pct}% of the pot)`,
+    saveEdits: "Save Edits",
+    cancelEdits: "Cancel Edits",
+    addedLines: "Added lines:",
+    removedLines: "Removed lines:",
+  },
 } as const;
 
 export default defineComponent({

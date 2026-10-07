@@ -156,6 +156,11 @@ const M = {
     noGraph: "Grafik yok",
     equity: "Equity",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    noGraph: "No graph available",
+    equity: "Equity",
+  },
 } as const;
 
 export default defineComponent({

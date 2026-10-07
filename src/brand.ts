@@ -33,6 +33,8 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       ms: "npokers",
       hi: "npokers",
       tr: "npokers",
+      // vi-todo: English copy; translate values in this block.
+      vi: "npokers",
     }
   : {
       /* 간판 교체 (2026-08-24, 트랙 B — 작업계획.md 가드레일 G3):
@@ -58,4 +60,6 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       hi: "HoldemMaster GTO Trainer",
       // tr도 라틴계 통일 — 확정표 §1-6 «GTO Trainer»
       tr: "HoldemMaster GTO Trainer",
+      // vi-todo: English copy; translate values in this block.
+      vi: "HoldemMaster GTO Trainer",
     };

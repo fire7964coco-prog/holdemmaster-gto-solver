@@ -121,6 +121,16 @@ const actionLabelsZhHant: Record<string, string> = {
   Allin: "全下",
   "All-in": "全下",
 };
+// vi-todo: English output copied explicitly, including engine-name defaults.
+const actionLabelsVi: Record<string, string> = {
+  Fold: "Fold",
+  Check: "Check",
+  Call: "Call",
+  Bet: "Bet",
+  Raise: "Raise",
+  Allin: "All-In",
+  "All-in": "All-In",
+};
 const actionName = (name: string) =>
   i18n.locale === "ko"
     ? actionLabelsKo[name] ?? name
@@ -135,6 +145,8 @@ const actionName = (name: string) =>
     // hi deliberately keeps Latin action terms, including the normalized All-in label.
     : i18n.locale === "hi"
     ? actionLabelsEn[name] ?? name
+    : i18n.locale === "vi"
+    ? actionLabelsVi[name] ?? name
     : actionLabelsEn[name] ?? name;
 
 export const trainerCategory = (
@@ -147,7 +159,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi",
     Record<TrainerCategory, string>
   > = {
     ko: {
@@ -232,6 +244,13 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "3-bet pot",
       blind: "Blind vs blind",
     },
+    // vi-todo: English copy; translate values in this block.
+    vi: {
+      all: "All",
+      srp: "Single Raised",
+      "3bp": "3-Bet Pot",
+      blind: "Blind vs Blind",
+    },
   };
   return labels[i18n.locale][category];
 };
@@ -269,6 +288,9 @@ export const trainerActionLabel = (
       : i18n.locale === "tr"
       ? // 확정표 §6: 퍼센트 기호 앞 «%35» · 접미사 없이 «pot» (번역 확정 형식)
         `${label} ${amount} (%${pct} pot)`
+      : i18n.locale === "vi"
+      ? // vi-todo: English copy; percent stays after the number without a space.
+        `${label} ${amount} (${pct}% pot)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return `${label} ${amount}`;

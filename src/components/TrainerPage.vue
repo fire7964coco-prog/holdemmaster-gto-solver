@@ -81,7 +81,7 @@
         </span>
         <span class="stat-chip">{{ L.totalLossLabel }} <b>{{ $n(totalLoss.toFixed(3)) }}</b>bb</span>
         <span class="stat-chip">{{ L.avgLossLabel }} <b>{{ $n(averageLoss.toFixed(3)) }}</b>bb</span>
-        <span class="stat-chip">{{ L.goodRateLabel }} <span v-if="isTr">%<b>{{ excellentRate.toFixed(0) }}</b></span><b v-else>{{ excellentRate.toFixed(0) }}</b><template v-if="!isTr">%</template></span>
+        <span class="stat-chip">{{ L.goodRateLabel }} <span v-if="isTr">%<b>{{ excellentRate.toFixed(0) }}</b></span><span v-else-if="isVi"><b>{{ excellentRate.toFixed(0) }}</b>%</span><b v-else>{{ excellentRate.toFixed(0) }}</b><template v-if="!isTr && !isVi">%</template></span>
       </div>
 
       <!-- 약점 분석: 카테고리별 평균 EV 손실 -->
@@ -2041,6 +2041,110 @@ const M = {
     syncFailed: (msg: string) => `Eşitleme başarısız: ${msg}`,
     signInFailed: (msg: string) => `Giriş başarısız: ${msg}`,
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    loadFailed: "Failed to load trainer data:",
+    loading: "Loading trainer…",
+    review: (n: number) => `Review (${n})`,
+    daily: "Daily Puzzle",
+    dailyStreakLabel: "Daily Puzzle",
+    done: "Done",
+    solved: "Solved",
+    dayStreakSuffix: "-day streak",
+    bestPrefix: "/ best",
+    streakLabel: "Streak",
+    totalLossLabel: "Total EV loss",
+    avgLossLabel: "Avg EV loss",
+    goodRateLabel: "Good-play rate",
+    weaknessTitle: "Leak Finder",
+    avgOfPot: (pct: string) => `avg ${pct}% of the pot`,
+    handCount: (n: number) => `(${n} hand${n === 1 ? "" : "s"})`,
+    notSolved: "Not tried",
+    weakestBefore: "Biggest losses in ",
+    weakestAfter: " —",
+    practiceThis: "Drill this spot type",
+    weaknessHint: "Solve 3+ hands in each category to see where you're leaking.",
+    accountBefore: "Saved to ",
+    accountAfter: "'s account",
+    syncingNow: "Syncing…",
+    syncNow: "Sync now",
+    signOutLabel: "Sign out",
+    localOnlyBefore: "Your progress is saved ",
+    localOnlyBold: "on this device only",
+    localOnlyAfter:
+      ". Link a HoldemMaster account to pick up where you left off on any device.",
+    googleSignIn: "Continue with Google",
+    kakaoSignIn: "Continue with Kakao",
+    footerLine: (nodes: number, pct: number) =>
+      `13 Study Spots · ${nodes} decision nodes · target exploitability ${pct}%`,
+    details: "Details ↓",
+    toAct: "to act",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Line:",
+    boardLabel: "Board",
+    myHand: "Your hand",
+    yourChoice: "Your choice",
+    prompt: "What's your play?",
+    bestEvTag: " · Highest EV",
+    evLoss: "EV loss",
+    mobileDetailTitle: "Frequency & EV by action",
+    mixedNote:
+      "Mixed strategies aren't marked wrong — grading is based on the EV difference between actions.",
+    dailyDone: "Daily Puzzle complete",
+    dailyDoneDesc:
+      "Everyone gets the same puzzle today. Post your result to compare with other players.",
+    makeCard: "Create a result card",
+    boardShow: "View today's leaderboard",
+    boardHide: "Hide leaderboard",
+    boardLoading: "Loading…",
+    boardCount: (n: number) => `${n} player${n === 1 ? "" : "s"} today`,
+    boardMyRank: (r: number) => `My rank #${r}`,
+    boardLoginHint:
+      "Sign in to put your name on the board — viewing is open to everyone.",
+    boardUnavailable: "The leaderboard isn't available yet.",
+    copied: "Copied",
+    copyResult: "Copy result text",
+    openCommunity: "Open community →",
+    pasteHintBefore: "In the community, hit ",
+    pasteHintBold: "[✏️ Write Post]",
+    pasteHintAfter: " and paste.",
+    keepPracticing: "Keep practicing",
+    nextHand: "Next hand",
+    readArticle: "Read the spot breakdown →",
+    viewFull: "View full solution",
+    resultTitle: "Results",
+    resultHintBefore: "Pick an action and you'll see ",
+    resultHintBold: "each action's frequency and EV",
+    resultHintAfter: ", plus how many bb your choice cost.",
+    gtoNoteBefore:
+      "GTO mixes actions with the same hand — a low-frequency choice isn't automatically a mistake. The measure is EV loss ",
+    gtoNoteBold: "relative to the pot",
+    gtoNoteAfter: ": ≤0.35% Best play · ≤1% Acceptable · above that, Review this spot.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `For this spot (${pot}bb pot) that's Best play ≤${best}bb · Acceptable ≤${good}bb.`,
+    resetHistoryLabel: "Reset history",
+    cardAlt: "Daily Puzzle result card",
+    shareApps: "Share",
+    saveImage: "Save image",
+    close: "Close",
+    cardHintBefore:
+      "Post your card to a group chat or social media — anyone who sees it plays the ",
+    cardHintBold: "same puzzle",
+    cardHintAfter: " today. The card never spoils the answer.",
+    verdictBest: "Best play",
+    verdictGood: "Acceptable",
+    verdictMiss: "Review this spot",
+    promptCopy: "Copy the text below",
+    shareText:
+      "Today's GTO puzzle — try it yourself: https://solver.holdemmaster.com/?view=trainer&lang=vi",
+    confirmReset: "Clear all trainer history on this device?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} saved · ${merged} pulled from other devices`,
+    syncSaved: (uploaded: number) => `${uploaded} saved`,
+    syncFailed: (msg: string) => `Sync failed: ${msg}`,
+    signInFailed: (msg: string) => `Sign-in failed: ${msg}`,
+  },
 } as const;
 
 export default defineComponent({
@@ -2050,6 +2154,7 @@ export default defineComponent({
     const L = computed(() => M[i18n.locale]);
     // 굵은 숫자 뒤 «%»는 tr에서만 숫자 앞으로(%35) — 굵기 범위를 바꾸지 않으려고 $pct 대신 자리만 옮긴다
     const isTr = computed(() => i18n.locale === "tr");
+    const isVi = computed(() => i18n.locale === "vi");
     /* 두 문장을 잇는 공백 — 서양어는 필요하고, CJK는 「。」가 이미 여백을 품고 있어
      * 넣으면 오히려 벌어진다. 템플릿의 줄바꿈에 맡기면 전 언어가 공백을 받는다 */
     const sentenceGap = computed(() =>
@@ -2540,6 +2645,7 @@ export default defineComponent({
       positionLabel,
       L,
       isTr,
+      isVi,
       isKo,
       trainerCategoryLabel,
       trainerActionLabel,

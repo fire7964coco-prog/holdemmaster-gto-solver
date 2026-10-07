@@ -111,6 +111,8 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   hi: { "": "/hi" },
   // ✅ /tr/solver 200 (2026-10-07 curl 실측 — 본체 MB-186 10-06 신설. 10-05에는 404였다). /tr/community는 여전히 404
   tr: { "": "/tr", "/solver": "/tr/solver" },
+  // V1: 2026-10-07 계획서 실측 /vi/solver 404 — 홈만 연결한다.
+  vi: { "": "/vi" },
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

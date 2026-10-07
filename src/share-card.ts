@@ -170,6 +170,18 @@ const CARD_TEXT = {
       `EV kaybı ${bb}bb${streak > 1 ? ` · ${streak} günlük seri` : ""}`,
     invite: "Bugünün sorusunu sen de çöz",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "One puzzle a day · same for everyone",
+    heading: "Daily GTO Puzzle",
+    board: "Board",
+    hand: "My Hand",
+    result: (verdict: string) => `My result: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `EV loss ${bb}bb${streak > 1 ? ` · ${streak}-day streak` : ""}`,
+    invite: "Try today's puzzle",
+  },
 } as const;
 
 export type DailyCardInput = {

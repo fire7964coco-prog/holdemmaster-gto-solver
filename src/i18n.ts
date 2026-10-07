@@ -15,7 +15,7 @@ import { reactive } from "vue";
 
 // ⚠ "zh"(간체)와 "zh-hant"(번체)는 «별개 언어»다 — 용어 자체가 다르므로 기계 변환 금지
 // (德州扑克/德州撲克 · 求解器/解算器 · 概率/機率 · 弃牌/蓋牌).
-export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr";
+export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi";
 
 /* 🔴 2026-08-27에 키를 갈았다 — «solver.locale» → «solver.locale.pegged».
  *
@@ -49,7 +49,8 @@ const readStored = (): Locale | null => {
       value === "id" ||
       value === "ms" ||
       value === "hi" ||
-      value === "tr"
+      value === "tr" ||
+      value === "vi"
       ? value
       : null;
   } catch {
@@ -73,7 +74,8 @@ const detect = (): Locale => {
     fromUrl === "id" ||
     fromUrl === "ms" ||
     fromUrl === "hi" ||
-    fromUrl === "tr"
+    fromUrl === "tr" ||
+    fromUrl === "vi"
   ) {
     try {
       localStorage.setItem(KEY, fromUrl);
@@ -99,6 +101,7 @@ const detect = (): Locale => {
   if (lang === "hi" || lang.startsWith("hi-")) return "hi";
   // 터키어(tr-TR·tr-CY). 확정표 §7-3
   if (lang.startsWith("tr")) return "tr";
+  if (lang.startsWith("vi")) return "vi";
   // ⚠ 중국어는 간체(zh-CN)와 번체(zh-hant)가 별개 언어다. **번체 판정이 «먼저» 와야 한다** —
   //   startsWith("zh")를 앞에 두면 zh-TW·zh-HK가 전부 간체로 새어 나간다(2026-08-22까지 실제로 그랬다).
   //   번체권 = 대만(zh-TW)·홍콩(zh-HK)·마카오(zh-MO), 그리고 명시적 문자표기 zh-Hant-*.
@@ -194,6 +197,12 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Tarayıcında doğrudan çalışan ücretsiz GTO solver — kurulum gerekmez. Texas Hold'em postflop stratejisini range, board ve bet boyutuna göre hesapla. HoldemMaster tarafından.",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em",
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
+  },
 };
 
 /* npokers 빌드(스토어용 순수 솔버)의 탭 제목·메타 설명 — 빌드 2벌 분기(2026-08-24).
@@ -267,6 +276,12 @@ const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Tarayıcında doğrudan çalışan ücretsiz GTO solver — kurulum gerekmez. Texas Hold'em postflop stratejisini range, board ve bet boyutuna göre hesapla.",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    title: "npokers — Free Online GTO Solver for Texas Hold'em",
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+  },
 };
 
 /* 빌드 2벌 분기 — 어느 사전을 쓸지는 빌드 타임에 정해진다 (webpack DefinePlugin) */
@@ -292,6 +307,7 @@ const DOC_LANG: Record<Locale, string> = {
   hi: "hi",
   // CSS uppercase가 터키어 규칙(i→İ)을 타게 한다 — 확정표 §7-1 (사이드바 uppercase는 끄지 않는다)
   tr: "tr",
+  vi: "vi",
 };
 
 /* 설치된 앱의 이름(창 제목·홈 화면 라벨)은 «매니페스트»가 정한다 — 문서 제목이 아니다.
@@ -322,7 +338,7 @@ const applyDocumentLocale = (locale: Locale) => {
 
 export const i18n = reactive({ locale: detect() });
 
-/** 언어별 라벨 파일(.ts)의 사전 타입 — 13개 언어 블록이 전부 있어야 빌드가 통과한다. */
+/** 언어별 라벨 파일(.ts)의 사전 타입 — 14개 언어 블록이 전부 있어야 빌드가 통과한다. */
 export type LocaleDict<T> = Record<Locale, T>;
 applyDocumentLocale(i18n.locale);
 
@@ -361,13 +377,13 @@ export const localizeNumber = (text: string) => {
   //   천단위(4자리부터 «1.326»)는 이 함수가 아니라 사전 쪽 toLocaleString("tr-TR")이 맡는다.
   if (i18n.locale === "tr")
     return text.replace(/(\d)\.(\d)/g, "$1,$2").replace(/(\d+(?:,\d+)?)\s?%/g, "%$1");
-  return i18n.locale === "pt" || i18n.locale === "de" || i18n.locale === "id"
+  return i18n.locale === "pt" || i18n.locale === "de" || i18n.locale === "id" || i18n.locale === "vi"
     ? text.replace(/(\d)\.(\d)/g, "$1,$2")
     : text;
 };
 
 /**
- * 화면에 찍히는 퍼센트 — tr만 «%35», 나머지 12언어는 지금과 글자 하나까지 같은 «35%»
+ * 화면에 찍히는 퍼센트 — tr만 «%35», 나머지 언어(vi 포함)는 «35%»
  * (튀르키예어화 확정표 §2-2 ⓐ). 템플릿에서는 전역 속성 `$pct(...)`(index.ts에서 등록).
  * ⚠ style 문자열(width: 50%)·벳 사이즈 입력 문법(«50%»)에는 쓰지 않는다.
  */
@@ -380,7 +396,8 @@ export const decimalMark = () =>
   i18n.locale === "de" ||
   i18n.locale === "fr" ||
   i18n.locale === "id" ||
-  i18n.locale === "tr"
+  i18n.locale === "tr" ||
+  i18n.locale === "vi"
     ? ","
     : ".";
 
@@ -394,7 +411,8 @@ export const decimalMark = () =>
  *   hi(2026-09-06)는 12번째 인자로 마지막에 추가한다.
  *   tr(2026-10-05)은 13번째 인자로 마지막에 추가한다 — 호출부 전수에 13번째 값을 붙였다
  *   (번역 전에는 en 복사 + «TR-TODO» 주석).
- *   ms(2026-09-03)도 같은 이유로 id 뒤 «맨 끝»이다 — 기존 10인자 호출 전수에 11번째 값을 붙였다. */
+ *   ms(2026-09-03)도 같은 이유로 id 뒤 «맨 끝»이다 — 기존 10인자 호출 전수에 11번째 값을 붙였다.
+ *   vi(2026-10-07)는 tr 뒤 14번째 인자. vi-todo는 영어 복사 자리다. */
 export const pick = <T>(
   ko: T,
   en: T,
@@ -408,7 +426,8 @@ export const pick = <T>(
   id: T = en,
   ms: T = en,
   hi: T = en,
-  tr: T = en
+  tr: T = en,
+  vi: T = en
 ): T =>
   i18n.locale === "ko"
     ? ko
@@ -434,4 +453,6 @@ export const pick = <T>(
     ? hi
     : i18n.locale === "tr"
     ? tr
+    : i18n.locale === "vi"
+    ? vi
     : en;

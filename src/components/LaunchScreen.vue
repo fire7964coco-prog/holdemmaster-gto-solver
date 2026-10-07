@@ -125,6 +125,13 @@ const M = {
     titleLine2: "GTO Trainer'a.",
     footer: "Ücretsiz GTO Solver · Çevrimdışı çalışır",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    greeting: "Welcome to",
+    titleLine1: "HoldemMaster",
+    titleLine2: "GTO Trainer.",
+    footer: "Free GTO Solver · Works Offline",
+  },
   ms: {
     greeting: "Selamat datang ke",
     titleLine1: "HoldemMaster",

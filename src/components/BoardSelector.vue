@@ -194,6 +194,16 @@ const M = {
     warnBody: (n: number) =>
       `Düzenlenen ağaç ${n} kartlık bir board varsayıyor.`,
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    inputError: "Could not read the cards. Enter 3–5 cards, such as AsKd7c or As Kd 7c. Your previous board is kept.",
+    placeholder: "e.g., AsKd7c",
+    clear: "Clear",
+    randomFlop: "Random Flop",
+    warnLabel: "Warning:",
+    warnBody: (n: number) =>
+      `The edited tree assumes a ${n}-card board.`,
+  },
 } as const;
 
 export default defineComponent({

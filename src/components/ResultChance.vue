@@ -254,6 +254,14 @@ const M = {
     action: (name: string): string =>
       ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    strategyCombos: "Strategy (Combos)",
+    strategy: "Strategy",
+    equity: "Equity",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

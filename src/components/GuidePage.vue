@@ -2839,6 +2839,202 @@ const M = {
     errNone: "Henüz kaydedilmiş hata yok.",
     errPrompt: "Aşağıdaki metni kopyala",
   },
+  // vi-todo: English copy; translate values in this block.
+  vi: {
+    quickTitle: "1-minute start — begin here if you're new",
+    quickStep1Desktop: "On the left, click ",
+    quickStep1Mobile: "In the tabs above, click ",
+    quickStep1Btn: "Study Spots",
+    quickStep1After: "",
+    quickStep2Before: "Open any spot and hit",
+    quickStep2Btn: "[⚡ View results]",
+    quickStep2After: " — the solution appears immediately",
+    quickStep3:
+      "Then use “Reading the results screen” below to make sense of the numbers",
+
+    termsTitle: "Four terms are all you need",
+    termRange: "Range",
+    defRange:
+      "The set of hands a player could be holding (e.g., “they've probably got AA, KK, or AK”)",
+    defPos:
+      "Out of position (acts first — a disadvantage) / in position (acts last — an advantage). In BTN vs BB, the BB is OOP",
+    termEquity: "Equity",
+    defEquity: "Your share of the pot if you were all in right now — win% plus half of the ties",
+    defEv: "Expected value — how much an action wins on average. Bigger is better",
+
+    customTitleBefore: "Solving a custom spot — follow the ",
+    customTitleDesktop: "sidebar",
+    customTitleMobile: "tab",
+    customTitleAfter: " numbers ① → ⑤ in order",
+    step1Bold: "① OOP Range / ② IP Range",
+    step1After:
+      " — paint the 13×13 grid by clicking and dragging, or type it as text: ",
+    step1Hint:
+      "22+ = every pocket pair · A2s+ = A2s through AKs · KTo+ = KTo through KQo. On the grid: diagonal = pocket pairs, upper right = suited, lower left = offsuit",
+    exampleHeader:
+      "New here? Copy these and paste them into the range inputs (standard BTN vs BB 100bb — the same ranges the Study Spots use)",
+    exOopLabel: "OOP (BB Caller)",
+    exIpLabel: "IP (BTN Opener)",
+    copiedLabel: "Copied!",
+    copyLabel: "Copy",
+    step3Bold: "③ Board",
+    step3After: " — click three flop cards, or hit “Random Flop”",
+    step4Bold: "④ Bet Sizes (Tree Settings)",
+    step4After:
+      " — leave the defaults at first. Just check the starting pot and effective stack",
+    step4Hint:
+      "Custom-spot inputs are in arbitrary integer chips. To think in bb, use 10 chips = 1bb (e.g., pot 55 = 5.5bb). The Study Spots and Trainer convert on this scale automatically.",
+    step5Bold1: "⑤ Run Solver",
+    step5Mid:
+      " — hit “Build Tree”, then “Run Solver” when it finishes. Once “Solver finished!” appears, open the ",
+    step5Bold2: "[Results]",
+    step5After: " tab at the top",
+    step5Hint:
+      "Solving runs on your own machine and takes a few seconds to a few minutes. Use [Share Spot] on screen ⑤ to copy a link to your spot and ask about it in the community",
+
+    resultsTitle: "Reading the results screen",
+    rTerm1: "Top strip",
+    rDef1:
+      "A scene picker for the action line (flop → bet → call → turn…). Click a node to see the strategy at that point",
+    rTerm2: "13×13 matrix (left)",
+    rDef2:
+      "Each cell is a hand; the color split inside it shows action frequencies. 🟥 bet/raise (darker = bigger bet) · 🟩 check/call · dimmed cell = not in the range. GTO plays the same hand as a mixed strategy — splitting actions by frequency so your pattern can't be read",
+    rTerm3: "Tiles (top right)",
+    rDef3: "Action frequencies (%) and combo counts across the whole range",
+    rTerm4: "Hand categories (middle right)",
+    rDef4:
+      "How each range connects with the board (top pair, draws…) — a quick read on who this board favors",
+    rTerm5: "Table (bottom right)",
+    rDef5:
+      "Per-hand weight, equity, EV, and action % — click a column header to sort",
+
+    lockTitle: "Strategy locking (node lock) — how does your strategy change when the opponent makes mistakes?",
+    lockTerm1: "Where",
+    lockDef1: "On the results screen after solving a spot yourself. Select a node in the action line at the top, then choose “Lock this node’s strategy”. In Study Spots, [View results] shows the solution immediately, but those results cannot be locked — run [Solve this spot yourself] first.",
+    lockTerm2: "How",
+    lockDef2: "Each action’s percentage (%) starts at its current strategy value. Change the values to add up to 100, then choose “Lock and solve again”. For example: the opponent never folds on the flop → fold 0, other actions total 100. You can lock several nodes.",
+    lockTerm3: "Reading results",
+    lockDef3: "A yellow banner appears above the results. This result was solved again with part of the strategy fixed, so it is not an equilibrium (GTO) strategy. In “Before/after comparison” in the panel, see how frequencies, EV, and Exploitability have changed.",
+    lockTerm4: "Undoing locks",
+    lockDef4: "Use “Unlock and solve again” for one node or “Unlock all and solve again” for all nodes. Locks disappear automatically when you solve a new spot. You cannot lock turn or river paths where you skipped choosing a card.",
+
+    trainerTitle: "GTO Trainer — from watching to playing",
+    trainerIntroBefore:
+      "Once you're comfortable reading the results screen, move on to the",
+    trainerBtn: "GTO Trainer",
+    trainerIntroAfter:
+      " . At decision points from the 13 Study Spots, you're dealt hands drawn from the actual ranges — pick an action and it grades you.",
+    gradTerm: "How grading works",
+    gradBefore: "You're graded not right-or-wrong but by ",
+    gradBold: "EV loss (bb)",
+    gradAfter:
+      ". GTO mixes several actions with the same hand, so a low-frequency action isn't automatically a mistake — what matters is how much EV it gives up",
+    verdictTerm: "Verdict thresholds",
+    verdictBefore: "Measured ",
+    verdictBold: "relative to the pot",
+    verdictAfter:
+      " — up to 0.35% of the pot = Best play · up to 1% = Acceptable · beyond that = Review this spot. For example, in a 5.5bb single raised pot (SRP) the cutoffs are 0.02bb and 0.06bb; in a 22.5bb 3-bet pot they're 0.08bb and 0.23bb.",
+    verdictHint:
+      "The same 0.08bb is a big mistake in a small pot and a trivial one in a big pot. Grading in absolute bb made 3-bet pots look worse than they are, so we switched to pot-relative grading (2026-08-15). The cutoffs have floors (0.02bb / 0.05bb): solves only converge to a target exploitability of 0.5%, so differences smaller than that can't be distinguished from solver noise.",
+    reviewTerm: "Review",
+    reviewBefore:
+      "Hands where you lost the most EV come back via the [Review] button. By default, your history is stored ",
+    reviewBold: "on this device only",
+    reviewAfter:
+      ". Sign in with a HoldemMaster account to keep it on your account and continue on other devices — signing in is optional, and every feature works without it",
+    filterTerm: "Filters",
+    filterDef:
+      "Drill just your weak areas: single raised pots, 3-bet pots, or blind vs blind",
+
+    myspotTerm: "My spots",
+    myspotDef: "After solving a spot yourself, choose “Practice this spot” on the results screen to create questions from it and start playing them immediately in the Trainer’s “My spots” tab. Grading uses the same criteria as the Study Spots.",
+    myspotHint: "Questions and history stay on this device only (20 most recent spots · 500 attempts per spot). They are not saved to your account, so you cannot continue on another device. Saving the same spot again clears its previous history. Questions made from results calculated with a locked strategy are marked “Assumes part of the strategy is fixed”.",
+
+    installTitle: "Install to your home screen and study offline",
+    install1:
+      "You can install this solver to your home screen like an app (no installer file). In Chrome or Edge, use the ",
+    installBold1: "install icon",
+    install2: " to the right of the address bar; in Safari on iPhone, tap ",
+    installBold2: "Share → Add to Home Screen",
+    install3:
+      ". Once installed, the 13 Study Spots and the Trainer drills are stored on your device, so you can keep studying ",
+    installBold3: "even on the subway with no internet",
+    install4: ".",
+    samsung1:
+      "* When you install from Samsung Internet, the browser or your device may block it for security reasons. That check comes from the browser, not from this app. ",
+    samsungBold: "Open the site in Chrome",
+    samsung2:
+      " and it installs without the block; if you'd rather continue here, follow the prompts in the dialog.",
+    offlineDataLabel: "Offline study data",
+    offlineSaved: "Saved — Study Spots and Trainer work without internet",
+    offlineSaving: "Saving…",
+    offlineNotSaved: "Not saved",
+    offlineSaveBtn: "Save now (~2.3MB)",
+    offlineFootnote:
+      "Custom-spot solving works offline only after you've run it online at least once — the solver engine is downloaded on first use.",
+
+    safeTitle: "Is it safe to install?",
+    safe1:
+      "Yes. “Installing” here doesn't mean downloading a program onto your device — it means ",
+    safeBold: "creating a shortcut that runs inside your browser",
+    safe2:
+      ". On Android, only a thin wrapper pointing at this address gets registered; everything still runs inside the browser engine. If you're skeptical, check these four things yourself — verifying beats taking our word for it.",
+    permTerm: "No permissions used",
+    permBefore:
+      "Installation asks for zero permissions — no camera, contacts, SMS, or location. See for yourself under ",
+    permBold: "Settings → App info → Permissions",
+    permAfter: " on your phone",
+    airplaneTerm: "Verify with airplane mode",
+    airplaneBefore:
+      "Turn the internet off and the Trainer keeps working — the clearest proof that the computation ",
+    airplaneBold: "happens entirely on your device",
+    airplaneAfter: "",
+    openTerm: "The source is public",
+    openBefore: "This solver is AGPL-3.0 open source (",
+    openAfter: ")",
+    removeTerm: "Uninstalls cleanly",
+    removeDef:
+      "Long-press and delete like any other app, and it's gone. Nothing runs in the background, nothing is left behind",
+    samsungNote2:
+      "* A security block in Samsung Internet is not malware detection — the browser simply doesn't recognize this kind of install package yet. It doesn't appear when you install from Chrome.",
+
+    studyTitle: "Suggested study plan",
+    study1:
+      "Work through the 13 Study Spots in order — they're a curriculum that builds as a series",
+    study2:
+      "If you're wondering “why does this hand mix in checks?”, compare per-action EVs in the detail table",
+    study3:
+      "Drill the same spots in the GTO Trainer to make them stick — the weakness report shows which situations cost you the most EV",
+    study4: "Keep the ranges, change only the board, and compare (e.g., A72 vs 974)",
+    study5:
+      "Recreate hands that confused you in real games and review them here",
+
+    troubleTitle: "Troubleshooting",
+    tTerm1: "Tree build error",
+    tDef1: "Make sure 3 board cards and both ranges are entered",
+    tTerm2: "Solving is slow",
+    tDef2: "Raise the target exploitability to 0.5%",
+    tTerm3: "Results tab is blank",
+    tDef3: "Open it after “Solver finished!” appears",
+    tTerm4: "Memory limit exceeded",
+    tDef4: "Switch to 16-bit integer mode, or use fewer bet sizes",
+    tTerm5: "Matrix is all gray",
+    tDef5:
+      "You're viewing the opponent's turn to act — pick another scene in the top strip",
+
+    errTitle: "Found something we should fix?",
+    err1: "If the screen breaks or a solve freezes, the error details are logged automatically on this device. ",
+    errBold: "Logs never leave your device",
+    err2:
+      " — we only see them if you copy them below and post them in the community. They contain just the error message and browser type — never your ranges or study history.",
+    errLoggedLabel: "Logged errors",
+    errCount: (n: number) => `${n}`,
+    errCopied: "Copied",
+    errCopyBtn: "Copy error details",
+    errClearBtn: "Clear log",
+    errNone: "No errors logged yet.",
+    errPrompt: "Please copy the text below",
+  },
 } as const;
 
 /* npokers 빌드에서 설치 문단의 «교육 예제·트레이너 저장» 대목만 «앱 저장»으로 바꾼다.
@@ -2973,6 +3169,17 @@ const N =
             "İnterneti kapat, uygulama çalışmaya devam eder — hesaplamanın ",
           install3: " seçeneğine dokun. Yüklendikten sonra uygulama cihazına kaydedilir, böylece ",
           install4: " kullanmaya devam edebilirsin.",
+        },
+        // vi-todo: English copy; translate values in this block.
+        vi: {
+          exampleHeader:
+            "New here? Copy these and paste them into the range inputs (standard BTN vs BB 100bb)",
+          step4Hint:
+            "Custom-spot inputs are in arbitrary integer chips. To think in bb, use 10 chips = 1bb (e.g., pot 55 = 5.5bb).",
+          airplaneBefore:
+            "Turn the internet off and the app keeps working — the clearest proof that the computation ",
+          install3: ". Once installed, the app is stored on your device, so you can keep using it ",
+          install4: ".",
         },
       }
     : null;

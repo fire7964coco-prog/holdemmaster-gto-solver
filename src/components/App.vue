@@ -220,6 +220,21 @@ export default defineComponent({
         "run-solver": "Solver'ı çalıştır",
         treeEdit: "Ağacı önizle ve düzenle",
       },
+      // vi-todo: English copy; translate values in this block.
+      vi: {
+        about: "About",
+        guide: "How to Use — Step by Step",
+        presets: "Study Spots — One-Click Examples",
+        trainer: "GTO Trainer — See the EV of Every Decision",
+        preflop: "Preflop Charts — Opening & Defense Ranges",
+        equity: "Equity Calculator — Hand & Range Equity",
+        "oop-range": "OOP Range",
+        "ip-range": "IP Range",
+        board: "Board",
+        "tree-config": "Tree Settings",
+        "run-solver": "Run Solver",
+        treeEdit: "Tree Preview & Edit",
+      },
       en: {
         about: "About",
         guide: "How to Use — Step by Step",
