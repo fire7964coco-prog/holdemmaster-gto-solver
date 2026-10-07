@@ -250,18 +250,17 @@ const M = {
       `Bet boyutları boştu, varsayılanlar da dolduruldu — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
     next: "Sonraki: ③ Board",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    title: "Fill ranges by position",
-    note: "Pick who opened and who called, then press the button below — both ranges, the pot and the stack are filled in at once. The ranges are the same as in Preflop Charts (6-max cash, 100bb).",
+    title: "Điền range theo vị trí",
+    note: "Chọn vị trí open và vị trí call, rồi nhấn nút bên dưới — cả hai range, pot và stack được điền cùng lúc. Range giống với Bảng preflop (cash 6-max, 100bb).",
     opener: "Open",
     caller: "Call",
-    apply: "Fill both ranges",
+    apply: "Điền cả hai range",
     applied: (oop: string, ip: string, pot: string, stack: string) =>
-      `${oop} (OOP) · ${ip} (IP) ranges filled in. Pot ${pot}bb · Stack ${stack}bb`,
+      `Đã điền range ${oop} (OOP) · ${ip} (IP). Pot ${pot}bb · Stack ${stack}bb`,
     betsFilled: (flop: string, later: string, raise: string) =>
-      `Bet sizes were empty, so defaults were filled in too — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
-    next: "Next: ③ Board",
+      `Cỡ cược đang trống nên đã điền luôn giá trị mặc định — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
+    next: "Tiếp: ③ Board",
   },
 } as const;
 

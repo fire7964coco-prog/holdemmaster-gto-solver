@@ -614,12 +614,11 @@ const M = {
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (%${percent} pot)`,
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
     pot: "Pot",
     stack: "Stack",
     equity: "Equity",
-    win: (player: string) => `${player} wins`,
+    win: (player: string) => `${player} thắng`,
     spotPlayer: (player: string): string =>
       (
         {

@@ -197,11 +197,11 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Tarayıcında doğrudan çalışan ücretsiz GTO solver — kurulum gerekmez. Texas Hold'em postflop stratejisini range, board ve bet boyutuna göre hesapla. HoldemMaster tarafından.",
   },
-  // vi-todo: English copy; translate values in this block.
+  // 베트남어 — 어순 «Trainer GTO»·«Solver GTO miễn phí»(확정표 ② · 규칙 1-5), bet size = «cỡ cược»(⑧)
   vi: {
-    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em",
+    title: "HoldemMaster Trainer GTO — Solver và trainer GTO miễn phí cho Texas Hold'em",
     description:
-      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
+      "Solver GTO miễn phí chạy ngay trong trình duyệt — không cần cài đặt. Tính chiến lược postflop Texas Hold'em theo range, board và cỡ cược. Do HoldemMaster thực hiện.",
   },
 };
 
@@ -276,11 +276,10 @@ const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Tarayıcında doğrudan çalışan ücretsiz GTO solver — kurulum gerekmez. Texas Hold'em postflop stratejisini range, board ve bet boyutuna göre hesapla.",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    title: "npokers — Free Online GTO Solver for Texas Hold'em",
+    title: "npokers — Solver GTO trực tuyến miễn phí cho Texas Hold'em",
     description:
-      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+      "Solver GTO miễn phí chạy ngay trong trình duyệt — không cần cài đặt. Tính chiến lược postflop Texas Hold'em theo range, board và cỡ cược.",
   },
 };
 
@@ -412,7 +411,7 @@ export const decimalMark = () =>
  *   tr(2026-10-05)은 13번째 인자로 마지막에 추가한다 — 호출부 전수에 13번째 값을 붙였다
  *   (번역 전에는 en 복사 + «TR-TODO» 주석).
  *   ms(2026-09-03)도 같은 이유로 id 뒤 «맨 끝»이다 — 기존 10인자 호출 전수에 11번째 값을 붙였다.
- *   vi(2026-10-07)는 tr 뒤 14번째 인자. vi-todo는 영어 복사 자리다. */
+ *   vi(2026-10-07)는 tr 뒤 14번째 인자. 번역은 2026-10-07 6묶음. */
 export const pick = <T>(
   ko: T,
   en: T,

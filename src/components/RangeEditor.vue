@@ -264,15 +264,14 @@ const M = {
     parseError: (range: string) =>
       `Range okunamadı: ${range || "(boş metin)"}`,
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. Tapping a cell that already has that weight clears it. The hand name and weight you tapped appear in large text above.",
-    clear: "Clear",
-    errorPrefix: "Error:",
-    weight: "Weight:",
-    combos: "combos",
+    mobileHint: "Chỉnh trọng số bằng thanh trượt bên dưới bảng, rồi nhấn vào một ô để áp dụng. Nhấn vào ô đã có đúng trọng số đó thì ô sẽ được xóa. Tên tay bài và trọng số bạn vừa nhấn hiện bằng chữ lớn ở phía trên.",
+    clear: "Xóa",
+    errorPrefix: "Lỗi:",
+    weight: "Trọng số:",
+    combos: "combo",
     parseError: (range: string) =>
-      `Failed to parse range: ${range || "(empty string)"}`,
+      `Không đọc được range: ${range || "(chuỗi trống)"}`,
   },
 } as const;
 

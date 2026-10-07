@@ -229,18 +229,17 @@ const M = {
       "Bir topluluk gönderisine yapıştır, sorunu düzeltmek için kullanalım. Kişisel bilgi içermez.",
     promptCopy: "Aşağıdaki metni kopyala",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    title: "An error was logged",
-    body1: "If something looked wrong, please let us know. The details are stored ",
-    bodyB1: "only on this device",
-    body2: " — sharing them is entirely up to you.",
-    copied: "Copied",
-    copyButton: "Copy error details",
-    close: "Close",
+    title: "Đã ghi lại một lỗi",
+    body1: "Nếu thấy có gì không ổn, hãy báo cho chúng tôi. Chi tiết được lưu ",
+    bodyB1: "chỉ trên thiết bị này",
+    body2: " — có chia sẻ hay không là hoàn toàn do bạn.",
+    copied: "Đã sao chép",
+    copyButton: "Sao chép chi tiết lỗi",
+    close: "Đóng",
     copiedHint:
-      "Paste it into a community post and we'll use it to fix the issue. It contains no personal information.",
-    promptCopy: "Copy the text below",
+      "Dán vào một bài viết trong cộng đồng, chúng tôi sẽ dùng để sửa lỗi. Nội dung không chứa thông tin cá nhân.",
+    promptCopy: "Sao chép đoạn văn bản bên dưới",
   },
 } as const;
 
@@ -261,7 +260,7 @@ export default defineComponent({
         "Réessayer avec un seul thread",
         "Coba lagi dengan satu thread",
         "Cuba semula dengan satu thread",
-        "एक थ्रेड से फिर कोशिश करें", "Tek thread ile tekrar dene", /* vi-todo */ "Retry with a single thread"
+        "एक थ्रेड से फिर कोशिश करें", "Tek thread ile tekrar dene", "Thử lại với một thread"
       )
     );
     const copied = ref(false);

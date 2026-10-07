@@ -319,15 +319,14 @@ export const dailyShareText = (verdict: string) => {
       .filter(Boolean)
       .join("\n");
   }
-  // vi-todo: English copy; only date, number formatting and link locale differ.
   if (i18n.locale === "vi") {
     return [
-      `[Daily GTO Puzzle · ${dailyCardDate()}]`,
-      `My result: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
-      dailyState.streak > 1 ? `${dailyState.streak}-day streak` : "",
+      `[Thử thách GTO hôm nay · ${dailyCardDate()}]`,
+      `Kết quả của tôi: ${verdict} (EV mất ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak} ngày liên tiếp` : "",
       "",
-      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&lang=vi",
-      "(HoldemMaster GTO Solver · one puzzle a day)",
+      "Giải cùng thử thách này → https://solver.holdemmaster.com/?view=trainer&lang=vi",
+      "(HoldemMaster GTO Solver · mỗi ngày một thử thách)",
     ]
       .filter(Boolean)
       .join("\n");

@@ -348,14 +348,13 @@ const M = {
     finalizing: "Tamamlanıyor…",
     paused: "Solver duraklatıldı.",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    startRange: "① Start with ranges",
-    viewPresets: "View Study Spots",
-    notRun: "You haven’t calculated your own results yet.\nYou can view example results directly in the “Study Spots” menu.\nTo calculate your own spot, complete ①~⑤, then press “Run Solver”.",
-    running: "Running the solver…",
-    finalizing: "Finalizing…",
-    paused: "Solver paused.",
+    startRange: "① Bắt đầu với range",
+    viewPresets: "Xem spot mẫu",
+    notRun: "Bạn chưa tính kết quả của riêng mình.\nBạn có thể xem kết quả mẫu ngay trong menu “Spot mẫu”.\nĐể tính spot của riêng bạn, hãy hoàn thành ①~⑤ rồi nhấn “Chạy solver”.",
+    running: "Đang chạy solver…",
+    finalizing: "Đang hoàn tất…",
+    paused: "Solver đã tạm dừng.",
   },
 } as const;
 

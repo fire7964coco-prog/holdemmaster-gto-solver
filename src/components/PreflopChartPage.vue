@@ -1481,106 +1481,105 @@ const M = {
       "sıklıklar) + kendi örnek spot range'lerimiz (toplanma: 08.2026)",
     phase2: "Yeni eşleşmeler ve senaryolar eklemeye devam edeceğiz.",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    modeRfi: "Opening (RFI)",
-    modeDefend: "vs Open (Defense)",
-    mode3bet: "vs 3-bet (after opening)",
-    mode4bet: "vs 4-bet (after 3-betting)",
+    modeRfi: "Open (RFI)",
+    modeDefend: "vs Open (phòng thủ)",
+    mode3bet: "vs 3-bet (sau khi open)",
+    mode4bet: "vs 4-bet (sau khi 3-bet)",
     intro4bet:
-      "How to respond when your 3-bet gets 4-bet — red is 5-bet (all-in), green " +
-      "is call, everything else is a fold. Frequencies are conditional on having 3-bet, so " +
-      "hands you never 3-bet are blank. 6-max cash, 100bb; BB 3-bets 11bb " +
-      "and faces a 24bb 4-bet; SB 3-bets 10bb and faces 22bb.",
+      "Cách phản ứng khi 3-bet của bạn bị 4-bet — đỏ là 5-bet (all-in), xanh lá " +
+      "là call, phần còn lại là fold. Tần suất tính với điều kiện bạn đã 3-bet, nên " +
+      "những tay bài bạn không bao giờ 3-bet để trống. Cash 6-max, 100bb; BB 3-bet 11bb " +
+      "và gặp 4-bet 24bb; SB 3-bet 10bb và gặp 22bb.",
     legend5bet: "5-bet (all-in)",
-    legendCond4bet: "Blank = never 3-bet in the first place",
-    stat5bet: "5-bet %",
-    statContinue4bet: "Continue % (of 3-bets)",
-    copy5bet: "Copy 5-bet range",
+    legendCond4bet: "Trống = ngay từ đầu không 3-bet",
+    stat5bet: "Tỷ lệ 5-bet",
+    statContinue4bet: "Tỷ lệ tiếp tục (trên số 3-bet)",
+    copy5bet: "Sao chép range 5-bet",
     note4bet:
-      "The stats are shares of your 3-betting range. At 100bb the 5-bet is " +
-      "effectively all-in — value centers on AA·KK (occasionally trapping with a " +
-      "call), and QQ·AK mix 5-bets with calls. Calls are driven by equity realization, " +
-      "not pot odds: you fight out of position at a low SPR, so only pairs and " +
-      "top suited hands continue — but don't fold everything, because their " +
-      "4-betting range mixes in bluffs like A5s–A4s.",
+      "Các chỉ số là tỷ lệ trong range 3-bet của bạn. Ở 100bb, 5-bet thực chất là " +
+      "all-in — value tập trung vào AA·KK (thỉnh thoảng gài bẫy bằng " +
+      "call), còn QQ·AK chơi hỗn hợp giữa 5-bet và call. Quyết định call dựa vào khả năng hiện thực hóa equity, " +
+      "không phải pot odds: bạn đánh không có vị trí với SPR thấp, nên chỉ các đôi và " +
+      "những tay đồng chất mạnh nhất tiếp tục — nhưng đừng fold hết, vì range " +
+      "4-bet của đối thủ có lẫn bluff như A5s–A4s.",
     how4bet2:
-      "If red + green don't fill the cell, the rest is folded. Cells with both " +
-      "colors mix 5-bets and calls. Hands outside the 3-betting range never " +
-      "face this spot, so they are blank.",
+      "Nếu đỏ + xanh lá không lấp đầy ô, phần còn lại là fold. Ô có cả hai " +
+      "màu là hỗn hợp giữa 5-bet và call. Tay bài ngoài range 3-bet không bao giờ " +
+      "gặp spot này nên để trống.",
     intro3bet:
-      "How to respond when your open-raise gets 3-bet — red is 4-bet, green is " +
-      "call, everything else is a fold. Frequencies are conditional on having opened, so " +
-      "hands you never open are blank. 6-max cash, 100bb, 2.5bb open, ~10-11bb 3-bet.",
+      "Cách phản ứng khi open-raise của bạn bị 3-bet — đỏ là 4-bet, xanh lá là " +
+      "call, phần còn lại là fold. Tần suất tính với điều kiện bạn đã open, nên " +
+      "những tay bài bạn không bao giờ open để trống. Cash 6-max, 100bb, open 2,5bb, 3-bet ~10-11bb.",
     legend4bet: "4-bet",
-    legendCond: "Blank = never opened in the first place",
-    stat4bet: "4-bet %",
-    statContinue: "Continue % (of opens)",
-    copy4bet: "Copy 4-bet range",
+    legendCond: "Trống = ngay từ đầu không open",
+    stat4bet: "Tỷ lệ 4-bet",
+    statContinue: "Tỷ lệ tiếp tục (trên số open)",
+    copy4bet: "Sao chép range 4-bet",
     note3bet:
-      "The stats are shares of your opening range, not of all hands. 4-bet value " +
-      "centers on QQ+/AK with a few bluffs like A5s-A4s mixed in. With position, " +
-      "the calling range stays wide: pairs, suited broadways, and connectors.",
+      "Các chỉ số là tỷ lệ trong range open của bạn, không phải trên tất cả tay bài. Value 4-bet " +
+      "tập trung vào QQ+/AK, kèm một ít bluff như A5s-A4s. Khi có vị trí, " +
+      "range call vẫn rộng: các đôi, broadway đồng chất và connector.",
     squeezeNote:
-      "A squeeze is a 3-bet with both an opener and a caller in the pot (about " +
-      "11-12bb here). The caller makes total defense tighter than heads-up and " +
-      "pushes the 3-bet toward value. Overcalls favor suited, connected hands " +
-      "that can make the nuts multiway.",
+      "Squeeze là 3-bet khi trong pot đã có cả người open lẫn người call (ở đây " +
+      "khoảng 11-12bb). Người call khiến tổng phòng thủ chặt hơn so với đối đầu tay đôi và " +
+      "đẩy 3-bet nghiêng về value. Overcall ưu tiên các tay đồng chất, liền nhau " +
+      "có thể thành nuts khi nhiều người (multiway).",
     how3bet2:
-      "If red + green don't fill the cell, the rest is folded. Cells with both " +
-      "colors mix 4-bets and calls. Hands outside the opening range never face " +
-      "this spot, so they are blank.",
-    intro: "Opening ranges by position (RFI) — which hands should you raise when everyone folds to you? Based on 6-max cash, 100bb, 2.5bb open. Partially filled cells mark borderline hands where public sources disagree on opening (fill height = share of sources favoring an open).",
-    provenanceNote: "Public-source consensus + internal derivation — not solver output. See “How was this chart built?” below.",
+      "Nếu đỏ + xanh lá không lấp đầy ô, phần còn lại là fold. Ô có cả hai " +
+      "màu là hỗn hợp giữa 4-bet và call. Tay bài ngoài range open không bao giờ gặp " +
+      "spot này nên để trống.",
+    intro: "Range open theo vị trí (RFI) — nên raise tay bài nào khi mọi người fold đến bạn? Dựa trên cash 6-max, 100bb, open 2,5bb. Ô được tô một phần là tay bài ranh giới, nơi các nguồn công khai không thống nhất về việc open (chiều cao phần tô = tỷ lệ nguồn ủng hộ open).",
+    provenanceNote: "Đồng thuận từ nguồn công khai + suy luận nội bộ — không phải kết quả solver. Xem “Bảng này được làm thế nào?” bên dưới.",
     introDefend:
-      "How to respond when someone open-raises before you — the most " +
-      "common matchups. Red is 3-bet, green is call, and the stacked height is " +
-      "your total defend frequency. 6-max cash, 100bb, 2.5bb open (3bb for SB opens).",
+      "Cách phản ứng khi có người open-raise trước bạn — các cặp đối đầu " +
+      "phổ biến nhất. Đỏ là 3-bet, xanh lá là call, tổng chiều cao là " +
+      "tần suất phòng thủ của bạn. Cash 6-max, 100bb, open 2,5bb (SB open 3bb).",
     legendOpen: "Open (100%)",
-    legendMixed: "Borderline hands (fill = share of sources favoring an open)",
+    legendMixed: "Tay ranh giới (phần tô = tỷ lệ nguồn ủng hộ open)",
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
-    legendMixedDefend: "Fill height = frequency (split cells are mixed)",
-    stat3bet: "3-bet %",
-    statCall: "Call %",
-    statTotal: "Total defend",
-    copy3bet: "Copy 3-bet range",
-    copyCall: "Copy call range",
+    legendMixedDefend: "Chiều cao phần tô = tần suất (ô chia đôi là hỗn hợp)",
+    stat3bet: "Tỷ lệ 3-bet",
+    statCall: "% call",
+    statTotal: "Tổng phòng thủ",
+    copy3bet: "Sao chép range 3-bet",
+    copyCall: "Sao chép range call",
     sbNote:
-      "In the SB you're essentially 3-bet-or-fold against a BTN open — you're " +
-      "out of position with BB still left to act, so calling saddles you with " +
-      "both disadvantages at once.",
+      "Ở SB, trước một lần open từ BTN bạn gần như chỉ có 3-bet hoặc fold — bạn " +
+      "không có vị trí và BB vẫn chưa hành động, nên call sẽ khiến bạn chịu " +
+      "cả hai bất lợi cùng lúc.",
     ipNote:
-      "Even with position, an early-position opening range is strong, and " +
-      "calling risks a squeeze from the blinds still left to act. In-position " +
-      "defense is therefore a narrow, 3-bet-centric range, with calls mostly " +
-      "limited to pairs and premium suited hands.",
-    statPercent: "Open %",
-    statCombos: "Combos opened",
-    statHands: "Hands opened",
-    statMixed: "Borderline hands",
-    copy: "Copy range text",
-    copied: "✓ Copied",
-    sendOop: "① Send to OOP Range",
-    sendIp: "② Send to IP Range",
-    howTitle: "How to read this",
-    how1: "The top-left to bottom-right diagonal is pairs; above it (right) is suited, below it (left) is offsuit.",
-    how2: "Partially filled cells mark borderline hands where sources disagree on whether to open. Fill height represents the share of sources favoring an open, not a solver result.",
-    how3: "The [Send to Range] buttons load this range into the custom-spot range editor — try solving the postflop play yourself.",
+      "Dù có vị trí, range open từ vị trí đầu vẫn mạnh, và " +
+      "call còn có nguy cơ bị squeeze từ các blind chưa hành động. Vì vậy " +
+      "phòng thủ khi có vị trí là một range hẹp, chủ yếu 3-bet, còn call phần lớn " +
+      "chỉ giới hạn ở các đôi và tay đồng chất cao cấp.",
+    statPercent: "Tỷ lệ open",
+    statCombos: "Combo open",
+    statHands: "Tay bài open",
+    statMixed: "Tay ranh giới",
+    copy: "Sao chép range",
+    copied: "✓ Đã sao chép",
+    sendOop: "① Gửi đến Range OOP",
+    sendIp: "② Gửi đến Range IP",
+    howTitle: "Cách đọc bảng",
+    how1: "Đường chéo từ trên trái xuống dưới phải là các đôi; phía trên (bên phải) là đồng chất, phía dưới (bên trái) là khác chất.",
+    how2: "Ô được tô một phần là tay bài ranh giới, nơi các nguồn không thống nhất có nên open hay không. Chiều cao phần tô thể hiện tỷ lệ nguồn ủng hộ open, không phải kết quả solver.",
+    how3: "Nút [① Gửi đến Range OOP] / [② Gửi đến Range IP] nạp range này vào trình chỉnh sửa range của spot tùy chỉnh — hãy thử tự giải phần chơi postflop.",
     howDefend2:
-      "If red + green don't fill the whole cell, the rest is folded. Cells showing both colors mix 3-bets and calls at those ratios.",
+      "Nếu đỏ + xanh lá không lấp đầy cả ô, phần còn lại là fold. Ô có cả hai màu là hỗn hợp 3-bet và call theo đúng tỷ lệ đó.",
     howDefend3:
-      "Paste a copied range into the custom-spot range inputs (① / ②) to solve the postflop play with this defense range yourself.",
-    sourceTitle: "How was this chart built?",
-    sourceBody: "We cross-checked several freely published GTO resources hand by hand to build a consensus range, marking borderline hands the sources disagree on with the share of sources favoring an open (75/50/25%). BTN and SB were also checked against the solver-verified ranges used by this app's Study Spots.",
+      "Dán range đã sao chép vào ô nhập range của spot tùy chỉnh (① / ②) để tự giải phần chơi postflop với range phòng thủ này.",
+    sourceTitle: "Bảng này được làm thế nào?",
+    sourceBody: "Chúng tôi đối chiếu từng tay bài giữa nhiều tài liệu GTO công khai miễn phí để tạo range đồng thuận, và đánh dấu những tay ranh giới mà các nguồn không thống nhất bằng tỷ lệ nguồn ủng hộ open (75/50/25%). BTN và SB còn được đối chiếu với các range đã kiểm chứng bằng solver dùng trong Spot mẫu của ứng dụng này.",
     sourceList:
-      "Public sources cross-checked: nlh.poker · Preflop Wizard · HoldemPro · " +
-      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB solved frequencies) · " +
-      "GTO Gecko · RiverOdds (defense anchors) · GTO Wizard blog · FreeBetRange " +
-      "(IP defense & squeeze principles) · 888poker · Run It Once (vs 3-bet " +
-      "frequencies) + our own study-spot ranges (collected 2026-08)",
-    phase2: "We'll keep adding more matchups and scenarios.",
+      "Nguồn công khai đã đối chiếu: nlh.poker · Preflop Wizard · HoldemPro · " +
+      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (tần suất solver BB vs SB) · " +
+      "GTO Gecko · RiverOdds (mốc phòng thủ) · blog GTO Wizard · FreeBetRange " +
+      "(nguyên tắc phòng thủ IP & squeeze) · 888poker · Run It Once (tần suất vs " +
+      "3-bet) + range spot mẫu của chúng tôi (thu thập 08/2026)",
+    phase2: "Chúng tôi sẽ tiếp tục bổ sung thêm cặp đối đầu và tình huống.",
   },
 } as const;
 

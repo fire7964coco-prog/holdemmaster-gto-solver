@@ -225,13 +225,13 @@ const M = {
     communitySuffix: "\u00a0Topluluğu",
     langSwitchLabel: "Dil seç",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    resultsDisabledHint: "Opens when ⑤ Run Solver is finished",
+    resultsDisabledHint: "Mở khi ⑤ Chạy solver xong",
     solver: "Solver",
-    community: "HoldemMaster",
-    communitySuffix: " Community",
-    langSwitchLabel: "Select language",
+    community: "Cộng đồng",
+    // 앞 공백 U+00A0 (확정표 §3-3·⑳ — es 꼴)
+    communitySuffix: " HoldemMaster",
+    langSwitchLabel: "Chọn ngôn ngữ",
   },
 } as const;
 

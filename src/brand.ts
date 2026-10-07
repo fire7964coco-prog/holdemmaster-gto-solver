@@ -33,7 +33,6 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       ms: "npokers",
       hi: "npokers",
       tr: "npokers",
-      // vi-todo: English copy; translate values in this block.
       vi: "npokers",
     }
   : {
@@ -60,6 +59,7 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       hi: "HoldemMaster GTO Trainer",
       // tr도 라틴계 통일 — 확정표 §1-6 «GTO Trainer»
       tr: "HoldemMaster GTO Trainer",
-      // vi-todo: English copy; translate values in this block.
-      vi: "HoldemMaster GTO Trainer",
+      // vi는 베트남어 어순 «Trainer GTO» — LaunchScreen 2행과 같은 꼴(확정표 ② · vi 문자열 안 «GTO Trainer» 0).
+      // 매니페스트 name·short_name·iOS 홈 화면 라벨은 영어 공용 앱 이름이라 그대로 둔다(확정표 ②).
+      vi: "HoldemMaster Trainer GTO",
     };

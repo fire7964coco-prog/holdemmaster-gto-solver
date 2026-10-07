@@ -472,23 +472,23 @@ export const MADE_LABELS_VI: Record<MadeKey, string> = {
   straight: "Sảnh",
   trips: "Xám",
   two_pair: "Hai Đôi",
-  overpair: "Overpair", // vi-todo
-  top_pair: "Top Pair", // vi-todo
-  second_pair: "Second Pair", // vi-todo
-  weak_pair: "Weak Pair", // vi-todo
-  underpair: "Underpair", // vi-todo
-  ace_high: "Ace-High", // vi-todo
-  king_high: "King-High", // vi-todo
-  nothing: "No Made Hand", // vi-todo
+  overpair: "Overpair",
+  top_pair: "Top pair",
+  second_pair: "Second pair",
+  weak_pair: "Đôi yếu",
+  underpair: "Underpair",
+  ace_high: "A-high",
+  king_high: "K-high",
+  nothing: "Chưa thành bài",
 };
 
 export const DRAW_LABELS_VI: Record<DrawKey, string> = {
-  combo_draw: "Combo Draw", // vi-todo
-  flush_draw: "Flush Draw", // vi-todo
-  oesd: "OESD", // vi-todo
-  gutshot: "Gutshot", // vi-todo
-  backdoor_fd: "Backdoor FD", // vi-todo
-  no_draw: "No Draw", // vi-todo
+  combo_draw: "Combo draw",
+  flush_draw: "Flush draw",
+  oesd: "OESD",
+  gutshot: "Gutshot",
+  backdoor_fd: "Backdoor FD",
+  no_draw: "Không draw",
 };
 
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */

@@ -170,17 +170,16 @@ const CARD_TEXT = {
       `EV kaybı ${bb}bb${streak > 1 ? ` · ${streak} günlük seri` : ""}`,
     invite: "Bugünün sorusunu sen de çöz",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    brand: "HoldemMaster GTO Trainer",
-    tagline: "One puzzle a day · same for everyone",
-    heading: "Daily GTO Puzzle",
+    brand: "HoldemMaster Trainer GTO",
+    tagline: "Mỗi ngày 1 thử thách · ai cũng như nhau",
+    heading: "Thử thách GTO hôm nay",
     board: "Board",
-    hand: "My Hand",
-    result: (verdict: string) => `My result: ${verdict}`,
+    hand: "Tay bài của tôi",
+    result: (verdict: string) => `Kết quả của tôi: ${verdict}`,
     evLine: (bb: string, streak: number) =>
-      `EV loss ${bb}bb${streak > 1 ? ` · ${streak}-day streak` : ""}`,
-    invite: "Try today's puzzle",
+      `EV mất ${bb}bb${streak > 1 ? ` · ${streak} ngày liên tiếp` : ""}`,
+    invite: "Giải thử thách hôm nay",
   },
 } as const;
 

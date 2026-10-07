@@ -689,21 +689,20 @@ const M = {
     exportJsonLabel: "JSON dışa aktar",
     importFailed: "Hata: İçe aktarılamadı.",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    noSavedRanges: "You have no saved ranges yet. Click “Save” and enter a name to keep your current range here. Use “Load” to bring it back next time.",
-    noSavedConfigs: "You have no saved configurations yet. Click “Save” and enter a name to keep your current configuration here. Use “Load” to bring it back next time.",
-    emptyGroup: "(Empty group)",
-    errorReload: "An error occurred. Please reload the page.",
-    load: "Load",
-    overwrite: "Overwrite",
-    save: "Save",
-    rename: "Rename",
-    addGroup: "Add Group",
-    deleteLabel: "Delete",
-    importJsonLabel: "Import JSON",
-    exportJsonLabel: "Export JSON",
-    importFailed: "Error: Import failed.",
+    noSavedRanges: "Bạn chưa lưu range nào. Nhấn “Lưu” rồi nhập tên để giữ range hiện tại ở đây. Lần sau dùng “Tải” để mở lại.",
+    noSavedConfigs: "Bạn chưa lưu cấu hình nào. Nhấn “Lưu” rồi nhập tên để giữ cấu hình hiện tại ở đây. Lần sau dùng “Tải” để mở lại.",
+    emptyGroup: "(Nhóm trống)",
+    errorReload: "Đã xảy ra lỗi. Hãy tải lại trang.",
+    load: "Tải",
+    overwrite: "Ghi đè",
+    save: "Lưu",
+    rename: "Đổi tên",
+    addGroup: "Thêm nhóm",
+    deleteLabel: "Xóa",
+    importJsonLabel: "Nhập JSON",
+    exportJsonLabel: "Xuất JSON",
+    importFailed: "Lỗi: Không nhập được.",
   },
 } as const;
 
@@ -1155,10 +1154,10 @@ export default defineComponent({
         .map((item) => item.path[item.path.length - 1])
         .filter((name) => name !== editingName.value);
       const defaultName = item.isGroup
-        ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo", "Neue Gruppe", "新建分组", "新增群組", "Nouveau groupe", "Grup baru", "Kumpulan baharu", "नया समूह", "Yeni grup", /* vi-todo */ "New group")
+        ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo", "Neue Gruppe", "新建分组", "新增群組", "Nouveau groupe", "Grup baru", "Kumpulan baharu", "नया समूह", "Yeni grup", "Nhóm mới")
         : props.storeName === "ranges"
-        ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range", "Neue Range", "新建范围", "新增範圍", "Nouvelle range", "Range baru", "Range baharu", "नई range", "Yeni range", /* vi-todo */ "New range")
-        : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração", "Neue Einstellung", "新建设置", "新增設定", "Nouvelle configuration", "Konfigurasi baru", "Tetapan baharu", "नई सेटिंग", "Yeni ayar", /* vi-todo */ "New configuration");
+        ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range", "Neue Range", "新建范围", "新增範圍", "Nouvelle range", "Range baru", "Range baharu", "नई range", "Yeni range", "Range mới")
+        : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração", "Neue Einstellung", "新建设置", "新增設定", "Nouvelle configuration", "Konfigurasi baru", "Tetapan baharu", "नई सेटिंग", "Yeni ayar", "Cấu hình mới");
       if (editingName.value === "") {
         let i = 2;
         let newName = defaultName;
@@ -1509,7 +1508,7 @@ export default defineComponent({
           "解析出错（JSON 格式无效）", "解析錯誤（JSON 格式無效）",
           "Erreur d'analyse (format JSON invalide)",
           "Kesalahan pembacaan (format JSON tidak valid)",
-          "Ralat pembacaan (format JSON tidak sah)", "पार्स नहीं हो सका (JSON प्रारूप अमान्य है)", "Okuma hatası (geçersiz JSON biçimi)", /* vi-todo */ "Parse error (invalid JSON format)");
+          "Ralat pembacaan (format JSON tidak sah)", "पार्स नहीं हो सका (JSON प्रारूप अमान्य है)", "Okuma hatası (geçersiz JSON biçimi)", "Lỗi đọc dữ liệu (định dạng JSON không hợp lệ)");
         return;
       }
 
@@ -1525,7 +1524,7 @@ export default defineComponent({
           "数据类型不一致", "資料類型不一致",
           "Le type de données ne correspond pas",
           "Tipe data tidak cocok",
-          "Jenis data tidak sepadan", "डेटा का प्रकार मेल नहीं खाता", "Veri türü uyuşmuyor", /* vi-todo */ "Data type mismatch");
+          "Jenis data tidak sepadan", "डेटा का प्रकार मेल नहीं खाता", "Veri türü uyuşmuyor", "Kiểu dữ liệu không khớp");
         return;
       }
 
@@ -1541,12 +1540,12 @@ export default defineComponent({
           "版本不一致", "版本不一致",
           "La version ne correspond pas",
           "Versi tidak cocok",
-          "Versi tidak sepadan", "वर्ज़न मेल नहीं खाता", "Sürüm uyuşmuyor", /* vi-todo */ "Version mismatch");
+          "Versi tidak sepadan", "वर्ज़न मेल नहीं खाता", "Sürüm uyuşmuyor", "Phiên bản không khớp");
         return;
       }
 
       if (!checkJson(obj.data)) {
-        importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos", "Ungültige Daten", "无效的数据", "無效的資料", "Données invalides", "Data tidak valid", "Data tidak sah", "अमान्य डेटा", "Geçersiz veri", /* vi-todo */ "Invalid data");
+        importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos", "Ungültige Daten", "无效的数据", "無效的資料", "Données invalides", "Data tidak valid", "Data tidak sah", "अमान्य डेटा", "Geçersiz veri", "Dữ liệu không hợp lệ");
         return;
       }
 
@@ -1563,7 +1562,7 @@ export default defineComponent({
           `已经有同名的项目，无法创建分组“${itemsToAdd}”`, `已經有同名的項目，無法建立群組「${itemsToAdd}」`,
           `Impossible de créer le groupe « ${itemsToAdd} » : un élément du même nom existe déjà`,
           `Tidak bisa membuat grup “${itemsToAdd}”: sudah ada item dengan nama yang sama`,
-          `Kumpulan “${itemsToAdd}” tidak dapat dibuat kerana sudah ada item dengan nama yang sama`, `"${itemsToAdd}" समूह नहीं बना सकते, क्योंकि इस नाम का आइटम पहले से मौजूद है`, `“${itemsToAdd}” grubu oluşturulamıyor: aynı adda bir öğe zaten var`, /* vi-todo */ `Cannot create group "${itemsToAdd}" because an item with the same name already exists`);
+          `Kumpulan “${itemsToAdd}” tidak dapat dibuat kerana sudah ada item dengan nama yang sama`, `"${itemsToAdd}" समूह नहीं बना सकते, क्योंकि इस नाम का आइटम पहले से मौजूद है`, `“${itemsToAdd}” grubu oluşturulamıyor: aynı adda bir öğe zaten var`, `Không thể tạo nhóm “${itemsToAdd}” vì đã có mục cùng tên`);
         return;
       }
 

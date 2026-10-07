@@ -1,7 +1,7 @@
 {
   "name": "HoldemMaster GTO Trainer",
   "short_name": "GTO Trainer",
-  "description": "A free GTO solver and trainer. All 13 Study Spots open instantly, even offline.",
+  "description": "Solver và trainer GTO miễn phí. Cả 13 spot mẫu mở tức thì, kể cả khi ngoại tuyến.",
   "lang": "vi",
   "dir": "ltr",
   "start_url": "/?view=trainer&lang=vi",
@@ -39,7 +39,7 @@
     {
       "name": "GTO Trainer",
       "short_name": "Trainer",
-      "description": "Play hands dealt from real ranges and get graded on EV loss",
+      "description": "Chơi các ván chia từ range thật và được chấm điểm theo EV mất",
       "url": "/?view=trainer&lang=vi",
       "icons": [
         {
@@ -49,9 +49,9 @@
       ]
     },
     {
-      "name": "13 Study Spots",
-      "short_name": "Study Spots",
-      "description": "See the GTO strategy for 13 spots with no waiting",
+      "name": "13 spot mẫu",
+      "short_name": "Spot mẫu",
+      "description": "Xem chiến lược GTO của 13 spot mà không phải chờ",
       "url": "/?view=presets&lang=vi",
       "icons": [
         {

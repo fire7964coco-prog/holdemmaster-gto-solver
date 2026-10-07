@@ -125,12 +125,12 @@ const M = {
     titleLine2: "GTO Trainer'a.",
     footer: "Ücretsiz GTO Solver · Çevrimdışı çalışır",
   },
-  // vi-todo: English copy; translate values in this block.
+  // 베트남어 어순(피수식어 앞) — «Trainer GTO.» (확정표 ② · R16 각 줄 12자 이내)
   vi: {
-    greeting: "Welcome to",
+    greeting: "Chào mừng đến với",
     titleLine1: "HoldemMaster",
-    titleLine2: "GTO Trainer.",
-    footer: "Free GTO Solver · Works Offline",
+    titleLine2: "Trainer GTO.",
+    footer: "Solver GTO miễn phí · Dùng được ngoại tuyến",
   },
   ms: {
     greeting: "Selamat datang ke",

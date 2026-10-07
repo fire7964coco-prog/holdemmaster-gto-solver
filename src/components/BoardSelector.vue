@@ -194,15 +194,14 @@ const M = {
     warnBody: (n: number) =>
       `Düzenlenen ağaç ${n} kartlık bir board varsayıyor.`,
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    inputError: "Could not read the cards. Enter 3–5 cards, such as AsKd7c or As Kd 7c. Your previous board is kept.",
-    placeholder: "e.g., AsKd7c",
-    clear: "Clear",
-    randomFlop: "Random Flop",
-    warnLabel: "Warning:",
+    inputError: "Không đọc được lá bài. Nhập 3–5 lá, ví dụ AsKd7c hoặc As Kd 7c. Board trước đó vẫn được giữ.",
+    placeholder: "vd. AsKd7c",
+    clear: "Xóa",
+    randomFlop: "Flop ngẫu nhiên",
+    warnLabel: "Cảnh báo:",
     warnBody: (n: number) =>
-      `The edited tree assumes a ${n}-card board.`,
+      `Cây đã chỉnh sửa giả định board có ${n} lá.`,
   },
 } as const;
 

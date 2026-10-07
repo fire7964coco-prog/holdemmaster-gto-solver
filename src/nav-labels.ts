@@ -25,6 +25,5 @@ export const navResults: Record<Locale, string> = {
   ms: "Hasil",
   hi: "परिणाम",
   tr: "Sonuçlar",
-  // vi-todo: English copy; translate values in this block.
-  vi: "Results",
+  vi: "Kết quả",
 };

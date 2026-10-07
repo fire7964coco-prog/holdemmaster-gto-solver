@@ -68,9 +68,8 @@ const M = {
   tr: {
     combos: "combo",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    combos: "combos",
+    combos: "combo",
   },
 } as const;
 
@@ -175,7 +174,7 @@ const actionLabel = (
       Raise: "Raise",
       Allin: "All-in",
       "All-in": "All-in",
-    }, /* vi-todo */ {
+    }, {
       Fold: "Fold",
       Check: "Check",
       Call: "Call",
@@ -211,7 +210,7 @@ const actionLabel = (
         "du pot",
         "dari pot",
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
-        "pot", "pot", "pot", /* vi-todo */ "pot" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
+        "pot", "pot", "pot", "pot" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
       )})`
     );
   }

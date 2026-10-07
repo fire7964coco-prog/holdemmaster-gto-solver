@@ -152,12 +152,11 @@ const M = {
     draws: "Draw'lar",
     noDraws: "Draw bilgisi yok",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    hands: "Hands",
-    noHands: "No hands to display",
-    draws: "Draws",
-    noDraws: "No draw information",
+    hands: "Tay bài",
+    noHands: "Không có tay bài để hiển thị",
+    draws: "Draw",
+    noDraws: "Không có thông tin draw",
   },
 } as const;
 

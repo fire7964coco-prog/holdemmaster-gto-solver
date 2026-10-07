@@ -311,18 +311,17 @@ const M = {
     playerLabel: "Oyuncu:",
     oopHint: "Bu, ilk hareket eden oyuncunun (OOP) stratejisi. Rakibi (IP) görmek için yukarıdaki “Oyuncu” ayarını IP yap.",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    backToList: "← Back",
+    backToList: "← Quay lại",
     pot: "Pot",
     stack: "Stack",
-    flopOnlyNote: "Flop strategy only. Want to click through turn and river? →",
-    solveThisSpot: "Solve this spot yourself",
-    readArticle: "Read the article",
-    loadError: (e: string) => `Couldn't load the precomputed results: ${e}`,
-    loading: "Loading results…",
-    playerLabel: "Player:",
-    oopHint: "This is the strategy of the player who acts first (OOP). To see the opponent (IP), set “Player” above to IP.",
+    flopOnlyNote: "Chỉ có chiến lược flop. Muốn xem tiếp turn và river? →",
+    solveThisSpot: "Tự giải spot này",
+    readArticle: "Đọc bài phân tích",
+    loadError: (e: string) => `Không tải được kết quả: ${e}`,
+    loading: "Đang tải kết quả…",
+    playerLabel: "Người chơi:",
+    oopHint: "Đây là chiến lược của người hành động trước (OOP). Để xem đối thủ (IP), đổi “Người chơi” ở trên sang IP.",
   },
 } as const;
 

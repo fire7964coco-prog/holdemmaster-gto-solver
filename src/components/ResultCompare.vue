@@ -173,9 +173,8 @@ const M = {
     combos: "Combo",
     equity: "Equity",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    combos: "Combos",
+    combos: "Combo",
     equity: "Equity",
   },
   "zh-hant": {

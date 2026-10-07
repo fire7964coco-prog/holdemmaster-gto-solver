@@ -1637,66 +1637,65 @@ const M = {
     boardMismatchHint:
       "Düzenlenen ağacı silmek için “Düzenlemeleri temizle ve kilidi aç” düğmesine bas.",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    advancedHint: "Rake · All-in · Merging — you can usually leave these unchanged",
-    advancedSettings: "Advanced settings ▸",
-    basicSettings: "Basic settings",
+    advancedHint: "Rake · All-in · Gộp — thường có thể để nguyên",
+    advancedSettings: "Cài đặt nâng cao ▸",
+    basicSettings: "Cài đặt cơ bản",
     chipNote:
-      "Enter amounts in integer chips. To think in bb, use 10 chips = 1bb (e.g., pot 55 = 5.5bb, stack 1000 = 100bb). If you enter or edit the pot or stack yourself, results stay in your chip scale; if you load one of the Study Spots and solve without changing the pot or stack, results are converted to bb.",
-    startingPot: "Starting Pot:",
-    effectiveStack: "Effective Stack:",
+      "Nhập số tiền bằng chip nguyên. Nếu muốn tính theo bb, dùng 10 chip = 1bb (vd. pot 55 = 5,5bb, stack 1000 = 100bb). Nếu bạn tự nhập hoặc sửa pot hay stack, kết quả giữ theo đơn vị chip của bạn; nếu bạn tải một Spot mẫu và giải mà không đổi pot hay stack, kết quả được quy đổi sang bb.",
+    startingPot: "Pot ban đầu:",
+    effectiveStack: "Stack hiệu dụng:",
     rake: "Rake:",
-    rakeCap: "Rake Cap:",
-    reset: "Clear",
-    error: "Error:",
-    warning: "Warning:",
-    oopBetSizes: "OOP Bet Sizes",
-    donkOption: "Use different sizes for donk bets",
-    howToInput: "How to input",
+    rakeCap: "Rake cap:",
+    reset: "Xóa",
+    error: "Lỗi:",
+    warning: "Cảnh báo:",
+    oopBetSizes: "Cỡ cược OOP",
+    donkOption: "Dùng cỡ cược khác cho donk bet",
+    howToInput: "Cách nhập",
     inputHelpIntro:
-      "You can enter multiple bet sizes separated by commas or spaces, in any of the following formats. If left empty, no bet or raise is made.",
+      "Bạn có thể nhập nhiều cỡ cược, cách nhau bằng dấu phẩy hoặc dấu cách, theo bất kỳ dạng nào dưới đây. Nếu để trống, sẽ không có bet hay raise.",
     inputHelpPercent:
-      "A number representing the percentage of the pot (e.g., “50”). For raises, the size is computed by first calling and then adding the specified percentage of the resulting pot. For example, if the pot before the bet is 100 and the opponent bets 75, a 50% raise is 75 + (100 + 75 + 75) * 50% = 200.",
+      "Một số thể hiện phần trăm pot (vd. “50”). Với raise, cỡ cược được tính bằng cách call trước rồi cộng thêm phần trăm đã nhập của pot sau khi call. Ví dụ, nếu pot trước khi bet là 100 và đối thủ bet 75, raise 50% là 75 + (100 + 75 + 75) * 50% = 200.",
     inputHelpMultiple:
-      "A multiple of the previous bet size (e.g., “2.5x”). Only available for raises.",
-    inputHelpAllin: "All-in (e.g., “a”).",
+      "Bội số của cỡ cược trước đó (vd. “2.5x”). Chỉ dùng cho raise.",
+    inputHelpAllin: "All-in (vd. “a”).",
     inputHelpFixed:
-      "Adding a fixed amount (e.g., “100c”). For raises, you can also cap the number of raises (e.g., “20c3r”).",
+      "Cộng thêm một số tiền cố định (vd. “100c”). Với raise, bạn cũng có thể giới hạn số lần raise (vd. “20c3r”).",
     inputHelpGeometric:
-      "Geometric size, i.e., splitting the remaining stack into the specified number of equal-percentage bets (e.g., “3e”). For example, if the current pot is 100 and the effective stack is 400, “2e” is a bet of 100. If the number before “e” is omitted, the number of remaining streets is used (Flop=3, Turn=2, River=1). For raises, the number of previous raises is subtracted from the specified number; e.g., “3e” becomes “2e” when re-raising. You can also append a number after “e” to set a maximum percentage limit (e.g., “2e200”).",
+      "Cỡ cược hình học, tức là chia stack còn lại thành số lần bet đã chỉ định với cùng tỷ lệ phần trăm pot (vd. “3e”). Ví dụ, nếu pot hiện tại là 100 và stack hiệu dụng là 400, “2e” là bet 100. Nếu bỏ số trước “e”, số street còn lại sẽ được dùng (Flop=3, Turn=2, River=1). Với raise, số lần raise trước đó được trừ khỏi số đã chỉ định; vd. “3e” thành “2e” khi re-raise. Bạn cũng có thể thêm một số sau “e” để đặt giới hạn phần trăm tối đa (vd. “2e200”).",
     flop: "Flop",
     turn: "Turn",
     river: "River",
     bet: "Bet:",
     raise: "Raise:",
     donk: "Donk:",
-    ipBetSizes: "IP Bet Sizes",
-    addAllInLabel: "Add All-In Threshold:",
+    ipBetSizes: "Cỡ cược IP",
+    addAllInLabel: "Ngưỡng thêm all-in:",
     addAllInHelp:
-      "Adds an all-in action to every node where the ratio of the maximum possible bet size to the pot is below this threshold.",
-    forceAllInLabel: "Force All-In Threshold:",
+      "Thêm hành động all-in vào mọi node mà tỷ lệ giữa cỡ cược lớn nhất có thể và pot thấp hơn ngưỡng này.",
+    forceAllInLabel: "Ngưỡng buộc all-in:",
     forceAllInHelp1:
-      "If the SPR (stack-to-pot ratio) after the opponent calls a bet action is below this threshold, that bet action is replaced with an all-in action. A recommended value is around 15–20%.",
+      "Nếu SPR (tỷ lệ stack trên pot) sau khi đối thủ call một hành động bet thấp hơn ngưỡng này, hành động bet đó được thay bằng all-in. Giá trị khuyến nghị khoảng 15–20%.",
     forceAllInHelp2:
-      "This option is similar to PioSOLVER's “all-in threshold”. PioSOLVER replaces a bet action with an all-in when the ratio of the amount put into the pot to the initial stack exceeds the threshold.",
+      "Tùy chọn này tương tự “all-in threshold” của PioSOLVER. PioSOLVER thay một hành động bet bằng all-in khi tỷ lệ giữa số chip đã cho vào pot và stack ban đầu vượt quá ngưỡng.",
     forceAllInHelp3:
-      "Ignoring rounding, the conversion formula is as follows (s = initial SPR, r = PioSOLVER's threshold):",
-    forceAllInFormula: "Threshold = s * (1 - r) / (1 + 2 * s * r).",
-    mergingLabel: "Merging Threshold:",
-    mergingHelp1: "Merges bet actions of similar sizes into one.",
+      "Bỏ qua phần làm tròn, công thức quy đổi như sau (s = SPR ban đầu, r = ngưỡng của PioSOLVER):",
+    forceAllInFormula: "Ngưỡng = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Ngưỡng gộp:",
+    mergingHelp1: "Gộp các hành động bet có cỡ gần nhau thành một.",
     mergingHelp2:
-      "The algorithm is the same as PioSOLVER's: pick the largest bet size (= X% of the pot) and remove every other bet action whose size (= Y% of the pot) satisfies the following inequality:",
-    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + threshold.",
-    mergingHelp3: "Repeat this process with the next largest remaining bet size.",
-    treePreviewEdit: "Tree Preview & Edit",
-    clearEditUnlock: "Clear Edits & Unlock",
-    addedLines: "Added lines:",
-    removedLines: "Removed lines:",
+      "Thuật toán giống PioSOLVER: chọn cỡ cược lớn nhất (= X% pot) rồi bỏ mọi hành động bet khác có cỡ (= Y% pot) thỏa bất đẳng thức sau:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + ngưỡng.",
+    mergingHelp3: "Lặp lại quá trình này với cỡ cược lớn nhất tiếp theo còn lại.",
+    treePreviewEdit: "Xem trước và chỉnh sửa cây",
+    clearEditUnlock: "Xóa chỉnh sửa và mở khóa",
+    addedLines: "Line đã thêm:",
+    removedLines: "Line đã xóa:",
     boardMismatch: (expected: number, actual: number) =>
-      `The edited tree assumes a ${expected}-card board, but the current board has ${actual} card${actual === 1 ? "" : "s"}.`,
+      `Cây đã chỉnh sửa giả định board có ${expected} lá, nhưng board hiện tại có ${actual} lá.`,
     boardMismatchHint:
-      "To discard the edited tree, click the “Clear Edits & Unlock” button.",
+      "Để bỏ cây đã chỉnh sửa, hãy nhấn nút “Xóa chỉnh sửa và mở khóa”.",
   },
 } as const;
 
@@ -1786,10 +1785,9 @@ const N: Partial<Record<keyof typeof M, { chipNote: string }>> | null =
           chipNote:
             "Miktarları tam sayı çip olarak gir. bb ile düşünmek istersen 10 çip = 1bb kullan (ör. pot 55 = 5,5bb, stack 1000 = 100bb). Pot ya da stack'i kendin girer veya değiştirirsen sonuçlar senin çip ölçeğinde kalır.",
         },
-        // vi-todo: English copy; translate values in this block.
         vi: {
           chipNote:
-            "Enter amounts in integer chips. To think in bb, use 10 chips = 1bb (e.g., pot 55 = 5.5bb, stack 1000 = 100bb). If you enter or edit the pot or stack yourself, results stay in your chip scale.",
+            "Nhập số tiền bằng chip nguyên. Nếu muốn tính theo bb, dùng 10 chip = 1bb (vd. pot 55 = 5,5bb, stack 1000 = 100bb). Nếu bạn tự nhập hoặc sửa pot hay stack, kết quả giữ theo đơn vị chip của bạn.",
         },
       }
     : null;
@@ -1855,7 +1853,7 @@ export default defineComponent({
       const errors: string[] = [];
       if (config.startingPot <= 0) {
         errors.push(
-          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スターティングポットには正の数を入力してください", "El bote inicial debe ser positivo", "O pote inicial deve ser positivo", "Der Start-Pot muss größer als 0 sein", "起始底池必须是正数", "起始底池必須是正數", "Le pot initial doit être positif", "Pot awal harus lebih dari 0", "Pot permulaan mesti lebih daripada 0", "शुरुआती pot शून्य से अधिक होना चाहिए", "Başlangıç pot'u 0'dan büyük olmalı", /* vi-todo */ "Starting pot must be positive")
+          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スターティングポットには正の数を入力してください", "El bote inicial debe ser positivo", "O pote inicial deve ser positivo", "Der Start-Pot muss größer als 0 sein", "起始底池必须是正数", "起始底池必須是正數", "Le pot initial doit être positif", "Pot awal harus lebih dari 0", "Pot permulaan mesti lebih daripada 0", "शुरुआती pot शून्य से अधिक होना चाहिए", "Başlangıç pot'u 0'dan büyük olmalı", "Pot ban đầu phải lớn hơn 0")
         );
       }
       if (config.startingPot > MAX_AMOUNT) {
@@ -1870,12 +1868,12 @@ export default defineComponent({
           ,
             `起始底池不能超过 ${MAX_AMOUNT}`, `起始底池不能超過 ${MAX_AMOUNT}`,
             `Le pot initial ne doit pas dépasser ${MAX_AMOUNT}`, `Pot awal tidak boleh melebihi ${MAX_AMOUNT}`,
-            `Pot permulaan tidak boleh melebihi ${MAX_AMOUNT}`, `शुरुआती pot ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Başlangıç pot'u en fazla ${MAX_AMOUNT} olabilir`, /* vi-todo */ `Starting pot must not exceed ${MAX_AMOUNT}`)
+            `Pot permulaan tidak boleh melebihi ${MAX_AMOUNT}`, `शुरुआती pot ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Başlangıç pot'u en fazla ${MAX_AMOUNT} olabilir`, `Pot ban đầu không được vượt quá ${MAX_AMOUNT}`)
         );
       }
       if (config.startingPot % 1 !== 0) {
         errors.push(
-          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier", "Pot awal harus bilangan bulat", "Pot permulaan mesti nombor bulat", "शुरुआती pot का मान पूर्णांक होना चाहिए", "Başlangıç pot'u tam sayı olmalı", /* vi-todo */ "Starting pot must be an integer")
+          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier", "Pot awal harus bilangan bulat", "Pot permulaan mesti nombor bulat", "शुरुआती pot का मान पूर्णांक होना चाहिए", "Başlangıç pot'u tam sayı olmalı", "Pot ban đầu phải là số nguyên")
         );
       }
       if (config.effectiveStack <= 0) {
@@ -1890,7 +1888,7 @@ export default defineComponent({
           ,
             "有效筹码必须是正数", "有效籌碼必須是正數",
             "Le stack effectif doit être positif", "Stack efektif harus lebih dari 0",
-            "Stack efektif mesti lebih daripada 0", "Effective stack शून्य से अधिक होना चाहिए", "Efektif stack 0'dan büyük olmalı", /* vi-todo */ "Effective stack must be positive")
+            "Stack efektif mesti lebih daripada 0", "Effective stack शून्य से अधिक होना चाहिए", "Efektif stack 0'dan büyük olmalı", "Stack hiệu dụng phải lớn hơn 0")
         );
       }
       if (config.effectiveStack > MAX_AMOUNT) {
@@ -1905,7 +1903,7 @@ export default defineComponent({
           ,
             `有效筹码不能超过 ${MAX_AMOUNT}`, `有效籌碼不能超過 ${MAX_AMOUNT}`,
             `Le stack effectif ne doit pas dépasser ${MAX_AMOUNT}`, `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`,
-            `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`, `Effective stack ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Efektif stack en fazla ${MAX_AMOUNT} olabilir`, /* vi-todo */ `Effective stack must not exceed ${MAX_AMOUNT}`)
+            `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`, `Effective stack ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Efektif stack en fazla ${MAX_AMOUNT} olabilir`, `Stack hiệu dụng không được vượt quá ${MAX_AMOUNT}`)
         );
       }
       if (config.effectiveStack % 1 !== 0) {
@@ -1920,22 +1918,22 @@ export default defineComponent({
           ,
             "有效筹码必须是整数", "有效籌碼必須是整數",
             "Le stack effectif doit être un nombre entier", "Stack efektif harus bilangan bulat",
-            "Stack efektif mesti nombor bulat", "Effective stack का मान पूर्णांक होना चाहिए", "Efektif stack tam sayı olmalı", /* vi-todo */ "Effective stack must be an integer")
+            "Stack efektif mesti nombor bulat", "Effective stack का मान पूर्णांक होना चाहिए", "Efektif stack tam sayı olmalı", "Stack hiệu dụng phải là số nguyên")
         );
       }
       if (config.rakePercent < 0) {
         errors.push(
-          pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo", "O rake não pode ser negativo", "Der Rake darf nicht negativ sein", "抽水不能是负数", "抽水不能是負數", "Le rake ne peut pas être négatif", "Rake tidak boleh negatif", "Rake tidak boleh negatif", "Rake ऋणात्मक नहीं हो सकता", "Rake negatif olamaz", /* vi-todo */ "Rake must not be negative")
+          pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo", "O rake não pode ser negativo", "Der Rake darf nicht negativ sein", "抽水不能是负数", "抽水不能是負數", "Le rake ne peut pas être négatif", "Rake tidak boleh negatif", "Rake tidak boleh negatif", "Rake ऋणात्मक नहीं हो सकता", "Rake negatif olamaz", "Rake không được âm")
         );
       }
       if (config.rakePercent > 100) {
         errors.push(
-          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%", "Der Rake darf 100% nicht überschreiten", "抽水不能超过 100%", "抽水不能超過 100%", "Le rake ne peut pas dépasser 100 %", "Rake tidak boleh melebihi 100%", "Rake tidak boleh melebihi 100%", "Rake 100% से अधिक नहीं हो सकता", "Rake %100'ü aşamaz", /* vi-todo */ "Rake must not exceed 100%")
+          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%", "Der Rake darf 100% nicht überschreiten", "抽水不能超过 100%", "抽水不能超過 100%", "Le rake ne peut pas dépasser 100 %", "Rake tidak boleh melebihi 100%", "Rake tidak boleh melebihi 100%", "Rake 100% से अधिक नहीं हो सकता", "Rake %100'ü aşamaz", "Rake không được vượt quá 100%")
         );
       }
       if (config.rakeCap < 0) {
         errors.push(
-          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo", "O teto do rake não pode ser negativo", "Das Rake-Cap darf nicht negativ sein", "抽水上限不能是负数", "抽水上限不能是負數", "Le cap de rake ne peut pas être négatif", "Rake cap tidak boleh negatif", "Rake cap tidak boleh negatif", "Rake की सीमा ऋणात्मक नहीं हो सकती", "Rake limiti negatif olamaz", /* vi-todo */ "Rake cap must not be negative")
+          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo", "O teto do rake não pode ser negativo", "Das Rake-Cap darf nicht negativ sein", "抽水上限不能是负数", "抽水上限不能是負數", "Le cap de rake ne peut pas être négatif", "Rake cap tidak boleh negatif", "Rake cap tidak boleh negatif", "Rake की सीमा ऋणात्मक नहीं हो सकती", "Rake limiti negatif olamaz", "Rake cap không được âm")
         );
       }
       if (config.rakeCap > 3 * MAX_AMOUNT) {
@@ -1951,7 +1949,7 @@ export default defineComponent({
             `抽水上限不能超过 ${3 * MAX_AMOUNT}`, `抽水上限不能超過 ${3 * MAX_AMOUNT}`,
             `Le cap de rake ne doit pas dépasser ${3 * MAX_AMOUNT}`,
             `Rake cap tidak boleh melebihi ${3 * MAX_AMOUNT}`,
-            `Rake cap tidak boleh melebihi ${3 * MAX_AMOUNT}`, `Rake की सीमा ${3 * MAX_AMOUNT} से अधिक नहीं हो सकती`, `Rake limiti en fazla ${3 * MAX_AMOUNT} olabilir`, /* vi-todo */ `Rake cap must not exceed ${3 * MAX_AMOUNT}`)
+            `Rake cap tidak boleh melebihi ${3 * MAX_AMOUNT}`, `Rake की सीमा ${3 * MAX_AMOUNT} से अधिक नहीं हो सकती`, `Rake limiti en fazla ${3 * MAX_AMOUNT} olabilir`, `Rake cap không được vượt quá ${3 * MAX_AMOUNT}`)
         );
       }
       return errors;
@@ -1962,36 +1960,36 @@ export default defineComponent({
       const isDonk = true;
       const betConfig = [
         {
-          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP", "Bet flop OOP", "OOP flop bet", "OOP flop bet", /* vi-todo */ "OOP flop bet"),
+          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP", "Bet flop OOP", "OOP flop bet", "OOP flop bet", "Bet flop OOP"),
           res: config.oopFlopBetSanitized,
         },
         {
-          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP", "Raise flop OOP", "OOP flop raise", "OOP flop raise", /* vi-todo */ "OOP flop raise"),
+          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP", "Raise flop OOP", "OOP flop raise", "OOP flop raise", "Raise flop OOP"),
           res: config.oopFlopRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP", "Bet turn OOP", "OOP turn bet", "OOP turn bet", /* vi-todo */ "OOP turn bet"),
+          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP", "Bet turn OOP", "OOP turn bet", "OOP turn bet", "Bet turn OOP"),
           res: config.oopTurnBetSanitized,
         },
         {
-          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP", "Raise turn OOP", "OOP turn raise", "OOP turn raise", /* vi-todo */ "OOP turn raise"),
+          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP", "Raise turn OOP", "OOP turn raise", "OOP turn raise", "Raise turn OOP"),
           res: config.oopTurnRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP", "Donk turn OOP", "OOP turn donk", "OOP turn donk", /* vi-todo */ "OOP turn donk"),
+          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP", "Donk turn OOP", "OOP turn donk", "OOP turn donk", "Donk turn OOP"),
           res: config.oopTurnDonkSanitized,
           isDonk,
         },
         {
-          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP", "Bet river OOP", "OOP river bet", "OOP river bet", /* vi-todo */ "OOP river bet"),
+          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP", "Bet river OOP", "OOP river bet", "OOP river bet", "Bet river OOP"),
           res: config.oopRiverBetSanitized,
         },
         {
-          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP", "Raise river OOP", "OOP river raise", "OOP river raise", /* vi-todo */ "OOP river raise"),
+          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP", "Raise river OOP", "OOP river raise", "OOP river raise", "Raise river OOP"),
           res: config.oopRiverRaiseSanitized,
         },
         {
-          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP", "Donk river OOP", "OOP river donk", "OOP river donk", /* vi-todo */ "OOP river donk"),
+          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP", "Donk river OOP", "OOP river donk", "OOP river donk", "Donk river OOP"),
           res: config.oopRiverDonkSanitized,
           isDonk,
         },
@@ -2008,27 +2006,27 @@ export default defineComponent({
       const errors: string[] = [];
       const betConfig = [
         {
-          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP", "Bet flop IP", "IP flop bet", "IP flop bet", /* vi-todo */ "IP flop bet"),
+          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP", "Bet flop IP", "IP flop bet", "IP flop bet", "Bet flop IP"),
           res: config.ipFlopBetSanitized,
         },
         {
-          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP", "Raise flop IP", "IP flop raise", "IP flop raise", /* vi-todo */ "IP flop raise"),
+          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP", "Raise flop IP", "IP flop raise", "IP flop raise", "Raise flop IP"),
           res: config.ipFlopRaiseSanitized,
         },
         {
-          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP", "Bet turn IP", "IP turn bet", "IP turn bet", /* vi-todo */ "IP turn bet"),
+          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP", "Bet turn IP", "IP turn bet", "IP turn bet", "Bet turn IP"),
           res: config.ipTurnBetSanitized,
         },
         {
-          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP", "Raise turn IP", "IP turn raise", "IP turn raise", /* vi-todo */ "IP turn raise"),
+          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP", "Raise turn IP", "IP turn raise", "IP turn raise", "Raise turn IP"),
           res: config.ipTurnRaiseSanitized,
         },
         {
-          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP", "Bet river IP", "IP river bet", "IP river bet", /* vi-todo */ "IP river bet"),
+          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP", "Bet river IP", "IP river bet", "IP river bet", "Bet river IP"),
           res: config.ipRiverBetSanitized,
         },
         {
-          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP", "Raise river IP", "IP river raise", "IP river raise", /* vi-todo */ "IP river raise"),
+          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP", "Raise river IP", "IP river raise", "IP river raise", "Raise river IP"),
           res: config.ipRiverRaiseSanitized,
         },
       ];
@@ -2054,7 +2052,7 @@ export default defineComponent({
           ,
             "追加全下的阈值不能是负数", "追加全下的門檻不能是負數",
             "Le seuil d'ajout du all-in ne peut pas être négatif", "Ambang tambah all-in tidak boleh negatif",
-            "Ambang tambah all-in tidak boleh negatif", "All-in जोड़ने की सीमा ऋणात्मक नहीं हो सकती", "All-in ekleme eşiği negatif olamaz", /* vi-todo */ "Add all-in threshold must not be negative")
+            "Ambang tambah all-in tidak boleh negatif", "All-in जोड़ने की सीमा ऋणात्मक नहीं हो सकती", "All-in ekleme eşiği negatif olamaz", "Ngưỡng thêm all-in không được âm")
         );
       }
       if (config.forceAllInThreshold < 0) {
@@ -2069,7 +2067,7 @@ export default defineComponent({
           ,
             "强制全下的阈值不能是负数", "強制全下的門檻不能是負數",
             "Le seuil de all-in forcé ne peut pas être négatif", "Ambang all-in paksa tidak boleh negatif",
-            "Ambang all-in paksa tidak boleh negatif", "Bet को all-in बनाने की सीमा ऋणात्मक नहीं हो सकती", "Zorunlu all-in eşiği negatif olamaz", /* vi-todo */ "Force all-in threshold must not be negative")
+            "Ambang all-in paksa tidak boleh negatif", "Bet को all-in बनाने की सीमा ऋणात्मक नहीं हो सकती", "Zorunlu all-in eşiği negatif olamaz", "Ngưỡng buộc all-in không được âm")
         );
       }
       if (config.mergingThreshold < 0) {
@@ -2084,7 +2082,7 @@ export default defineComponent({
           ,
             "合并阈值不能是负数", "合併門檻不能是負數",
             "Le seuil de fusion ne peut pas être négatif", "Ambang penggabungan tidak boleh negatif",
-            "Ambang penggabungan tidak boleh negatif", "Bet मिलाने की सीमा ऋणात्मक नहीं हो सकती", "Birleştirme eşiği negatif olamaz", /* vi-todo */ "Merging threshold must not be negative")
+            "Ambang penggabungan tidak boleh negatif", "Bet मिलाने की सीमा ऋणात्मक नहीं हो सकती", "Birleştirme eşiği negatif olamaz", "Ngưỡng gộp không được âm")
         );
       }
       return errors;
@@ -2104,7 +2102,7 @@ export default defineComponent({
           ,
             "不建议把强制全下的阈值设到 30% 以上。\n想知道这个设置是做什么的，看上面的“怎么填”。", "不建議把強制全下的門檻設到 30% 以上。\n想知道這個設定是做什麼的，請看上面的「怎麼填」。",
             "Régler le seuil de all-in forcé au-dessus de 30 % n'est pas recommandé.\nVa voir « Comment remplir » pour comprendre ce réglage.", "Menyetel ambang all-in paksa di atas 30% tidak disarankan.\nLihat teks bantuan di samping pengaturan ini untuk memahami pengaruhnya.",
-            "Menetapkan ambang all-in paksa melebihi 30% tidak disyorkan.\nLihat “Cara isi” di sebelah tetapan ini untuk memahami kesannya.", "Bet को all-in बनाने की सीमा 30% से अधिक रखना उचित नहीं है।\nयह सेटिंग कैसे काम करती है, इसके लिए मदद का टेक्स्ट देखें।", "Zorunlu all-in eşiğini %30'un üzerine ayarlaman önerilmez.\nBu ayarın ne işe yaradığını “Zorunlu all-in eşiği” yanındaki yardım metninde görebilirsin.", /* vi-todo */ "Setting the force all-in threshold higher than 30% is not recommended.\nSee the help text for what this setting does.")
+            "Menetapkan ambang all-in paksa melebihi 30% tidak disyorkan.\nLihat “Cara isi” di sebelah tetapan ini untuk memahami kesannya.", "Bet को all-in बनाने की सीमा 30% से अधिक रखना उचित नहीं है।\nयह सेटिंग कैसे काम करती है, इसके लिए मदद का टेक्स्ट देखें।", "Zorunlu all-in eşiğini %30'un üzerine ayarlaman önerilmez.\nBu ayarın ne işe yaradığını “Zorunlu all-in eşiği” yanındaki yardım metninde görebilirsin.", "Không nên đặt ngưỡng buộc all-in cao hơn 30%.\nXem phần giải thích bên cạnh “Ngưỡng buộc all-in” để biết cài đặt này hoạt động thế nào.")
         );
       }
       return warnings;
@@ -2129,7 +2127,7 @@ export default defineComponent({
           ,
             "发现了无效的线路（是不是加载了损坏的设置？）", "發現了無效的線路（是不是載入了損壞的設定？）",
             "Ligne invalide trouvée (configuration corrompue chargée ?)", "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
-            "Line tidak sah ditemui (memuatkan tetapan yang rosak?)", "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", /* vi-todo */ "Invalid line found (loaded a broken configuration?)")
+            "Line tidak sah ditemui (memuatkan tetapan yang rosak?)", "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (cài đặt đã tải bị hỏng?)")
         );
       }
       if (
@@ -2152,7 +2150,7 @@ export default defineComponent({
           ,
             "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
             "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
-            "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayar (bozuk bir ayar mı yüklendi?)", /* vi-todo */ "Invalid configuration (loaded a broken configuration?)")
+            "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayar (bozuk bir ayar mı yüklendi?)", "Cài đặt không hợp lệ (cài đặt đã tải bị hỏng?)")
         );
       }
       return errors;

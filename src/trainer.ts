@@ -121,7 +121,6 @@ const actionLabelsZhHant: Record<string, string> = {
   Allin: "全下",
   "All-in": "全下",
 };
-// vi-todo: English output copied explicitly, including engine-name defaults.
 const actionLabelsVi: Record<string, string> = {
   Fold: "Fold",
   Check: "Check",
@@ -244,12 +243,11 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "3-bet pot",
       blind: "Blind vs blind",
     },
-    // vi-todo: English copy; translate values in this block.
     vi: {
-      all: "All",
-      srp: "Single Raised",
-      "3bp": "3-Bet Pot",
-      blind: "Blind vs Blind",
+      all: "Tất cả",
+      srp: "Single raised",
+      "3bp": "Pot 3-bet",
+      blind: "Blind vs blind",
     },
   };
   return labels[i18n.locale][category];
@@ -289,7 +287,7 @@ export const trainerActionLabel = (
       ? // 확정표 §6: 퍼센트 기호 앞 «%35» · 접미사 없이 «pot» (번역 확정 형식)
         `${label} ${amount} (%${pct} pot)`
       : i18n.locale === "vi"
-      ? // vi-todo: English copy; percent stays after the number without a space.
+      ? // 확정표 §2-2: «35%» 숫자 뒤 · 공백 없음 · «pot» 영어
         `${label} ${amount} (${pct}% pot)`
       : `${label} ${amount} (${pct}% pot)`;
   }

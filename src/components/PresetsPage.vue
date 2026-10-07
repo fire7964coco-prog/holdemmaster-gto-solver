@@ -150,21 +150,20 @@ const M = {
     footnote:
       "Range'ler 100bb online oyun standardına yakın tutuldu. Bir spot yükle, range'leri değiştir ve sonuçları karşılaştırarak öğren.",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    infoBtn1: "[⚡ View results]",
+    infoBtn1: "[⚡ Xem kết quả]",
     infoText1:
-      " shows the solved strategy instantly. Use ",
-    infoBtn2: "[Solve it yourself]",
+      " hiện ngay chiến lược của solver. Chỉ dùng ",
+    infoBtn2: "[Tự giải]",
     infoText2:
-      " only when you want to tweak the ranges or explore turn and river play.",
+      " khi bạn muốn chỉnh range hoặc xem tiếp turn và river.",
     pot: "Pot",
     stack: "Stack",
-    articleLink: "Read article",
-    viewResults: "View results",
-    solveYourself: "Solve it yourself",
+    articleLink: "Đọc bài phân tích",
+    viewResults: "Xem kết quả",
+    solveYourself: "Tự giải",
     footnote:
-      "Ranges are approximations of standard 100bb online play. Load a spot, tweak the ranges, and compare — a great way to study.",
+      "Range là bản xấp xỉ lối chơi online 100bb tiêu chuẩn. Tải một spot, chỉnh range rồi so sánh — đây là cách học rất tốt.",
   },
   en: {
     infoBtn1: "[⚡ View results]",

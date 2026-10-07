@@ -156,9 +156,8 @@ const M = {
     noGraph: "Grafik yok",
     equity: "Equity",
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
-    noGraph: "No graph available",
+    noGraph: "Không có biểu đồ",
     equity: "Equity",
   },
 } as const;

@@ -953,55 +953,54 @@ const M = {
       `Exploitability: ${value} (${percent})`,
     timeLine: (seconds: string) => `Geçen süre: ${seconds} sn`,
   },
-  // vi-todo: English copy; translate values in this block.
   vi: {
     sharedSpotBanner:
-      "Shared spot loaded — press [Build Tree] → [Run Solver] to start solving.",
-    numThreadsLabel: "Number of threads:",
-    buildTree: "Build Tree",
-    copied: "Copied!",
-    shareSpot: "🔗 Share Spot",
-    statusLabel: "Status:",
-    statusNotLoaded: "Module not loaded",
-    statusBuilding: "Building tree…",
-    statusError: (message: string) => `Error: ${message}`,
+      "Đã tải spot được chia sẻ — nhấn [Tạo cây] → [Chạy solver] để bắt đầu.",
+    numThreadsLabel: "Số thread:",
+    buildTree: "Tạo cây",
+    copied: "Đã sao chép!",
+    shareSpot: "🔗 Chia sẻ spot",
+    statusLabel: "Trạng thái:",
+    statusNotLoaded: "Chưa tải module",
+    statusBuilding: "Đang tạo cây…",
+    statusError: (message: string) => `Lỗi: ${message}`,
     statusBuilt: (threads: number) =>
-      `Tree built successfully (${threads} thread${threads === 1 ? "" : "s"})`,
-    precisionMode: "Precision mode:",
+      `Đã tạo cây thành công (${threads} thread)`,
+    precisionMode: "Độ chính xác:",
     precisionTipIntro:
-      "The precision mode mainly affects memory usage. There are also a few other differences.",
+      "Chế độ độ chính xác chủ yếu ảnh hưởng đến lượng bộ nhớ dùng. Ngoài ra còn vài khác biệt nhỏ.",
     precisionTipFp:
-      "32-bit floating point (FP): recommended when memory usage is below the limit (3.9GB). About 7 significant digits and better performance.",
+      "Số thực 32-bit (FP): nên dùng khi bộ nhớ cần dùng dưới giới hạn (3,9 GB). Khoảng 7 chữ số có nghĩa và chạy nhanh hơn.",
     precisionTipInt:
-      "16-bit integer: an alternative when the 32-bit FP mode exceeds the memory limit. About 4 significant digits, so it is not suitable for a target exploitability below 0.1%, and it performs worse than 32-bit FP.",
-    fp32Label: "32-bit FP:",
-    int16Label: "16-bit integer:",
-    ramNeeded: (size: string) => `needs ${size} of RAM`,
-    limitExceeded: "(limit exceeded)",
-    ramLimit: "RAM limit: 3.9GB (= 4GB Wasm limit − 0.1GB margin)",
-    targetLabel: "Target exploitability:",
+      "Số nguyên 16-bit: phương án thay thế khi chế độ FP 32-bit vượt giới hạn bộ nhớ. Chỉ khoảng 4 chữ số có nghĩa nên không hợp với exploitability mục tiêu dưới 0,1%, và chạy chậm hơn FP 32-bit.",
+    fp32Label: "FP 32-bit:",
+    int16Label: "Int 16-bit:",
+    ramNeeded: (size: string) => `cần ${size} RAM`,
+    limitExceeded: "(vượt giới hạn)",
+    ramLimit: "Giới hạn RAM: 3,9 GB (= giới hạn Wasm 4 GB − dự phòng 0,1 GB)",
+    targetLabel: "Exploitability mục tiêu:",
     exploitTipIntro:
-      "Specifies the acceptable distance from the Nash equilibrium. A lower value gives a more accurate result, but the computation takes longer.",
-    exploitTipDetailLabel: "Details:",
+      "Khoảng cách chấp nhận được so với cân bằng Nash. Giá trị càng thấp thì kết quả càng chính xác, nhưng tính càng lâu.",
+    exploitTipDetailLabel: "Chi tiết:",
     exploitTipDetail:
-      "In a Nash equilibrium, both players' strategies are MES (Maximally Exploitative Strategies) against each other. Using this property, we define the distance between an obtained strategy and the Nash equilibrium as follows:",
-    exploitTipFormula: "Distance = (Opponent's MES EV) - (Opponent's actual EV)",
+      "Ở cân bằng Nash, chiến lược của hai người chơi là MES (Maximally Exploitative Strategies) đối với nhau. Dựa vào tính chất này, ta định nghĩa khoảng cách giữa chiến lược thu được và cân bằng Nash như sau:",
+    exploitTipFormula: "Khoảng cách = (EV MES của đối thủ) - (EV thực tế của đối thủ)",
     exploitTipOutro:
-      "This distance is always non-negative and is zero only if the obtained strategy is a part of a Nash equilibrium. Exploitability is defined as the average distance of both players.",
-    maxIterationsLabel: "Max iterations:",
-    runSolver: "Run Solver",
-    stop: "Stop",
-    pause: "Pause",
-    resume: "Resume",
-    solving: "Solving…",
-    finalizing: "Finalizing…",
-    pausedStatus: "Paused.",
-    finished: "Solver finished!",
-    allocatingMemory: "Allocating memory…",
-    iterations: (count: number) => `Iterations: ${count}`,
+      "Khoảng cách này luôn không âm và chỉ bằng 0 khi chiến lược thu được là một phần của cân bằng Nash. Exploitability là trung bình khoảng cách của hai người chơi.",
+    maxIterationsLabel: "Số vòng lặp tối đa:",
+    runSolver: "Chạy solver",
+    stop: "Dừng",
+    pause: "Tạm dừng",
+    resume: "Tiếp tục",
+    solving: "Đang giải…",
+    finalizing: "Đang hoàn tất…",
+    pausedStatus: "Đã tạm dừng.",
+    finished: "Solver đã xong!",
+    allocatingMemory: "Đang cấp phát bộ nhớ…",
+    iterations: (count: number) => `Vòng lặp: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
       `Exploitability: ${value} (${percent})`,
-    timeLine: (seconds: string) => `Time elapsed: ${seconds}s`,
+    timeLine: (seconds: string) => `Thời gian: ${seconds}s`,
   },
 } as const;
 
@@ -1022,7 +1021,7 @@ const invalidLineMessage = () => pick(
   "Ligne invalide trouvée (configuration corrompue chargée ?)",
   "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
   "Line tidak sah ditemui (memuatkan tetapan yang rosak?)",
-  "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", /* vi-todo */ "Invalid line found (loaded broken configurations?)"
+  "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (bạn đã tải cài đặt bị hỏng?)"
 );
 
 const checkConfig = (
@@ -1039,7 +1038,7 @@ const checkConfig = (
     ,
       "公共牌至少需要 3 张", "公共牌至少需要 3 張",
       "Le board doit contenir au moins 3 cartes", "Board harus berisi minimal 3 kartu",
-      "Board mesti mengandungi sekurang-kurangnya 3 kad", "Board में कम से कम 3 कार्ड होने चाहिए", "Board'da en az 3 kart olmalı", /* vi-todo */ "The board must contain at least 3 cards");
+      "Board mesti mengandungi sekurang-kurangnya 3 kad", "Board में कम से कम 3 कार्ड होने चाहिए", "Board'da en az 3 kart olmalı", "Board phải có ít nhất 3 lá");
   }
 
   if (config.startingPot <= 0) {
@@ -1053,7 +1052,7 @@ const checkConfig = (
     ,
       "起始底池必须大于 0", "起始底池必須大於 0",
       "Le pot initial doit être positif", "Pot awal harus lebih dari 0",
-      "Pot permulaan mesti lebih daripada 0", "शुरुआती pot शून्य से अधिक होना चाहिए", "Başlangıç pot'u 0'dan büyük olmalı", /* vi-todo */ "Starting pot must be positive");
+      "Pot permulaan mesti lebih daripada 0", "शुरुआती pot शून्य से अधिक होना चाहिए", "Başlangıç pot'u 0'dan büyük olmalı", "Pot ban đầu phải lớn hơn 0");
   }
 
   if (config.startingPot > MAX_AMOUNT) {
@@ -1067,11 +1066,11 @@ const checkConfig = (
     ,
       `起始底池不能超过 ${MAX_AMOUNT}`, `起始底池不能超過 ${MAX_AMOUNT}`,
       `Le pot initial ne doit pas dépasser ${MAX_AMOUNT}`, `Pot awal tidak boleh melebihi ${MAX_AMOUNT}`,
-      `Pot permulaan tidak boleh melebihi ${MAX_AMOUNT}`, `शुरुआती pot ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Başlangıç pot'u en fazla ${MAX_AMOUNT} olabilir`, /* vi-todo */ `Starting pot must not exceed ${MAX_AMOUNT}`);
+      `Pot permulaan tidak boleh melebihi ${MAX_AMOUNT}`, `शुरुआती pot ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Başlangıç pot'u en fazla ${MAX_AMOUNT} olabilir`, `Pot ban đầu không được vượt quá ${MAX_AMOUNT}`);
   }
 
   if (config.startingPot % 1 !== 0) {
-    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier", "Pot awal harus bilangan bulat", "Pot permulaan mesti nombor bulat", "शुरुआती pot का मान पूर्णांक होना चाहिए", "Başlangıç pot'u tam sayı olmalı", /* vi-todo */ "Starting pot must be an integer");
+    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier", "Pot awal harus bilangan bulat", "Pot permulaan mesti nombor bulat", "शुरुआती pot का मान पूर्णांक होना चाहिए", "Başlangıç pot'u tam sayı olmalı", "Pot ban đầu phải là số nguyên");
   }
 
   if (config.effectiveStack <= 0) {
@@ -1085,7 +1084,7 @@ const checkConfig = (
     ,
       "有效筹码必须大于 0", "有效籌碼必須大於 0",
       "Le stack effectif doit être positif", "Stack efektif harus lebih dari 0",
-      "Stack efektif mesti lebih daripada 0", "Effective stack शून्य से अधिक होना चाहिए", "Efektif stack 0'dan büyük olmalı", /* vi-todo */ "Effective stack must be positive");
+      "Stack efektif mesti lebih daripada 0", "Effective stack शून्य से अधिक होना चाहिए", "Efektif stack 0'dan büyük olmalı", "Stack hiệu dụng phải lớn hơn 0");
   }
 
   if (config.effectiveStack > MAX_AMOUNT) {
@@ -1099,7 +1098,7 @@ const checkConfig = (
     ,
       `有效筹码不能超过 ${MAX_AMOUNT}`, `有效籌碼不能超過 ${MAX_AMOUNT}`,
       `Le stack effectif ne doit pas dépasser ${MAX_AMOUNT}`, `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`,
-      `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`, `Effective stack ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Efektif stack en fazla ${MAX_AMOUNT} olabilir`, /* vi-todo */ `Effective stack must not exceed ${MAX_AMOUNT}`);
+      `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`, `Effective stack ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Efektif stack en fazla ${MAX_AMOUNT} olabilir`, `Stack hiệu dụng không được vượt quá ${MAX_AMOUNT}`);
   }
 
   if (config.effectiveStack % 1 !== 0) {
@@ -1113,57 +1112,57 @@ const checkConfig = (
     ,
       "有效筹码必须是整数", "有效籌碼必須是整數",
       "Le stack effectif doit être un nombre entier", "Stack efektif harus bilangan bulat",
-      "Stack efektif mesti nombor bulat", "Effective stack का मान पूर्णांक होना चाहिए", "Efektif stack tam sayı olmalı", /* vi-todo */ "Effective stack must be an integer");
+      "Stack efektif mesti nombor bulat", "Effective stack का मान पूर्णांक होना चाहिए", "Efektif stack tam sayı olmalı", "Stack hiệu dụng phải là số nguyên");
   }
 
   const betConfig = [
     {
       s: config.oopFlopBetSanitized,
-      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP", "Bet flop OOP", "OOP flop bet", "OOP flop bet", /* vi-todo */ "OOP flop bet"),
+      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP", "Bet flop OOP", "OOP flop bet", "OOP flop bet", "Bet flop OOP"),
     },
     {
       s: config.oopFlopRaiseSanitized,
-      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP", "Raise flop OOP", "OOP flop raise", "OOP flop raise", /* vi-todo */ "OOP flop raise"),
+      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP", "Raise flop OOP", "OOP flop raise", "OOP flop raise", "Raise flop OOP"),
     },
     {
       s: config.oopTurnBetSanitized,
-      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP", "Bet turn OOP", "OOP turn bet", "OOP turn bet", /* vi-todo */ "OOP turn bet"),
+      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP", "Bet turn OOP", "OOP turn bet", "OOP turn bet", "Bet turn OOP"),
     },
     {
       s: config.oopTurnRaiseSanitized,
-      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP", "Raise turn OOP", "OOP turn raise", "OOP turn raise", /* vi-todo */ "OOP turn raise"),
+      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP", "Raise turn OOP", "OOP turn raise", "OOP turn raise", "Raise turn OOP"),
     },
     {
       s: config.oopRiverBetSanitized,
-      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP", "Bet river OOP", "OOP river bet", "OOP river bet", /* vi-todo */ "OOP river bet"),
+      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP", "Bet river OOP", "OOP river bet", "OOP river bet", "Bet river OOP"),
     },
     {
       s: config.oopRiverRaiseSanitized,
-      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP", "Raise river OOP", "OOP river raise", "OOP river raise", /* vi-todo */ "OOP river raise"),
+      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP", "Raise river OOP", "OOP river raise", "OOP river raise", "Raise river OOP"),
     },
     {
       s: config.ipFlopBetSanitized,
-      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP", "Bet flop IP", "IP flop bet", "IP flop bet", /* vi-todo */ "IP flop bet"),
+      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP", "Bet flop IP", "IP flop bet", "IP flop bet", "Bet flop IP"),
     },
     {
       s: config.ipFlopRaiseSanitized,
-      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP", "Raise flop IP", "IP flop raise", "IP flop raise", /* vi-todo */ "IP flop raise"),
+      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP", "Raise flop IP", "IP flop raise", "IP flop raise", "Raise flop IP"),
     },
     {
       s: config.ipTurnBetSanitized,
-      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP", "Bet turn IP", "IP turn bet", "IP turn bet", /* vi-todo */ "IP turn bet"),
+      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP", "Bet turn IP", "IP turn bet", "IP turn bet", "Bet turn IP"),
     },
     {
       s: config.ipTurnRaiseSanitized,
-      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP", "Raise turn IP", "IP turn raise", "IP turn raise", /* vi-todo */ "IP turn raise"),
+      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP", "Raise turn IP", "IP turn raise", "IP turn raise", "Raise turn IP"),
     },
     {
       s: config.ipRiverBetSanitized,
-      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP", "Bet river IP", "IP river bet", "IP river bet", /* vi-todo */ "IP river bet"),
+      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP", "Bet river IP", "IP river bet", "IP river bet", "Bet river IP"),
     },
     {
       s: config.ipRiverRaiseSanitized,
-      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP", "Raise river IP", "IP river raise", "IP river raise", /* vi-todo */ "IP river raise"),
+      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP", "Raise river IP", "IP river raise", "IP river raise", "Raise river IP"),
     },
   ];
 
@@ -1175,12 +1174,12 @@ const checkConfig = (
 
   if (config.donkOption) {
     if (!config.oopTurnDonkSanitized.valid) {
-      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP", "Donk turn OOP", "OOP turn donk", "OOP turn donk", /* vi-todo */ "OOP turn donk")}: ${
+      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP", "Donk turn OOP", "OOP turn donk", "OOP turn donk", "Donk turn OOP")}: ${
         config.oopTurnDonkSanitized.s
       }`;
     }
     if (!config.oopRiverDonkSanitized.valid) {
-      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP", "Donk river OOP", "OOP river donk", "OOP river donk", /* vi-todo */ "OOP river donk")}: ${
+      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP", "Donk river OOP", "OOP river donk", "OOP river donk", "Donk river OOP")}: ${
         config.oopRiverDonkSanitized.s
       }`;
     }
@@ -1197,7 +1196,7 @@ const checkConfig = (
     ,
       "追加全下的阈值不正确", "追加全下的門檻不正確",
       "Seuil d'ajout du all-in invalide", "Ambang tambah all-in tidak valid",
-      "Ambang tambah all-in tidak sah", "All-in जोड़ने की सीमा अमान्य है", "Geçersiz all-in ekleme eşiği", /* vi-todo */ "Invalid add all-in threshold");
+      "Ambang tambah all-in tidak sah", "All-in जोड़ने की सीमा अमान्य है", "Geçersiz all-in ekleme eşiği", "Ngưỡng thêm all-in không hợp lệ");
   }
 
   if (config.forceAllInThreshold < 0) {
@@ -1211,7 +1210,7 @@ const checkConfig = (
     ,
       "强制全下的阈值不正确", "強制全下的門檻不正確",
       "Seuil de all-in forcé invalide", "Ambang all-in paksa tidak valid",
-      "Ambang all-in paksa tidak sah", "Bet को all-in बनाने की सीमा अमान्य है", "Geçersiz zorunlu all-in eşiği", /* vi-todo */ "Invalid force all-in threshold");
+      "Ambang all-in paksa tidak sah", "Bet को all-in बनाने की सीमा अमान्य है", "Geçersiz zorunlu all-in eşiği", "Ngưỡng buộc all-in không hợp lệ");
   }
 
   if (config.mergingThreshold < 0) {
@@ -1225,7 +1224,7 @@ const checkConfig = (
     ,
       "合并阈值不正确", "合併門檻不正確",
       "Seuil de fusion invalide", "Ambang penggabungan tidak valid",
-      "Ambang penggabungan tidak sah", "Bet मिलाने की सीमा अमान्य है", "Geçersiz birleştirme eşiği", /* vi-todo */ "Invalid merging threshold");
+      "Ambang penggabungan tidak sah", "Bet मिलाने की सीमा अमान्य है", "Geçersiz birleştirme eşiği", "Ngưỡng gộp không hợp lệ");
   }
 
   if (
@@ -1242,7 +1241,7 @@ const checkConfig = (
     ,
       `公共牌不正确（需要 ${config.expectedBoardLength} 张）`, `公共牌不正確（需要 ${config.expectedBoardLength} 張）`,
       `Board invalide (${config.expectedBoardLength} cartes requises)`, `Board tidak valid (butuh ${config.expectedBoardLength} kartu)`,
-      `Board tidak sah (perlu ${config.expectedBoardLength} kad)`, `अमान्य Board (${config.expectedBoardLength} कार्ड चाहिए)`, `Geçersiz board (${config.expectedBoardLength} kart gerekli)`, /* vi-todo */ `Invalid board (${config.expectedBoardLength} cards required)`);
+      `Board tidak sah (perlu ${config.expectedBoardLength} kad)`, `अमान्य Board (${config.expectedBoardLength} कार्ड चाहिए)`, `Geçersiz board (${config.expectedBoardLength} kart gerekli)`, `Board không hợp lệ (cần ${config.expectedBoardLength} lá)`);
   }
 
   const addedLinesArray =
@@ -1282,7 +1281,7 @@ const checkConfig = (
     ,
       "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
       "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
-      "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)", /* vi-todo */ "Invalid configurations (loaded broken configurations?)");
+      "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)", "Cài đặt không hợp lệ (bạn đã tải cài đặt bị hỏng?)");
   }
 
   return null;
@@ -1749,7 +1748,7 @@ export default defineComponent({
         ,
           "想分享牌局的话，请先填好 OOP 和 IP 范围，并选好至少 3 张公共牌。", "想分享牌局的話，請先填好 OOP 和 IP 範圍，並選好至少 3 張公共牌。",
           "Pour partager un spot, renseigne d'abord les ranges OOP et IP et au moins 3 cartes de board.", "Untuk membagikan spot, isi dulu range OOP dan IP serta minimal 3 kartu board.",
-          "Untuk berkongsi spot, isi dahulu range OOP dan IP serta sekurang-kurangnya 3 kad board.", "स्पॉट शेयर करने से पहले OOP और IP की range तथा Board के कम से कम 3 कार्ड दर्ज करें।", "Spot paylaşmak için önce OOP ve IP range'lerini ve en az 3 board kartını gir.", /* vi-todo */ "To share a spot, enter the OOP and IP ranges and at least 3 board cards first.");
+          "Untuk berkongsi spot, isi dahulu range OOP dan IP serta sekurang-kurangnya 3 kad board.", "स्पॉट शेयर करने से पहले OOP और IP की range तथा Board के कम से कम 3 कार्ड दर्ज करें।", "Spot paylaşmak için önce OOP ve IP range'lerini ve en az 3 board kartını gir.", "Để chia sẻ spot, trước hết hãy nhập range OOP, range IP và ít nhất 3 lá board.");
         return;
       }
       if (url.length > 8192) {
@@ -1765,7 +1764,7 @@ export default defineComponent({
           "Le lien de partage est trop long — simplifie les paramètres de l'arbre ou exporte-les dans un fichier de configuration.",
           "Tautan berbagi terlalu panjang — sederhanakan pengaturan tree atau ekspor sebagai file konfigurasi.",
           "Pautan perkongsian terlalu panjang — ringkaskan tetapan tree atau eksport sebagai fail konfigurasi.",
-          "शेयर लिंक बहुत लंबा है — ट्री की सेटिंग कम करें या उन्हें कॉन्फ़िगरेशन फ़ाइल के रूप में एक्सपोर्ट करें।", "Paylaşım bağlantısı çok uzun — ağaç ayarlarını sadeleştir ya da yapılandırma dosyası olarak dışa aktar.", /* vi-todo */ "The share link is too long — simplify the tree settings or export them as a configuration file."
+          "शेयर लिंक बहुत लंबा है — ट्री की सेटिंग कम करें या उन्हें कॉन्फ़िगरेशन फ़ाइल के रूप में एक्सपोर्ट करें।", "Paylaşım bağlantısı çok uzun — ağaç ayarlarını sadeleştir ya da yapılandırma dosyası olarak dışa aktar.", "Liên kết chia sẻ quá dài — hãy đơn giản hóa cài đặt cây hoặc xuất ra file cấu hình."
         );
         return;
       }
