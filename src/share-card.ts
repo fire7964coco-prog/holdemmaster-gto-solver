@@ -172,7 +172,7 @@ const CARD_TEXT = {
   },
   vi: {
     brand: "HoldemMaster Trainer GTO",
-    tagline: "Mỗi ngày 1 thử thách · ai cũng như nhau",
+    tagline: "Mỗi ngày 1 thử thách · chung cho mọi người",
     heading: "Thử thách GTO hôm nay",
     board: "Board",
     hand: "Tay bài của tôi",

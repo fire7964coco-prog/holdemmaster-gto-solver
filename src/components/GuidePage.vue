@@ -2840,8 +2840,8 @@ const M = {
     errPrompt: "Aşağıdaki metni kopyala",
   },
   vi: {
-    quickTitle: "Bắt đầu trong 1 phút — mới dùng thì bắt đầu từ đây",
-    quickStep1Desktop: "Ở cột bên trái, nhấn ",
+    quickTitle: "Bắt đầu trong 1 phút — dành cho người mới",
+    quickStep1Desktop: "Ở thanh bên trái, nhấn ",
     quickStep1Mobile: "Ở các tab phía trên, nhấn ",
     quickStep1Btn: "Spot mẫu",
     quickStep1After: "",
@@ -2858,7 +2858,7 @@ const M = {
     defPos:
       "Không có vị trí (OOP — hành động trước, bất lợi) / có vị trí (IP — hành động sau, có lợi). Trong BTN vs BB, BB (mù lớn) là OOP",
     termEquity: "Equity",
-    defEquity: "Phần pot thuộc về bạn nếu all-in ngay lúc này — % thắng cộng một nửa phần hòa",
+    defEquity: "Phần pot thuộc về bạn nếu all-in ngay lúc này — % thắng cộng một nửa % hòa",
     defEv: "EV (giá trị kỳ vọng) — trung bình một hành động thắng được bao nhiêu. Càng lớn càng tốt",
 
     customTitleBefore: "Giải spot tùy chỉnh — đi lần lượt theo số ① → ⑤ trên ",
@@ -2869,7 +2869,7 @@ const M = {
     step1After:
       " — tô ma trận 13×13 bằng cách nhấn và kéo, hoặc nhập dạng văn bản: ",
     step1Hint:
-      "22+ = mọi pocket pair · A2s+ = từ A2s đến AKs · KTo+ = từ KTo đến KQo. Trên ma trận: đường chéo = pocket pair, nửa trên bên phải = suited (cùng chất), nửa dưới bên trái = offsuit (khác chất)",
+      "22+ = mọi pocket pair · A2s+ = từ A2s đến AKs · KTo+ = từ KTo đến KQo. Trên ma trận: đường chéo = pocket pair, nửa trên bên phải = suited (đồng chất), nửa dưới bên trái = offsuit (khác chất)",
     exampleHeader:
       "Mới dùng lần đầu? Sao chép các range này và dán vào ô nhập range (chuẩn BTN vs BB 100bb — cũng là range mà spot mẫu dùng)",
     exOopLabel: "OOP (BB call)",
@@ -2894,15 +2894,15 @@ const M = {
     resultsTitle: "Đọc màn hình kết quả",
     rTerm1: "Thanh trên cùng",
     rDef1:
-      "Chọn cảnh trong diễn biến hành động (flop → bet → call → turn…). Nhấn vào một node để xem chiến lược tại thời điểm đó",
+      "Chọn node trong diễn biến hành động (flop → bet → call → turn…). Nhấn vào một node để xem chiến lược tại thời điểm đó",
     rTerm2: "Ma trận 13×13 (bên trái)",
     rDef2:
-      "Mỗi ô là một tay bài; các mảng màu trong ô cho biết tần suất từng hành động. 🟥 bet/raise (tố — càng đậm cược càng lớn) · 🟩 check/call (theo) · ô mờ = không có trong range. GTO (chiến lược tối ưu theo lý thuyết trò chơi) chơi cùng một tay bài bằng chiến lược hỗn hợp — chia hành động theo tần suất để đối thủ không đọc được lối chơi của bạn",
+      "Mỗi ô là một tay bài; các mảng màu trong ô cho biết tần suất từng hành động. 🟥 bet/raise (tố — càng đậm cược càng lớn) · 🟩 check/call (call = theo) · ô mờ = không có trong range. GTO (chiến lược tối ưu theo lý thuyết trò chơi) chơi cùng một tay bài bằng chiến lược hỗn hợp — chia hành động theo tần suất để đối thủ không đọc được lối chơi của bạn",
     rTerm3: "Khung (trên bên phải)",
     rDef3: "Tần suất hành động (%) và số combo trên toàn bộ range",
     rTerm4: "Nhóm tay bài (giữa bên phải)",
     rDef4:
-      "Mỗi range ăn khớp với board thế nào (top pair, draw…) — nhìn nhanh board này có lợi cho ai",
+      "Mỗi range trúng board đến đâu (top pair, draw…) — nhìn nhanh board này có lợi cho ai",
     rTerm5: "Bảng (dưới bên phải)",
     rDef5:
       "Trọng số, equity, EV và % hành động của từng tay bài — nhấn tiêu đề cột để sắp xếp",
@@ -2913,8 +2913,8 @@ const M = {
     lockTerm2: "Cách làm",
     lockDef2: "Phần trăm (%) của mỗi hành động bắt đầu từ giá trị chiến lược hiện tại. Sửa các giá trị sao cho tổng bằng 100, rồi chọn “Khóa và giải lại”. Ví dụ: đối thủ không bao giờ fold (bỏ bài) ở flop → fold 0, các hành động còn lại cộng lại bằng 100. Bạn có thể khóa nhiều node.",
     lockTerm3: "Đọc kết quả",
-    lockDef3: "Một banner vàng hiện phía trên kết quả. Kết quả này được giải lại khi một phần chiến lược bị cố định, nên không phải chiến lược cân bằng (GTO). Trong mục “So sánh trước/sau” ở bảng bên, xem tần suất, EV và Exploitability (mức có thể bị khai thác) đã thay đổi thế nào.",
-    lockTerm4: "Bỏ khóa",
+    lockDef3: "Một banner vàng hiện phía trên kết quả. Kết quả này được giải lại với một phần chiến lược bị cố định, nên không phải chiến lược cân bằng (GTO). Trong mục “So sánh trước/sau” ở bảng bên, xem tần suất, EV và Exploitability (mức có thể bị khai thác) đã thay đổi thế nào.",
+    lockTerm4: "Mở khóa",
     lockDef4: "Dùng “Mở khóa và giải lại” cho một node hoặc “Mở khóa tất cả và giải lại” cho mọi node. Các khóa tự mất khi bạn giải một spot mới. Không thể khóa đường turn hoặc river mà bạn đã bỏ qua bước chọn lá.",
 
     trainerTitle: "Trainer GTO — từ xem đến chơi",
@@ -2947,11 +2947,11 @@ const M = {
 
     myspotTerm: "Spot của tôi",
     myspotDef: "Sau khi tự giải một spot, chọn “Luyện tập spot này” trên màn hình kết quả để tạo câu hỏi từ spot đó và luyện ngay trong tab “Spot của tôi” của Trainer GTO. Cách chấm giống spot mẫu.",
-    myspotHint: "Câu hỏi và lịch sử chỉ lưu trên thiết bị này (20 spot gần nhất · 500 lần làm mỗi spot). Chúng không lưu vào tài khoản, nên bạn không thể học tiếp trên thiết bị khác. Lưu lại cùng một spot sẽ xóa lịch sử cũ của spot đó. Câu hỏi tạo từ kết quả tính với chiến lược bị khóa sẽ có nhãn “Giả định cố định một phần chiến lược”.",
+    myspotHint: "Câu hỏi và lịch sử chỉ lưu trên thiết bị này (20 spot gần nhất · 500 lần thử mỗi spot). Chúng không lưu vào tài khoản, nên bạn không thể học tiếp trên thiết bị khác. Lưu lại cùng một spot sẽ xóa lịch sử cũ của spot đó. Câu hỏi tạo từ kết quả tính với chiến lược bị khóa sẽ có nhãn “Giả định một phần chiến lược được cố định”.",
 
     installTitle: "Cài lên màn hình chính và học khi không có mạng",
     install1:
-      "Bạn có thể cài solver này lên màn hình chính như một ứng dụng (không cần file cài đặt). Trên Chrome hoặc Edge, dùng ",
+      "Bạn có thể cài solver này lên màn hình chính như một ứng dụng (không cần tệp cài đặt). Trên Chrome hoặc Edge, dùng ",
     installBold1: "biểu tượng cài đặt",
     install2: " ở bên phải thanh địa chỉ; trên Safari của iPhone, nhấn ",
     installBold2: "Chia sẻ → Thêm vào MH chính",
@@ -2960,7 +2960,7 @@ const M = {
     installBold3: "ngay cả trên tàu điện ngầm không có mạng",
     install4: ".",
     samsung1:
-      "* Khi cài từ Samsung Internet, trình duyệt hoặc thiết bị có thể chặn vì lý do bảo mật. Bước xác minh đó đến từ trình duyệt, không phải từ ứng dụng này. ",
+      "* Khi cài từ Samsung Internet, trình duyệt hoặc thiết bị có thể chặn vì lý do bảo mật. Việc chặn này do trình duyệt, không phải do ứng dụng này. ",
     samsungBold: "Mở trong Chrome",
     samsung2:
       " để cài mà không bị chặn; nếu muốn tiếp tục tại đây, hãy làm theo hướng dẫn trong hộp thoại.",
@@ -2999,11 +2999,11 @@ const M = {
 
     studyTitle: "Lộ trình học gợi ý",
     study1:
-      "Làm lần lượt 13 spot mẫu — đây là một giáo trình nối tiếp nhau",
+      "Làm lần lượt 13 spot mẫu — các spot nối tiếp nhau thành một giáo trình",
     study2:
       "Nếu thắc mắc “sao tay này có lúc lại check?”, hãy so sánh EV từng hành động trong bảng chi tiết",
     study3:
-      "Luyện lại các spot đó trong Trainer GTO cho nhớ lâu — báo cáo điểm yếu cho biết tình huống nào làm bạn mất nhiều EV nhất",
+      "Luyện lại các spot đó trong Trainer GTO cho nhớ lâu — khung “Tìm điểm yếu” cho biết tình huống nào làm bạn mất nhiều EV nhất",
     study4: "Giữ nguyên range, chỉ đổi board rồi so sánh (ví dụ A72 với 974)",
     study5:
       "Dựng lại những ván khiến bạn lúng túng khi chơi thật và phân tích tại đây",
@@ -3016,13 +3016,13 @@ const M = {
     tTerm3: "Tab Kết quả trống",
     tDef3: "Mở sau khi hiện “Solver đã xong!”",
     tTerm4: "Vượt giới hạn bộ nhớ",
-    tDef4: "Chuyển sang chế độ số nguyên 16-bit, hoặc dùng ít cỡ cược hơn",
+    tDef4: "Ở “Độ chính xác:”, chọn Int 16-bit, hoặc dùng ít cỡ cược hơn",
     tTerm5: "Ma trận không được tô màu",
     tDef5:
-      "Bạn đang xem lượt hành động của đối thủ — chọn cảnh khác ở thanh trên cùng",
+      "Bạn đang xem lượt hành động của đối thủ — chọn node khác ở thanh trên cùng",
 
     errTitle: "Gặp lỗi cần sửa?",
-    err1: "Nếu màn hình bị vỡ hoặc solver bị treo khi giải, chi tiết lỗi sẽ tự động ghi lại trên thiết bị này. ",
+    err1: "Nếu màn hình hiển thị lỗi hoặc solver bị treo khi giải, chi tiết lỗi sẽ được tự động ghi lại trên thiết bị này. ",
     errBold: "Nhật ký không bao giờ rời khỏi thiết bị của bạn",
     err2:
       " — chúng tôi chỉ thấy khi bạn sao chép bên dưới và đăng lên cộng đồng. Nhật ký chỉ gồm thông báo lỗi và loại trình duyệt — không bao giờ có range hay lịch sử học của bạn.",

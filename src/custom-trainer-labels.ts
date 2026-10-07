@@ -174,14 +174,14 @@ export const M = {
   vi: {
     entry: "Luyện tập spot này", busy: "Đang lưu câu hỏi luyện tập…", tab: "Spot của tôi", presetTab: "Luyện tập spot mẫu",
     empty: "Sau khi giải một spot, nhấn [Luyện tập spot này] ở màn hình kết quả để lưu câu hỏi vào đây.",
-    loading: "Đang tải spot của bạn…", storageNote: "Thiết bị này lưu 20 spot gần nhất và 500 lần thử gần nhất cho mỗi spot. Kết quả Spot của tôi được tính riêng. Lưu lại cùng một spot sẽ thay lời giải cũ và xóa lịch sử luyện tập của spot đó.",
+    loading: "Đang tải spot của bạn…", storageNote: "Thiết bị này lưu 20 spot gần nhất và 500 lần thử gần nhất cho mỗi spot. Kết quả Spot của tôi được tính riêng. Lưu lại cùng một spot sẽ thay thế lời giải cũ và xóa lịch sử luyện tập của spot đó.",
     source: "Lời giải gần đúng của bạn · Exploitability mục tiêu {target}% · Đạt {achieved}%", lockAssumption: "Giả định một phần chiến lược được cố định",
     reviewSource: "Spot từ Phân tích ván bài · {method} · Exploitability mục tiêu {target}% · Đạt {achieved}%", backToReview: "Quay lại Phân tích ván bài",
-    chooseSpot: "Spot đã lưu", deleteSpot: "Xóa spot", deleteConfirm: "Xóa spot này và lịch sử luyện tập của nó khỏi thiết bị này?",
+    chooseSpot: "Spot đã lưu", deleteSpot: "Xóa spot", deleteConfirm: "Xóa spot này cùng lịch sử luyện tập khỏi thiết bị này?",
     loadError: "Không tải được các spot đã lưu. Hãy mở lại màn hình này.", saveError: "Không lưu được. Hãy thử lại.",
     captureError: "Không tạo được câu hỏi luyện tập từ kết quả này. Hãy chắc chắn solver đã giải xong.",
     noQuestion: "Spot này không có tay bài nào để chơi.", board: "Board", hand: "Tay bài của bạn", pot: "Pot", stack: "Stack", line: "Diễn biến",
-    prompt: "Bạn sẽ làm gì?", next: "Câu hỏi tiếp theo", review: "Ôn lại lỗi sai", practice: "Luyện tập thường", attemptCount: "Số lần thử ở spot này: {count}",
+    prompt: "Bạn sẽ làm gì?", next: "Câu tiếp theo", review: "Xem lại lỗi sai", practice: "Luyện tập thông thường", attemptCount: "Số lần thử ở spot này: {count}",
     verdictBest: "Nước đi tốt nhất", verdictGood: "Chấp nhận được", verdictBad: "Xem lại spot này", evLoss: "EV mất", frequency: "Tần suất", actionEv: "EV hành động", chips: "chip",
   },
 } satisfies LocaleDict<Record<string, string>>;

@@ -265,7 +265,7 @@ const M = {
       `Range okunamadı: ${range || "(boş metin)"}`,
   },
   vi: {
-    mobileHint: "Chỉnh trọng số bằng thanh trượt bên dưới bảng, rồi nhấn vào một ô để áp dụng. Nhấn vào ô đã có đúng trọng số đó thì ô sẽ được xóa. Tên tay bài và trọng số bạn vừa nhấn hiện bằng chữ lớn ở phía trên.",
+    mobileHint: "Chỉnh trọng số bằng thanh trượt bên dưới ma trận, rồi nhấn vào một ô để áp dụng. Nhấn vào ô đã có đúng trọng số đó thì ô sẽ được xóa. Tên tay bài và trọng số bạn vừa nhấn hiện bằng chữ lớn ở phía trên.",
     clear: "Xóa",
     errorPrefix: "Lỗi:",
     weight: "Trọng số:",

@@ -1125,11 +1125,11 @@ const M = {
     combos: "Combo đối thủ",
     badgeExact: "Chính xác",
     badgeApprox: "Xấp xỉ (±0,2 điểm %)",
-    exactNote: (n: number) => `Đã đếm đủ toàn bộ ${n.toLocaleString("vi-VN")} trường hợp`,
+    exactNote: (n: number) => `Đã đếm toàn bộ ${n.toLocaleString("vi-VN")} trường hợp`,
     approxNote: (n: number) =>
       `Quá nhiều trường hợp để đếm hết — đã lấy mẫu ${n.toLocaleString("vi-VN")} runout ngẫu nhiên`,
     howTitle: "Cách đọc",
-    how1: "Equity = % thắng + một nửa số lần hòa. Đó là phần pot bạn nhận được nếu all-in ngay bây giờ.",
+    how1: "Equity = % thắng + một nửa % hòa. Đó là phần pot bạn nhận được nếu all-in ngay bây giờ.",
     how2: "Khi đấu với range, các combo trùng lá với bạn hoặc với board sẽ tự động bị loại.",
     how3: "Nhãn “Chính xác” nghĩa là đã đếm mọi trường hợp; “Xấp xỉ” là mẫu ngẫu nhiên.",
     limitTitle: "Công cụ này tính gì",

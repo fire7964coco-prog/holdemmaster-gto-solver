@@ -37,7 +37,7 @@
   ],
   "shortcuts": [
     {
-      "name": "GTO Trainer",
+      "name": "Trainer GTO",
       "short_name": "Trainer",
       "description": "Chơi các ván chia từ range thật và được chấm điểm theo EV mất",
       "url": "/?view=trainer&lang=vi",

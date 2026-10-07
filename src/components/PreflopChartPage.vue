@@ -1484,17 +1484,17 @@ const M = {
   vi: {
     modeRfi: "Open (RFI)",
     modeDefend: "vs Open (phòng thủ)",
-    mode3bet: "vs 3-bet (sau khi open)",
-    mode4bet: "vs 4-bet (sau khi 3-bet)",
+    mode3bet: "vs 3-bet (sau open)",
+    mode4bet: "vs 4-bet (sau 3-bet)",
     intro4bet:
       "Cách phản ứng khi 3-bet của bạn bị 4-bet — đỏ là 5-bet (all-in), xanh lá " +
       "là call, phần còn lại là fold. Tần suất tính với điều kiện bạn đã 3-bet, nên " +
-      "những tay bài bạn không bao giờ 3-bet để trống. Cash 6-max, 100bb; BB 3-bet 11bb " +
+      "những tay bài bạn không bao giờ 3-bet được để trống. Cash 6-max, 100bb; BB 3-bet 11bb " +
       "và gặp 4-bet 24bb; SB 3-bet 10bb và gặp 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "Trống = ngay từ đầu không 3-bet",
     stat5bet: "Tỷ lệ 5-bet",
-    statContinue4bet: "Tỷ lệ tiếp tục (trên số 3-bet)",
+    statContinue4bet: "Tiếp tục (trong range 3-bet)",
     copy5bet: "Sao chép range 5-bet",
     note4bet:
       "Các chỉ số là tỷ lệ trong range 3-bet của bạn. Ở 100bb, 5-bet thực chất là " +
@@ -1510,19 +1510,19 @@ const M = {
     intro3bet:
       "Cách phản ứng khi open-raise của bạn bị 3-bet — đỏ là 4-bet, xanh lá là " +
       "call, phần còn lại là fold. Tần suất tính với điều kiện bạn đã open, nên " +
-      "những tay bài bạn không bao giờ open để trống. Cash 6-max, 100bb, open 2,5bb, 3-bet ~10-11bb.",
+      "những tay bài bạn không bao giờ open được để trống. Cash 6-max, 100bb, open 2,5bb, 3-bet ~10-11bb.",
     legend4bet: "4-bet",
     legendCond: "Trống = ngay từ đầu không open",
     stat4bet: "Tỷ lệ 4-bet",
-    statContinue: "Tỷ lệ tiếp tục (trên số open)",
+    statContinue: "Tiếp tục (trong range open)",
     copy4bet: "Sao chép range 4-bet",
     note3bet:
       "Các chỉ số là tỷ lệ trong range open của bạn, không phải trên tất cả tay bài. Value 4-bet " +
-      "tập trung vào QQ+/AK, kèm một ít bluff như A5s-A4s. Khi có vị trí, " +
+      "tập trung vào QQ+/AK, kèm một ít bluff như A5s–A4s. Khi có vị trí, " +
       "range call vẫn rộng: các đôi, broadway đồng chất và connector.",
     squeezeNote:
-      "Squeeze là 3-bet khi trong pot đã có cả người open lẫn người call (ở đây " +
-      "khoảng 11-12bb). Người call khiến tổng phòng thủ chặt hơn so với đối đầu tay đôi và " +
+      "Squeeze là 3-bet khi trong pot đã có cả bên open lẫn bên call (ở đây " +
+      "khoảng 11-12bb). Bên call khiến tổng phòng thủ chặt hơn so với đối đầu tay đôi và " +
       "đẩy 3-bet nghiêng về value. Overcall ưu tiên các tay đồng chất, liền nhau " +
       "có thể thành nuts khi nhiều người (multiway).",
     how3bet2:
@@ -1540,9 +1540,9 @@ const M = {
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
-    legendMixedDefend: "Chiều cao phần tô = tần suất (ô chia đôi là hỗn hợp)",
+    legendMixedDefend: "Chiều cao phần tô = tần suất (ô có hai màu là hỗn hợp)",
     stat3bet: "Tỷ lệ 3-bet",
-    statCall: "% call",
+    statCall: "Tỷ lệ call",
     statTotal: "Tổng phòng thủ",
     copy3bet: "Sao chép range 3-bet",
     copyCall: "Sao chép range call",
@@ -1553,8 +1553,8 @@ const M = {
     ipNote:
       "Dù có vị trí, range open từ vị trí đầu vẫn mạnh, và " +
       "call còn có nguy cơ bị squeeze từ các blind chưa hành động. Vì vậy " +
-      "phòng thủ khi có vị trí là một range hẹp, chủ yếu 3-bet, còn call phần lớn " +
-      "chỉ giới hạn ở các đôi và tay đồng chất cao cấp.",
+      "range phòng thủ khi có vị trí khá hẹp, chủ yếu là 3-bet, còn call phần lớn " +
+      "chỉ giới hạn ở các đôi và tay bài đồng chất mạnh nhất.",
     statPercent: "Tỷ lệ open",
     statCombos: "Combo open",
     statHands: "Tay bài open",

@@ -968,7 +968,7 @@ const M = {
       `Đã tạo cây thành công (${threads} thread)`,
     precisionMode: "Độ chính xác:",
     precisionTipIntro:
-      "Chế độ độ chính xác chủ yếu ảnh hưởng đến lượng bộ nhớ dùng. Ngoài ra còn vài khác biệt nhỏ.",
+      "Độ chính xác chủ yếu ảnh hưởng đến lượng bộ nhớ cần dùng. Ngoài ra còn vài khác biệt khác.",
     precisionTipFp:
       "Số thực 32-bit (FP): nên dùng khi bộ nhớ cần dùng dưới giới hạn (3,9 GB). Khoảng 7 chữ số có nghĩa và chạy nhanh hơn.",
     precisionTipInt:
@@ -984,7 +984,7 @@ const M = {
     exploitTipDetailLabel: "Chi tiết:",
     exploitTipDetail:
       "Ở cân bằng Nash, chiến lược của hai người chơi là MES (Maximally Exploitative Strategies) đối với nhau. Dựa vào tính chất này, ta định nghĩa khoảng cách giữa chiến lược thu được và cân bằng Nash như sau:",
-    exploitTipFormula: "Khoảng cách = (EV MES của đối thủ) - (EV thực tế của đối thủ)",
+    exploitTipFormula: "Khoảng cách = (EV MES của đối thủ) − (EV thực tế của đối thủ)",
     exploitTipOutro:
       "Khoảng cách này luôn không âm và chỉ bằng 0 khi chiến lược thu được là một phần của cân bằng Nash. Exploitability là trung bình khoảng cách của hai người chơi.",
     maxIterationsLabel: "Số vòng lặp tối đa:",
@@ -1021,7 +1021,7 @@ const invalidLineMessage = () => pick(
   "Ligne invalide trouvée (configuration corrompue chargée ?)",
   "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
   "Line tidak sah ditemui (memuatkan tetapan yang rosak?)",
-  "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (bạn đã tải cài đặt bị hỏng?)"
+  "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (cấu hình đã tải bị hỏng?)"
 );
 
 const checkConfig = (
@@ -1281,7 +1281,7 @@ const checkConfig = (
     ,
       "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
       "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
-      "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)", "Cài đặt không hợp lệ (bạn đã tải cài đặt bị hỏng?)");
+      "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)", "Cấu hình không hợp lệ (cấu hình đã tải bị hỏng?)");
   }
 
   return null;
@@ -1764,7 +1764,7 @@ export default defineComponent({
           "Le lien de partage est trop long — simplifie les paramètres de l'arbre ou exporte-les dans un fichier de configuration.",
           "Tautan berbagi terlalu panjang — sederhanakan pengaturan tree atau ekspor sebagai file konfigurasi.",
           "Pautan perkongsian terlalu panjang — ringkaskan tetapan tree atau eksport sebagai fail konfigurasi.",
-          "शेयर लिंक बहुत लंबा है — ट्री की सेटिंग कम करें या उन्हें कॉन्फ़िगरेशन फ़ाइल के रूप में एक्सपोर्ट करें।", "Paylaşım bağlantısı çok uzun — ağaç ayarlarını sadeleştir ya da yapılandırma dosyası olarak dışa aktar.", "Liên kết chia sẻ quá dài — hãy đơn giản hóa cài đặt cây hoặc xuất ra file cấu hình."
+          "शेयर लिंक बहुत लंबा है — ट्री की सेटिंग कम करें या उन्हें कॉन्फ़िगरेशन फ़ाइल के रूप में एक्सपोर्ट करें।", "Paylaşım bağlantısı çok uzun — ağaç ayarlarını sadeleştir ya da yapılandırma dosyası olarak dışa aktar.", "Liên kết chia sẻ quá dài — hãy đơn giản hóa cài đặt cây hoặc xuất ra tệp cấu hình."
         );
         return;
       }

@@ -252,11 +252,11 @@ export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = {
     comparison: "So sánh trước/sau",
     exploitability: "Exploitability",
     sumError: "Nhập số nguyên từ 0 đến 100 cho mỗi hành động, tổng phải bằng 100.",
-    skippedChance: "Không thể khóa đường đi có lá bài chưa chọn. Hãy chọn lá bài trước.",
+    skippedChance: "Không thể khóa đường turn/river khi chưa chọn lá bài. Hãy chọn lá bài trước.",
     engineError: "Không khóa được chiến lược. Hãy xem lại giá trị đã nhập rồi giải lại.",
     assumption: "Giá trị theo giả định chiến lược cố định",
     banner: "Đã giải với một phần chiến lược bị cố định — không phải chiến lược cân bằng (GTO) · {count} node bị khóa",
-    noReach: "Trọng số đạt tới của node này bằng 0 nên không thể hiển thị tần suất ban đầu.",
+    noReach: "Trọng số reach của node này bằng 0 nên không thể hiển thị tần suất ban đầu.",
   },
 };
 

@@ -233,7 +233,7 @@ const M = {
     title: "Đã ghi lại một lỗi",
     body1: "Nếu thấy có gì không ổn, hãy báo cho chúng tôi. Chi tiết được lưu ",
     bodyB1: "chỉ trên thiết bị này",
-    body2: " — có chia sẻ hay không là hoàn toàn do bạn.",
+    body2: " — có chia sẻ hay không là hoàn toàn do bạn quyết định.",
     copied: "Đã sao chép",
     copyButton: "Sao chép chi tiết lỗi",
     close: "Đóng",

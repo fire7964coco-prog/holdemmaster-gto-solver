@@ -527,7 +527,7 @@ export const PRESETS: Preset[] = [
     title: "브로드웨이 연결 투톤",
     titleEn: "Connected Broadway Board, Two-Tone",
     titleTr: "Bağlantılı broadway board, iki renkli",
-    titleVi: "Board broadway liên kết, hai chất",
+    titleVi: "Board broadway liền nhau, hai chất",
     board: "Qs Jd Ts",
     lesson:
       "양쪽 다 맞은 것처럼 보이는 보드. 그런데 BB는 13스팟 중 에퀴티 실현율이 가장 낮습니다 — 77.9%, BTN은 119.4%. BB가 99.9% 체크하는 이유를 핸드 분류 패널에서 확인하세요.",
@@ -535,7 +535,7 @@ export const PRESETS: Preset[] = [
       "A board that looks like it hits both ranges. But BB realizes less equity here than in any of the 13 spots — 77.9% against BTN's 119.4% — and checks 99.9%. The hand-category panel shows why.",
     lessonTr:
       "İki range'e de oturuyor gibi görünen bir board. Ama BB, 13 spot içinde equity'sini en az burada realize ediyor — %77,9, BTN ise %119,4 — ve %99,9 sıklıkla check yapıyor. Nedenini el kategorisi paneli gösteriyor.",
-    lessonVi: "Board trông như trúng cả hai range. Nhưng trong 13 spot, đây là nơi BB hiện thực hóa equity kém nhất — 77,9%, so với 119,4% của BTN — và check 99,9%. Bảng phân loại tay bài cho thấy lý do.",
+    lessonVi: "Board trông như trúng cả hai range. Nhưng trong 13 spot, đây là nơi BB hiện thực hóa equity kém nhất — 77,9%, so với 119,4% của BTN — và check 99,9%. Khung Nhóm tay bài cho thấy lý do.",
     titleJa: "ブロードウェイのコネクトボード（2トーン）",
     lessonJa:
       "両者に当たったように見えるボードです。ところがBBのエクイティ実現率は13スポット中で最も低く、77.9%（BTNは119.4%）。99.9%チェックになる理由を分類パネルで確かめましょう。",
@@ -570,7 +570,7 @@ export const PRESETS: Preset[] = [
     title: "미들 연결 투톤",
     titleEn: "Connected Middle Board, Two-Tone",
     titleTr: "Bağlantılı orta board, iki renkli",
-    titleVi: "Board tầm trung liên kết, hai chất",
+    titleVi: "Board tầm trung liền nhau, hai chất",
     board: "9h 8h 7c",
     lesson:
       "콜러(BB) 우위 보드의 대표. BTN의 C벳 빈도가 뚝 떨어지는 것을 확인하세요 — '무조건 C벳'이 왜 틀린지 배우는 스팟.",
@@ -621,7 +621,7 @@ export const PRESETS: Preset[] = [
       "Watch why big bets give way to small bets and checks. Notice how often even made flushes just check.",
     lessonTr:
       "Büyük bet'lerin neden yerini küçük bet'lere ve check'e bıraktığını izle. Hazır floşların bile ne kadar sık yalnızca check yaptığına dikkat et.",
-    lessonVi: "Hãy xem vì sao cược lớn nhường chỗ cho cược nhỏ và check. Để ý xem ngay cả tay đã thành Thùng cũng chỉ check thường xuyên đến mức nào.",
+    lessonVi: "Hãy xem vì sao cược lớn nhường chỗ cho cược nhỏ và check. Để ý xem ngay cả tay đã thành Thùng cũng check thường xuyên đến mức nào.",
     titleJa: "モノトーンボード（同スート3枚）",
     lessonJa:
       "大きなベットが減り、小さなベットとチェックが中心になる理由を学びます。完成したフラッシュでさえ頻繁にチェックすることを観察しましょう。",
@@ -703,7 +703,7 @@ export const PRESETS: Preset[] = [
     betFlop: "33",
     titleEn: "Low Rainbow Board",
     titleTr: "Düşük rainbow board",
-    titleVi: "Board thấp rainbow",
+    titleVi: "Board thấp rainbow (3 lá khác chất)",
     lesson:
       "오버카드 싸움. BB의 체크레이즈 빈도가 높아지는 보드 — 상단 스트립에서 벳 이후 응수를 따라가 보세요.",
     lessonEn:
@@ -928,7 +928,7 @@ export const PRESETS: Preset[] = [
     title: "로우 연결 투톤",
     titleEn: "Connected Low Board, Two-Tone",
     titleTr: "Bağlantılı düşük board, iki renkli",
-    titleVi: "Board thấp liên kết, hai chất",
+    titleVi: "Board thấp liền nhau, hai chất",
     board: "7d 6d 5c",
     betFlop: "33", // sb-king-mid와 동일한 메모리 사유
     lesson:
@@ -937,7 +937,7 @@ export const PRESETS: Preset[] = [
       "Two wide ranges collide on an ultra-connected board: two-pair hands, straights, and draws everywhere. The hand-category panel shines here.",
     lessonTr:
       "İki geniş range çok bağlantılı bir board'da çarpışıyor: her yerde iki çift, kent ve draw'lar. El kategorisi paneli tam burada işe yarıyor.",
-    lessonVi: "Hai range rộng va chạm trên board cực kỳ liên kết: Hai Đôi, Sảnh và draw ở khắp nơi. Bảng phân loại tay bài phát huy tác dụng ở đây.",
+    lessonVi: "Hai range rộng va chạm trên board cực kỳ liền nhau: Hai Đôi, Sảnh và draw ở khắp nơi. Khung Nhóm tay bài phát huy tác dụng ở đây.",
     titleJa: "ローのコネクトボード（2トーン）",
     lessonJa:
       "ワイドレンジ同士がぶつかる非常にコネクトしたボードです。ツーペア・ストレート・ドローが続出します。分類パネルがにぎやかになるスポットです。",

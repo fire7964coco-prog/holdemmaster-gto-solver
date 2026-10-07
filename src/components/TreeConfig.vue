@@ -1642,7 +1642,7 @@ const M = {
     advancedSettings: "Cài đặt nâng cao ▸",
     basicSettings: "Cài đặt cơ bản",
     chipNote:
-      "Nhập số tiền bằng chip nguyên. Nếu muốn tính theo bb, dùng 10 chip = 1bb (vd. pot 55 = 5,5bb, stack 1000 = 100bb). Nếu bạn tự nhập hoặc sửa pot hay stack, kết quả giữ theo đơn vị chip của bạn; nếu bạn tải một Spot mẫu và giải mà không đổi pot hay stack, kết quả được quy đổi sang bb.",
+      "Nhập số tiền bằng số chip nguyên. Nếu muốn tính theo bb, dùng 10 chip = 1bb (vd. pot 55 = 5,5bb, stack 1000 = 100bb). Nếu bạn tự nhập hoặc sửa pot hay stack, kết quả giữ theo đơn vị chip của bạn; nếu bạn tải một spot mẫu và giải mà không đổi pot hay stack, kết quả được quy đổi sang bb.",
     startingPot: "Pot ban đầu:",
     effectiveStack: "Stack hiệu dụng:",
     rake: "Rake:",
@@ -1787,7 +1787,7 @@ const N: Partial<Record<keyof typeof M, { chipNote: string }>> | null =
         },
         vi: {
           chipNote:
-            "Nhập số tiền bằng chip nguyên. Nếu muốn tính theo bb, dùng 10 chip = 1bb (vd. pot 55 = 5,5bb, stack 1000 = 100bb). Nếu bạn tự nhập hoặc sửa pot hay stack, kết quả giữ theo đơn vị chip của bạn.",
+            "Nhập số tiền bằng số chip nguyên. Nếu muốn tính theo bb, dùng 10 chip = 1bb (vd. pot 55 = 5,5bb, stack 1000 = 100bb). Nếu bạn tự nhập hoặc sửa pot hay stack, kết quả giữ theo đơn vị chip của bạn.",
         },
       }
     : null;
@@ -2127,7 +2127,7 @@ export default defineComponent({
           ,
             "发现了无效的线路（是不是加载了损坏的设置？）", "發現了無效的線路（是不是載入了損壞的設定？）",
             "Ligne invalide trouvée (configuration corrompue chargée ?)", "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
-            "Line tidak sah ditemui (memuatkan tetapan yang rosak?)", "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (cài đặt đã tải bị hỏng?)")
+            "Line tidak sah ditemui (memuatkan tetapan yang rosak?)", "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (cấu hình đã tải bị hỏng?)")
         );
       }
       if (
@@ -2150,7 +2150,7 @@ export default defineComponent({
           ,
             "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
             "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
-            "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayar (bozuk bir ayar mı yüklendi?)", "Cài đặt không hợp lệ (cài đặt đã tải bị hỏng?)")
+            "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayar (bozuk bir ayar mı yüklendi?)", "Cấu hình không hợp lệ (cấu hình đã tải bị hỏng?)")
         );
       }
       return errors;

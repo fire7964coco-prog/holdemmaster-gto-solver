@@ -456,7 +456,7 @@ const M = {
     iosB1: "nút Chia sẻ",
     ios2: " bên dưới, rồi chọn ",
     iosB2: "“Thêm vào MH chính”",
-    ios3: ". Ứng dụng mở chỉ với một chạm; spot mẫu và Trainer GTO được lưu để dùng ngoại tuyến.",
+    ios3: ". Ứng dụng mở chỉ với một chạm; Spot mẫu và Trainer GTO được lưu để dùng ngoại tuyến.",
     openInChrome: "Mở trong Chrome",
     install: "Thêm vào màn hình chính",
     gotIt: "Đã hiểu",

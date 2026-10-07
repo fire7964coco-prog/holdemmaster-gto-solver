@@ -817,7 +817,7 @@ const M = {
     features: [
       { title: "Miễn phí", desc: "Mọi tính năng, không giới hạn số lần dùng" },
       { title: "Học ngoại tuyến", desc: "Thêm vào màn hình chính và luyện tập không cần mạng" },
-      { title: "Giải nhanh", desc: "Đa thread — nhanh như solver trên máy tính" },
+      { title: "Giải nhanh", desc: "Đa thread — nhanh như solver bản desktop" },
       { title: "Trainer GTO", desc: "Chơi từng spot, chấm điểm theo EV mất so với pot" },
     ],
     featureLockTitle: "Khóa chiến lược (node lock)",
@@ -832,7 +832,7 @@ const M = {
       "Khi đã quen, hãy tự giải tay bài của mình bằng Spot tùy chỉnh (①–⑤)",
     ],
     landingBefore:
-      "Muốn đọc trước GTO solver là gì và cách đọc kết quả? Xem",
+      "Muốn đọc trước solver GTO là gì và cách đọc kết quả? Xem",
     landingLink: "hướng dẫn solver của HoldemMaster",
     landingAfter: ".",
     notes:
@@ -1100,7 +1100,7 @@ const N =
           features: [
             { title: "Miễn phí", desc: "Mọi tính năng, không giới hạn số lần dùng" },
             { title: "Ngoại tuyến", desc: "Thêm vào màn hình chính và dùng không cần mạng" },
-            { title: "Giải nhanh", desc: "Đa thread — nhanh như solver trên máy tính" },
+            { title: "Giải nhanh", desc: "Đa thread — nhanh như solver bản desktop" },
             { title: "Bảng & equity", desc: "Range open và phòng thủ, cùng equity của tay bài và range" },
           ],
           steps: [

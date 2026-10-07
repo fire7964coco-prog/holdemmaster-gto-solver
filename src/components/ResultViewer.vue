@@ -351,7 +351,7 @@ const M = {
   vi: {
     startRange: "① Bắt đầu với range",
     viewPresets: "Xem spot mẫu",
-    notRun: "Bạn chưa tính kết quả của riêng mình.\nBạn có thể xem kết quả mẫu ngay trong menu “Spot mẫu”.\nĐể tính spot của riêng bạn, hãy hoàn thành ①~⑤ rồi nhấn “Chạy solver”.",
+    notRun: "Bạn chưa tính kết quả của riêng mình.\nBạn có thể xem kết quả mẫu ngay trong menu “Spot mẫu”.\nĐể tính spot của riêng bạn, hãy hoàn thành ①–⑤ rồi nhấn “Chạy solver”.",
     running: "Đang chạy solver…",
     finalizing: "Đang hoàn tất…",
     paused: "Solver đã tạm dừng.",
