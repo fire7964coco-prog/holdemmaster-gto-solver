@@ -504,7 +504,7 @@ const M = {
     deleteLabel: "삭제",
     importJsonLabel: "JSON 가져오기",
     exportJsonLabel: "JSON 내보내기",
-    importFailed: "오류: 가져오기에 실패했습니다.",
+    importFailed: "오류: 가져오기에 실패했습니다. 아래 이유를 확인해 주세요 — 이 목록의 «JSON 내보내기»로 저장한 파일만 가져올 수 있습니다.",
   },
   en: {
     noSavedRanges: "You have no saved ranges yet. Click “Save” and enter a name to keep your current range here. Use “Load” to bring it back next time.",
@@ -519,7 +519,7 @@ const M = {
     deleteLabel: "Delete",
     importJsonLabel: "Import JSON",
     exportJsonLabel: "Export JSON",
-    importFailed: "Error: Import failed.",
+    importFailed: "Error: Import failed. Check the reason below — only files saved with “Export JSON” in this list can be imported.",
   },
   ja: {
     noSavedRanges: "保存したレンジはまだありません。「保存」を押して名前を付けると今のレンジがここに残り、次回は「読み込み」で使えます。",
@@ -534,7 +534,7 @@ const M = {
     deleteLabel: "削除",
     importJsonLabel: "JSONをインポート",
     exportJsonLabel: "JSONをエクスポート",
-    importFailed: "エラー: インポートに失敗しました。",
+    importFailed: "エラー: インポートに失敗しました。下の理由を確認してください — このリストの「JSONをエクスポート」で保存したファイルだけを読み込めます。",
   },
   es: {
     noSavedRanges: "Aún no tienes rangos guardados. Pulsa “Guardar” y escribe un nombre para conservar aquí el rango actual. La próxima vez puedes recuperarlo con “Cargar”.",
@@ -549,7 +549,7 @@ const M = {
     deleteLabel: "Eliminar",
     importJsonLabel: "Importar JSON",
     exportJsonLabel: "Exportar JSON",
-    importFailed: "Error: la importación falló.",
+    importFailed: "Error: la importación falló. Revisa el motivo de abajo: solo se pueden importar archivos guardados con “Exportar JSON” en esta lista.",
   },
   pt: {
     noSavedRanges: "Você ainda não tem ranges salvos. Clique em “Salvar” e dê um nome para manter o range atual aqui. Da próxima vez, use “Carregar” para recuperá-lo.",
@@ -564,7 +564,7 @@ const M = {
     deleteLabel: "Excluir",
     importJsonLabel: "Importar JSON",
     exportJsonLabel: "Exportar JSON",
-    importFailed: "Erro: a importação falhou.",
+    importFailed: "Erro: a importação falhou. Veja o motivo abaixo: só é possível importar arquivos salvos com “Exportar JSON” nesta lista.",
   },
   de: {
     noSavedRanges: "Du hast noch keine Ranges gespeichert. Klicke auf „Speichern“ und gib einen Namen ein, um die aktuelle Range hier abzulegen. Mit „Laden“ kannst du sie später wieder verwenden.",
@@ -579,7 +579,7 @@ const M = {
     deleteLabel: "Löschen",
     importJsonLabel: "JSON importieren",
     exportJsonLabel: "JSON exportieren",
-    importFailed: "Fehler: Der Import ist fehlgeschlagen.",
+    importFailed: "Fehler: Der Import ist fehlgeschlagen. Sieh dir den Grund unten an – importieren lassen sich nur Dateien, die mit „JSON exportieren“ in dieser Liste gespeichert wurden.",
   },
   zh: {
     noSavedRanges: "还没有保存的范围。点击“保存”并输入名称，当前范围就会保存在这里，下次可用“加载”再次使用。",
@@ -594,7 +594,7 @@ const M = {
     deleteLabel: "删除",
     importJsonLabel: "导入 JSON",
     exportJsonLabel: "导出 JSON",
-    importFailed: "错误：导入失败。",
+    importFailed: "错误：导入失败。请查看下面的原因——只能导入用这个列表的“导出 JSON”保存的文件。",
   },
   // ⚠ 台灣 소프트웨어 표기는 대륙과 «단어 자체»가 다르다 (본체 번체 코퍼스·台灣 Windows 관용):
   //   加载→載入 · 保存→儲存 · 设置→設定 · 分组→群組 · 添加→新增 · 导入/导出→匯入/匯出 ·
@@ -612,7 +612,7 @@ const M = {
     deleteLabel: "刪除",
     importJsonLabel: "匯入 JSON",
     exportJsonLabel: "匯出 JSON",
-    importFailed: "錯誤：匯入失敗。",
+    importFailed: "錯誤：匯入失敗。請查看下面的原因——只能匯入用這個列表的「匯出 JSON」儲存的檔案。",
   },
   fr: {
     noSavedRanges: "Tu n'as pas encore de range enregistrée. Clique sur « Enregistrer » et saisis un nom pour garder ta range actuelle ici. Tu pourras la retrouver avec « Charger » la prochaine fois.",
@@ -627,7 +627,7 @@ const M = {
     deleteLabel: "Supprimer",
     importJsonLabel: "Importer JSON",
     exportJsonLabel: "Exporter JSON",
-    importFailed: "Erreur : échec de l'import.",
+    importFailed: "Erreur : échec de l'import. Regarde la raison ci-dessous : seuls les fichiers enregistrés avec « Exporter JSON » dans cette liste peuvent être importés.",
   },
   id: {
     noSavedRanges: "Anda belum menyimpan range. Tekan “Simpan” lalu beri nama untuk menyimpan range saat ini di sini. Gunakan “Muat” untuk memakainya lagi nanti.",
@@ -642,7 +642,7 @@ const M = {
     deleteLabel: "Hapus",
     importJsonLabel: "Impor JSON",
     exportJsonLabel: "Ekspor JSON",
-    importFailed: "Error: impor gagal.",
+    importFailed: "Error: impor gagal. Lihat alasannya di bawah — hanya file yang disimpan dengan “Ekspor JSON” di daftar ini yang bisa diimpor.",
   },
   ms: {
     noSavedRanges: "Anda belum menyimpan range. Tekan “Simpan” dan namakan untuk menyimpan range semasa di sini. Gunakan “Muat” untuk menggunakannya semula nanti.",
@@ -657,7 +657,7 @@ const M = {
     deleteLabel: "Padam",
     importJsonLabel: "Import JSON",
     exportJsonLabel: "Eksport JSON",
-    importFailed: "Ralat: import gagal.",
+    importFailed: "Ralat: import gagal. Lihat sebabnya di bawah — hanya fail yang disimpan dengan “Eksport JSON” dalam senarai ini boleh diimport.",
   },
   hi: {
     noSavedRanges: "अभी कोई range सेव नहीं है। “सेव करें” दबाकर नाम लिखें, तो मौजूदा range यहाँ रहेगी और अगली बार आप “लोड करें” से उसे फिर इस्तेमाल कर सकते हैं।",
@@ -672,7 +672,7 @@ const M = {
     deleteLabel: "हटाएँ",
     importJsonLabel: "JSON इंपोर्ट करें",
     exportJsonLabel: "JSON एक्सपोर्ट करें",
-    importFailed: "त्रुटि: इंपोर्ट नहीं हो सका।",
+    importFailed: "त्रुटि: इंपोर्ट नहीं हो सका। नीचे कारण देखें — इसी सूची के “JSON एक्सपोर्ट करें” से सेव की गई फ़ाइल ही इंपोर्ट हो सकती है।",
   },
   tr: {
     noSavedRanges: "Henüz kayıtlı range yok. Şu anki range'i burada tutmak için “Kaydet” düğmesine dokun ve bir ad gir. Sonraki sefer “Yükle” ile geri getirebilirsin.",
@@ -687,7 +687,7 @@ const M = {
     deleteLabel: "Sil",
     importJsonLabel: "JSON içe aktar",
     exportJsonLabel: "JSON dışa aktar",
-    importFailed: "Hata: İçe aktarılamadı.",
+    importFailed: "Hata: İçe aktarılamadı. Aşağıdaki nedene bak — yalnızca bu listede “JSON dışa aktar” ile kaydedilen dosyalar içe aktarılabilir.",
   },
   vi: {
     noSavedRanges: "Bạn chưa lưu range nào. Nhấn “Lưu” rồi nhập tên để giữ range hiện tại ở đây. Lần sau dùng “Tải” để mở lại.",
@@ -702,7 +702,7 @@ const M = {
     deleteLabel: "Xóa",
     importJsonLabel: "Nhập JSON",
     exportJsonLabel: "Xuất JSON",
-    importFailed: "Lỗi: Không nhập được.",
+    importFailed: "Lỗi: Không nhập được. Hãy xem lý do bên dưới — chỉ nhập được tệp đã lưu bằng “Xuất JSON” trong danh sách này.",
   },
 } as const;
 

@@ -355,8 +355,8 @@ const M = {
     how3: "«전수 계산» 배지는 모든 경우를 다 세었다는 뜻이고, «근사»는 무작위 표본 결과입니다.",
     limitTitle: "이 계산기의 범위",
     limitBody:
-      "2인 올인 승률만 계산합니다. 레인지 대 레인지, 3인 이상, 벳·폴드가 섞인 상황의 " +
-      "기대값은 솔버(커스텀 스팟)가 담당합니다.",
+      "2인 올인 승률만 계산합니다. 레인지 대 레인지나 벳·폴드가 이어지는 상황은 " +
+      "솔버(커스텀 스팟)로 계산하세요. 3인 이상 팟은 지원하지 않습니다.",
     errors: {
       "need-hero": "내 핸드 2장을 골라 주세요.",
       "bad-board": "보드는 0·3·4·5장만 가능합니다.",
@@ -364,7 +364,7 @@ const M = {
       duplicate: "같은 카드를 두 번 쓸 수 없습니다.",
       "empty-range": "상대 레인지가 비어 있습니다.",
       "no-combos": "카드 제거 후 상대에게 남는 콤보가 없습니다.",
-      unknown: "계산 중 오류가 발생했습니다.",
+      unknown: "계산 중 오류가 발생했습니다. «계산»을 다시 눌러 주세요.",
     } as Record<string, string>,
   },
   hi: {
@@ -414,7 +414,7 @@ const M = {
       duplicate: "एक ही कार्ड 2 बार इस्तेमाल नहीं कर सकते।",
       "empty-range": "विरोधी की range खाली है।",
       "no-combos": "कार्ड हटाने के बाद विरोधी का कोई combo नहीं बचा।",
-      unknown: "गणना के दौरान कुछ गड़बड़ हो गई।",
+      unknown: "गणना के दौरान कुछ गड़बड़ हो गई। दोबारा कोशिश के लिए “गणना करें” दबाएँ।",
     } as Record<string, string>,
   },
   en: {
@@ -460,8 +460,8 @@ const M = {
     how3: "The “Exact” badge means every case was counted; “Approx.” is a random sample.",
     limitTitle: "What this calculator covers",
     limitBody:
-      "This tool computes all-in equity between two players only. Range vs range, multiway pots " +
-      "and betting lines are handled by the solver (Custom Spot).",
+      "This tool computes all-in equity between two players only. For range vs range and betting lines, " +
+      "use the solver (Custom Spot). Multiway pots are not supported.",
     errors: {
       "need-hero": "Pick your two cards first.",
       "bad-board": "The board must have 0, 3, 4 or 5 cards.",
@@ -469,7 +469,7 @@ const M = {
       duplicate: "The same card cannot be used twice.",
       "empty-range": "The opponent range is empty.",
       "no-combos": "No opponent combos remain after card removal.",
-      unknown: "Something went wrong during the calculation.",
+      unknown: "Something went wrong during the calculation. Press Calculate to try again.",
     } as Record<string, string>,
   },
   ja: {
@@ -516,8 +516,8 @@ const M = {
     how3: "「完全計算」バッジはすべての場合を数えたという意味で、「近似」はランダムサンプルの結果です。",
     limitTitle: "この計算機の範囲",
     limitBody:
-      "2人のオールイン勝率のみを計算します。レンジ対レンジ、3人以上、ベットやフォールドが絡む状況の" +
-      "期待値はソルバー（カスタムスポット）が担当します。",
+      "2人のオールイン勝率のみを計算します。レンジ対レンジやベット・フォールドが続く状況は" +
+      "ソルバー（カスタムスポット）で計算してください。3人以上のポットには対応していません。",
     errors: {
       "need-hero": "自分のハンド2枚を選んでください。",
       "bad-board": "ボードは0・3・4・5枚のみ有効です。",
@@ -525,7 +525,7 @@ const M = {
       duplicate: "同じカードを2回使うことはできません。",
       "empty-range": "相手のレンジが空です。",
       "no-combos": "カードリムーバル後、相手に残るコンボがありません。",
-      unknown: "計算中にエラーが発生しました。",
+      unknown: "計算中にエラーが発生しました。もう一度「計算」を押してください。",
     } as Record<string, string>,
   },
   es: {
@@ -572,8 +572,8 @@ const M = {
     how3: "La insignia «Cálculo exacto» significa que se contaron todos los casos; «Aprox.» es una muestra aleatoria.",
     limitTitle: "Alcance",
     limitBody:
-      "Esta herramienta solo calcula equity de all-in entre dos jugadores. Rango contra rango, botes " +
-      "multiway y líneas de apuesta los maneja el solver (Spot personalizado).",
+      "Esta herramienta solo calcula equity de all-in entre dos jugadores. Para rango contra rango y líneas " +
+      "de apuesta, usa el solver (Spot personalizado). Los botes multiway no son compatibles.",
     errors: {
       "need-hero": "Primero elige tus dos cartas.",
       "bad-board": "El board debe tener 0, 3, 4 o 5 cartas.",
@@ -581,7 +581,7 @@ const M = {
       duplicate: "No puedes usar la misma carta dos veces.",
       "empty-range": "El rango del rival está vacío.",
       "no-combos": "No quedan combos para el rival después del card removal.",
-      unknown: "Ocurrió un error durante el cálculo.",
+      unknown: "Ocurrió un error durante el cálculo. Pulsa Calcular para intentarlo de nuevo.",
     } as Record<string, string>,
   },
   pt: {
@@ -631,8 +631,8 @@ const M = {
     how3: "O selo “Cálculo exato” significa que todos os casos foram contados; “Aprox.” é uma amostra aleatória.",
     limitTitle: "O que esta calculadora cobre",
     limitBody:
-      "Esta ferramenta só calcula equity de all-in entre dois jogadores. Range contra range, potes " +
-      "multiway e linhas de aposta são tratados pelo solver (Spot personalizado).",
+      "Esta ferramenta só calcula equity de all-in entre dois jogadores. Para range contra range e linhas " +
+      "de aposta, use o solver (Spot personalizado). Potes multiway não são suportados.",
     errors: {
       "need-hero": "Escolha primeiro as suas duas cartas.",
       "bad-board": "O board precisa ter 0, 3, 4 ou 5 cartas.",
@@ -640,7 +640,7 @@ const M = {
       duplicate: "Você não pode usar a mesma carta duas vezes.",
       "empty-range": "O range do vilão está vazio.",
       "no-combos": "Não sobrou nenhum combo para o vilão depois do card removal.",
-      unknown: "Ocorreu um erro durante o cálculo.",
+      unknown: "Ocorreu um erro durante o cálculo. Toque em Calcular para tentar de novo.",
     } as Record<string, string>,
   },
   de: {
@@ -695,8 +695,8 @@ const M = {
       "Das Abzeichen „Exakt“ heißt, dass jeder Fall gezählt wurde; „Näherung“ ist eine Zufallsstichprobe.",
     limitTitle: "Was dieser Rechner abdeckt",
     limitBody:
-      "Dieses Werkzeug berechnet nur die All-in-Equity zwischen zwei Spielern. Range gegen Range, " +
-      "Multiway-Pots und Bet-Lines übernimmt der Solver (Eigener Spot).",
+      "Dieses Werkzeug berechnet nur die All-in-Equity zwischen zwei Spielern. Für Range gegen Range und " +
+      "Bet-Lines nutze den Solver (Eigener Spot). Multiway-Pots werden nicht unterstützt.",
     errors: {
       "need-hero": "Wähle zuerst deine zwei Karten.",
       "bad-board": "Das Board darf nur 0, 3, 4 oder 5 Karten haben.",
@@ -705,7 +705,7 @@ const M = {
       "empty-range": "Die Gegner-Range ist leer.",
       "no-combos":
         "Nach dem Card Removal bleiben dem Gegner keine Combos übrig – wähle andere Karten oder mach die Gegner-Range weiter.",
-      unknown: "Bei der Berechnung ist ein Fehler aufgetreten.",
+      unknown: "Bei der Berechnung ist ein Fehler aufgetreten. Tippe erneut auf „Berechnen“.",
     } as Record<string, string>,
   },
   zh: {
@@ -763,8 +763,8 @@ const M = {
     how3: "“精确”这个标记表示所有情况都数过了；“近似”则是随机抽样的结果。",
     limitTitle: "这个计算器管到哪儿",
     limitBody:
-      "它只算两人全下的胜率。范围对范围、3 人以上，以及夹着下注和弃牌的局面，" +
-      "由求解器（自定义牌局）来负责。",
+      "它只算两人全下的胜率。范围对范围、夹着下注和弃牌的局面，" +
+      "请用求解器（自定义牌局）来算。不支持 3 人以上的底池。",
     errors: {
       "need-hero": "请先选好自己的两张牌。",
       "bad-board": "公共牌只能是 0、3、4 或 5 张。",
@@ -773,7 +773,7 @@ const M = {
       "empty-range": "对手范围是空的。",
       "no-combos":
         "去掉被挡住的组合后，对手一个组合都不剩了——换几张牌，或者把对手范围放宽一些。",
-      unknown: "计算过程中出错了。",
+      unknown: "计算过程中出错了。请再点一次“计算”。",
     } as Record<string, string>,
   },
   "zh-hant": {
@@ -832,8 +832,8 @@ const M = {
     how3: "「精確」這個標記表示所有情況都數過了；「近似」則是隨機抽樣的結果。",
     limitTitle: "這個計算器算得到什麼",
     limitBody:
-      "它只算兩人全下的勝率。範圍對範圍、3 人以上，以及夾著下注和蓋牌的局面，" +
-      "由解算器（自訂牌局）來負責。",
+      "它只算兩人全下的勝率。範圍對範圍、夾著下注和蓋牌的局面，" +
+      "請用解算器（自訂牌局）來算。不支援 3 人以上的底池。",
     errors: {
       "need-hero": "請先選好自己的兩張牌。",
       "bad-board": "公共牌只能是 0、3、4 或 5 張。",
@@ -842,7 +842,7 @@ const M = {
       "empty-range": "對手範圍是空的。",
       "no-combos":
         "去掉被擋住的組合後，對手一個組合都不剩了——換幾張牌，或者把對手範圍放寬一些。",
-      unknown: "計算過程中出錯了。",
+      unknown: "計算過程中出錯了。請再按一次「計算」。",
     } as Record<string, string>,
   },
   fr: {
@@ -896,8 +896,8 @@ const M = {
     limitTitle: "Ce que couvre ce calculateur",
     // «Spot personnalisé» = 사이드바 customLabel과 같은 글자
     limitBody:
-      "Cet outil calcule uniquement l'equity à tapis entre deux joueurs. Range contre range, pots multiway " +
-      "et lignes de bet relèvent du solver (Spot personnalisé).",
+      "Cet outil calcule uniquement l'equity à tapis entre deux joueurs. Pour range contre range et les lignes " +
+      "de bet, utilise le solver (Spot personnalisé). Les pots multiway ne sont pas pris en charge.",
     errors: {
       "need-hero": "Choisis d'abord tes deux cartes.",
       "bad-board": "Le board doit avoir 0, 3, 4 ou 5 cartes.",
@@ -905,7 +905,7 @@ const M = {
       duplicate: "La même carte ne peut pas être utilisée deux fois.",
       "empty-range": "La range adverse est vide.",
       "no-combos": "Aucun combo adverse ne reste après le retrait des cartes bloquées.",
-      unknown: "Une erreur est survenue pendant le calcul.",
+      unknown: "Une erreur est survenue pendant le calcul. Appuie de nouveau sur Calculer.",
     } as Record<string, string>,
   },
   id: {
@@ -958,8 +958,8 @@ const M = {
     limitTitle: "Cakupan kalkulator ini",
     // «Spot kustom» = 사이드바 customLabel과 같은 글자
     limitBody:
-      "Alat ini hanya menghitung equity all-in antara dua pemain. Range vs range, pot multiway, " +
-      "dan line bet ditangani oleh solver (Spot kustom).",
+      "Alat ini hanya menghitung equity all-in antara dua pemain. Untuk range vs range dan line bet, " +
+      "gunakan solver (Spot kustom). Pot multiway tidak didukung.",
     errors: {
       "need-hero": "Pilih dua kartu Anda dulu.",
       "bad-board": "Board harus berisi 0, 3, 4, atau 5 kartu.",
@@ -1020,8 +1020,8 @@ const M = {
     limitTitle: "Skop kalkulator ini",
     // «Spot tersuai» = 사이드바 customLabel과 같은 글자
     limitBody:
-      "Alat ini hanya mengira equity all-in antara dua pemain. Range lawan range, pot multiway, " +
-      "dan line pertaruhan dikendalikan oleh solver (Spot tersuai).",
+      "Alat ini hanya mengira equity all-in antara dua pemain. Untuk range lawan range dan line pertaruhan, " +
+      "gunakan solver (Spot tersuai). Pot multiway tidak disokong.",
     errors: {
       "need-hero": "Sila pilih dua kad anda dahulu.",
       "bad-board": "Board mesti ada 0, 3, 4 atau 5 kad.",
@@ -1088,7 +1088,7 @@ const M = {
       duplicate: "Aynı kart iki kez kullanılamaz.",
       "empty-range": "Rakip range'i boş.",
       "no-combos": "Kartlar çıkarıldıktan sonra rakibe hiç combo kalmadı.",
-      unknown: "Hesaplama sırasında bir şeyler ters gitti.",
+      unknown: "Hesaplama sırasında bir şeyler ters gitti. Tekrar denemek için Hesapla düğmesine bas.",
     } as Record<string, string>,
   },
   vi: {
@@ -1143,7 +1143,7 @@ const M = {
       duplicate: "Không thể dùng một lá hai lần.",
       "empty-range": "Range của đối thủ đang trống.",
       "no-combos": "Đối thủ không còn combo nào sau khi loại các lá trùng.",
-      unknown: "Đã xảy ra lỗi trong lúc tính.",
+      unknown: "Đã xảy ra lỗi trong lúc tính. Hãy nhấn Tính để thử lại.",
     } as Record<string, string>,
   },
 } as const;

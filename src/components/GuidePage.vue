@@ -357,7 +357,7 @@ const M = {
 
     customTitleBefore: "커스텀 스팟 계산 — ",
     customTitleDesktop: "사이드바",
-    customTitleMobile: "위쪽 탭",
+    customTitleMobile: "위쪽 «커스텀 스팟» 메뉴",
     customTitleAfter: " 번호 ①→⑤ 순서 그대로",
     step1Bold: "① OOP 레인지 / ② IP 레인지",
     step1After: " — 13×13 표를 클릭·드래그로 칠하거나 텍스트로 입력: ",
@@ -541,7 +541,7 @@ const M = {
 
     customTitleBefore: "Solving a custom spot — follow the ",
     customTitleDesktop: "sidebar",
-    customTitleMobile: "tab",
+    customTitleMobile: "top “Custom Spot” menu",
     customTitleAfter: " numbers ① → ⑤ in order",
     step1Bold: "① OOP Range / ② IP Range",
     step1After:
@@ -736,7 +736,7 @@ const M = {
 
     customTitleBefore: "カスタムスポットの計算 — ",
     customTitleDesktop: "サイドバー",
-    customTitleMobile: "上のタブ",
+    customTitleMobile: "上の「カスタムスポット」メニュー",
     customTitleAfter: "の番号①→⑤の順に進めます",
     step1Bold: "① OOPレンジ / ② IPレンジ",
     step1After:
@@ -930,7 +930,7 @@ const M = {
 
     customTitleBefore: "Resolver un spot personalizado — sigue los números ",
     customTitleDesktop: "de la barra lateral",
-    customTitleMobile: "de las pestañas",
+    customTitleMobile: "del menú superior “Spot personalizado”",
     customTitleAfter: " en orden ① → ⑤",
     step1Bold: "① Rango OOP / ② Rango IP",
     step1After:
@@ -1126,7 +1126,7 @@ const M = {
 
     customTitleBefore: "Resolver um spot personalizado — siga os números ",
     customTitleDesktop: "da barra lateral",
-    customTitleMobile: "das abas",
+    customTitleMobile: "do menu superior “Spot personalizado”",
     customTitleAfter: " na ordem ① → ⑤",
     step1Bold: "① Range OOP / ② Range IP",
     step1After:
@@ -1323,7 +1323,7 @@ const M = {
 
     customTitleBefore: "Einen eigenen Spot rechnen – folge den Nummern ",
     customTitleDesktop: "in der Seitenleiste",
-    customTitleMobile: "in den Tabs",
+    customTitleMobile: "im oberen Menü „Eigener Spot“",
     customTitleAfter: " der Reihe nach ① → ⑤",
     step1Bold: "① OOP-Range / ② IP-Range",
     step1After:
@@ -1521,7 +1521,7 @@ const M = {
 
     customTitleBefore: "自己算一个牌局——",
     customTitleDesktop: "侧边栏",
-    customTitleMobile: "上方标签",
+    customTitleMobile: "上方“自定义牌局”菜单",
     customTitleAfter: "里的 ①→⑤，照顺序来就行",
     step1Bold: "① OOP 范围 / ② IP 范围",
     step1After: "——在 13×13 的表格里点击、拖动来涂色，也可以直接输入文字：",
@@ -1714,7 +1714,7 @@ const M = {
 
     customTitleBefore: "自己算一個牌局——",
     customTitleDesktop: "側邊欄",
-    customTitleMobile: "上方分頁",
+    customTitleMobile: "上方「自訂牌局」選單",
     customTitleAfter: "裡的 ①→⑤，照順序來就行",
     step1Bold: "① OOP 範圍 / ② IP 範圍",
     step1After: "——在 13×13 的表格裡點選、拖曳來塗色，也可以直接輸入文字：",
@@ -1909,7 +1909,7 @@ const M = {
 
     customTitleBefore: "Calculer un spot personnalisé — suis les numéros ",
     customTitleDesktop: "de la barre latérale",
-    customTitleMobile: "des onglets",
+    customTitleMobile: "du menu du haut « Spot personnalisé »",
     customTitleAfter: " ① → ⑤ dans l'ordre",
     step1Bold: "① Range OOP / ② Range IP",
     step1After:
@@ -2115,7 +2115,7 @@ const M = {
 
     customTitleBefore: "Menghitung spot kustom — ikuti nomor ",
     customTitleDesktop: "di sidebar",
-    customTitleMobile: "di tab",
+    customTitleMobile: "di menu atas “Spot kustom”",
     customTitleAfter: " ① → ⑤ secara berurutan",
     step1Bold: "① Range OOP / ② Range IP",
     step1After:
@@ -2319,7 +2319,7 @@ const M = {
 
     customTitleBefore: "Mengira spot tersuai — ikut nombor ",
     customTitleDesktop: "di bar sisi",
-    customTitleMobile: "di tab",
+    customTitleMobile: "di menu atas “Spot tersuai”",
     customTitleAfter: " ① → ⑤ mengikut urutan",
     step1Bold: "① Range OOP / ② Range IP",
     step1After:
@@ -2516,7 +2516,7 @@ const M = {
     defEv: "अपेक्षित मूल्य — किसी एक्शन से औसतन मिलने वाला मूल्य। जितना अधिक, उतना बेहतर।",
     customTitleBefore: "अपना स्पॉट हल करें — ",
     customTitleDesktop: "साइडबार",
-    customTitleMobile: "टैब",
+    customTitleMobile: "ऊपर के “अपना स्पॉट” मेनू",
     customTitleAfter: " में ① → ⑤ के क्रम से चलें",
     step1Bold: "① OOP Range / ② IP Range",
     step1After: " — कंप्यूटर पर 13×13 ग्रिड में क्लिक करके खींचें। फ़ोन पर नीचे दिए उदाहरण कॉपी करके टेक्स्ट इनपुट में पेस्ट कर सकते हैं: ",
@@ -2668,7 +2668,7 @@ const M = {
 
     customTitleBefore: "Özel spot çözmek — ",
     customTitleDesktop: "kenar çubuğundaki",
-    customTitleMobile: "sekmelerdeki",
+    customTitleMobile: "üstteki “Özel spot” menüsündeki",
     customTitleAfter: " ① → ⑤ numaraları sırayla izle",
     step1Bold: "① OOP range / ② IP range",
     step1After:
@@ -2863,7 +2863,7 @@ const M = {
 
     customTitleBefore: "Giải spot tùy chỉnh — đi lần lượt theo số ① → ⑤ trên ",
     customTitleDesktop: "thanh bên",
-    customTitleMobile: "các tab",
+    customTitleMobile: "menu “Spot tùy chỉnh” ở trên cùng",
     customTitleAfter: "",
     step1Bold: "① Range OOP / ② Range IP",
     step1After:

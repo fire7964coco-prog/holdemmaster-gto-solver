@@ -725,8 +725,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `${uploaded}개 보관 · 다른 기기 기록 ${merged}개 가져옴`,
     syncSaved: (uploaded: number) => `${uploaded}개 보관됨`,
-    syncFailed: (msg: string) => `동기화 실패: ${msg}`,
-    signInFailed: (msg: string) => `로그인 실패: ${msg}`,
+    syncFailed: (msg: string) => `동기화 실패: ${msg} — 기록은 이 기기에 그대로 있습니다. «지금 동기화»를 눌러 다시 시도하세요.`,
+    signInFailed: (msg: string) => `로그인 실패: ${msg} — 로그인 버튼을 다시 눌러 주세요.`,
   },
   en: {
     loadFailed: "Failed to load trainer data:",
@@ -828,8 +828,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `${uploaded} saved · ${merged} pulled from other devices`,
     syncSaved: (uploaded: number) => `${uploaded} saved`,
-    syncFailed: (msg: string) => `Sync failed: ${msg}`,
-    signInFailed: (msg: string) => `Sign-in failed: ${msg}`,
+    syncFailed: (msg: string) => `Sync failed: ${msg} — your results are still saved on this device. Press “Sync now” to try again.`,
+    signInFailed: (msg: string) => `Sign-in failed: ${msg} — press the sign-in button again to retry.`,
   },
   ja: {
     loadFailed: "トレーナーデータを読み込めませんでした:",
@@ -933,8 +933,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `${uploaded}件保存・他端末の記録${merged}件を取得`,
     syncSaved: (uploaded: number) => `${uploaded}件保存済み`,
-    syncFailed: (msg: string) => `同期失敗: ${msg}`,
-    signInFailed: (msg: string) => `ログイン失敗: ${msg}`,
+    syncFailed: (msg: string) => `同期失敗: ${msg} — 記録はこの端末に残っています。「今すぐ同期」を押してもう一度お試しください。`,
+    signInFailed: (msg: string) => `ログイン失敗: ${msg} — もう一度ログインボタンを押してください。`,
   },
   es: {
     loadFailed: "No se pudieron cargar los datos del entrenador:",
@@ -1036,8 +1036,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `${uploaded} guardadas · ${merged} traídas de otros dispositivos`,
     syncSaved: (uploaded: number) => `${uploaded} guardadas`,
-    syncFailed: (msg: string) => `Error de sincronización: ${msg}`,
-    signInFailed: (msg: string) => `Error al iniciar sesión: ${msg}`,
+    syncFailed: (msg: string) => `Error de sincronización: ${msg} — tus resultados siguen guardados en este dispositivo. Pulsa “Sincronizar ahora” para reintentar.`,
+    signInFailed: (msg: string) => `Error al iniciar sesión: ${msg} — pulsa de nuevo el botón para iniciar sesión.`,
   },
   pt: {
     loadFailed: "Não foi possível carregar os dados do Treinador:",
@@ -1143,8 +1143,8 @@ const M = {
       } de outros dispositivos`,
     syncSaved: (uploaded: number) =>
       `${uploaded} salva${uploaded === 1 ? "" : "s"}`,
-    syncFailed: (msg: string) => `Erro de sincronização: ${msg}`,
-    signInFailed: (msg: string) => `Erro ao fazer login: ${msg}`,
+    syncFailed: (msg: string) => `Erro de sincronização: ${msg} — seus resultados continuam salvos neste dispositivo. Toque em “Sincronizar agora” para tentar de novo.`,
+    signInFailed: (msg: string) => `Erro ao fazer login: ${msg} — toque de novo no botão de login.`,
   },
   de: {
     loadFailed: "Die Trainer-Daten konnten nicht geladen werden:",
@@ -1250,8 +1250,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `${uploaded} gespeichert · ${merged} von anderen Geräten geholt`,
     syncSaved: (uploaded: number) => `${uploaded} gespeichert`,
-    syncFailed: (msg: string) => `Fehler bei der Synchronisierung: ${msg}`,
-    signInFailed: (msg: string) => `Fehler beim Anmelden: ${msg}`,
+    syncFailed: (msg: string) => `Fehler bei der Synchronisierung: ${msg} – deine Ergebnisse bleiben auf diesem Gerät. Tippe auf „Jetzt synchronisieren“, um es erneut zu versuchen.`,
+    signInFailed: (msg: string) => `Fehler beim Anmelden: ${msg} – tippe erneut auf die Anmelde-Schaltfläche.`,
   },
   zh: {
     loadFailed: "训练器数据加载失败：",
@@ -1380,8 +1380,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `已保存 ${uploaded} 条 · 从其他设备取回 ${merged} 条`,
     syncSaved: (uploaded: number) => `已保存 ${uploaded} 条`,
-    syncFailed: (msg: string) => `同步失败：${msg}`,
-    signInFailed: (msg: string) => `登录失败：${msg}`,
+    syncFailed: (msg: string) => `同步失败：${msg}——记录仍保存在这台设备上。请点“立即同步”再试一次。`,
+    signInFailed: (msg: string) => `登录失败：${msg}——请再点一次登录按钮。`,
   },
   // ⚠ 台灣 표기: 账号→帳號 · 登录→登入 · 退出登录→登出 · 昵称→暱稱 · 设备→裝置 ·
   //   保存→儲存 · 记录(명사)→紀錄 · 社区→社群 · 加载→載入 · 复盘→複盤 · 图片→圖片
@@ -1506,8 +1506,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `已儲存 ${uploaded} 筆 · 從其他裝置取回 ${merged} 筆`,
     syncSaved: (uploaded: number) => `已儲存 ${uploaded} 筆`,
-    syncFailed: (msg: string) => `同步失敗：${msg}`,
-    signInFailed: (msg: string) => `登入失敗：${msg}`,
+    syncFailed: (msg: string) => `同步失敗：${msg}——紀錄仍保存在這台裝置上。請按「立刻同步」再試一次。`,
+    signInFailed: (msg: string) => `登入失敗：${msg}——請再按一次登入按鈕。`,
   },
   fr: {
     loadFailed: "Impossible de charger les données du trainer :",
@@ -1617,8 +1617,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `${uploaded} enregistrées · ${merged} récupérées depuis d'autres appareils`,
     syncSaved: (uploaded: number) => `${uploaded} enregistrées`,
-    syncFailed: (msg: string) => `Échec de la synchronisation : ${msg}`,
-    signInFailed: (msg: string) => `Échec de la connexion : ${msg}`,
+    syncFailed: (msg: string) => `Échec de la synchronisation : ${msg} — tes résultats restent sur cet appareil. Appuie de nouveau sur Synchroniser.`,
+    signInFailed: (msg: string) => `Échec de la connexion : ${msg} — appuie de nouveau sur le bouton de connexion.`,
   },
   // 인도네시아어 — Anda체(본체 브리프 확정, kamu 금지). 도구명 trainer·leak·streak·hand·range·pot은
   // 본체 id 코퍼스가 영어 그대로 쓴다(리서치 §2). 액션명은 영어(trainer.ts와 동일).
@@ -1727,8 +1727,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `${uploaded} tersimpan · ${merged} ditarik dari perangkat lain`,
     syncSaved: (uploaded: number) => `${uploaded} tersimpan`,
-    syncFailed: (msg: string) => `Sinkronisasi gagal: ${msg}`,
-    signInFailed: (msg: string) => `Login gagal: ${msg}`,
+    syncFailed: (msg: string) => `Sinkronisasi gagal: ${msg} — hasil tetap tersimpan di perangkat ini. Tekan “Sinkronkan” untuk mencoba lagi.`,
+    signInFailed: (msg: string) => `Login gagal: ${msg} — tekan tombol login sekali lagi.`,
   },
   // 말레이어 — anda(소문자)체(문두만 Anda, kamu·awak 금지). 도구명 trainer·leak·streak·hand·range·pot은
   // 영어 그대로(리서치 §2). 액션명은 영어(trainer.ts와 동일). 🔴 인니어 낱말 금지(리서치 §6).
@@ -1822,8 +1822,8 @@ const M = {
     confirmReset: "इस डिवाइस का पूरा ट्रेनर इतिहास हटाएँ?",
     syncMerged: (uploaded: number, merged: number) => `${uploaded} सेव हुए · ${merged} दूसरे डिवाइस से आए`,
     syncSaved: (uploaded: number) => `${uploaded} सेव हुए`,
-    syncFailed: (msg: string) => `सिंक नहीं हो सका: ${msg}`,
-    signInFailed: (msg: string) => `लॉग इन नहीं हो सका: ${msg}`,
+    syncFailed: (msg: string) => `सिंक नहीं हो सका: ${msg} — आपके नतीजे इसी डिवाइस पर सेव हैं। दोबारा कोशिश के लिए “अभी सिंक करें” दबाएँ।`,
+    signInFailed: (msg: string) => `लॉग इन नहीं हो सका: ${msg} — लॉग इन बटन फिर से दबाएँ।`,
   },
   ms: {
     loadFailed: "Gagal memuatkan data trainer (cuba muat semula halaman):",
@@ -1931,8 +1931,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `${uploaded} disimpan · ${merged} diambil daripada peranti lain`,
     syncSaved: (uploaded: number) => `${uploaded} disimpan`,
-    syncFailed: (msg: string) => `Penyegerakan gagal: ${msg}`,
-    signInFailed: (msg: string) => `Log masuk gagal: ${msg}`,
+    syncFailed: (msg: string) => `Penyegerakan gagal: ${msg} — keputusan masih disimpan pada peranti ini. Tekan “Segerakkan” untuk cuba lagi.`,
+    signInFailed: (msg: string) => `Log masuk gagal: ${msg} — tekan butang log masuk sekali lagi.`,
   },
   tr: {
     loadFailed: "GTO Trainer verileri yüklenemedi:",
@@ -2038,8 +2038,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `${uploaded} kaydedildi · diğer cihazlardan ${merged} alındı`,
     syncSaved: (uploaded: number) => `${uploaded} kaydedildi`,
-    syncFailed: (msg: string) => `Eşitleme başarısız: ${msg}`,
-    signInFailed: (msg: string) => `Giriş başarısız: ${msg}`,
+    syncFailed: (msg: string) => `Eşitleme başarısız: ${msg} — sonuçların bu cihazda duruyor. Tekrar denemek için “Şimdi eşitle” düğmesine bas.`,
+    signInFailed: (msg: string) => `Giriş başarısız: ${msg} — giriş düğmesine tekrar bas.`,
   },
   vi: {
     loadFailed: "Không tải được dữ liệu trainer:",
@@ -2141,8 +2141,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `Đã lưu ${uploaded} · nhận ${merged} từ thiết bị khác`,
     syncSaved: (uploaded: number) => `Đã lưu ${uploaded}`,
-    syncFailed: (msg: string) => `Đồng bộ thất bại: ${msg}`,
-    signInFailed: (msg: string) => `Đăng nhập thất bại: ${msg}`,
+    syncFailed: (msg: string) => `Đồng bộ thất bại: ${msg} — kết quả của bạn vẫn được lưu trên thiết bị này. Hãy nhấn “Đồng bộ ngay” để thử lại.`,
+    signInFailed: (msg: string) => `Đăng nhập thất bại: ${msg} — hãy nhấn lại nút đăng nhập.`,
   },
 } as const;
 
