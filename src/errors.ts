@@ -189,7 +189,7 @@ export const setupErrorCapture = () => {
   window.addEventListener("unhandledrejection", (event) => {
     const reason = event.reason;
     record(
-      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ", "Erro não tratado: ", "Unbehandelter Fehler: ", "未处理的错误：", "未處理的錯誤：", "Erreur non gérée : ", "Error tidak tertangani: ", "Ralat tidak dikendalikan: ", "हैंडल नहीं की गई त्रुटि: ", "İşlenmemiş hata: ", "Lỗi chưa được xử lý: ", "Необработанная ошибка: ") + String(reason?.message ?? reason),
+      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ", "Erro não tratado: ", "Unbehandelter Fehler: ", "未处理的错误：", "未處理的錯誤：", "Erreur non gérée : ", "Error tidak tertangani: ", "Ralat tidak dikendalikan: ", "हैंडल नहीं की गई त्रुटि: ", "İşlenmemiş hata: ", "Lỗi chưa được xử lý: ", "Необработанное отклонение промиса: ") + String(reason?.message ?? reason),
       String(reason?.stack ?? "")
     );
   });

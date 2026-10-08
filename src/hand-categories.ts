@@ -529,7 +529,7 @@ export const DRAW_LABELS_RU: Record<DrawKey, string> = {
   flush_draw: "Флеш-дро",
   oesd: "OESD",
   gutshot: "Гатшот",
-  backdoor_fd: "Бэкдор ФД",
+  backdoor_fd: "Бэкдор-ФД",
   no_draw: "Без дро",
 };
 

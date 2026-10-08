@@ -475,7 +475,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Ders kitabı gibi bir range avantajı spotu. BB check yaptıktan sonra BTN'nin ne kadar geniş bir range ile küçük c-bet yaptığını izle — as, açan oyuncunun range'ine tam oturuyor.",
     lessonVi: "Spot kinh điển về lợi thế range. Hãy xem BTN c-bet nhỏ với range rộng đến mức nào sau khi BB check — lá A đánh trúng range của bên open.",
-    lessonRu: "Хрестоматийный спот на преимущество диапазона. Смотри, насколько широким диапазоном BTN ставит маленький контбет после чека BB — туз отлично попадает в диапазон опена.",
+    lessonRu: "Хрестоматийный спот с преимуществом диапазона. Смотри, насколько широким диапазоном BTN ставит маленький контбет после чека BB — туз отлично попадает в диапазон опена.",
     titleJa: "ドライなAハイボード",
     lessonJa:
       "レンジ優位の教科書的スポットです。BBのチェック後、BTNが非常に広いレンジで小さくCベットする理由を観察しましょう（Aはオープンレイザーに有利なカードです）。",
@@ -565,7 +565,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "İki range'e de oturuyor gibi görünen bir board. Ama BB, 13 spot içinde equity'sini en az burada realize ediyor — %77,9, BTN ise %119,4 — ve %99,9 sıklıkla check yapıyor. Nedenini el kategorisi paneli gösteriyor.",
     lessonVi: "Board trông như trúng cả hai range. Nhưng trong 13 spot, đây là nơi BB hiện thực hóa equity kém nhất — 77,9%, so với 119,4% của BTN — và check 99,9%. Khung Nhóm tay bài cho thấy lý do.",
-    lessonRu: "Кажется, что этот борд попадает в оба диапазона. Но здесь BB реализует эквити хуже, чем в любом из 13 спотов, — 77,9% против 119,4% у BTN — и чекает 99,9%. Почему так, видно на панели «Разбивка руки».",
+    lessonRu: "Кажется, что этот борд попадает в оба диапазона. Но здесь BB реализует эквити хуже, чем в любом из 13 спотов, — 77,9% против 119,4% у BTN — и чекает 99,9%. Почему так, видно на панели «Руки».",
     titleJa: "ブロードウェイのコネクトボード（2トーン）",
     lessonJa:
       "両者に当たったように見えるボードです。ところがBBのエクイティ実現率は13スポット中で最も低く、77.9%（BTNは119.4%）。99.9%チェックになる理由を分類パネルで確かめましょう。",
@@ -610,7 +610,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Call edenin lehine klasik doku. BTN'nin c-bet sıklığı sert düşüyor — bu spot “her zaman c-bet” fikrinin neden yanlış olduğunu tam olarak gösteriyor.",
     lessonVi: "Kiểu board kinh điển có lợi cho bên call. Tần suất c-bet của BTN giảm mạnh — spot này cho thấy rõ vì sao “luôn c-bet” là sai.",
-    lessonRu: "Классическая текстура в пользу колла. Частота контбета BTN резко падает — этот спот наглядно показывает, почему «контбет всегда» — ошибка.",
+    lessonRu: "Классическая текстура в пользу коллера. Частота контбета BTN резко падает — этот спот наглядно показывает, почему «контбет всегда» — ошибка.",
     titleJa: "ミドルのコネクトボード（2トーン）",
     lessonJa:
       "コーラー（BB）優位ボードの代表例です。BTNのCベット頻度が大きく下がることを確認しましょう — 「常にCベット」がなぜ間違いなのかを学べるスポットです。",
@@ -748,7 +748,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Bir overcard savaşı — BB bu dokuda sık check-raise yapar; cevapları görmek için üst şeritte bir bet'in sonrasına geç.",
     lessonVi: "Cuộc chiến overcard — BB check-raise thường xuyên trên kiểu board này, nên hãy chọn node sau một lần bet trên thanh trên cùng để xem các phản ứng.",
-    lessonRu: "Война оверкарт — на такой текстуре BB часто делает чек-рейз, поэтому выбери в верхней полосе узел после бета и посмотри ответы.",
+    lessonRu: "Война оверкарт — на такой текстуре BB часто делает чек-рейз, поэтому выбери на верхней полосе узел после бета и посмотри ответы.",
     titleJa: "ロー・レインボーボード",
     lessonJa:
       "オーバーカードの戦いです。BBのチェックレイズ頻度が高くなるボード — 上部ストリップでベット後の相手のアクションを追ってみましょう。",
@@ -784,7 +784,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Ace-High Board, 3-Bettor's Edge",
     titleTr: "A-high board, 3-bet yapanın avantajı",
     titleVi: "Board A-high, lợi thế của bên 3-bet",
-    titleRu: "Борд туз-хай в пользу 3-бета",
+    titleRu: "Борд туз-хай в пользу 3-беттора",
     board: "Ad Ks 2h",
     lesson:
       "3벳 레인지(AK, AA, KK 다수)에 최고의 보드. 낮은 SPR에서 작은 벳으로 레인지 전체를 압박하는 패턴.",
@@ -793,7 +793,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Range'i AK, AA ve KK ile dolu olan 3-bet yapan için olabilecek en iyi flop. Düşük SPR'de küçük bet'ler tüm range'e baskı kurar.",
     lessonVi: "Flop tốt nhất có thể cho bên 3-bet, với range đầy AK, AA và KK. Ở SPR thấp, cược nhỏ gây áp lực lên toàn bộ range.",
-    lessonRu: "Лучший возможный флоп для стороны 3-бета: в её диапазоне полно AK, AA и KK. При низком SPR маленькие ставки давят на весь диапазон.",
+    lessonRu: "Лучший возможный флоп для 3-беттора: в его диапазоне полно AK, AA и KK. При низком SPR маленькие ставки давят на весь диапазон.",
     titleJa: "3ベッター優位のAハイボード",
     lessonJa:
       "3ベットレンジ（AK・AA・KKが多い）にとって最高のボードです。低SPRで小さなベットを使い、レンジ全体に圧力をかけるパターンを学びます。",
@@ -845,7 +845,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Call edene de uyan bir board'da 3-bet pot — yine de 3-bet yapan yavaşlamıyor: range'in %98,4'ü aynı üçte iki boyutla bet yapıyor. Check yapan %0,8'i hangi ellerin oluşturduğuna bak.",
     lessonVi: "Pot 3-bet trên board cũng hợp với bên call — vậy mà bên 3-bet không chậm lại: 98,4% range bet cùng một cỡ 2/3 pot. Xem những tay bài nào tạo nên 0,8% check.",
-    lessonRu: "3-бет-пот на борде, который подходит и стороне колла, — и всё же сторона 3-бета не сбавляет темп: 98,4% диапазона ставит один и тот же сайзинг в две трети банка. Посмотри, какие руки составляют те 0,8%, что чекают.",
+    lessonRu: "3-бет-пот на борде, который подходит и коллеру, — и всё же 3-беттор не сбавляет темп: 98,4% диапазона ставит один и тот же сайзинг в две трети банка. Посмотри, какие руки составляют те 0,8%, что чекает.",
     titleJa: "ダイナミックな2トーンボード",
     lessonJa:
       "3ベットポットなのにコーラーにも良いカードが多いボードです。それでも3ベッターは止まりません — 98.4%が同じ2/3サイズで打ちます。チェックに残る0.8%がどんなハンドか見てみましょう。",
@@ -985,7 +985,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "İki geniş range çok bağlantılı bir board'da çarpışıyor: her yerde iki çift, kent ve draw'lar. El kategorisi paneli tam burada işe yarıyor.",
     lessonVi: "Hai range rộng va chạm trên board cực kỳ liền nhau: Hai Đôi, Sảnh và draw ở khắp nơi. Khung Nhóm tay bài phát huy tác dụng ở đây.",
-    lessonRu: "Два широких диапазона сталкиваются на сверхсвязанном борде: две пары, стриты и дро повсюду. Здесь панель «Разбивка руки» особенно полезна.",
+    lessonRu: "Два широких диапазона сталкиваются на сверхсвязанном борде: две пары, стриты и дро повсюду. Здесь особенно полезны панели «Руки» и «Дро».",
     titleJa: "ローのコネクトボード（2トーン）",
     lessonJa:
       "ワイドレンジ同士がぶつかる非常にコネクトしたボードです。ツーペア・ストレート・ドローが続出します。分類パネルがにぎやかになるスポットです。",

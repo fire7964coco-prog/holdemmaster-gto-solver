@@ -624,7 +624,7 @@ const M = {
     equityBadge: "% побед",
     customLabel: "Свой спот",
     // ⚠ 이 라벨이 두 줄로 접히면 1280×720에서 ⑤가 화면 밖으로 밀린다 (한 줄로 유지할 것)
-    customLabelSuffix: " — расчёт",
+    customLabelSuffix: " — расчёт",
     oopRange: "Диапазон OOP",
     ipRange: "Диапазон IP",
     board: "Борд",

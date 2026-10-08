@@ -1010,7 +1010,7 @@ const M = {
     copied: "Скопировано!",
     shareSpot: "🔗 Поделиться спотом",
     statusLabel: "Статус:",
-    statusNotLoaded: "Модуль не загружен",
+    statusNotLoaded: "Движок не загружен",
     statusBuilding: "Построение дерева…",
     statusError: (message: string) => `Ошибка: ${message}`,
     statusBuilt: (threads: number) =>
@@ -1019,9 +1019,9 @@ const M = {
     precisionTipIntro:
       "Этот режим в основном влияет на расход памяти. Есть и несколько других отличий.",
     precisionTipFp:
-      "32-битное с плавающей точкой (FP): рекомендуется, если расход памяти ниже лимита (3,9 ГБ). Около 7 значащих цифр и выше производительность.",
+      "32-битное с плавающей точкой (FP): рекомендуется, если расход памяти ниже лимита (3,9 ГБ). Около 7 значащих цифр и более высокая производительность.",
     precisionTipInt:
-      "16-битное целое: запасной вариант, когда режим 32-бит FP превышает лимит памяти. Около 4 значащих цифр, поэтому не подходит для целевой exploitability ниже 0,1%, и работает медленнее, чем 32-бит FP.",
+      "16-битное целое: запасной вариант, когда режим 32-бит FP превышает лимит памяти. Около 4 значащих цифр, поэтому не подходит для целевой exploitability ниже 0,1%. Кроме того, работает медленнее, чем 32-бит FP.",
     fp32Label: "32-бит FP:",
     int16Label: "16-бит целое:",
     ramNeeded: (size: string) => `нужно ${size} ОЗУ`,
@@ -1330,7 +1330,7 @@ const checkConfig = (
     ,
       "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
       "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
-      "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)", "Cấu hình không hợp lệ (cấu hình đã tải bị hỏng?)", "Недопустимые настройки (загружена повреждённая конфигурация?)");
+      "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)", "Cấu hình không hợp lệ (cấu hình đã tải bị hỏng?)", "Недопустимая конфигурация (загружена повреждённая конфигурация?)");
   }
 
   return null;

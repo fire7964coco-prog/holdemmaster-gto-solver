@@ -116,7 +116,7 @@ export default defineComponent({
     const unit = computed(() => bank.value?.unitScale === 10 ? "bb" : L.value.chips);
     const number = localizeNumber;
     // ru nouns depend on the displayed count; bb stays attached (U1 §2-1).
-    const ruUnit = (n: number, scale: number) => scale === 10 ? "bb" : ` ${ruChipLabel(n)}`;
+    const ruUnit = (n: number, scale: number) => scale === 10 ? "bb" : ` ${ruChipLabel(n, true)}`; // toFixed(3) 표시 → few형
     const displayValue = (value: number) => i18n.locale === "ru"
       ? `${number(value.toFixed(3))}${ruUnit(value, bank.value?.unitScale ?? 1)}`
       : `${number(value.toFixed(3))} ${unit.value}`;

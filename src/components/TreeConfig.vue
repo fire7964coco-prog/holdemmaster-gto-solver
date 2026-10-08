@@ -1702,7 +1702,7 @@ const M = {
     advancedSettings: "Дополнительно ▸",
     basicSettings: "Основные настройки",
     chipNote:
-      "Вводи суммы в целых фишках. Чтобы думать в bb, считай 10 фишек = 1bb (например, банк 55 = 5,5bb, стек 1 000 = 100bb). Если ты вводишь или меняешь банк или стек вручную, результаты остаются в твоих фишках; если загрузить спот из раздела «Учебные споты» и запустить расчёт, не меняя банк и стек, результаты пересчитываются в bb.",
+      "Вводи суммы в целых фишках. Чтобы думать в bb, считай 10 фишек = 1bb (например, банк 55 = 5,5bb, стек 1 000 = 100bb). Если ты вводишь или меняешь банк или стек вручную, результаты остаются в фишках; если загрузить спот из раздела «Учебные споты» и запустить расчёт, не меняя банк и стек, результаты пересчитываются в bb.",
     startingPot: "Начальный банк:",
     effectiveStack: "Эффективный стек:",
     rake: "Рейк:",
@@ -1718,10 +1718,10 @@ const M = {
     inputHelpPercent:
       "Число — процент от банка (напр. «50»). Для рейза размер считается так: сначала колл, затем добавляется указанный процент от получившегося банка. Например, если банк до бета 100 и соперник ставит 75, рейз 50% = 75 + (100 + 75 + 75) × 50% = 200.",
     inputHelpMultiple:
-      "Кратное предыдущего бета (напр. «2.5x»). Только для рейзов.",
+      "Кратное предыдущему бету (напр. «2.5x»). Только для рейзов.",
     inputHelpAllin: "Олл-ин (напр. «a»).",
     inputHelpFixed:
-      "Фиксированная сумма (напр. «100c»). Для рейзов можно также ограничить число рейзов (напр. «20c3r»).",
+      "Добавление фиксированной суммы (напр. «100c»). Для рейзов можно также ограничить число рейзов (напр. «20c3r»).",
     inputHelpGeometric:
       "Геометрический сайзинг: оставшийся стек делится на заданное число бетов с одинаковым процентом от банка (напр. «3e»). Например, если банк 100, а эффективный стек 400, «2e» — это бет 100. Если число перед «e» не указано, берётся число оставшихся улиц (флоп = 3, тёрн = 2, ривер = 1). Для рейзов из заданного числа вычитается число предыдущих рейзов: например, при ре-рейзе «3e» становится «2e». После «e» можно добавить число — максимальный процент от банка (напр. «2e200»).",
     flop: "Флоп",
@@ -1738,7 +1738,7 @@ const M = {
     forceAllInHelp1:
       "Если SPR (отношение стека к банку) после колла соперника на бет ниже этого порога, этот бет заменяется олл-ином. Рекомендуемое значение — около 15–20%.",
     forceAllInHelp2:
-      "Эта опция похожа на «all-in threshold» в PioSOLVER. PioSOLVER заменяет бет олл-ином, когда доля вложенного в банк от начального стека превышает порог.",
+      "Эта опция похожа на «all-in threshold» в PioSOLVER. PioSOLVER заменяет бет олл-ином, когда отношение суммы, вложенной в банк, к начальному стеку превышает порог.",
     forceAllInHelp3:
       "Без учёта округления формула перевода такая (s = начальный SPR, r = порог PioSOLVER):",
     forceAllInFormula: "Порог = s × (1 − r) / (1 + 2 × s × r).",
@@ -1851,7 +1851,7 @@ const N: Partial<Record<keyof typeof M, { chipNote: string }>> | null =
         },
         ru: {
           chipNote:
-            "Вводи суммы в целых фишках. Чтобы думать в bb, считай 10 фишек = 1bb (например, банк 55 = 5,5bb, стек 1 000 = 100bb). Если ты вводишь или меняешь банк или стек вручную, результаты остаются в твоих фишках.",
+            "Вводи суммы в целых фишках. Чтобы думать в bb, считай 10 фишек = 1bb (например, банк 55 = 5,5bb, стек 1 000 = 100bb). Если ты вводишь или меняешь банк или стек вручную, результаты остаются в фишках.",
         },
       }
     : null;
@@ -2024,36 +2024,36 @@ export default defineComponent({
       const isDonk = true;
       const betConfig = [
         {
-          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP", "Bet flop OOP", "OOP flop bet", "OOP flop bet", "Bet flop OOP", "Бет на флопе OOP"),
+          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP", "Bet flop OOP", "OOP flop bet", "OOP flop bet", "Bet flop OOP", "Бет OOP на флопе"),
           res: config.oopFlopBetSanitized,
         },
         {
-          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP", "Raise flop OOP", "OOP flop raise", "OOP flop raise", "Raise flop OOP", "Рейз на флопе OOP"),
+          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP", "Raise flop OOP", "OOP flop raise", "OOP flop raise", "Raise flop OOP", "Рейз OOP на флопе"),
           res: config.oopFlopRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP", "Bet turn OOP", "OOP turn bet", "OOP turn bet", "Bet turn OOP", "Бет на тёрне OOP"),
+          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP", "Bet turn OOP", "OOP turn bet", "OOP turn bet", "Bet turn OOP", "Бет OOP на тёрне"),
           res: config.oopTurnBetSanitized,
         },
         {
-          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP", "Raise turn OOP", "OOP turn raise", "OOP turn raise", "Raise turn OOP", "Рейз на тёрне OOP"),
+          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP", "Raise turn OOP", "OOP turn raise", "OOP turn raise", "Raise turn OOP", "Рейз OOP на тёрне"),
           res: config.oopTurnRaiseSanitized,
         },
         {
-          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP", "Donk turn OOP", "OOP turn donk", "OOP turn donk", "Donk turn OOP", "Донк на тёрне OOP"),
+          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP", "Donk turn OOP", "OOP turn donk", "OOP turn donk", "Donk turn OOP", "Донк OOP на тёрне"),
           res: config.oopTurnDonkSanitized,
           isDonk,
         },
         {
-          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP", "Bet river OOP", "OOP river bet", "OOP river bet", "Bet river OOP", "Бет на ривере OOP"),
+          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP", "Bet river OOP", "OOP river bet", "OOP river bet", "Bet river OOP", "Бет OOP на ривере"),
           res: config.oopRiverBetSanitized,
         },
         {
-          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP", "Raise river OOP", "OOP river raise", "OOP river raise", "Raise river OOP", "Рейз на ривере OOP"),
+          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP", "Raise river OOP", "OOP river raise", "OOP river raise", "Raise river OOP", "Рейз OOP на ривере"),
           res: config.oopRiverRaiseSanitized,
         },
         {
-          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP", "Donk river OOP", "OOP river donk", "OOP river donk", "Donk river OOP", "Донк на ривере OOP"),
+          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP", "Donk river OOP", "OOP river donk", "OOP river donk", "Donk river OOP", "Донк OOP на ривере"),
           res: config.oopRiverDonkSanitized,
           isDonk,
         },
@@ -2070,27 +2070,27 @@ export default defineComponent({
       const errors: string[] = [];
       const betConfig = [
         {
-          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP", "Bet flop IP", "IP flop bet", "IP flop bet", "Bet flop IP", "Бет на флопе IP"),
+          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP", "Bet flop IP", "IP flop bet", "IP flop bet", "Bet flop IP", "Бет IP на флопе"),
           res: config.ipFlopBetSanitized,
         },
         {
-          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP", "Raise flop IP", "IP flop raise", "IP flop raise", "Raise flop IP", "Рейз на флопе IP"),
+          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP", "Raise flop IP", "IP flop raise", "IP flop raise", "Raise flop IP", "Рейз IP на флопе"),
           res: config.ipFlopRaiseSanitized,
         },
         {
-          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP", "Bet turn IP", "IP turn bet", "IP turn bet", "Bet turn IP", "Бет на тёрне IP"),
+          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP", "Bet turn IP", "IP turn bet", "IP turn bet", "Bet turn IP", "Бет IP на тёрне"),
           res: config.ipTurnBetSanitized,
         },
         {
-          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP", "Raise turn IP", "IP turn raise", "IP turn raise", "Raise turn IP", "Рейз на тёрне IP"),
+          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP", "Raise turn IP", "IP turn raise", "IP turn raise", "Raise turn IP", "Рейз IP на тёрне"),
           res: config.ipTurnRaiseSanitized,
         },
         {
-          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP", "Bet river IP", "IP river bet", "IP river bet", "Bet river IP", "Бет на ривере IP"),
+          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP", "Bet river IP", "IP river bet", "IP river bet", "Bet river IP", "Бет IP на ривере"),
           res: config.ipRiverBetSanitized,
         },
         {
-          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP", "Raise river IP", "IP river raise", "IP river raise", "Raise river IP", "Рейз на ривере IP"),
+          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP", "Raise river IP", "IP river raise", "IP river raise", "Raise river IP", "Рейз IP на ривере"),
           res: config.ipRiverRaiseSanitized,
         },
       ];

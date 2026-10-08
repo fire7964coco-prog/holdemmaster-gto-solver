@@ -188,7 +188,7 @@ export const M = {
   ru: {
     entry: "Тренировать этот спот", busy: "Сохранение вопросов…", tab: "Мои споты", presetTab: "Учебные споты",
     empty: "Когда расчёт закончится, нажми [Тренировать этот спот] на экране результатов — вопросы сохранятся здесь.",
-    loading: "Загрузка твоих спотов…", storageNote: "На этом устройстве хранятся 20 последних спотов и по 500 последних попыток в каждом. Результаты в «Мои споты» считаются отдельно. Если сохранить тот же спот снова, его расчёт заменится, а история тренировок по нему удалится.",
+    loading: "Загрузка твоих спотов…", storageNote: "На этом устройстве хранятся 20 последних спотов и по 500 последних попыток в каждом. Результаты во вкладке «Мои споты» считаются отдельно. Если сохранить тот же спот снова, его расчёт заменится, а история тренировок по нему удалится.",
     source: "Твой приближённый расчёт · целевая погрешность {target}% · достигнуто {achieved}%", lockAssumption: "Часть стратегии считается зафиксированной",
     reviewSource: "Спот из разбора раздачи · {method} · целевая погрешность {target}% · достигнуто {achieved}%", backToReview: "Назад к разбору раздачи",
     chooseSpot: "Сохранённые споты", deleteSpot: "Удалить спот", deleteConfirm: "Удалить этот спот и историю тренировок по нему с этого устройства?",
@@ -196,11 +196,13 @@ export const M = {
     captureError: "Не удалось создать вопросы по этим результатам. Проверь, что расчёт завершён.",
     noQuestion: "В этом споте нет рук для розыгрыша.", board: "Борд", hand: "Твоя рука", pot: "Банк", stack: "Стек", line: "Линия",
     prompt: "Как сыграешь?", next: "Следующий вопрос", review: "Разбор ошибок", practice: "Обычная тренировка", attemptCount: "Попыток в этом споте: {count}",
-    verdictBest: "Лучший ход", verdictGood: "Допустимо", verdictBad: "Спот на разбор", evLoss: "Потеря EV", frequency: "Частота", actionEv: "EV действия", chips: "фишка",
+    verdictBest: "Лучший ход", verdictGood: "Допустимо", verdictBad: "Нужен разбор", evLoss: "Потеря EV", frequency: "Частота", actionEv: "EV действия", chips: "фишка",
   },
 } satisfies LocaleDict<Record<string, string>>;
 
 export type CustomTrainerLabelKey = keyof typeof M.ko;
 
 // ru: one form is M.ru.chips; few/many follow «фишка/фишки/фишек».
-export const ruChipLabel = (n: number): string => ruPlural(n, M.ru.chips, "фишки", "фишек");
+// shownAsDecimal: 화면이 소수 자리로 보이는 값(«1,000 фишки»)은 ruPlural 계약(§7-1)대로 항상 few형 — 정수 그대로 넘기면 «1,000 фишка»가 나간다(10-08 검수).
+export const ruChipLabel = (n: number, shownAsDecimal = false): string =>
+  shownAsDecimal ? "фишки" : ruPlural(n, M.ru.chips, "фишки", "фишек");

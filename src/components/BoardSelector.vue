@@ -67,7 +67,7 @@ import { computed, defineComponent, onUnmounted, ref } from "vue";
 import { useConfigStore } from "../store";
 import { cardText } from "../utils";
 import { parseBoardInput } from "../board-input";
-import { i18n, ruPlural } from "../i18n";
+import { i18n } from "../i18n";
 
 import BoardSelectorCard from "./BoardSelectorCard.vue";
 
@@ -210,7 +210,7 @@ const M = {
     randomFlop: "Случайный флоп",
     warnLabel: "Внимание:",
     warnBody: (n: number) =>
-      `Отредактированное дерево рассчитано на ${n} ${ruPlural(n, "карту", "карты", "карт")} борда.`,
+      `Отредактированное дерево рассчитано на борд из ${n} карт.`,
   },
 } as const;
 

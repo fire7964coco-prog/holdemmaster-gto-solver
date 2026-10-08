@@ -183,7 +183,7 @@ const CARD_TEXT = {
   },
   ru: {
     brand: "HoldemMaster GTO-тренажёр",
-    tagline: "Одна задача в день · у всех одна и та же",
+    tagline: "Одна задача в день · одна на всех",
     heading: "Задача дня по GTO",
     board: "Борд",
     hand: "Моя рука",
