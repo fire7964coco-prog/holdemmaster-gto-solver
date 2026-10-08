@@ -38,7 +38,7 @@
     -->
     <script>
       (function () {
-        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr", "vi"];
+        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr", "vi", "ru"];
         var l = null;
         try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
         if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale.pegged"); } catch (e) { l = null; } }
@@ -55,6 +55,7 @@
           else if (n === "hi" || n.indexOf("hi-") === 0) l = "hi";
           else if (n.indexOf("tr") === 0) l = "tr"; // tr-TR·tr-CY
           else if (n.indexOf("vi") === 0) l = "vi";
+          else if (n.indexOf("ru") === 0) l = "ru";
           else if (n.indexOf("zh") === 0) l = (/^zh-(tw|hk|mo)($|[-_])/.test(n) || n.indexOf("hant") >= 0) ? "zh-hant" : "zh";
           else l = "en";
         }
@@ -65,7 +66,7 @@
         var TITLE = {
           en: "GTO Trainer", ja: "GTOトレーナー", es: "GTO Trainer", pt: "GTO Trainer",
           de: "GTO Trainer", zh: "GTO 训练器", "zh-hant": "GTO 訓練器", fr: "GTO Trainer", id: "GTO Trainer",
-          ms: "GTO Trainer", hi: "GTO Trainer", tr: "GTO Trainer", vi: "GTO Trainer" /* 앱 이름 = 매니페스트 short_name과 같은 영어 공용(확정표 ②) */
+          ms: "GTO Trainer", hi: "GTO Trainer", tr: "GTO Trainer", ru: "GTO Trainer" /* ru-todo */, vi: "GTO Trainer" /* 앱 이름 = 매니페스트 short_name과 같은 영어 공용(확정표 ②) */
         };
         var meta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
         if (meta && TITLE[l]) meta.setAttribute("content", TITLE[l]);

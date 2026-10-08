@@ -30,7 +30,7 @@
     -->
     <script>
       (function () {
-        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr", "vi"];
+        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr", "vi", "ru"];
         var l = null;
         try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
         if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale.pegged"); } catch (e) { l = null; } }
@@ -47,6 +47,7 @@
           else if (n === "hi" || n.indexOf("hi-") === 0) l = "hi";
           else if (n.indexOf("tr") === 0) l = "tr"; // tr-TR·tr-CY
           else if (n.indexOf("vi") === 0) l = "vi";
+          else if (n.indexOf("ru") === 0) l = "ru";
           else if (n.indexOf("zh") === 0) l = (/^zh-(tw|hk|mo)($|[-_])/.test(n) || n.indexOf("hant") >= 0) ? "zh-hant" : "zh";
           else l = "en";
         }

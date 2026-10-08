@@ -902,6 +902,32 @@ const M = {
     action: (name: string): string =>
       ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
+  // ru-todo: English copy; translate values in this block.
+  ru: {
+    summary: "Summary",
+    barWidth: "Bar Width:",
+    normalized: "Normalized",
+    absolute: "Absolute",
+    full: "Full",
+    display: "Display:",
+    actionPct: "Action %",
+    actionEv: "Action EV",
+    exportCsv: "Export summary as a CSV file",
+    all: "All",
+    hand: "Hand",
+    strategy: "Strategy",
+    weightBar: "Weight (Bar)",
+    weight: "Weight",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (Bar)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      chanceType === "turn" ? "No turn report available" : "No river report available",
+    noResults: "No results",
+    action: (name: string): string =>
+      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

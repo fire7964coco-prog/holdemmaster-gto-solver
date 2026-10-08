@@ -552,6 +552,31 @@ const M = {
     strategyCombos: "Chiến lược (combo)",
     equity: "Equity",
   },
+  // ru-todo: English copy; translate values in this block.
+  ru: {
+    modeLabels: {
+      basics: "Basics",
+      graphs: "Graphs",
+      compare: "Compare",
+      turn: "Turn",
+      river: "River",
+    } as Record<string, string>,
+    player: "Player:",
+    auto: (player: string) => `Auto (${player})`,
+    barHeight: "Bar Height:",
+    normalized: "Normalized",
+    absolute: "Absolute",
+    full: "Full",
+    suit: "Suit:",
+    grouped: "Grouped",
+    individual: "Individual",
+    display: "Display:",
+    strategy: "Strategy",
+    weight: "Weight",
+    chart: "Chart:",
+    strategyCombos: "Strategy (Combos)",
+    equity: "Equity",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

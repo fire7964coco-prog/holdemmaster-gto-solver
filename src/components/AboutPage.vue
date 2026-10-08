@@ -843,6 +843,51 @@ const M = {
     creditMid2: " bản địa hóa và cải tiến. Toàn bộ mã nguồn đã sửa được công bố trên",
     creditAfter: " theo cùng giấy phép.",
   },
+  // ru-todo: English copy; translate values in this block.
+  ru: {
+    community: "HoldemMaster Community",
+    heroTitle1: "GTO strategy,",
+    heroTitle2: "right in your browser.",
+    heroSub1: "Nothing to install, nothing to pay. Enter your ranges and a board,",
+    heroSub2: " and the optimal strategy is computed right on your own device.",
+    ctaPresets: "View Study Spots",
+    ctaTrainer: "GTO Trainer",
+    ctaDaily: "Daily Puzzle",
+    dailyDone: "Done",
+    ctaGuide: "How to Use",
+    ctaInstall: "Add to Home Screen",
+    installNote:
+      "Installing saves the Study Spots and Trainer to your device, so you can keep practicing even when you're offline. It's a browser shortcut, not a program — it never asks for any permissions.",
+    installSafe: "Is it safe?",
+    features: [
+      { title: "Free", desc: "Every feature, no usage limits" },
+      { title: "Offline Study", desc: "Add it to your home screen and practice without an internet connection" },
+      { title: "Fast Solving", desc: "Multithreaded — desktop-solver speed" },
+      { title: "GTO Trainer", desc: "Play spots, graded on EV loss relative to the pot" },
+    ],
+    featureLockTitle: "Strategy locking (node lock)",
+    featureLockDesc: "Set the opponent’s strategy and solve again — see how your strategy changes when the opponent makes mistakes",
+    step5Trainer: "After solving, use [Lock this node’s strategy] to try changing the opponent’s strategy, then [Practice this spot] to answer questions about that spot",
+    step5Solver: "After solving, use [Lock this node’s strategy] to try changing the opponent’s strategy",
+    stepsTitle: "New here?",
+    steps: [
+      "Open any spot under Study Spots and hit [View results] — solutions appear instantly",
+      "Check How to Use to learn how to read the results screen",
+      "Try the GTO Trainer — it shows exactly how many bb each decision costs you",
+      "Once you're comfortable, solve your own hands with Custom Spot (①–⑤)",
+    ],
+    landingBefore:
+      "Prefer to read up first on what a GTO solver is and how to interpret the output? See",
+    landingLink: "the HoldemMaster solver guide",
+    landingAfter: ".",
+    notes:
+      "On iOS and Safari, browser limitations force single-threaded solving, so it runs slower — on macOS we recommend Chrome. Available memory is capped at 4GB (a WebAssembly limit), so solving big spots yourself is smoother on a PC.",
+    creditBefore: "This app is based on",
+    creditMid1: " (by Wataru Inariba, AGPL-3.0), localized and enhanced by",
+    creditBrand: "HoldemMaster",
+    creditMid2: ". The full modified source code is published on",
+    creditAfter: " under the same license.",
+  },
 } as const;
 
 /* npokers 빌드에서 위 사전을 덮어쓰는 조각 — 트레이너·교육예제·오늘의문제 언급을 걷어내고
@@ -1107,6 +1152,25 @@ const N =
             "Xem qua range open và phòng thủ trong Bảng preflop",
             "Xem Hướng dẫn để biết cách đọc màn hình kết quả",
             "Khi đã quen, hãy tự giải tay bài của mình bằng Spot tùy chỉnh (①–⑤)",
+          ],
+        },
+        // ru-todo: English copy; translate values in this block.
+        ru: {
+          community: "npokers.com",
+          ctaPreflop: "Preflop Charts",
+          ctaEquity: "Equity Calculator",
+          installNote:
+            "Installing saves the app to your device, so it opens even when you're offline. It's a browser shortcut, not a program — it never asks for any permissions.",
+          features: [
+            { title: "Free", desc: "Every feature, no usage limits" },
+            { title: "Offline", desc: "Add it to your home screen and use it without an internet connection" },
+            { title: "Fast Solving", desc: "Multithreaded — desktop-solver speed" },
+            { title: "Charts & Equity", desc: "Opening & defense ranges, plus hand and range equity" },
+          ],
+          steps: [
+            "Skim the opening & defense ranges under Preflop Charts",
+            "Check How to Use to learn how to read the results screen",
+            "Once you're comfortable, solve your own hands with Custom Spot (①–⑤)",
           ],
         },
       }

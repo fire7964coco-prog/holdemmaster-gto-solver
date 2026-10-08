@@ -130,6 +130,16 @@ const actionLabelsVi: Record<string, string> = {
   Allin: "All-In",
   "All-in": "All-In",
 };
+// ru-todo: English output copied explicitly, including engine-name defaults.
+const actionLabelsRu: Record<string, string> = {
+  Fold: "Fold",
+  Check: "Check",
+  Call: "Call",
+  Bet: "Bet",
+  Raise: "Raise",
+  Allin: "All-In",
+  "All-in": "All-In",
+};
 const actionName = (name: string) =>
   i18n.locale === "ko"
     ? actionLabelsKo[name] ?? name
@@ -146,6 +156,8 @@ const actionName = (name: string) =>
     ? actionLabelsEn[name] ?? name
     : i18n.locale === "vi"
     ? actionLabelsVi[name] ?? name
+    : i18n.locale === "ru"
+    ? actionLabelsRu[name] ?? name
     : actionLabelsEn[name] ?? name;
 
 export const trainerCategory = (
@@ -158,7 +170,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru",
     Record<TrainerCategory, string>
   > = {
     ko: {
@@ -249,6 +261,13 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "Pot 3-bet",
       blind: "Blind vs blind",
     },
+    // ru-todo: English copy; translate values in this block.
+    ru: {
+      all: "All",
+      srp: "Single Raised",
+      "3bp": "3-Bet Pot",
+      blind: "Blind vs Blind",
+    },
   };
   return labels[i18n.locale][category];
 };
@@ -288,6 +307,9 @@ export const trainerActionLabel = (
         `${label} ${amount} (%${pct} pot)`
       : i18n.locale === "vi"
       ? // 확정표 §2-2: «35%» 숫자 뒤 · 공백 없음 · «pot» 영어
+        `${label} ${amount} (${pct}% pot)`
+      : i18n.locale === "ru"
+      ? // ru-todo: English copy; percent stays after the number without a space.
         `${label} ${amount} (${pct}% pot)`
       : `${label} ${amount} (${pct}% pot)`;
   }

@@ -89,6 +89,7 @@
           <option value="zh">简体中文</option>
           <option value="zh-hant">繁體中文</option>
           <option value="vi">Tiếng Việt</option>
+          <option value="ru">Русский</option>
         </select>
         <a
           :href="communityUrl"
@@ -233,6 +234,14 @@ const M = {
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Chọn ngôn ngữ",
   },
+  // ru-todo: English copy; translate values in this block.
+  ru: {
+    resultsDisabledHint: "Opens when ⑤ Run Solver is finished",
+    solver: "Solver",
+    community: "HoldemMaster",
+    communitySuffix: " Community",
+    langSwitchLabel: "Select language",
+  },
 } as const;
 
 export default defineComponent({
@@ -259,7 +268,8 @@ export default defineComponent({
         value === "ms" ||
         value === "hi" ||
         value === "tr" ||
-        value === "vi"
+        value === "vi" ||
+        value === "ru"
       )
         setLocale(value);
     };

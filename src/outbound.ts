@@ -113,6 +113,8 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   tr: { "": "/tr", "/solver": "/tr/solver" },
   // V1: 2026-10-07 계획서 실측 /vi/solver 404 — 홈만 연결한다.
   vi: { "": "/vi" },
+  // U1: 2026-10-08 supplied measurements: ru landing pages unavailable; home only.
+  ru: { "": "/ru" },
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

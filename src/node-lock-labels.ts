@@ -258,6 +258,25 @@ export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = {
     banner: "Đã giải với một phần chiến lược bị cố định — không phải chiến lược cân bằng (GTO) · {count} node bị khóa",
     noReach: "Trọng số reach của node này bằng 0 nên không thể hiển thị tần suất ban đầu.",
   },
+  // ru-todo: English copy; translate values in this block.
+  ru: {
+    title: "Lock this node’s strategy",
+    apply: "Lock and solve again",
+    clearAll: "Unlock all and solve again",
+    remove: "Unlock and solve again",
+    before: "Before locking",
+    after: "After locking",
+    frequency: "Frequency",
+    comparison: "Before/after comparison",
+    exploitability: "Exploitability",
+    sumError: "Enter integers from 0 to 100 for each action, totaling 100.",
+    skippedChance: "A path with an unspecified card cannot be locked. Select the card first.",
+    engineError: "The strategy could not be locked. Check the input values and solve again.",
+    assumption: "Values under the fixed-strategy assumption",
+    // ru-todo: §7-1: use a colon label with {count}, no noun inflection.
+    banner: "Solved with part of the strategy fixed — not an equilibrium (GTO) strategy · {count} locked nodes",
+    noReach: "This node’s reach weight is 0, so initial frequencies are unavailable.",
+  },
 };
 
 export const nodeLockLabels = () => NODE_LOCK_MESSAGES[i18n.locale];

@@ -132,6 +132,13 @@ const M = {
     titleLine2: "Trainer GTO.",
     footer: "Solver GTO miễn phí · Dùng được ngoại tuyến",
   },
+  // ru-todo: English copy; translate values in this block.
+  ru: {
+    greeting: "Welcome to",
+    titleLine1: "HoldemMaster",
+    titleLine2: "GTO Trainer.",
+    footer: "Free GTO Solver · Works Offline",
+  },
   ms: {
     greeting: "Selamat datang ke",
     titleLine1: "HoldemMaster",

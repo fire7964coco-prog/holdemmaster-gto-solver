@@ -71,6 +71,10 @@ const M = {
   vi: {
     combos: "combo",
   },
+  // ru-todo: English copy; translate values in this block.
+  ru: {
+    combos: "combos",
+  },
 } as const;
 
 const actionLabel = (
@@ -182,6 +186,14 @@ const actionLabel = (
       Raise: "Raise",
       Allin: "All-in",
       "All-in": "All-in",
+    }, /* ru-todo */ {
+      Fold: "Fold",
+      Check: "Check",
+      Call: "Call",
+      Bet: "Bet",
+      Raise: "Raise",
+      Allin: "All-in",
+      "All-in": "All-in",
     } // tr: 액션명은 영어 그대로(확정표 §3-1)
   );
   const label = map[name] ?? name;
@@ -210,7 +222,7 @@ const actionLabel = (
         "du pot",
         "dari pot",
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
-        "pot", "pot", "pot", "pot" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
+        "pot", "pot", "pot", "pot", /* ru-todo */ "pot" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
       )})`
     );
   }

@@ -241,6 +241,19 @@ const M = {
       "Dán vào một bài viết trong cộng đồng, chúng tôi sẽ dùng để sửa lỗi. Nội dung không chứa thông tin cá nhân.",
     promptCopy: "Sao chép đoạn văn bản bên dưới",
   },
+  // ru-todo: English copy; translate values in this block.
+  ru: {
+    title: "An error was logged",
+    body1: "If something looked wrong, please let us know. The details are stored ",
+    bodyB1: "only on this device",
+    body2: " — sharing them is entirely up to you.",
+    copied: "Copied",
+    copyButton: "Copy error details",
+    close: "Close",
+    copiedHint:
+      "Paste it into a community post and we'll use it to fix the issue. It contains no personal information.",
+    promptCopy: "Copy the text below",
+  },
 } as const;
 
 export default defineComponent({
@@ -260,7 +273,7 @@ export default defineComponent({
         "Réessayer avec un seul thread",
         "Coba lagi dengan satu thread",
         "Cuba semula dengan satu thread",
-        "एक थ्रेड से फिर कोशिश करें", "Tek thread ile tekrar dene", "Thử lại với một thread"
+        "एक थ्रेड से फिर कोशिश करें", "Tek thread ile tekrar dene", "Thử lại với một thread", /* ru-todo */ "Retry with a single thread"
       )
     );
     const copied = ref(false);

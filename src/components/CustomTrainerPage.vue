@@ -90,7 +90,7 @@ import type { CustomTrainerBank, CustomTrainerQuestion, CustomTrainerAttempt } f
 import { listCustomTrainerBanks, deleteCustomTrainerBank, getCustomTrainerAttempts, addCustomTrainerAttempt } from "../custom-trainer-db";
 import { evaluateTrainerAction, trainerActionLabel, trainerCardPair } from "../trainer";
 import type { TrainerEvaluation } from "../trainer";
-import { M } from "../custom-trainer-labels";
+import { M, ruChipLabel } from "../custom-trainer-labels";
 import { M as REVIEW_LABELS } from "../hand-review-labels";
 import { useStore } from "../store";
 import { i18n, localizeNumber, pctText } from "../i18n";
@@ -115,8 +115,14 @@ export default defineComponent({
     let selectionVersion = 0;
     const unit = computed(() => bank.value?.unitScale === 10 ? "bb" : L.value.chips);
     const number = localizeNumber;
-    const displayValue = (value: number) => `${number(value.toFixed(3))} ${unit.value}`;
-    const amount = (value: number) => `${number(formatAmount(value, bank.value?.unitScale ?? 1))} ${unit.value}`;
+    // ru nouns depend on the displayed count; bb stays attached (U1 §2-1).
+    const ruUnit = (n: number, scale: number) => scale === 10 ? "bb" : ` ${ruChipLabel(n)}`;
+    const displayValue = (value: number) => i18n.locale === "ru"
+      ? `${number(value.toFixed(3))}${ruUnit(value, bank.value?.unitScale ?? 1)}`
+      : `${number(value.toFixed(3))} ${unit.value}`;
+    const amount = (value: number) => i18n.locale === "ru"
+      ? `${number(formatAmount(value, bank.value?.unitScale ?? 1))}${ruUnit(Number(formatAmount(value, bank.value?.unitScale ?? 1)), bank.value?.unitScale ?? 1)}`
+      : `${number(formatAmount(value, bank.value?.unitScale ?? 1))} ${unit.value}`;
     const percent = (value: number) =>
       i18n.locale === "fr" ? `${number(value.toFixed(1))} %` : pctText(number(value.toFixed(1)));
     const boardCards = computed(() => question.value?.node.currentBoard.map(cardText) ?? []);
@@ -134,6 +140,11 @@ export default defineComponent({
       .replace("{achieved}", number(String(Number(bank.value.achievedExploitabilityPct.toPrecision(3))))) : "");
     const bankTitle = (item: CustomTrainerBank) => {
       const board = item.board.map(card => { const text = cardText(card); return text.rank + text.suit; }).join(" ");
+      if (i18n.locale === "ru") {
+        const pot = formatAmount(item.startingPot, item.unitScale);
+        const stack = formatAmount(item.effectiveStack, item.unitScale);
+        return `${board} · ${L.value.pot} ${number(pot)}${ruUnit(Number(pot), item.unitScale)} · ${L.value.stack} ${number(stack)}${ruUnit(Number(stack), item.unitScale)}`;
+      }
       const unitName = item.unitScale === 10 ? "bb" : L.value.chips;
       return `${board} · ${L.value.pot} ${number(formatAmount(item.startingPot, item.unitScale))} ${unitName} · ${L.value.stack} ${number(formatAmount(item.effectiveStack, item.unitScale))} ${unitName}`;
     };

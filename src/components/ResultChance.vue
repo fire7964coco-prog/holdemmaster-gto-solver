@@ -261,6 +261,14 @@ const M = {
     action: (name: string): string =>
       ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
+  // ru-todo: English copy; translate values in this block.
+  ru: {
+    strategyCombos: "Strategy (Combos)",
+    strategy: "Strategy",
+    equity: "Equity",
+    action: (name: string): string =>
+      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

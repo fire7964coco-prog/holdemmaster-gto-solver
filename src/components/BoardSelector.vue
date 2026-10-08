@@ -67,7 +67,7 @@ import { computed, defineComponent, onUnmounted, ref } from "vue";
 import { useConfigStore } from "../store";
 import { cardText } from "../utils";
 import { parseBoardInput } from "../board-input";
-import { i18n } from "../i18n";
+import { i18n, ruPlural } from "../i18n";
 
 import BoardSelectorCard from "./BoardSelectorCard.vue";
 
@@ -202,6 +202,16 @@ const M = {
     warnLabel: "Cảnh báo:",
     warnBody: (n: number) =>
       `Cây đã chỉnh sửa giả định board có ${n} lá.`,
+  },
+  // ru-todo: English copy; translate values in this block.
+  ru: {
+    inputError: "Could not read the cards. Enter 3–5 cards, such as AsKd7c or As Kd 7c. Your previous board is kept.",
+    placeholder: "e.g., AsKd7c",
+    clear: "Clear",
+    randomFlop: "Random Flop",
+    warnLabel: "Warning:",
+    warnBody: (n: number) =>
+      `The edited tree assumes a ${n}-${ruPlural(n, "card", "card", "card")} board.`,
   },
 } as const;
 

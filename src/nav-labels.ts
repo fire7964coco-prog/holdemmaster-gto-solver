@@ -26,4 +26,6 @@ export const navResults: Record<Locale, string> = {
   hi: "परिणाम",
   tr: "Sonuçlar",
   vi: "Kết quả",
+  // ru-todo: English copy; translate values in this block.
+  ru: "Results",
 };

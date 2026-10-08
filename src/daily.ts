@@ -9,7 +9,7 @@
  * 데이터는 새로 만들지 않는다. 기존 문제 은행에 날짜 기반 난수를 넣을 뿐이다.
  */
 import { reactive } from "vue";
-import { i18n, localizeNumber } from "./i18n";
+import { i18n, localizeNumber, ruPlural } from "./i18n";
 import { makeTrainerQuestion, TrainerBank, TrainerQuestion } from "./trainer";
 
 const KEY_LAST = "daily.lastDate";
@@ -145,7 +145,7 @@ export const recordDaily = (lossBb: number) => {
  */
 export const dailyCardDate = () => {
   const key = todayKey();
-  if (i18n.locale === "de" || i18n.locale === "tr") return key.split("-").reverse().join(".");
+  if (i18n.locale === "de" || i18n.locale === "tr" || i18n.locale === "ru") return key.split("-").reverse().join(".");
   // hi: DD/MM/YYYY with Latin digits, same in the image and copied text.
   if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi" || i18n.locale === "vi")
     return key.split("-").reverse().join("/");
@@ -327,6 +327,19 @@ export const dailyShareText = (verdict: string) => {
       "",
       "Giải cùng thử thách này → https://solver.holdemmaster.com/?view=trainer&lang=vi",
       "(HoldemMaster GTO Solver · mỗi ngày một thử thách)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  // ru-todo: English copy; translate full sentences and the three day forms.
+  if (i18n.locale === "ru") {
+    return [
+      `[Daily GTO Puzzle · ${dailyCardDate()}]`,
+      `My result: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak}${ruPlural(dailyState.streak, "-day streak", "-day streak", "-day streak")}` : "",
+      "",
+      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&lang=ru",
+      "(HoldemMaster GTO Solver · one puzzle a day)",
     ]
       .filter(Boolean)
       .join("\n");
