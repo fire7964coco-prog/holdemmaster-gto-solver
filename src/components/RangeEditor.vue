@@ -273,15 +273,14 @@ const M = {
     parseError: (range: string) =>
       `Không đọc được range: ${range || "(chuỗi trống)"}`,
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. Tapping a cell that already has that weight clears it. The hand name and weight you tapped appear in large text above.",
-    clear: "Clear",
-    errorPrefix: "Error:",
-    weight: "Weight:",
-    combos: "combos",
+    mobileHint: "Выбери вес ползунком под матрицей, затем нажми на ячейку, чтобы применить его. Повторное нажатие на ячейку с тем же весом очищает её. Название руки и вес нажатой ячейки крупно показаны сверху.",
+    clear: "Очистить",
+    errorPrefix: "Ошибка:",
+    weight: "Вес:",
+    combos: "комбо",
     parseError: (range: string) =>
-      `Failed to parse range: ${range || "(empty string)"}`,
+      `Не удалось разобрать диапазон: ${range || "(пустая строка)"}`,
   },
 } as const;
 

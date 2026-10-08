@@ -1,7 +1,7 @@
 {
   "name": "npokers",
   "short_name": "npokers",
-  "description": "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+  "description": "Бесплатный GTO-солвер прямо в браузере — ничего не нужно устанавливать. Считай постфлоп-стратегию в техасском холдеме по диапазону, борду и сайзингу.",
   "lang": "ru",
   "dir": "ltr",
   "start_url": "/?lang=ru",
@@ -37,9 +37,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Preflop Charts",
-      "short_name": "Charts",
-      "description": "Opening & defense ranges by position",
+      "name": "Префлоп-чарты",
+      "short_name": "Чарты",
+      "description": "Диапазоны опена и защиты по позициям",
       "url": "/?view=preflop&lang=ru",
       "icons": [
         {
@@ -49,9 +49,9 @@
       ]
     },
     {
-      "name": "Equity Calculator",
-      "short_name": "Equity",
-      "description": "Hand and range equity",
+      "name": "Калькулятор эквити",
+      "short_name": "Эквити",
+      "description": "Эквити руки и диапазона",
       "url": "/?view=equity&lang=ru",
       "icons": [
         {

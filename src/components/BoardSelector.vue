@@ -203,15 +203,14 @@ const M = {
     warnBody: (n: number) =>
       `Cây đã chỉnh sửa giả định board có ${n} lá.`,
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    inputError: "Could not read the cards. Enter 3–5 cards, such as AsKd7c or As Kd 7c. Your previous board is kept.",
-    placeholder: "e.g., AsKd7c",
-    clear: "Clear",
-    randomFlop: "Random Flop",
-    warnLabel: "Warning:",
+    inputError: "Не удалось распознать карты. Введи 3–5 карт, например AsKd7c или As Kd 7c. Прежний борд сохранён.",
+    placeholder: "напр. AsKd7c",
+    clear: "Очистить",
+    randomFlop: "Случайный флоп",
+    warnLabel: "Внимание:",
     warnBody: (n: number) =>
-      `The edited tree assumes a ${n}-${ruPlural(n, "card", "card", "card")} board.`,
+      `Отредактированное дерево рассчитано на ${n} ${ruPlural(n, "карту", "карты", "карт")} борда.`,
   },
 } as const;
 

@@ -331,15 +331,14 @@ export const dailyShareText = (verdict: string) => {
       .filter(Boolean)
       .join("\n");
   }
-  // ru-todo: English copy; translate full sentences and the three day forms.
   if (i18n.locale === "ru") {
     return [
-      `[Daily GTO Puzzle · ${dailyCardDate()}]`,
-      `My result: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
-      dailyState.streak > 1 ? `${dailyState.streak}${ruPlural(dailyState.streak, "-day streak", "-day streak", "-day streak")}` : "",
+      `[Задача дня по GTO · ${dailyCardDate()}]`,
+      `Мой результат: ${verdict} (потеря EV ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak} ${ruPlural(dailyState.streak, "день", "дня", "дней")} подряд` : "",
       "",
-      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&lang=ru",
-      "(HoldemMaster GTO Solver · one puzzle a day)",
+      "Реши ту же задачу → https://solver.holdemmaster.com/?view=trainer&lang=ru",
+      "(HoldemMaster GTO-солвер · одна задача в день)",
     ]
       .filter(Boolean)
       .join("\n");

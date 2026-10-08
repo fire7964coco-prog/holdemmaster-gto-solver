@@ -165,21 +165,20 @@ const M = {
     footnote:
       "Range là bản xấp xỉ lối chơi online 100bb tiêu chuẩn. Tải một spot, chỉnh range rồi so sánh — đây là cách học rất tốt.",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    infoBtn1: "[⚡ View results]",
+    infoBtn1: "[⚡ Результаты]",
     infoText1:
-      " shows the solved strategy instantly. Use ",
-    infoBtn2: "[Solve it yourself]",
+      " сразу показывает стратегию солвера. Нажимай ",
+    infoBtn2: "[Решить самому]",
     infoText2:
-      " only when you want to tweak the ranges or explore turn and river play.",
-    pot: "Pot",
-    stack: "Stack",
-    articleLink: "Read article",
-    viewResults: "View results",
-    solveYourself: "Solve it yourself",
+      " только если хочешь изменить диапазоны или разобрать игру на тёрне и ривере.",
+    pot: "Банк",
+    stack: "Стек",
+    articleLink: "Читать статью",
+    viewResults: "Результаты",
+    solveYourself: "Решить самому",
     footnote:
-      "Ranges are approximations of standard 100bb online play. Load a spot, tweak the ranges, and compare — a great way to study.",
+      "Диапазоны приближены к стандартной онлайн-игре со стеком 100bb. Загрузи спот, измени диапазоны и сравни результаты — отличный способ учиться.",
   },
   en: {
     infoBtn1: "[⚡ View results]",

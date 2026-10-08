@@ -185,23 +185,22 @@ export const M = {
     prompt: "Bạn sẽ làm gì?", next: "Câu tiếp theo", review: "Xem lại lỗi sai", practice: "Luyện tập thông thường", attemptCount: "Số lần thử ở spot này: {count}",
     verdictBest: "Nước đi tốt nhất", verdictGood: "Chấp nhận được", verdictBad: "Xem lại spot này", evLoss: "EV mất", frequency: "Tần suất", actionEv: "EV hành động", chips: "chip",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    entry: "Practice this spot", busy: "Saving practice questions…", tab: "My spots", presetTab: "Preset practice",
-    empty: "After solving a spot, choose [Practice this spot] on the results screen to save questions here.",
-    loading: "Loading your spots…", storageNote: "This device stores your 20 most recent spots and 500 latest attempts per spot. My spot results are counted separately. Saving the same spot again replaces its solve and clears its practice history.",
-    source: "Your approximate solve · Target error {target}% · Achieved {achieved}%", lockAssumption: "Assumes part of the strategy is fixed",
-    reviewSource: "Spot from your hand review · {method} · Target error {target}% · Achieved {achieved}%", backToReview: "Back to hand review",
-    chooseSpot: "Saved spots", deleteSpot: "Delete spot", deleteConfirm: "Delete this spot and its practice history from this device?",
-    loadError: "Could not load your saved spots. Please reopen this screen.", saveError: "Could not save. Please try again.",
-    captureError: "Could not create practice questions from these results. Check that the solve has finished.",
-    noQuestion: "There are no playable hands in this spot.", board: "Board", hand: "Your hand", pot: "Pot", stack: "Stack", line: "Line",
-    prompt: "What's your play?", next: "Next question", review: "Review mistakes", practice: "Regular practice", attemptCount: "Attempts in this spot: {count}",
-    verdictBest: "Best play", verdictGood: "Acceptable", verdictBad: "Review this spot", evLoss: "EV loss", frequency: "Frequency", actionEv: "Action EV", chips: "chips",
+    entry: "Тренировать этот спот", busy: "Сохранение вопросов…", tab: "Мои споты", presetTab: "Учебные споты",
+    empty: "Когда расчёт закончится, нажми [Тренировать этот спот] на экране результатов — вопросы сохранятся здесь.",
+    loading: "Загрузка твоих спотов…", storageNote: "На этом устройстве хранятся 20 последних спотов и по 500 последних попыток в каждом. Результаты в «Мои споты» считаются отдельно. Если сохранить тот же спот снова, его расчёт заменится, а история тренировок по нему удалится.",
+    source: "Твой приближённый расчёт · целевая погрешность {target}% · достигнуто {achieved}%", lockAssumption: "Часть стратегии считается зафиксированной",
+    reviewSource: "Спот из разбора раздачи · {method} · целевая погрешность {target}% · достигнуто {achieved}%", backToReview: "Назад к разбору раздачи",
+    chooseSpot: "Сохранённые споты", deleteSpot: "Удалить спот", deleteConfirm: "Удалить этот спот и историю тренировок по нему с этого устройства?",
+    loadError: "Не удалось загрузить сохранённые споты. Открой этот экран заново.", saveError: "Не удалось сохранить. Попробуй ещё раз.",
+    captureError: "Не удалось создать вопросы по этим результатам. Проверь, что расчёт завершён.",
+    noQuestion: "В этом споте нет рук для розыгрыша.", board: "Борд", hand: "Твоя рука", pot: "Банк", stack: "Стек", line: "Линия",
+    prompt: "Как сыграешь?", next: "Следующий вопрос", review: "Разбор ошибок", practice: "Обычная тренировка", attemptCount: "Попыток в этом споте: {count}",
+    verdictBest: "Лучший ход", verdictGood: "Допустимо", verdictBad: "Спот на разбор", evLoss: "Потеря EV", frequency: "Частота", actionEv: "EV действия", chips: "фишка",
   },
 } satisfies LocaleDict<Record<string, string>>;
 
 export type CustomTrainerLabelKey = keyof typeof M.ko;
 
-// ru-todo: the one form is M.ru.chips; translate the few/many forms here.
-export const ruChipLabel = (n: number): string => ruPlural(n, M.ru.chips, "chips", "chips");
+// ru: one form is M.ru.chips; few/many follow «фишка/фишки/фишек».
+export const ruChipLabel = (n: number): string => ruPlural(n, M.ru.chips, "фишки", "фишек");

@@ -177,10 +177,9 @@ const M = {
     combos: "Combo",
     equity: "Equity",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    combos: "Combos",
-    equity: "Equity",
+    combos: "Комбо",
+    equity: "Эквити",
   },
   "zh-hant": {
     combos: "組合",

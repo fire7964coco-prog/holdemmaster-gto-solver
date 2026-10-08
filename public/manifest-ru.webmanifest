@@ -1,7 +1,7 @@
 {
   "name": "HoldemMaster GTO Trainer",
   "short_name": "GTO Trainer",
-  "description": "A free GTO solver and trainer. All 13 Study Spots open instantly, even offline.",
+  "description": "Бесплатный GTO-солвер и тренажёр. Все 13 учебных спотов открываются сразу, даже офлайн.",
   "lang": "ru",
   "dir": "ltr",
   "start_url": "/?view=trainer&lang=ru",
@@ -37,9 +37,9 @@
   ],
   "shortcuts": [
     {
-      "name": "GTO Trainer",
-      "short_name": "Trainer",
-      "description": "Play hands dealt from real ranges and get graded on EV loss",
+      "name": "GTO-тренажёр",
+      "short_name": "Тренажёр",
+      "description": "Играй раздачи из реальных диапазонов и получай оценку по потере EV",
       "url": "/?view=trainer&lang=ru",
       "icons": [
         {
@@ -49,9 +49,9 @@
       ]
     },
     {
-      "name": "13 Study Spots",
-      "short_name": "Study Spots",
-      "description": "See the GTO strategy for 13 spots with no waiting",
+      "name": "13 учебных спотов",
+      "short_name": "Учебные споты",
+      "description": "Смотри GTO-стратегию для 13 спотов без ожидания",
       "url": "/?view=presets&lang=ru",
       "icons": [
         {

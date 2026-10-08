@@ -234,13 +234,13 @@ const M = {
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Chọn ngôn ngữ",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    resultsDisabledHint: "Opens when ⑤ Run Solver is finished",
-    solver: "Solver",
-    community: "HoldemMaster",
-    communitySuffix: " Community",
-    langSwitchLabel: "Select language",
+    resultsDisabledHint: "Откроется после шага ⑤ Запустить солвер",
+    solver: "Солвер",
+    community: "Сообщество",
+    // 앞 공백 U+00A0 (확정표 §3-3 · §5-2 — es·vi 꼴)
+    communitySuffix: "\u00a0HoldemMaster",
+    langSwitchLabel: "Выбор языка",
   },
 } as const;
 

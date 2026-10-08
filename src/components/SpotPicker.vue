@@ -262,18 +262,17 @@ const M = {
       `Cỡ cược đang trống nên đã điền luôn giá trị mặc định — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
     next: "Tiếp: ③ Board",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    title: "Fill ranges by position",
-    note: "Pick who opened and who called, then press the button below — both ranges, the pot and the stack are filled in at once. The ranges are the same as in Preflop Charts (6-max cash, 100bb).",
-    opener: "Open",
-    caller: "Call",
-    apply: "Fill both ranges",
+    title: "Диапазоны по позициям",
+    note: "Выбери позицию опена и позицию колла и нажми кнопку ниже — оба диапазона, банк и стек заполнятся сразу. Диапазоны те же, что в разделе «Префлоп-чарты» (кэш 6-max, 100bb).",
+    opener: "Опен",
+    caller: "Колл",
+    apply: "Заполнить оба диапазона",
     applied: (oop: string, ip: string, pot: string, stack: string) =>
-      `${oop} (OOP) · ${ip} (IP) ranges filled in. Pot ${pot}bb · Stack ${stack}bb`,
+      `Диапазоны заполнены: ${oop} (OOP) · ${ip} (IP). Банк ${pot}bb · Стек ${stack}bb`,
     betsFilled: (flop: string, later: string, raise: string) =>
-      `Bet sizes were empty, so defaults were filled in too — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
-    next: "Next: ③ Board",
+      `Сайзинги были пустыми, поэтому подставлены значения по умолчанию — Флоп ${flop} · Тёрн/Ривер ${later} · Рейз ${raise}`,
+    next: "Далее: ③ Борд",
   },
 } as const;
 

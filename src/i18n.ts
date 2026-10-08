@@ -206,11 +206,11 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Solver GTO miễn phí chạy ngay trong trình duyệt — không cần cài đặt. Tính chiến lược postflop Texas Hold'em theo range, board và cỡ cược. Do HoldemMaster thực hiện.",
   },
-  // ru-todo: English copy; translate values in this block.
+  // 러시아어 — «GTO-тренажёр»·«GTO-солвер»(확정표 §1-6·§3-1), bet size = «сайзинг»(§4-⑤)
   ru: {
-    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em",
+    title: "HoldemMaster GTO-тренажёр — бесплатный GTO-солвер и тренажёр для техасского холдема",
     description:
-      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
+      "Бесплатный GTO-солвер, который работает прямо в браузере — ничего не нужно устанавливать. Считай постфлоп-стратегию в техасском холдеме по диапазону, борду и сайзингу. От HoldemMaster.",
   },
 };
 
@@ -290,11 +290,10 @@ const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Solver GTO miễn phí chạy ngay trong trình duyệt — không cần cài đặt. Tính chiến lược postflop Texas Hold'em theo range, board và cỡ cược.",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    title: "npokers — Free Online GTO Solver for Texas Hold'em",
+    title: "npokers — бесплатный онлайн GTO-солвер для техасского холдема",
     description:
-      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+      "Бесплатный GTO-солвер, который работает прямо в браузере — ничего не нужно устанавливать. Считай постфлоп-стратегию в техасском холдеме по диапазону, борду и сайзингу.",
   },
 };
 
@@ -429,7 +428,7 @@ export const decimalMark = () =>
  *   (번역 전에는 en 복사 + «TR-TODO» 주석).
  *   ms(2026-09-03)도 같은 이유로 id 뒤 «맨 끝»이다 — 기존 10인자 호출 전수에 11번째 값을 붙였다.
  *   vi(2026-10-07)는 tr 뒤 14번째 인자. 번역은 2026-10-07 6묶음.
- *   ru(2026-10-08)는 vi 뒤 15번째 인자. 모든 호출에 ru-todo 영어 복사 자리를 둔다. */
+ *   ru(2026-10-08)는 vi 뒤 15번째 인자. 모든 호출에 ru 15번째 인자를 둔다. */
 export const pick = <T>(
   ko: T,
   en: T,

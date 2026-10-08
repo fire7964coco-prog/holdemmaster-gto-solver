@@ -158,12 +158,11 @@ const M = {
     draws: "Draw",
     noDraws: "Không có thông tin draw",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    hands: "Hands",
-    noHands: "No hands to display",
-    draws: "Draws",
-    noDraws: "No draw information",
+    hands: "Руки",
+    noHands: "Нет рук для показа",
+    draws: "Дро",
+    noDraws: "Нет данных о дро",
   },
 } as const;
 

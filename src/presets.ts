@@ -294,7 +294,7 @@ const SRP = {
   categoryEn: "Single Raised Pot — BTN vs BB (Fundamentals)",
   categoryTr: "Single raised pot — BTN vs BB (temeller)",
   categoryVi: "Single raised pot — BTN vs BB (cơ bản)",
-  categoryRu: "Single Raised Pot — BTN vs BB (Fundamentals)", // ru-todo
+  categoryRu: "Сингл-рейз-пот — BTN vs BB (основы)",
   categoryJa: "シングルレイズポット — BTN vs BB（基本）",
   categoryEs: "Single Raised Pot — BTN vs BB (fundamentos)",
   categoryPt: "Single Raised Pot — BTN vs BB (fundamentos)",
@@ -308,7 +308,7 @@ const SRP = {
   oopLabelEn: "BB (Caller)",
   oopLabelTr: "BB (call eden)",
   oopLabelVi: "BB (bên call)",
-  oopLabelRu: "BB (Caller)", // ru-todo
+  oopLabelRu: "BB (колл)",
   oopLabelJa: "BB（コーラー）",
   oopLabelEs: "BB (caller)",
   oopLabelPt: "BB (caller)",
@@ -322,7 +322,7 @@ const SRP = {
   ipLabelEn: "BTN (Opener)",
   ipLabelTr: "BTN (açan)",
   ipLabelVi: "BTN (bên open)",
-  ipLabelRu: "BTN (Opener)", // ru-todo
+  ipLabelRu: "BTN (опен)",
   ipLabelJa: "BTN（オープンレイザー）",
   ipLabelEs: "BTN (open-raiser)",
   ipLabelPt: "BTN (open-raiser)",
@@ -350,7 +350,7 @@ const TBP = {
   categoryEn: "3-Bet Pot — BB 3-Bets, BTN Calls (Low SPR)",
   categoryTr: "3-bet pot — BB 3-bet yapar, BTN call eder (düşük SPR)",
   categoryVi: "Pot 3-bet — BB 3-bet, BTN call (SPR thấp)",
-  categoryRu: "3-Bet Pot — BB 3-Bets, BTN Calls (Low SPR)", // ru-todo
+  categoryRu: "3-бет-пот — 3-бет BB, колл BTN (низкий SPR)",
   categoryJa: "3ベットポット — BB 3ベット vs BTN コール（低SPR）",
   categoryEs: "Bote de 3-bet — BB 3-betea y BTN paga (SPR bajo)",
   categoryPt: "Pote de 3-bet — BB dá 3-bet e BTN paga (SPR baixo)",
@@ -364,7 +364,7 @@ const TBP = {
   oopLabelEn: "BB (3-Bettor)",
   oopLabelTr: "BB (3-bet yapan)",
   oopLabelVi: "BB (bên 3-bet)",
-  oopLabelRu: "BB (3-Bettor)", // ru-todo
+  oopLabelRu: "BB (3-бет)",
   oopLabelJa: "BB（3ベッター）",
   oopLabelEs: "BB (3-bettor)",
   oopLabelPt: "BB (3-bettor)",
@@ -378,7 +378,7 @@ const TBP = {
   ipLabelEn: "BTN (Caller)",
   ipLabelTr: "BTN (call eden)",
   ipLabelVi: "BTN (bên call)",
-  ipLabelRu: "BTN (Caller)", // ru-todo
+  ipLabelRu: "BTN (колл)",
   ipLabelJa: "BTN（コーラー）",
   ipLabelEs: "BTN (caller)",
   ipLabelPt: "BTN (caller)",
@@ -406,7 +406,7 @@ const SBBB = {
   categoryEn: "Blind vs Blind — SB vs BB (Wide Ranges)",
   categoryTr: "Blind vs blind — SB vs BB (geniş range'ler)",
   categoryVi: "Blind vs blind — SB vs BB (range rộng)",
-  categoryRu: "Blind vs Blind — SB vs BB (Wide Ranges)", // ru-todo
+  categoryRu: "Блайнд vs блайнд — SB vs BB (широкие диапазоны)",
   categoryJa: "ブラインド戦（BvB） — SB vs BB（ワイドレンジ）",
   categoryEs: "Guerra de ciegas — SB vs BB (rangos amplios)",
   categoryPt: "Blind vs Blind — SB vs BB (ranges amplos)",
@@ -420,7 +420,7 @@ const SBBB = {
   oopLabelEn: "SB (Opener)",
   oopLabelTr: "SB (açan)",
   oopLabelVi: "SB (bên open)",
-  oopLabelRu: "SB (Opener)", // ru-todo
+  oopLabelRu: "SB (опен)",
   oopLabelJa: "SB（オープンレイザー）",
   oopLabelEs: "SB (open-raiser)",
   oopLabelPt: "SB (open-raiser)",
@@ -434,7 +434,7 @@ const SBBB = {
   ipLabelEn: "BB (Caller)",
   ipLabelTr: "BB (call eden)",
   ipLabelVi: "BB (bên call)",
-  ipLabelRu: "BB (Caller)", // ru-todo
+  ipLabelRu: "BB (колл)",
   ipLabelJa: "BB（コーラー）",
   ipLabelEs: "BB (caller)",
   ipLabelPt: "BB (caller)",
@@ -466,7 +466,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Dry Ace-High Board",
     titleTr: "Kuru A-high board",
     titleVi: "Board A-high khô",
-    titleRu: "Dry Ace-High Board", // ru-todo
+    titleRu: "Сухой борд туз-хай",
     board: "Ah 7d 2c",
     lesson:
       "레인지 우위 교과서. BB 체크 후 BTN이 작은 벳을 매우 넓게 치는 이유를 관찰하세요 (A가 오픈레이저에게 유리한 카드).",
@@ -475,7 +475,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Ders kitabı gibi bir range avantajı spotu. BB check yaptıktan sonra BTN'nin ne kadar geniş bir range ile küçük c-bet yaptığını izle — as, açan oyuncunun range'ine tam oturuyor.",
     lessonVi: "Spot kinh điển về lợi thế range. Hãy xem BTN c-bet nhỏ với range rộng đến mức nào sau khi BB check — lá A đánh trúng range của bên open.",
-    lessonRu: "The textbook range-advantage spot. Watch how wide a range BTN c-bets small with after BB checks — the ace smashes the opener's range.", // ru-todo
+    lessonRu: "Хрестоматийный спот на преимущество диапазона. Смотри, насколько широким диапазоном BTN ставит маленький контбет после чека BB — туз отлично попадает в диапазон опена.",
     titleJa: "ドライなAハイボード",
     lessonJa:
       "レンジ優位の教科書的スポットです。BBのチェック後、BTNが非常に広いレンジで小さくCベットする理由を観察しましょう（Aはオープンレイザーに有利なカードです）。",
@@ -511,7 +511,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Dry King-High Board",
     titleTr: "Kuru K-high board",
     titleVi: "Board K-high khô",
-    titleRu: "Dry King-High Board", // ru-todo
+    titleRu: "Сухой борд король-хай",
     board: "Ks 8d 3c",
     lesson:
       "A하이 보드와 비교해보세요. K 보드도 BTN 우위지만 미묘하게 체크가 늘어납니다. 왜일까요?",
@@ -520,7 +520,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "A-high board ile karşılaştır. K-high hâlâ BTN'nin lehine ama check biraz daha sık. Nedenini bulabilir misin?",
     lessonVi: "So sánh với board A-high. K-high vẫn có lợi cho BTN, nhưng check nhiều hơn một chút. Bạn có đoán được vì sao không?",
-    lessonRu: "Compare with the ace-high board. King-high still favors BTN, but there's a bit more checking. Can you tell why?", // ru-todo
+    lessonRu: "Сравни с бордом туз-хай. Король-хай тоже в пользу BTN, но чеков чуть больше. Понимаешь почему?",
     titleJa: "ドライなKハイボード",
     lessonJa:
       "Aハイボードと比較してみましょう。KハイボードでもBTN優位ですが、チェックがわずかに増えます。なぜでしょうか？",
@@ -556,7 +556,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Connected Broadway Board, Two-Tone",
     titleTr: "Bağlantılı broadway board, iki renkli",
     titleVi: "Board broadway liền nhau, hai chất",
-    titleRu: "Connected Broadway Board, Two-Tone", // ru-todo
+    titleRu: "Связанный бродвейный борд, двухмастный",
     board: "Qs Jd Ts",
     lesson:
       "양쪽 다 맞은 것처럼 보이는 보드. 그런데 BB는 13스팟 중 에퀴티 실현율이 가장 낮습니다 — 77.9%, BTN은 119.4%. BB가 99.9% 체크하는 이유를 핸드 분류 패널에서 확인하세요.",
@@ -565,7 +565,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "İki range'e de oturuyor gibi görünen bir board. Ama BB, 13 spot içinde equity'sini en az burada realize ediyor — %77,9, BTN ise %119,4 — ve %99,9 sıklıkla check yapıyor. Nedenini el kategorisi paneli gösteriyor.",
     lessonVi: "Board trông như trúng cả hai range. Nhưng trong 13 spot, đây là nơi BB hiện thực hóa equity kém nhất — 77,9%, so với 119,4% của BTN — và check 99,9%. Khung Nhóm tay bài cho thấy lý do.",
-    lessonRu: "A board that looks like it hits both ranges. But BB realizes less equity here than in any of the 13 spots — 77.9% against BTN's 119.4% — and checks 99.9%. The hand-category panel shows why.", // ru-todo
+    lessonRu: "Кажется, что этот борд попадает в оба диапазона. Но здесь BB реализует эквити хуже, чем в любом из 13 спотов, — 77,9% против 119,4% у BTN — и чекает 99,9%. Почему так, видно на панели «Разбивка руки».",
     titleJa: "ブロードウェイのコネクトボード（2トーン）",
     lessonJa:
       "両者に当たったように見えるボードです。ところがBBのエクイティ実現率は13スポット中で最も低く、77.9%（BTNは119.4%）。99.9%チェックになる理由を分類パネルで確かめましょう。",
@@ -601,7 +601,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Connected Middle Board, Two-Tone",
     titleTr: "Bağlantılı orta board, iki renkli",
     titleVi: "Board tầm trung liền nhau, hai chất",
-    titleRu: "Connected Middle Board, Two-Tone", // ru-todo
+    titleRu: "Связанный средний борд, двухмастный",
     board: "9h 8h 7c",
     lesson:
       "콜러(BB) 우위 보드의 대표. BTN의 C벳 빈도가 뚝 떨어지는 것을 확인하세요 — '무조건 C벳'이 왜 틀린지 배우는 스팟.",
@@ -610,7 +610,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Call edenin lehine klasik doku. BTN'nin c-bet sıklığı sert düşüyor — bu spot “her zaman c-bet” fikrinin neden yanlış olduğunu tam olarak gösteriyor.",
     lessonVi: "Kiểu board kinh điển có lợi cho bên call. Tần suất c-bet của BTN giảm mạnh — spot này cho thấy rõ vì sao “luôn c-bet” là sai.",
-    lessonRu: "The classic caller-friendly texture. BTN's c-bet frequency plummets — this spot shows exactly why “always c-bet” is wrong.", // ru-todo
+    lessonRu: "Классическая текстура в пользу колла. Частота контбета BTN резко падает — этот спот наглядно показывает, почему «контбет всегда» — ошибка.",
     titleJa: "ミドルのコネクトボード（2トーン）",
     lessonJa:
       "コーラー（BB）優位ボードの代表例です。BTNのCベット頻度が大きく下がることを確認しましょう — 「常にCベット」がなぜ間違いなのかを学べるスポットです。",
@@ -646,7 +646,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Monotone Board (All One Suit)",
     titleTr: "Monoton board (hepsi aynı renk)",
     titleVi: "Board monotone (cả 3 lá cùng chất)",
-    titleRu: "Monotone Board (All One Suit)", // ru-todo
+    titleRu: "Монотонный борд (все карты одной масти)",
     board: "Qs 9s 2s",
     lesson:
       "큰 벳이 드물어지고 작은 벳/체크 위주가 되는 이유. 플러시 완성 핸드도 자주 체크하는 것을 관찰하세요.",
@@ -655,7 +655,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Büyük bet'lerin neden yerini küçük bet'lere ve check'e bıraktığını izle. Hazır floşların bile ne kadar sık yalnızca check yaptığına dikkat et.",
     lessonVi: "Hãy xem vì sao cược lớn nhường chỗ cho cược nhỏ và check. Để ý xem ngay cả tay đã thành Thùng cũng check thường xuyên đến mức nào.",
-    lessonRu: "Watch why big bets give way to small bets and checks. Notice how often even made flushes just check.", // ru-todo
+    lessonRu: "Смотри, почему крупные ставки уступают место маленьким и чекам. Заметь, как часто даже готовые флеши просто чекают.",
     titleJa: "モノトーンボード（同スート3枚）",
     lessonJa:
       "大きなベットが減り、小さなベットとチェックが中心になる理由を学びます。完成したフラッシュでさえ頻繁にチェックすることを観察しましょう。",
@@ -691,7 +691,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Paired Board",
     titleTr: "Çiftli board",
     titleVi: "Board có đôi",
-    titleRu: "Paired Board", // ru-todo
+    titleRu: "Спаренный борд",
     board: "6c 6d 3h",
     lesson:
       "아무도 잘 못 맞춘 보드 → 블러프 비중이 올라갑니다. 어떤 핸드가 블러프 벳을 하는지 상세 표에서 찾아보세요.",
@@ -700,7 +700,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Bu board kimseye pek oturmuyor, bu yüzden blöf sıklığı artıyor. Hangi ellerin blöf olarak bet yaptığını detay tablosunda bul.",
     lessonVi: "Board này hầu như không trúng ai, nên tần suất bluff tăng lên. Dùng bảng chi tiết để tìm những tay bài bet bluff.",
-    lessonRu: "Nobody connects with this board, so the bluffing frequency goes up. Use the detail table to find which hands bet as bluffs.", // ru-todo
+    lessonRu: "В этот борд никто толком не попадает, поэтому частота блефа растёт. Найди в подробной таблице руки, которые ставят блефом.",
     titleJa: "ペアボード",
     lessonJa:
       "どちらのレンジもボードとほとんど噛み合いません → ブラフの比率が上がります。どのハンドがブラフベットをするのか、詳細表で探してみましょう。",
@@ -740,7 +740,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Low Rainbow Board",
     titleTr: "Düşük rainbow board",
     titleVi: "Board thấp rainbow (3 lá khác chất)",
-    titleRu: "Low Rainbow Board", // ru-todo
+    titleRu: "Низкий радужный борд",
     lesson:
       "오버카드 싸움. BB의 체크레이즈 빈도가 높아지는 보드 — 상단 스트립에서 벳 이후 응수를 따라가 보세요.",
     lessonEn:
@@ -748,7 +748,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Bir overcard savaşı — BB bu dokuda sık check-raise yapar; cevapları görmek için üst şeritte bir bet'in sonrasına geç.",
     lessonVi: "Cuộc chiến overcard — BB check-raise thường xuyên trên kiểu board này, nên hãy chọn node sau một lần bet trên thanh trên cùng để xem các phản ứng.",
-    lessonRu: "An overcard war — BB check-raises often on this texture, so follow the top strip past a bet to see the responses.", // ru-todo
+    lessonRu: "Война оверкарт — на такой текстуре BB часто делает чек-рейз, поэтому выбери в верхней полосе узел после бета и посмотри ответы.",
     titleJa: "ロー・レインボーボード",
     lessonJa:
       "オーバーカードの戦いです。BBのチェックレイズ頻度が高くなるボード — 上部ストリップでベット後の相手のアクションを追ってみましょう。",
@@ -784,7 +784,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Ace-High Board, 3-Bettor's Edge",
     titleTr: "A-high board, 3-bet yapanın avantajı",
     titleVi: "Board A-high, lợi thế của bên 3-bet",
-    titleRu: "Ace-High Board, 3-Bettor's Edge", // ru-todo
+    titleRu: "Борд туз-хай в пользу 3-бета",
     board: "Ad Ks 2h",
     lesson:
       "3벳 레인지(AK, AA, KK 다수)에 최고의 보드. 낮은 SPR에서 작은 벳으로 레인지 전체를 압박하는 패턴.",
@@ -793,7 +793,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Range'i AK, AA ve KK ile dolu olan 3-bet yapan için olabilecek en iyi flop. Düşük SPR'de küçük bet'ler tüm range'e baskı kurar.",
     lessonVi: "Flop tốt nhất có thể cho bên 3-bet, với range đầy AK, AA và KK. Ở SPR thấp, cược nhỏ gây áp lực lên toàn bộ range.",
-    lessonRu: "The best possible flop for the 3-bettor, whose range is loaded with AK, AA and KK. At low SPR, small bets pressure the entire range.", // ru-todo
+    lessonRu: "Лучший возможный флоп для стороны 3-бета: в её диапазоне полно AK, AA и KK. При низком SPR маленькие ставки давят на весь диапазон.",
     titleJa: "3ベッター優位のAハイボード",
     lessonJa:
       "3ベットレンジ（AK・AA・KKが多い）にとって最高のボードです。低SPRで小さなベットを使い、レンジ全体に圧力をかけるパターンを学びます。",
@@ -829,7 +829,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Dynamic Two-Tone Board",
     titleTr: "Dinamik iki renkli board",
     titleVi: "Board động, hai chất",
-    titleRu: "Dynamic Two-Tone Board", // ru-todo
+    titleRu: "Динамичный двухмастный борд",
     board: "Qh Th 7s",
     // ⚠ 빈도는 «normalizer»로 잰다 — «weights»가 아니다.
     //   화면(ActionSummary.vue)의 freq = Σ strategy×normalizer / Σ normalizer 다.
@@ -845,7 +845,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Call edene de uyan bir board'da 3-bet pot — yine de 3-bet yapan yavaşlamıyor: range'in %98,4'ü aynı üçte iki boyutla bet yapıyor. Check yapan %0,8'i hangi ellerin oluşturduğuna bak.",
     lessonVi: "Pot 3-bet trên board cũng hợp với bên call — vậy mà bên 3-bet không chậm lại: 98,4% range bet cùng một cỡ 2/3 pot. Xem những tay bài nào tạo nên 0,8% check.",
-    lessonRu: "A 3-bet pot on a board that suits the caller as well — and yet the 3-bettor doesn't slow down: 98.4% of the range fires the same two-thirds size. See which hands make up the 0.8% that checks.", // ru-todo
+    lessonRu: "3-бет-пот на борде, который подходит и стороне колла, — и всё же сторона 3-бета не сбавляет темп: 98,4% диапазона ставит один и тот же сайзинг в две трети банка. Посмотри, какие руки составляют те 0,8%, что чекают.",
     titleJa: "ダイナミックな2トーンボード",
     lessonJa:
       "3ベットポットなのにコーラーにも良いカードが多いボードです。それでも3ベッターは止まりません — 98.4%が同じ2/3サイズで打ちます。チェックに残る0.8%がどんなハンドか見てみましょう。",
@@ -881,7 +881,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Low Dry Board",
     titleTr: "Düşük kuru board",
     titleVi: "Board thấp khô",
-    titleRu: "Low Dry Board", // ru-todo
+    titleRu: "Низкий сухой борд",
     board: "8d 5c 2s",
     lesson:
       "3벳 레인지가 통째로 빗나간 보드. 그래도 오버페어+A하이로 압박이 가능한 이유 — 에퀴티 vs 폴드에퀴티.",
@@ -890,7 +890,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "3-bet yapanın range'ini büyük ölçüde ıskalayan bir board — yine de overpair'ler ve A-high eller baskıyı sürdürüyor. Equity mi, fold equity mi?",
     lessonVi: "Board phần lớn trượt range của bên 3-bet — vậy mà overpair và tay A-high vẫn giữ áp lực. Equity hay fold equity?",
-    lessonRu: "A board that largely misses the 3-bettor's range — yet overpairs and ace-high hands keep the pressure on. Equity vs fold equity.", // ru-todo
+    lessonRu: "Борд почти не попадает в диапазон 3-бета — но оверпары и руки туз-хай продолжают давить. Эквити против фолд-эквити.",
     titleJa: "ロー・ドライボード",
     lessonJa:
       "3ベットレンジがほぼ丸ごと外れるボードです。それでもオーバーペアとAハイで圧力をかけられる理由を学びます — エクイティ対フォールドエクイティです。",
@@ -926,7 +926,7 @@ export const PRESETS: Preset[] = [
     titleEn: "King-High with a Ten",
     titleTr: "K-high, T'li board",
     titleVi: "Board K-high có lá 10",
-    titleRu: "King-High with a Ten", // ru-todo
+    titleRu: "Король-хай с десяткой",
     board: "Kh Td 6s",
     // 블라인드전 와이드 레인지는 콤보 수가 최대 → 벳 2종이면 16비트로도
     // 4.18GB(한도 초과)라 플랍 벳 1종으로 다이어트 (sb-paired-ace는 보드가
@@ -939,7 +939,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Blind vs blind'da range'ler geniş, bu yüzden iki range de zayıf. Sıklıkları BTN vs BB “Kuru K-high board” spotuyla karşılaştır.",
     lessonVi: "Ở blind vs blind, range hai bên đều rộng nên cả hai range đều yếu. So sánh tần suất với spot BTN vs BB “Board K-high khô”.",
-    lessonRu: "Blind vs Blind ranges are wide, so both ranges are weak. Compare the frequencies to the BTN-vs-BB Dry King-High Board spot.", // ru-todo
+    lessonRu: "В игре блайнд vs блайнд диапазоны широкие, поэтому оба диапазона слабые. Сравни частоты со спотом BTN vs BB «Сухой борд король-хай».",
     titleJa: "KTハイボード",
     lessonJa:
       "ブラインド戦はレンジが広く、お互いに弱いのが特徴です。同じKハイボードでも、BTN vs BBのときと頻度がどう違うか比較してみましょう。",
@@ -975,7 +975,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Connected Low Board, Two-Tone",
     titleTr: "Bağlantılı düşük board, iki renkli",
     titleVi: "Board thấp liền nhau, hai chất",
-    titleRu: "Connected Low Board, Two-Tone", // ru-todo
+    titleRu: "Связанный низкий борд, двухмастный",
     board: "7d 6d 5c",
     betFlop: "33", // sb-king-mid와 동일한 메모리 사유
     lesson:
@@ -985,7 +985,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "İki geniş range çok bağlantılı bir board'da çarpışıyor: her yerde iki çift, kent ve draw'lar. El kategorisi paneli tam burada işe yarıyor.",
     lessonVi: "Hai range rộng va chạm trên board cực kỳ liền nhau: Hai Đôi, Sảnh và draw ở khắp nơi. Khung Nhóm tay bài phát huy tác dụng ở đây.",
-    lessonRu: "Two wide ranges collide on an ultra-connected board: two-pair hands, straights, and draws everywhere. The hand-category panel shines here.", // ru-todo
+    lessonRu: "Два широких диапазона сталкиваются на сверхсвязанном борде: две пары, стриты и дро повсюду. Здесь панель «Разбивка руки» особенно полезна.",
     titleJa: "ローのコネクトボード（2トーン）",
     lessonJa:
       "ワイドレンジ同士がぶつかる非常にコネクトしたボードです。ツーペア・ストレート・ドローが続出します。分類パネルがにぎやかになるスポットです。",
@@ -1021,7 +1021,7 @@ export const PRESETS: Preset[] = [
     titleEn: "Ace-Paired Board",
     titleTr: "As çiftli board",
     titleVi: "Board đôi A",
-    titleRu: "Ace-Paired Board", // ru-todo
+    titleRu: "Борд со спаренными тузами",
     board: "As Ah 6d",
     // ⚠ 콤보 수 88/66은 «트립스»다 — «A를 든 콤보»(94/72)가 아니다.
     //   보드가 As Ah 6d라 A6는 트립스가 아니라 «에이스 풀하우스»다(AAA + 66).
@@ -1035,7 +1035,7 @@ export const PRESETS: Preset[] = [
     lessonTr:
       "Board'da iki as var. Trips nadir değil — sadece SB'de daha fazla var (SB'de 88 combo, BB'de 66), bu yüzden SB %80,1 sıklıkla bet yapıyor. Burada her şey, kimin daha çok as tuttuğuna bağlı.",
     lessonVi: "Hai lá A trên board. Xám không hiếm — chỉ là SB có nhiều hơn (88 combo so với 66 của BB), nên SB bet 80,1%. Ai giữ nhiều lá A hơn mới là điều quyết định ở đây.",
-    lessonRu: "Two aces on the board. Trips aren't rare — SB simply holds more of them (88 combos to BB's 66), so SB bets 80.1%. Who holds more aces is the whole story here.", // ru-todo
+    lessonRu: "На борде два туза. Трипсы не редкость — просто у SB их больше (88 комбо против 66 у BB), поэтому SB ставит 80,1%. Здесь всё решает то, у кого больше тузов.",
     titleJa: "Aペアボード",
     lessonJa:
       "Aが2枚落ちた特殊なボードです。トリップスは珍しくありません — SBが88コンボ、BBが66コンボで、Aを多く持つSBが80.1%打ちます。どちらがAを多く持つかがこのボードのすべてです。",

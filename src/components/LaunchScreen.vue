@@ -132,12 +132,12 @@ const M = {
     titleLine2: "Trainer GTO.",
     footer: "Solver GTO miễn phí · Dùng được ngoại tuyến",
   },
-  // ru-todo: English copy; translate values in this block.
+  // 러시아어 — R16 «GTO-тренажёр.»(13자 · 넘치면 «GTO Trainer.»)
   ru: {
-    greeting: "Welcome to",
+    greeting: "Добро пожаловать в",
     titleLine1: "HoldemMaster",
-    titleLine2: "GTO Trainer.",
-    footer: "Free GTO Solver · Works Offline",
+    titleLine2: "GTO-тренажёр.",
+    footer: "Бесплатный GTO-солвер · Работает офлайн",
   },
   ms: {
     greeting: "Selamat datang ke",

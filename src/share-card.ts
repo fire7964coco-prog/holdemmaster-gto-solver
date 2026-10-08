@@ -181,17 +181,16 @@ const CARD_TEXT = {
       `EV mất ${bb}bb${streak > 1 ? ` · ${streak} ngày liên tiếp` : ""}`,
     invite: "Giải thử thách hôm nay",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    brand: "HoldemMaster GTO Trainer",
-    tagline: "One puzzle a day · same for everyone",
-    heading: "Daily GTO Puzzle",
-    board: "Board",
-    hand: "My Hand",
-    result: (verdict: string) => `My result: ${verdict}`,
+    brand: "HoldemMaster GTO-тренажёр",
+    tagline: "Одна задача в день · у всех одна и та же",
+    heading: "Задача дня по GTO",
+    board: "Борд",
+    hand: "Моя рука",
+    result: (verdict: string) => `Мой результат: ${verdict}`,
     evLine: (bb: string, streak: number) =>
-      `EV loss ${bb}bb${streak > 1 ? ` · ${streak}${ruPlural(streak, "-day streak", "-day streak", "-day streak")}` : ""}`,
-    invite: "Try today's puzzle",
+      `Потеря EV ${bb}bb${streak > 1 ? ` · ${streak} ${ruPlural(streak, "день", "дня", "дней")} подряд` : ""}`,
+    invite: "Реши сегодняшнюю задачу",
   },
 } as const;
 

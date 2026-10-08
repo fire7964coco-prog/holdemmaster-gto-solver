@@ -1581,106 +1581,105 @@ const M = {
       "3-bet) + range spot mẫu của chúng tôi (thu thập 08/2026)",
     phase2: "Chúng tôi sẽ tiếp tục bổ sung thêm cặp đối đầu và tình huống.",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    modeRfi: "Opening (RFI)",
-    modeDefend: "vs Open (Defense)",
-    mode3bet: "vs 3-bet (after opening)",
-    mode4bet: "vs 4-bet (after 3-betting)",
+    modeRfi: "Опен (RFI)",
+    modeDefend: "vs опен (защита)",
+    mode3bet: "vs 3-бет (после опена)",
+    mode4bet: "vs 4-бет (после 3-бета)",
     intro4bet:
-      "How to respond when your 3-bet gets 4-bet — red is 5-bet (all-in), green " +
-      "is call, everything else is a fold. Frequencies are conditional on having 3-bet, so " +
-      "hands you never 3-bet are blank. 6-max cash, 100bb; BB 3-bets 11bb " +
-      "and faces a 24bb 4-bet; SB 3-bets 10bb and faces 22bb.",
-    legend5bet: "5-bet (all-in)",
-    legendCond4bet: "Blank = never 3-bet in the first place",
-    stat5bet: "5-bet %",
-    statContinue4bet: "Continue % (of 3-bets)",
-    copy5bet: "Copy 5-bet range",
+      "Как отвечать, когда на твой 3-бет делают 4-бет: красный — 5-бет (олл-ин), зелёный — " +
+      "колл, всё остальное — фолд. Частоты считаются только для рук из диапазона 3-бета, " +
+      "поэтому руки, с которыми 3-бет не делают, пустые. Кэш 6-max, 100bb; BB делает 3-бет 11bb " +
+      "и получает 4-бет 24bb; SB делает 3-бет 10bb и получает 22bb.",
+    legend5bet: "5-бет (олл-ин)",
+    legendCond4bet: "Пусто = 3-бета не было",
+    stat5bet: "Частота 5-бета",
+    statContinue4bet: "Продолжение (в диапазоне 3-бета)",
+    copy5bet: "Копировать диапазон 5-бета",
     note4bet:
-      "The stats are shares of your 3-betting range. At 100bb the 5-bet is " +
-      "effectively all-in — value centers on AA·KK (occasionally trapping with a " +
-      "call), and QQ·AK mix 5-bets with calls. Calls are driven by equity realization, " +
-      "not pot odds: you fight out of position at a low SPR, so only pairs and " +
-      "top suited hands continue — but don't fold everything, because their " +
-      "4-betting range mixes in bluffs like A5s–A4s.",
+      "Доли считаются от твоего диапазона 3-бета. При 100bb 5-бет по сути означает " +
+      "олл-ин — вэлью строится на AA·KK (иногда с ловушкой через колл), а QQ·AK " +
+      "смешивают 5-бет с коллом. Коллы определяются реализацией эквити, а не шансами банка: " +
+      "ты играешь без позиции при низком SPR, поэтому продолжают только пары и " +
+      "лучшие одномастные руки — но не сбрасывай карты со всем подряд: в диапазоне " +
+      "4-бета соперника есть блефы вроде A5s–A4s.",
     how4bet2:
-      "If red + green don't fill the cell, the rest is folded. Cells with both " +
-      "colors mix 5-bets and calls. Hands outside the 3-betting range never " +
-      "face this spot, so they are blank.",
+      "Если красный и зелёный не заполняют ячейку целиком, остаток — фолд. Ячейки с обоими " +
+      "цветами смешивают 5-бет и колл. Руки вне диапазона 3-бета в этот спот " +
+      "не попадают, поэтому они пустые.",
     intro3bet:
-      "How to respond when your open-raise gets 3-bet — red is 4-bet, green is " +
-      "call, everything else is a fold. Frequencies are conditional on having opened, so " +
-      "hands you never open are blank. 6-max cash, 100bb, 2.5bb open, ~10-11bb 3-bet.",
-    legend4bet: "4-bet",
-    legendCond: "Blank = never opened in the first place",
-    stat4bet: "4-bet %",
-    statContinue: "Continue % (of opens)",
-    copy4bet: "Copy 4-bet range",
+      "Как отвечать, когда на твой опен-рейз делают 3-бет: красный — 4-бет, зелёный — " +
+      "колл, всё остальное — фолд. Частоты считаются только для рук из диапазона опена, " +
+      "поэтому руки, с которыми не открываются, пустые. Кэш 6-max, 100bb, опен 2,5bb, 3-бет ~10–11bb.",
+    legend4bet: "4-бет",
+    legendCond: "Пусто = опена не было",
+    stat4bet: "Частота 4-бета",
+    statContinue: "Продолжение (в диапазоне опена)",
+    copy4bet: "Копировать диапазон 4-бета",
     note3bet:
-      "The stats are shares of your opening range, not of all hands. 4-bet value " +
-      "centers on QQ+/AK with a few bluffs like A5s-A4s mixed in. With position, " +
-      "the calling range stays wide: pairs, suited broadways, and connectors.",
+      "Доли считаются от твоего диапазона опена, а не от всех рук. Вэлью 4-бета — " +
+      "QQ+/AK с примесью блефов вроде A5s–A4s. В позиции " +
+      "диапазон колла остаётся широким: пары, одномастные бродвеи и коннекторы.",
     squeezeNote:
-      "A squeeze is a 3-bet with both an opener and a caller in the pot (about " +
-      "11-12bb here). The caller makes total defense tighter than heads-up and " +
-      "pushes the 3-bet toward value. Overcalls favor suited, connected hands " +
-      "that can make the nuts multiway.",
+      "Сквиз — это 3-бет, когда в банке уже есть опен и колл (здесь около " +
+      "11–12bb). Из-за колла в банке общая защита становится уже, чем один на один, " +
+      "а 3-бет смещается к вэлью. Для оверколла лучше всего подходят одномастные связанные руки, " +
+      "которые могут собрать натс в мультивее.",
     how3bet2:
-      "If red + green don't fill the cell, the rest is folded. Cells with both " +
-      "colors mix 4-bets and calls. Hands outside the opening range never face " +
-      "this spot, so they are blank.",
-    intro: "Opening ranges by position (RFI) — which hands should you raise when everyone folds to you? Based on 6-max cash, 100bb, 2.5bb open. Partially filled cells mark borderline hands where public sources disagree on opening (fill height = share of sources favoring an open).",
-    provenanceNote: "Public-source consensus + internal derivation — not solver output. See “How was this chart built?” below.",
+      "Если красный и зелёный не заполняют ячейку целиком, остаток — фолд. Ячейки с обоими " +
+      "цветами смешивают 4-бет и колл. Руки вне диапазона опена в этот спот " +
+      "не попадают, поэтому они пустые.",
+    intro: "Диапазоны опена по позициям (RFI) — какие руки рейзить, если все до тебя сбросили карты? Кэш 6-max, 100bb, опен 2,5bb. Частично закрашенные ячейки — пограничные руки, по которым открытые источники расходятся насчёт опена (высота заливки = доля источников за опен).",
+    provenanceNote: "Консенсус открытых источников + собственная доработка — не результат солвера. Подробнее — в блоке «Как составлен этот чарт?» ниже.",
     introDefend:
-      "How to respond when someone open-raises before you — the most " +
-      "common matchups. Red is 3-bet, green is call, and the stacked height is " +
-      "your total defend frequency. 6-max cash, 100bb, 2.5bb open (3bb for SB opens).",
-    legendOpen: "Open (100%)",
-    legendMixed: "Borderline hands (fill = share of sources favoring an open)",
-    legendFold: "Fold",
-    legend3bet: "3-bet",
-    legendCall: "Call",
-    legendMixedDefend: "Fill height = frequency (split cells are mixed)",
-    stat3bet: "3-bet %",
-    statCall: "Call %",
-    statTotal: "Total defend",
-    copy3bet: "Copy 3-bet range",
-    copyCall: "Copy call range",
+      "Как отвечать на опен-рейз перед тобой — самые частые " +
+      "пары позиций. Красный — 3-бет, зелёный — колл, общая высота — " +
+      "твоя частота защиты. Кэш 6-max, 100bb, опен 2,5bb (3bb при опене с SB).",
+    legendOpen: "Опен (100%)",
+    legendMixed: "Пограничные руки (заливка = доля источников за опен)",
+    legendFold: "Фолд",
+    legend3bet: "3-бет",
+    legendCall: "Колл",
+    legendMixedDefend: "Высота заливки = частота (разделённые ячейки — смешанная стратегия)",
+    stat3bet: "Частота 3-бета",
+    statCall: "Частота колла",
+    statTotal: "Общая защита",
+    copy3bet: "Копировать диапазон 3-бета",
+    copyCall: "Копировать диапазон колла",
     sbNote:
-      "In the SB you're essentially 3-bet-or-fold against a BTN open — you're " +
-      "out of position with BB still left to act, so calling saddles you with " +
-      "both disadvantages at once.",
+      "На SB против опена с BTN играй по сути 3-бет или фолд: ты " +
+      "без позиции, а BB ещё ходит после тебя, так что колл собирает " +
+      "оба минуса сразу.",
     ipNote:
-      "Even with position, an early-position opening range is strong, and " +
-      "calling risks a squeeze from the blinds still left to act. In-position " +
-      "defense is therefore a narrow, 3-bet-centric range, with calls mostly " +
-      "limited to pairs and premium suited hands.",
-    statPercent: "Open %",
-    statCombos: "Combos opened",
-    statHands: "Hands opened",
-    statMixed: "Borderline hands",
-    copy: "Copy range text",
-    copied: "✓ Copied",
-    sendOop: "① Send to OOP Range",
-    sendIp: "② Send to IP Range",
-    howTitle: "How to read this",
-    how1: "The top-left to bottom-right diagonal is pairs; above it (right) is suited, below it (left) is offsuit.",
-    how2: "Partially filled cells mark borderline hands where sources disagree on whether to open. Fill height represents the share of sources favoring an open, not a solver result.",
-    how3: "The [Send to Range] buttons load this range into the custom-spot range editor — try solving the postflop play yourself.",
+      "Даже в позиции диапазон опена с ранних позиций сильный, а " +
+      "колл рискует нарваться на сквиз от блайндов, которые ещё ходят. Поэтому защита " +
+      "в позиции — узкий диапазон с упором на 3-бет, а коллы в основном " +
+      "ограничены парами и сильнейшими одномастными руками.",
+    statPercent: "Частота опена",
+    statCombos: "Комбо в опене",
+    statHands: "Рук в опене",
+    statMixed: "Пограничные руки",
+    copy: "Копировать диапазон",
+    copied: "✓ Скопировано",
+    sendOop: "① Отправить в диапазон OOP",
+    sendIp: "② Отправить в диапазон IP",
+    howTitle: "Как читать чарт",
+    how1: "Диагональ из левого верхнего угла в правый нижний — пары; выше неё (справа) — одномастные руки, ниже (слева) — разномастные.",
+    how2: "Частично закрашенные ячейки — пограничные руки, по которым источники расходятся, открываться ли. Высота заливки показывает долю источников за опен, а не результат солвера.",
+    how3: "Кнопки [① Отправить в диапазон OOP] и [② Отправить в диапазон IP] загружают этот диапазон в редактор диапазонов своего спота — попробуй решить постфлоп.",
     howDefend2:
-      "If red + green don't fill the whole cell, the rest is folded. Cells showing both colors mix 3-bets and calls at those ratios.",
+      "Если красный и зелёный не заполняют ячейку целиком, остаток — фолд. Ячейки с обоими цветами смешивают 3-бет и колл в этой пропорции.",
     howDefend3:
-      "Paste a copied range into the custom-spot range inputs (① / ②) to solve the postflop play with this defense range yourself.",
-    sourceTitle: "How was this chart built?",
-    sourceBody: "We cross-checked several freely published GTO resources hand by hand to build a consensus range, marking borderline hands the sources disagree on with the share of sources favoring an open (75/50/25%). BTN and SB were also checked against the solver-verified ranges used by this app's Study Spots.",
+      "Вставь скопированный диапазон в поля диапазонов своего спота (① / ②), чтобы решить постфлоп с этим диапазоном защиты.",
+    sourceTitle: "Как составлен этот чарт?",
+    sourceBody: "Мы сверили по каждой руке несколько бесплатных открытых GTO-материалов и собрали консенсусный диапазон, а пограничные руки, по которым источники расходятся, отметили долей источников за опен (75/50/25%). BTN и SB дополнительно сверены с проверенными солвером диапазонами из раздела «Учебные споты» этого приложения.",
     sourceList:
-      "Public sources cross-checked: nlh.poker · Preflop Wizard · HoldemPro · " +
-      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB solved frequencies) · " +
-      "GTO Gecko · RiverOdds (defense anchors) · GTO Wizard blog · FreeBetRange " +
-      "(IP defense & squeeze principles) · 888poker · Run It Once (vs 3-bet " +
-      "frequencies) + our own study-spot ranges (collected 2026-08)",
-    phase2: "We'll keep adding more matchups and scenarios.",
+      "Сверенные открытые источники: nlh.poker · Preflop Wizard · HoldemPro · " +
+      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (частоты солвера BB vs SB) · " +
+      "GTO Gecko · RiverOdds (ориентиры защиты) · блог GTO Wizard · FreeBetRange " +
+      "(принципы защиты в позиции и сквиза) · 888poker · Run It Once (частоты vs " +
+      "3-бет) + диапазоны наших учебных спотов (собрано 08.2026)",
+    phase2: "Мы продолжим добавлять новые пары позиций и ситуации.",
   },
 } as const;
 

@@ -323,18 +323,17 @@ const M = {
     playerLabel: "Người chơi:",
     oopHint: "Đây là chiến lược của người hành động trước (OOP). Để xem đối thủ (IP), đổi “Người chơi” ở trên sang IP.",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    backToList: "← Back",
-    pot: "Pot",
-    stack: "Stack",
-    flopOnlyNote: "Flop strategy only. Want to click through turn and river? →",
-    solveThisSpot: "Solve this spot yourself",
-    readArticle: "Read the article",
-    loadError: (e: string) => `Couldn't load the precomputed results: ${e}`,
-    loading: "Loading results…",
-    playerLabel: "Player:",
-    oopHint: "This is the strategy of the player who acts first (OOP). To see the opponent (IP), set “Player” above to IP.",
+    backToList: "← Назад",
+    pot: "Банк",
+    stack: "Стек",
+    flopOnlyNote: "Здесь только стратегия на флопе. Хочешь пройти тёрн и ривер? →",
+    solveThisSpot: "Решить этот спот самому",
+    readArticle: "Читать статью",
+    loadError: (e: string) => `Не удалось загрузить результаты: ${e}`,
+    loading: "Загрузка результатов…",
+    playerLabel: "Игрок:",
+    oopHint: "Это стратегия игрока, который ходит первым (OOP). Чтобы увидеть соперника (IP), выбери IP в поле «Игрок» выше.",
   },
 } as const;
 

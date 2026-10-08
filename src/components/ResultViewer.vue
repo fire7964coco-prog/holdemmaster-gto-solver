@@ -356,14 +356,13 @@ const M = {
     finalizing: "Đang hoàn tất…",
     paused: "Solver đã tạm dừng.",
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    startRange: "① Start with ranges",
-    viewPresets: "View Study Spots",
-    notRun: "You haven’t calculated your own results yet.\nYou can view example results directly in the “Study Spots” menu.\nTo calculate your own spot, complete ①~⑤, then press “Run Solver”.",
-    running: "Running the solver…",
-    finalizing: "Finalizing…",
-    paused: "Solver paused.",
+    startRange: "① Начать с диапазонов",
+    viewPresets: "Открыть учебные споты",
+    notRun: "Своих результатов пока нет.\nГотовые примеры результатов — сразу в разделе «Учебные споты».\nЧтобы рассчитать свой спот, пройди шаги ①–⑤ и нажми «Запустить солвер».",
+    running: "Идёт расчёт…",
+    finalizing: "Завершение…",
+    paused: "Солвер на паузе.",
   },
 } as const;
 

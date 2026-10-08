@@ -130,15 +130,14 @@ const actionLabelsVi: Record<string, string> = {
   Allin: "All-In",
   "All-in": "All-In",
 };
-// ru-todo: English output copied explicitly, including engine-name defaults.
 const actionLabelsRu: Record<string, string> = {
-  Fold: "Fold",
-  Check: "Check",
-  Call: "Call",
-  Bet: "Bet",
-  Raise: "Raise",
-  Allin: "All-In",
-  "All-in": "All-In",
+  Fold: "Фолд",
+  Check: "Чек",
+  Call: "Колл",
+  Bet: "Бет",
+  Raise: "Рейз",
+  Allin: "Олл-ин",
+  "All-in": "Олл-ин",
 };
 const actionName = (name: string) =>
   i18n.locale === "ko"
@@ -261,12 +260,11 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "Pot 3-bet",
       blind: "Blind vs blind",
     },
-    // ru-todo: English copy; translate values in this block.
     ru: {
-      all: "All",
-      srp: "Single Raised",
-      "3bp": "3-Bet Pot",
-      blind: "Blind vs Blind",
+      all: "Все",
+      srp: "Сингл-рейз",
+      "3bp": "3-бет-пот",
+      blind: "Блайнд vs блайнд",
     },
   };
   return labels[i18n.locale][category];
@@ -309,8 +307,8 @@ export const trainerActionLabel = (
       ? // 확정표 §2-2: «35%» 숫자 뒤 · 공백 없음 · «pot» 영어
         `${label} ${amount} (${pct}% pot)`
       : i18n.locale === "ru"
-      ? // ru-todo: English copy; percent stays after the number without a space.
-        `${label} ${amount} (${pct}% pot)`
+      ? // 확정표 §6 R14: «Бет 3,3 (33% банка)» — % 붙임 · «банка» 생격 고정
+        `${label} ${amount} (${pct}% банка)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return `${label} ${amount}`;

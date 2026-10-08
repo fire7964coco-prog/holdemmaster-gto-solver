@@ -261,13 +261,12 @@ const M = {
     action: (name: string): string =>
       ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    strategyCombos: "Strategy (Combos)",
-    strategy: "Strategy",
-    equity: "Equity",
+    strategyCombos: "Стратегия (комбо)",
+    strategy: "Стратегия",
+    equity: "Эквити",
     action: (name: string): string =>
-      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+      ({ Fold: "Фолд", Check: "Чек", Call: "Колл", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ин", "All-in": "Олл-ин" } as Record<string, string>)[name] ?? name,
   },
 } as const;
 

@@ -633,25 +633,24 @@ const M = {
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% pot)`,
   },
-  // ru-todo: English copy; translate values in this block.
   ru: {
-    pot: "Pot",
-    stack: "Stack",
-    equity: "Equity",
-    win: (player: string) => `${player} wins`,
+    pot: "Банк",
+    stack: "Стек",
+    equity: "Эквити",
+    win: (player: string) => `Выигрывает ${player}`,
     spotPlayer: (player: string): string =>
       (
         {
-          flop: "Flop",
-          turn: "Turn",
-          river: "River",
-          end: "End",
+          flop: "Флоп",
+          turn: "Тёрн",
+          river: "Ривер",
+          end: "Вскрытие",
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
     action: (name: string): string =>
-      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+      ({ Fold: "Фолд", Check: "Чек", Call: "Колл", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ин", "All-in": "Олл-ин" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
-      `${label} ${formatted} (${percent}% pot)`,
+      `${label} ${formatted} (${percent}% банка)`,
   },
 } as const;
 
