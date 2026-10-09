@@ -1,5 +1,9 @@
 <template>
-  <section class="review-page" data-testid="review-page">
+  <section
+    class="review-page"
+    :class="{ 'review-done': complete && !fatalStatus }"
+    data-testid="review-page"
+  >
     <div class="review-toolbar">
       <span
         >{{ L.flop }} · {{ L.precomputed }} ·
@@ -1840,6 +1844,38 @@ p {
   }
   .review-columns {
     flex: none;
+  }
+}
+/* Phone, hand finished: nothing left to pick, so stop boxing the results into the
+   fixed one-screen layout. The page scrolls; records, then full results, then the
+   (now tiny) picker flow in order. 10-09 owner phone test: results looked cut off. */
+@media (max-width: 767px) {
+  .review-page.review-done {
+    overflow-y: auto;
+  }
+  .review-done .review-columns {
+    flex: none;
+    grid-template-rows: auto auto auto auto;
+  }
+  .review-done .review-records {
+    position: static;
+    grid-row: 2;
+    height: auto;
+    border-radius: 8px;
+  }
+  .review-done .review-results {
+    grid-row: 3;
+    margin-bottom: 0;
+    overflow: visible;
+  }
+  .review-done .review-details {
+    overflow: visible;
+  }
+  .review-done .review-picker {
+    grid-row: 4;
+    position: static;
+    height: auto;
+    border-radius: 8px;
   }
 }
 </style>
