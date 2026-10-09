@@ -273,9 +273,8 @@ const M = {
     copy4bet: "4벳 레인지 복사",
     note3bet:
       "통계는 전체 핸드가 아니라 «오픈 레인지 대비» 비율입니다. 4벳 밸류는 " +
-      "QQ+/AK 중심이고, A5s-A4s 같은 블러프를 소량 섞습니다. 콜은 포지션이 있는 " +
-      "조합(블라인드 3벳 상대)에서는 페어·수딧 브로드웨이·커넥터까지 넓게, 없는 " +
-      "조합(뒤 포지션 3벳 상대)에서는 페어·수딧 브로드웨이 중심으로 좁게 가져갑니다.",
+      "QQ+/AK 중심이고, A5s-A4s 같은 블러프를 소량 섞습니다. 콜은 포지션이 있으면 " +
+      "페어·수딧 브로드웨이·커넥터까지 넓게, 없으면 페어·수딧 브로드웨이 중심으로 좁게 가져갑니다.",
     squeezeNote:
       "스퀴즈 = 오픈과 콜러가 모두 있는 상태에서의 3벳(여기서는 약 11~12bb). " +
       "콜러가 있으면 헤즈업 수비보다 전체 수비는 좁아지고 3벳은 밸류 중심이 " +
@@ -353,7 +352,7 @@ const M = {
     stat4bet: "4-bet %",
     statContinue: "आगे खेलने का % (open range में से)",
     copy4bet: "4-bet range कॉपी करें",
-    note3bet: "ये आँकड़े आपकी opening range के हिस्से हैं, सभी हैंड के नहीं। 4-bet की value range मुख्यतः QQ+/AK है, जिसमें A5s-A4s जैसे कुछ bluffs मिलते हैं। IP होने पर (blinds के 3-bet के ख़िलाफ़) calling range में pairs, suited broadways और connectors भी शामिल रहते हैं; OOP होने पर (आपके बाद की पोज़िशन के 3-bet के ख़िलाफ़) calling range छोटी रहती है और मुख्यतः pairs और suited broadways पर टिकती है।",
+    note3bet: "ये आँकड़े आपकी opening range के हिस्से हैं, सभी हैंड के नहीं। 4-bet की value range मुख्यतः QQ+/AK है, जिसमें A5s-A4s जैसे कुछ bluffs मिलते हैं। IP होने पर calling range में pairs, suited broadways और connectors भी शामिल रहते हैं; OOP होने पर calling range छोटी रहती है और मुख्यतः pairs और suited broadways पर टिकती है।",
     squeezeNote: "Opener और caller दोनों pot में हों, तब किया गया 3-bet squeeze कहलाता है (यहाँ लगभग 11–12bb)। Caller की मौजूदगी में कुल defend range heads-up से छोटी होती है और 3-bet में value हैंड का हिस्सा बढ़ता है। Overcall में ऐसे suited, connected हैंड काम आते हैं जो multiway pot में nuts बना सकें।",
     how3bet2: "लाल और हरे हिस्से के बाद बचा खाली हिस्सा fold है। दोनों रंग वाले खाने में 4-bet और call मिलते हैं। Opening range से बाहर के हैंड इस स्थिति तक नहीं पहुँचते, इसलिए उनके खाने खाली हैं।",
     intro: "पोज़िशन के हिसाब से opening ranges (RFI): आपके पहले सभी fold कर दें, तो किन हैंड से raise करें? आधार: 6-max cash, 100bb, 2.5bb open। आंशिक रूप से भरे खाने उन सीमांत हैंड को दिखाते हैं जिन पर सार्वजनिक स्रोतों में मतभेद है (भराव की ऊँचाई = open करने की सलाह देने वाले स्रोतों का अनुपात)।",
@@ -430,9 +429,9 @@ const M = {
     copy4bet: "Copy 4-bet range",
     note3bet:
       "The stats are shares of your opening range, not of all hands. 4-bet value " +
-      "centers on QQ+/AK with a few bluffs like A5s-A4s mixed in. In position (vs a blind " +
-      "3-bet), the calling range stays wide: pairs, suited broadways, and connectors; out of " +
-      "position (vs a 3-bet from behind you), it narrows to mostly pairs and suited broadways.",
+      "centers on QQ+/AK with a few bluffs like A5s-A4s mixed in. In position, the calling " +
+      "range stays wide: pairs, suited broadways, and connectors; out of position, it narrows " +
+      "to mostly pairs and suited broadways.",
     squeezeNote:
       "A squeeze is a 3-bet with both an opener and a caller in the pot (about " +
       "11-12bb here). The caller makes total defense tighter than heads-up and " +
@@ -530,9 +529,9 @@ const M = {
     copy4bet: "4ベットレンジをコピー",
     note3bet:
       "統計は全ハンドではなく「オープンレンジに対する」割合です。4ベットのバリューは" +
-      "QQ+/AKが中心で、A5s-A4sのようなブラフを少量混ぜます。コールは、ポジションがある" +
-      "組み合わせ（ブラインドの3ベット相手）ではペア・スーテッドブロードウェイ・コネクターまで広く、" +
-      "ない組み合わせ（後ろのポジションの3ベット相手）ではペア・スーテッドブロードウェイ中心に狭く続行します。",
+      "QQ+/AKが中心で、A5s-A4sのようなブラフを少量混ぜます。コールは、ポジションが" +
+      "あればペア・スーテッドブロードウェイ・コネクターまで広く、" +
+      "なければペア・スーテッドブロードウェイ中心に狭く続行します。",
     squeezeNote:
       "スクイーズ = オープンとコーラーが両方いる状況での3ベット（ここでは約11〜12bb）です。" +
       "コーラーがいるとヘッズアップのディフェンスより全体の続行は狭くなり、3ベットは" +
@@ -628,9 +627,9 @@ const M = {
     copy4bet: "Copiar rango de 4-bet",
     note3bet:
       "Las estadísticas son proporciones de tu rango de apertura, no de todas las manos. El valor " +
-      "del 4-bet se centra en QQ+/AK con algunos bluffs como A5s-A4s. Con posición (contra un " +
-      "3-bet de las ciegas), el rango de call se mantiene amplio: pares, broadways suited y " +
-      "conectores; sin posición (contra un 3-bet de posiciones posteriores), se estrecha a " +
+      "del 4-bet se centra en QQ+/AK con algunos bluffs como A5s-A4s. Con posición, el rango de " +
+      "call se mantiene amplio: pares, broadways suited y " +
+      "conectores; sin posición, se estrecha a " +
       "pares y broadways suited sobre todo.",
     squeezeNote:
       "Un squeeze es un 3-bet con un opener y un caller ya en el bote (aquí de unos 11-12bb). " +
@@ -727,9 +726,9 @@ const M = {
     copy4bet: "Copiar range de 4-bet",
     note3bet:
       "As estatísticas são proporções do seu range de abertura, não de todas as mãos. O valor " +
-      "do 4-bet se concentra em QQ+/AK com alguns blefes como A5s-A4s. Com posição (contra um " +
-      "3-bet dos blinds), o range de call continua amplo: pares, broadways suited e connectors; " +
-      "sem posição (contra um 3-bet das posições posteriores), fica mais estreito, centrado em " +
+      "do 4-bet se concentra em QQ+/AK com alguns blefes como A5s-A4s. Com posição, o range de " +
+      "call continua amplo: pares, broadways suited e connectors; " +
+      "sem posição, fica mais estreito, centrado em " +
       "pares e broadways suited.",
     squeezeNote:
       "Um squeeze é um 3-bet com um opener e um caller já no pote (aqui de uns 11-12bb). " +
@@ -828,9 +827,9 @@ const M = {
     copy4bet: "4-Bet-Range kopieren",
     note3bet:
       "Die Statistik zeigt Anteile deiner Open-Range, nicht aller Hände. Der Value der 4-Bet liegt " +
-      "bei QQ+/AK, dazu ein paar Bluffs wie A5s-A4s. Mit Position (gegen eine 3-Bet aus den " +
-      "Blinds) bleibt die Call-Range breit: Paare, suited Broadways und Connectors; ohne Position " +
-      "(gegen eine 3-Bet aus Positionen hinter dir) wird sie enger – vor allem Paare und suited Broadways.",
+      "bei QQ+/AK, dazu ein paar Bluffs wie A5s-A4s. Mit Position bleibt die " +
+      "Call-Range breit: Paare, suited Broadways und Connectors; ohne Position " +
+      "wird sie enger – vor allem Paare und suited Broadways.",
     squeezeNote:
       "Ein Squeeze ist eine 3-Bet, wenn schon ein Opener und ein Caller im Pot sind (hier etwa " +
       "11–12bb). Der Caller macht die Gesamtverteidigung enger als im Heads-up und schiebt die " +
@@ -932,8 +931,8 @@ const M = {
     copy4bet: "复制 4bet 范围",
     note3bet:
       "统计是“占你开池范围”的比例，不是占全部手牌。4bet 的价值牌以 QQ+、AK 为主，" +
-      "再掺一点 A5s、A4s 这样的诈唬。跟注这边，有位置的组合（对手是盲注位 3bet）可以拿得很宽：" +
-      "对子、同花大牌、连牌都能留；没有位置的组合（对手是你后面位置的 3bet）要收窄，" +
+      "再掺一点 A5s、A4s 这样的诈唬。跟注这边，有位置时可以拿得很宽：" +
+      "对子、同花大牌、连牌都能留；没有位置时要收窄，" +
       "以对子、同花大牌为主。",
     squeezeNote:
       "挤压（squeeze）指的是前面已经有人开池、又有人跟注时的 3bet（这里大约 11~12bb）。" +
@@ -1034,8 +1033,8 @@ const M = {
     copy4bet: "複製 4bet 範圍",
     note3bet:
       "統計是「佔你開池範圍」的比例，不是佔全部手牌。4bet 的價值牌以 QQ+、AK 為主，" +
-      "再摻一點 A5s、A4s 這樣的詐唬。跟注這邊，有位置的組合（對手是盲注位 3bet）可以拿得很寬：" +
-      "對子、同花百老匯、連張都能留；沒有位置的組合（對手是你後面位置的 3bet）要收窄，" +
+      "再摻一點 A5s、A4s 這樣的詐唬。跟注這邊，有位置時可以拿得很寬：" +
+      "對子、同花百老匯、連張都能留；沒有位置時要收窄，" +
       "以對子、同花百老匯為主。",
     squeezeNote:
       "擠壓（squeeze）指的是前面已經有人開池，又有人跟注時的 3bet（這裡大約 11～12bb）。" +
@@ -1136,9 +1135,9 @@ const M = {
     copy4bet: "Copier la range de 4-bet",
     note3bet:
       "Les stats sont des parts de ta range d'open, pas de toutes les mains. La value du " +
-      "4-bet se concentre sur QQ+/AK, avec quelques bluffs comme A5s-A4s. Avec la position (face " +
-      "à un 3-bet des blinds), la range de call reste large : paires, broadways suited et " +
-      "connecteurs ; sans position (face à un 3-bet d'une position après toi), elle se resserre " +
+      "4-bet se concentre sur QQ+/AK, avec quelques bluffs comme A5s-A4s. Avec la position, la " +
+      "range de call reste large : paires, broadways suited et " +
+      "connecteurs ; sans position, elle se resserre " +
       "surtout sur les paires et les broadways suited.",
     squeezeNote:
       "Un squeeze est un 3-bet quand il y a déjà un ouvreur et un caller dans le coup " +
@@ -1240,9 +1239,9 @@ const M = {
     copy4bet: "Salin range 4-bet",
     note3bet:
       "Statistiknya adalah bagian dari range open Anda, bukan dari semua hand. Value 4-bet " +
-      "terpusat di QQ+/AK, ditambah beberapa bluff seperti A5s-A4s. Dengan posisi (melawan 3-bet " +
-      "dari blind), range call tetap lebar: pair, broadway suited, dan connector; tanpa posisi " +
-      "(melawan 3-bet dari posisi setelah Anda), range call lebih sempit dan berpusat pada pair dan broadway suited.",
+      "terpusat di QQ+/AK, ditambah beberapa bluff seperti A5s-A4s. Dengan posisi, range call " +
+      "tetap lebar: pair, broadway suited, dan connector; tanpa posisi, " +
+      "range call lebih sempit dan berpusat pada pair dan broadway suited.",
     squeezeNote:
       "Squeeze adalah 3-bet saat sudah ada yang open dan ada yang call (sekitar 11-12bb di sini). " +
       "Adanya caller membuat total defend lebih ketat daripada heads-up dan mendorong 3-bet ke " +
@@ -1340,9 +1339,9 @@ const M = {
     copy4bet: "Salin range 4-bet",
     note3bet:
       "Statistik ini ialah bahagian daripada range open anda, bukan daripada semua tangan. Value " +
-      "4-bet tertumpu pada QQ+/AK, ditambah sedikit bluff seperti A5s-A4s. Dengan posisi (menentang " +
-      "3-bet dari blind), range call kekal luas: pair, broadway suited, dan connector; tanpa posisi " +
-      "(menentang 3-bet dari posisi selepas anda), range call lebih sempit dan tertumpu pada pair dan broadway suited.",
+      "4-bet tertumpu pada QQ+/AK, ditambah sedikit bluff seperti A5s-A4s. Dengan posisi, range " +
+      "call kekal luas: pair, broadway suited, dan connector; tanpa posisi, " +
+      "range call lebih sempit dan tertumpu pada pair dan broadway suited.",
     squeezeNote:
       "Squeeze ialah 3-bet apabila sudah ada yang open dan ada yang call (sekitar 11-12bb di sini). " +
       "Kehadiran caller menjadikan jumlah defend lebih ketat berbanding heads-up dan menolak 3-bet " +
@@ -1443,8 +1442,8 @@ const M = {
     note3bet:
       "İstatistikler tüm ellerin değil, açılış range'inin içindeki paylardır. 4-bet value'su " +
       "QQ+/AK etrafında toplanır, A5s–A4s gibi birkaç blöf de karışır. Pozisyondayken " +
-      "(blind'lardan gelen 3-bet'e karşı) call range'i geniş kalır: çiftler, suited broadway'ler " +
-      "ve connector'lar; pozisyonsuzken (arkandaki pozisyonlardan gelen 3-bet'e karşı) daralır, " +
+      "call range'i geniş kalır: çiftler, suited broadway'ler " +
+      "ve connector'lar; pozisyonsuzken daralır, " +
       "çoğunlukla çiftler ve suited broadway'lerden oluşur.",
     squeezeNote:
       "Squeeze, pot'ta hem açan hem de call eden biri varken yapılan 3-bet'tir (burada " +
@@ -1545,9 +1544,9 @@ const M = {
     copy4bet: "Sao chép range 4-bet",
     note3bet:
       "Các chỉ số là tỷ lệ trong range open của bạn, không phải trên tất cả tay bài. Value 4-bet " +
-      "tập trung vào QQ+/AK, kèm một ít bluff như A5s–A4s. Khi có vị trí (gặp 3-bet từ blind), " +
-      "range call vẫn rộng: các đôi, broadway đồng chất và connector; khi không có vị trí (gặp " +
-      "3-bet từ vị trí sau bạn), range call hẹp lại, chủ yếu là các đôi và broadway đồng chất.",
+      "tập trung vào QQ+/AK, kèm một ít bluff như A5s–A4s. Khi có vị trí, " +
+      "range call vẫn rộng: các đôi, broadway đồng chất và connector; khi không có vị trí, " +
+      "range call hẹp lại, chủ yếu là các đôi và broadway đồng chất.",
     squeezeNote:
       "Squeeze là 3-bet khi trong pot đã có cả bên open lẫn bên call (ở đây " +
       "khoảng 11–12bb). Bên call khiến tổng phòng thủ chặt hơn so với đối đầu tay đôi và " +
@@ -1647,9 +1646,9 @@ const M = {
     copy4bet: "Копировать диапазон 4-бета",
     note3bet:
       "Доли считаются от твоего диапазона опена, а не от всех рук. Вэлью 4-бета — " +
-      "QQ+/AK с примесью блефов вроде A5s–A4s. В позиции (против 3-бета из блайндов) " +
+      "QQ+/AK с примесью блефов вроде A5s–A4s. В позиции " +
       "диапазон колла остаётся широким: пары, одномастные бродвеи и коннекторы; без позиции " +
-      "(против 3-бета с позиций после тебя) он уже — в основном пары и одномастные бродвеи.",
+      "он уже — в основном пары и одномастные бродвеи.",
     squeezeNote:
       "Сквиз — это 3-бет после опена и колла (здесь около " +
       "11–12bb). Из-за коллера общая защита становится уже, чем в хедз-апе, " +
