@@ -5,7 +5,7 @@ declare const __F1_TEST_BUILD__: boolean;
 declare const __APP_TARGET__: "trainer" | "npokers";
 
 const LAUNCHED = {
-  feedback: false,
+  feedback: true, // 본체 코드 1 라이브 5ac5d755 (10-09) · share·summary는 코드 2 뒤
   share: false,
   summary: false,
 } as const;
