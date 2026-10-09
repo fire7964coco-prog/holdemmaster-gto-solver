@@ -1248,6 +1248,14 @@ button {
 button:hover {
   background: rgb(var(--c-bg-3));
 }
+/* Fold-out rows (계산 기준 · 접는 핸드 · 핸드 표) must read as tappable — owner 10-09. */
+summary {
+  color: rgb(var(--c-brand));
+  cursor: pointer;
+}
+summary::marker {
+  color: rgb(var(--c-brand));
+}
 button:focus-visible,
 summary:focus-visible {
   outline: 2px solid rgb(var(--c-brand));
@@ -1572,7 +1580,6 @@ p {
 }
 .review-grid-details summary {
   font-size: 10px;
-  color: rgb(var(--c-text-secondary));
   margin-bottom: 6px;
   cursor: pointer;
 }
