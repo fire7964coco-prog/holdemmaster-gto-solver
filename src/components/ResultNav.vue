@@ -644,7 +644,7 @@ const M = {
           flop: "Флоп",
           turn: "Тёрн",
           river: "Ривер",
-          end: "Вскрытие",
+          end: "Конец",
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
     action: (name: string): string =>

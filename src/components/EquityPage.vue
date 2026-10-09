@@ -355,8 +355,7 @@ const M = {
     how3: "«전수 계산» 배지는 모든 경우를 다 세었다는 뜻이고, «근사»는 무작위 표본 결과입니다.",
     limitTitle: "이 계산기의 범위",
     limitBody:
-      "2인 올인 승률만 계산합니다. 레인지 대 레인지나 벳·폴드가 이어지는 상황은 " +
-      "솔버(커스텀 스팟)로 계산하세요. 3인 이상 팟은 지원하지 않습니다.",
+      "2인 올인 승률만 계산합니다. 플랍 이후(보드 3장 이상)의 레인지 대 레인지나 벳·폴드가 이어지는 상황은 솔버(커스텀 스팟)로 계산하세요. 3인 이상 팟은 지원하지 않습니다.",
     errors: {
       "need-hero": "내 핸드 2장을 골라 주세요.",
       "bad-board": "보드는 0·3·4·5장만 가능합니다.",
@@ -406,7 +405,8 @@ const M = {
     how3: "“सटीक” का मतलब है कि सभी संभावनाएँ गिनी गईं। “अनुमान” random नमूने पर आधारित है।",
     limitTitle: "इस कैलकुलेटर का दायरा",
     // hi: the solver also supports only heads-up; do not repeat the English multiway claim.
-    limitBody: "यह टूल केवल 2 खिलाड़ियों की all-in equity निकालता है। Range vs range और आगे की betting lines के लिए [अपना स्पॉट] में सॉल्वर इस्तेमाल करें। Multiway pots समर्थित नहीं हैं।",
+    limitBody:
+      "यह टूल केवल 2 खिलाड़ियों की all-in equity निकालता है। फ्लॉप के बाद (बोर्ड पर 3 या ज़्यादा कार्ड) range vs range और आगे की betting lines के लिए [अपना स्पॉट] में सॉल्वर इस्तेमाल करें। Multiway pots समर्थित नहीं हैं।",
     errors: {
       "need-hero": "पहले अपने 2 कार्ड चुनें।",
       "bad-board": "Board पर 0, 3, 4 या 5 कार्ड होने चाहिए।",
@@ -460,8 +460,7 @@ const M = {
     how3: "The “Exact” badge means every case was counted; “Approx.” is a random sample.",
     limitTitle: "What this calculator covers",
     limitBody:
-      "This tool computes all-in equity between two players only. For range vs range and betting lines, " +
-      "use the solver (Custom Spot). Multiway pots are not supported.",
+      "This tool computes all-in equity between two players only. For range vs range and betting lines from the flop on (a board of 3+ cards), use the solver (Custom Spot). Multiway pots are not supported.",
     errors: {
       "need-hero": "Pick your two cards first.",
       "bad-board": "The board must have 0, 3, 4 or 5 cards.",
@@ -516,8 +515,7 @@ const M = {
     how3: "「完全計算」バッジはすべての場合を数えたという意味で、「近似」はランダムサンプルの結果です。",
     limitTitle: "この計算機の範囲",
     limitBody:
-      "2人のオールイン勝率のみを計算します。レンジ対レンジやベット・フォールドが続く状況は" +
-      "ソルバー（カスタムスポット）で計算してください。3人以上のポットには対応していません。",
+      "2人のオールイン勝率のみを計算します。フロップ以降（ボード3枚以上）のレンジ対レンジやベット・フォールドが続く状況はソルバー（カスタムスポット）で計算してください。3人以上のポットには対応していません。",
     errors: {
       "need-hero": "自分のハンド2枚を選んでください。",
       "bad-board": "ボードは0・3・4・5枚のみ有効です。",
@@ -572,8 +570,7 @@ const M = {
     how3: "La insignia «Cálculo exacto» significa que se contaron todos los casos; «Aprox.» es una muestra aleatoria.",
     limitTitle: "Alcance",
     limitBody:
-      "Esta herramienta solo calcula equity de all-in entre dos jugadores. Para rango contra rango y líneas " +
-      "de apuesta, usa el solver (Spot personalizado). Los botes multiway no son compatibles.",
+      "Esta herramienta solo calcula equity de all-in entre dos jugadores. Para rango contra rango y líneas de apuesta desde el flop (board de 3 cartas o más), usa el solver (Spot personalizado). Los botes multiway no son compatibles.",
     errors: {
       "need-hero": "Primero elige tus dos cartas.",
       "bad-board": "El board debe tener 0, 3, 4 o 5 cartas.",
@@ -631,8 +628,7 @@ const M = {
     how3: "O selo “Cálculo exato” significa que todos os casos foram contados; “Aprox.” é uma amostra aleatória.",
     limitTitle: "O que esta calculadora cobre",
     limitBody:
-      "Esta ferramenta só calcula equity de all-in entre dois jogadores. Para range contra range e linhas " +
-      "de aposta, use o solver (Spot personalizado). Potes multiway não são suportados.",
+      "Esta ferramenta só calcula equity de all-in entre dois jogadores. Para range contra range e linhas de aposta a partir do flop (board com 3 cartas ou mais), use o solver (Spot personalizado). Potes multiway não são suportados.",
     errors: {
       "need-hero": "Escolha primeiro as suas duas cartas.",
       "bad-board": "O board precisa ter 0, 3, 4 ou 5 cartas.",
@@ -695,8 +691,7 @@ const M = {
       "Das Abzeichen „Exakt“ heißt, dass jeder Fall gezählt wurde; „Näherung“ ist eine Zufallsstichprobe.",
     limitTitle: "Was dieser Rechner abdeckt",
     limitBody:
-      "Dieses Werkzeug berechnet nur die All-in-Equity zwischen zwei Spielern. Für Range gegen Range und " +
-      "Bet-Lines nutze den Solver (Eigener Spot). Multiway-Pots werden nicht unterstützt.",
+      "Dieses Werkzeug berechnet nur die All-in-Equity zwischen zwei Spielern. Für Range gegen Range und Bet-Lines ab dem Flop (Board mit mindestens 3 Karten) nutze den Solver (Eigener Spot). Multiway-Pots werden nicht unterstützt.",
     errors: {
       "need-hero": "Wähle zuerst deine zwei Karten.",
       "bad-board": "Das Board darf nur 0, 3, 4 oder 5 Karten haben.",
@@ -763,8 +758,7 @@ const M = {
     how3: "“精确”这个标记表示所有情况都数过了；“近似”则是随机抽样的结果。",
     limitTitle: "这个计算器管到哪儿",
     limitBody:
-      "它只算两人全下的胜率。范围对范围、夹着下注和弃牌的局面，" +
-      "请用求解器（自定义牌局）来算。不支持 3 人以上的底池。",
+      "它只算两人全下的胜率。翻牌之后（公共牌 3 张以上）范围对范围、夹着下注和弃牌的局面，请用求解器（自定义牌局）来算。不支持 3 人以上的底池。",
     errors: {
       "need-hero": "请先选好自己的两张牌。",
       "bad-board": "公共牌只能是 0、3、4 或 5 张。",
@@ -832,8 +826,7 @@ const M = {
     how3: "「精確」這個標記表示所有情況都數過了；「近似」則是隨機抽樣的結果。",
     limitTitle: "這個計算器算得到什麼",
     limitBody:
-      "它只算兩人全下的勝率。範圍對範圍、夾著下注和蓋牌的局面，" +
-      "請用解算器（自訂牌局）來算。不支援 3 人以上的底池。",
+      "它只算兩人全下的勝率。翻牌之後（公共牌 3 張以上）範圍對範圍、夾著下注和蓋牌的局面，請用解算器（自訂牌局）來算。不支援 3 人以上的底池。",
     errors: {
       "need-hero": "請先選好自己的兩張牌。",
       "bad-board": "公共牌只能是 0、3、4 或 5 張。",
@@ -896,8 +889,7 @@ const M = {
     limitTitle: "Ce que couvre ce calculateur",
     // «Spot personnalisé» = 사이드바 customLabel과 같은 글자
     limitBody:
-      "Cet outil calcule uniquement l'equity à tapis entre deux joueurs. Pour range contre range et les lignes " +
-      "de bet, utilise le solver (Spot personnalisé). Les pots multiway ne sont pas pris en charge.",
+      "Cet outil calcule uniquement l'equity à tapis entre deux joueurs. Pour range contre range et les lignes de bet à partir du flop (board d'au moins 3 cartes), utilise le solver (Spot personnalisé). Les pots multiway ne sont pas pris en charge.",
     errors: {
       "need-hero": "Choisis d'abord tes deux cartes.",
       "bad-board": "Le board doit avoir 0, 3, 4 ou 5 cartes.",
@@ -958,8 +950,7 @@ const M = {
     limitTitle: "Cakupan kalkulator ini",
     // «Spot kustom» = 사이드바 customLabel과 같은 글자
     limitBody:
-      "Alat ini hanya menghitung equity all-in antara dua pemain. Untuk range vs range dan line bet, " +
-      "gunakan solver (Spot kustom). Pot multiway tidak didukung.",
+      "Alat ini hanya menghitung equity all-in antara dua pemain. Untuk range vs range dan line bet mulai dari flop (board 3 kartu atau lebih), gunakan solver (Spot kustom). Pot multiway tidak didukung.",
     errors: {
       "need-hero": "Pilih dua kartu Anda dulu.",
       "bad-board": "Board harus berisi 0, 3, 4, atau 5 kartu.",
@@ -1020,8 +1011,7 @@ const M = {
     limitTitle: "Skop kalkulator ini",
     // «Spot tersuai» = 사이드바 customLabel과 같은 글자
     limitBody:
-      "Alat ini hanya mengira equity all-in antara dua pemain. Untuk range lawan range dan line pertaruhan, " +
-      "gunakan solver (Spot tersuai). Pot multiway tidak disokong.",
+      "Alat ini hanya mengira equity all-in antara dua pemain. Untuk range lawan range dan line pertaruhan bermula dari flop (board 3 kad atau lebih), gunakan solver (Spot tersuai). Pot multiway tidak disokong.",
     errors: {
       "need-hero": "Sila pilih dua kad anda dahulu.",
       "bad-board": "Board mesti ada 0, 3, 4 atau 5 kad.",
@@ -1079,8 +1069,7 @@ const M = {
     limitTitle: "Bu hesaplayıcının kapsamı",
     // tr: solver도 2인만 지원 — en의 «multiway는 솔버가 담당» 서술을 옮기지 않는다(hi와 같은 처리). «Özel spot» = 사이드바 customLabel
     limitBody:
-      "Bu araç yalnızca iki oyuncu arasındaki all-in equity'yi hesaplar. Range vs range ve sonraki line'lar için " +
-      "Özel spot bölümündeki solver'ı kullan. Multiway pot'lar desteklenmiyor.",
+      "Bu araç yalnızca iki oyuncu arasındaki all-in equity'yi hesaplar. Flop'tan itibaren (board'da en az 3 kart) range vs range ve sonraki line'lar için Özel spot bölümündeki solver'ı kullan. Multiway pot'lar desteklenmiyor.",
     errors: {
       "need-hero": "Önce iki kartını seç.",
       "bad-board": "Board'da 0, 3, 4 veya 5 kart olmalı.",
@@ -1134,8 +1123,7 @@ const M = {
     how3: "Nhãn “Chính xác” nghĩa là đã đếm mọi trường hợp; “Xấp xỉ” là mẫu ngẫu nhiên.",
     limitTitle: "Công cụ này tính gì",
     limitBody:
-      "Công cụ này chỉ tính equity all-in giữa hai người chơi. Với range vs range và các line tiếp theo, " +
-      "hãy dùng solver ở mục Spot tùy chỉnh. Không hỗ trợ pot nhiều người (multiway).",
+      "Công cụ này chỉ tính equity all-in giữa hai người chơi. Với range vs range và các line tiếp theo từ flop trở đi (board từ 3 lá trở lên), hãy dùng solver ở mục Spot tùy chỉnh. Không hỗ trợ pot nhiều người (multiway).",
     errors: {
       "need-hero": "Chọn 2 lá của bạn trước.",
       "bad-board": "Board phải có 0, 3, 4 hoặc 5 lá.",
@@ -1189,8 +1177,7 @@ const M = {
     how3: "Значок «Точно» — посчитаны все варианты; «Примерно» — случайная выборка.",
     limitTitle: "Что считает этот калькулятор",
     limitBody:
-      "Этот инструмент считает эквити олл-ина только между двумя игроками. Для диапазона против диапазона и линий ставок " +
-      "используй солвер («Свой спот»). Мультивей-поты не поддерживаются.",
+      "Этот инструмент считает эквити олл-ина только между двумя игроками. Для диапазона против диапазона и линий ставок начиная с флопа (на борде от 3 карт) используй солвер («Свой спот»). Мультивей-поты не поддерживаются.",
     errors: {
       "need-hero": "Сначала выбери две свои карты.",
       "bad-board": "На борде должно быть 0, 3, 4 или 5 карт.",
