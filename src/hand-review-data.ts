@@ -13,9 +13,9 @@ export const HAND_REVIEW_DATA = {
   maxCachedFlops: 8,
   timeoutMs: 20000,
 };
-// 출시 전에는 사이드바 메뉴를 숨긴다 — 상황 계산이 다 끝나고 자료를 올린 뒤에 켠다 (사장님 09-29 «중간 공개 없음»).
+// 사이드바 메뉴 노출 스위치 — 11상황 자료를 올린 뒤 출시(2026-10-09 사장님 ○). 09-29 «중간 공개 없음» 조건 충족.
 // ?view=hand-review 직접 주소로는 열린다 (검사·내부 확인용).
-export const HAND_REVIEW_LAUNCHED = false;
+export const HAND_REVIEW_LAUNCHED = true;
 const cache = new Map<string, Hmr1File>();
 
 export async function loadReviewFlop(
