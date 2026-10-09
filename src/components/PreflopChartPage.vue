@@ -264,7 +264,8 @@ const M = {
     intro3bet:
       "내가 오픈 레이즈했는데 3벳을 받았을 때의 대응 — 빨강은 4벳, 초록은 콜, " +
       "나머지는 폴드입니다. 빈도는 «오픈했다면» 기준이라 오픈하지 않는 핸드는 " +
-      "비어 있습니다. 6맥스 캐시 100bb, 오픈 2.5bb, 3벳 약 10~11bb 기준.",
+      "비어 있습니다. 6맥스 캐시 100bb, 오픈 2.5bb, 3벳은 블라인드 11bb(BB vs SB 오픈은 9bb)·" +
+      "뒤 포지션 7.5bb 기준.",
     legend4bet: "4벳",
     legendCond: "빈 칸 = 애초에 오픈 안 함",
     stat4bet: "4벳 비율",
@@ -272,8 +273,9 @@ const M = {
     copy4bet: "4벳 레인지 복사",
     note3bet:
       "통계는 전체 핸드가 아니라 «오픈 레인지 대비» 비율입니다. 4벳 밸류는 " +
-      "QQ+/AK 중심이고, A5s-A4s 같은 블러프를 소량 섞습니다. 콜은 포지션이 " +
-      "있으니 페어·수딧 브로드웨이·커넥터까지 넓게 가져갑니다.",
+      "QQ+/AK 중심이고, A5s-A4s 같은 블러프를 소량 섞습니다. 콜은 포지션이 있는 " +
+      "조합(블라인드 3벳 상대)에서는 페어·수딧 브로드웨이·커넥터까지 넓게, 없는 " +
+      "조합(뒤 포지션 3벳 상대)에서는 페어·수딧 브로드웨이 중심으로 좁게 가져갑니다.",
     squeezeNote:
       "스퀴즈 = 오픈과 콜러가 모두 있는 상태에서의 3벳(여기서는 약 11~12bb). " +
       "콜러가 있으면 헤즈업 수비보다 전체 수비는 좁아지고 3벳은 밸류 중심이 " +
@@ -345,13 +347,13 @@ const M = {
     copy5bet: "5-bet range कॉपी करें",
     note4bet: "ये आँकड़े आपकी 3-bet range के हिस्से हैं। 100bb पर 5-bet लगभग हमेशा all-in होता है। Value के लिए मुख्य हैंड AA·KK हैं (कभी call करके trap), जबकि QQ·AK में 5-bet और call मिलते हैं। Call करते समय pot odds के साथ equity realization भी देखें: कम SPR पर OOP खेलना होता है, इसलिए मुख्यतः pairs और सबसे मज़बूत suited हैंड बचते हैं। विरोधी की 4-bet range में A5s–A4s जैसे bluffs भी हैं, इसलिए हर हैंड fold करना सही नहीं होगा।",
     how4bet2: "लाल और हरे हिस्से के बाद बचा खाली हिस्सा fold है। दोनों रंग वाले खाने में 5-bet और call मिलते हैं। 3-bet range से बाहर के हैंड इस स्थिति तक नहीं पहुँचते, इसलिए उनके खाने खाली हैं।",
-    intro3bet: "आपके open-raise पर 3-bet आने के बाद की रणनीति: लाल = 4-bet, हरा = call, बाकी = fold। आवृत्तियाँ आपके open कर चुकने की शर्त पर हैं, इसलिए जिन हैंड से आप open नहीं करते, वे खाली हैं। आधार: 6-max cash, 100bb, 2.5bb open, लगभग 10–11bb 3-bet।",
+    intro3bet: "आपके open-raise पर 3-bet आने के बाद की रणनीति: लाल = 4-bet, हरा = call, बाकी = fold। आवृत्तियाँ आपके open कर चुकने की शर्त पर हैं, इसलिए जिन हैंड से आप open नहीं करते, वे खाली हैं। आधार: 6-max cash, 100bb, 2.5bb open; blinds से 3-bet 11bb (SB open के ख़िलाफ़ BB 9bb), आपके बाद की पोज़िशन से 7.5bb।",
     legend4bet: "4-bet",
     legendCond: "खाली = इस हैंड से open नहीं होता",
     stat4bet: "4-bet %",
     statContinue: "आगे खेलने का % (open range में से)",
     copy4bet: "4-bet range कॉपी करें",
-    note3bet: "ये आँकड़े आपकी opening range के हिस्से हैं, सभी हैंड के नहीं। 4-bet की value range मुख्यतः QQ+/AK है, जिसमें A5s-A4s जैसे कुछ bluffs मिलते हैं। IP होने पर calling range में pairs, suited broadways और connectors भी शामिल रहते हैं।",
+    note3bet: "ये आँकड़े आपकी opening range के हिस्से हैं, सभी हैंड के नहीं। 4-bet की value range मुख्यतः QQ+/AK है, जिसमें A5s-A4s जैसे कुछ bluffs मिलते हैं। IP होने पर (blinds के 3-bet के ख़िलाफ़) calling range में pairs, suited broadways और connectors भी शामिल रहते हैं; OOP होने पर (आपके बाद की पोज़िशन के 3-bet के ख़िलाफ़) calling range छोटी रहती है और मुख्यतः pairs और suited broadways पर टिकती है।",
     squeezeNote: "Opener और caller दोनों pot में हों, तब किया गया 3-bet squeeze कहलाता है (यहाँ लगभग 11–12bb)। Caller की मौजूदगी में कुल defend range heads-up से छोटी होती है और 3-bet में value हैंड का हिस्सा बढ़ता है। Overcall में ऐसे suited, connected हैंड काम आते हैं जो multiway pot में nuts बना सकें।",
     how3bet2: "लाल और हरे हिस्से के बाद बचा खाली हिस्सा fold है। दोनों रंग वाले खाने में 4-bet और call मिलते हैं। Opening range से बाहर के हैंड इस स्थिति तक नहीं पहुँचते, इसलिए उनके खाने खाली हैं।",
     intro: "पोज़िशन के हिसाब से opening ranges (RFI): आपके पहले सभी fold कर दें, तो किन हैंड से raise करें? आधार: 6-max cash, 100bb, 2.5bb open। आंशिक रूप से भरे खाने उन सीमांत हैंड को दिखाते हैं जिन पर सार्वजनिक स्रोतों में मतभेद है (भराव की ऊँचाई = open करने की सलाह देने वाले स्रोतों का अनुपात)।",
@@ -419,7 +421,8 @@ const M = {
     intro3bet:
       "How to respond when your open-raise gets 3-bet — red is 4-bet, green is " +
       "call, everything else is a fold. Frequencies are conditional on having opened, so " +
-      "hands you never open are blank. 6-max cash, 100bb, 2.5bb open, ~10-11bb 3-bet.",
+      "hands you never open are blank. 6-max cash, 100bb, 2.5bb open; 3-bets are 11bb from " +
+      "the blinds (9bb for BB vs an SB open) and 7.5bb from positions behind you.",
     legend4bet: "4-bet",
     legendCond: "Blank = never opened in the first place",
     stat4bet: "4-bet %",
@@ -427,8 +430,9 @@ const M = {
     copy4bet: "Copy 4-bet range",
     note3bet:
       "The stats are shares of your opening range, not of all hands. 4-bet value " +
-      "centers on QQ+/AK with a few bluffs like A5s-A4s mixed in. With position, " +
-      "the calling range stays wide: pairs, suited broadways, and connectors.",
+      "centers on QQ+/AK with a few bluffs like A5s-A4s mixed in. In position (vs a blind " +
+      "3-bet), the calling range stays wide: pairs, suited broadways, and connectors; out of " +
+      "position (vs a 3-bet from behind you), it narrows to mostly pairs and suited broadways.",
     squeezeNote:
       "A squeeze is a 3-bet with both an opener and a caller in the pot (about " +
       "11-12bb here). The caller makes total defense tighter than heads-up and " +
@@ -517,7 +521,8 @@ const M = {
     intro3bet:
       "自分がオープンレイズした後に3ベットを受けたときの対応です — 赤は4ベット、緑はコール、" +
       "残りはフォールドです。頻度は「オープンした場合」を基準としているため、オープンしない" +
-      "ハンドは空欄です。6maxキャッシュゲーム100bb、オープン2.5bb、3ベット約10〜11bbが基準です。",
+      "ハンドは空欄です。6maxキャッシュゲーム100bb、オープン2.5bb、3ベットはブラインドから11bb" +
+      "（SBのオープンに対するBBは9bb）・後ろのポジションから7.5bbが基準です。",
     legend4bet: "4ベット",
     legendCond: "空欄 = そもそもオープンしない",
     stat4bet: "4ベット率",
@@ -525,8 +530,9 @@ const M = {
     copy4bet: "4ベットレンジをコピー",
     note3bet:
       "統計は全ハンドではなく「オープンレンジに対する」割合です。4ベットのバリューは" +
-      "QQ+/AKが中心で、A5s-A4sのようなブラフを少量混ぜます。コールはポジションが" +
-      "あるため、ペア・スーテッドブロードウェイ・コネクターまで広く続行します。",
+      "QQ+/AKが中心で、A5s-A4sのようなブラフを少量混ぜます。コールは、ポジションがある" +
+      "組み合わせ（ブラインドの3ベット相手）ではペア・スーテッドブロードウェイ・コネクターまで広く、" +
+      "ない組み合わせ（後ろのポジションの3ベット相手）ではペア・スーテッドブロードウェイ中心に狭く続行します。",
     squeezeNote:
       "スクイーズ = オープンとコーラーが両方いる状況での3ベット（ここでは約11〜12bb）です。" +
       "コーラーがいるとヘッズアップのディフェンスより全体の続行は狭くなり、3ベットは" +
@@ -613,7 +619,8 @@ const M = {
     intro3bet:
       "Cómo responder cuando tu open-raise recibe un 3-bet — el rojo es 4-bet, el verde es call " +
       "y el resto se retira. Las frecuencias son condicionales a haber abierto, así que las manos " +
-      "que nunca abres quedan en blanco. Cash 6-max, 100bb, open de 2.5bb, 3-bet de ~10-11bb.",
+      "que nunca abres quedan en blanco. Cash 6-max, 100bb, open de 2.5bb; 3-bet de 11bb desde " +
+      "las ciegas (9bb de la BB contra un open de la SB) y de 7.5bb desde posiciones posteriores.",
     legend4bet: "4-bet",
     legendCond: "En blanco = nunca se abre",
     stat4bet: "% de 4-bet",
@@ -621,8 +628,10 @@ const M = {
     copy4bet: "Copiar rango de 4-bet",
     note3bet:
       "Las estadísticas son proporciones de tu rango de apertura, no de todas las manos. El valor " +
-      "del 4-bet se centra en QQ+/AK con algunos bluffs como A5s-A4s. Con posición, el rango de " +
-      "call se mantiene amplio: pares, broadways suited y conectores.",
+      "del 4-bet se centra en QQ+/AK con algunos bluffs como A5s-A4s. Con posición (contra un " +
+      "3-bet de las ciegas), el rango de call se mantiene amplio: pares, broadways suited y " +
+      "conectores; sin posición (contra un 3-bet de posiciones posteriores), se estrecha a " +
+      "pares y broadways suited sobre todo.",
     squeezeNote:
       "Un squeeze es un 3-bet con un opener y un caller ya en el bote (aquí de unos 11-12bb). " +
       "El caller hace que la defensa total sea más estrecha que en heads-up y empuja el 3-bet " +
@@ -709,7 +718,8 @@ const M = {
     intro3bet:
       "Como responder quando o seu open-raise leva um 3-bet — o vermelho é 4-bet, o verde é call " +
       "e o resto dá fold. As frequências são condicionais a ter aberto, então as mãos " +
-      "com que você nunca abre ficam em branco. Cash 6-max, 100bb, open de 2,5bb, 3-bet de ~10-11bb.",
+      "com que você nunca abre ficam em branco. Cash 6-max, 100bb, open de 2,5bb; 3-bet de 11bb " +
+      "dos blinds (9bb do BB contra um open do SB) e de 7,5bb das posições posteriores.",
     legend4bet: "4-bet",
     legendCond: "Em branco = nunca abre",
     stat4bet: "% de 4-bet",
@@ -717,8 +727,10 @@ const M = {
     copy4bet: "Copiar range de 4-bet",
     note3bet:
       "As estatísticas são proporções do seu range de abertura, não de todas as mãos. O valor " +
-      "do 4-bet se concentra em QQ+/AK com alguns blefes como A5s-A4s. Com posição, o range de " +
-      "call continua amplo: pares, broadways suited e connectors.",
+      "do 4-bet se concentra em QQ+/AK com alguns blefes como A5s-A4s. Com posição (contra um " +
+      "3-bet dos blinds), o range de call continua amplo: pares, broadways suited e connectors; " +
+      "sem posição (contra um 3-bet das posições posteriores), fica mais estreito, centrado em " +
+      "pares e broadways suited.",
     squeezeNote:
       "Um squeeze é um 3-bet com um opener e um caller já no pote (aqui de uns 11-12bb). " +
       "O caller faz a defesa total ficar mais estreita que no heads-up e empurra o 3-bet " +
@@ -807,7 +819,8 @@ const M = {
     intro3bet:
       "Wie du reagierst, wenn dein Open-Raise eine 3-Bet kassiert – Rot ist 4-Bet, Grün ist Call, " +
       "der Rest foldet. Die Frequenzen gelten unter der Bedingung, dass du geöffnet hast; Hände, " +
-      "die du nie eröffnest, bleiben leer. 6-max Cashgame, 100bb, Open auf 2,5bb, 3-Bet auf ca. 10–11bb.",
+      "die du nie eröffnest, bleiben leer. 6-max Cashgame, 100bb, Open auf 2,5bb; 3-Bet aus den " +
+      "Blinds auf 11bb (BB gegen SB-Open: 9bb), aus Positionen hinter dir auf 7,5bb.",
     legend4bet: "4-Bet",
     legendCond: "Leer = wird nie eröffnet",
     stat4bet: "4-Bet-Anteil",
@@ -815,8 +828,9 @@ const M = {
     copy4bet: "4-Bet-Range kopieren",
     note3bet:
       "Die Statistik zeigt Anteile deiner Open-Range, nicht aller Hände. Der Value der 4-Bet liegt " +
-      "bei QQ+/AK, dazu ein paar Bluffs wie A5s-A4s. Mit Position bleibt die Call-Range breit: " +
-      "Paare, suited Broadways und Connectors.",
+      "bei QQ+/AK, dazu ein paar Bluffs wie A5s-A4s. Mit Position (gegen eine 3-Bet aus den " +
+      "Blinds) bleibt die Call-Range breit: Paare, suited Broadways und Connectors; ohne Position " +
+      "(gegen eine 3-Bet aus Positionen hinter dir) wird sie enger – vor allem Paare und suited Broadways.",
     squeezeNote:
       "Ein Squeeze ist eine 3-Bet, wenn schon ein Opener und ein Caller im Pot sind (hier etwa " +
       "11–12bb). Der Caller macht die Gesamtverteidigung enger als im Heads-up und schiebt die " +
@@ -909,7 +923,8 @@ const M = {
     intro3bet:
       "你开池加注之后被 3bet 该怎么办——红色是 4bet，绿色是跟注，其余弃牌。" +
       "这里的频率是在“假设你开池了”的前提下算的，所以你根本不会开池的手牌是空白的。" +
-      "基准：6 人桌现金局 100bb，开池 2.5bb，3bet 大约 10~11bb。",
+      "基准：6 人桌现金局 100bb，开池 2.5bb，盲注位 3bet 11bb（BB 对 SB 开池为 9bb），" +
+      "你后面的位置 3bet 7.5bb。",
     legend4bet: "4bet",
     legendCond: "空白 = 这里本来就不开池",
     stat4bet: "4bet 比例",
@@ -917,8 +932,9 @@ const M = {
     copy4bet: "复制 4bet 范围",
     note3bet:
       "统计是“占你开池范围”的比例，不是占全部手牌。4bet 的价值牌以 QQ+、AK 为主，" +
-      "再掺一点 A5s、A4s 这样的诈唬。跟注这边因为你有位置，可以拿得很宽：" +
-      "对子、同花大牌、连牌都能留。",
+      "再掺一点 A5s、A4s 这样的诈唬。跟注这边，有位置的组合（对手是盲注位 3bet）可以拿得很宽：" +
+      "对子、同花大牌、连牌都能留；没有位置的组合（对手是你后面位置的 3bet）要收窄，" +
+      "以对子、同花大牌为主。",
     squeezeNote:
       "挤压（squeeze）指的是前面已经有人开池、又有人跟注时的 3bet（这里大约 11~12bb）。" +
       "有跟注者在，总的防守范围会比单挑时更窄，3bet 也更偏价值。跟着一起跟注（overcall）" +
@@ -1009,7 +1025,8 @@ const M = {
     intro3bet:
       "你開池加注之後被 3bet 該怎麼辦——紅色是 4bet，綠色是跟注，其餘蓋牌。" +
       "這裡的頻率是在「假設你開池了」的前提下算的，所以你根本不會開池的手牌是空白的。" +
-      "基準：6 人現金桌 100bb，開池 2.5bb，3bet 大約 10～11bb。",
+      "基準：6 人現金桌 100bb，開池 2.5bb，盲注位 3bet 11bb（BB 對 SB 開池為 9bb），" +
+      "你後面的位置 3bet 7.5bb。",
     legend4bet: "4bet",
     legendCond: "空白 = 這裡本來就不開池",
     stat4bet: "4bet 比例",
@@ -1017,8 +1034,9 @@ const M = {
     copy4bet: "複製 4bet 範圍",
     note3bet:
       "統計是「佔你開池範圍」的比例，不是佔全部手牌。4bet 的價值牌以 QQ+、AK 為主，" +
-      "再摻一點 A5s、A4s 這樣的詐唬。跟注這邊因為你有位置，可以拿得很寬：" +
-      "對子、同花百老匯、連張都能留。",
+      "再摻一點 A5s、A4s 這樣的詐唬。跟注這邊，有位置的組合（對手是盲注位 3bet）可以拿得很寬：" +
+      "對子、同花百老匯、連張都能留；沒有位置的組合（對手是你後面位置的 3bet）要收窄，" +
+      "以對子、同花百老匯為主。",
     squeezeNote:
       "擠壓（squeeze）指的是前面已經有人開池，又有人跟注時的 3bet（這裡大約 11～12bb）。" +
       "有跟注者在，總的防守範圍會比單挑時更窄，3bet 也更偏價值。跟著一起跟注（overcall）" +
@@ -1109,7 +1127,8 @@ const M = {
     intro3bet:
       "Comment réagir quand ton open se fait 3-bet — rouge = 4-bet, vert = call, tout le " +
       "reste est un fold. Les fréquences sont conditionnées au fait d'avoir ouvert, donc les " +
-      "mains que tu n'ouvres jamais restent vides. Cash game 6-max, 100bb, open 2,5bb, 3-bet d'environ 10-11bb.",
+      "mains que tu n'ouvres jamais restent vides. Cash game 6-max, 100bb, open 2,5bb ; 3-bet de " +
+      "11bb depuis les blinds (9bb pour la BB contre un open de la SB) et de 7,5bb depuis les positions après toi.",
     legend4bet: "4-bet",
     legendCond: "Vide = jamais ouvert au départ",
     stat4bet: "% de 4-bet",
@@ -1117,8 +1136,10 @@ const M = {
     copy4bet: "Copier la range de 4-bet",
     note3bet:
       "Les stats sont des parts de ta range d'open, pas de toutes les mains. La value du " +
-      "4-bet se concentre sur QQ+/AK, avec quelques bluffs comme A5s-A4s. Avec la position, " +
-      "la range de call reste large : paires, broadways suited et connecteurs.",
+      "4-bet se concentre sur QQ+/AK, avec quelques bluffs comme A5s-A4s. Avec la position (face " +
+      "à un 3-bet des blinds), la range de call reste large : paires, broadways suited et " +
+      "connecteurs ; sans position (face à un 3-bet d'une position après toi), elle se resserre " +
+      "surtout sur les paires et les broadways suited.",
     squeezeNote:
       "Un squeeze est un 3-bet quand il y a déjà un ouvreur et un caller dans le coup " +
       "(environ 11-12bb ici). Le caller rend la défense totale plus serrée qu'en heads-up " +
@@ -1211,7 +1232,7 @@ const M = {
       "5-bet dan call. Hand di luar range 3-bet tidak pernah sampai ke spot ini, jadi tetap kosong.",
     intro3bet:
       "Cara merespons saat open Anda di-3-bet — merah = 4-bet, hijau = call, sisanya fold. " +
-      "Frekuensinya dihitung hanya dari hand yang memang Anda open, jadi hand yang tidak pernah Anda open dibiarkan kosong. Cash game 6-max, 100bb, open 2,5bb, 3-bet sekitar 10-11bb.",
+      "Frekuensinya dihitung hanya dari hand yang memang Anda open, jadi hand yang tidak pernah Anda open dibiarkan kosong. Cash game 6-max, 100bb, open 2,5bb, 3-bet 11bb dari blind (BB melawan open SB: 9bb) dan 7,5bb dari posisi setelah Anda.",
     legend4bet: "4-bet",
     legendCond: "Kosong = tidak pernah open sejak awal",
     stat4bet: "% 4-bet",
@@ -1219,8 +1240,9 @@ const M = {
     copy4bet: "Salin range 4-bet",
     note3bet:
       "Statistiknya adalah bagian dari range open Anda, bukan dari semua hand. Value 4-bet " +
-      "terpusat di QQ+/AK, ditambah beberapa bluff seperti A5s-A4s. Dengan posisi, range call " +
-      "tetap lebar: pair, broadway suited, dan connector.",
+      "terpusat di QQ+/AK, ditambah beberapa bluff seperti A5s-A4s. Dengan posisi (melawan 3-bet " +
+      "dari blind), range call tetap lebar: pair, broadway suited, dan connector; tanpa posisi " +
+      "(melawan 3-bet dari posisi setelah Anda), range call lebih sempit dan berpusat pada pair dan broadway suited.",
     squeezeNote:
       "Squeeze adalah 3-bet saat sudah ada yang open dan ada yang call (sekitar 11-12bb di sini). " +
       "Adanya caller membuat total defend lebih ketat daripada heads-up dan mendorong 3-bet ke " +
@@ -1310,7 +1332,7 @@ const M = {
       "5-bet dengan call. Tangan di luar range 3-bet tidak pernah sampai ke spot ini, jadi ia kekal kosong.",
     intro3bet:
       "Cara bertindak balas apabila open anda di-3-bet — merah = 4-bet, hijau = call, selebihnya fold. " +
-      "Frekuensinya dikira hanya daripada tangan yang memang anda open, jadi tangan yang tidak pernah anda open dibiarkan kosong. Cash game 6-max, 100bb, open 2.5bb, 3-bet sekitar 10-11bb.",
+      "Frekuensinya dikira hanya daripada tangan yang memang anda open, jadi tangan yang tidak pernah anda open dibiarkan kosong. Cash game 6-max, 100bb, open 2.5bb, 3-bet 11bb dari blind (BB menentang open SB: 9bb) dan 7.5bb dari posisi selepas anda.",
     legend4bet: "4-bet",
     legendCond: "Kosong = tidak pernah open dari awal",
     stat4bet: "% 4-bet",
@@ -1318,8 +1340,9 @@ const M = {
     copy4bet: "Salin range 4-bet",
     note3bet:
       "Statistik ini ialah bahagian daripada range open anda, bukan daripada semua tangan. Value " +
-      "4-bet tertumpu pada QQ+/AK, ditambah sedikit bluff seperti A5s-A4s. Dengan posisi, range " +
-      "call kekal luas: pair, broadway suited, dan connector.",
+      "4-bet tertumpu pada QQ+/AK, ditambah sedikit bluff seperti A5s-A4s. Dengan posisi (menentang " +
+      "3-bet dari blind), range call kekal luas: pair, broadway suited, dan connector; tanpa posisi " +
+      "(menentang 3-bet dari posisi selepas anda), range call lebih sempit dan tertumpu pada pair dan broadway suited.",
     squeezeNote:
       "Squeeze ialah 3-bet apabila sudah ada yang open dan ada yang call (sekitar 11-12bb di sini). " +
       "Kehadiran caller menjadikan jumlah defend lebih ketat berbanding heads-up dan menolak 3-bet " +
@@ -1410,7 +1433,8 @@ const M = {
     intro3bet:
       "Open-raise'ine 3-bet geldiğinde nasıl cevap vereceğin — kırmızı 4-bet, yeşil " +
       "call, geri kalan her şey fold. Sıklıklar açmış olmana göre verilir; bu yüzden " +
-      "hiç açmadığın eller boş. 6-max cash, 100bb, 2,5bb open, ~10–11bb 3-bet.",
+      "hiç açmadığın eller boş. 6-max cash, 100bb, 2,5bb open; 3-bet blind'lardan 11bb " +
+      "(SB open'ına karşı BB'den 9bb), arkandaki pozisyonlardan 7,5bb.",
     legend4bet: "4-bet",
     legendCond: "Boş = baştan hiç açılmayan el",
     stat4bet: "4-bet oranı",
@@ -1419,7 +1443,9 @@ const M = {
     note3bet:
       "İstatistikler tüm ellerin değil, açılış range'inin içindeki paylardır. 4-bet value'su " +
       "QQ+/AK etrafında toplanır, A5s–A4s gibi birkaç blöf de karışır. Pozisyondayken " +
-      "call range'i geniş kalır: çiftler, suited broadway'ler ve connector'lar.",
+      "(blind'lardan gelen 3-bet'e karşı) call range'i geniş kalır: çiftler, suited broadway'ler " +
+      "ve connector'lar; pozisyonsuzken (arkandaki pozisyonlardan gelen 3-bet'e karşı) daralır, " +
+      "çoğunlukla çiftler ve suited broadway'lerden oluşur.",
     squeezeNote:
       "Squeeze, pot'ta hem açan hem de call eden biri varken yapılan 3-bet'tir (burada " +
       "yaklaşık 11–12bb). Call eden oyuncu toplam savunmayı heads-up'a göre daraltır ve " +
@@ -1510,7 +1536,8 @@ const M = {
     intro3bet:
       "Cách phản ứng khi open-raise của bạn bị 3-bet — đỏ là 4-bet, xanh lá là " +
       "call, phần còn lại là fold. Tần suất tính với điều kiện bạn đã open, nên " +
-      "những tay bài bạn không bao giờ open được để trống. Cash 6-max, 100bb, open 2,5bb, 3-bet ~10–11bb.",
+      "những tay bài bạn không bao giờ open được để trống. Cash 6-max, 100bb, open 2,5bb; 3-bet " +
+      "11bb từ blind (BB gặp open của SB là 9bb) và 7,5bb từ các vị trí sau bạn.",
     legend4bet: "4-bet",
     legendCond: "Trống = ngay từ đầu không open",
     stat4bet: "Tỷ lệ 4-bet",
@@ -1518,8 +1545,9 @@ const M = {
     copy4bet: "Sao chép range 4-bet",
     note3bet:
       "Các chỉ số là tỷ lệ trong range open của bạn, không phải trên tất cả tay bài. Value 4-bet " +
-      "tập trung vào QQ+/AK, kèm một ít bluff như A5s–A4s. Khi có vị trí, " +
-      "range call vẫn rộng: các đôi, broadway đồng chất và connector.",
+      "tập trung vào QQ+/AK, kèm một ít bluff như A5s–A4s. Khi có vị trí (gặp 3-bet từ blind), " +
+      "range call vẫn rộng: các đôi, broadway đồng chất và connector; khi không có vị trí (gặp " +
+      "3-bet từ vị trí sau bạn), range call hẹp lại, chủ yếu là các đôi và broadway đồng chất.",
     squeezeNote:
       "Squeeze là 3-bet khi trong pot đã có cả bên open lẫn bên call (ở đây " +
       "khoảng 11–12bb). Bên call khiến tổng phòng thủ chặt hơn so với đối đầu tay đôi và " +
@@ -1610,7 +1638,8 @@ const M = {
     intro3bet:
       "Как отвечать, когда на твой опен-рейз делают 3-бет: красный — 4-бет, зелёный — " +
       "колл, всё остальное — фолд. Частоты считаются только для рук из диапазона опена, " +
-      "поэтому руки, с которыми не открываются, пустые. Кэш 6-max, 100bb, опен 2,5bb, 3-бет ~10–11bb.",
+      "поэтому руки, с которыми не открываются, пустые. Кэш 6-max, 100bb, опен 2,5bb; 3-бет " +
+      "из блайндов — 11bb (BB против опена SB — 9bb), с позиций после тебя — 7,5bb.",
     legend4bet: "4-бет",
     legendCond: "Пусто = рука вне диапазона опена",
     stat4bet: "Частота 4-бета",
@@ -1618,8 +1647,9 @@ const M = {
     copy4bet: "Копировать диапазон 4-бета",
     note3bet:
       "Доли считаются от твоего диапазона опена, а не от всех рук. Вэлью 4-бета — " +
-      "QQ+/AK с примесью блефов вроде A5s–A4s. В позиции " +
-      "диапазон колла остаётся широким: пары, одномастные бродвеи и коннекторы.",
+      "QQ+/AK с примесью блефов вроде A5s–A4s. В позиции (против 3-бета из блайндов) " +
+      "диапазон колла остаётся широким: пары, одномастные бродвеи и коннекторы; без позиции " +
+      "(против 3-бета с позиций после тебя) он уже — в основном пары и одномастные бродвеи.",
     squeezeNote:
       "Сквиз — это 3-бет после опена и колла (здесь около " +
       "11–12bb). Из-за коллера общая защита становится уже, чем в хедз-апе, " +

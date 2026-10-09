@@ -319,21 +319,45 @@ const VS_OPEN: Record<ScenarioId, DefendTiers> = {
 // 히어로의 레인지가 이미 오픈 레인지로 제한돼 있어 별도 모드로 표시한다.
 // 빈도는 «오픈했다면»의 조건부 — 오픈하지 않는 핸드는 응답이 없어야 하고(검증),
 // 통계는 전체 1326콤보가 아니라 «오픈 레인지 대비» %로 계산한다.
-// 전제: 오픈 2.5bb, 3벳 약 10~11bb. 내부 앵커: presets BTN_CALL_3BET(3벳팟 프리셋).
+// 전제: 오픈 2.5bb, 3벳 BB 11 · SB 10 · BB vs SB 오픈 9 · IP(CO·BTN) 7.5bb(레이크 없음).
+// 내부 앵커: presets BTN_CALL_3BET(3벳팟 프리셋).
+// 확장 5 (2026-10-09): CO·HJ·UTG·SB 오픈 9조합 추가 — 판정 참고자료/3벳팟_단계2_판정_2026-10-09.md
 
-export type Vs3BetId = "btn-vs-bb-3bet" | "btn-vs-sb-3bet";
+export type Vs3BetId =
+  | "btn-vs-bb-3bet"
+  | "btn-vs-sb-3bet"
+  | "co-vs-bb-3bet"
+  | "co-vs-btn-3bet"
+  | "hj-vs-bb-3bet"
+  | "hj-vs-co-3bet"
+  | "hj-vs-btn-3bet"
+  | "utg-vs-bb-3bet"
+  | "utg-vs-co-3bet"
+  | "utg-vs-btn-3bet"
+  | "sb-vs-bb-3bet";
 
 export type Vs3BetScenario = {
   id: Vs3BetId;
-  /** 오픈한 내 포지션 */
+  /** 오픈한 내 포지션 (표시용) */
   hero: string;
   /** 3벳한 상대 */
   villain: string;
+  /** 오픈한 내 포지션 — 통계 분모(RFI)를 가져오는 키 */
+  opener: Position;
 };
 
 export const VS3BET_SCENARIOS: Vs3BetScenario[] = [
-  { id: "btn-vs-bb-3bet", hero: "BTN", villain: "BB" },
-  { id: "btn-vs-sb-3bet", hero: "BTN", villain: "SB" },
+  { id: "btn-vs-bb-3bet", hero: "BTN", villain: "BB", opener: "BTN" },
+  { id: "btn-vs-sb-3bet", hero: "BTN", villain: "SB", opener: "BTN" },
+  { id: "co-vs-bb-3bet", hero: "CO", villain: "BB", opener: "CO" },
+  { id: "co-vs-btn-3bet", hero: "CO", villain: "BTN", opener: "CO" },
+  { id: "hj-vs-bb-3bet", hero: "HJ", villain: "BB", opener: "HJ" },
+  { id: "hj-vs-co-3bet", hero: "HJ", villain: "CO", opener: "HJ" },
+  { id: "hj-vs-btn-3bet", hero: "HJ", villain: "BTN", opener: "HJ" },
+  { id: "utg-vs-bb-3bet", hero: "UTG", villain: "BB", opener: "UTG" },
+  { id: "utg-vs-co-3bet", hero: "UTG", villain: "CO", opener: "UTG" },
+  { id: "utg-vs-btn-3bet", hero: "UTG", villain: "BTN", opener: "UTG" },
+  { id: "sb-vs-bb-3bet", hero: "SB", villain: "BB", opener: "SB" },
 ];
 
 type Vs3BetTiers = { fourBet: TierMap; call: TierMap };
@@ -369,6 +393,97 @@ const VS_3BET: Record<Vs3BetId, Vs3BetTiers> = {
       75: "TT,AJo,ATo,KQo,KJo,KQs,K9s,Q9s,54s,65s",
       50: "JJ,AQs,AQo,A5s-A4s,97s,86s",
       25: "QQ,AKs,AKo,QJo,A3s-A2s",
+    },
+  },
+  // ── 확장 5 (2026-10-09): 9조합 추가 — 판정 참고자료/3벳팟_단계2_판정_2026-10-09.md ──
+  // vs BB 3벳(11bb) — 오픈한 쪽이 IP: 콜 중심 · 4벳 적음. BB의 3벳이 vs BTN(폴라)보다
+  // vs CO·HJ(리니어 5.6%)·UTG(4.5%)에서 강하므로 BTN→BB보다 핸드별로 조인다
+  "co-vs-bb-3bet": {
+    fourBet: { 100: "KK+", 50: "QQ,AKs,AKo", 25: "JJ,AQs,A5s-A4s" },
+    call: {
+      100: "TT-66,AJs,KQs,JTs",
+      75: "JJ,55-22,AQs,ATs,KJs,QJs,T9s",
+      50: "QQ,AKs,AKo,AQo,A9s-A8s,KTs,QTs,98s,87s,A5s-A4s",
+      25: "AJo,KQo,76s,J9s,T8s",
+    },
+  },
+  // 차트상 BB의 3벳 vs HJ는 vs CO와 같은 레인지지만 실제 솔버는 HJ 상대를 더 좁게 3벳한다 → 하단만 25씩 낮춤
+  "hj-vs-bb-3bet": {
+    fourBet: { 100: "KK+", 50: "QQ,AKs,AKo", 25: "JJ,AQs,A5s-A4s" },
+    call: {
+      100: "TT-66,AJs,KQs,JTs",
+      75: "JJ,AQs,ATs,KJs,QJs,T9s",
+      50: "QQ,AKs,AKo,AQo,55-22,KTs,QTs,A5s-A4s",
+      25: "A9s-A8s,98s,87s,AJo,KQo",
+    },
+  },
+  // BB의 3벳 vs UTG(4.5% · QQ+/AK 코어)가 가장 강하다 → AA·KK도 25% 트랩 콜, QQ·AK는 콜 위주
+  "utg-vs-bb-3bet": {
+    fourBet: { 75: "AA,KK", 25: "AKs,AKo,A5s" },
+    call: {
+      100: "QQ-99,AQs",
+      75: "AKs,88-77,AJs,KQs",
+      50: "AKo,66,AQo,ATs,KJs,QJs,JTs,A5s",
+      25: "AA,KK,55,KTs,T9s",
+    },
+  },
+  // vs IP 3벳(7.5bb) — 오픈한 쪽이 OOP: 4벳 비중↑(KK+ 순수 · QQ·AK·JJ 75 · TT 50) · 콜은 IP 콜보다 좁다
+  "co-vs-btn-3bet": {
+    fourBet: { 100: "KK+", 75: "QQ,AKs,AKo,JJ", 50: "TT,A5s-A4s", 25: "AQs,A3s-A2s" },
+    call: {
+      100: "99-77,AJs-ATs,KQs,QJs,JTs,T9s",
+      75: "AQs,66-55,KJs,98s,87s",
+      50: "TT,44-22,KTs,QTs,76s,65s,A9s",
+      25: "QQ,AKs,AKo,JJ,AQo,A5s-A4s",
+    },
+  },
+  "hj-vs-btn-3bet": {
+    fourBet: { 100: "KK+", 75: "QQ,AKs,AKo,JJ", 50: "TT,A5s-A4s", 25: "AQs,A3s-A2s" },
+    call: {
+      100: "99-77,AJs-ATs,KQs,QJs,JTs,T9s",
+      75: "AQs,66-55,KJs,98s",
+      50: "TT",
+      25: "QQ,AKs,AKo,JJ,AQo,A5s-A4s,44-22,KTs,QTs,87s,76s,A9s",
+    },
+  },
+  // CO의 3벳(4.56%)이 BTN(4.79%)보다 좁아 더 강하다 → HJ→BTN에서 하단↓
+  "hj-vs-co-3bet": {
+    fourBet: { 100: "KK+", 75: "QQ,AKs,AKo,JJ", 50: "TT,A5s-A4s", 25: "AQs,A3s-A2s" },
+    call: {
+      100: "99-77,AJs,KQs,JTs,T9s",
+      75: "AQs,ATs,QJs,98s",
+      50: "TT,66-55,KJs",
+      25: "QQ,AKs,AKo,JJ,AQo,A5s-A4s,44-22,KTs,QTs,87s",
+    },
+  },
+  // UTG 오픈 vs BTN·CO 3벳(3.9%·3.85% · 가장 강한 3벳) — 4벳은 AA·KK 중심, QQ는 콜 위주
+  "utg-vs-btn-3bet": {
+    fourBet: { 100: "AA,KK", 75: "AKs", 50: "AKo,A5s", 25: "QQ,A4s" },
+    call: {
+      100: "JJ-99,AQs,KQs",
+      75: "QQ,AJs",
+      50: "AKo,88-77,66-55,ATs,KJs,QJs,JTs,T9s",
+      25: "AKs,AQo,KTs,QTs,98s,A5s-A4s",
+    },
+  },
+  "utg-vs-co-3bet": {
+    fourBet: { 100: "AA,KK", 75: "AKs", 50: "AKo,A5s", 25: "QQ,A4s" },
+    call: {
+      100: "JJ-99,AQs",
+      75: "QQ,KQs",
+      50: "AKo,88-77,AJs,JTs",
+      25: "AKs,66-55,AQo,ATs,KJs,QJs,T9s,A5s-A4s",
+    },
+  },
+  // SB 3bb 오픈 → BB 9bb 3벳(머지드 10.1%) — SB가 OOP·오픈이 가장 넓어 폴드 최대, 4벳 밸류 TT+/AQ+.
+  // 4벳 블러프는 BB의 AJ+/KQ/KJ를 막는 오프수트 브로드웨이(888poker) + 휠 에이스 — 이 조합만 오프수트 블러프 수록
+  "sb-vs-bb-3bet": {
+    fourBet: { 100: "KK+", 75: "QQ,AKs,AKo", 50: "JJ,AQs,A5s-A2s,AJo,KQo", 25: "TT,AQo,ATo,KJo" },
+    call: {
+      100: "99-55,AJs-ATs,KQs-KJs,QJs,JTs,T9s",
+      75: "TT,44-22,A9s-A6s,KTs,QTs,98s,87s,AQo",
+      50: "JJ,AQs,A5s-A4s,K9s,J9s,T8s,76s,65s,KQo",
+      25: "QQ,AKs,AKo,A3s-A2s,Q9s,54s,AJo,ATo,KJo",
     },
   },
 };
@@ -674,10 +789,11 @@ export type Vs3BetStats = {
   mixedHands: number;
 };
 
-/** 통계는 «오픈 레인지 대비» — 각 핸드를 히어로(BTN)의 RFI 빈도로 가중해 계산 */
+/** 통계는 «오픈 레인지 대비» — 각 핸드를 히어로(오픈한 자리)의 RFI 빈도로 가중해 계산 */
 export const vs3betStatsFor = (id: Vs3BetId): Vs3BetStats => {
   const { fourBet, call } = vs3betGridsFor(id);
-  const rfi = gridFor("BTN"); // 두 조합 모두 히어로가 BTN
+  const opener = VS3BET_SCENARIOS.find((sc) => sc.id === id)?.opener ?? "BTN";
+  const rfi = gridFor(opener);
   let openCombos = 0;
   let fourBetCombos = 0;
   let callCombos = 0;
