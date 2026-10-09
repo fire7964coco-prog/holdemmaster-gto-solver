@@ -1,4 +1,6 @@
 /** Independent launch switches: enable each only after its main-site API opens. */
+import { i18n } from "./i18n";
+
 declare const __F1_TEST_BUILD__: boolean;
 declare const __APP_TARGET__: "trainer" | "npokers";
 
@@ -16,8 +18,16 @@ export const isFeedbackTestHost = (): boolean =>
 const testSwitch = (name: string): boolean =>
   isFeedbackTestHost() && new URLSearchParams(location.search).get(name) === "1";
 
+/** 본체 후기창 서버가 받지 않는 로케일 — 저장하면 locale 오류가 난다. 본체가 사전에 넣으면 뺀다
+ *  (ru: 본체 회신 10-09 «/ru/solver 회차에서 사전에 넣고 다시 알림») */
+const FEEDBACK_UNSUPPORTED_LOCALES: readonly string[] = ["ru"];
+const feedbackOn = __APP_TARGET__ === "trainer" && (LAUNCHED.feedback || testSwitch("feedback"));
+
 export const feedbackFeatures = Object.freeze({
-  feedback: __APP_TARGET__ === "trainer" && (LAUNCHED.feedback || testSwitch("feedback")),
+  /** getter라 화면이 i18n.locale을 따라 다시 그린다(언어를 바꾸면 메뉴가 같이 숨는다) */
+  get feedback(): boolean {
+    return feedbackOn && !FEEDBACK_UNSUPPORTED_LOCALES.includes(i18n.locale);
+  },
   share: __APP_TARGET__ === "trainer" && (LAUNCHED.share || testSwitch("feedbackShare")),
   summary: __APP_TARGET__ === "trainer" && (LAUNCHED.summary || testSwitch("feedbackSummary")),
 });
