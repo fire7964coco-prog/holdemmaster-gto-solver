@@ -3,9 +3,13 @@ import { ReviewError } from "./review/errors";
 import { SPOT_UNIT_SCALE } from "./preflop-spots";
 
 // Deployment changes only this configuration. Data is served separately, never bundled.
+// 자료 = Cloudflare R2 `holdem-review-data` → Worker(도구/review-data-worker). 자료를 바꿀 땐 v2/로 새로 올린다.
 export const HAND_REVIEW_DATA = {
-  baseUrl: "/review-data",
-  readyScenarios: ["srp-btn-bb"] as readonly string[],
+  baseUrl: "https://holdem-review-data.review-data-worker.workers.dev/v1",
+  readyScenarios: [
+    "srp-btn-bb", "srp-sb-bb", "srp-co-bb", "srp-hj-bb", "srp-utg-bb",
+    "srp-co-btn", "srp-hj-btn", "srp-utg-btn", "srp-hj-co", "3bp-btn-bb", "3bp-btn-sb",
+  ] as readonly string[],
   maxCachedFlops: 8,
   timeoutMs: 20000,
 };
