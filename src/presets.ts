@@ -1,6 +1,6 @@
 // 교육용 프리셋 스팟 — 보드 유형 × 상황 커리큘럼
 // 단위: bb×10 (예: 팟 55 = 5.5bb). 레인지는 100bb 온라인 표준의 근사치.
-import { i18n } from "./i18n";
+import { i18n, ruPlural } from "./i18n";
 
 export type Preset = {
   id: string;
@@ -124,7 +124,17 @@ export const presetTitleOf = (
     : i18n.locale === "ru"
     ? preset.titleRu
     : preset.titleEn;
+// lesson의 «{n}» = 교육 예제 개수(PRESETS.length) — 문구에 숫자를 박지 않는다(검수장 권고).
+// ru «из {n} спотов»는 속격이라 1로 끝나면 단수 «спота».
 export const presetLessonOf = (
+  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId" | "lessonMs" | "lessonHi" | "lessonTr" | "lessonVi" | "lessonRu">
+): string => {
+  const n = PRESETS.length;
+  return rawLessonOf(preset)
+    .replace("{n} спотов", `${n} ${ruPlural(n, "спота", "спотов", "спотов")}`)
+    .replace(/\{n\}/g, String(n));
+};
+const rawLessonOf = (
   preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId" | "lessonMs" | "lessonHi" | "lessonTr" | "lessonVi" | "lessonRu">
 ) =>
   i18n.locale === "ko"
@@ -559,38 +569,38 @@ export const PRESETS: Preset[] = [
     titleRu: "Связанный бродвейный борд, двухмастный",
     board: "Qs Jd Ts",
     lesson:
-      "양쪽 다 맞은 것처럼 보이는 보드. 그런데 BB는 13스팟 중 에퀴티 실현율이 가장 낮습니다 — 77.9%, BTN은 119.4%. BB가 99.9% 체크하는 이유를 핸드 분류 패널에서 확인하세요.",
+      "양쪽 다 맞은 것처럼 보이는 보드. 그런데 BB는 {n}스팟 중 에퀴티 실현율이 가장 낮습니다 — 77.9%, BTN은 119.4%. BB가 99.9% 체크하는 이유를 핸드 분류 패널에서 확인하세요.",
     lessonEn:
-      "A board that looks like it hits both ranges. But BB realizes less equity here than in any of the 13 spots — 77.9% against BTN's 119.4% — and checks 99.9%. The hand-category panel shows why.",
+      "A board that looks like it hits both ranges. But BB realizes less equity here than in any of the {n} spots — 77.9% against BTN's 119.4% — and checks 99.9%. The hand-category panel shows why.",
     lessonTr:
-      "İki range'e de oturuyor gibi görünen bir board. Ama BB, 13 spot içinde equity'sini en az burada realize ediyor — %77,9, BTN ise %119,4 — ve %99,9 sıklıkla check yapıyor. Nedenini el kategorisi paneli gösteriyor.",
-    lessonVi: "Board trông như trúng cả hai range. Nhưng trong 13 spot, đây là nơi BB hiện thực hóa equity kém nhất — 77,9%, so với 119,4% của BTN — và check 99,9%. Khung Nhóm tay bài cho thấy lý do.",
-    lessonRu: "Кажется, что этот борд попадает в оба диапазона. Но здесь BB реализует эквити хуже, чем в любом из 13 спотов, — 77,9% против 119,4% у BTN — и чекает 99,9%. Почему так, видно на панели «Руки».",
+      "İki range'e de oturuyor gibi görünen bir board. Ama BB, {n} spot içinde equity'sini en az burada realize ediyor — %77,9, BTN ise %119,4 — ve %99,9 sıklıkla check yapıyor. Nedenini el kategorisi paneli gösteriyor.",
+    lessonVi: "Board trông như trúng cả hai range. Nhưng trong {n} spot, đây là nơi BB hiện thực hóa equity kém nhất — 77,9%, so với 119,4% của BTN — và check 99,9%. Khung Nhóm tay bài cho thấy lý do.",
+    lessonRu: "Кажется, что этот борд попадает в оба диапазона. Но здесь BB реализует эквити хуже, чем в любом из {n} спотов, — 77,9% против 119,4% у BTN — и чекает 99,9%. Почему так, видно на панели «Руки».",
     titleJa: "ブロードウェイのコネクトボード（2トーン）",
     lessonJa:
-      "両者に当たったように見えるボードです。ところがBBのエクイティ実現率は13スポット中で最も低く、77.9%（BTNは119.4%）。99.9%チェックになる理由を分類パネルで確かめましょう。",
+      "両者に当たったように見えるボードです。ところがBBのエクイティ実現率は{n}スポット中で最も低く、77.9%（BTNは119.4%）。99.9%チェックになる理由を分類パネルで確かめましょう。",
     titleEs: "Broadway conectado, two-tone",
     lessonEs:
-      "Un board que parece conectar con ambos rangos. Pero BB realiza menos equity aquí que en cualquiera de los 13 spots — 77.9% frente al 119.4% de BTN — y hace check el 99.9%. El panel de manos y proyectos explica por qué.",
+      "Un board que parece conectar con ambos rangos. Pero BB realiza menos equity aquí que en cualquiera de los {n} spots — 77.9% frente al 119.4% de BTN — y hace check el 99.9%. El panel de manos y proyectos explica por qué.",
     titlePt: "Board Broadway conectado, two-tone",
     lessonPt:
-      "Um board que parece conectar com os dois ranges. Mas o BB realiza menos equity aqui do que em qualquer um dos 13 spots — 77,9% contra 119,4% do BTN — e dá check em 99,9%. O painel Mãos / Draws mostra o porquê.",
+      "Um board que parece conectar com os dois ranges. Mas o BB realiza menos equity aqui do que em qualquer um dos {n} spots — 77,9% contra 119,4% do BTN — e dá check em 99,9%. O painel Mãos / Draws mostra o porquê.",
     titleDe: "Verbundenes Broadway-Board, Two-Tone",
     titleZh: "broadway 高张连张双色牌面",
     titleZhHant: "百老匯連張雙色牌面",
     lessonDe:
-      "Ein Board, das beide Ranges zu treffen scheint. Doch BB realisiert hier weniger Equity als in jedem der 13 Spots – 77,9% gegen 119,4% beim BTN – und checkt zu 99,9%. Das Panel Hände / Draws zeigt, warum.",
-    lessonZh: "看着像两边都打中的牌面。可 BB 的权益实现在 13 个案例里是最低的——77.9%，BTN 是 119.4%。BB 为什么 99.9% 都过牌，到“手牌/听牌”面板里找答案。",
-    lessonZhHant: "看著像兩邊都打中的牌面。可 BB 的勝率實現在 13 個案例裡是最低的——77.9%，BTN 是 119.4%。BB 為什麼 99.9% 都過牌，到「手牌/聽牌」面板裡找答案。",
+      "Ein Board, das beide Ranges zu treffen scheint. Doch BB realisiert hier weniger Equity als in jedem der {n} Spots – 77,9% gegen 119,4% beim BTN – und checkt zu 99,9%. Das Panel Hände / Draws zeigt, warum.",
+    lessonZh: "看着像两边都打中的牌面。可 BB 的权益实现在 {n} 个案例里是最低的——77.9%，BTN 是 119.4%。BB 为什么 99.9% 都过牌，到“手牌/听牌”面板里找答案。",
+    lessonZhHant: "看著像兩邊都打中的牌面。可 BB 的勝率實現在 {n} 個案例裡是最低的——77.9%，BTN 是 119.4%。BB 為什麼 99.9% 都過牌，到「手牌/聽牌」面板裡找答案。",
     titleFr: "Broadway connecté, bicolore",
     lessonFr:
-      "Un board qui semble toucher les deux ranges. Pourtant c'est ici que BB réalise le moins bien son equity des 13 spots — 77,9 % réalisés contre 119,4 % pour BTN — et il check à 99,9 %. Le panneau « Mains / Tirages » montre pourquoi.",
+      "Un board qui semble toucher les deux ranges. Pourtant c'est ici que BB réalise le moins bien son equity des {n} spots — 77,9 % réalisés contre 119,4 % pour BTN — et il check à 99,9 %. Le panneau « Mains / Tirages » montre pourquoi.",
     titleId: "Board Broadway terhubung, two-tone",
     lessonId:
-      "Board yang tampak mengenai kedua range. Namun justru di sini BB merealisasikan equity paling rendah dari 13 spot — 77,9% berbanding 119,4% milik BTN — dan check 99,9%. Panel kategori hand menunjukkan alasannya.",
+      "Board yang tampak mengenai kedua range. Namun justru di sini BB merealisasikan equity paling rendah dari {n} spot — 77,9% berbanding 119,4% milik BTN — dan check 99,9%. Panel kategori hand menunjukkan alasannya.",
     titleMs: "Board Broadway bersambung, two-tone",
     lessonMs:
-      "Board yang nampak seperti mengenai kedua-dua range. Namun di sinilah BB merealisasikan equity paling rendah antara 13 spot — 77.9% berbanding 119.4% milik BTN — dan check 99.9%. Panel kategori tangan menunjukkan sebabnya.",
+      "Board yang nampak seperti mengenai kedua-dua range. Namun di sinilah BB merealisasikan equity paling rendah antara {n} spot — 77.9% berbanding 119.4% milik BTN — dan check 99.9%. Panel kategori tangan menunjukkan sebabnya.",
   },
   {
     titleHi: "जुड़ा हुआ middle board, two-tone",

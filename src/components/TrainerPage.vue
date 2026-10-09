@@ -556,6 +556,8 @@
 </template>
 
 <script lang="ts">
+// 교육 예제 개수 — 문구에 숫자를 박지 않는다(검수장 권고)
+const SPOT_COUNT = PRESETS.length; // PRESETS import below is hoisted
 import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
 import CustomTrainerPage from "./CustomTrainerPage.vue";
 import { customTrainerState } from "../custom-trainer";
@@ -661,7 +663,7 @@ const M = {
     googleSignIn: "구글로 계속하기",
     kakaoSignIn: "카카오",
     footerLine: (nodes: number, pct: number) =>
-      `13개 교육 프리셋 · ${nodes}개 결정 노드 · 계산 목표 오차 ${pct}%`,
+      `${SPOT_COUNT}개 교육 프리셋 · ${nodes}개 결정 노드 · 계산 목표 오차 ${pct}%`,
     details: "자세히 ↓",
     toAct: "차례",
     potLabel: "팟",
@@ -762,7 +764,7 @@ const M = {
     googleSignIn: "Continue with Google",
     kakaoSignIn: "Continue with Kakao",
     footerLine: (nodes: number, pct: number) =>
-      `13 Study Spots · ${nodes} decision nodes · target exploitability ${pct}%`,
+      `${SPOT_COUNT} Study Spots · ${nodes} decision nodes · target exploitability ${pct}%`,
     details: "Details ↓",
     toAct: "to act",
     potLabel: "Pot",
@@ -867,7 +869,7 @@ const M = {
     googleSignIn: "Googleで続ける",
     kakaoSignIn: "カカオトークで続ける",
     footerLine: (nodes: number, pct: number) =>
-      `13個の学習スポット・${nodes}個の決定ノード・計算目標誤差 ${pct}%`,
+      `${SPOT_COUNT}個の学習スポット・${nodes}個の決定ノード・計算目標誤差 ${pct}%`,
     details: "詳細 ↓",
     toAct: "の番",
     potLabel: "ポット",
@@ -970,7 +972,7 @@ const M = {
     googleSignIn: "Continuar con Google",
     kakaoSignIn: "Kakao",
     footerLine: (nodes: number, pct: number) =>
-      `13 presets de estudio · ${nodes} nodos de decisión · error objetivo ${pct}%`,
+      `${SPOT_COUNT} presets de estudio · ${nodes} nodos de decisión · error objetivo ${pct}%`,
     details: "Detalles ↓",
     toAct: "por actuar",
     potLabel: "Bote",
@@ -1073,7 +1075,7 @@ const M = {
     googleSignIn: "Continuar com o Google",
     kakaoSignIn: "Continuar com o Kakao",
     footerLine: (nodes: number, pct: number) =>
-      `13 Spots de estudo · ${nodes} nós de decisão · erro objetivo ${pct}%`,
+      `${SPOT_COUNT} Spots de estudo · ${nodes} nós de decisão · erro objetivo ${pct}%`,
     details: "Detalhes ↓",
     toAct: "para agir",
     potLabel: "Pote",
@@ -1182,7 +1184,7 @@ const M = {
     googleSignIn: "Weiter mit Google",
     kakaoSignIn: "Weiter mit Kakao",
     footerLine: (nodes: number, pct: number) =>
-      `13 Lernspots · ${nodes} Entscheidungsknoten · Zielabweichung ${pct}%`,
+      `${SPOT_COUNT} Lernspots · ${nodes} Entscheidungsknoten · Zielabweichung ${pct}%`,
     details: "Details ↓",
     toAct: "am Zug",
     potLabel: "Pot",
@@ -1303,7 +1305,7 @@ const M = {
     googleSignIn: "用 Google 继续",
     kakaoSignIn: "用 Kakao 继续",
     footerLine: (nodes: number, pct: number) =>
-      `13 个教学案例 · ${nodes} 个决策节点 · 目标可剥削度 ${pct}%`,
+      `${SPOT_COUNT} 个教学案例 · ${nodes} 个决策节点 · 目标可剥削度 ${pct}%`,
     details: "详情 ↓",
     toAct: "该行动",
     potLabel: "底池",
@@ -1430,7 +1432,7 @@ const M = {
     googleSignIn: "用 Google 繼續",
     kakaoSignIn: "用 Kakao 繼續",
     footerLine: (nodes: number, pct: number) =>
-      `13 個教學案例 · ${nodes} 個決策節點 · 目標可剝削度 ${pct}%`,
+      `${SPOT_COUNT} 個教學案例 · ${nodes} 個決策節點 · 目標可剝削度 ${pct}%`,
     details: "詳情 ↓",
     toAct: "該行動",
     potLabel: "底池",
@@ -1546,7 +1548,7 @@ const M = {
     googleSignIn: "Continuer avec Google",
     kakaoSignIn: "Continuer avec Kakao",
     footerLine: (nodes: number, pct: number) =>
-      `13 Spots d'étude · ${nodes} nœuds de décision · exploitabilité cible ${pct} %`,
+      `${SPOT_COUNT} Spots d'étude · ${nodes} nœuds de décision · exploitabilité cible ${pct} %`,
     details: "Détails ↓",
     toAct: "doit parler",
     potLabel: "Pot",
@@ -1658,7 +1660,7 @@ const M = {
     googleSignIn: "Lanjutkan dengan Google",
     kakaoSignIn: "Lanjutkan dengan Kakao",
     footerLine: (nodes: number, pct: number) =>
-      `13 Spot belajar · ${nodes} node keputusan · target exploitability ${pct}%`,
+      `${SPOT_COUNT} Spot belajar · ${nodes} node keputusan · target exploitability ${pct}%`,
     details: "Detail ↓",
     toAct: "yang bertindak",
     potLabel: "Pot",
@@ -1764,7 +1766,7 @@ const M = {
     localOnlyAfter: " सेव होती है। HoldemMaster खाते से जुड़कर किसी भी डिवाइस पर यहीं से आगे बढ़ सकते हैं।",
     googleSignIn: "Google से जारी रखें",
     kakaoSignIn: "Kakao से जारी रखें",
-    footerLine: (nodes: number, pct: number) => `13 अभ्यास स्पॉट · ${nodes} निर्णय बिंदु · लक्ष्य exploitability ${pct}%`,
+    footerLine: (nodes: number, pct: number) => `${SPOT_COUNT} अभ्यास स्पॉट · ${nodes} निर्णय बिंदु · लक्ष्य exploitability ${pct}%`,
     details: "विवरण ↓",
     toAct: "की बारी",
     potLabel: "Pot",
@@ -1861,7 +1863,7 @@ const M = {
     googleSignIn: "Teruskan dengan Google",
     kakaoSignIn: "Teruskan dengan Kakao",
     footerLine: (nodes: number, pct: number) =>
-      `13 Spot belajar · ${nodes} node keputusan · sasaran exploitability ${pct}%`,
+      `${SPOT_COUNT} Spot belajar · ${nodes} node keputusan · sasaran exploitability ${pct}%`,
     details: "Butiran ↓",
     toAct: "untuk bertindak",
     potLabel: "Pot",
@@ -1971,7 +1973,7 @@ const M = {
     googleSignIn: "Google ile devam et",
     kakaoSignIn: "Kakao ile devam et",
     footerLine: (nodes: number, pct: number) =>
-      `13 örnek spot · ${nodes} karar node'u · hedef exploitability %${pct}`,
+      `${SPOT_COUNT} örnek spot · ${nodes} karar node'u · hedef exploitability %${pct}`,
     details: "Ayrıntılar ↓",
     toAct: "oynayacak",
     potLabel: "Pot",
@@ -2075,7 +2077,7 @@ const M = {
     googleSignIn: "Tiếp tục với Google",
     kakaoSignIn: "Tiếp tục với Kakao",
     footerLine: (nodes: number, pct: number) =>
-      `13 spot mẫu · ${nodes} node quyết định · exploitability mục tiêu ${pct}%`,
+      `${SPOT_COUNT} spot mẫu · ${nodes} node quyết định · exploitability mục tiêu ${pct}%`,
     details: "Chi tiết ↓",
     toAct: "hành động",
     potLabel: "Pot",
@@ -2181,7 +2183,7 @@ const M = {
     googleSignIn: "Войти через Google",
     kakaoSignIn: "Войти через Kakao",
     footerLine: (nodes: number, pct: number) =>
-      `13 учебных спотов · узлы решений: ${nodes} · целевая exploitability ${pct}%`,
+      `${SPOT_COUNT} ${ruPlural(SPOT_COUNT, "учебный спот", "учебных спота", "учебных спотов")} · узлы решений: ${nodes} · целевая exploitability ${pct}%`,
     details: "Подробнее ↓",
     toAct: "ходит",
     potLabel: "Банк",

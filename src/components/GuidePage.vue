@@ -324,6 +324,12 @@
 </template>
 
 <script lang="ts">
+import { PRESETS } from "../presets";
+import { ruPlural } from "../i18n";
+// 교육 예제 개수 — 문구에 숫자를 박지 않는다(검수장 권고 · 프리셋이 늘면 따라간다)
+const SPOT_COUNT = PRESETS.length;
+const ruSpotsGen = () => `${SPOT_COUNT} ${ruPlural(SPOT_COUNT, "учебного спота", "учебных спотов", "учебных спотов")}`;
+const ruSpotsNom = () => `${SPOT_COUNT} ${ruPlural(SPOT_COUNT, "учебный спот", "учебных спота", "учебных спотов")}`;
 import { computed, defineComponent, ref } from "vue";
 import { useStore } from "../store";
 import { pwa, saveOffline, checkOfflineStatus } from "../pwa";
@@ -412,7 +418,7 @@ const M = {
     trainerIntroBefore: "결과 화면을 읽는 게 익숙해졌다면",
     trainerBtn: "GTO 트레이너",
     trainerIntroAfter:
-      " 로 넘어가세요. 교육 예제 13개의 결정 지점에서 실제 레인지대로 뽑은 핸드를 받고, 액션을 고르면 채점해줍니다.",
+      ` 로 넘어가세요. 교육 예제 ${SPOT_COUNT}개의 결정 지점에서 실제 레인지대로 뽑은 핸드를 받고, 액션을 고르면 채점해줍니다.`,
     gradTerm: "채점 방식",
     gradBefore: "정답/오답이 아니라 ",
     gradBold: "EV 손실(bb)",
@@ -444,7 +450,7 @@ const M = {
     install2: ", 아이폰 사파리는 ",
     installBold2: "공유 → 홈 화면에 추가",
     install3:
-      "입니다. 설치하면 교육 예제 13종과 트레이너 문제가 기기에 저장돼 ",
+      `입니다. 설치하면 교육 예제 ${SPOT_COUNT}종과 트레이너 문제가 기기에 저장돼 `,
     installBold3: "인터넷이 없는 지하철에서도",
     install4: " 그대로 풀 수 있습니다.",
     samsung1:
@@ -485,7 +491,7 @@ const M = {
       "※ 삼성 인터넷에서 뜨는 「안전하지 않은 앱 차단됨」 경고는 악성코드 탐지가 아니라, 그 브라우저가 만드는 설치 파일을 구글이 아직 신뢰 목록에 넣지 않아 생기는 문제입니다. 크롬으로 열면 뜨지 않습니다.",
 
     studyTitle: "추천 공부법",
-    study1: "교육 예제 13개를 순서대로 — 시리즈로 이어지는 커리큘럼입니다",
+    study1: `교육 예제 ${SPOT_COUNT}개를 순서대로 — 시리즈로 이어지는 커리큘럼입니다`,
     study2: '"왜 이 핸드는 체크를 섞지?" 궁금하면 상세 표에서 액션별 EV를 비교',
     study3:
       "같은 스팟을 GTO 트레이너로 풀어 몸에 익히기 — 약점 분석이 어느 상황에서 손실이 큰지 알려줍니다",
@@ -600,7 +606,7 @@ const M = {
       "Once you're comfortable reading the results screen, move on to the",
     trainerBtn: "GTO Trainer",
     trainerIntroAfter:
-      " . At decision points from the 13 Study Spots, you're dealt hands drawn from the actual ranges — pick an action and it grades you.",
+      ` . At decision points from the ${SPOT_COUNT} Study Spots, you're dealt hands drawn from the actual ranges — pick an action and it grades you.`,
     gradTerm: "How grading works",
     gradBefore: "You're graded not right-or-wrong but by ",
     gradBold: "EV loss (bb)",
@@ -634,7 +640,7 @@ const M = {
     install2: " to the right of the address bar; in Safari on iPhone, tap ",
     installBold2: "Share → Add to Home Screen",
     install3:
-      ". Once installed, the 13 Study Spots and the Trainer drills are stored on your device, so you can keep studying ",
+      `. Once installed, the ${SPOT_COUNT} Study Spots and the Trainer drills are stored on your device, so you can keep studying `,
     installBold3: "even on the subway with no internet",
     install4: ".",
     samsung1:
@@ -677,7 +683,7 @@ const M = {
 
     studyTitle: "Suggested study plan",
     study1:
-      "Work through the 13 Study Spots in order — they're a curriculum that builds as a series",
+      `Work through the ${SPOT_COUNT} Study Spots in order — they're a curriculum that builds as a series`,
     study2:
       "If you're wondering “why does this hand mix in checks?”, compare per-action EVs in the detail table",
     study3:
@@ -794,7 +800,7 @@ const M = {
     trainerIntroBefore: "結果画面の読み方に慣れてきたら",
     trainerBtn: "GTOトレーナー",
     trainerIntroAfter:
-      " に進みましょう。13個の学習スポットの決定ポイントで、実際のレンジから引いたハンドが配られ、アクションを選ぶと採点してくれます。",
+      ` に進みましょう。${SPOT_COUNT}個の学習スポットの決定ポイントで、実際のレンジから引いたハンドが配られ、アクションを選ぶと採点してくれます。`,
     gradTerm: "採点方式",
     gradBefore: "正解/不正解ではなく ",
     gradBold: "EVロス(bb)",
@@ -828,7 +834,7 @@ const M = {
     install2: "、iPhoneのSafariでは ",
     installBold2: "共有 → ホーム画面に追加",
     install3:
-      " です。インストールすると13種の学習スポットとトレーナーの問題が端末に保存され、",
+      ` です。インストールすると${SPOT_COUNT}種の学習スポットとトレーナーの問題が端末に保存され、`,
     installBold3: "インターネットのない地下鉄でも",
     install4: " そのまま解けます。",
     samsung1:
@@ -871,7 +877,7 @@ const M = {
 
     studyTitle: "おすすめの学習法",
     study1:
-      "13個の学習スポットを順番に — シリーズとして続くカリキュラムです",
+      `${SPOT_COUNT}個の学習スポットを順番に — シリーズとして続くカリキュラムです`,
     study2:
       "「なぜこのハンドはチェックを混ぜるの？」と気になったら、詳細表でアクションごとのEVを比較",
     study3:
@@ -989,7 +995,7 @@ const M = {
       "Cuando ya te sientas cómodo leyendo la pantalla de resultados, pasa al",
     trainerBtn: "Entrenador GTO",
     trainerIntroAfter:
-      " . En los puntos de decisión de los 13 Spots de estudio recibes manos sacadas de los rangos reales — eliges una acción y te califica.",
+      ` . En los puntos de decisión de los ${SPOT_COUNT} Spots de estudio recibes manos sacadas de los rangos reales — eliges una acción y te califica.`,
     gradTerm: "Cómo califica",
     gradBefore: "No se califica como correcto/incorrecto sino por ",
     gradBold: "pérdida de EV (bb)",
@@ -1023,7 +1029,7 @@ const M = {
     install2: " a la derecha de la barra de direcciones; en Safari de iPhone toca ",
     installBold2: "Compartir → Agregar a pantalla de inicio",
     install3:
-      ". Una vez instalado, los 13 Spots de estudio y los retos del Entrenador quedan guardados en tu dispositivo, para que puedas seguir estudiando ",
+      `. Una vez instalado, los ${SPOT_COUNT} Spots de estudio y los retos del Entrenador quedan guardados en tu dispositivo, para que puedas seguir estudiando `,
     installBold3: "incluso en el metro sin internet",
     install4: ".",
     samsung1:
@@ -1066,7 +1072,7 @@ const M = {
 
     studyTitle: "Plan de estudio sugerido",
     study1:
-      "Recorre los 13 Spots de estudio en orden — son un plan de estudios que avanza como serie",
+      `Recorre los ${SPOT_COUNT} Spots de estudio en orden — son un plan de estudios que avanza como serie`,
     study2:
       "¿Te preguntas «por qué esta mano mezcla checks»? — compara los EV por acción en la tabla de detalle",
     study3:
@@ -1185,7 +1191,7 @@ const M = {
       "Quando já estiver confortável lendo a tela de resultados, passe para o",
     trainerBtn: "Treinador GTO",
     trainerIntroAfter:
-      " . Nos pontos de decisão dos 13 Spots de estudo você recebe mãos tiradas dos ranges reais — escolhe uma ação e recebe a sua nota.",
+      ` . Nos pontos de decisão dos ${SPOT_COUNT} Spots de estudo você recebe mãos tiradas dos ranges reais — escolhe uma ação e recebe a sua nota.`,
     gradTerm: "Como a nota é dada",
     gradBefore: "Não é uma nota de certo/errado, e sim por ",
     gradBold: "perda de EV (bb)",
@@ -1219,7 +1225,7 @@ const M = {
     install2: " à direita da barra de endereços; no Safari do iPhone, toque em ",
     installBold2: "Compartilhar → Adicionar à Tela de Início",
     install3:
-      ". Depois de instalado, os 13 Spots de estudo e os desafios do Treinador ficam salvos no seu dispositivo, para você continuar estudando ",
+      `. Depois de instalado, os ${SPOT_COUNT} Spots de estudo e os desafios do Treinador ficam salvos no seu dispositivo, para você continuar estudando `,
     installBold3: "até no metrô sem internet",
     install4: ".",
     samsung1:
@@ -1262,7 +1268,7 @@ const M = {
 
     studyTitle: "Plano de estudo sugerido",
     study1:
-      "Percorra os 13 Spots de estudo em ordem — eles formam um curso que avança como uma série",
+      `Percorra os ${SPOT_COUNT} Spots de estudo em ordem — eles formam um curso que avança como uma série`,
     study2:
       "Ficou com a dúvida “por que esta mão mistura checks?” — compare os EV por ação na tabela de detalhes",
     study3:
@@ -1382,7 +1388,7 @@ const M = {
       "Wenn du den Ergebnisbildschirm sicher liest, geh weiter zum",
     trainerBtn: "GTO-Trainer",
     trainerIntroAfter:
-      " . An den Entscheidungspunkten der 13 Lernspots bekommst du Hände aus den echten Ranges – du wählst eine Aktion und bekommst deine Note.",
+      ` . An den Entscheidungspunkten der ${SPOT_COUNT} Lernspots bekommst du Hände aus den echten Ranges – du wählst eine Aktion und bekommst deine Note.`,
     gradTerm: "Wie benotet wird",
     gradBefore: "Es gibt kein Richtig/Falsch, sondern eine Note nach ",
     gradBold: "EV-Verlust (bb)",
@@ -1416,7 +1422,7 @@ const M = {
     install2: " rechts in der Adressleiste; in Safari auf dem iPhone tippst du auf ",
     installBold2: "Teilen → Zum Home-Bildschirm",
     install3:
-      ". Nach der Installation liegen die 13 Lernspots und die Trainer-Aufgaben auf deinem Gerät, sodass du ",
+      `. Nach der Installation liegen die ${SPOT_COUNT} Lernspots und die Trainer-Aufgaben auf deinem Gerät, sodass du `,
     installBold3: "auch in der U-Bahn ohne Netz",
     install4: " weiterlernen kannst.",
     samsung1:
@@ -1459,7 +1465,7 @@ const M = {
 
     studyTitle: "Vorschlag für deinen Lernplan",
     study1:
-      "Geh die 13 Lernspots der Reihe nach durch – sie sind als Kurs aufgebaut und bauen aufeinander auf",
+      `Geh die ${SPOT_COUNT} Lernspots der Reihe nach durch – sie sind als Kurs aufgebaut und bauen aufeinander auf`,
     study2:
       "Bleibt die Frage „warum mischt diese Hand Checks?“ – vergleiche den EV je Aktion in der Übersicht",
     study3:
@@ -1578,7 +1584,7 @@ const M = {
     // ⚠ 앞 요소(버튼)와 사이에 HTML 공백이 들어가 「训练器 。」로 벌어졌다(실측).
     //   전각 마침표를 앞으로 붙이지 말고 문장을 다시 시작한다
     trainerIntroAfter:
-      "试试看。它会在 13 个教学案例的决策点上，按真实范围抽一手牌给你，你选完动作它就打分。",
+      `试试看。它会在 ${SPOT_COUNT} 个教学案例的决策点上，按真实范围抽一手牌给你，你选完动作它就打分。`,
     gradTerm: "怎么打分",
     gradBefore: "它不是判对错，而是按 ",
     gradBold: "EV 损失（bb）",
@@ -1610,7 +1616,7 @@ const M = {
     install2: "；iPhone 的 Safari 则是点",
     installBold2: "分享 → 添加到主屏幕",
     install3:
-      "。装好之后，13 个教学案例和训练器的题目都会存到设备里，",
+      `。装好之后，${SPOT_COUNT} 个教学案例和训练器的题目都会存到设备里，`,
     installBold3: "在没信号的地铁上",
     install4: "也照样能做。",
     // 三星浏览器 = Samsung Internet의 중국어 정식 명칭
@@ -1653,7 +1659,7 @@ const M = {
       "※ 三星浏览器那条拦截提示并不代表查出了恶意代码，只是因为 Google 还没把这个浏览器生成的安装包列入信任名单。用 Chrome 打开就不会出现。",
 
     studyTitle: "推荐的学习路线",
-    study1: "把 13 个教学案例按顺序过一遍——它们是连成一套的课程",
+    study1: `把 ${SPOT_COUNT} 个教学案例按顺序过一遍——它们是连成一套的课程`,
     study2: "想不通“这手牌为什么要混着过牌？”的时候，就到右下角的[汇总]表里比较各动作的 EV",
     study3:
       "同一个局面再用 GTO 训练器做一遍，把它练成手感——弱点分析会告诉你哪类局面亏得最多",
@@ -1774,7 +1780,7 @@ const M = {
     // ⚠ 앞 요소(버튼)와 사이에 HTML 공백이 들어가 「訓練器 。」로 벌어진다 —
     //   전각 마침표를 앞으로 붙이지 말고 문장을 다시 시작한다
     trainerIntroAfter:
-      "試試看。它會在 13 個教學案例的決策點上，按真實範圍抽一手牌給你，你選完動作它就評分。",
+      `試試看。它會在 ${SPOT_COUNT} 個教學案例的決策點上，按真實範圍抽一手牌給你，你選完動作它就評分。`,
     gradTerm: "怎麼評分",
     gradBefore: "它不是判對錯，而是按 ",
     gradBold: "EV 損失（bb）",
@@ -1808,7 +1814,7 @@ const M = {
     // iOS Safari 번체 메뉴 이름 (Apple 台灣 표기는 「加入主畫面」 — 간체의 「添加到主屏幕」과 다르다)
     installBold2: "分享 → 加入主畫面",
     install3:
-      "。裝好之後，13 個教學案例和訓練器的題目都會存到裝置裡，",
+      `。裝好之後，${SPOT_COUNT} 個教學案例和訓練器的題目都會存到裝置裡，`,
     installBold3: "在沒訊號的地鐵上",
     install4: "也照樣能做。",
     // ⚠ 창 제목·버튼 이름을 «단정하지 않는다» — 기기와 Android 버전마다 다르고 실기 캡처가 없다
@@ -1849,7 +1855,7 @@ const M = {
       "※ 三星瀏覽器那條攔截提示並不代表查出了惡意程式碼，只是因為 Google 還沒把這個瀏覽器產生的安裝檔列入信任名單。用 Chrome 開啟就不會出現。",
 
     studyTitle: "推薦的學習路線",
-    study1: "把 13 個教學案例按順序過一遍——它們是連成一套的課程",
+    study1: `把 ${SPOT_COUNT} 個教學案例按順序過一遍——它們是連成一套的課程`,
     study2: "想不通「這手牌為什麼要混著過牌？」的時候，就到右下角的[彙總]表裡比較各動作的 EV",
     study3:
       "同一個局面再用 GTO 訓練器做一遍，把它練成手感——弱點分析會告訴你哪類局面虧得最多",
@@ -1970,7 +1976,7 @@ const M = {
       "Une fois à l'aise avec l'écran de résultats, passe au",
     trainerBtn: "Trainer GTO",
     trainerIntroAfter:
-      ". Aux points de décision des 13 Spots d'étude, tu reçois des mains tirées des vraies ranges — choisis une action et il te note.",
+      `. Aux points de décision des ${SPOT_COUNT} Spots d'étude, tu reçois des mains tirées des vraies ranges — choisis une action et il te note.`,
     gradTerm: "Comment marche la note",
     gradBefore: "Tu n'es pas noté en bonne ou mauvaise réponse, mais en ",
     gradBold: "perte d'EV (bb)",
@@ -2007,7 +2013,7 @@ const M = {
     // ⚠ InstallBanner.iosB2(Apple 프랑스어 메뉴명)와 같은 표기
     installBold2: "Partager → Sur l'écran d'accueil",
     install3:
-      ". Une fois installé, les 13 Spots d'étude et les exercices du Trainer sont stockés sur ton appareil, pour continuer à étudier ",
+      `. Une fois installé, les ${SPOT_COUNT} Spots d'étude et les exercices du Trainer sont stockés sur ton appareil, pour continuer à étudier `,
     installBold3: "même dans le métro sans internet",
     install4: ".",
     samsung1:
@@ -2050,7 +2056,7 @@ const M = {
 
     studyTitle: "Plan d'étude suggéré",
     study1:
-      "Fais les 13 Spots d'étude dans l'ordre — chaque spot s'appuie sur le précédent",
+      `Fais les ${SPOT_COUNT} Spots d'étude dans l'ordre — chaque spot s'appuie sur le précédent`,
     study2:
       "Si tu te demandes « pourquoi cette main mixe des checks ? », compare les EV par action dans le tableau détaillé",
     study3:
@@ -2176,7 +2182,7 @@ const M = {
       "Setelah nyaman membaca layar hasil, lanjut ke",
     trainerBtn: "Trainer GTO",
     trainerIntroAfter:
-      ". Di titik keputusan dari 13 Spot belajar, Anda mendapat hand yang diambil dari range sungguhan — pilih aksi dan Anda langsung dinilai.",
+      `. Di titik keputusan dari ${SPOT_COUNT} Spot belajar, Anda mendapat hand yang diambil dari range sungguhan — pilih aksi dan Anda langsung dinilai.`,
     gradTerm: "Cara penilaiannya",
     gradBefore: "Anda tidak dinilai benar atau salah, melainkan berdasarkan ",
     gradBold: "kerugian EV (bb)",
@@ -2213,7 +2219,7 @@ const M = {
     // ⚠ InstallBanner.iosB2(Apple 인니어 메뉴명)와 같은 표기
     installBold2: "Bagikan → Tambah ke Layar Utama",
     install3:
-      ". Setelah terpasang, 13 Spot belajar dan soal-soal Trainer tersimpan di perangkat Anda, jadi Anda tetap bisa belajar ",
+      `. Setelah terpasang, ${SPOT_COUNT} Spot belajar dan soal-soal Trainer tersimpan di perangkat Anda, jadi Anda tetap bisa belajar `,
     installBold3: "bahkan di kereta tanpa internet",
     install4: ".",
     samsung1:
@@ -2256,7 +2262,7 @@ const M = {
 
     studyTitle: "Saran urutan belajar",
     study1:
-      "Kerjakan 13 Spot belajar secara berurutan — setiap spot dibangun di atas spot sebelumnya",
+      `Kerjakan ${SPOT_COUNT} Spot belajar secara berurutan — setiap spot dibangun di atas spot sebelumnya`,
     study2:
       "Kalau Anda bertanya “kenapa hand ini kadang check?”, bandingkan EV tiap aksi di tabel detail",
     study3:
@@ -2380,7 +2386,7 @@ const M = {
       "Selepas anda selesa membaca skrin hasil, teruskan ke",
     trainerBtn: "Trainer GTO",
     trainerIntroAfter:
-      ". Pada titik keputusan daripada 13 Spot belajar, anda diberi tangan yang diambil daripada range sebenar — pilih satu aksi dan anda terus dinilai.",
+      `. Pada titik keputusan daripada ${SPOT_COUNT} Spot belajar, anda diberi tangan yang diambil daripada range sebenar — pilih satu aksi dan anda terus dinilai.`,
     gradTerm: "Cara penilaian",
     gradBefore: "Anda tidak dinilai betul atau salah, sebaliknya berdasarkan ",
     gradBold: "kerugian EV (bb)",
@@ -2417,7 +2423,7 @@ const M = {
     // ⚠ InstallBanner.iosB2(Apple 말레이어 메뉴명)와 같은 표기
     installBold2: "Kongsi → Tambah ke Skrin Utama",
     install3:
-      ". Selepas dipasang, 13 Spot belajar dan soalan Trainer GTO tersimpan pada peranti anda, jadi anda boleh terus belajar ",
+      `. Selepas dipasang, ${SPOT_COUNT} Spot belajar dan soalan Trainer GTO tersimpan pada peranti anda, jadi anda boleh terus belajar `,
     installBold3: "walaupun dalam LRT tanpa internet",
     install4: ".",
     samsung1:
@@ -2460,7 +2466,7 @@ const M = {
 
     studyTitle: "Cadangan cara belajar",
     study1:
-      "Selesaikan 13 Spot belajar mengikut urutan — setiap spot dibina di atas spot sebelumnya",
+      `Selesaikan ${SPOT_COUNT} Spot belajar mengikut urutan — setiap spot dibina di atas spot sebelumnya`,
     study2:
       "Kalau anda tertanya-tanya “kenapa tangan ini kadang-kadang check?”, bandingkan EV setiap aksi dalam jadual terperinci",
     study3:
@@ -2560,7 +2566,7 @@ const M = {
     trainerTitle: "GTO Trainer — अब खुद फ़ैसले लें",
     trainerIntroBefore: "परिणाम स्क्रीन समझने के बाद",
     trainerBtn: "GTO Trainer",
-    trainerIntroAfter: " आज़माएँ। 13 अभ्यास स्पॉट के निर्णय बिंदुओं पर आपको वास्तविक range से हैंड मिलते हैं। एक्शन चुनें और अपना मूल्यांकन देखें।",
+    trainerIntroAfter: ` आज़माएँ। ${SPOT_COUNT} अभ्यास स्पॉट के निर्णय बिंदुओं पर आपको वास्तविक range से हैंड मिलते हैं। एक्शन चुनें और अपना मूल्यांकन देखें।`,
     gradTerm: "मूल्यांकन कैसे होता है",
     gradBefore: "सिर्फ़ सही या ग़लत के बजाय ",
     gradBold: "EV नुकसान (bb)",
@@ -2585,7 +2591,7 @@ const M = {
     installBold1: "इंस्टॉल आइकन",
     install2: " इस्तेमाल करें। iPhone के Safari में ",
     installBold2: "शेयर करें → होम स्क्रीन पर जोड़ें",
-    install3: " चुनें। इंस्टॉल होने पर 13 अभ्यास स्पॉट और ट्रेनर का डेटा डिवाइस पर सेव हो जाता है। आप ",
+    install3: ` चुनें। इंस्टॉल होने पर ${SPOT_COUNT} अभ्यास स्पॉट और ट्रेनर का डेटा डिवाइस पर सेव हो जाता है। आप `,
     installBold3: "बिना इंटरनेट, मेट्रो में भी",
     install4: " अभ्यास कर सकते हैं।",
     samsung1: "* Samsung Internet या आपका डिवाइस सुरक्षा कारणों से इंस्टॉल रोक सकता है। यह जाँच ब्राउज़र या डिवाइस करता है। ",
@@ -2616,7 +2622,7 @@ const M = {
     removeDef: "दूसरे ऐप की तरह आइकन को देर तक दबाकर हटाएँ। सेव किया गया साइट डेटा हटाना हो तो ब्राउज़र की सेटिंग भी देखें।",
     samsungNote2: "* Samsung Internet में इंस्टॉल रुकने का कारण ब्राउज़र या डिवाइस की सुरक्षा जाँच हो सकता है। संदेश ध्यान से पढ़ें। ज़रूरत हो तो साइट Chrome में खोलकर कोशिश करें।",
     studyTitle: "अभ्यास का सुझाया क्रम",
-    study1: "13 अभ्यास स्पॉट क्रम से देखें — ये एक-दूसरे से जुड़ी स्थितियों को समझने में मदद करते हैं",
+    study1: `${SPOT_COUNT} अभ्यास स्पॉट क्रम से देखें — ये एक-दूसरे से जुड़ी स्थितियों को समझने में मदद करते हैं`,
     study2: "सोच रहे हैं कि “इस हैंड से कभी check क्यों होता है?” विवरण टेबल में हर एक्शन के EV की तुलना करें।",
     study3: "उन्हीं स्पॉट का GTO Trainer में अभ्यास करें। कमज़ोरियों की रिपोर्ट बताती है कि किन स्थितियों में सबसे अधिक EV नुकसान होता है",
     study4: "Range वही रखें और सिर्फ़ बोर्ड बदलकर तुलना करें (जैसे A72 और 974)",
@@ -2727,7 +2733,7 @@ const M = {
       "Sonuç ekranını rahatça okuyabiliyorsan sıradaki durak:",
     trainerBtn: "GTO Trainer",
     trainerIntroAfter:
-      ". 13 örnek spotun karar anlarında gerçek range'lerden çekilen eller dağıtılır — bir aksiyon seç, puanını hemen gör.",
+      `. ${SPOT_COUNT} örnek spotun karar anlarında gerçek range'lerden çekilen eller dağıtılır — bir aksiyon seç, puanını hemen gör.`,
     gradTerm: "Puanlama nasıl işler",
     gradBefore: "Doğru/yanlış diye değil, ",
     gradBold: "EV kaybına (bb)",
@@ -2761,7 +2767,7 @@ const M = {
     install2: " kullan; iPhone'da Safari'de ",
     installBold2: "Paylaş → Ana Ekrana Ekle",
     install3:
-      " seçeneğine dokun. Yüklendikten sonra 13 örnek spot ve GTO Trainer alıştırmaları cihazına kaydedilir, böylece ",
+      ` seçeneğine dokun. Yüklendikten sonra ${SPOT_COUNT} örnek spot ve GTO Trainer alıştırmaları cihazına kaydedilir, böylece `,
     installBold3: "internetin olmadığı metroda bile",
     install4: " çalışmaya devam edebilirsin.",
     samsung1:
@@ -2804,7 +2810,7 @@ const M = {
 
     studyTitle: "Önerilen çalışma planı",
     study1:
-      "13 örnek spotu sırayla bitir — birbirinin üstüne kurulan bir seri olarak hazırlandı",
+      `${SPOT_COUNT} örnek spotu sırayla bitir — birbirinin üstüne kurulan bir seri olarak hazırlandı`,
     study2:
       "“Bu el neden bazen check de yapıyor?” diye merak ediyorsan detay tablosunda aksiyon başına EV'leri karşılaştır",
     study3:
@@ -2922,7 +2928,7 @@ const M = {
       "Khi đã quen đọc màn hình kết quả, hãy chuyển sang",
     trainerBtn: "Trainer GTO",
     trainerIntroAfter:
-      ". Tại các điểm quyết định của 13 spot mẫu, bạn nhận tay bài rút từ range thực tế — chọn một hành động và trainer sẽ chấm điểm.",
+      `. Tại các điểm quyết định của ${SPOT_COUNT} spot mẫu, bạn nhận tay bài rút từ range thực tế — chọn một hành động và trainer sẽ chấm điểm.`,
     gradTerm: "Cách chấm điểm",
     gradBefore: "Không chấm đúng/sai mà chấm theo ",
     gradBold: "EV mất (bb)",
@@ -2956,7 +2962,7 @@ const M = {
     install2: " ở bên phải thanh địa chỉ; trên Safari của iPhone, nhấn ",
     installBold2: "Chia sẻ → Thêm vào MH chính",
     install3:
-      ". Sau khi cài, 13 spot mẫu và bài luyện Trainer GTO được lưu trên thiết bị, nên bạn vẫn học tiếp được ",
+      `. Sau khi cài, ${SPOT_COUNT} spot mẫu và bài luyện Trainer GTO được lưu trên thiết bị, nên bạn vẫn học tiếp được `,
     installBold3: "ngay cả trên tàu điện ngầm không có mạng",
     install4: ".",
     samsung1:
@@ -2999,7 +3005,7 @@ const M = {
 
     studyTitle: "Lộ trình học gợi ý",
     study1:
-      "Làm lần lượt 13 spot mẫu — các spot nối tiếp nhau thành một giáo trình",
+      `Làm lần lượt ${SPOT_COUNT} spot mẫu — các spot nối tiếp nhau thành một giáo trình`,
     study2:
       "Nếu thắc mắc “sao tay này có lúc lại check?”, hãy so sánh EV từng hành động trong bảng chi tiết",
     study3:
@@ -3117,7 +3123,7 @@ const M = {
       "Когда освоишься с экраном результатов, переходи в раздел",
     trainerBtn: "GTO-тренажёр",
     trainerIntroAfter:
-      ". В точках принятия решений из 13 учебных спотов тебе раздаются руки из настоящих диапазонов — выбери действие, и тренажёр его оценит.",
+      `. В точках принятия решений из ${ruSpotsGen()} тебе раздаются руки из настоящих диапазонов — выбери действие, и тренажёр его оценит.`,
     gradTerm: "Как ставится оценка",
     gradBefore: "Оценка — не «верно/неверно», а ",
     gradBold: "потеря EV (bb)",
@@ -3151,7 +3157,7 @@ const M = {
     install2: " справа от адресной строки; в Safari на iPhone — ",
     installBold2: "Поделиться → На экран \"Домой\"",
     install3:
-      ". После установки 13 учебных спотов и раздачи GTO-тренажёра хранятся на устройстве, так что заниматься можно ",
+      `. После установки ${ruSpotsNom()} и раздачи GTO-тренажёра хранятся на устройстве, так что заниматься можно `,
     installBold3: "даже в метро без интернета",
     install4: ".",
     samsung1:
@@ -3194,7 +3200,7 @@ const M = {
 
     studyTitle: "Как заниматься",
     study1:
-      "Пройди 13 учебных спотов по порядку — это курс, где каждый спот опирается на предыдущие",
+      `Пройди ${ruSpotsNom()} по порядку — это курс, где каждый спот опирается на предыдущие`,
     study2:
       "Если непонятно, почему эта рука иногда чекает, сравни EV по действиям в подробной таблице",
     study3:
