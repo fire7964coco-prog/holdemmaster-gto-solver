@@ -894,7 +894,7 @@ export const PRESETS: Preset[] = [
     titleRu: "Низкий сухой борд",
     board: "8d 5c 2s",
     lesson:
-      "3벳 레인지가 통째로 빗나간 보드. 그래도 오버페어+A하이로 압박이 가능한 이유 — 에퀴티 vs 폴드에퀴티.",
+      "3벳 레인지가 대부분 빗나간 보드. 그래도 오버페어+A하이로 압박이 가능한 이유 — 에퀴티 vs 폴드에퀴티.",
     lessonEn:
       "A board that largely misses the 3-bettor's range — yet overpairs and ace-high hands keep the pressure on. Equity vs fold equity.",
     lessonTr:
@@ -906,17 +906,17 @@ export const PRESETS: Preset[] = [
       "3ベットレンジがほぼ丸ごと外れるボードです。それでもオーバーペアとAハイで圧力をかけられる理由を学びます — エクイティ対フォールドエクイティです。",
     titleEs: "Board bajo y seco",
     lessonEs:
-      "Un board que no conecta en absoluto con el rango del 3-bettor — y aun así los overpairs y las A-high mantienen la presión. Equity vs fold equity.",
+      "Un board que apenas conecta con el rango del 3-bettor — y aun así los overpairs y las A-high mantienen la presión. Equity vs fold equity.",
     titlePt: "Board baixo e seco",
     lessonPt:
-      "Um board que não conecta em nada com o range do 3-bettor — e mesmo assim os overpairs e as mãos A-high mantêm a pressão. Equity vs fold equity.",
+      "Um board que quase não conecta com o range do 3-bettor — e mesmo assim os overpairs e as mãos A-high mantêm a pressão. Equity vs fold equity.",
     titleDe: "Niedriges, trockenes Board",
     titleZh: "低张干燥牌面",
     titleZhHant: "低張乾燥牌面",
     lessonDe:
       "Ein Board, das die Range des 3-Bettors weitgehend verfehlt – und trotzdem halten Overpairs und A-High den Druck aufrecht. Equity vs. Fold Equity.",
-    lessonZh: "3bet 范围整个都没打中的牌面。可即便如此，超对和 A 高牌照样能施压——比的是胜率和 fold equity（弃牌率）。",
-    lessonZhHant: "3bet 範圍整個都沒打中的牌面。但即便如此，超對和 A 高牌照樣能施壓——比的是勝率和棄牌權益（fold equity）。",
+    lessonZh: "3bet 范围大部分都没打中的牌面。可即便如此，超对和 A 高牌照样能施压——比的是胜率和 fold equity（弃牌率）。",
+    lessonZhHant: "3bet 範圍大部分都沒打中的牌面。但即便如此，超對和 A 高牌照樣能施壓——比的是勝率和棄牌權益（fold equity）。",
     titleFr: "Board bas et sec",
     lessonFr:
       "Un board qui rate presque toute la range du 3-betteur — et pourtant les overpairs et les mains hauteur As maintiennent la pression. Equity contre fold equity.",

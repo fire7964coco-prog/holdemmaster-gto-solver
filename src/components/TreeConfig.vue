@@ -1069,7 +1069,7 @@ const M = {
     advancedSettings: "Configurações avançadas ▸",
     basicSettings: "Configurações básicas",
     chipNote:
-      "Informe os valores em fichas inteiras. Para pensar em bb, use 10 fichas = 1bb (ex.: pote 55 = 5.5bb, stack 1000 = 100bb). Se você informar ou alterar o pote ou o stack, os resultados mantêm sua escala de fichas; se carregar um dos Spots de estudo e calcular sem alterar o pote nem o stack, os resultados são convertidos para bb.",
+      "Informe os valores em fichas inteiras. Para pensar em bb, use 10 fichas = 1bb (ex.: pote 55 = 5,5bb, stack 1000 = 100bb). Se você informar ou alterar o pote ou o stack, os resultados mantêm sua escala de fichas; se carregar um dos Spots de estudo e calcular sem alterar o pote nem o stack, os resultados são convertidos para bb.",
     startingPot: "Pote inicial:",
     effectiveStack: "Stack efetivo:",
     rake: "Rake:",
@@ -1131,7 +1131,7 @@ const M = {
     advancedSettings: "Erweiterte Einstellungen ▸",
     basicSettings: "Grundeinstellungen",
     chipNote:
-      "Gib die Beträge in ganzen Chips ein. Wenn du in bb denken willst, verwende 10 Chips = 1bb (z. B.: Pot 55 = 5.5bb, Stack 1000 = 100bb). Wenn du Pot oder Stack selbst eingibst oder änderst, bleiben die Ergebnisse in deiner Chip-Skala; wenn du einen der Lernspots lädst und ohne Änderung an Pot und Stack rechnest, werden die Ergebnisse in bb umgerechnet.",
+      "Gib die Beträge in ganzen Chips ein. Wenn du in bb denken willst, verwende 10 Chips = 1bb (z. B.: Pot 55 = 5,5bb, Stack 1000 = 100bb). Wenn du Pot oder Stack selbst eingibst oder änderst, bleiben die Ergebnisse in deiner Chip-Skala; wenn du einen der Lernspots lädst und ohne Änderung an Pot und Stack rechnest, werden die Ergebnisse in bb umgerechnet.",
     startingPot: "Start-Pot:",
     effectiveStack: "Effektiver Stack:",
     rake: "Rake:",
@@ -1325,7 +1325,7 @@ const M = {
     advancedSettings: "Réglages avancés ▸",
     basicSettings: "Réglages de base",
     chipNote:
-      "Saisis les montants en jetons entiers. Pour raisonner en bb, utilise 10 jetons = 1bb (ex. : pot 55 = 5.5bb, stack 1000 = 100bb). Si tu saisis ou modifies toi-même le pot ou le stack, les résultats gardent ton échelle de jetons ; si tu charges un des Spots d'étude et calcules sans modifier le pot ni le stack, les résultats sont convertis en bb.",
+      "Saisis les montants en jetons entiers. Pour raisonner en bb, utilise 10 jetons = 1bb (ex. : pot 55 = 5,5bb, stack 1000 = 100bb). Si tu saisis ou modifies toi-même le pot ou le stack, les résultats gardent ton échelle de jetons ; si tu charges un des Spots d'étude et calcules sans modifier le pot ni le stack, les résultats sont convertis en bb.",
     startingPot: "Pot initial :",
     effectiveStack: "Stack effectif :",
     rake: "Rake :",
@@ -1391,7 +1391,7 @@ const M = {
     advancedSettings: "Pengaturan lanjutan ▸",
     basicSettings: "Pengaturan dasar",
     chipNote:
-      "Masukkan jumlah dalam chip bilangan bulat. Untuk menghitung dalam bb, gunakan 10 chip = 1bb (contoh: pot 55 = 5.5bb, stack 1000 = 100bb). Jika Anda memasukkan atau mengubah sendiri pot atau stack, hasilnya tetap memakai skala chip Anda; jika Anda memuat Spot belajar lalu menghitung tanpa mengubah pot dan stack, hasilnya dikonversi ke bb.",
+      "Masukkan jumlah dalam chip bilangan bulat. Untuk menghitung dalam bb, gunakan 10 chip = 1bb (contoh: pot 55 = 5,5bb, stack 1000 = 100bb). Jika Anda memasukkan atau mengubah sendiri pot atau stack, hasilnya tetap memakai skala chip Anda; jika Anda memuat Spot belajar lalu menghitung tanpa mengubah pot dan stack, hasilnya dikonversi ke bb.",
     startingPot: "Pot awal:",
     effectiveStack: "Stack efektif:",
     rake: "Rake:",

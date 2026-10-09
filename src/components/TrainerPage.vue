@@ -69,7 +69,7 @@
       <div id="trainer-stats" class="order-4 md:order-2 flex flex-wrap gap-1.5 mt-3">
         <span class="stat-chip">{{ L.solved }} <b>{{ attempts.length }}</b></span>
         <span v-if="dailyState.streak" class="stat-chip">
-          {{ L.dailyStreakLabel }} <b>{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
+          {{ L.dailyStreakLabel }} <span><b>{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}</span>
           <span v-if="dailyState.bestStreak > dailyState.streak" class="text-neutral-600">
             {{ L.bestPrefix }} {{ dailyState.bestStreak }}
           </span>
@@ -79,9 +79,9 @@
           <b :class="streak >= 3 ? 'text-emerald-300' : ''">{{ streak }}</b>
           <span v-if="bestStreak > 0" class="text-neutral-600">{{ L.bestPrefix }} {{ bestStreak }}</span>
         </span>
-        <span class="stat-chip">{{ L.totalLossLabel }} <b>{{ $n(totalLoss.toFixed(3)) }}</b>bb</span>
-        <span class="stat-chip">{{ L.avgLossLabel }} <b>{{ $n(averageLoss.toFixed(3)) }}</b>bb</span>
-        <span class="stat-chip">{{ L.goodRateLabel }} <span v-if="isTr">%<b>{{ excellentRate.toFixed(0) }}</b></span><span v-else-if="isVi || isRu"><b>{{ excellentRate.toFixed(0) }}</b>%</span><b v-else>{{ excellentRate.toFixed(0) }}</b><template v-if="!isTr && !isVi && !isRu">%</template></span>
+        <span class="stat-chip">{{ L.totalLossLabel }} <span><b>{{ $n(totalLoss.toFixed(3)) }}</b>bb</span></span>
+        <span class="stat-chip">{{ L.avgLossLabel }} <span><b>{{ $n(averageLoss.toFixed(3)) }}</b>bb</span></span>
+        <span class="stat-chip">{{ L.goodRateLabel }} <b>{{ $pct(excellentRate.toFixed(0)) }}</b></span>
       </div>
 
       <!-- 약점 분석: 카테고리별 평균 EV 손실 -->
@@ -2262,8 +2262,6 @@ export default defineComponent({
     const L = computed(() => M[i18n.locale]);
     // 굵은 숫자 뒤 «%»는 tr에서만 숫자 앞으로(%35) — 굵기 범위를 바꾸지 않으려고 $pct 대신 자리만 옮긴다
     const isTr = computed(() => i18n.locale === "tr");
-    const isVi = computed(() => i18n.locale === "vi");
-    const isRu = computed(() => i18n.locale === "ru");
     /* 두 문장을 잇는 공백 — 서양어는 필요하고, CJK는 「。」가 이미 여백을 품고 있어
      * 넣으면 오히려 벌어진다. 템플릿의 줄바꿈에 맡기면 전 언어가 공백을 받는다 */
     const sentenceGap = computed(() =>
@@ -2754,8 +2752,6 @@ export default defineComponent({
       positionLabel,
       L,
       isTr,
-      isVi,
-      isRu,
       isKo,
       trainerCategoryLabel,
       trainerActionLabel,

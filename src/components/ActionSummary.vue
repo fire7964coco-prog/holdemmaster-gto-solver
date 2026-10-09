@@ -169,7 +169,7 @@ const actionLabel = (
       Raise: "Raise",
       Allin: "All-in",
       "All-in": "All-in",
-    }, {
+    }, { // tr: 액션명은 영어 그대로(확정표 §3-1)
       Fold: "Fold",
       Check: "Check",
       Call: "Call",
@@ -193,7 +193,7 @@ const actionLabel = (
       Raise: "Рейз",
       Allin: "Олл-ин",
       "All-in": "Олл-ин",
-    } // tr: 액션명은 영어 그대로(확정표 §3-1)
+    }
   );
   const label = map[name] ?? name;
   if (!amount || amount === "0") return label;

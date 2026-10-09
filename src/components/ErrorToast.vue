@@ -259,7 +259,7 @@ export default defineComponent({
   setup() {
     const L = computed(() => M[i18n.locale]);
     const retrySingleThreadLabel = computed(() =>
-      // i18n.ts pick() 순서: ko, en, ja, es, pt, de, zh, zh-hant, fr, id, ms, hi, tr.
+      // i18n.ts pick() 순서: ko, en, ja, es, pt, de, zh, zh-hant, fr, id, ms, hi, tr, vi, ru.
       pick(
         "단일 스레드로 다시 시도",
         "Retry with a single thread",

@@ -17,10 +17,10 @@
       </span>
       <!-- 스팟 정보는 칩으로 — 트레이너와 같은 눈금을 쓴다 -->
       <span class="stat-chip">
-        {{ L.pot }} <b>{{ $n(String(preset.startingPot / preset.unitScale)) }}</b>bb
+        {{ L.pot }} <span><b>{{ $n(String(preset.startingPot / preset.unitScale)) }}</b>bb</span>
       </span>
       <span class="stat-chip">
-        {{ L.stack }} <b>{{ $n(String(preset.effectiveStack / preset.unitScale)) }}</b>bb
+        {{ L.stack }} <span><b>{{ $n(String(preset.effectiveStack / preset.unitScale)) }}</b>bb</span>
       </span>
     </div>
 
