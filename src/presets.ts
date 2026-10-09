@@ -469,38 +469,38 @@ export const PRESETS: Preset[] = [
     titleRu: "Сухой борд туз-хай",
     board: "Ah 7d 2c",
     lesson:
-      "레인지 우위 교과서. BB 체크 후 BTN이 작은 벳을 매우 넓게 치는 이유를 관찰하세요 (A가 오픈레이저에게 유리한 카드).",
+      "레인지 우위 교과서. 이 A하이 보드에서 BB는 첫 액션의 98.2%를 체크합니다(BB 에퀴티 45.1%). 먼저 벳하는 1.9%가 어떤 핸드인지 살펴보세요.",
     lessonEn:
-      "The textbook range-advantage spot. Watch how wide a range BTN c-bets small with after BB checks — the ace smashes the opener's range.",
+      "The textbook range-advantage spot. On this ace-high board BB checks 98.2% of the time on its first action (BB equity 45.1%). See which hands make up the 1.9% that bets.",
     lessonTr:
-      "Ders kitabı gibi bir range avantajı spotu. BB check yaptıktan sonra BTN'nin ne kadar geniş bir range ile küçük c-bet yaptığını izle — as, açan oyuncunun range'ine tam oturuyor.",
-    lessonVi: "Spot kinh điển về lợi thế range. Hãy xem BTN c-bet nhỏ với range rộng đến mức nào sau khi BB check — lá A đánh trúng range của bên open.",
-    lessonRu: "Хрестоматийный спот с преимуществом диапазона. Смотри, насколько широким диапазоном BTN ставит маленький контбет после чека BB — туз отлично попадает в диапазон опена.",
+      "Ders kitabı gibi bir range avantajı spotu. Bu A-high board'da BB ilk aksiyonunda %98,2 check yapıyor (BB'nin equity'si %45,1). Bet yapan %1,9'u hangi ellerin oluşturduğuna bak.",
+    lessonVi: "Spot kinh điển về lợi thế range. Trên board A-high này, BB check 98,2% ở hành động đầu tiên (equity của BB: 45,1%). Hãy xem những tay bài nào tạo nên 1,9% bet.",
+    lessonRu: "Хрестоматийный спот с преимуществом диапазона. На этом борде туз-хай BB первым действием чекает в 98,2% случаев (эквити BB — 45,1%). Посмотри, какие руки составляют те 1,9%, что ставят.",
     titleJa: "ドライなAハイボード",
     lessonJa:
-      "レンジ優位の教科書的スポットです。BBのチェック後、BTNが非常に広いレンジで小さくCベットする理由を観察しましょう（Aはオープンレイザーに有利なカードです）。",
+      "レンジ優位の教科書的スポットです。このAハイボードでBBは最初のアクションで98.2%チェックします（BBのエクイティ45.1%）。先にベットする1.9%がどんなハンドか見てみましょう。",
     titleEs: "Board seco A-high",
     lessonEs:
-      "El spot de manual de la ventaja de rango. Observa con qué rango tan amplio apuesta BTN con un c-bet pequeño después del check de BB — el as encaja de lleno en el rango del open-raiser.",
+      "El spot de manual de la ventaja de rango. En este board A-high, BB hace check el 98.2% de las veces en su primera acción (equity de BB: 45.1%). Mira qué manos forman el 1.9% que apuesta.",
     titlePt: "Board seco A-high",
     lessonPt:
-      "O spot clássico de vantagem de range. Repare como o BTN dá um c-bet pequeno com um range amplíssimo depois do check do BB — o ás acerta em cheio no range de quem abriu.",
+      "O spot clássico de vantagem de range. Neste board A-high, o BB dá check 98,2% das vezes na primeira ação (equity do BB: 45,1%). Veja quais mãos formam os 1,9% que apostam.",
     titleDe: "Trockenes A-High-Board",
     titleZh: "干燥的 A 高牌面",
     titleZhHant: "乾燥的 A 高牌面",
     lessonDe:
-      "Der Lehrbuch-Spot für den Range-Vorteil. Schau, wie weit die Range ist, mit der der BTN nach dem Check der BB eine kleine C-Bet macht – das Ass trifft die Range des Openers voll.",
-    lessonZh: "这是范围优势的教科书。BB 过牌之后，看看 BTN 为什么能用非常宽的范围去下小注——A 这张牌正好打中了开池方的范围。",
-    lessonZhHant: "這是範圍優勢的教科書。BB 過牌之後，看看 BTN 為什麼能用非常寬的範圍去下小注——A 這張牌正好打中了開池方的範圍。",
+      "Der Lehrbuch-Spot für den Range-Vorteil. Auf diesem A-High-Board checkt BB bei der ersten Aktion 98,2% (Equity von BB: 45,1%). Schau dir an, welche Hände die 1,9% Bets ausmachen.",
+    lessonZh: "这是范围优势的教科书。在这个 A 高牌面上，BB 第一次行动有 98.2% 过牌（BB 胜率 45.1%）。看看先下注的那 1.9% 是哪些手牌。",
+    lessonZhHant: "這是範圍優勢的教科書。在這個 A 高牌面上，BB 第一次行動有 98.2% 過牌（BB 勝率 45.1%）。看看先下注的那 1.9% 是哪些手牌。",
     titleFr: "Board sec A-high",
     lessonFr:
-      "Le cas d'école de l'avantage de range. Regarde avec quelle range large BTN mise un petit c-bet après le check de BB — l'as tape en plein dans la range de l'ouvreur.",
+      "Le cas d'école de l'avantage de range. Sur ce board A-high, BB checke 98,2 % du temps à sa première action (equity de BB : 45,1 %). Regarde quelles mains composent les 1,9 % qui misent.",
     titleId: "Board kering A-high",
     lessonId:
-      "Contoh klasik range advantage. Perhatikan seberapa lebar range yang dipakai BTN untuk c-bet kecil setelah BB check — kartu As menghantam range opener dengan telak.",
+      "Contoh klasik range advantage. Di board A-high ini BB check 98,2% pada aksi pertamanya (equity BB 45,1%). Lihat hand mana saja yang membentuk 1,9% yang bet.",
     titleMs: "Board kering A-high",
     lessonMs:
-      "Spot klasik untuk range advantage. Perhatikan betapa luas range yang digunakan BTN untuk c-bet kecil selepas BB check — kad As menghentam range opener sepenuhnya.",
+      "Spot klasik untuk range advantage. Di board A-high ini BB check 98.2% pada tindakan pertamanya (equity BB 45.1%). Lihat tangan mana yang membentuk 1.9% yang bet.",
   },
   {
     titleHi: "सूखा K-high board",
@@ -604,38 +604,38 @@ export const PRESETS: Preset[] = [
     titleRu: "Связанный средний борд, двухмастный",
     board: "9h 8h 7c",
     lesson:
-      "콜러(BB) 우위 보드의 대표. BTN의 C벳 빈도가 뚝 떨어지는 것을 확인하세요 — '무조건 C벳'이 왜 틀린지 배우는 스팟.",
+      "같은 BTN 대 BB라도 9-8-7 연결 보드에서는 BB가 첫 액션에 23.7%를 먼저 벳합니다 — A하이 보드보다 훨씬 많습니다. 그래도 에퀴티는 BB 48.5%로 BTN이 조금 앞섭니다. 어떤 핸드가 먼저 치는지 확인하세요.",
     lessonEn:
-      "The classic caller-friendly texture. BTN's c-bet frequency plummets — this spot shows exactly why “always c-bet” is wrong.",
+      "Same BTN vs BB, but on the connected 9-8-7 BB leads 23.7% on its first action — far more than on the ace-high board. Equity still slightly favors BTN — BB has 48.5%. Check which hands lead.",
     lessonTr:
-      "Call edenin lehine klasik doku. BTN'nin c-bet sıklığı sert düşüyor — bu spot “her zaman c-bet” fikrinin neden yanlış olduğunu tam olarak gösteriyor.",
-    lessonVi: "Kiểu board kinh điển có lợi cho bên call. Tần suất c-bet của BTN giảm mạnh — spot này cho thấy rõ vì sao “luôn c-bet” là sai.",
-    lessonRu: "Классическая текстура в пользу коллера. Частота контбета BTN резко падает — этот спот наглядно показывает, почему «контбет всегда» — ошибка.",
+      "Yine BTN - BB, ama bağlantılı 9-8-7'de BB ilk aksiyonunda %23,7 önden bet yapıyor — A-high board'dakinden çok daha sık. Yine de equity biraz BTN'den yana: BB'de %48,5. Hangi ellerin önden bet yaptığına bak.",
+    lessonVi: "Vẫn là BTN vs BB, nhưng trên board liền nhau 9-8-7, BB bet trước 23,7% ở hành động đầu tiên, nhiều hơn hẳn so với board A-high. Dù vậy equity vẫn nghiêng nhẹ về BTN — BB có 48,5%. Hãy xem những tay nào bet trước.",
+    lessonRu: "Снова BTN против BB, но на связанном 9-8-7 BB первым действием ставит в 23,7% случаев — намного чаще, чем на борде туз-хай. При этом эквити всё равно чуть на стороне BTN: у BB 48,5%. Посмотри, какие руки ставят первыми.",
     titleJa: "ミドルのコネクトボード（2トーン）",
     lessonJa:
-      "コーラー（BB）優位ボードの代表例です。BTNのCベット頻度が大きく下がることを確認しましょう — 「常にCベット」がなぜ間違いなのかを学べるスポットです。",
+      "同じBTN vs BBでも、9-8-7の連結ボードではBBが最初のアクションで23.7%先にベットします（Aハイボードよりずっと多い）。それでもエクイティはBB 48.5%で、わずかにBTNが上です。どのハンドが先に打つか確認しましょう。",
     titleEs: "Conectado medio, two-tone",
     lessonEs:
-      "La textura clásica que favorece al caller. La frecuencia de c-bet de BTN se desploma — este spot muestra exactamente por qué «siempre c-bet» es un error.",
+      "Mismo BTN vs BB, pero en el 9-8-7 conectado BB apuesta primero el 23.7% en su primera acción, mucho más que en el board A-high. Aun así, la equity favorece un poco a BTN: BB tiene el 48.5%. Revisa qué manos apuestan primero.",
     titlePt: "Board médio conectado, two-tone",
     lessonPt:
-      "A textura clássica que favorece o caller. A frequência de c-bet do BTN despenca — este spot mostra exatamente por que «sempre dar c-bet» é um erro.",
+      "Mesmo BTN vs BB, mas no 9-8-7 conectado o BB aposta primeiro 23,7% na primeira ação, bem mais do que no board A-high. Mesmo assim, a equity favorece levemente o BTN: o BB tem 48,5%. Confira quais mãos apostam primeiro.",
     titleDe: "Verbundenes Middle-Board, Two-Tone",
     titleZh: "中张连张双色牌面",
     titleZhHant: "中張連張雙色牌面",
     lessonDe:
-      "Die klassische Textur für den Caller. Die C-Bet-Frequenz des BTN bricht ein – dieser Spot zeigt genau, warum „immer c-betten“ falsch ist.",
-    lessonZh: "跟注方（BB）占优牌面的代表。你会看到 BTN 的 c-bet 频率直接掉下来——这个局面就是在告诉你，为什么“逢翻必 c-bet”是错的。",
-    lessonZhHant: "跟注方（BB）佔優牌面的代表。你會看到 BTN 的 c-bet 頻率直接掉下來——這個局面就是在告訴你，為什麼「逢翻必 c-bet」是錯的。",
+      "Wieder BTN gegen BB, aber auf dem verbundenen 9-8-7 bettet BB bei der ersten Aktion 23,7% zuerst – viel öfter als auf dem A-High-Board. Die Equity liegt trotzdem knapp bei BTN – BB hat 48,5%. Prüfe, welche Hände zuerst betten.",
+    lessonZh: "同样是 BTN vs BB，在 9-8-7 连张牌面上 BB 第一次行动就有 23.7% 先下注，比 A 高牌面多得多。不过胜率仍是 BTN 略占上风——BB 为 48.5%。看看哪些手牌会先下注。",
+    lessonZhHant: "同樣是 BTN vs BB，在 9-8-7 連張牌面上 BB 第一次行動就有 23.7% 先下注，比 A 高牌面多得多。不過勝率仍是 BTN 略佔上風——BB 為 48.5%。看看哪些手牌會先下注。",
     titleFr: "Board médian connecté, bicolore",
     lessonFr:
-      "La texture classique qui favorise le caller. La fréquence de c-bet de BTN s'effondre — ce spot montre exactement pourquoi « toujours c-bet » est une erreur.",
+      "Toujours BTN contre BB, mais sur le 9-8-7 connecté, BB mise en premier 23,7 % du temps à sa première action, bien plus que sur le board A-high. L'equity reste pourtant légèrement en faveur de BTN : BB a 48,5 %. Vérifie quelles mains misent en premier.",
     titleId: "Board tengah terhubung, two-tone",
     lessonId:
-      "Tekstur klasik yang menguntungkan caller. Frekuensi c-bet BTN anjlok — spot ini menunjukkan persis kenapa “selalu c-bet” itu keliru.",
+      "Masih BTN vs BB, tetapi di board terhubung 9-8-7 BB bet lebih dulu 23,7% pada aksi pertamanya, jauh lebih sering daripada di board A-high. Meski begitu, equity masih sedikit berpihak ke BTN — BB 48,5%. Periksa hand mana yang bet lebih dulu.",
     titleMs: "Board tengah bersambung, two-tone",
     lessonMs:
-      "Tekstur klasik yang memihak caller. Frekuensi c-bet BTN menjunam — spot ini menunjukkan dengan tepat kenapa “sentiasa c-bet” itu salah.",
+      "Masih BTN lawan BB, tetapi di board bersambung 9-8-7 BB bet dahulu 23.7% pada tindakan pertamanya, jauh lebih kerap berbanding di board A-high. Namun equity masih sedikit memihak BTN — BB 48.5%. Semak tangan mana yang bet dahulu.",
   },
   {
     titleHi: "Monotone board (एक ही suit)",
@@ -742,38 +742,38 @@ export const PRESETS: Preset[] = [
     titleVi: "Board thấp rainbow (3 lá khác chất)",
     titleRu: "Низкий радужный борд",
     lesson:
-      "오버카드 싸움. BB의 체크레이즈 빈도가 높아지는 보드 — 상단 스트립에서 벳 이후 응수를 따라가 보세요.",
+      "6-5-2 로우 보드에서 BB는 첫 액션의 96.8%를 체크합니다. 이 스팟의 플랍 벳은 팟 33% 한 가지뿐이고, BB가 그 벳을 고르는 비율은 3.2%입니다. 벳하는 핸드가 무엇인지 보세요.",
     lessonEn:
-      "An overcard war — BB check-raises often on this texture, so follow the top strip past a bet to see the responses.",
+      "On the low 6-5-2, BB checks 96.8% of the time on its first action. This spot has a single flop bet size, 33% pot, and BB uses it 3.2% of the time. See which hands bet.",
     lessonTr:
-      "Bir overcard savaşı — BB bu dokuda sık check-raise yapar; cevapları görmek için üst şeritte bir bet'in sonrasına geç.",
-    lessonVi: "Cuộc chiến overcard — BB check-raise thường xuyên trên kiểu board này, nên hãy chọn node sau một lần bet trên thanh trên cùng để xem các phản ứng.",
-    lessonRu: "Война оверкарт — на такой текстуре BB часто делает чек-рейз, поэтому выбери на верхней полосе узел после бета и посмотри ответы.",
+      "Düşük 6-5-2'de BB ilk aksiyonunda %96,8 check yapıyor. Bu spotta flop'ta tek bir bet boyutu var, pot'un %33'ü; BB onu %3,2 sıklıkla kullanıyor. Hangi ellerin bet yaptığına bak.",
+    lessonVi: "Trên board thấp 6-5-2, BB check 96,8% ở hành động đầu tiên. Spot này chỉ có một cỡ bet ở flop là 33% pot, và BB dùng nó 3,2%. Hãy xem những tay nào bet.",
+    lessonRu: "На низком 6-5-2 BB первым действием чекает в 96,8% случаев. В этом споте на флопе только один сайзинг — 33% банка, и BB выбирает его в 3,2% случаев. Посмотри, какие руки ставят.",
     titleJa: "ロー・レインボーボード",
     lessonJa:
-      "オーバーカードの戦いです。BBのチェックレイズ頻度が高くなるボード — 上部ストリップでベット後の相手のアクションを追ってみましょう。",
+      "6-5-2のローボードで、BBは最初のアクションで96.8%チェックします。このスポットのフロップのベットサイズはポットの33%の1種類だけで、BBがそれを選ぶのは3.2%です。ベットするハンドを見てみましょう。",
     titleEs: "Board bajo y rainbow",
     lessonEs:
-      "Una guerra de overcards. BB hace check-raise muy seguido en esta textura — sigue la tira superior después de una apuesta para ver las respuestas.",
+      "En el 6-5-2 bajo, BB hace check el 96.8% de las veces en su primera acción. Este spot tiene un solo tamaño de apuesta en el flop, 33% del bote, y BB lo usa el 3.2% de las veces. Mira qué manos apuestan.",
     titlePt: "Board baixo e rainbow",
     lessonPt:
-      "Uma guerra de overcards. O BB dá check-raise com muita frequência nesta textura — siga a faixa superior depois de uma aposta para ver as respostas.",
+      "No 6-5-2 baixo, o BB dá check 96,8% das vezes na primeira ação. Este spot tem um único tamanho de aposta no flop, 33% do pote, e o BB o usa 3,2% das vezes. Veja quais mãos apostam.",
     titleDe: "Niedriges Rainbow-Board",
     titleZh: "低张彩虹牌面",
     titleZhHant: "低張彩虹牌面",
     lessonDe:
-      "Ein Overcard-Krieg – die BB check-raist auf dieser Textur oft. Verfolge die obere Leiste über eine Bet hinaus, um die Antworten zu sehen.",
-    lessonZh: "一场高张（overcard）之争。这种牌面上 BB 的过牌加注频率会变高——到顶部动作条上，顺着下注之后的应对一路点下去看看。",
-    lessonZhHant: "一場高張（overcard）之爭。這種牌面上 BB 的過牌加注頻率會變高——到頂部的動作列上，順著下注之後的應對一路點下去看看。",
+      "Auf dem niedrigen 6-5-2 checkt BB bei der ersten Aktion 96,8%. In diesem Spot gibt es auf dem Flop nur eine Bet-Size, 33% Pot, und BB nutzt sie zu 3,2%. Sieh dir an, welche Hände betten.",
+    lessonZh: "在 6-5-2 低张牌面上，BB 第一次行动有 96.8% 过牌。这个局面翻牌只有一种下注尺寸——底池的 33%，BB 选择它的比例是 3.2%。看看哪些手牌会下注。",
+    lessonZhHant: "在 6-5-2 低張牌面上，BB 第一次行動有 96.8% 過牌。這個牌局翻牌只有一種下注尺寸——底池的 33%，BB 選擇它的比例是 3.2%。看看哪些手牌會下注。",
     titleFr: "Board bas rainbow",
     lessonFr:
-      "Une guerre d'overcards — BB check-raise souvent sur cette texture. Suis la barre d'actions du haut après une mise pour voir les réponses.",
+      "Sur le 6-5-2 bas, BB checke 96,8 % du temps à sa première action. Ce spot n'a qu'une taille de mise au flop, 33 % du pot, et BB l'utilise 3,2 % du temps. Regarde quelles mains misent.",
     titleId: "Board rendah rainbow",
     lessonId:
-      "Perang overcard — BB sering check-raise di tekstur ini. Ikuti bilah aksi di atas setelah bet untuk melihat responsnya.",
+      "Di board rendah 6-5-2, BB check 96,8% pada aksi pertamanya. Spot ini hanya punya satu ukuran bet di flop, 33% pot, dan BB memakainya 3,2%. Lihat hand mana yang bet.",
     titleMs: "Board rendah rainbow",
     lessonMs:
-      "Perang overcard — BB kerap check-raise pada tekstur ini. Ikuti bar aksi di bahagian atas selepas bet untuk melihat jawapan lawan.",
+      "Di board rendah 6-5-2, BB check 96.8% pada tindakan pertamanya. Spot ini hanya ada satu saiz bet di flop, 33% pot, dan BB menggunakannya 3.2%. Lihat tangan mana yang bet.",
   },
   {
     titleHi: "A-high board, 3-bettor को फ़ायदा",
@@ -787,38 +787,38 @@ export const PRESETS: Preset[] = [
     titleRu: "Борд туз-хай в пользу 3-беттора",
     board: "Ad Ks 2h",
     lesson:
-      "3벳 레인지(AK, AA, KK 다수)에 최고의 보드. 낮은 SPR에서 작은 벳으로 레인지 전체를 압박하는 패턴.",
+      "3벳 레인지(AK·AA·KK 다수)에 잘 맞는 플랍 — BB(3벳터) 에퀴티 68.9%. BB는 첫 액션에 레인지 전체로 벳합니다: 팟 33% 57.8%, 팟 66% 42.2%. 두 사이즈를 섞으니 어떤 핸드가 어느 사이즈를 고르는지 비교해 보세요.",
     lessonEn:
-      "The best possible flop for the 3-bettor, whose range is loaded with AK, AA and KK. At low SPR, small bets pressure the entire range.",
+      "A flop that suits the 3-bet range, loaded with AK, AA and KK: BB, the 3-bettor, has 68.9% equity. BB bets its entire range on its first action — 57.8% at 33% pot and 42.2% at 66% pot. Compare which hands pick which size.",
     lessonTr:
-      "Range'i AK, AA ve KK ile dolu olan 3-bet yapan için olabilecek en iyi flop. Düşük SPR'de küçük bet'ler tüm range'e baskı kurar.",
-    lessonVi: "Flop tốt nhất có thể cho bên 3-bet, với range đầy AK, AA và KK. Ở SPR thấp, cược nhỏ gây áp lực lên toàn bộ range.",
-    lessonRu: "Лучший возможный флоп для 3-беттора: в его диапазоне полно AK, AA и KK. При низком SPR маленькие ставки давят на весь диапазон.",
+      "Bolca AK, AA ve KK içeren 3-bet range'ine uyan bir flop: 3-bet yapan BB'nin equity'si %68,9. BB ilk aksiyonunda tüm range'iyle bet yapıyor — pot'un %33'ü ile %57,8, pot'un %66'sı ile %42,2. Hangi ellerin hangi boyutu seçtiğini karşılaştır.",
+    lessonVi: "Flop hợp với range 3-bet đầy AK, AA và KK: BB, bên 3-bet, có equity 68,9%. BB bet với toàn bộ range ở hành động đầu tiên — 57,8% cỡ 33% pot và 42,2% cỡ 66% pot. So sánh xem tay nào chọn cỡ nào.",
+    lessonRu: "Флоп, который подходит диапазону 3-бета, где полно AK, AA и KK: у BB, 3-беттора, эквити 68,9%. BB первым действием ставит всем диапазоном — 57,8% по 33% банка и 42,2% по 66% банка. Сравни, какие руки выбирают какой сайзинг.",
     titleJa: "3ベッター優位のAハイボード",
     lessonJa:
-      "3ベットレンジ（AK・AA・KKが多い）にとって最高のボードです。低SPRで小さなベットを使い、レンジ全体に圧力をかけるパターンを学びます。",
+      "3ベットレンジ（AK・AA・KKが多い）に合うフロップです。3ベッターのBBのエクイティは68.9%。BBは最初のアクションでレンジ全体をベットします — ポット33%が57.8%、ポット66%が42.2%。どのハンドがどちらのサイズを選ぶか比べてみましょう。",
     titleEs: "Board A-high, ventaja del 3-bettor",
     lessonEs:
-      "El mejor flop posible para el 3-bettor (cargado de AK, AA y KK). Con SPR bajo, las apuestas pequeñas presionan todo el rango.",
+      "Un flop que encaja con el rango de 3-bet, lleno de AK, AA y KK: BB, el 3-bettor, tiene un 68.9% de equity. BB apuesta todo su rango en su primera acción: 57.8% al 33% del bote y 42.2% al 66%. Compara qué manos eligen cada tamaño.",
     titlePt: "Board A-high, vantagem do 3-bettor",
     lessonPt:
-      "O melhor flop possível para o 3-bettor (carregado de AK, AA e KK). Com SPR baixo, apostas pequenas pressionam o range inteiro.",
+      "Um flop que combina com o range de 3-bet, cheio de AK, AA e KK: o BB, que deu o 3-bet, tem 68,9% de equity. O BB aposta com todo o range na primeira ação — 57,8% com 33% do pote e 42,2% com 66%. Compare quais mãos escolhem cada tamanho.",
     titleDe: "A-High-Board, Vorteil für den 3-Bettor",
     titleZh: "3bet 方占优的 A 高牌面",
     titleZhHant: "3bet 方佔優的 A 高牌面",
     lessonDe:
-      "Der bestmögliche Flop für den 3-Bettor, dessen Range voll mit AK, AA und KK ist. Bei niedrigem SPR setzen kleine Bets die ganze Range unter Druck.",
-    lessonZh: "对 3bet 范围（一堆 AK、AA、KK）来说最好的翻牌。SPR 低的时候，这是用小注压住对手整个范围的典型打法。",
-    lessonZhHant: "對 3bet 範圍（一堆 AK、AA、KK）來說最好的翻牌。SPR 低的時候，這是用小注壓住對手整個範圍的典型打法。",
+      "Ein Flop, der zur 3-Bet-Range voller AK, AA und KK passt: BB als 3-Bettor hat 68,9% Equity. BB bettet bei der ersten Aktion mit der ganzen Range – 57,8% mit 33% Pot und 42,2% mit 66% Pot. Vergleiche, welche Hände welche Size wählen.",
+    lessonZh: "适合 3bet 范围（一堆 AK、AA、KK）的翻牌：3bet 方 BB 的胜率是 68.9%。BB 第一次行动用整个范围下注——33% 底池占 57.8%，66% 底池占 42.2%。比较一下哪些手牌选哪种尺寸。",
+    lessonZhHant: "適合 3bet 範圍（一堆 AK、AA、KK）的翻牌：3bet 方 BB 的勝率是 68.9%。BB 第一次行動用整個範圍下注——33% 底池佔 57.8%，66% 底池佔 42.2%。比較一下哪些手牌選哪種尺寸。",
     titleFr: "Board A-high, avantage du 3-betteur",
     lessonFr:
-      "Le meilleur flop possible pour le 3-betteur, dont la range est remplie d'AK, d'AA et de KK. À SPR bas, les petites mises mettent la pression sur toute la range.",
+      "Un flop qui convient à la range de 3-bet, pleine d'AK, AA et KK : BB, le 3-betteur, a 68,9 % d'equity. BB mise toute sa range à sa première action — 57,8 % à 33 % du pot et 42,2 % à 66 %. Compare quelles mains choisissent quelle taille.",
     titleId: "Board A-high, keunggulan 3-bettor",
     lessonId:
-      "Flop terbaik untuk 3-bettor, yang range-nya penuh AK, AA, dan KK. Di SPR rendah, bet kecil menekan seluruh range.",
+      "Flop yang cocok untuk range 3-bet yang penuh AK, AA, dan KK: BB sebagai 3-bettor punya equity 68,9%. BB bet dengan seluruh range pada aksi pertamanya — 57,8% dengan 33% pot dan 42,2% dengan 66% pot. Bandingkan hand mana yang memilih ukuran mana.",
     titleMs: "Board A-high, kelebihan 3-bettor",
     lessonMs:
-      "Flop terbaik untuk 3-bettor, yang range-nya penuh dengan AK, AA dan KK. Pada SPR rendah, bet kecil menekan keseluruhan range lawan.",
+      "Flop yang sesuai dengan range 3-bet yang penuh dengan AK, AA dan KK: BB sebagai 3-bettor mempunyai equity 68.9%. BB bet dengan seluruh range pada tindakan pertamanya — 57.8% dengan 33% pot dan 42.2% dengan 66% pot. Bandingkan tangan mana memilih saiz yang mana.",
   },
   {
     titleHi: "Draws वाला two-tone board",
