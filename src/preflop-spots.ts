@@ -19,6 +19,7 @@ import {
   gridFor,
   defendGridsFor,
   vs3betGridsFor,
+  VS3BET_SCENARIOS,
   handLabelAt,
 } from "./preflop-charts";
 
@@ -50,7 +51,7 @@ export type SrpSpot = {
   /** "srp-btn-bb" — BB 수비 5개는 사전 계산 결과 파일의 상황 id와 같다 */
   id: string;
   opener: Position;
-  /** 3벳 팟이면 3벳한 블라인드 (SB 포함) */
+  /** 3벳 팟이면 3벳한 자리 */
   caller: Caller | ThreeBettor;
   oop: Seat;
   ip: Seat;
@@ -94,12 +95,13 @@ export const SRP_SPOTS: SrpSpot[] = OPENERS.flatMap((opener) =>
   callersFor(opener).map((caller) => srpSpot(opener, caller) as SrpSpot)
 );
 
-// ─── 핸드 복기 전용: 3벳 팟 (2026-10-05) ───────────────────────
-// BTN 2.5bb 오픈 → 블라인드 3벳 → BTN 콜. 3벳한 블라인드가 OOP.
-// 레인지는 차트에서 곱해 만든다: 3벳 쪽 = 3벳 빈도 · BTN = 오픈 빈도 × «3벳에 콜» 빈도.
+// ─── 핸드 복기 전용: 3벳 팟 (2026-10-05 · 10-09 11조합으로 일반화) ─────────
+// 오픈 → 3벳 → 오픈한 쪽 콜. 차트에 «vs 3벳» 응답이 있는 11조합(VS3BET_SCENARIOS)만 싣는다.
+// 레인지는 차트에서 곱해 만든다: 3벳 쪽 = 3벳 빈도 · 오픈한 쪽 = 오픈 빈도 × «3벳에 콜» 빈도.
+// 3벳 크기(판정 참고자료/3벳팟_단계2_판정_2026-10-09.md §2): BB 11bb(SB 오픈 상대는 9bb) · SB 10bb · CO·BTN 7.5bb.
 // 사전 계산 도구(main.rs의 3bp-*)와 글자까지 같아야 한다 (검사: spot-picker-verify.js).
-export type ThreeBettor = "BB" | "SB";
-export const THREE_BETTORS: ThreeBettor[] = ["BB", "SB"];
+export type ThreeBettor = "CO" | "BTN" | "SB" | "BB";
+export const THREE_BETTORS: ThreeBettor[] = ["CO", "BTN", "SB", "BB"];
 
 /** 169칸 가중치(0~1) → "AKs,A5s:0.5" 꼴. 순서는 차트 격자 순 */
 const weightedText = (weights: number[]): string =>
@@ -109,26 +111,39 @@ const weightedText = (weights: number[]): string =>
     .map(([hand, w]) => (w === 1 ? hand : `${hand}:${w}`))
     .join(",");
 
-export const threeBetSpot = (blind: ThreeBettor): SrpSpot => {
-  const threeBet = blind === "BB" ? 110 : 100; // 차트 전제: BB 11bb · SB 10bb
-  const dead = blind === "BB" ? 5 : 10; // 3벳하지 않은 블라인드
-  const rfi = gridFor("BTN");
-  const call = vs3betGridsFor(blind === "BB" ? "btn-vs-bb-3bet" : "btn-vs-sb-3bet").call;
-  const raise = defendGridsFor(blind === "BB" ? "bb-vs-btn" : "sb-vs-btn").threeBet;
+/** 오픈·3벳 자리 조합의 3벳 팟. 차트에 vs 3벳 응답이 없는 조합은 null */
+export const threeBetSpot = (opener: Position, threeBettor: ThreeBettor): SrpSpot | null => {
+  const scenario = VS3BET_SCENARIOS.find((s) => s.opener === opener && s.villain === threeBettor);
+  if (!scenario) return null;
+
+  const threeBet =
+    threeBettor === "BB" ? (opener === "SB" ? 90 : 110) : threeBettor === "SB" ? 100 : 75;
+  // 죽은 블라인드: 3벳이 BB면 SB 0.5bb(오픈이 SB면 없음) · SB면 BB 1bb · 뒤 포지션이면 SB+BB 1.5bb
+  const dead = threeBettor === "BB" ? (opener === "SB" ? 0 : 5) : threeBettor === "SB" ? 10 : 15;
+  const rfi = gridFor(opener);
+  const call = vs3betGridsFor(scenario.id).call;
+  const raise = defendGridsFor(`${threeBettor}-vs-${opener}`.toLowerCase() as ScenarioId).threeBet;
+  const openerRange = weightedText(call.map((c, i) => (rfi[i] * c) / 10000));
+  const threeBetRange = weightedText(raise.map((v) => v / 100));
+  const openerIsOop = FLOP_ORDER.indexOf(opener) < FLOP_ORDER.indexOf(threeBettor);
+
   return {
-    id: `3bp-btn-${blind}`.toLowerCase(),
-    opener: "BTN",
-    caller: blind,
-    oop: blind,
-    ip: "BTN",
-    oopRange: weightedText(raise.map((v) => v / 100)),
-    ipRange: weightedText(call.map((c, i) => (rfi[i] * c) / 10000)),
+    id: `3bp-${opener}-${threeBettor}`.toLowerCase(),
+    opener,
+    caller: threeBettor,
+    oop: openerIsOop ? opener : threeBettor,
+    ip: openerIsOop ? threeBettor : opener,
+    oopRange: openerIsOop ? openerRange : threeBetRange,
+    ipRange: openerIsOop ? threeBetRange : openerRange,
     startingPot: threeBet * 2 + dead,
     effectiveStack: 1000 - threeBet,
   };
 };
 
-export const THREE_BET_SPOTS: SrpSpot[] = THREE_BETTORS.map(threeBetSpot);
+/** 3벳 팟 11개 — 차트의 vs 3벳 탭 순서 */
+export const THREE_BET_SPOTS: SrpSpot[] = VS3BET_SCENARIOS.map(
+  (s) => threeBetSpot(s.opener, s.villain as ThreeBettor) as SrpSpot
+);
 
 /** 검증 스크립트용 훅 — spot-picker-verify.js가 사전 계산 도구의 표와 대조한다 */
 declare global {
