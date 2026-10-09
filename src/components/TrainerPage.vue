@@ -2260,7 +2260,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale]);
-    // 굵은 숫자 뒤 «%»는 tr에서만 숫자 앞으로(%35) — 굵기 범위를 바꾸지 않으려고 $pct 대신 자리만 옮긴다
+    // 결과 요약 줄(좋은 판단 비율): 굵은 숫자 뒤 «%»는 tr에서만 숫자 앞으로(%35) — 굵기 범위를 바꾸지 않으려고 $pct 대신 자리만 옮긴다. 통계 칩은 $pct로 숫자·%를 함께 굵게(10-09)
     const isTr = computed(() => i18n.locale === "tr");
     /* 두 문장을 잇는 공백 — 서양어는 필요하고, CJK는 「。」가 이미 여백을 품고 있어
      * 넣으면 오히려 벌어진다. 템플릿의 줄바꿈에 맡기면 전 언어가 공백을 받는다 */

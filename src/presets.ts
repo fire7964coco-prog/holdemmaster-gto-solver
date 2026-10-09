@@ -915,7 +915,7 @@ export const PRESETS: Preset[] = [
     titleZhHant: "低張乾燥牌面",
     lessonDe:
       "Ein Board, das die Range des 3-Bettors weitgehend verfehlt – und trotzdem halten Overpairs und A-High den Druck aufrecht. Equity vs. Fold Equity.",
-    lessonZh: "3bet 范围大部分都没打中的牌面。可即便如此，超对和 A 高牌照样能施压——比的是胜率和 fold equity（弃牌率）。",
+    lessonZh: "3bet 范围大部分都没打中的牌面。可即便如此，超对和 A 高牌照样能施压——比的是胜率和弃牌权益（fold equity）。",
     lessonZhHant: "3bet 範圍大部分都沒打中的牌面。但即便如此，超對和 A 高牌照樣能施壓——比的是勝率和棄牌權益（fold equity）。",
     titleFr: "Board bas et sec",
     lessonFr:
