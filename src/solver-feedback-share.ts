@@ -5,8 +5,8 @@ const MAIN_ORIGIN = "https://www.holdemmaster.com";
 const PAYLOAD_LIMIT = 16384; // Same limit as spot-share.ts: applySpotFromUrl.
 
 /**
- * Code 2's endpoint is not open yet. Keep its provisional { payload } ->
- * { id } | { url } contract here; encoding/decoding stays in spot-share.ts.
+ * Main-site code 2 (MB-215): { payload } -> 200 { ok, id, url }, 4xx/5xx { ok:false, error }.
+ * Encoding/decoding stays in spot-share.ts.
  * Every failure returns the exact original URL, including a 3-second timeout.
  */
 export const shareSpotThroughMain = async (originalUrl: string): Promise<string> => {

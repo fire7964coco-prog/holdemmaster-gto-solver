@@ -5,9 +5,9 @@ declare const __F1_TEST_BUILD__: boolean;
 declare const __APP_TARGET__: "trainer" | "npokers";
 
 const LAUNCHED = {
-  feedback: true, // 본체 코드 1 라이브 5ac5d755 (10-09) · share·summary는 코드 2 뒤
-  share: false,
-  summary: false,
+  feedback: true, // 본체 코드 1 라이브 5ac5d755 (10-09)
+  share: true, // 본체 코드 2 라이브 1b097803 (MB-215 · 10-10 실제 API 확인)
+  summary: true, // 같은 회차 · 후기 3개 미만이면 text "" → 화면에 안 나온다
 } as const;
 
 /** Normal production builds cannot enable F1 with a query parameter. */

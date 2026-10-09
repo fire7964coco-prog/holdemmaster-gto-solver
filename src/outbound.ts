@@ -103,16 +103,14 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   // id-verify.js는 랜딩이 있으면 /id/solver인지 검사하므로 기존 단언을 유지한다.
   // 커뮤니티·개별 해설 경로는 별개이며 이번 랜딩 연결에 포함하지 않는다.
   id: { "": "/id", "/solver": "/id/solver" },
-  // 말레이어 (2026-09-03 실측 curl): `/ms` 200 · **`/ms/solver` 404** · `/ms/community` 404 ·
-  // 개별 `/ms/blog/...` 해설 글 404 → 홈만 등재. 랜딩·해설 링크는 화면에서 숨겨진다.
-  // 🔴 본체가 `/ms/solver`를 열면 여기와 ms-verify.js가 같이 낡는다 — 언어 작업마다 다시 잴 것
-  ms: { "": "/ms" },
-  // 2026-09-05 HTTP: /hi 200; /hi/solver and /hi/community 404.
-  hi: { "": "/hi" },
+  // ✅ /ms/solver·/hi/solver 200 (2026-10-10 curl 실측 · 본체 요청). 09-03·09-05에는 404였다.
+  //    커뮤니티·개별 해설 글은 여전히 등재하지 않는다(화면에서 숨김).
+  ms: { "": "/ms", "/solver": "/ms/solver" },
+  hi: { "": "/hi", "/solver": "/hi/solver" },
   // ✅ /tr/solver 200 (2026-10-07 curl 실측 — 본체 MB-186 10-06 신설. 10-05에는 404였다). /tr/community는 여전히 404
   tr: { "": "/tr", "/solver": "/tr/solver" },
-  // V1: 2026-10-07 계획서 실측 /vi/solver 404 — 홈만 연결한다.
-  vi: { "": "/vi" },
+  // ✅ /vi/solver 200 (2026-10-10 curl 실측 · 본체 MB-211 10-09 신설). 10-07에는 404였다.
+  vi: { "": "/vi", "/solver": "/vi/solver" },
   // U1: 2026-10-08 supplied measurements: ru landing pages unavailable; home only.
   ru: { "": "/ru" },
 };
@@ -124,9 +122,8 @@ export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {
   return trackOutbound(`${MAIN_SITE}${localized}`, placement);
 };
 
-/** F1 success link. ms/hi landing files exist as of 2026-10-04; keep legacy callers unchanged while F1 is off. */
+/** F1 success link — the main-site landing's review section. */
 export const solverReviewsUrl = (locale: string) => {
-  const localized = locale === "ko" ? "/solver" : LOCALE_PATHS[locale]?.["/solver"]
-    ?? (locale === "ms" || locale === "hi" ? `/${locale}/solver` : "");
+  const localized = locale === "ko" ? "/solver" : LOCALE_PATHS[locale]?.["/solver"] ?? "";
   return localized ? `${trackOutbound(`${MAIN_SITE}${localized}`, "about-landing")}#solver-reviews` : "";
 };
