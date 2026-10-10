@@ -269,7 +269,7 @@ const M = {
     statContinue: "계속(오픈 대비)",
     copy4bet: "4벳 레인지 복사",
     note3bet:
-      "통계는 전체 핸드가 아니라 «오픈 레인지 대비» 비율입니다. 4벳 밸류는 QQ+/AK 중심이고(UTG 오픈은 AA·KK 중심, QQ는 콜 위주), A5s-A4s 같은 블러프를 소량 섞습니다(SB 오픈은 AJo·KQo 같은 오프수트 브로드웨이 블러프까지 더 많이). 콜은 페어·수딧 브로드웨이가 뼈대이고, 포지션이 없으면 같은 오픈 자리에서 포지션이 있을 때보다 좁게 가져갑니다. 커넥터 콜은 UTG 오픈에서는 거의 없고, 나머지 자리에서는 일부 섞입니다.",
+      "통계는 전체 핸드가 아니라 «오픈 레인지 대비» 비율입니다. 4벳 밸류는 QQ+/AK 중심이고(UTG 오픈은 AA·KK 중심, QQ는 콜 위주), A5s-A4s 같은 블러프를 소량 섞습니다(SB 오픈은 AJo·KQo 같은 오프수트 브로드웨이 블러프까지 더 많이). 콜은 페어·수딧 브로드웨이가 뼈대이고, 포지션이 없으면 같은 오픈 자리에서 포지션이 있을 때보다 좁게 가져갑니다. 커넥터 콜은 UTG 오픈에서는 적고(T9s 일부, BTN 3벳 상대로 98s 소량), 나머지 자리에서는 더 많이 섞입니다.",
     squeezeNote:
       "스퀴즈 = 오픈과 콜러가 모두 있는 상태에서의 3벳(여기서는 약 11~12bb). " +
       "콜러가 있으면 헤즈업 수비보다 전체 수비는 좁아지고 3벳은 밸류 중심이 " +
@@ -349,7 +349,7 @@ const M = {
     statContinue: "आगे खेलने का % (open range में से)",
     copy4bet: "4-bet range कॉपी करें",
     note3bet:
-      "ये आँकड़े आपकी opening range के हिस्से हैं, सभी हैंड के नहीं। 4-bet की value range मुख्यतः QQ+/AK है (UTG open में मुख्यतः AA-KK, और QQ ज़्यादातर call), जिसमें A5s-A4s जैसे कुछ bluffs मिलते हैं (SB open में bluffs ज़्यादा, AJo और KQo जैसे offsuit broadways भी)। calling range का आधार pairs और suited broadways हैं; OOP होने पर यह उसी opener की IP calling range से छोटी रहती है। UTG open में connectors से call लगभग नहीं होता; बाकी positions में कुछ connectors call में मिलते हैं।",
+      "ये आँकड़े आपकी opening range के हिस्से हैं, सभी हैंड के नहीं। 4-bet की value range मुख्यतः QQ+/AK है (UTG open में मुख्यतः AA-KK, और QQ ज़्यादातर call), जिसमें A5s-A4s जैसे कुछ bluffs मिलते हैं (SB open में bluffs ज़्यादा, AJo और KQo जैसे offsuit broadways भी)। calling range का आधार pairs और suited broadways हैं; OOP होने पर यह उसी opener की IP calling range से छोटी रहती है। UTG open में connectors से call कम होता है (कुछ T9s, और BTN के 3-bet के ख़िलाफ़ थोड़ा 98s); बाकी positions में ज़्यादा connectors call में मिलते हैं।",
     squeezeNote: "Opener और caller दोनों pot में हों, तब किया गया 3-bet squeeze कहलाता है (यहाँ लगभग 11–12bb)। Caller की मौजूदगी में कुल defend range heads-up से छोटी होती है और 3-bet में value हैंड का हिस्सा बढ़ता है। Overcall में ऐसे suited, connected हैंड काम आते हैं जो multiway pot में nuts बना सकें।",
     how3bet2: "लाल और हरे हिस्से के बाद बचा खाली हिस्सा fold है। दोनों रंग वाले खाने में 4-bet और call मिलते हैं। Opening range से बाहर के हैंड इस स्थिति तक नहीं पहुँचते, इसलिए उनके खाने खाली हैं।",
     intro: "पोज़िशन के हिसाब से opening ranges (RFI): आपके पहले सभी fold कर दें, तो किन हैंड से raise करें? आधार: 6-max cash, 100bb, 2.5bb open। आंशिक रूप से भरे खाने उन सीमांत हैंड को दिखाते हैं जिन पर सार्वजनिक स्रोतों में मतभेद है (भराव की ऊँचाई = open करने की सलाह देने वाले स्रोतों का अनुपात)।",
@@ -422,7 +422,7 @@ const M = {
     statContinue: "Continue % (of opens)",
     copy4bet: "Copy 4-bet range",
     note3bet:
-      "The stats are shares of your opening range, not of all hands. 4-bet value centers on QQ+/AK (AA-KK when UTG opens, with QQ mostly calling), with a few bluffs like A5s-A4s mixed in (more when the SB opens, including offsuit broadways like AJo and KQo). The calling range is built on pairs and suited broadways; out of position it is narrower than the same opener's in-position range. Connectors almost never call when UTG opens; from the other seats, some are mixed into the calls.",
+      "The stats are shares of your opening range, not of all hands. 4-bet value centers on QQ+/AK (AA-KK when UTG opens, with QQ mostly calling), with a few bluffs like A5s-A4s mixed in (more when the SB opens, including offsuit broadways like AJo and KQo). The calling range is built on pairs and suited broadways; out of position it is narrower than the same opener's in-position range. Connectors rarely call when UTG opens (some T9s, plus a little 98s against a BTN 3-bet); from the other seats, more of them are mixed into the calls.",
     squeezeNote:
       "A squeeze is a 3-bet with both an opener and a caller in the pot (about " +
       "11-12bb here). The caller makes total defense tighter than heads-up and " +
@@ -516,7 +516,7 @@ const M = {
     statContinue: "継続（オープン比）",
     copy4bet: "4ベットレンジをコピー",
     note3bet:
-      "統計は全ハンドではなく「オープンレンジに対する」割合です。4ベットのバリューはQQ+/AKが中心で（UTGオープンはAA・KK中心、QQはコール主体）、A5s-A4sのようなブラフを少量混ぜます（SBオープンはAJo・KQoのようなオフスートのブロードウェイのブラフまで多め）。コールはペア・スーテッドブロードウェイが骨格で、ポジションがなければ同じオープン位置でポジションがあるときより狭くなります。コネクターのコールはUTGオープンではほとんどなく、それ以外のポジションでは一部混ざります。",
+      "統計は全ハンドではなく「オープンレンジに対する」割合です。4ベットのバリューはQQ+/AKが中心で（UTGオープンはAA・KK中心、QQはコール主体）、A5s-A4sのようなブラフを少量混ぜます（SBオープンはAJo・KQoのようなオフスートのブロードウェイのブラフまで多め）。コールはペア・スーテッドブロードウェイが骨格で、ポジションがなければ同じオープン位置でポジションがあるときより狭くなります。コネクターのコールはUTGオープンでは少なく（T9sの一部と、BTNの3ベットに対する98sの少量）、それ以外のポジションではより多く混ざります。",
     squeezeNote:
       "スクイーズ = オープンとコーラーが両方いる状況での3ベット（ここでは約11〜12bb）です。" +
       "コーラーがいるとヘッズアップのディフェンスより全体の続行は狭くなり、3ベットは" +
@@ -608,7 +608,7 @@ const M = {
     statContinue: "Continúa (de los opens)",
     copy4bet: "Copiar rango de 4-bet",
     note3bet:
-      "Las estadísticas son proporciones de tu rango de apertura, no de todas las manos. El valor del 4-bet se centra en QQ+/AK (si abres desde UTG, en AA-KK, y QQ va sobre todo a call), con algunos bluffs como A5s-A4s (más si abres desde la SB, incluidos broadways offsuit como AJo y KQo). El rango de call se apoya en pares y broadways suited; sin posición es más estrecho que el del mismo abridor con posición. Los conectores casi nunca pagan cuando abre UTG; desde las demás posiciones, algunos se mezclan en el call.",
+      "Las estadísticas son proporciones de tu rango de apertura, no de todas las manos. El valor del 4-bet se centra en QQ+/AK (si abres desde UTG, en AA-KK, y QQ va sobre todo a call), con algunos bluffs como A5s-A4s (más si abres desde la SB, incluidos broadways offsuit como AJo y KQo). El rango de call se apoya en pares y broadways suited; sin posición es más estrecho que el del mismo abridor con posición. Los conectores pagan poco cuando abre UTG (algo de T9s y un poco de 98s ante un 3-bet del BTN); desde las demás posiciones, se mezclan más en el call.",
     squeezeNote:
       "Un squeeze es un 3-bet con un opener y un caller ya en el bote (aquí de unos 11-12bb). " +
       "El caller hace que la defensa total sea más estrecha que en heads-up y empuja el 3-bet " +
@@ -700,7 +700,7 @@ const M = {
     statContinue: "% de continuação (dos opens)",
     copy4bet: "Copiar range de 4-bet",
     note3bet:
-      "As estatísticas são proporções do seu range de abertura, não de todas as mãos. O valor do 4-bet se concentra em QQ+/AK (abrindo do UTG, em AA-KK, com QQ indo mais para o call), com alguns blefes como A5s-A4s (mais abrindo do SB, incluindo broadways offsuit como AJo e KQo). O range de call se apoia em pares e broadways suited; sem posição, fica mais estreito que o do mesmo abridor com posição. Os connectors quase nunca pagam quando o UTG abre; nas demais posições, alguns entram no call.",
+      "As estatísticas são proporções do seu range de abertura, não de todas as mãos. O valor do 4-bet se concentra em QQ+/AK (abrindo do UTG, em AA-KK, com QQ indo mais para o call), com alguns blefes como A5s-A4s (mais abrindo do SB, incluindo broadways offsuit como AJo e KQo). O range de call se apoia em pares e broadways suited; sem posição, fica mais estreito que o do mesmo abridor com posição. Os connectors pagam pouco quando o UTG abre (parte do T9s e um pouco de 98s contra 3-bet do BTN); nas demais posições, entram mais no call.",
     squeezeNote:
       "Um squeeze é um 3-bet com um opener e um caller já no pote (aqui de uns 11-12bb). " +
       "O caller faz a defesa total ficar mais estreita que no heads-up e empurra o 3-bet " +
@@ -794,7 +794,7 @@ const M = {
     statContinue: "Continue-Anteil (von den Opens)",
     copy4bet: "4-Bet-Range kopieren",
     note3bet:
-      "Die Statistik zeigt Anteile deiner Open-Range, nicht aller Hände. Der Value der 4-Bet liegt bei QQ+/AK (bei UTG-Opens bei AA-KK, QQ wird eher gecallt), dazu ein paar Bluffs wie A5s-A4s (bei SB-Opens mehr, auch offsuited Broadways wie AJo und KQo). Das Gerüst der Call-Range sind Paare und suited Broadways; ohne Position ist sie enger als beim selben Opener mit Position. Connectors callen bei UTG-Opens so gut wie nie; von den anderen Positionen sind einige im Call dabei.",
+      "Die Statistik zeigt Anteile deiner Open-Range, nicht aller Hände. Der Value der 4-Bet liegt bei QQ+/AK (bei UTG-Opens bei AA-KK, QQ wird eher gecallt), dazu ein paar Bluffs wie A5s-A4s (bei SB-Opens mehr, auch offsuited Broadways wie AJo und KQo). Das Gerüst der Call-Range sind Paare und suited Broadways; ohne Position ist sie enger als beim selben Opener mit Position. Connectors callen bei UTG-Opens selten (etwas T9s, gegen eine 3-Bet vom BTN auch ein wenig 98s); von den anderen Positionen sind mehr davon im Call dabei.",
     squeezeNote:
       "Ein Squeeze ist eine 3-Bet, wenn schon ein Opener und ein Caller im Pot sind (hier etwa " +
       "11–12bb). Der Caller macht die Gesamtverteidigung enger als im Heads-up und schiebt die " +
@@ -892,7 +892,7 @@ const M = {
     statContinue: "继续比例（占开池范围）",
     copy4bet: "复制 4bet 范围",
     note3bet:
-      "统计是“占你开池范围”的比例，不是占全部手牌。4bet 的价值牌以 QQ+、AK 为主（UTG 开池时以 AA、KK 为主，QQ 多半跟注），再掺一点 A5s、A4s 这样的诈唬（SB 开池时诈唬更多，还包括 AJo、KQo 这类非同花大牌）。跟注以对子、同花大牌为骨架；没有位置时，比同一开池位置有位置时更窄。UTG 开池时几乎不用连牌跟注；其他位置开池时会掺一些连牌跟注。",
+      "统计是“占你开池范围”的比例，不是占全部手牌。4bet 的价值牌以 QQ+、AK 为主（UTG 开池时以 AA、KK 为主，QQ 多半跟注），再掺一点 A5s、A4s 这样的诈唬（SB 开池时诈唬更多，还包括 AJo、KQo 这类非同花大牌）。跟注以对子、同花大牌为骨架；没有位置时，比同一开池位置有位置时更窄。UTG 开池时连牌跟注很少（部分 T9s，面对 BTN 3bet 时再加少量 98s）；其他位置开池时会掺更多连牌跟注。",
     squeezeNote:
       "挤压（squeeze）指的是前面已经有人开池、又有人跟注时的 3bet（这里大约 11~12bb）。" +
       "有跟注者在，总的防守范围会比单挑时更窄，3bet 也更偏价值。跟着一起跟注（overcall）" +
@@ -988,7 +988,7 @@ const M = {
     statContinue: "繼續比例（佔開池範圍）",
     copy4bet: "複製 4bet 範圍",
     note3bet:
-      "統計是「佔你開池範圍」的比例，不是佔全部手牌。4bet 的價值牌以 QQ+、AK 為主（UTG 開池時以 AA、KK 為主，QQ 多半跟注），再摻一點 A5s、A4s 這樣的詐唬（SB 開池時詐唬更多，還包括 AJo、KQo 這類不同花百老匯）。跟注以對子、同花百老匯為骨架；沒有位置時，比同一開池位置有位置時更窄。UTG 開池時幾乎不用連張跟注；其他位置開池時會摻一些連張跟注。",
+      "統計是「佔你開池範圍」的比例，不是佔全部手牌。4bet 的價值牌以 QQ+、AK 為主（UTG 開池時以 AA、KK 為主，QQ 多半跟注），再摻一點 A5s、A4s 這樣的詐唬（SB 開池時詐唬更多，還包括 AJo、KQo 這類不同花百老匯）。跟注以對子、同花百老匯為骨架；沒有位置時，比同一開池位置有位置時更窄。UTG 開池時連張跟注很少（部分 T9s，面對 BTN 3bet 時再加少量 98s）；其他位置開池時會摻更多連張跟注。",
     squeezeNote:
       "擠壓（squeeze）指的是前面已經有人開池，又有人跟注時的 3bet（這裡大約 11～12bb）。" +
       "有跟注者在，總的防守範圍會比單挑時更窄，3bet 也更偏價值。跟著一起跟注（overcall）" +
@@ -1084,7 +1084,7 @@ const M = {
     statContinue: "% de continuation (des opens)",
     copy4bet: "Copier la range de 4-bet",
     note3bet:
-      "Les stats sont des parts de ta range d'open, pas de toutes les mains. La value du 4-bet se concentre sur QQ+/AK (en open UTG, sur AA-KK, QQ partant surtout en call), avec quelques bluffs comme A5s-A4s (davantage en open SB, y compris des broadways offsuit comme AJo et KQo). La range de call repose sur les paires et les broadways suited ; sans position, elle est plus serrée que celle du même ouvreur avec position. Les connecteurs ne callent presque jamais quand UTG ouvre ; depuis les autres positions, quelques-uns se mêlent aux calls.",
+      "Les stats sont des parts de ta range d'open, pas de toutes les mains. La value du 4-bet se concentre sur QQ+/AK (en open UTG, sur AA-KK, QQ partant surtout en call), avec quelques bluffs comme A5s-A4s (davantage en open SB, y compris des broadways offsuit comme AJo et KQo). La range de call repose sur les paires et les broadways suited ; sans position, elle est plus serrée que celle du même ouvreur avec position. Les connecteurs callent peu quand UTG ouvre (une partie des T9s, plus un peu de 98s face à un 3-bet du BTN) ; depuis les autres positions, ils se mêlent davantage aux calls.",
     squeezeNote:
       "Un squeeze est un 3-bet quand il y a déjà un ouvreur et un caller dans le coup " +
       "(environ 11-12bb ici). Le caller rend la défense totale plus serrée qu'en heads-up " +
@@ -1183,7 +1183,7 @@ const M = {
     statContinue: "% lanjut (dari open)",
     copy4bet: "Salin range 4-bet",
     note3bet:
-      "Statistiknya adalah bagian dari range open Anda, bukan dari semua hand. Value 4-bet terpusat di QQ+/AK (untuk open UTG, di AA-KK, sedangkan QQ lebih banyak call), ditambah beberapa bluff seperti A5s-A4s (lebih banyak untuk open SB, termasuk broadway offsuit seperti AJo dan KQo). Range call bertumpu pada pair dan broadway suited; tanpa posisi, range call lebih sempit daripada milik opener yang sama saat punya posisi. Connector hampir tidak pernah call saat UTG open; dari posisi lain, sebagian connector ikut dalam call.",
+      "Statistiknya adalah bagian dari range open Anda, bukan dari semua hand. Value 4-bet terpusat di QQ+/AK (untuk open UTG, di AA-KK, sedangkan QQ lebih banyak call), ditambah beberapa bluff seperti A5s-A4s (lebih banyak untuk open SB, termasuk broadway offsuit seperti AJo dan KQo). Range call bertumpu pada pair dan broadway suited; tanpa posisi, range call lebih sempit daripada milik opener yang sama saat punya posisi. Connector jarang call saat UTG open (sebagian T9s, ditambah sedikit 98s melawan 3-bet BTN); dari posisi lain, lebih banyak connector ikut dalam call.",
     squeezeNote:
       "Squeeze adalah 3-bet saat sudah ada yang open dan ada yang call (sekitar 11-12bb di sini). " +
       "Adanya caller membuat total defend lebih ketat daripada heads-up dan mendorong 3-bet ke " +
@@ -1279,7 +1279,7 @@ const M = {
     statContinue: "% meneruskan (daripada open)",
     copy4bet: "Salin range 4-bet",
     note3bet:
-      "Statistik ini ialah bahagian daripada range open anda, bukan daripada semua tangan. Value 4-bet tertumpu pada QQ+/AK (bagi open UTG, pada AA-KK, manakala QQ lebih banyak call), ditambah sedikit bluff seperti A5s-A4s (lebih banyak bagi open SB, termasuk broadway offsuit seperti AJo dan KQo). Range call berasaskan pair dan broadway suited; tanpa posisi, range call lebih sempit berbanding opener yang sama ketika ada posisi. Connector hampir tidak pernah call apabila UTG open; dari posisi lain, sebahagian connector turut dalam call.",
+      "Statistik ini ialah bahagian daripada range open anda, bukan daripada semua tangan. Value 4-bet tertumpu pada QQ+/AK (bagi open UTG, pada AA-KK, manakala QQ lebih banyak call), ditambah sedikit bluff seperti A5s-A4s (lebih banyak bagi open SB, termasuk broadway offsuit seperti AJo dan KQo). Range call berasaskan pair dan broadway suited; tanpa posisi, range call lebih sempit berbanding opener yang sama ketika ada posisi. Connector jarang call apabila UTG open (sebahagian T9s, serta sedikit 98s menentang 3-bet BTN); dari posisi lain, lebih banyak connector turut dalam call.",
     squeezeNote:
       "Squeeze ialah 3-bet apabila sudah ada yang open dan ada yang call (sekitar 11-12bb di sini). " +
       "Kehadiran caller menjadikan jumlah defend lebih ketat berbanding heads-up dan menolak 3-bet " +
@@ -1375,7 +1375,7 @@ const M = {
     statContinue: "Devam oranı (açılışlara göre)",
     copy4bet: "4-bet range'ini kopyala",
     note3bet:
-      "İstatistikler tüm ellerin değil, açılış range'inin içindeki paylardır. 4-bet value'su QQ+/AK etrafında toplanır (UTG open'ında AA–KK etrafında; QQ çoğunlukla call), A5s–A4s gibi birkaç blöf de karışır (SB open'ında daha çok; AJo, KQo gibi offsuit broadway'ler de). Call range'inin iskeleti çiftler ve suited broadway'lerdir; pozisyonsuzken aynı açıcının pozisyondaki range'inden daha dardır. UTG açtığında connector'larla call neredeyse hiç yok; diğer pozisyonlarda call'a birkaç connector karışır.",
+      "İstatistikler tüm ellerin değil, açılış range'inin içindeki paylardır. 4-bet value'su QQ+/AK etrafında toplanır (UTG open'ında AA–KK etrafında; QQ çoğunlukla call), A5s–A4s gibi birkaç blöf de karışır (SB open'ında daha çok; AJo, KQo gibi offsuit broadway'ler de). Call range'inin iskeleti çiftler ve suited broadway'lerdir; pozisyonsuzken aynı açıcının pozisyondaki range'inden daha dardır. UTG açtığında connector'larla call az (T9s'in bir kısmı, BTN 3-bet'ine karşı biraz da 98s); diğer pozisyonlarda call'a daha çok connector karışır.",
     squeezeNote:
       "Squeeze, pot'ta hem açan hem de call eden biri varken yapılan 3-bet'tir (burada " +
       "yaklaşık 11–12bb). Call eden oyuncu toplam savunmayı heads-up'a göre daraltır ve " +
@@ -1471,7 +1471,7 @@ const M = {
     statContinue: "Tiếp tục (trong range open)",
     copy4bet: "Sao chép range 4-bet",
     note3bet:
-      "Các chỉ số là tỷ lệ trong range open của bạn, không phải trên tất cả tay bài. Value 4-bet tập trung vào QQ+/AK (khi open từ UTG thì chủ yếu là AA–KK, còn QQ phần lớn call), kèm một ít bluff như A5s–A4s (khi open từ SB thì nhiều hơn, gồm cả broadway khác chất như AJo, KQo). Range call dựa trên các đôi và broadway đồng chất; khi không có vị trí, range call hẹp hơn so với cùng người open khi có vị trí. Khi UTG open thì gần như không call bằng connector; ở các vị trí khác, một số connector có trong range call.",
+      "Các chỉ số là tỷ lệ trong range open của bạn, không phải trên tất cả tay bài. Value 4-bet tập trung vào QQ+/AK (khi open từ UTG thì chủ yếu là AA–KK, còn QQ phần lớn call), kèm một ít bluff như A5s–A4s (khi open từ SB thì nhiều hơn, gồm cả broadway khác chất như AJo, KQo). Range call dựa trên các đôi và broadway đồng chất; khi không có vị trí, range call hẹp hơn so với cùng người open khi có vị trí. Khi UTG open thì ít call bằng connector (một phần T9s, thêm một ít 98s khi gặp 3-bet từ BTN); ở các vị trí khác, nhiều connector hơn có trong range call.",
     squeezeNote:
       "Squeeze là 3-bet khi trong pot đã có cả bên open lẫn bên call (ở đây " +
       "khoảng 11–12bb). Bên call khiến tổng phòng thủ chặt hơn so với đối đầu tay đôi và " +
@@ -1567,7 +1567,7 @@ const M = {
     statContinue: "Продолжение (в диапазоне опена)",
     copy4bet: "Копировать диапазон 4-бета",
     note3bet:
-      "Доли считаются от твоего диапазона опена, а не от всех рук. Вэлью 4-бета — QQ+/AK (при опене с UTG — AA–KK, а QQ чаще идёт в колл) с примесью блефов вроде A5s–A4s (при опене с SB блефов больше, в том числе разномастные бродвеи вроде AJo и KQo). Основа диапазона колла — пары и одномастные бродвеи; без позиции он уже, чем у того же опенера в позиции. При опене с UTG коннекторы в колл почти не идут; с остальных позиций часть коннекторов попадает в колл.",
+      "Доли считаются от твоего диапазона опена, а не от всех рук. Вэлью 4-бета — QQ+/AK (при опене с UTG — AA–KK, а QQ чаще идёт в колл) с примесью блефов вроде A5s–A4s (при опене с SB блефов больше, в том числе разномастные бродвеи вроде AJo и KQo). Основа диапазона колла — пары и одномастные бродвеи; без позиции он уже, чем у того же опенера в позиции. При опене с UTG коннекторы идут в колл редко (часть T9s и немного 98s против 3-бета с BTN); с остальных позиций в колл попадает больше коннекторов.",
     squeezeNote:
       "Сквиз — это 3-бет после опена и колла (здесь около " +
       "11–12bb). Из-за коллера общая защита становится уже, чем в хедз-апе, " +
