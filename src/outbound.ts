@@ -111,8 +111,8 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   tr: { "": "/tr", "/solver": "/tr/solver" },
   // ✅ /vi/solver 200 (2026-10-10 curl 실측 · 본체 MB-211 10-09 신설). 10-07에는 404였다.
   vi: { "": "/vi", "/solver": "/vi/solver" },
-  // U1: 2026-10-08 supplied measurements: ru landing pages unavailable; home only.
-  ru: { "": "/ru" },
+  // ✅ /ru/solver 200 (2026-10-10 curl 실측 · 본체 MB-218 배포 3814bcfc). 10-08에는 404였다.
+  ru: { "": "/ru", "/solver": "/ru/solver" },
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {
