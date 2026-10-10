@@ -9,6 +9,7 @@ export type SideView =
   | "guide"
   | "presets"
   | "trainer"
+  | "flop-study" // R2_REVIEW_ONLY
   | "hand-review" // R2_REVIEW_ONLY
   | "preflop"
   | "equity"

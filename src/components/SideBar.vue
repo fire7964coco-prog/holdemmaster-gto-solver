@@ -45,6 +45,15 @@
 
     <!-- R2_REVIEW_ONLY_START -->
     <button
+      v-if="FLOP_STUDY_LAUNCHED && FEATURE_TRAINER"
+      :class="itemStyle('flop-study')"
+      data-testid="nav-flop-study"
+      @click="store.sideView = 'flop-study'"
+    >
+      {{ flopStudyNavTitle }}
+    </button>
+
+    <button
       v-if="FEATURE_TRAINER && HAND_REVIEW_LAUNCHED"
       :class="itemStyle('hand-review')"
       data-testid="nav-hand-review"
@@ -138,6 +147,7 @@ import { cardText } from "../utils";
 import { i18n } from "../i18n";
 import { FEATURE_TRAINER } from "@features";
 import { handReviewLabels, HAND_REVIEW_LAUNCHED } from "@features"; // R2_REVIEW_ONLY
+import { flopStudyLabels, FLOP_STUDY_LAUNCHED } from "@features"; // R2_REVIEW_ONLY
 
 import RangeMiniViewer from "./RangeMiniViewer.vue";
 
@@ -644,6 +654,7 @@ export default defineComponent({
     const config = useConfigStore();
     const L = computed(() => M[i18n.locale]);
     const reviewNavTitle = computed(() => FEATURE_TRAINER ? handReviewLabels(i18n.locale).navTitle : ""); // R2_REVIEW_ONLY
+    const flopStudyNavTitle = computed(() => FEATURE_TRAINER ? flopStudyLabels(i18n.locale).navTitle : ""); // R2_REVIEW_ONLY
     const customViews: SideView[] = ["oop-range", "ip-range", "board", "tree-config", "run-solver"];
     const isCustom = computed(() => customViews.includes(store.sideView));
     const lastExplore = ref<SideView>("about");
@@ -693,6 +704,8 @@ export default defineComponent({
       L,
       reviewNavTitle, // R2_REVIEW_ONLY
       HAND_REVIEW_LAUNCHED, // R2_REVIEW_ONLY
+      flopStudyNavTitle, // R2_REVIEW_ONLY
+      FLOP_STUDY_LAUNCHED, // R2_REVIEW_ONLY
       FEATURE_TRAINER,
       isCustom,
       readySteps,

@@ -40,6 +40,9 @@
           <TrainerPage />
         </div>
         <!-- R2_REVIEW_ONLY_START -->
+        <div v-if="isFlopStudy">
+          <FlopStudyPage />
+        </div>
         <div v-if="reviewMounted" v-show="isHandReview" class="flex-1 min-h-0">
           <HandReviewPage />
         </div>
@@ -99,6 +102,7 @@ import { viewFromUrl } from "../pwa";
 // 빌드 2벌 분기 — npokers 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
 import { TrainerPage, PresetsPage, bootstrapAccount } from "@features";
 import { HandReviewPage, handReviewLabels, FEATURE_TRAINER } from "@features"; // R2_REVIEW_ONLY
+import { FlopStudyPage, flopStudyLabels } from "@features"; // R2_REVIEW_ONLY
 import { i18n } from "../i18n";
 
 import NavBar from "./NavBar.vue";
@@ -129,6 +133,7 @@ export default defineComponent({
     GuidePage,
     PresetsPage,
     TrainerPage,
+    FlopStudyPage, // R2_REVIEW_ONLY
     HandReviewPage, // R2_REVIEW_ONLY
     PreflopChartPage,
     EquityPage,
@@ -148,6 +153,7 @@ export default defineComponent({
     const store = useStore();
     if (__F1_TEST_BUILD__) void import("../solver-feedback-test").then(m => m.installFeedbackTestHooks(store)); // F1_FEEDBACK_ONLY
     const isHandReview = computed(() => FEATURE_TRAINER && store.sideView === "hand-review"); // R2_REVIEW_ONLY
+    const isFlopStudy = computed(() => FEATURE_TRAINER && store.sideView === "flop-study"); // R2_REVIEW_ONLY
     // 복기 → 연습 → 돌아오기에서 입력한 판이 지워지지 않게, 한 번 연 복기 화면은 숨기기만 한다. // R2_REVIEW_ONLY
     const reviewMounted = ref(false); // R2_REVIEW_ONLY
     watch(isHandReview, (open) => { if (open) reviewMounted.value = true; }, { immediate: true }); // R2_REVIEW_ONLY
@@ -397,6 +403,7 @@ export default defineComponent({
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];
       if (store.sideView === "hand-review") return FEATURE_TRAINER ? handReviewLabels(i18n.locale).title : ""; // R2_REVIEW_ONLY
+      if (store.sideView === "flop-study") return FEATURE_TRAINER ? flopStudyLabels(i18n.locale).title : ""; // R2_REVIEW_ONLY
       const base = messages[store.sideView];
       return store.sideView === "tree-config" && store.treeEditOpen
         ? `${base} > ${messages.treeEdit}`
@@ -444,6 +451,7 @@ export default defineComponent({
       store,
       feedbackFeatures, feedbackOpen, // F1_FEEDBACK_ONLY
       isHandReview, // R2_REVIEW_ONLY
+      isFlopStudy, // R2_REVIEW_ONLY
       reviewMounted, // R2_REVIEW_ONLY
       header,
       clientHeight,
