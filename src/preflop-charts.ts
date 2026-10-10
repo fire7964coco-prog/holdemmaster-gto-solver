@@ -492,26 +492,42 @@ const VS_3BET: Record<Vs3BetId, Vs3BetTiers> = {
 // 히어로가 «3벳한 사람»(BB/SB)이라 조건부 모집단이 3벳 레인지다. 빈도는 «3벳했다면»
 // 기준이고, 통계도 전체 1326콤보가 아니라 «3벳 레인지 대비» %로 계산한다.
 // 액션은 5벳(올인)/콜 — 100bb에서 5벳은 사실상 올인 단일 사이즈(출처검증.md 8절 결정 2).
-// 전제: 오픈 2.5bb, BB 3벳 11bb → 4벳 24bb / SB 3벳 10bb → 4벳 22bb, 5벳 올인.
+// 전제: 오픈 2.5bb(SB 3bb), BB 3벳 11 → 4벳 24 · SB 3벳 10 → 22 · IP(CO·BTN) 3벳 7.5 → 19 ·
+// BB vs SB 3벳 9 → 22(bb) · 5벳 올인.
 // 값은 공개 출처가 얇아(핸드별 표는 유료 도구 안에만 있음) 내부 유도로 채웠다:
 // 에퀴티 실측(vs4벳_에퀴티실측표.md) + 팟 오즈 + 자동수익 하한(BB 39.4%/SB 40.9%) +
 // S17~S20 핸드군. 3인 페르소나 검수 완료 — 판정 전체는 출처검증.md 확장 4(10·11절).
 
-export type Vs4BetId = "bb-vs-btn-4bet" | "sb-vs-btn-4bet";
+export type Vs4BetId =
+  | "bb-vs-btn-4bet" | "sb-vs-btn-4bet"
+  | "bb-vs-co-4bet" | "bb-vs-hj-4bet" | "bb-vs-utg-4bet" | "bb-vs-sb-4bet"
+  | "btn-vs-co-4bet" | "btn-vs-hj-4bet" | "btn-vs-utg-4bet"
+  | "co-vs-hj-4bet" | "co-vs-utg-4bet";
 
 export type Vs4BetScenario = {
   id: Vs4BetId;
   /** 3벳한 내 포지션 */
   hero: string;
-  /** 4벳한 상대 */
+  /** 4벳한 상대(오픈한 쪽) */
   villain: string;
   /** 히어로의 3벳 레인지가 있는 수비 조합 (조건부 모집단) */
   base: ScenarioId;
+  /** 상대의 4벳 레인지가 있는 vs 3벳 조합 (상대 4벳 = RFI(villain) × VS_3BET[vs3bet].fourBet) */
+  vs3bet: Vs3BetId;
 };
 
 export const VS4BET_SCENARIOS: Vs4BetScenario[] = [
-  { id: "bb-vs-btn-4bet", hero: "BB", villain: "BTN", base: "bb-vs-btn" },
-  { id: "sb-vs-btn-4bet", hero: "SB", villain: "BTN", base: "sb-vs-btn" },
+  { id: "bb-vs-btn-4bet", hero: "BB", villain: "BTN", base: "bb-vs-btn", vs3bet: "btn-vs-bb-3bet" },
+  { id: "sb-vs-btn-4bet", hero: "SB", villain: "BTN", base: "sb-vs-btn", vs3bet: "btn-vs-sb-3bet" },
+  { id: "bb-vs-co-4bet", hero: "BB", villain: "CO", base: "bb-vs-co", vs3bet: "co-vs-bb-3bet" },
+  { id: "bb-vs-hj-4bet", hero: "BB", villain: "HJ", base: "bb-vs-hj", vs3bet: "hj-vs-bb-3bet" },
+  { id: "bb-vs-utg-4bet", hero: "BB", villain: "UTG", base: "bb-vs-utg", vs3bet: "utg-vs-bb-3bet" },
+  { id: "bb-vs-sb-4bet", hero: "BB", villain: "SB", base: "bb-vs-sb", vs3bet: "sb-vs-bb-3bet" },
+  { id: "btn-vs-co-4bet", hero: "BTN", villain: "CO", base: "btn-vs-co", vs3bet: "co-vs-btn-3bet" },
+  { id: "btn-vs-hj-4bet", hero: "BTN", villain: "HJ", base: "btn-vs-hj", vs3bet: "hj-vs-btn-3bet" },
+  { id: "btn-vs-utg-4bet", hero: "BTN", villain: "UTG", base: "btn-vs-utg", vs3bet: "utg-vs-btn-3bet" },
+  { id: "co-vs-hj-4bet", hero: "CO", villain: "HJ", base: "co-vs-hj", vs3bet: "hj-vs-co-3bet" },
+  { id: "co-vs-utg-4bet", hero: "CO", villain: "UTG", base: "co-vs-utg", vs3bet: "utg-vs-co-3bet" },
 ];
 
 type Vs4BetTiers = { fiveBet: TierMap; call: TierMap };
@@ -524,7 +540,7 @@ type Vs4BetTiers = { fiveBet: TierMap; call: TierMap };
 // QQ·AKs·AKo의 5벳은 콜당한 에퀴티 50% 미달이지만 폴드 에퀴티가 근거 — 검증 화이트리스트.
 const VS_4BET: Record<Vs4BetId, Vs4BetTiers> = {
   // BB 3벳 11bb → BTN 4벳 24bb. 모집단 94콤보(29핸드), 계속 55.25콤보 = 58.8%
-  // (하한 39.4% ✓, 창 50~62% ✓). 콜은 실현율(OOP·SPR 1.8)이 기준 — 팟 오즈(26.8%)는
+  // (하한 39.4% ✓, 창 50~62% ✓). 콜은 실현율(OOP·SPR 1.57)이 기준 — 팟 오즈(26.8%)는
   // 전 핸드가 통과해 판별력이 없다. 88-77 콜 25는 99와 실측 에퀴티가 동일(40.3 안팎)해
   // 절벽을 없앤 검수 반영(11절). 폴드: T8s·97s·86s·A3s-A2s·KQs·KJs·QJs·JTs·76s·65s·
   // AJo·KQo — 필요 실현율 0.8+ 미달, 블로커·도미 근거 없음.
@@ -559,6 +575,62 @@ const VS_4BET: Record<Vs4BetId, Vs4BetTiers> = {
       50: "QQ,AKs,88,AJs,AQo,A5s",
       25: "AA,KK,AKo,77,ATs,KQs,AJo",
     },
+  },
+  // ── 확장 6 (2026-10-10): 9조합 추가 — 판정 참고자료/4벳림프팟_판정_2026-10-10.md ──
+  // 5벳 밸류는 AA·KK만(콜당했을 때 ≥50%는 전 조합에서 이 둘뿐). QQ·AK 5벳 혼합은 상대 4벳의
+  // 블러프 비중이 ≥15%인 BTN·SB 4벳 상대에서만 성립하고, CO·HJ·UTG의 좁은 4벳(블러프 7~14%)
+  // 상대로는 폴드 에퀴티가 없어 콜이 낫다. UTG 4벳(AA·KK 중심) 상대로는 KK도 잼이 −EV → 콜.
+  // AA·KK 트랩 콜 25는 기존 관례. 자동수익 하한(BB 39.4 / IP 41.1 / BB vs SB 38.7)은 구속조건.
+  // vs CO·HJ 4벳(11 → 24bb · BB가 OOP · 상대 27.5c, 블러프 7.3%): QQ+·AK + JJ 절반.
+  // 두 조합은 히어로 3벳·상대 4벳·팟이 전부 같아 응답도 같다(id만 분리 · 모델 안에 차이가 없다).
+  "bb-vs-co-4bet": {
+    fiveBet: { 75: "AA,KK" },
+    call: { 100: "QQ,AKs", 75: "AKo", 50: "JJ", 25: "AA,KK" },
+  },
+  "bb-vs-hj-4bet": {
+    fiveBet: { 75: "AA,KK" },
+    call: { 100: "QQ,AKs", 75: "AKo", 50: "JJ", 25: "AA,KK" },
+  },
+  // vs UTG 4벳(14c = AA·KK 75 + AK·A5s 25): KK는 콜당하면 35%라 잼하지 않고 콜 100. QQ·AK 콜 위주.
+  "bb-vs-utg-4bet": {
+    fiveBet: { 75: "AA" },
+    call: { 100: "KK", 75: "QQ,AKs", 50: "AKo", 25: "AA,JJ" },
+  },
+  // SB 3bb 오픈 → BB 9bb 3벳 → SB 22bb 4벳(64c · 블러프 40.6% — A5s-A2s·AJo·KQo·ATo·KJo). BB가 IP.
+  // 블러프가 많아 QQ·AK 잼 75(화이트리스트) · JJ·TT 25 · ATs 25 A-블로커 잼. AQ·AJ 콜이 SB의
+  // 오프수트 브로드웨이 블러프를 도미네이트. A9s 이하·수딧 브로드웨이·커넥터는 폴드.
+  "bb-vs-sb-4bet": {
+    fiveBet: { 75: "AA,KK,QQ,AKs,AKo", 25: "JJ,TT,ATs" },
+    call: {
+      100: "AQs,AJs,AQo",
+      75: "JJ,TT,99,AJo",
+      50: "88-77,KQs",
+      25: "AA,KK,QQ,AKs,AKo,66,ATs,ATo",
+    },
+  },
+  // vs CO·HJ 4벳(7.5 → 19bb · 3벳한 쪽이 IP · 상대 43c, 블러프 14%): IP라 TT·AJs·AQo까지 콜.
+  "btn-vs-co-4bet": {
+    fiveBet: { 75: "AA,KK" },
+    call: { 100: "QQ,JJ,AKs,AKo,AQs", 75: "TT", 50: "AJs", 25: "AA,KK,AQo" },
+  },
+  "btn-vs-hj-4bet": {
+    fiveBet: { 75: "AA,KK" },
+    call: { 100: "QQ,JJ,AKs,AKo,AQs", 75: "TT", 50: "AJs", 25: "AA,KK,AQo" },
+  },
+  // CO 3벳은 BTN보다 좁다 → AQs 75 · AQo(3벳 50%뿐) 폴드 (사슬 CO vs HJ ⊆ BTN vs HJ)
+  "co-vs-hj-4bet": {
+    fiveBet: { 75: "AA,KK" },
+    call: { 100: "QQ,JJ,AKs,AKo", 75: "AQs,TT", 50: "AJs", 25: "AA,KK" },
+  },
+  // vs UTG 4벳(25.25c = AA·KK 100 · AKs 75 · AKo·A5s 50 · QQ 25 · A4s 19): KK 콜 100(콜당하면 45%).
+  // AQs는 32.6%로 IP라도 접는다. 두 조합은 모집단 차이가 65s 1콤보뿐이라 티어 동일.
+  "btn-vs-utg-4bet": {
+    fiveBet: { 75: "AA" },
+    call: { 100: "KK,QQ,AKs,AKo", 75: "JJ", 50: "TT", 25: "AA" },
+  },
+  "co-vs-utg-4bet": {
+    fiveBet: { 75: "AA" },
+    call: { 100: "KK,QQ,AKs,AKo", 75: "JJ", 50: "TT", 25: "AA" },
   },
 };
 

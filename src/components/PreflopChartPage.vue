@@ -245,19 +245,14 @@ const M = {
     mode3bet: "vs 3벳 (오픈 후)",
     mode4bet: "vs 4벳 (3벳 후)",
     intro4bet:
-      "내가 3벳했는데 4벳을 받았을 때의 대응 — 빨강은 5벳(올인), 초록은 콜, " +
-      "나머지는 폴드입니다. 빈도는 «3벳했다면» 기준이라 3벳하지 않는 핸드는 " +
-      "비어 있습니다. 6맥스 캐시 100bb, BB 3벳 11bb → 4벳 24bb / SB 3벳 10bb → 4벳 22bb 기준.",
+      "내가 3벳했는데 4벳을 받았을 때의 대응 — 빨강은 5벳(올인), 초록은 콜, 나머지는 폴드입니다. 빈도는 «3벳했다면» 기준이라 3벳하지 않는 핸드는 비어 있습니다. 6맥스 캐시 100bb 기준. 4벳 크기: BB 3벳 11bb → 24bb · SB 3벳 10bb → 22bb · 뒤 포지션(CO·BTN) 3벳 7.5bb → 19bb · BB vs SB 오픈 3벳 9bb → 22bb.",
     legend5bet: "5벳 (올인)",
     legendCond4bet: "빈 칸 = 애초에 3벳 안 함",
     stat5bet: "5벳 비율",
     statContinue4bet: "계속(3벳 대비)",
     copy5bet: "5벳 레인지 복사",
     note4bet:
-      "통계는 «3벳 레인지 대비» 비율입니다. 100bb에서 5벳은 사실상 올인 한 가지입니다 — " +
-      "밸류는 AA·KK 중심(가끔 콜로 트랩)이고 QQ·AK는 5벳과 콜을 섞습니다. 콜은 팟 오즈가 " +
-      "아니라 실현율이 기준입니다: 포지션 없이 낮은 SPR로 싸우므로 페어와 최상위 수딧만 " +
-      "남기되, 상대 4벳에 A5s-A4s 같은 블러프가 섞여 있어 전부 접지는 않습니다.",
+      "통계는 «3벳 레인지 대비» 비율입니다. 100bb에서 5벳은 사실상 올인 한 가지입니다 — 밸류는 AA·KK 중심(가끔 콜로 트랩)이고, 블러프가 섞인 BTN·SB 4벳 상대로는 QQ·AK도 5벳을 섞지만 좁은 CO·HJ·UTG 4벳 상대로는 콜합니다(UTG 4벳 상대로는 KK도 콜). 콜은 팟 오즈가 아니라 실현율이 기준입니다: 포지션이 있는 쪽(BTN·CO가 3벳한 경우, BB vs SB)은 TT·AJs·AQo 같은 중간 핸드까지 콜을 넓히고, 포지션이 없는 BB 3벳은 QQ+·AK 중심으로 좁힙니다. 상대 4벳에 A5s-A4s 같은 블러프가 섞여 있어 전부 접지는 않습니다.",
     how4bet2:
       "빨강+초록이 칸을 다 채우지 못하면 그만큼 폴드입니다. 두 색이 함께면 5벳과 콜을 " +
       "혼합합니다. 3벳 레인지에 없는 핸드는 이 상황 자체가 생기지 않아 비어 있습니다.",
@@ -333,13 +328,15 @@ const M = {
     modeDefend: "Open के सामने",
     mode3bet: "3-bet के सामने (open के बाद)",
     mode4bet: "4-bet के सामने (3-bet के बाद)",
-    intro4bet: "आपके 3-bet पर 4-bet आने के बाद की रणनीति: लाल = 5-bet (all-in), हरा = call, बाकी = fold। आवृत्तियाँ आपके 3-bet कर चुकने की शर्त पर हैं, इसलिए जिन हैंड से आप 3-bet नहीं करते, वे खाली हैं। आधार: 6-max cash, 100bb; BB का 11bb 3-bet → 24bb 4-bet, SB का 10bb 3-bet → 22bb 4-bet।",
+    intro4bet:
+      "आपके 3-bet पर 4-bet आने के बाद की रणनीति: लाल = 5-bet (all-in), हरा = call, बाकी = fold। आवृत्तियाँ आपके 3-bet कर चुकने की शर्त पर हैं, इसलिए जिन हैंड से आप 3-bet नहीं करते, वे खाली हैं। आधार: 6-max cash, 100bb। 4-bet साइज़: BB का 11bb 3-bet → 24bb, SB का 10bb 3-bet → 22bb, बाद की पोज़िशन (CO·BTN) का 7.5bb 3-bet → 19bb, SB open के ख़िलाफ़ BB का 9bb 3-bet → 22bb।",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "खाली = इस हैंड से 3-bet नहीं होता",
     stat5bet: "5-bet %",
     statContinue4bet: "आगे खेलने का % (3-bet range में से)",
     copy5bet: "5-bet range कॉपी करें",
-    note4bet: "ये आँकड़े आपकी 3-bet range के हिस्से हैं। 100bb पर 5-bet लगभग हमेशा all-in होता है। Value के लिए मुख्य हैंड AA·KK हैं (कभी call करके trap), जबकि QQ·AK में 5-bet और call मिलते हैं। Call करते समय pot odds के साथ equity realization भी देखें: कम SPR पर OOP खेलना होता है, इसलिए मुख्यतः pairs और सबसे मज़बूत suited हैंड बचते हैं। विरोधी की 4-bet range में A5s–A4s जैसे bluffs भी हैं, इसलिए हर हैंड fold करना सही नहीं होगा।",
+    note4bet:
+      "ये आँकड़े आपकी 3-bet range के हिस्से हैं। 100bb पर 5-bet लगभग हमेशा all-in होता है। Value के लिए मुख्य हैंड AA·KK हैं (कभी call करके trap)। Bluffs वाली BTN·SB 4-bet के ख़िलाफ़ QQ·AK भी 5-bet मिलाते हैं, लेकिन सीमित CO·HJ·UTG 4-bet के ख़िलाफ़ call करते हैं (UTG 4-bet के ख़िलाफ़ KK भी call करता है)। Call का फ़ैसला pot odds से नहीं, equity realization से होता है: पोज़िशन वाली तरफ़ (जब BTN·CO ने 3-bet किया हो, या BB vs SB) TT·AJs·AQo जैसे मध्यम हैंड तक call बढ़ाती है, जबकि OOP से 3-bet करने वाला BB मुख्यतः QQ+·AK तक सीमित रहता है। विरोधी की 4-bet range में A5s–A4s जैसे bluffs भी हैं, इसलिए हर हैंड fold करना सही नहीं होगा।",
     how4bet2: "लाल और हरे हिस्से के बाद बचा खाली हिस्सा fold है। दोनों रंग वाले खाने में 5-bet और call मिलते हैं। 3-bet range से बाहर के हैंड इस स्थिति तक नहीं पहुँचते, इसलिए उनके खाने खाली हैं।",
     intro3bet:
       "आपके open-raise पर 3-bet आने के बाद की रणनीति: लाल = 4-bet, हरा = call, बाकी = fold। आवृत्तियाँ आपके open कर चुकने की शर्त पर हैं, इसलिए जिन हैंड से आप open नहीं करते, वे खाली हैं। आधार: 6-max cash, 100bb, 2.5bb open (SB से 3bb); 3-bet BB से 11bb और SB से 10bb (SB open के ख़िलाफ़ BB 9bb), आपके बाद की पोज़िशन से 7.5bb।",
@@ -394,22 +391,14 @@ const M = {
     mode3bet: "vs 3-bet (after opening)",
     mode4bet: "vs 4-bet (after 3-betting)",
     intro4bet:
-      "How to respond when your 3-bet gets 4-bet — red is 5-bet (all-in), green " +
-      "is call, everything else is a fold. Frequencies are conditional on having 3-bet, so " +
-      "hands you never 3-bet are blank. 6-max cash, 100bb; BB 3-bets 11bb " +
-      "and faces a 24bb 4-bet; SB 3-bets 10bb and faces 22bb.",
+      "How to respond when your 3-bet gets 4-bet — red is 5-bet (all-in), green is call, everything else is a fold. Frequencies are conditional on having 3-bet, so hands you never 3-bet are blank. 6-max cash, 100bb. 4-bet sizes: BB 3-bets 11bb → 24bb · SB 3-bets 10bb → 22bb · later positions (CO·BTN) 3-bet 7.5bb → 19bb · BB vs an SB open 3-bets 9bb → 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "Blank = never 3-bet in the first place",
     stat5bet: "5-bet %",
     statContinue4bet: "Continue % (of 3-bets)",
     copy5bet: "Copy 5-bet range",
     note4bet:
-      "The stats are shares of your 3-betting range. At 100bb the 5-bet is " +
-      "effectively all-in — value centers on AA·KK (occasionally trapping with a " +
-      "call), and QQ·AK mix 5-bets with calls. Calls are driven by equity realization, " +
-      "not pot odds: you fight out of position at a low SPR, so only pairs and " +
-      "top suited hands continue — but don't fold everything, because their " +
-      "4-betting range mixes in bluffs like A5s–A4s.",
+      "Stats are % of your 3-bet range. At 100bb the 5-bet is effectively a single all-in size — value is AA·KK (occasionally trapping by calling); QQ·AK mix in 5-bets only against bluff-laden BTN·SB 4-bets and call against the narrow CO·HJ·UTG 4-bets (vs a UTG 4-bet even KK calls). Calling is about equity realization, not pot odds: with position (BTN·CO 3-bettor, BB vs SB) calls widen to medium hands like TT·AJs·AQo; the out-of-position BB 3-bettor keeps it to QQ+·AK. Fold everything? No — the 4-bet range contains bluffs like A5s-A4s.",
     how4bet2:
       "If red + green don't fill the cell, the rest is folded. Cells with both " +
       "colors mix 5-bets and calls. Hands outside the 3-betting range never " +
@@ -490,21 +479,14 @@ const M = {
     mode3bet: "vs 3ベット",
     mode4bet: "vs 4ベット",
     intro4bet:
-      "自分が3ベットした後に4ベットを受けたときの対応です — 赤は5ベット（オールイン）、" +
-      "緑はコール、残りはフォールドです。頻度は「3ベットした場合」を基準としているため、" +
-      "3ベットしないハンドは空欄です。6maxキャッシュゲーム100bb、BBの3ベット11bb → 4ベット24bb / " +
-      "SBの3ベット10bb → 4ベット22bbが基準です。",
+      "自分が3ベットした後に4ベットを受けたときの対応です — 赤は5ベット（オールイン）、緑はコール、残りはフォールドです。頻度は「3ベットした場合」を基準としているため、3ベットしないハンドは空欄です。6maxキャッシュゲーム100bbが基準です。4ベットサイズ：BBの3ベット11bb → 24bb・SBの3ベット10bb → 22bb・後ろのポジション（CO・BTN）の3ベット7.5bb → 19bb・SBのオープンに対するBBの3ベット9bb → 22bb。",
     legend5bet: "5ベット（オールイン）",
     legendCond4bet: "空欄 = そもそも3ベットしない",
     stat5bet: "5ベット率",
     statContinue4bet: "継続（3ベット比）",
     copy5bet: "5ベットレンジをコピー",
     note4bet:
-      "統計は「3ベットレンジに対する」割合です。100bbでは5ベットは実質オールイン一択です — " +
-      "バリューはAA・KKが中心（まれにコールでトラップ）で、QQ・AKは5ベットとコールを混ぜます。" +
-      "コールの基準はポットオッズではなくエクイティ実現率です。ポジションなしの低SPRで戦うため、" +
-      "ペアと最上位のスーテッドだけを残しますが、相手の4ベットにはA5s-A4sのようなブラフも" +
-      "混ざっているので、すべてを降りるわけではありません。",
+      "統計は「3ベットレンジに対する」割合です。100bbでは5ベットは実質オールイン一択です — バリューはAA・KKが中心（まれにコールでトラップ）で、ブラフが混ざるBTN・SBの4ベットに対してはQQ・AKも5ベットを混ぜますが、狭いCO・HJ・UTGの4ベットに対してはコールします（UTGの4ベットにはKKもコール）。コールの基準はポットオッズではなくエクイティ実現率です。ポジションがある側（BTN・COが3ベットした場合、BB vs SB）はTT・AJs・AQoのような中くらいのハンドまでコールを広げ、ポジションのないBBの3ベットはQQ+・AK中心に絞ります。相手の4ベットにはA5s-A4sのようなブラフも混ざっているので、すべてを降りるわけではありません。",
     how4bet2:
       "赤＋緑がマスを満たさない分はフォールドです。両色が重なるマスは5ベットとコールを" +
       "混合します。3ベットレンジにないハンドはこの状況自体が起こらないため空欄です。",
@@ -581,21 +563,14 @@ const M = {
     mode3bet: "vs 3-bet (tras abrir)",
     mode4bet: "vs 4-bet (tras 3-betear)",
     intro4bet:
-      "Cómo responder cuando tu 3-bet recibe un 4-bet — el rojo es 5-bet (all-in), el verde " +
-      "es call y el resto se retira. Las frecuencias son condicionales a haber 3-beteado, así que " +
-      "las manos que nunca 3-beteas quedan en blanco. Cash 6-max, 100bb; la BB 3-betea 11bb " +
-      "y enfrenta un 4-bet de 24bb, la SB 3-betea 10bb y enfrenta 22bb.",
+      "Cómo responder cuando tu 3-bet recibe un 4-bet — el rojo es 5-bet (all-in), el verde es call y el resto se retira. Las frecuencias son condicionales a haber 3-beteado, así que las manos que nunca 3-beteas quedan en blanco. Cash 6-max, 100bb. Tamaños de 4-bet: la BB 3-betea 11bb → 24bb · la SB 3-betea 10bb → 22bb · las posiciones posteriores (CO·BTN) 3-betean 7.5bb → 19bb · la BB contra un open de la SB 3-betea 9bb → 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "En blanco = nunca se 3-betea",
     stat5bet: "% de 5-bet",
     statContinue4bet: "Continúa (de los 3-bets)",
     copy5bet: "Copiar rango de 5-bet",
     note4bet:
-      "Las estadísticas son proporciones de tu rango de 3-bet. A 100bb el 5-bet es en la práctica " +
-      "all-in — el valor se centra en AA·KK (a veces solo pagando para tender una trampa), y QQ·AK mezclan 5-bets " +
-      "con calls. Los calls se guían por la realización, no por las pot odds: peleas fuera de " +
-      "posición con SPR bajo, así que solo continúan los pares y las mejores manos suited — pero " +
-      "no lo foldees todo, porque el rango de 4-bet mezcla bluffs como A5s-A4s.",
+      "Las estadísticas son proporciones de tu rango de 3-bet. A 100bb el 5-bet es en la práctica all-in — el valor se centra en AA·KK (a veces solo pagando para tender una trampa); QQ·AK mezclan 5-bets solo contra los 4-bets de BTN·SB, que llevan bluffs, y pagan contra los 4-bets estrechos de CO·HJ·UTG (contra un 4-bet de UTG incluso KK paga). Los calls se guían por la realización, no por las pot odds: con posición (si 3-betearon BTN·CO, o BB vs SB) los calls se amplían a manos medias como TT·AJs·AQo; la BB, que 3-betea fuera de posición, se limita a QQ+·AK. Pero no lo foldees todo: el rango de 4-bet mezcla bluffs como A5s-A4s.",
     how4bet2:
       "Si el rojo + verde no llenan la celda, el resto se retira. Las celdas con ambos colores " +
       "mezclan 5-bets y calls. Las manos fuera del rango de 3-bet nunca enfrentan este spot, " +
@@ -673,21 +648,14 @@ const M = {
     mode3bet: "vs 3-bet (depois de abrir)",
     mode4bet: "vs 4-bet (depois do 3-bet)",
     intro4bet:
-      "Como responder quando o seu 3-bet leva um 4-bet — o vermelho é 5-bet (all-in), o verde " +
-      "é call e o resto dá fold. As frequências são condicionais a ter dado 3-bet, então " +
-      "as mãos com que você nunca dá 3-bet ficam em branco. Cash 6-max, 100bb; a BB dá 3-bet de 11bb " +
-      "e enfrenta um 4-bet de 24bb, a SB dá 3-bet de 10bb e enfrenta 22bb.",
+      "Como responder quando o seu 3-bet leva um 4-bet — o vermelho é 5-bet (all-in), o verde é call e o resto dá fold. As frequências são condicionais a ter dado 3-bet, então as mãos com que você nunca dá 3-bet ficam em branco. Cash 6-max, 100bb. Tamanhos de 4-bet: a BB dá 3-bet de 11bb → 24bb · a SB dá 3-bet de 10bb → 22bb · as posições posteriores (CO·BTN) dão 3-bet de 7,5bb → 19bb · a BB contra um open da SB dá 3-bet de 9bb → 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "Em branco = nunca dá 3-bet",
     stat5bet: "% de 5-bet",
     statContinue4bet: "% de continuação (dos 3-bets)",
     copy5bet: "Copiar range de 5-bet",
     note4bet:
-      "As estatísticas são proporções do seu range de 3-bet. Com 100bb o 5-bet é na prática " +
-      "all-in — o valor se concentra em AA·KK (às vezes só pagando para armar uma armadilha), e QQ·AK misturam 5-bets " +
-      "com calls. Os calls se guiam pela realização de equity, não pelas pot odds: você briga fora de " +
-      "posição com SPR baixo, então só continuam os pares e as melhores mãos suited — mas " +
-      "não dê fold em tudo, porque o range de 4-bet mistura blefes como A5s-A4s.",
+      "As estatísticas são proporções do seu range de 3-bet. Com 100bb o 5-bet é na prática all-in — o valor se concentra em AA·KK (às vezes só pagando para armar uma armadilha); QQ·AK misturam 5-bets só contra os 4-bets de BTN·SB, que trazem blefes, e pagam contra os 4-bets estreitos de CO·HJ·UTG (contra um 4-bet de UTG até KK paga). Os calls se guiam pela realização de equity, não pelas pot odds: com posição (quando BTN·CO deram o 3-bet, ou BB vs SB) os calls se ampliam para mãos médias como TT·AJs·AQo; a BB, que dá 3-bet fora de posição, fica em QQ+·AK. Mas não dê fold em tudo, porque o range de 4-bet mistura blefes como A5s-A4s.",
     how4bet2:
       "Se o vermelho + verde não preencherem a célula, o resto dá fold. As células com as duas cores " +
       "misturam 5-bets e calls. As mãos fora do range de 3-bet nunca enfrentam este spot, " +
@@ -766,22 +734,14 @@ const M = {
     // die Bet ist weiblich (본체 브리프 §7-9 실측) → «nach der 3-Bet»
     mode4bet: "vs 4-Bet (nach der 3-Bet)",
     intro4bet:
-      "Wie du reagierst, wenn deine 3-Bet eine 4-Bet kassiert – Rot ist 5-Bet (All-in), Grün ist " +
-      "Call, der Rest foldet. Die Frequenzen gelten unter der Bedingung, dass du 3-bettest; " +
-      "Hände, die du nie 3-bettest, bleiben leer. 6-max Cashgame, 100bb: die BB 3-bettet auf " +
-      "11bb und bekommt eine 4-Bet auf 24bb, die SB 3-bettet auf 10bb und bekommt 22bb.",
+      "Wie du reagierst, wenn deine 3-Bet eine 4-Bet kassiert – Rot ist 5-Bet (All-in), Grün ist Call, der Rest foldet. Die Frequenzen gelten unter der Bedingung, dass du 3-bettest; Hände, die du nie 3-bettest, bleiben leer. 6-max Cashgame, 100bb. 4-Bet-Größen: BB 3-bettet auf 11bb → 24bb · SB 3-bettet auf 10bb → 22bb · spätere Positionen (CO·BTN) 3-betten auf 7,5bb → 19bb · BB gegen SB-Open 3-bettet auf 9bb → 22bb.",
     legend5bet: "5-Bet (All-in)",
     legendCond4bet: "Leer = wird hier nie 3-gebettet",
     stat5bet: "5-Bet-Anteil",
     statContinue4bet: "Continue-Anteil (von den 3-Bets)",
     copy5bet: "5-Bet-Range kopieren",
     note4bet:
-      "Die Statistik zeigt Anteile deiner 3-Bet-Range. Mit 100bb ist die 5-Bet praktisch immer " +
-      "All-in – der Value liegt bei AA·KK (manchmal nur gecallt, um eine Falle zu stellen), " +
-      "QQ·AK mischen 5-Bet und Call. Die Calls richten sich nach der Equity-Realisierung, nicht " +
-      "nach den Pot Odds: Du spielst ohne Position mit niedrigem SPR, deshalb bleiben nur Paare " +
-      "und die besten suited Hände – aber folde nicht alles, denn die 4-Bet-Range mischt Bluffs " +
-      "wie A5s-A4s hinein.",
+      "Die Statistik zeigt Anteile deiner 3-Bet-Range. Mit 100bb ist die 5-Bet praktisch immer All-in – der Value liegt bei AA·KK (manchmal nur gecallt, um eine Falle zu stellen); QQ·AK mischen 5-Bets nur gegen bluffreiche 4-Bets von BTN·SB ein und callen gegen die engen 4-Bets von CO·HJ·UTG (gegen eine UTG-4-Bet callt sogar KK). Die Calls richten sich nach der Equity-Realisierung, nicht nach den Pot Odds: Mit Position (3-Bet von BTN·CO oder BB vs SB) reichen die Calls bis zu mittleren Händen wie TT·AJs·AQo; die BB, die ohne Position 3-bettet, bleibt bei QQ+·AK. Aber folde nicht alles, denn die 4-Bet-Range mischt Bluffs wie A5s-A4s hinein.",
     how4bet2:
       "Füllen Rot und Grün die Zelle nicht ganz, wird der Rest gefoldet. Zellen mit beiden Farben " +
       "mischen 5-Bet und Call. Hände außerhalb der 3-Bet-Range geraten nie in diesen Spot und " +
@@ -867,20 +827,14 @@ const M = {
     mode3bet: "vs 3bet（开池之后）",
     mode4bet: "vs 4bet（3bet 之后）",
     intro4bet:
-      "你 3bet 之后被 4bet 该怎么办——红色是 5bet（全下），绿色是跟注，其余弃牌。" +
-      "这里的频率是在“假设你 3bet 了”的前提下算的，所以你根本不会 3bet 的手牌是空白的。" +
-      "基准：6 人桌现金局 100bb，BB 3bet 到 11bb → 4bet 到 24bb；SB 3bet 到 10bb → 4bet 到 22bb。",
+      "你 3bet 之后被 4bet 该怎么办——红色是 5bet（全下），绿色是跟注，其余弃牌。这里的频率是在“假设你 3bet 了”的前提下算的，所以你根本不会 3bet 的手牌是空白的。基准：6 人桌现金局 100bb。4bet 尺寸：BB 3bet 11bb → 24bb；SB 3bet 10bb → 22bb；后面位置（CO、BTN）3bet 7.5bb → 19bb；BB 对 SB 开池 3bet 9bb → 22bb。",
     legend5bet: "5bet（all-in）",
     legendCond4bet: "空白 = 这里本来就不 3bet",
     stat5bet: "5bet 比例",
     statContinue4bet: "继续比例（占 3bet 范围）",
     copy5bet: "复制 5bet 范围",
     note4bet:
-      "统计是“占你 3bet 范围”的比例。100bb 深度下，5bet 实际上只有全下这一种——" +
-      "价值牌以 AA、KK 为主（偶尔只跟注做陷阱），QQ 和 AK 则混着 5bet 和跟注。" +
-      "跟注看的不是底池赔率，而是权益实现（equity realization）。" +
-      "你没有位置、SPR 又低，所以只留对子和最强的同花手牌；" +
-      "但也别全弃——对手的 4bet 范围里混着 A5s、A4s 这类诈唬。",
+      "统计是“占你 3bet 范围”的比例。100bb 深度下，5bet 实际上只有全下这一种——价值牌以 AA、KK 为主（偶尔只跟注做陷阱）；面对混有诈唬的 BTN、SB 4bet，QQ 和 AK 也会混着 5bet，但面对较窄的 CO、HJ、UTG 4bet 就跟注（面对 UTG 4bet 连 KK 也跟注）。跟注看的不是底池赔率，而是权益实现（equity realization）：有位置的一方（BTN、CO 3bet 时，以及 BB 对 SB）会把跟注放宽到 TT、AJs、AQo 这类中等手牌；没有位置的 BB 3bet 则收窄到以 QQ+、AK 为主。但也别全弃——对手的 4bet 范围里混着 A5s、A4s 这类诈唬。",
     how4bet2:
       "红色加绿色没把格子填满，剩下的那部分就是弃牌。两种颜色同时出现，表示按这个比例混着 5bet 和跟注。" +
       "不在 3bet 范围里的手牌，压根碰不到这个局面，所以留空。",
@@ -963,20 +917,14 @@ const M = {
     mode3bet: "vs 3bet（開池之後）",
     mode4bet: "vs 4bet（3bet 之後）",
     intro4bet:
-      "你 3bet 之後被 4bet 該怎麼辦——紅色是 5bet（全下），綠色是跟注，其餘蓋牌。" +
-      "這裡的頻率是在「假設你 3bet 了」的前提下算的，所以你根本不會 3bet 的手牌是空白的。" +
-      "基準：6 人現金桌 100bb，BB 3bet 到 11bb → 4bet 到 24bb；SB 3bet 到 10bb → 4bet 到 22bb。",
+      "你 3bet 之後被 4bet 該怎麼辦——紅色是 5bet（全下），綠色是跟注，其餘蓋牌。這裡的頻率是在「假設你 3bet 了」的前提下算的，所以你根本不會 3bet 的手牌是空白的。基準：6 人現金桌 100bb。4bet 尺寸：BB 3bet 11bb → 24bb；SB 3bet 10bb → 22bb；後面位置（CO、BTN）3bet 7.5bb → 19bb；BB 對 SB 開池 3bet 9bb → 22bb。",
     legend5bet: "5bet（all-in）",
     legendCond4bet: "空白 = 這裡本來就不 3bet",
     stat5bet: "5bet 比例",
     statContinue4bet: "繼續比例（佔 3bet 範圍）",
     copy5bet: "複製 5bet 範圍",
     note4bet:
-      "統計是「佔你 3bet 範圍」的比例。100bb 深度下，5bet 實際上只有全下這一種——" +
-      "價值牌以 AA、KK 為主（偶爾只跟注做陷阱），QQ 和 AK 則混著 5bet 和跟注。" +
-      "跟注看的不是底池賠率，而是勝率實現（equity realization）。" +
-      "你沒有位置，SPR 又低，所以只留對子和最強的同花手牌；" +
-      "但也別全蓋——對手的 4bet 範圍裡混著 A5s、A4s 這類詐唬。",
+      "統計是「佔你 3bet 範圍」的比例。100bb 深度下，5bet 實際上只有全下這一種——價值牌以 AA、KK 為主（偶爾只跟注做陷阱）；面對混有詐唬的 BTN、SB 4bet，QQ 和 AK 也會混著 5bet，但面對較窄的 CO、HJ、UTG 4bet 就跟注（面對 UTG 4bet 連 KK 也跟注）。跟注看的不是底池賠率，而是勝率實現（equity realization）：有位置的一方（BTN、CO 3bet 時，以及 BB 對 SB）會把跟注放寬到 TT、AJs、AQo 這類中等手牌；沒有位置的 BB 3bet 則收窄到以 QQ+、AK 為主。但也別全蓋——對手的 4bet 範圍裡混著 A5s、A4s 這類詐唬。",
     how4bet2:
       "紅色加綠色沒把格子填滿，剩下的那部分就是蓋牌。兩種顏色同時出現，表示按這個比例混著 5bet 和跟注。" +
       "不在 3bet 範圍裡的手牌，根本碰不到這個局面，所以留空。",
@@ -1056,22 +1004,14 @@ const M = {
     mode4bet: "vs 4-bet (après ton 3-bet)",
     // ⚠ 산문의 소수·%는 프랑스식 — 2,5bb · «N %» (U+202F). §13 값 자체는 불변
     intro4bet:
-      "Comment réagir quand ton 3-bet se fait 4-bet — rouge = 5-bet (tapis), vert = call, " +
-      "tout le reste est un fold. Les fréquences sont conditionnées au fait d'avoir 3-bet, donc " +
-      "les mains que tu ne 3-bet jamais restent vides. Cash game 6-max, 100bb ; BB 3-bet à 11bb " +
-      "face à un 4-bet de 24bb ; SB 3-bet à 10bb face à 22bb.",
+      "Comment réagir quand ton 3-bet se fait 4-bet — rouge = 5-bet (tapis), vert = call, tout le reste est un fold. Les fréquences sont conditionnées au fait d'avoir 3-bet, donc les mains que tu ne 3-bet jamais restent vides. Cash game 6-max, 100bb. Tailles de 4-bet : BB 3-bet à 11bb → 24bb · SB 3-bet à 10bb → 22bb · positions suivantes (CO·BTN) 3-bet à 7,5bb → 19bb · BB contre un open de la SB 3-bet à 9bb → 22bb.",
     legend5bet: "5-bet (tapis)",
     legendCond4bet: "Vide = jamais 3-bet au départ",
     stat5bet: "% de 5-bet",
     statContinue4bet: "% de continuation (des 3-bets)",
     copy5bet: "Copier la range de 5-bet",
     note4bet:
-      "Les stats sont des parts de ta range de 3-bet. À 100bb, le 5-bet est en pratique " +
-      "un tapis — la value se concentre sur AA·KK (avec parfois un call pour piéger), et " +
-      "QQ·AK mixent 5-bet et call. Les calls se justifient par la capacité à concrétiser " +
-      "son equity, pas par la cote du pot : tu joues hors de position à SPR bas, donc seules " +
-      "les paires et les meilleures mains suited continuent — mais ne fold pas tout : " +
-      "la range de 4-bet adverse mélange aussi des bluffs comme A5s-A4s.",
+      "Les stats sont des parts de ta range de 3-bet. À 100bb, le 5-bet est en pratique un tapis — la value se concentre sur AA·KK (avec parfois un call pour piéger) ; QQ·AK ne mixent le 5-bet que contre les 4-bets de BTN·SB, chargés en bluffs, et callent contre les 4-bets serrés de CO·HJ·UTG (contre un 4-bet d'UTG, même KK se contente de call). Les calls se justifient par la capacité à concrétiser son equity, pas par la cote du pot : en position (3-bet de BTN·CO, ou BB vs SB), on élargit les calls jusqu'à des mains moyennes comme TT·AJs·AQo ; la BB, qui 3-bet hors de position, s'en tient à QQ+·AK. Mais ne fold pas tout : la range de 4-bet adverse mélange aussi des bluffs comme A5s-A4s.",
     how4bet2:
       "Si le rouge + le vert ne remplissent pas la case, le reste est foldé. Les cases " +
       "bicolores mixent 5-bet et call. Les mains hors de la range de 3-bet ne rencontrent " +
@@ -1157,21 +1097,14 @@ const M = {
     mode4bet: "vs 4-bet (setelah 3-bet)",
     // 산문의 소수는 인니식 2,5bb — § 13 값 자체는 불변. % 앞 공백 없음
     intro4bet:
-      "Cara merespons saat 3-bet Anda di-4-bet — merah = 5-bet (all-in), hijau = call, " +
-      "sisanya fold. Frekuensinya dihitung hanya dari hand yang memang Anda 3-bet, jadi hand yang tidak pernah Anda 3-bet dibiarkan kosong. Cash game 6-max, 100bb; BB 3-bet ke 11bb " +
-      "menghadapi 4-bet 24bb; SB 3-bet ke 10bb menghadapi 22bb.",
+      "Cara merespons saat 3-bet Anda di-4-bet — merah = 5-bet (all-in), hijau = call, sisanya fold. Frekuensinya dihitung hanya dari hand yang memang Anda 3-bet, jadi hand yang tidak pernah Anda 3-bet dibiarkan kosong. Cash game 6-max, 100bb. Ukuran 4-bet: BB 3-bet 11bb → 24bb · SB 3-bet 10bb → 22bb · posisi setelahnya (CO·BTN) 3-bet 7,5bb → 19bb · BB melawan open SB 3-bet 9bb → 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "Kosong = tidak pernah 3-bet sejak awal",
     stat5bet: "% 5-bet",
     statContinue4bet: "% lanjut (dari 3-bet)",
     copy5bet: "Salin range 5-bet",
     note4bet:
-      "Statistiknya adalah bagian dari range 3-bet Anda. Di 100bb, 5-bet praktis berarti " +
-      "all-in — value terpusat di AA·KK (sesekali call untuk menjebak), sedangkan QQ·AK " +
-      "mencampur 5-bet dan call. Call dibenarkan oleh kemampuan merealisasikan equity, bukan " +
-      "oleh pot odds: Anda bermain out of position dengan SPR rendah, jadi hanya pair dan " +
-      "hand suited terbaik yang lanjut — tetapi jangan fold semuanya: range 4-bet lawan juga " +
-      "berisi bluff seperti A5s-A4s.",
+      "Statistiknya adalah bagian dari range 3-bet Anda. Di 100bb, 5-bet praktis berarti all-in — value terpusat di AA·KK (sesekali call untuk menjebak); QQ·AK mencampur 5-bet hanya melawan 4-bet BTN·SB yang banyak bluff-nya, dan call melawan 4-bet CO·HJ·UTG yang sempit (melawan 4-bet UTG, KK pun call). Call dibenarkan oleh kemampuan merealisasikan equity, bukan oleh pot odds: in position (saat BTN·CO yang 3-bet, atau BB vs SB) call melebar sampai hand menengah seperti TT·AJs·AQo; BB yang 3-bet out of position tetap di sekitar QQ+·AK. Tetapi jangan fold semuanya: range 4-bet lawan juga berisi bluff seperti A5s-A4s.",
     how4bet2:
       "Jika merah + hijau tidak memenuhi kotak, sisanya di-fold. Kotak dua warna mencampur " +
       "5-bet dan call. Hand di luar range 3-bet tidak pernah sampai ke spot ini, jadi tetap kosong.",
@@ -1253,21 +1186,14 @@ const M = {
     mode4bet: "vs 4-bet (selepas 3-bet)",
     // 산문의 소수는 영어식 2.5bb (리서치 §1-2). % 앞 공백 없음
     intro4bet:
-      "Cara bertindak balas apabila 3-bet anda di-4-bet — merah = 5-bet (all-in), hijau = call, " +
-      "selebihnya fold. Frekuensinya dikira hanya daripada tangan yang memang anda 3-bet, jadi tangan yang tidak pernah anda 3-bet dibiarkan kosong. Cash game 6-max, 100bb; BB 3-bet ke 11bb " +
-      "menghadapi 4-bet 24bb; SB 3-bet ke 10bb menghadapi 22bb.",
+      "Cara bertindak balas apabila 3-bet anda di-4-bet — merah = 5-bet (all-in), hijau = call, selebihnya fold. Frekuensinya dikira hanya daripada tangan yang memang anda 3-bet, jadi tangan yang tidak pernah anda 3-bet dibiarkan kosong. Cash game 6-max, 100bb. Saiz 4-bet: BB 3-bet 11bb → 24bb · SB 3-bet 10bb → 22bb · posisi selepasnya (CO·BTN) 3-bet 7.5bb → 19bb · BB menentang open SB 3-bet 9bb → 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "Kosong = tidak pernah 3-bet dari awal",
     stat5bet: "% 5-bet",
     statContinue4bet: "% meneruskan (daripada 3-bet)",
     copy5bet: "Salin range 5-bet",
     note4bet:
-      "Statistik ini ialah bahagian daripada range 3-bet anda. Pada 100bb, 5-bet pada dasarnya " +
-      "bermakna all-in — value tertumpu pada AA·KK (sekali-sekala call untuk memerangkap), " +
-      "manakala QQ·AK mencampurkan 5-bet dengan call. Call ditentukan oleh keupayaan " +
-      "merealisasikan equity, bukan oleh pot odds: anda bermain out of position dengan SPR " +
-      "rendah, jadi hanya pair dan tangan suited terbaik yang meneruskan — tetapi jangan fold " +
-      "semuanya, kerana range 4-bet lawan turut mengandungi bluff seperti A5s-A4s.",
+      "Statistik ini ialah bahagian daripada range 3-bet anda. Pada 100bb, 5-bet pada dasarnya bermakna all-in — value tertumpu pada AA·KK (sekali-sekala call untuk memerangkap); QQ·AK mencampurkan 5-bet hanya menentang 4-bet BTN·SB yang banyak bluff, dan call menentang 4-bet CO·HJ·UTG yang sempit (menentang 4-bet UTG, KK pun call). Call ditentukan oleh keupayaan merealisasikan equity, bukan oleh pot odds: in position (apabila BTN·CO yang 3-bet, atau BB vs SB) call diluaskan hingga tangan sederhana seperti TT·AJs·AQo; BB yang 3-bet out of position kekal sekitar QQ+·AK. Tetapi jangan fold semuanya, kerana range 4-bet lawan turut mengandungi bluff seperti A5s-A4s.",
     how4bet2:
       "Jika merah + hijau tidak memenuhi kotak, selebihnya di-fold. Kotak dua warna mencampurkan " +
       "5-bet dengan call. Tangan di luar range 3-bet tidak pernah sampai ke spot ini, jadi ia kekal kosong.",
@@ -1347,22 +1273,14 @@ const M = {
     mode3bet: "3-bet'e karşı (açılıştan sonra)",
     mode4bet: "4-bet'e karşı (3-bet'ten sonra)",
     intro4bet:
-      "3-bet'ine 4-bet geldiğinde nasıl cevap vereceğin — kırmızı 5-bet (all-in), yeşil " +
-      "call, geri kalan her şey fold. Sıklıklar 3-bet yapmış olmana göre verilir; bu yüzden " +
-      "hiç 3-bet yapmadığın eller boş. 6-max cash, 100bb; BB 11bb 3-bet yapar " +
-      "ve 24bb 4-bet ile karşılaşır, SB 10bb 3-bet yapar ve 22bb ile karşılaşır.",
+      "3-bet'ine 4-bet geldiğinde nasıl cevap vereceğin — kırmızı 5-bet (all-in), yeşil call, geri kalan her şey fold. Sıklıklar 3-bet yapmış olmana göre verilir; bu yüzden hiç 3-bet yapmadığın eller boş. 6-max cash, 100bb. 4-bet boyutları: BB 11bb 3-bet → 24bb · SB 10bb 3-bet → 22bb · sonraki pozisyonlar (CO·BTN) 7,5bb 3-bet → 19bb · SB open'ına karşı BB 9bb 3-bet → 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "Boş = baştan hiç 3-bet yapılmayan el",
     stat5bet: "5-bet oranı",
     statContinue4bet: "Devam oranı (3-bet'lere göre)",
     copy5bet: "5-bet range'ini kopyala",
     note4bet:
-      "İstatistikler 3-bet range'inin içindeki paylardır. 100bb'de 5-bet fiilen " +
-      "all-in demektir — value ağırlıkla AA ve KK ile yapılır (ara sıra call ile tuzak kurulur), " +
-      "QQ ve AK ise 5-bet ile call arasında karma oynanır. Call kararını pot oranı değil equity " +
-      "realization belirler: düşük SPR'de pozisyon dışı oynarsın, bu yüzden yalnızca çiftler " +
-      "ve en iyi suited eller devam eder — ama her şeyi fold etme, çünkü rakibin " +
-      "4-bet range'inde A5s–A4s gibi blöfler de var.",
+      "İstatistikler 3-bet range'inin içindeki paylardır. 100bb'de 5-bet fiilen all-in demektir — value ağırlıkla AA ve KK ile yapılır (ara sıra call ile tuzak kurulur); blöf içeren BTN·SB 4-bet'lerine karşı QQ ve AK de 5-bet karıştırır, ama dar CO·HJ·UTG 4-bet'lerine karşı call edilir (UTG 4-bet'ine karşı KK bile call edilir). Call kararını pot oranı değil equity realization belirler: pozisyonu olan taraf (3-bet'i BTN·CO yaptıysa ya da BB vs SB) call'ları TT·AJs·AQo gibi orta güçteki ellere kadar genişletir; pozisyon dışından 3-bet yapan BB ise QQ+·AK etrafında dar tutar. Ama her şeyi fold etme, çünkü rakibin 4-bet range'inde A5s–A4s gibi blöfler de var.",
     how4bet2:
       "Kırmızı + yeşil hücreyi doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte " +
       "olduğu hücrelerde 5-bet ve call karma oynanır. 3-bet range'inin dışındaki eller bu " +
@@ -1443,22 +1361,14 @@ const M = {
     mode3bet: "vs 3-bet (sau open)",
     mode4bet: "vs 4-bet (sau 3-bet)",
     intro4bet:
-      "Cách phản ứng khi 3-bet của bạn bị 4-bet — đỏ là 5-bet (all-in), xanh lá " +
-      "là call, phần còn lại là fold. Tần suất tính với điều kiện bạn đã 3-bet, nên " +
-      "những tay bài bạn không bao giờ 3-bet được để trống. Cash 6-max, 100bb; BB 3-bet 11bb " +
-      "và gặp 4-bet 24bb; SB 3-bet 10bb và gặp 22bb.",
+      "Cách phản ứng khi 3-bet của bạn bị 4-bet — đỏ là 5-bet (all-in), xanh lá là call, phần còn lại là fold. Tần suất tính với điều kiện bạn đã 3-bet, nên những tay bài bạn không bao giờ 3-bet được để trống. Cash 6-max, 100bb. Kích thước 4-bet: BB 3-bet 11bb → 24bb · SB 3-bet 10bb → 22bb · các vị trí sau (CO·BTN) 3-bet 7,5bb → 19bb · BB gặp open của SB 3-bet 9bb → 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "Trống = ngay từ đầu không 3-bet",
     stat5bet: "Tỷ lệ 5-bet",
     statContinue4bet: "Tiếp tục (trong range 3-bet)",
     copy5bet: "Sao chép range 5-bet",
     note4bet:
-      "Các chỉ số là tỷ lệ trong range 3-bet của bạn. Ở 100bb, 5-bet thực chất là " +
-      "all-in — value tập trung vào AA·KK (thỉnh thoảng gài bẫy bằng " +
-      "call), còn QQ·AK chơi hỗn hợp giữa 5-bet và call. Quyết định call dựa vào khả năng hiện thực hóa equity, " +
-      "không phải pot odds: bạn đánh không có vị trí với SPR thấp, nên chỉ các đôi và " +
-      "những tay đồng chất mạnh nhất tiếp tục — nhưng đừng fold hết, vì range " +
-      "4-bet của đối thủ có lẫn bluff như A5s–A4s.",
+      "Các chỉ số là tỷ lệ trong range 3-bet của bạn. Ở 100bb, 5-bet thực chất là all-in — value tập trung vào AA·KK (thỉnh thoảng gài bẫy bằng call); trước 4-bet có lẫn bluff của BTN·SB thì QQ·AK cũng trộn 5-bet, còn trước 4-bet hẹp của CO·HJ·UTG thì call (trước 4-bet của UTG thì cả KK cũng call). Quyết định call dựa vào khả năng hiện thực hóa equity, không phải pot odds: bên có vị trí (khi BTN·CO 3-bet, hoặc BB vs SB) nới call đến các tay bài trung bình như TT·AJs·AQo; BB 3-bet không có vị trí thì thu hẹp quanh QQ+·AK. Nhưng đừng fold hết, vì range 4-bet của đối thủ có lẫn bluff như A5s–A4s.",
     how4bet2:
       "Nếu đỏ + xanh lá không lấp đầy ô, phần còn lại là fold. Ô có cả hai " +
       "màu là hỗn hợp giữa 5-bet và call. Tay bài ngoài range 3-bet không bao giờ " +
@@ -1539,22 +1449,14 @@ const M = {
     mode3bet: "vs 3-бет (после опена)",
     mode4bet: "vs 4-бет (после 3-бета)",
     intro4bet:
-      "Как отвечать, когда на твой 3-бет делают 4-бет: красный — 5-бет (олл-ин), зелёный — " +
-      "колл, всё остальное — фолд. Частоты считаются только для рук из диапазона 3-бета, " +
-      "поэтому руки, с которыми 3-бет не делают, пустые. Кэш 6-max, 100bb; BB делает 3-бет 11bb " +
-      "и получает 4-бет на 24bb; SB делает 3-бет 10bb и получает 4-бет на 22bb.",
+      "Как отвечать, когда на твой 3-бет делают 4-бет: красный — 5-бет (олл-ин), зелёный — колл, всё остальное — фолд. Частоты считаются только для рук из диапазона 3-бета, поэтому руки, с которыми 3-бет не делают, пустые. Кэш 6-max, 100bb. Размеры 4-бета: BB делает 3-бет 11bb → 24bb · SB — 10bb → 22bb · поздние позиции (CO·BTN) — 7,5bb → 19bb · BB против опена SB — 9bb → 22bb.",
     legend5bet: "5-бет (олл-ин)",
     legendCond4bet: "Пусто = рука вне диапазона 3-бета",
     stat5bet: "Частота 5-бета",
     statContinue4bet: "Продолжение (в диапазоне 3-бета)",
     copy5bet: "Копировать диапазон 5-бета",
     note4bet:
-      "Доли считаются от твоего диапазона 3-бета. При 100bb 5-бет по сути означает " +
-      "олл-ин — вэлью строится на AA·KK (иногда их слоуплеят коллом), а QQ·AK " +
-      "смешивают 5-бет с коллом. Коллы определяются реализацией эквити, а не шансами банка: " +
-      "ты играешь без позиции при низком SPR, поэтому продолжать стоит только с парами и " +
-      "лучшими одномастными руками — но не фолди всё подряд: в диапазоне " +
-      "4-бета соперника есть блефы вроде A5s–A4s.",
+      "Доли считаются от твоего диапазона 3-бета. При 100bb 5-бет по сути означает олл-ин — вэлью строится на AA·KK (иногда их слоуплеят коллом); против 4-бетов BTN·SB, где много блефов, QQ·AK тоже подмешивают 5-бет, а против узких 4-бетов CO·HJ·UTG отвечают коллом (против 4-бета UTG коллом отвечает даже KK). Коллы определяются реализацией эквити, а не шансами банка: в позиции (если 3-бет делали BTN·CO, а также BB против SB) коллы расширяются до средних рук вроде TT·AJs·AQo, а BB, делающий 3-бет без позиции, ограничивается QQ+·AK. Но не фолди всё подряд: в диапазоне 4-бета соперника есть блефы вроде A5s–A4s.",
     how4bet2:
       "Если красный и зелёный не заполняют ячейку целиком, остаток — фолд. Ячейки с обоими " +
       "цветами смешивают 5-бет и колл. Руки вне диапазона 3-бета в этот спот " +
