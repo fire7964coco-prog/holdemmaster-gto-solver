@@ -165,12 +165,32 @@ export const takeLoginPurpose = (): "feedback" | null => {
   } catch { return null; }
 };
 
+/** 로그인에서 돌아와 열 화면 (저장 목록 동기화 · 없으면 App이 트레이너로 연다). 다음 signIn 한 번에만 쓰인다. */
+const LOGIN_RETURN_KEY = "solver.login.returnView.v1";
+const RETURN_VIEWS = ["oop-range", "ip-range", "tree-config"];
+let nextReturnView: string | null = null;
+export const setLoginReturnView = (view: string) => {
+  nextReturnView = RETURN_VIEWS.includes(view) ? view : null;
+};
+export const takeLoginReturnView = (): string | null => {
+  try {
+    const raw = sessionStorage.getItem(LOGIN_RETURN_KEY);
+    sessionStorage.removeItem(LOGIN_RETURN_KEY);
+    const d = JSON.parse(raw ?? "null");
+    return RETURN_VIEWS.includes(d?.view) && Number.isFinite(d.at) &&
+      Date.now() - d.at >= 0 && Date.now() - d.at <= LOGIN_PURPOSE_TTL_MS ? d.view : null;
+  } catch { return null; }
+};
+
 export const signIn = async (provider: "google" | "kakao", purpose?: "feedback") => {
   // 다른 화면에서 시작한 로그인이 중단된 후기 초안을 자동 제출하지 않도록 매번 덮어쓴다.
   try {
     if (purpose) sessionStorage.setItem(LOGIN_PURPOSE_KEY, JSON.stringify({ purpose, at: Date.now() }));
     else sessionStorage.removeItem(LOGIN_PURPOSE_KEY);
+    if (nextReturnView) sessionStorage.setItem(LOGIN_RETURN_KEY, JSON.stringify({ view: nextReturnView, at: Date.now() }));
+    else sessionStorage.removeItem(LOGIN_RETURN_KEY);
   } catch { /* storage may be unavailable: no purpose means no auto-submit */ }
+  nextReturnView = null;
   const supabase = await getClient();
   if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能", "Les comptes sont désactivés dans cette version", "Fitur akun dinonaktifkan di versi ini", "Ciri akaun tidak tersedia dalam versi ini", "इस संस्करण में खाते की सुविधा उपलब्ध नहीं है", "Bu sürümde hesap özelliği kapalı", "Tính năng tài khoản đã bị tắt trong phiên bản này", "Аккаунты в этой версии отключены"));
   const { error } = await supabase.auth.signInWithOAuth({

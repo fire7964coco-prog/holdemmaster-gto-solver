@@ -1,0 +1,147 @@
+<template>
+  <!-- 저장 목록 아래 한 줄 — 로그인 권유 / 동기화 상태 (설계 참고자료/계정동기화_설계안_2026-10-11.md §3) -->
+  <div
+    v-if="enabled && (user || hasItems)"
+    class="saved-sync-line text-xs text-neutral-400 leading-relaxed"
+    data-testid="saved-sync-line"
+    :data-store="storeName"
+    :data-state="user ? status.state : 'signed-out'"
+  >
+    <template v-if="!user">
+      <span>{{ L.invite }}</span>
+      <span class="inline-flex gap-2 ml-1 align-middle">
+        <button
+          class="saved-sync-button"
+          data-testid="saved-sync-google"
+          :disabled="busy"
+          @click="start('google')"
+        >
+          {{ L.google }}
+        </button>
+        <button
+          v-if="isKo"
+          class="saved-sync-button"
+          data-testid="saved-sync-kakao"
+          :disabled="busy"
+          @click="start('kakao')"
+        >
+          {{ L.kakao }}
+        </button>
+      </span>
+    </template>
+    <template v-else-if="status.state === 'syncing'">{{ L.syncing }}</template>
+    <template v-else-if="status.state === 'limit'">{{ L.limit }}</template>
+    <template v-else-if="status.state === 'pending'">{{ L.pending }}</template>
+    <template v-else-if="status.lastSync">{{
+      L.ok.replace("{time}", time(status.lastSync))
+    }}</template>
+    <template v-else>{{ L.kept }}</template>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, onBeforeUnmount, onMounted, PropType, ref, watch } from "vue";
+import { i18n } from "../i18n";
+import {
+  AccountUser,
+  getCurrentUser,
+  hasStoredSession,
+  isClientLoaded,
+  onAuthChange,
+  setLoginReturnView,
+  signIn,
+} from "../account";
+import { useStore } from "../store";
+import type { SavedStore } from "../db";
+import {
+  onSavedReplaced,
+  requestSavedSync,
+  savedSyncEnabled,
+  savedSyncStatus,
+  syncSavedStore,
+} from "../saved-sync-run";
+import { savedSyncLabels } from "../saved-sync-labels";
+
+export default defineComponent({
+  props: {
+    storeName: { type: String as PropType<SavedStore>, required: true },
+    /** 저장 목록에 항목이 하나라도 있는가 — 없으면 권유 줄을 띄우지 않는다 */
+    hasItems: { type: Boolean, required: true },
+    /** 저장 목록이 이 기기에서 바뀔 때마다 1씩 오른다 → 계정에 반영 */
+    revision: { type: Number, required: true },
+  },
+  emits: ["replaced"],
+  setup(props, { emit }) {
+    const store = useStore();
+    const enabled = savedSyncEnabled();
+    const L = computed(() => savedSyncLabels(i18n.locale));
+    const isKo = computed(() => i18n.locale === "ko");
+    const user = ref<AccountUser | null>(null);
+    const busy = ref(false);
+    const status = computed(() => savedSyncStatus[props.storeName]);
+
+    let stopAuth: (() => void) | null = null;
+    let stopReplaced: (() => void) | null = null;
+    onMounted(async () => {
+      if (!enabled) return;
+      stopReplaced = onSavedReplaced((s) => {
+        if (s === props.storeName) emit("replaced");
+      });
+      // 로그인한 흔적이 없으면 supabase-js(214KB)를 내려받지 않는다 — 권유 줄만 보인다 (account.ts 원칙)
+      if (!hasStoredSession() && !isClientLoaded()) return;
+      user.value = await getCurrentUser();
+      stopAuth = onAuthChange((u) => {
+        const signedIn = !user.value && u;
+        user.value = u;
+        if (signedIn) void syncSavedStore(props.storeName);
+      });
+      if (user.value) void syncSavedStore(props.storeName);
+    });
+    onBeforeUnmount(() => {
+      stopAuth?.();
+      stopReplaced?.();
+    });
+    watch(
+      () => props.revision,
+      () => {
+        if (user.value) requestSavedSync(props.storeName);
+      }
+    );
+
+    const start = async (provider: "google" | "kakao") => {
+      busy.value = true;
+      try {
+        // 로그인에서 돌아오면 이 화면(레인지·트리 설정)으로 — 트레이너로 가지 않게
+        setLoginReturnView(store.sideView);
+        await signIn(provider);
+      } catch {
+        busy.value = false;
+      }
+    };
+    const time = (t: number) =>
+      new Date(t).toLocaleTimeString(i18n.locale === "zh-hant" ? "zh-Hant" : i18n.locale, {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+    return { enabled, L, isKo, user, busy, status, start, time };
+  },
+});
+</script>
+
+<style scoped>
+.saved-sync-line {
+  padding: 2px 2px 0;
+}
+.saved-sync-button {
+  padding: 1px 8px;
+  border: 1px solid rgb(var(--c-line));
+  border-radius: 5px;
+  background: rgb(var(--c-bg-2));
+  color: rgb(var(--c-text, 229 229 229));
+  font-weight: 600;
+}
+.saved-sync-button:hover {
+  background: rgb(var(--c-bg-3));
+}
+</style>

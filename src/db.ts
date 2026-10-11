@@ -377,6 +377,38 @@ export const deleteItem = async (store: string, item: DbItem | DbGroup) => {
   }
 };
 
+/* ── 계정 동기화(saved-sync-run.ts)가 쓰는 통째 읽기·쓰기 ─────────── */
+
+/** 저장 목록 한 벌 + 지운 표시 (동기화 직전 상태) */
+export const getSavedState = async (store: SavedStore) => {
+  const rows = (await db.table(store).toArray()) as (DbItem | DbGroup)[];
+  const tombstones = await db.savedTombstones.filter((t) => t.store === store).toArray();
+  return { rows, tombstones };
+};
+
+/**
+ * 합친 결과로 저장 목록을 통째로 바꾼다. 읽은 뒤 다른 탭에서 바뀌었으면(행 수·시각이 다르면)
+ * 쓰지 않고 false — 다음 동기화가 다시 합친다.
+ */
+export const replaceSavedState = async (
+  store: SavedStore,
+  expected: { count: number; newest: number },
+  rows: (DbItem | DbGroup)[],
+  tombstones: SavedTombstone[]
+) => {
+  const table = db.table(store);
+  return await db.transaction("rw", table, db.savedTombstones, async () => {
+    const current = (await table.toArray()) as (DbItem | DbGroup)[];
+    const newest = Math.max(0, ...current.map((r) => r.updatedAt ?? 0));
+    if (current.length !== expected.count || newest !== expected.newest) return false;
+    await table.clear();
+    await table.bulkAdd(rows.map(({ id: _id, ...rest }) => rest));
+    await db.savedTombstones.filter((t) => t.store === store).delete();
+    await db.savedTombstones.bulkPut(tombstones);
+    return true;
+  });
+};
+
 export const bulkAdd = async (store: string, items: (DbItem | DbGroup)[]) => {
   try {
     const table = db.table(store);

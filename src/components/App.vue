@@ -96,11 +96,11 @@
 
 <script lang="ts">
 import { computed, defineComponent, nextTick, ref, watch } from "vue";
-import { useStore, useConfigStore } from "../store";
+import { useStore, useConfigStore, SideView } from "../store";
 import { applySpotFromUrl } from "../spot-share";
 import { viewFromUrl } from "../pwa";
 // 빌드 2벌 분기 — npokers 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
-import { TrainerPage, PresetsPage, bootstrapAccount } from "@features";
+import { TrainerPage, PresetsPage, bootstrapAccount, takeLoginReturnView } from "@features";
 import { HandReviewPage, handReviewLabels, FEATURE_TRAINER } from "@features"; // R2_REVIEW_ONLY
 import { FlopStudyPage, flopStudyLabels } from "@features"; // R2_REVIEW_ONLY
 import { flopStudyEntry, parseFlopStudyLink } from "../flop-study-model"; // R2_REVIEW_ONLY
@@ -414,7 +414,8 @@ export default defineComponent({
     // 로그인에서 돌아온 경우: 세션을 먼저 회수하고 주소를 정리한 뒤 트레이너로 복귀.
     // (앱 진입 화면은 소개라, 트레이너 화면에서만 처리하면 인증 코드를 놓친다)
     void bootstrapAccount().then((returned) => {
-      if (returned) store.sideView = "trainer";
+      // 저장 목록 화면에서 로그인했으면 그 화면으로, 아니면 트레이너로
+      if (returned) store.sideView = (takeLoginReturnView() as SideView | null) ?? "trainer";
       if (returned && feedbackFeatures.feedback) void resumeFeedbackDraft(); // F1_FEEDBACK_ONLY
     });
 

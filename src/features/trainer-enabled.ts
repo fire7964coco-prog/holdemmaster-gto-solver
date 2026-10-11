@@ -23,7 +23,8 @@ export { FLOP_STUDY_LAUNCHED } from "../hand-review-data";
 export { default as CustomTrainerEntry } from "../components/CustomTrainerEntry.vue";
 export { createCustomTrainerCapture } from "../custom-trainer-capture";
 export { default as PresetsPage } from "../components/PresetsPage.vue";
-export { bootstrapAccount } from "../account";
+export { bootstrapAccount, takeLoginReturnView } from "../account";
+export { default as SavedSyncLine } from "../components/SavedSyncLine.vue";
 export { dailyState, loadDailyState } from "../daily";
 
 /** 이 빌드에 트레이너 일체(교육예제·트레이너·오늘의문제·리더보드·계정)가 있는가 */

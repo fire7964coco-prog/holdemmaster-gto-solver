@@ -26,6 +26,9 @@ export const PresetsPage = EmptyPage;
 
 /** 계정 기능 없음 — 로그인 복귀 처리도 없다 */
 export const bootstrapAccount = async (): Promise<boolean> => false;
+export const takeLoginReturnView = (): string | null => null;
+/** 저장 목록 계정 동기화 한 줄 없음 */
+export const SavedSyncLine = EmptyPage;
 
 /** 오늘의 문제 없음 — AboutPage의 완료 표시가 참조하는 최소 형태만 유지 */
 export const dailyState = reactive({ done: false, lossBb: 0, streak: 0, bestStreak: 0 });

@@ -464,6 +464,14 @@
         {{ L.exportJsonLabel }}
       </a>
     </div>
+
+    <SavedSyncLine
+      v-if="FEATURE_TRAINER"
+      :store-name="storeName"
+      :has-items="data.length > 0"
+      :revision="syncRevision"
+      @replaced="loadData"
+    />
   </div>
 
   <div
@@ -489,6 +497,7 @@ import * as Db from "../db";
 import { i18n, pick } from "../i18n";
 
 import { XMarkIcon } from "@heroicons/vue/20/solid";
+import { FEATURE_TRAINER, SavedSyncLine } from "@features";
 
 const M = {
   ko: {
@@ -829,6 +838,7 @@ type Message =
 export default defineComponent({
   components: {
     XMarkIcon,
+    SavedSyncLine,
   },
 
   props: {
@@ -967,6 +977,12 @@ export default defineComponent({
 
     // Broadcast channel
     const channel = new BroadcastChannel(`item-picker-${props.storeName}`);
+    // 저장 목록 계정 동기화: 이 기기에서 바꾼 뒤마다 올라간다 (SavedSyncLine이 계정에 반영)
+    const syncRevision = ref(0);
+    const notify = (message: Message) => {
+      channel.postMessage(message);
+      syncRevision.value++;
+    };
 
     channel.onmessage = async (event: MessageEvent<Message>) => {
       if (errorOccured.value) return;
@@ -1109,7 +1125,7 @@ export default defineComponent({
             props.storeName,
             itemToDbItem(selectedItem.value.item)
           ));
-          channel.postMessage({
+          notify({
             type: "overwriteItem",
             path: [...selectedItem.value.item.path],
             value: clone(props.value),
@@ -1266,7 +1282,7 @@ export default defineComponent({
               props.storeName,
               itemToDbItem(item)
             ));
-            channel.postMessage({
+            notify({
               type: "addItem",
               path: [...item.path],
               value: clone(item.value),
@@ -1277,7 +1293,7 @@ export default defineComponent({
               props.storeName,
               groupToDbGroup(item)
             ));
-            channel.postMessage({
+            notify({
               type: "addGroup",
               path: [...item.path],
             } as AddGroupMessage);
@@ -1289,7 +1305,7 @@ export default defineComponent({
             toDbItemOrGroup({ ...item, path: prevPath }),
             newName
           ));
-          channel.postMessage({
+          notify({
             type: "renameItem",
             path: prevPath,
             newName: newName,
@@ -1386,7 +1402,7 @@ export default defineComponent({
       if (isUserAction) {
         // save and broadcast
         errorOccured.value ||= !(await Db.deleteItem(props.storeName, dbItem));
-        channel.postMessage({
+        notify({
           type: "deleteItem",
           path,
         } as DeleteItemMessage);
@@ -1582,7 +1598,7 @@ export default defineComponent({
       }
 
       errorOccured.value ||= !(await Db.bulkAdd(props.storeName, itemsToAdd));
-      channel.postMessage({ type: "importJson" });
+      notify({ type: "importJson" });
       await loadData();
     };
 
@@ -1642,6 +1658,9 @@ export default defineComponent({
       exportJsonButton,
       importJson,
       exportJson,
+      FEATURE_TRAINER,
+      syncRevision,
+      loadData,
     };
   },
 });
