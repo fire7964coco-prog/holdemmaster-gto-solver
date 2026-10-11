@@ -252,7 +252,7 @@ const M = {
     statContinue4bet: "계속(3벳 대비)",
     copy5bet: "5벳 레인지 복사",
     note4bet:
-      "통계는 «3벳 레인지 대비» 비율입니다. 100bb에서 5벳은 사실상 올인 한 가지입니다 — 밸류는 AA·KK 중심(가끔 콜로 트랩)이고, 블러프가 섞인 BTN·SB 4벳 상대로는 QQ·AK도 5벳을 섞지만 좁은 CO·HJ·UTG 4벳 상대로는 콜합니다(UTG 4벳 상대로는 KK도 콜). 콜은 팟 오즈가 아니라 실현율이 기준입니다: 포지션이 있는 쪽(BTN·CO가 3벳한 경우, BB vs SB)은 TT·AJs 같은 중간 핸드까지 콜을 넓히고(UTG 4벳 상대로는 JJ·TT까지), 포지션이 없는 BB 3벳은 좁은 CO·HJ·UTG 4벳 상대로 QQ·JJ·AK 중심으로 좁힙니다(블러프가 섞인 BTN 4벳 상대로는 TT-77·AJs·AQo까지). 상대 4벳에 A5s-A4s 같은 블러프가 섞여 있어 전부 접지는 않습니다.",
+      "통계는 «3벳 레인지 대비» 비율입니다. 100bb에서 5벳은 사실상 올인 한 가지입니다 — 밸류는 AA·KK 중심(가끔 콜로 트랩)이고, 블러프가 섞인 BTN·SB 4벳 상대로는 QQ·AK도 5벳을 섞지만 좁은 CO·HJ·UTG 4벳 상대로는 콜합니다(UTG 4벳 상대로는 KK도 콜). 콜은 팟 오즈가 아니라 실현율이 기준입니다: 포지션이 있는 쪽(BTN·CO가 3벳한 경우)은 TT·AJs 같은 중간 핸드까지 콜을 넓히고(UTG 4벳 상대로는 JJ·TT까지), 블러프가 많은 SB 4벳을 받는 BB vs SB는 99-66·ATs·KQs·AJo-ATo까지 더 넓히며, 포지션이 없는 BB 3벳은 좁은 CO·HJ·UTG 4벳 상대로 QQ·JJ·AK 중심으로 좁힙니다(블러프가 섞인 BTN 4벳 상대로는 TT-77·AJs-ATs·AQo까지). 상대 4벳에 A5s-A4s 같은 블러프가 섞여 있어 전부 접지는 않습니다.",
     how4bet2:
       "빨강+초록이 칸을 다 채우지 못하면 그만큼 폴드입니다. 두 색이 함께면 5벳과 콜을 " +
       "혼합합니다. 3벳 레인지에 없는 핸드는 이 상황 자체가 생기지 않아 비어 있습니다.",
@@ -336,7 +336,7 @@ const M = {
     statContinue4bet: "आगे खेलने का % (3-bet range में से)",
     copy5bet: "5-bet range कॉपी करें",
     note4bet:
-      "ये आँकड़े आपकी 3-bet range के हिस्से हैं। 100bb पर 5-bet लगभग हमेशा all-in होता है। Value के लिए मुख्य हैंड AA·KK हैं (कभी call करके trap)। Bluffs वाली BTN·SB 4-bet के ख़िलाफ़ QQ·AK भी 5-bet मिलाते हैं, लेकिन सीमित CO·HJ·UTG 4-bet के ख़िलाफ़ call करते हैं (UTG 4-bet के ख़िलाफ़ KK भी call करता है)। Call का फ़ैसला pot odds से नहीं, equity realization से होता है: पोज़िशन वाली तरफ़ (जब BTN·CO ने 3-bet किया हो, या BB vs SB) TT·AJs जैसे मध्यम हैंड तक call बढ़ाती है (UTG 4-bet के ख़िलाफ़ सिर्फ़ JJ·TT तक), जबकि OOP से 3-bet करने वाला BB सीमित CO·HJ·UTG 4-bet के ख़िलाफ़ मुख्यतः QQ·JJ·AK तक सीमित रहता है (bluffs वाली BTN 4-bet के ख़िलाफ़ TT–77·AJs·AQo तक)। विरोधी की 4-bet range में A5s–A4s जैसे bluffs भी हैं, इसलिए हर हैंड fold करना सही नहीं होगा।",
+      "ये आँकड़े आपकी 3-bet range के हिस्से हैं। 100bb पर 5-bet लगभग हमेशा all-in होता है। Value के लिए मुख्य हैंड AA·KK हैं (कभी call करके trap)। Bluffs वाली BTN·SB 4-bet के ख़िलाफ़ QQ·AK भी 5-bet मिलाते हैं, लेकिन सीमित CO·HJ·UTG 4-bet के ख़िलाफ़ call करते हैं (UTG 4-bet के ख़िलाफ़ KK भी call करता है)। Call का फ़ैसला pot odds से नहीं, equity realization से होता है: पोज़िशन वाली तरफ़ (जब BTN·CO ने 3-bet किया हो) TT·AJs जैसे मध्यम हैंड तक call बढ़ाती है (UTG 4-bet के ख़िलाफ़ सिर्फ़ JJ·TT तक), bluffs से भरी SB 4-bet का सामना करने वाला BB vs SB इसे और बढ़ाकर 99–66·ATs·KQs·AJo–ATo तक ले जाता है, जबकि OOP से 3-bet करने वाला BB सीमित CO·HJ·UTG 4-bet के ख़िलाफ़ मुख्यतः QQ·JJ·AK तक सीमित रहता है (bluffs वाली BTN 4-bet के ख़िलाफ़ TT–77·AJs–ATs·AQo तक)। विरोधी की 4-bet range में A5s–A4s जैसे bluffs भी हैं, इसलिए हर हैंड fold करना सही नहीं होगा।",
     how4bet2: "लाल और हरे हिस्से के बाद बचा खाली हिस्सा fold है। दोनों रंग वाले खाने में 5-bet और call मिलते हैं। 3-bet range से बाहर के हैंड इस स्थिति तक नहीं पहुँचते, इसलिए उनके खाने खाली हैं।",
     intro3bet:
       "आपके open-raise पर 3-bet आने के बाद की रणनीति: लाल = 4-bet, हरा = call, बाकी = fold। आवृत्तियाँ आपके open कर चुकने की शर्त पर हैं, इसलिए जिन हैंड से आप open नहीं करते, वे खाली हैं। आधार: 6-max cash, 100bb, 2.5bb open (SB से 3bb); 3-bet BB से 11bb और SB से 10bb (SB open के ख़िलाफ़ BB 9bb), आपके बाद की पोज़िशन से 7.5bb।",
@@ -398,7 +398,7 @@ const M = {
     statContinue4bet: "Continue % (of 3-bets)",
     copy5bet: "Copy 5-bet range",
     note4bet:
-      "Stats are % of your 3-bet range. At 100bb the 5-bet is effectively a single all-in size — value is AA·KK (occasionally trapping by calling); QQ·AK mix in 5-bets only against bluff-laden BTN·SB 4-bets and call against the narrow CO·HJ·UTG 4-bets (vs a UTG 4-bet even KK calls). Calling is about equity realization, not pot odds: with position (BTN·CO 3-bettor, BB vs SB) calls widen to medium hands like TT·AJs (vs a UTG 4-bet only JJ·TT); the out-of-position BB 3-bettor keeps it to QQ·JJ·AK against the narrow CO·HJ·UTG 4-bets (against the bluff-laden BTN 4-bet, down to TT-77·AJs·AQo). Fold everything? No — the 4-bet range contains bluffs like A5s-A4s.",
+      "Stats are % of your 3-bet range. At 100bb the 5-bet is effectively a single all-in size — value is AA·KK (occasionally trapping by calling); QQ·AK mix in 5-bets only against bluff-laden BTN·SB 4-bets and call against the narrow CO·HJ·UTG 4-bets (vs a UTG 4-bet even KK calls). Calling is about equity realization, not pot odds: with position (BTN·CO 3-bettor) calls widen to medium hands like TT·AJs (vs a UTG 4-bet only JJ·TT), and BB vs SB, facing a bluff-heavy SB 4-bet, widens further to 99-66·ATs·KQs·AJo-ATo; the out-of-position BB 3-bettor keeps it to QQ·JJ·AK against the narrow CO·HJ·UTG 4-bets (against the bluff-laden BTN 4-bet, down to TT-77·AJs-ATs·AQo). Fold everything? No — the 4-bet range contains bluffs like A5s-A4s.",
     how4bet2:
       "If red + green don't fill the cell, the rest is folded. Cells with both " +
       "colors mix 5-bets and calls. Hands outside the 3-betting range never " +
@@ -486,7 +486,7 @@ const M = {
     statContinue4bet: "継続（3ベット比）",
     copy5bet: "5ベットレンジをコピー",
     note4bet:
-      "統計は「3ベットレンジに対する」割合です。100bbでは5ベットは実質オールイン一択です — バリューはAA・KKが中心（まれにコールでトラップ）で、ブラフが混ざるBTN・SBの4ベットに対してはQQ・AKも5ベットを混ぜますが、狭いCO・HJ・UTGの4ベットに対してはコールします（UTGの4ベットにはKKもコール）。コールの基準はポットオッズではなくエクイティ実現率です。ポジションがある側（BTN・COが3ベットした場合、BB vs SB）はTT・AJsのような中くらいのハンドまでコールを広げ（UTGの4ベットに対してはJJ・TTまで）、ポジションのないBBの3ベットは狭いCO・HJ・UTGの4ベットに対してQQ・JJ・AK中心に絞ります（ブラフが混ざるBTNの4ベットに対してはTT-77・AJs・AQoまで）。相手の4ベットにはA5s-A4sのようなブラフも混ざっているので、すべてを降りるわけではありません。",
+      "統計は「3ベットレンジに対する」割合です。100bbでは5ベットは実質オールイン一択です — バリューはAA・KKが中心（まれにコールでトラップ）で、ブラフが混ざるBTN・SBの4ベットに対してはQQ・AKも5ベットを混ぜますが、狭いCO・HJ・UTGの4ベットに対してはコールします（UTGの4ベットにはKKもコール）。コールの基準はポットオッズではなくエクイティ実現率です。ポジションがある側（BTN・COが3ベットした場合）はTT・AJsのような中くらいのハンドまでコールを広げ（UTGの4ベットに対してはJJ・TTまで）、ブラフの多いSBの4ベットを受けるBB vs SBはさらに99-66・ATs・KQs・AJo-AToまで広げ、ポジションのないBBの3ベットは狭いCO・HJ・UTGの4ベットに対してQQ・JJ・AK中心に絞ります（ブラフが混ざるBTNの4ベットに対してはTT-77・AJs-ATs・AQoまで）。相手の4ベットにはA5s-A4sのようなブラフも混ざっているので、すべてを降りるわけではありません。",
     how4bet2:
       "赤＋緑がマスを満たさない分はフォールドです。両色が重なるマスは5ベットとコールを" +
       "混合します。3ベットレンジにないハンドはこの状況自体が起こらないため空欄です。",
@@ -570,7 +570,7 @@ const M = {
     statContinue4bet: "Continúa (de los 3-bets)",
     copy5bet: "Copiar rango de 5-bet",
     note4bet:
-      "Las estadísticas son proporciones de tu rango de 3-bet. A 100bb el 5-bet es en la práctica all-in — el valor se centra en AA·KK (a veces solo pagando para tender una trampa); QQ·AK mezclan 5-bets solo contra los 4-bets de BTN·SB, que llevan bluffs, y pagan contra los 4-bets estrechos de CO·HJ·UTG (contra un 4-bet de UTG incluso KK paga). Los calls se guían por la realización, no por las pot odds: con posición (si 3-betearon BTN·CO, o BB vs SB) los calls se amplían a manos medias como TT·AJs (contra un 4-bet de UTG, solo hasta JJ·TT); la BB, que 3-betea fuera de posición, se limita a QQ·JJ·AK contra los 4-bets estrechos de CO·HJ·UTG (contra el 4-bet de BTN, que lleva bluffs, llega hasta TT-77·AJs·AQo). Pero no lo foldees todo: el rango de 4-bet mezcla bluffs como A5s-A4s.",
+      "Las estadísticas son proporciones de tu rango de 3-bet. A 100bb el 5-bet es en la práctica all-in — el valor se centra en AA·KK (a veces solo pagando para tender una trampa); QQ·AK mezclan 5-bets solo contra los 4-bets de BTN·SB, que llevan bluffs, y pagan contra los 4-bets estrechos de CO·HJ·UTG (contra un 4-bet de UTG incluso KK paga). Los calls se guían por la realización, no por las pot odds: con posición (si 3-betearon BTN·CO) los calls se amplían a manos medias como TT·AJs (contra un 4-bet de UTG, solo hasta JJ·TT), y la BB vs SB, ante un 4-bet de SB cargado de bluffs, amplía aún más hasta 99-66·ATs·KQs·AJo-ATo; la BB, que 3-betea fuera de posición, se limita a QQ·JJ·AK contra los 4-bets estrechos de CO·HJ·UTG (contra el 4-bet de BTN, que lleva bluffs, llega hasta TT-77·AJs-ATs·AQo). Pero no lo foldees todo: el rango de 4-bet mezcla bluffs como A5s-A4s.",
     how4bet2:
       "Si el rojo + verde no llenan la celda, el resto se retira. Las celdas con ambos colores " +
       "mezclan 5-bets y calls. Las manos fuera del rango de 3-bet nunca enfrentan este spot, " +
@@ -655,7 +655,7 @@ const M = {
     statContinue4bet: "% de continuação (dos 3-bets)",
     copy5bet: "Copiar range de 5-bet",
     note4bet:
-      "As estatísticas são proporções do seu range de 3-bet. Com 100bb o 5-bet é na prática all-in — o valor se concentra em AA·KK (às vezes só pagando para armar uma armadilha); QQ·AK misturam 5-bets só contra os 4-bets de BTN·SB, que trazem blefes, e pagam contra os 4-bets estreitos de CO·HJ·UTG (contra um 4-bet de UTG até KK paga). Os calls se guiam pela realização de equity, não pelas pot odds: com posição (quando BTN·CO deram o 3-bet, ou BB vs SB) os calls se ampliam para mãos médias como TT·AJs (contra um 4-bet de UTG, só até JJ·TT); a BB, que dá 3-bet fora de posição, fica em QQ·JJ·AK contra os 4-bets estreitos de CO·HJ·UTG (contra o 4-bet de BTN, que traz blefes, vai até TT-77·AJs·AQo). Mas não dê fold em tudo, porque o range de 4-bet mistura blefes como A5s-A4s.",
+      "As estatísticas são proporções do seu range de 3-bet. Com 100bb o 5-bet é na prática all-in — o valor se concentra em AA·KK (às vezes só pagando para armar uma armadilha); QQ·AK misturam 5-bets só contra os 4-bets de BTN·SB, que trazem blefes, e pagam contra os 4-bets estreitos de CO·HJ·UTG (contra um 4-bet de UTG até KK paga). Os calls se guiam pela realização de equity, não pelas pot odds: com posição (quando BTN·CO deram o 3-bet) os calls se ampliam para mãos médias como TT·AJs (contra um 4-bet de UTG, só até JJ·TT), e a BB vs SB, diante de um 4-bet do SB cheio de blefes, amplia ainda mais até 99-66·ATs·KQs·AJo-ATo; a BB, que dá 3-bet fora de posição, fica em QQ·JJ·AK contra os 4-bets estreitos de CO·HJ·UTG (contra o 4-bet de BTN, que traz blefes, vai até TT-77·AJs-ATs·AQo). Mas não dê fold em tudo, porque o range de 4-bet mistura blefes como A5s-A4s.",
     how4bet2:
       "Se o vermelho + verde não preencherem a célula, o resto dá fold. As células com as duas cores " +
       "misturam 5-bets e calls. As mãos fora do range de 3-bet nunca enfrentam este spot, " +
@@ -741,7 +741,7 @@ const M = {
     statContinue4bet: "Continue-Anteil (von den 3-Bets)",
     copy5bet: "5-Bet-Range kopieren",
     note4bet:
-      "Die Statistik zeigt Anteile deiner 3-Bet-Range. Mit 100bb ist die 5-Bet praktisch immer All-in – der Value liegt bei AA·KK (manchmal nur gecallt, um eine Falle zu stellen); QQ·AK mischen 5-Bets nur gegen bluffreiche 4-Bets von BTN·SB ein und callen gegen die engen 4-Bets von CO·HJ·UTG (gegen eine UTG-4-Bet callt sogar KK). Die Calls richten sich nach der Equity-Realisierung, nicht nach den Pot Odds: Mit Position (3-Bet von BTN·CO oder BB vs SB) reichen die Calls bis zu mittleren Händen wie TT·AJs (gegen eine UTG-4-Bet nur bis JJ·TT); die BB, die ohne Position 3-bettet, bleibt gegen die engen 4-Bets von CO·HJ·UTG bei QQ·JJ·AK (gegen die bluffreiche BTN-4-Bet bis hinunter zu TT-77·AJs·AQo). Aber folde nicht alles, denn die 4-Bet-Range mischt Bluffs wie A5s-A4s hinein.",
+      "Die Statistik zeigt Anteile deiner 3-Bet-Range. Mit 100bb ist die 5-Bet praktisch immer All-in – der Value liegt bei AA·KK (manchmal nur gecallt, um eine Falle zu stellen); QQ·AK mischen 5-Bets nur gegen bluffreiche 4-Bets von BTN·SB ein und callen gegen die engen 4-Bets von CO·HJ·UTG (gegen eine UTG-4-Bet callt sogar KK). Die Calls richten sich nach der Equity-Realisierung, nicht nach den Pot Odds: Mit Position (3-Bet von BTN·CO) reichen die Calls bis zu mittleren Händen wie TT·AJs (gegen eine UTG-4-Bet nur bis JJ·TT), und BB vs SB geht gegen die bluffreiche SB-4-Bet noch weiter bis 99-66·ATs·KQs·AJo-ATo; die BB, die ohne Position 3-bettet, bleibt gegen die engen 4-Bets von CO·HJ·UTG bei QQ·JJ·AK (gegen die bluffreiche BTN-4-Bet bis hinunter zu TT-77·AJs-ATs·AQo). Aber folde nicht alles, denn die 4-Bet-Range mischt Bluffs wie A5s-A4s hinein.",
     how4bet2:
       "Füllen Rot und Grün die Zelle nicht ganz, wird der Rest gefoldet. Zellen mit beiden Farben " +
       "mischen 5-Bet und Call. Hände außerhalb der 3-Bet-Range geraten nie in diesen Spot und " +
@@ -834,7 +834,7 @@ const M = {
     statContinue4bet: "继续比例（占 3bet 范围）",
     copy5bet: "复制 5bet 范围",
     note4bet:
-      "统计是“占你 3bet 范围”的比例。100bb 深度下，5bet 实际上只有全下这一种——价值牌以 AA、KK 为主（偶尔只跟注做陷阱）；面对混有诈唬的 BTN、SB 4bet，QQ 和 AK 也会混着 5bet，但面对较窄的 CO、HJ、UTG 4bet 就跟注（面对 UTG 4bet 连 KK 也跟注）。跟注看的不是底池赔率，而是权益实现（equity realization）：有位置的一方（BTN、CO 3bet 时，以及 BB 对 SB）会把跟注放宽到 TT、AJs 这类中等手牌（面对 UTG 4bet 只到 JJ、TT）；没有位置的 BB 3bet 面对较窄的 CO、HJ、UTG 4bet 则收窄到以 QQ、JJ、AK 为主（面对混有诈唬的 BTN 4bet 则放宽到 TT-77、AJs、AQo）。但也别全弃——对手的 4bet 范围里混着 A5s、A4s 这类诈唬。",
+      "统计是“占你 3bet 范围”的比例。100bb 深度下，5bet 实际上只有全下这一种——价值牌以 AA、KK 为主（偶尔只跟注做陷阱）；面对混有诈唬的 BTN、SB 4bet，QQ 和 AK 也会混着 5bet，但面对较窄的 CO、HJ、UTG 4bet 就跟注（面对 UTG 4bet 连 KK 也跟注）。跟注看的不是底池赔率，而是权益实现（equity realization）：有位置的一方（BTN、CO 3bet 时）会把跟注放宽到 TT、AJs 这类中等手牌（面对 UTG 4bet 只到 JJ、TT），而 BB 对 SB 面对诈唬较多的 SB 4bet 会进一步放宽到 99-66、ATs、KQs、AJo-ATo；没有位置的 BB 3bet 面对较窄的 CO、HJ、UTG 4bet 则收窄到以 QQ、JJ、AK 为主（面对混有诈唬的 BTN 4bet 则放宽到 TT-77、AJs-ATs、AQo）。但也别全弃——对手的 4bet 范围里混着 A5s、A4s 这类诈唬。",
     how4bet2:
       "红色加绿色没把格子填满，剩下的那部分就是弃牌。两种颜色同时出现，表示按这个比例混着 5bet 和跟注。" +
       "不在 3bet 范围里的手牌，压根碰不到这个局面，所以留空。",
@@ -924,7 +924,7 @@ const M = {
     statContinue4bet: "繼續比例（佔 3bet 範圍）",
     copy5bet: "複製 5bet 範圍",
     note4bet:
-      "統計是「佔你 3bet 範圍」的比例。100bb 深度下，5bet 實際上只有全下這一種——價值牌以 AA、KK 為主（偶爾只跟注做陷阱）；面對混有詐唬的 BTN、SB 4bet，QQ 和 AK 也會混著 5bet，但面對較窄的 CO、HJ、UTG 4bet 就跟注（面對 UTG 4bet 連 KK 也跟注）。跟注看的不是底池賠率，而是勝率實現（equity realization）：有位置的一方（BTN、CO 3bet 時，以及 BB 對 SB）會把跟注放寬到 TT、AJs 這類中等手牌（面對 UTG 4bet 只到 JJ、TT）；沒有位置的 BB 3bet 面對較窄的 CO、HJ、UTG 4bet 則收窄到以 QQ、JJ、AK 為主（面對混有詐唬的 BTN 4bet 則放寬到 TT-77、AJs、AQo）。但也別全蓋——對手的 4bet 範圍裡混著 A5s、A4s 這類詐唬。",
+      "統計是「佔你 3bet 範圍」的比例。100bb 深度下，5bet 實際上只有全下這一種——價值牌以 AA、KK 為主（偶爾只跟注做陷阱）；面對混有詐唬的 BTN、SB 4bet，QQ 和 AK 也會混著 5bet，但面對較窄的 CO、HJ、UTG 4bet 就跟注（面對 UTG 4bet 連 KK 也跟注）。跟注看的不是底池賠率，而是勝率實現（equity realization）：有位置的一方（BTN、CO 3bet 時）會把跟注放寬到 TT、AJs 這類中等手牌（面對 UTG 4bet 只到 JJ、TT），而 BB 對 SB 面對詐唬較多的 SB 4bet 會進一步放寬到 99-66、ATs、KQs、AJo-ATo；沒有位置的 BB 3bet 面對較窄的 CO、HJ、UTG 4bet 則收窄到以 QQ、JJ、AK 為主（面對混有詐唬的 BTN 4bet 則放寬到 TT-77、AJs-ATs、AQo）。但也別全蓋——對手的 4bet 範圍裡混著 A5s、A4s 這類詐唬。",
     how4bet2:
       "紅色加綠色沒把格子填滿，剩下的那部分就是蓋牌。兩種顏色同時出現，表示按這個比例混著 5bet 和跟注。" +
       "不在 3bet 範圍裡的手牌，根本碰不到這個局面，所以留空。",
@@ -1011,7 +1011,7 @@ const M = {
     statContinue4bet: "% de continuation (des 3-bets)",
     copy5bet: "Copier la range de 5-bet",
     note4bet:
-      "Les stats sont des parts de ta range de 3-bet. À 100bb, le 5-bet est en pratique un tapis — la value se concentre sur AA·KK (avec parfois un call pour piéger) ; QQ·AK ne mixent le 5-bet que contre les 4-bets de BTN·SB, chargés en bluffs, et callent contre les 4-bets serrés de CO·HJ·UTG (contre un 4-bet d'UTG, même KK se contente de call). Les calls se justifient par la capacité à concrétiser son equity, pas par la cote du pot : en position (3-bet de BTN·CO, ou BB vs SB), on élargit les calls jusqu'à des mains moyennes comme TT·AJs (contre un 4-bet d'UTG, seulement JJ·TT) ; la BB, qui 3-bet hors de position, s'en tient à QQ·JJ·AK contre les 4-bets serrés de CO·HJ·UTG (contre le 4-bet de BTN, chargé en bluffs, elle descend jusqu'à TT-77·AJs·AQo). Mais ne fold pas tout : la range de 4-bet adverse mélange aussi des bluffs comme A5s-A4s.",
+      "Les stats sont des parts de ta range de 3-bet. À 100bb, le 5-bet est en pratique un tapis — la value se concentre sur AA·KK (avec parfois un call pour piéger) ; QQ·AK ne mixent le 5-bet que contre les 4-bets de BTN·SB, chargés en bluffs, et callent contre les 4-bets serrés de CO·HJ·UTG (contre un 4-bet d'UTG, même KK se contente de call). Les calls se justifient par la capacité à concrétiser son equity, pas par la cote du pot : en position (3-bet de BTN·CO), on élargit les calls jusqu'à des mains moyennes comme TT·AJs (contre un 4-bet d'UTG, seulement JJ·TT), et en BB vs SB, face au 4-bet de la SB chargé en bluffs, on élargit encore jusqu'à 99-66·ATs·KQs·AJo-ATo ; la BB, qui 3-bet hors de position, s'en tient à QQ·JJ·AK contre les 4-bets serrés de CO·HJ·UTG (contre le 4-bet de BTN, chargé en bluffs, elle descend jusqu'à TT-77·AJs-ATs·AQo). Mais ne fold pas tout : la range de 4-bet adverse mélange aussi des bluffs comme A5s-A4s.",
     how4bet2:
       "Si le rouge + le vert ne remplissent pas la case, le reste est foldé. Les cases " +
       "bicolores mixent 5-bet et call. Les mains hors de la range de 3-bet ne rencontrent " +
@@ -1104,7 +1104,7 @@ const M = {
     statContinue4bet: "% lanjut (dari 3-bet)",
     copy5bet: "Salin range 5-bet",
     note4bet:
-      "Statistiknya adalah bagian dari range 3-bet Anda. Di 100bb, 5-bet praktis berarti all-in — value terpusat di AA·KK (sesekali call untuk menjebak); QQ·AK mencampur 5-bet hanya melawan 4-bet BTN·SB yang banyak bluff-nya, dan call melawan 4-bet CO·HJ·UTG yang sempit (melawan 4-bet UTG, KK pun call). Call dibenarkan oleh kemampuan merealisasikan equity, bukan oleh pot odds: in position (saat BTN·CO yang 3-bet, atau BB vs SB) call melebar sampai hand menengah seperti TT·AJs (melawan 4-bet UTG hanya JJ·TT); BB yang 3-bet out of position tetap di sekitar QQ·JJ·AK melawan 4-bet CO·HJ·UTG yang sempit (melawan 4-bet BTN yang banyak bluff-nya, sampai TT-77·AJs·AQo). Tetapi jangan fold semuanya: range 4-bet lawan juga berisi bluff seperti A5s-A4s.",
+      "Statistiknya adalah bagian dari range 3-bet Anda. Di 100bb, 5-bet praktis berarti all-in — value terpusat di AA·KK (sesekali call untuk menjebak); QQ·AK mencampur 5-bet hanya melawan 4-bet BTN·SB yang banyak bluff-nya, dan call melawan 4-bet CO·HJ·UTG yang sempit (melawan 4-bet UTG, KK pun call). Call dibenarkan oleh kemampuan merealisasikan equity, bukan oleh pot odds: in position (saat BTN·CO yang 3-bet) call melebar sampai hand menengah seperti TT·AJs (melawan 4-bet UTG hanya JJ·TT), dan BB vs SB, menghadapi 4-bet SB yang banyak bluff-nya, melebar lagi sampai 99-66·ATs·KQs·AJo-ATo; BB yang 3-bet out of position tetap di sekitar QQ·JJ·AK melawan 4-bet CO·HJ·UTG yang sempit (melawan 4-bet BTN yang banyak bluff-nya, sampai TT-77·AJs-ATs·AQo). Tetapi jangan fold semuanya: range 4-bet lawan juga berisi bluff seperti A5s-A4s.",
     how4bet2:
       "Jika merah + hijau tidak memenuhi kotak, sisanya di-fold. Kotak dua warna mencampur " +
       "5-bet dan call. Hand di luar range 3-bet tidak pernah sampai ke spot ini, jadi tetap kosong.",
@@ -1193,7 +1193,7 @@ const M = {
     statContinue4bet: "% meneruskan (daripada 3-bet)",
     copy5bet: "Salin range 5-bet",
     note4bet:
-      "Statistik ini ialah bahagian daripada range 3-bet anda. Pada 100bb, 5-bet pada dasarnya bermakna all-in — value tertumpu pada AA·KK (sekali-sekala call untuk memerangkap); QQ·AK mencampurkan 5-bet hanya menentang 4-bet BTN·SB yang banyak bluff, dan call menentang 4-bet CO·HJ·UTG yang sempit (menentang 4-bet UTG, KK pun call). Call ditentukan oleh keupayaan merealisasikan equity, bukan oleh pot odds: in position (apabila BTN·CO yang 3-bet, atau BB vs SB) call diluaskan hingga tangan sederhana seperti TT·AJs (menentang 4-bet UTG hanya JJ·TT); BB yang 3-bet out of position kekal sekitar QQ·JJ·AK menentang 4-bet CO·HJ·UTG yang sempit (menentang 4-bet BTN yang banyak bluff, hingga TT-77·AJs·AQo). Tetapi jangan fold semuanya, kerana range 4-bet lawan turut mengandungi bluff seperti A5s-A4s.",
+      "Statistik ini ialah bahagian daripada range 3-bet anda. Pada 100bb, 5-bet pada dasarnya bermakna all-in — value tertumpu pada AA·KK (sekali-sekala call untuk memerangkap); QQ·AK mencampurkan 5-bet hanya menentang 4-bet BTN·SB yang banyak bluff, dan call menentang 4-bet CO·HJ·UTG yang sempit (menentang 4-bet UTG, KK pun call). Call ditentukan oleh keupayaan merealisasikan equity, bukan oleh pot odds: in position (apabila BTN·CO yang 3-bet) call diluaskan hingga tangan sederhana seperti TT·AJs (menentang 4-bet UTG hanya JJ·TT), dan BB vs SB, menentang 4-bet SB yang banyak bluff, diluaskan lagi hingga 99-66·ATs·KQs·AJo-ATo; BB yang 3-bet out of position kekal sekitar QQ·JJ·AK menentang 4-bet CO·HJ·UTG yang sempit (menentang 4-bet BTN yang banyak bluff, hingga TT-77·AJs-ATs·AQo). Tetapi jangan fold semuanya, kerana range 4-bet lawan turut mengandungi bluff seperti A5s-A4s.",
     how4bet2:
       "Jika merah + hijau tidak memenuhi kotak, selebihnya di-fold. Kotak dua warna mencampurkan " +
       "5-bet dengan call. Tangan di luar range 3-bet tidak pernah sampai ke spot ini, jadi ia kekal kosong.",
@@ -1280,7 +1280,7 @@ const M = {
     statContinue4bet: "Devam oranı (3-bet'lere göre)",
     copy5bet: "5-bet range'ini kopyala",
     note4bet:
-      "İstatistikler 3-bet range'inin içindeki paylardır. 100bb'de 5-bet fiilen all-in demektir — value ağırlıkla AA ve KK ile yapılır (ara sıra call ile tuzak kurulur); blöf içeren BTN·SB 4-bet'lerine karşı QQ ve AK de 5-bet karıştırır, ama dar CO·HJ·UTG 4-bet'lerine karşı call edilir (UTG 4-bet'ine karşı KK bile call edilir). Call kararını pot oranı değil equity realization belirler: pozisyonu olan taraf (3-bet'i BTN·CO yaptıysa ya da BB vs SB) call'ları TT·AJs gibi orta güçteki ellere kadar genişletir (UTG 4-bet'ine karşı yalnızca JJ·TT); pozisyon dışından 3-bet yapan BB ise dar CO·HJ·UTG 4-bet'lerine karşı QQ·JJ·AK etrafında dar tutar (blöf içeren BTN 4-bet'ine karşı TT–77·AJs·AQo'ya kadar iner). Ama her şeyi fold etme, çünkü rakibin 4-bet range'inde A5s–A4s gibi blöfler de var.",
+      "İstatistikler 3-bet range'inin içindeki paylardır. 100bb'de 5-bet fiilen all-in demektir — value ağırlıkla AA ve KK ile yapılır (ara sıra call ile tuzak kurulur); blöf içeren BTN·SB 4-bet'lerine karşı QQ ve AK de 5-bet karıştırır, ama dar CO·HJ·UTG 4-bet'lerine karşı call edilir (UTG 4-bet'ine karşı KK bile call edilir). Call kararını pot oranı değil equity realization belirler: pozisyonu olan taraf (3-bet'i BTN·CO yaptıysa) call'ları TT·AJs gibi orta güçteki ellere kadar genişletir (UTG 4-bet'ine karşı yalnızca JJ·TT), blöfü bol SB 4-bet'iyle karşılaşan BB vs SB ise 99–66·ATs·KQs·AJo–ATo'ya kadar daha da genişletir; pozisyon dışından 3-bet yapan BB ise dar CO·HJ·UTG 4-bet'lerine karşı QQ·JJ·AK etrafında dar tutar (blöf içeren BTN 4-bet'ine karşı TT–77·AJs–ATs·AQo'ya kadar iner). Ama her şeyi fold etme, çünkü rakibin 4-bet range'inde A5s–A4s gibi blöfler de var.",
     how4bet2:
       "Kırmızı + yeşil hücreyi doldurmuyorsa kalan kısım fold'dur. İki rengin birlikte " +
       "olduğu hücrelerde 5-bet ve call karma oynanır. 3-bet range'inin dışındaki eller bu " +
@@ -1368,7 +1368,7 @@ const M = {
     statContinue4bet: "Tiếp tục (trong range 3-bet)",
     copy5bet: "Sao chép range 5-bet",
     note4bet:
-      "Các chỉ số là tỷ lệ trong range 3-bet của bạn. Ở 100bb, 5-bet thực chất là all-in — value tập trung vào AA·KK (thỉnh thoảng gài bẫy bằng call); trước 4-bet có lẫn bluff của BTN·SB thì QQ·AK cũng trộn 5-bet, còn trước 4-bet hẹp của CO·HJ·UTG thì call (trước 4-bet của UTG thì cả KK cũng call). Quyết định call dựa vào khả năng hiện thực hóa equity, không phải pot odds: bên có vị trí (khi BTN·CO 3-bet, hoặc BB vs SB) nới call đến các tay bài trung bình như TT·AJs (trước 4-bet của UTG thì chỉ đến JJ·TT); BB 3-bet không có vị trí thì thu hẹp quanh QQ·JJ·AK trước 4-bet hẹp của CO·HJ·UTG (trước 4-bet có lẫn bluff của BTN thì mở đến TT–77·AJs·AQo). Nhưng đừng fold hết, vì range 4-bet của đối thủ có lẫn bluff như A5s–A4s.",
+      "Các chỉ số là tỷ lệ trong range 3-bet của bạn. Ở 100bb, 5-bet thực chất là all-in — value tập trung vào AA·KK (thỉnh thoảng gài bẫy bằng call); trước 4-bet có lẫn bluff của BTN·SB thì QQ·AK cũng trộn 5-bet, còn trước 4-bet hẹp của CO·HJ·UTG thì call (trước 4-bet của UTG thì cả KK cũng call). Quyết định call dựa vào khả năng hiện thực hóa equity, không phải pot odds: bên có vị trí (khi BTN·CO 3-bet) nới call đến các tay bài trung bình như TT·AJs (trước 4-bet của UTG thì chỉ đến JJ·TT), còn BB vs SB trước 4-bet nhiều bluff của SB thì nới rộng thêm đến 99–66·ATs·KQs·AJo–ATo; BB 3-bet không có vị trí thì thu hẹp quanh QQ·JJ·AK trước 4-bet hẹp của CO·HJ·UTG (trước 4-bet có lẫn bluff của BTN thì mở đến TT–77·AJs–ATs·AQo). Nhưng đừng fold hết, vì range 4-bet của đối thủ có lẫn bluff như A5s–A4s.",
     how4bet2:
       "Nếu đỏ + xanh lá không lấp đầy ô, phần còn lại là fold. Ô có cả hai " +
       "màu là hỗn hợp giữa 5-bet và call. Tay bài ngoài range 3-bet không bao giờ " +
@@ -1456,7 +1456,7 @@ const M = {
     statContinue4bet: "Продолжение (в диапазоне 3-бета)",
     copy5bet: "Копировать диапазон 5-бета",
     note4bet:
-      "Доли считаются от твоего диапазона 3-бета. При 100bb 5-бет по сути означает олл-ин — вэлью строится на AA·KK (иногда их слоуплеят коллом); против 4-бетов BTN·SB, где много блефов, QQ·AK тоже подмешивают 5-бет, а против узких 4-бетов CO·HJ·UTG отвечают коллом (против 4-бета UTG коллом отвечает даже KK). Коллы определяются реализацией эквити, а не шансами банка: в позиции (если 3-бет делали BTN·CO, а также BB против SB) коллы расширяются до средних рук вроде TT·AJs (против 4-бета UTG — только JJ·TT), а BB, делающий 3-бет без позиции, против узких 4-бетов CO·HJ·UTG ограничивается QQ·JJ·AK (против 4-бета BTN, где много блефов, — вплоть до TT–77·AJs·AQo). Но не фолди всё подряд: в диапазоне 4-бета соперника есть блефы вроде A5s–A4s.",
+      "Доли считаются от твоего диапазона 3-бета. При 100bb 5-бет по сути означает олл-ин — вэлью строится на AA·KK (иногда их слоуплеят коллом); против 4-бетов BTN·SB, где много блефов, QQ·AK тоже подмешивают 5-бет, а против узких 4-бетов CO·HJ·UTG отвечают коллом (против 4-бета UTG коллом отвечает даже KK). Коллы определяются реализацией эквити, а не шансами банка: в позиции (если 3-бет делали BTN·CO) коллы расширяются до средних рук вроде TT·AJs (против 4-бета UTG — только JJ·TT), BB против SB, отвечая на 4-бет SB с большим количеством блефов, расширяет коллы ещё дальше — до 99–66·ATs·KQs·AJo–ATo, а BB, делающий 3-бет без позиции, против узких 4-бетов CO·HJ·UTG ограничивается QQ·JJ·AK (против 4-бета BTN, где много блефов, — вплоть до TT–77·AJs–ATs·AQo). Но не фолди всё подряд: в диапазоне 4-бета соперника есть блефы вроде A5s–A4s.",
     how4bet2:
       "Если красный и зелёный не заполняют ячейку целиком, остаток — фолд. Ячейки с обоими " +
       "цветами смешивают 5-бет и колл. Руки вне диапазона 3-бета в этот спот " +
