@@ -9,6 +9,10 @@ export type DbItem = {
   name3: string;
   isGroup: 0;
   value: unknown;
+  /** v5 계정 동기화 — 기기에서 만든 고유값 (저장 목록 항목마다) */
+  clientId?: string;
+  /** v5 — 마지막으로 고친 시각(ms). 두 기기가 같은 항목을 고치면 나중 것이 이긴다 */
+  updatedAt?: number;
 };
 
 export type DbGroup = {
@@ -18,7 +22,17 @@ export type DbGroup = {
   name2: string;
   name3: string;
   isGroup: 1;
+  clientId?: string;
+  updatedAt?: number;
 };
+
+/** v5 — 지운 항목의 고유값. 계정 동기화 때 다른 기기에서도 지우도록 남겨 둔다 */
+export type SavedTombstone = {
+  store: SavedStore;
+  clientId: string;
+  deletedAt: number;
+};
+export type SavedStore = "ranges" | "configurations";
 
 export type TrainerAttempt = {
   id?: number;
@@ -38,6 +52,7 @@ class WASMPostflopDB extends Dexie {
   public ranges!: Table<DbItem | DbGroup, number>;
   public configurations!: Table<DbItem | DbGroup, number>;
   public trainerAttempts!: Table<TrainerAttempt, number>;
+  public savedTombstones!: Table<SavedTombstone, [string, string]>;
 
   public constructor() {
     super("WASMPostflopDB");
@@ -85,6 +100,28 @@ class WASMPostflopDB extends Dexie {
             if (!item.clientId) item.clientId = newClientId();
           });
       });
+
+    // v5: 저장 목록(레인지·벳 설정) 계정 동기화 준비 — 항목마다 clientId·updatedAt을 채우고
+    // 지운 항목은 savedTombstones에 남긴다 (설계 참고자료/계정동기화_설계안_2026-10-11.md §4).
+    this.version(5)
+      .stores({
+        ranges: "++id, [name0+name1+name2+name3+isGroup], &clientId",
+        configurations: "++id, [name0+name1+name2+name3+isGroup], &clientId",
+        trainerAttempts: "++id, timestamp, category, presetId, evLossBb, &clientId",
+        savedTombstones: "[store+clientId]",
+      })
+      .upgrade(async (tx) => {
+        const now = Date.now();
+        for (const store of ["ranges", "configurations"]) {
+          await tx
+            .table(store)
+            .toCollection()
+            .modify((item: DbItem | DbGroup) => {
+              if (!item.clientId) item.clientId = newClientId();
+              if (!item.updatedAt) item.updatedAt = now;
+            });
+        }
+      });
   }
 }
 
@@ -97,6 +134,22 @@ export const newClientId = () => {
 };
 
 const db = new WASMPostflopDB();
+
+/** 새로 넣는 항목에 고유값·시각을 붙인다 (가져온 JSON의 옛 값은 버린다 — 같은 기기 사본과 겹치지 않게) */
+const stamped = <T extends DbItem | DbGroup>(item: T): T => {
+  const { id: _id, ...rest } = item;
+  return { ...rest, clientId: newClientId(), updatedAt: Date.now() } as T;
+};
+
+const addTombstones = async (store: string, rows: (DbItem | DbGroup)[]) => {
+  if (store !== "ranges" && store !== "configurations") return;
+  const deletedAt = Date.now();
+  await db.savedTombstones.bulkPut(
+    rows
+      .filter((row) => row.clientId)
+      .map((row) => ({ store, clientId: row.clientId!, deletedAt }))
+  );
+};
 
 const makeParent = (item: DbItem | DbGroup) => {
   if (item.name3 !== "") {
@@ -153,7 +206,7 @@ export const addItem = async (store: string, item: DbItem) => {
       }
 
       // insert
-      await table.add(item);
+      await table.add(stamped(item));
 
       return true;
     });
@@ -178,7 +231,9 @@ export const overwriteItem = async (store: string, item: DbItem) => {
       }
 
       // update
-      return (await collection.modify({ value: item.value })) === 1;
+      return (
+        (await collection.modify({ value: item.value, updatedAt: Date.now() })) === 1
+      );
     });
   } catch {
     return false;
@@ -222,8 +277,13 @@ export const renameItem = async (
           ? ["[name0+name1]", [item.name0, item.name1], { name1: newName }]
           : ["name0", item.name0, { name0: newName }];
 
-      // update
-      return (await table.where(index).equals(key).modify(modifier)) > 0;
+      // update (그룹 이름을 바꾸면 안의 항목 경로도 바뀌므로 모두 시각 갱신)
+      return (
+        (await table
+          .where(index)
+          .equals(key)
+          .modify({ ...(modifier as object), updatedAt: Date.now() })) > 0
+      );
     });
   } catch {
     return false;
@@ -261,7 +321,7 @@ export const addGroup = async (store: string, group: DbGroup) => {
       }
 
       // insert
-      await table.add(group);
+      await table.add(stamped(group));
 
       return true;
     });
@@ -274,7 +334,7 @@ export const deleteItem = async (store: string, item: DbItem | DbGroup) => {
   try {
     const table = db.table(store);
 
-    return await db.transaction("rw", table, async () => {
+    return await db.transaction("rw", table, db.savedTombstones, async () => {
       if (item.isGroup) {
         // check if exists
         const count = await table
@@ -293,7 +353,9 @@ export const deleteItem = async (store: string, item: DbItem | DbGroup) => {
             : ["name0", item.name0];
 
         // delete
-        return (await table.where(index).equals(key).delete()) > 0;
+        const doomed = table.where(index).equals(key);
+        await addTombstones(store, await doomed.toArray());
+        return (await doomed.delete()) > 0;
       } else {
         // get collection
         const collection = table
@@ -306,6 +368,7 @@ export const deleteItem = async (store: string, item: DbItem | DbGroup) => {
         }
 
         // delete
+        await addTombstones(store, await collection.toArray());
         return (await collection.delete()) === 1;
       }
     });
@@ -320,7 +383,7 @@ export const bulkAdd = async (store: string, items: (DbItem | DbGroup)[]) => {
 
     return await db.transaction("rw", table, async () => {
       // insert
-      await table.bulkAdd(items);
+      await table.bulkAdd(items.map(stamped));
 
       return true;
     });
