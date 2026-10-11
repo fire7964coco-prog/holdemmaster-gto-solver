@@ -40,7 +40,7 @@
           <TrainerPage />
         </div>
         <!-- R2_REVIEW_ONLY_START -->
-        <div v-if="isFlopStudy">
+        <div v-if="isFlopStudy" class="flex-1 min-h-0">
           <FlopStudyPage />
         </div>
         <div v-if="reviewMounted" v-show="isHandReview" class="flex-1 min-h-0">
