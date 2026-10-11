@@ -32,6 +32,9 @@ function requireProducerProfile(file: Hmr1File) {
     "srp-hj-co": [65, 975], "3bp-btn-bb": [225, 890], "3bp-btn-sb": [210, 900],
     "3bp-co-bb": [225, 890], "3bp-hj-bb": [225, 890], "3bp-utg-bb": [225, 890], "3bp-sb-bb": [180, 910],
     "3bp-co-btn": [165, 925], "3bp-hj-co": [165, 925], "3bp-hj-btn": [165, 925], "3bp-utg-co": [165, 925], "3bp-utg-btn": [165, 925],
+    "4bp-btn-bb": [485, 760], "4bp-btn-sb": [450, 780], "4bp-co-bb": [485, 760], "4bp-hj-bb": [485, 760],
+    "4bp-utg-bb": [485, 760], "4bp-sb-bb": [440, 780], "4bp-co-btn": [395, 810], "4bp-hj-btn": [395, 810],
+    "4bp-utg-btn": [395, 810], "4bp-hj-co": [395, 810], "4bp-utg-co": [395, 810],
   };
   const profile = Object.prototype.hasOwnProperty.call(scenarios, h.scenario) ? scenarios[h.scenario] : null;
   if (!profile || h.pot !== profile[0] || h.stack !== profile[1] ||

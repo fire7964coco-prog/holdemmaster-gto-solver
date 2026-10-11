@@ -455,6 +455,7 @@ import { M } from "../hand-review-labels";
 import {
   SRP_SPOTS,
   THREE_BET_SPOTS,
+  FOUR_BET_SPOTS,
   THREE_BETTORS,
   CALLERS,
   OPENERS,
@@ -528,9 +529,16 @@ export default defineComponent({
       heroPlayer = ref<0 | 1>(1),
       potType = ref("srp");
     // 3인 이상은 복기 불가 — 자리 고르기는 오픈·콜 표를 그대로 보여 준다
-    const isThreeBet = computed(() => potType.value === "3bet");
+    // 4벳 팟도 «오픈한 자리 · 3벳한 자리»로 고른다 (오픈한 쪽이 4벳)
+    const isThreeBet = computed(
+      () => potType.value === "3bet" || potType.value === "4bet"
+    );
     const spots = computed(() =>
-      isThreeBet.value ? THREE_BET_SPOTS : SRP_SPOTS
+      potType.value === "4bet"
+        ? FOUR_BET_SPOTS
+        : isThreeBet.value
+        ? THREE_BET_SPOTS
+        : SRP_SPOTS
     );
     const secondSeats = computed<string[]>(() =>
       isThreeBet.value ? THREE_BETTORS : CALLERS
@@ -541,7 +549,9 @@ export default defineComponent({
       );
     const spot = computed(
       () =>
-        [...SRP_SPOTS, ...THREE_BET_SPOTS].find((s) => s.id === spotId.value)!
+        [...SRP_SPOTS, ...THREE_BET_SPOTS, ...FOUR_BET_SPOTS].find(
+          (s) => s.id === spotId.value
+        )!
     );
     const heroCards = ref<number[]>([]),
       board = ref<number[]>([]),
@@ -679,6 +689,7 @@ export default defineComponent({
     const potTypes = computed(() => [
       { id: "srp", label: L.value.singleRaised },
       { id: "3bet", label: L.value.threeBet },
+      { id: "4bet", label: L.value.fourBet },
       { id: "multiway", label: L.value.multiway },
     ]);
     const bb = (chips: number) =>

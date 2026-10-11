@@ -19,7 +19,9 @@ import {
   gridFor,
   defendGridsFor,
   vs3betGridsFor,
+  vs4betGridsFor,
   VS3BET_SCENARIOS,
+  VS4BET_SCENARIOS,
   handLabelAt,
 } from "./preflop-charts";
 
@@ -145,14 +147,55 @@ export const THREE_BET_SPOTS: SrpSpot[] = VS3BET_SCENARIOS.map(
   (s) => threeBetSpot(s.opener, s.villain as ThreeBettor) as SrpSpot
 );
 
+// ─── 핸드 복기 전용: 4벳 팟 (2026-10-11) ─────────────────────────────
+// 오픈 → 3벳 → 오픈한 쪽 4벳 → 3벳한 쪽 콜. 차트에 «vs 4벳» 응답이 있는 11조합(VS4BET_SCENARIOS)만 싣는다.
+// 레인지: 4벳 쪽 = 오픈 빈도 × «3벳에 4벳» 빈도 · 3벳 쪽 = 3벳 빈도 × «4벳에 콜» 빈도.
+// 4벳 크기(판정 참고자료/4벳림프팟_판정_2026-10-10.md §2): BB 3벳 상대 24bb(SB 오픈이면 22bb) · SB 3벳 상대 22bb · CO·BTN 3벳 상대 19bb.
+// 사전 계산 도구(main.rs의 4bp-*)와 글자까지 같아야 한다 (검사: spot-picker-verify.js).
+export const fourBetSpot = (opener: Position, threeBettor: ThreeBettor): SrpSpot | null => {
+  const scenario = VS4BET_SCENARIOS.find((s) => s.villain === opener && s.hero === threeBettor);
+  if (!scenario) return null;
+
+  const fourBet =
+    threeBettor === "BB" ? (opener === "SB" ? 220 : 240) : threeBettor === "SB" ? 220 : 190;
+  // 죽은 블라인드는 3벳 팟과 같다
+  const dead = threeBettor === "BB" ? (opener === "SB" ? 0 : 5) : threeBettor === "SB" ? 10 : 15;
+  const rfi = gridFor(opener);
+  const raise = vs3betGridsFor(scenario.vs3bet).fourBet;
+  const threeBet = defendGridsFor(scenario.base).threeBet;
+  const call = vs4betGridsFor(scenario.id).call;
+  const openerRange = weightedText(raise.map((r, i) => (rfi[i] * r) / 10000));
+  const threeBettorRange = weightedText(call.map((c, i) => (threeBet[i] * c) / 10000));
+  const openerIsOop = FLOP_ORDER.indexOf(opener) < FLOP_ORDER.indexOf(threeBettor);
+
+  return {
+    id: `4bp-${opener}-${threeBettor}`.toLowerCase(),
+    opener,
+    caller: threeBettor,
+    oop: openerIsOop ? opener : threeBettor,
+    ip: openerIsOop ? threeBettor : opener,
+    oopRange: openerIsOop ? openerRange : threeBettorRange,
+    ipRange: openerIsOop ? threeBettorRange : openerRange,
+    startingPot: fourBet * 2 + dead,
+    effectiveStack: 1000 - fourBet,
+  };
+};
+
+/** 4벳 팟 11개 — 차트의 vs 4벳 탭 순서 */
+export const FOUR_BET_SPOTS: SrpSpot[] = VS4BET_SCENARIOS.map(
+  (s) => fourBetSpot(s.villain as Position, s.hero as ThreeBettor) as SrpSpot
+);
+
 /** 검증 스크립트용 훅 — spot-picker-verify.js가 사전 계산 도구의 표와 대조한다 */
 declare global {
   interface Window {
     __spots?: SrpSpot[];
     __threeBetSpots?: SrpSpot[];
+    __fourBetSpots?: SrpSpot[];
   }
 }
 if (typeof window !== "undefined") {
   window.__spots = SRP_SPOTS;
   window.__threeBetSpots = THREE_BET_SPOTS;
+  window.__fourBetSpots = FOUR_BET_SPOTS;
 }

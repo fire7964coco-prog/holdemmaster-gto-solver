@@ -11,11 +11,13 @@ export const HAND_REVIEW_DATA = {
     "srp-co-btn", "srp-hj-btn", "srp-utg-btn", "srp-hj-co", "3bp-btn-bb", "3bp-btn-sb",
     "3bp-co-bb", "3bp-co-btn", "3bp-hj-bb", "3bp-hj-co", "3bp-hj-btn",
     "3bp-utg-bb", "3bp-utg-co", "3bp-utg-btn", "3bp-sb-bb",
+    "4bp-btn-bb", "4bp-btn-sb", "4bp-co-bb", "4bp-hj-bb", "4bp-utg-bb", "4bp-sb-bb",
+    "4bp-co-btn", "4bp-hj-btn", "4bp-utg-btn", "4bp-hj-co", "4bp-utg-co",
   ] as readonly string[],
   maxCachedFlops: 8,
   timeoutMs: 20000,
 };
-// 사이드바 메뉴 노출 스위치 — 11상황 자료를 올린 뒤 출시(2026-10-09 사장님 ○) → 20상황 · 10-11 3벳 9개 추가. 09-29 «중간 공개 없음» 조건 충족.
+// 사이드바 메뉴 노출 스위치 — 11상황 자료를 올린 뒤 출시(2026-10-09 사장님 ○) → 20상황 · 10-11 3벳 9개 추가 → 31상황 · 10-11 4벳 11개 추가. 09-29 «중간 공개 없음» 조건 충족.
 // ?view=hand-review 직접 주소로는 열린다 (검사·내부 확인용).
 export const HAND_REVIEW_LAUNCHED = true;
 // 플랍 조회 사이드바 메뉴 스위치 (설계안 참고자료/플랍조회_설계안_2026-10-10.md · 5단계 사장님 ○ 뒤 true).
