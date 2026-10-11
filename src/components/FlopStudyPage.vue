@@ -34,9 +34,13 @@
             :data-testid="'study-opener-' + pos"
             :aria-pressed="spot.opener === pos"
             :disabled="!spotFor(pos)"
+            :class="{ 'not-ready': spotFor(pos) && !openerReady(pos) }"
             @click="chooseSeats(pos, spot.caller)"
           >
-            {{ pos }}
+            {{ pos
+            }}<small v-if="spotFor(pos) && !openerReady(pos)" class="study-badge">{{
+              S.notReady
+            }}</small>
           </button>
         </div>
       </div>
@@ -49,10 +53,16 @@
             :data-testid="'study-caller-' + pos"
             :aria-pressed="spot.caller === pos"
             :disabled="!spotFor(spot.opener, pos)"
-            :class="{ 'not-ready': !isReady(spotFor(spot.opener, pos)) }"
+            :class="{ 'not-ready': spotFor(spot.opener, pos) && !isReady(spotFor(spot.opener, pos)) }"
             @click="chooseSeats(spot.opener, pos)"
           >
-            {{ pos }}
+            {{ pos
+            }}<small
+              v-if="spotFor(spot.opener, pos) && !isReady(spotFor(spot.opener, pos))"
+              class="study-badge"
+              :data-testid="'study-not-ready-' + pos"
+              >{{ S.notReady }}</small
+            >
           </button>
         </div>
       </div>
@@ -98,6 +108,13 @@
           </button></template
         >
       </div>
+    </div>
+
+    <div class="study-note" data-testid="study-sizes">
+      <span>{{ format(S.fixedSizes, sizes) }}</span>
+      <button data-testid="study-open-solver" @click="openInSolver">
+        {{ S.openInSolver }}
+      </button>
     </div>
 
     <div
@@ -148,6 +165,12 @@
       <template v-else
         >{{ statusText
         }}<button
+          v-if="statusCode === 'SCENARIO_NOT_READY'"
+          data-testid="study-not-ready-open"
+          @click="openInSolver"
+        >
+          {{ S.openInSolver }}</button
+        ><button
           v-if="statusCode === 'LOAD_FAILED' || statusCode === 'MISSING_FILE'"
           data-testid="study-retry"
           @click="load"
@@ -169,19 +192,49 @@
     <div v-else-if="file" class="study-columns">
       <section class="study-panel study-summary" data-testid="study-summary">
         <template v-if="summary">
+          <div class="study-tabs">
+            <button
+              data-testid="study-tab-strategy"
+              :aria-pressed="mode === 'strategy'"
+              @click="mode = 'strategy'"
+            >
+              {{ S.strategyTab }}
+            </button>
+            <button
+              data-testid="study-tab-range"
+              :aria-pressed="mode === 'range'"
+              @click="mode = 'range'"
+            >
+              {{ S.rangeTab }}
+            </button>
+          </div>
+          <div v-if="mode === 'range'" class="study-tabs">
+            <button
+              v-for="p in [0, 1]"
+              :key="p"
+              :data-testid="'study-range-player-' + p"
+              :aria-pressed="rangePlayer === p"
+              @click="rangePlayer = p"
+            >
+              {{ p === 0 ? "OOP" : "IP" }} · {{ seat(p) }}
+            </button>
+          </div>
           <h2>{{ format(S.actions, { seat: seat(summary.player) }) }}</h2>
           <p class="study-meta">
             {{
               format(S.combos, { count: num(summary.combos, 1) })
             }}
           </p>
-          <div
+          <button
             v-for="(item, a) in summary.actions"
             :key="a"
             class="study-summary-row"
             :data-testid="'study-summary-' + a"
             :data-frequency="item.frequency"
             :data-combos="item.combos"
+            :aria-pressed="filter.includes(a)"
+            :disabled="mode === 'range'"
+            @click="toggleFilter(a)"
           >
             <span>{{ actionText(item.action) }}</span>
             <b>{{ pct(item.frequency) }}</b>
@@ -194,35 +247,63 @@
               />
             </div>
             <small>{{ format(S.combos, { count: num(item.combos, 1) }) }}</small>
-          </div>
+          </button>
+          <p v-if="mode === 'strategy'" class="study-meta study-filter-help">
+            {{ S.filterHelp
+            }}<button
+              v-if="filter.length"
+              data-testid="study-clear-filter"
+              @click="filter = []"
+            >
+              {{ S.clearFilter }}
+            </button>
+          </p>
         </template>
       </section>
 
       <section class="study-panel study-grid-panel">
         <template v-if="summary">
-          <h2>{{ format(S.strategyGrid, { seat: seat(summary.player) }) }}</h2>
-          <div class="study-grid" data-testid="study-grid">
+          <h2>
+            {{
+              format(mode === "range" ? S.rangeGrid : S.strategyGrid, {
+                seat: seat(viewPlayer),
+              })
+            }}
+          </h2>
+          <div
+            class="study-grid"
+            data-testid="study-grid"
+            :data-mode="mode"
+            :data-player="viewPlayer"
+          >
             <button
-              v-for="cell in grid"
+              v-for="(cell, i) in grid"
               :key="cell.key"
               class="study-cell"
-              :class="{ selected: cell.key === selectedKey }"
+              :class="{ selected: cell.key === selectedKey, dimmed: mask[i] === 0 }"
               :data-testid="'study-cell-' + cell.key"
               :data-reach="cell.reach"
+              :data-mask="mask[i]"
               :data-frequencies="cell.frequencies.join(',')"
               :title="cell.key"
               @click="selectedKey = cell.key"
             >
               <i
-                v-if="cell.frequencies.length"
+                v-if="mode === 'range'"
+                class="study-range-fill"
+                :style="{ opacity: cell.reach }"
+              /><i
+                v-else-if="cell.frequencies.length"
                 :style="{
                   height: Math.max(cell.reach, 0.06) * 100 + '%',
-                  background: gradient(cell.frequencies),
+                  background: gradient(filtered(cell.frequencies)),
                 }"
               /><span>{{ cell.key }}</span>
             </button>
           </div>
-          <p class="study-meta">{{ S.gridHelp }}</p>
+          <p class="study-meta">
+            {{ mode === "range" ? S.rangeHelp : S.gridHelp }}
+          </p>
         </template>
       </section>
 
@@ -237,6 +318,32 @@
         <p v-else-if="!reachedCombos.length" class="study-meta">
           {{ S.notInRange }}
         </p>
+        <table v-else-if="mode === 'range'" class="study-combos">
+          <thead>
+            <tr>
+              <th>{{ S.combo }}</th>
+              <th>{{ S.weight }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="combo in reachedCombos"
+              :key="combo.name"
+              :data-testid="'study-combo-' + combo.name"
+              :data-weight="combo.weight"
+            >
+              <td class="study-combo-name">
+                <span
+                  v-for="c in combo.actualHand"
+                  :key="c"
+                  :class="suitClass(c)"
+                  >{{ card(c) }}</span
+                >
+              </td>
+              <td>{{ pct(combo.weight) }}</td>
+            </tr>
+          </tbody>
+        </table>
         <table v-else class="study-combos">
           <thead>
             <tr>
@@ -289,8 +396,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, shallowRef } from "vue";
+import { computed, defineComponent, ref, shallowRef, watch } from "vue";
 import { i18n, localizeNumber } from "../i18n";
+import { useStore, useConfigStore } from "../store";
 import { flopStudyLabels } from "../flop-study-labels";
 import { M } from "../hand-review-labels";
 import {
@@ -300,6 +408,7 @@ import {
   SRP_SPOTS,
   THREE_BET_SPOTS,
   FOUR_BET_SPOTS,
+  SPOT_BET_SIZES,
   SPOT_UNIT_SCALE,
   SrpSpot,
 } from "../preflop-spots";
@@ -310,26 +419,53 @@ import { parseAction } from "../review/flop-line";
 import { ReviewError } from "../review/errors";
 import { flopNode } from "../hand-review-model";
 import {
+  actionFilterMask,
   cellCombos,
+  flopStudyEntry,
   lineSummaries,
   parseFlopText,
   randomFlop,
   studyGrid,
+  validLinePrefix,
 } from "../flop-study-model";
 import { actionColors } from "../action-colors";
 
 const RANKS = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+const ALL_SPOTS = [...SRP_SPOTS, ...THREE_BET_SPOTS, ...FOUR_BET_SPOTS];
+const BET_FIELDS = (["oop", "ip"] as const).flatMap((p) =>
+  (["Flop", "Turn", "River"] as const).flatMap((street) =>
+    (["Bet", "Raise"] as const).map((kind) => `${p}${street}${kind}` as const)
+  )
+);
 
 export default defineComponent({
   setup() {
     const S = computed(() => flopStudyLabels(i18n.locale));
     const R = computed(() => M[i18n.locale]);
 
-    const potType = ref<"srp" | "3bet" | "4bet">("srp"),
-      spotId = ref("srp-btn-bb"),
-      flop = ref<number[]>(parseFlopText("Ah7d2c")!),
+    const store = useStore();
+    const config = useConfigStore();
+
+    // 딥링크(?view=flop-study&spot=&flop=&line=)는 App.vue가 주소를 지우기 전에 읽어 둔 것을 한 번만 쓴다
+    const entry = flopStudyEntry.link;
+    flopStudyEntry.link = null;
+    const entrySpot = ALL_SPOTS.find((s) => s.id === entry?.spot);
+    let pendingLine = entrySpot && entry?.line.length ? entry.line : null;
+
+    const potType = ref<"srp" | "3bet" | "4bet">(
+        !entrySpot || SRP_SPOTS.includes(entrySpot)
+          ? "srp"
+          : THREE_BET_SPOTS.includes(entrySpot)
+          ? "3bet"
+          : "4bet"
+      ),
+      spotId = ref(entrySpot?.id ?? "srp-btn-bb"),
+      flop = ref<number[]>(entry?.flop ?? parseFlopText("Ah7d2c")!),
       path = ref<number[]>([]),
-      selectedKey = ref("");
+      selectedKey = ref(""),
+      mode = ref<"strategy" | "range">("strategy"),
+      rangePlayer = ref<0 | 1>(0),
+      filter = ref<number[]>([]);
     const file = shallowRef<Hmr1File | null>(null),
       loading = ref(false),
       errorCode = ref("");
@@ -353,13 +489,12 @@ export default defineComponent({
           s.opener === opener && (caller === undefined || s.caller === caller)
       );
     const spot = computed(
-      () =>
-        [...SRP_SPOTS, ...THREE_BET_SPOTS, ...FOUR_BET_SPOTS].find(
-          (s) => s.id === spotId.value
-        )!
+      () => ALL_SPOTS.find((s) => s.id === spotId.value)!
     );
     const isReady = (s?: SrpSpot) =>
       !!s && HAND_REVIEW_DATA.readyScenarios.includes(s.id);
+    const openerReady = (opener: string) =>
+      spots.value.some((s) => s.opener === opener && isReady(s));
     const statusCode = computed(() =>
       !isReady(spot.value) ? "SCENARIO_NOT_READY" : errorCode.value
     );
@@ -397,8 +532,17 @@ export default defineComponent({
         actionColors(step.summary.actions.map((a) => a.action))
       )
     );
+    // 전략 탭 = 행동 플레이어 · 레인지 탭 = [OOP|IP]로 고른 쪽
+    const viewPlayer = computed<0 | 1>(() =>
+      mode.value === "range" ? rangePlayer.value : summary.value?.player ?? 0
+    );
     const grid = computed(() =>
-      node.value && summary.value ? studyGrid(node.value) : []
+      node.value && summary.value ? studyGrid(node.value, viewPlayer.value) : []
+    );
+    const mask = computed(() =>
+      mode.value === "range"
+        ? grid.value.map(() => 1)
+        : actionFilterMask(grid.value, filter.value)
     );
     const mapping = computed(() => canonicalizeFlop(flop.value));
     const reachedCombos = computed(() =>
@@ -406,10 +550,67 @@ export default defineComponent({
         ? cellCombos(
             node.value,
             selectedKey.value,
-            mapping.value.inversePerm
-          ).filter((c) => c.weight > 0 && c.frequencies.length)
+            mapping.value.inversePerm,
+            viewPlayer.value
+          ).filter(
+            (c) =>
+              c.weight > 0 && (mode.value === "range" || c.frequencies.length)
+          )
         : []
     );
+    // 노드가 바뀌면 액션 번호가 달라지므로 필터를 비운다
+    watch(path, () => (filter.value = []));
+    const toggleFilter = (a: number) => {
+      filter.value = filter.value.includes(a)
+        ? filter.value.filter((x) => x !== a)
+        : [...filter.value, a].sort((x, y) => x - y);
+    };
+    const filtered = (frequencies: number[]) =>
+      filter.value.length
+        ? frequencies.map((f, a) => (filter.value.includes(a) ? f : 0))
+        : frequencies;
+
+    // 고정 벳 크기 안내 — 숫자는 받은 파일 헤더가 정본, 파일이 없으면 앱 상수
+    const sizes = computed(() => {
+      const h = file.value?.header,
+        list = (text: string) =>
+          text
+            .split(",")
+            .map((s) => localizeNumber(s.trim().replace(/%?$/, "%")))
+            .join(" · ");
+      return {
+        flop: list(h?.flopBet ?? SPOT_BET_SIZES.flopBet),
+        raise: list(h?.raise ?? SPOT_BET_SIZES.raise),
+      };
+    });
+
+    // [솔버로 열기] — SpotPicker.apply와 같은 길 + 보드(실제 무늬) + 미리 계산과 같은 벳 크기
+    function openInSolver() {
+      const filled =
+        config.range[0].some(Boolean) ||
+        config.range[1].some(Boolean) ||
+        config.board.length > 0;
+      if (filled && !window.confirm(S.value.confirmOverwrite)) return;
+      const s = spot.value;
+      config.board = [...flop.value];
+      config.startingPot = s.startingPot;
+      config.effectiveStack = s.effectiveStack;
+      store.displayUnitScale = SPOT_UNIT_SCALE;
+      config.expectedBoardLength = 0;
+      config.addedLines = "";
+      config.removedLines = "";
+      config.donkOption = false;
+      config.oopTurnDonk = "";
+      config.oopRiverDonk = "";
+      for (const field of BET_FIELDS)
+        config[field] = field.endsWith("Raise")
+          ? SPOT_BET_SIZES.raise
+          : field.includes("Flop")
+          ? SPOT_BET_SIZES.flopBet
+          : SPOT_BET_SIZES.laterBet;
+      store.pendingRangeText = [s.oopRange, s.ipRange];
+      store.sideView = "tree-config";
+    }
     const endText = computed(() =>
       line.value.end === "chance"
         ? S.value.turnNotStored
@@ -462,6 +663,8 @@ export default defineComponent({
           from = to;
           return segment;
         })
+        // 필터로 뺀 액션 몫은 비워 둔다 (안 그러면 마지막 색이 끝까지 번진다)
+        .concat(from < 99.95 ? [`transparent ${from}% 100%`] : [])
         .join(",")})`;
     };
 
@@ -477,6 +680,8 @@ export default defineComponent({
           mapping.value.fileName
         );
         if (token !== epoch) return;
+        if (pendingLine) path.value = validLinePrefix(result, pendingLine);
+        pendingLine = null;
         file.value = result;
       } catch (error) {
         if (token === epoch)
@@ -492,6 +697,7 @@ export default defineComponent({
     function chooseSpot(id: string) {
       spotId.value = id;
       path.value = [];
+      pendingLine = null;
       void load();
     }
     // 같은 자리 조합이 없으면 그 오픈의 첫 조합으로 간다 (복기 화면과 같음)
@@ -510,6 +716,7 @@ export default defineComponent({
     function setFlop(cards: number[]) {
       flop.value = [...cards].sort((a, b) => b - a);
       path.value = [];
+      pendingLine = null;
       void load();
     }
     function togglePicker() {
@@ -548,6 +755,16 @@ export default defineComponent({
       spot,
       spotFor,
       isReady,
+      openerReady,
+      mode,
+      rangePlayer,
+      viewPlayer,
+      filter,
+      mask,
+      toggleFilter,
+      filtered,
+      sizes,
+      openInSolver,
       flop,
       path,
       file,
@@ -768,11 +985,69 @@ p {
 .study-columns > .study-panel {
   overflow: auto;
 }
+.study-note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  color: rgb(var(--c-text-muted));
+  font-size: 11px;
+  flex: none;
+}
+.study-note button {
+  padding: 3px 8px;
+  font-size: 11px;
+}
+.study-badge {
+  margin-left: 5px;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: rgb(var(--c-bg-3));
+  font-size: 9px;
+  font-weight: 600;
+  vertical-align: 1px;
+}
+.study-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.study-tabs button {
+  flex: 1;
+  padding: 4px 6px;
+  font-size: 11px;
+}
 .study-summary-row {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 3px 8px;
-  margin-top: 10px;
+  margin-top: 6px;
+  width: 100%;
+  text-align: left;
+  font-size: 12px;
+}
+.study-summary-row[aria-pressed="true"] {
+  background: rgb(var(--c-bg-3));
+  border-color: rgb(var(--c-brand));
+  color: inherit;
+}
+.study-summary-row:disabled {
+  opacity: 1;
+}
+.study-filter-help {
+  margin-top: 8px;
+}
+.study-filter-help button {
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 10px;
+}
+.study-range-fill {
+  top: 0;
+  background: rgb(var(--c-brand));
+}
+.study-cell.dimmed span {
+  opacity: 0.35;
 }
 .study-summary-row small {
   grid-column: 1 / -1;

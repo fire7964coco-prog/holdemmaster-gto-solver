@@ -103,6 +103,7 @@ import { viewFromUrl } from "../pwa";
 import { TrainerPage, PresetsPage, bootstrapAccount } from "@features";
 import { HandReviewPage, handReviewLabels, FEATURE_TRAINER } from "@features"; // R2_REVIEW_ONLY
 import { FlopStudyPage, flopStudyLabels } from "@features"; // R2_REVIEW_ONLY
+import { flopStudyEntry, parseFlopStudyLink } from "../flop-study-model"; // R2_REVIEW_ONLY
 import { i18n } from "../i18n";
 
 import NavBar from "./NavBar.vue";
@@ -427,6 +428,7 @@ export default defineComponent({
       // 공유 링크가 우선이므로 없을 때만 본다.
       const view = viewFromUrl();
       if (view) {
+        if (view === "flop-study") flopStudyEntry.link = parseFlopStudyLink(location.search); // R2_REVIEW_ONLY
         store.sideView = view;
         history.replaceState(null, "", location.pathname);
       } else if (new URLSearchParams(location.search).has("lang")) {

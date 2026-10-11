@@ -145,14 +145,17 @@ export function comboName(hand: Hmr1Hand) {
   return cardName(a) + cardName(b);
 }
 
-/** 칸 하나의 콤보 상세. inversePerm = canonicalizeFlop(실제 플랍).inversePerm. */
+/** 칸 하나의 콤보 상세. inversePerm = canonicalizeFlop(실제 플랍).inversePerm.
+ *  player가 행동 플레이어가 아니면(레인지 탭의 상대 자리) 비중만 채우고 빈도·EV는 빈 배열. */
 export function cellCombos(
   node: ReviewNode,
   key: string,
-  inversePerm: SuitPermutation
+  inversePerm: SuitPermutation,
+  player = node.player
 ): StudyCombo[] {
-  const p = node.player;
+  const p = player;
   if (p === null) return [];
+  const acting = p === node.player;
   const n = node.hands[p].length,
     out: StudyCombo[] = [];
   node.hands[p].forEach((hand, h) => {
@@ -162,8 +165,9 @@ export function cellCombos(
       applyPerm(hand[1], inversePerm),
     ] as const;
     let sum = 0;
-    for (let a = 0; a < node.actions.length; a++)
-      sum += node.strategy[a * n + h];
+    if (acting)
+      for (let a = 0; a < node.actions.length; a++)
+        sum += node.strategy[a * n + h];
     out.push({
       hand,
       actualHand,
@@ -171,7 +175,7 @@ export function cellCombos(
       weight: node.ranges[p][h],
       frequencies:
         sum > 0 ? node.actions.map((_, a) => node.strategy[a * n + h] / sum) : [],
-      evBb: node.actions.map((_, a) => {
+      evBb: (acting ? node.actions : []).map((_, a) => {
         const v = node.evBb[a * n + h];
         return node.available[a * n + h] && Number.isFinite(v) ? v : null;
       }),
@@ -243,6 +247,9 @@ export function parseFlopStudyLink(search: string): FlopStudyLink | null {
     line: valid ? parts.map(Number) : [],
   };
 }
+
+/** App.vue가 `replaceState`로 주소를 지우기 전에 읽어 둔 딥링크 — 조회 화면이 열릴 때 한 번 가져간다. */
+export const flopStudyEntry: { link: FlopStudyLink | null } = { link: null };
 
 export function buildFlopStudyLink(link: {
   spot: string;

@@ -14,7 +14,7 @@ export const HAND_REVIEW_DATA = {
     "4bp-btn-bb", "4bp-btn-sb", "4bp-co-bb", "4bp-hj-bb", "4bp-utg-bb", "4bp-sb-bb",
     "4bp-co-btn", "4bp-hj-btn", "4bp-utg-btn", "4bp-hj-co", "4bp-utg-co",
   ] as readonly string[],
-  maxCachedFlops: 8,
+  maxCachedFlops: 16,
   timeoutMs: 20000,
 };
 // 사이드바 메뉴 노출 스위치 — 11상황 자료를 올린 뒤 출시(2026-10-09 사장님 ○) → 20상황 · 10-11 3벳 9개 추가 → 31상황 · 10-11 4벳 11개 추가. 09-29 «중간 공개 없음» 조건 충족.
