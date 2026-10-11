@@ -29,13 +29,11 @@
         </button>
       </span>
     </template>
-    <template v-else-if="status.state === 'syncing'">{{ L.syncing }}</template>
+    <!-- idle(첫 동기화 전)도 «맞추는 중» — 확인 안 된 «보관 중»은 띄우지 않는다 (MA-433) -->
+    <template v-else-if="status.state === 'syncing' || !status.lastSync">{{ L.syncing }}</template>
     <template v-else-if="status.state === 'limit'">{{ L.limit }}</template>
     <template v-else-if="status.state === 'pending'">{{ L.pending }}</template>
-    <template v-else-if="status.lastSync">{{
-      L.ok.replace("{time}", time(status.lastSync))
-    }}</template>
-    <template v-else>{{ L.kept }}</template>
+    <template v-else>{{ L.ok.replace("{time}", time(status.lastSync)) }}</template>
   </div>
 </template>
 

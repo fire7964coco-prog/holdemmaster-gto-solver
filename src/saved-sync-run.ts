@@ -121,7 +121,7 @@ export const onSavedReplaced = (fn: (store: SavedStore) => void) => {
 
 /**
  * 한 목록을 계정과 맞춘다. 로그인 안 했거나 기능이 꺼져 있으면 아무것도 보내지 않고 false.
- * 순서: 계정에서 받기 → 합치기 → 기기에 먼저 쓰기 → 계정에 올리기 → 오래된 지운 표시 정리.
+ * 순서: 계정에서 받기 → 합치기 → 기기에 먼저 쓰기 → 오래된 지운 표시 정리 → 계정에 올리기.
  * 기기에 먼저 쓰므로 올리기가 실패해도 다음 동기화가 다시 올린다(saved-sync-check «실패 뒤 재시도»).
  */
 export const syncSavedStore = (store: SavedStore): Promise<boolean> => {
@@ -179,6 +179,20 @@ async function runSync(store: SavedStore): Promise<boolean> {
     }
     listeners.forEach((fn) => fn(store));
 
+    // 오래된 지운 표시를 올리기보다 먼저 지운다 — 전체 3,000 한도에 걸려도 저절로 풀리게 (MA-433)
+    const remoteIds = new Set(remote.map((r) => r.clientId));
+    const purge = merged.tombstones
+      .filter((t) => expired(t) && remoteIds.has(t.clientId))
+      .map((t) => t.clientId);
+    for (let i = 0; i < purge.length; i += CHUNK) {
+      await supabase
+        .from(TABLE)
+        .delete()
+        .eq("user_id", user.id)
+        .eq("kind", kind)
+        .in("client_id", purge.slice(i, i + CHUNK));
+    }
+
     const upload = merged.upload.filter((r) => !expired(r));
     for (let i = 0; i < upload.length; i += CHUNK) {
       const { error: upErr } = await supabase
@@ -191,19 +205,6 @@ async function runSync(store: SavedStore): Promise<boolean> {
         status.state = /limit reached/.test(upErr.message) ? "limit" : "pending";
         return false;
       }
-    }
-
-    const remoteIds = new Set(remote.map((r) => r.clientId));
-    const purge = merged.tombstones
-      .filter((t) => expired(t) && remoteIds.has(t.clientId))
-      .map((t) => t.clientId);
-    for (let i = 0; i < purge.length; i += CHUNK) {
-      await supabase
-        .from(TABLE)
-        .delete()
-        .eq("user_id", user.id)
-        .eq("kind", kind)
-        .in("client_id", purge.slice(i, i + CHUNK));
     }
 
     status.state = "ok";
