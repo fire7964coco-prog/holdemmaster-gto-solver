@@ -29,8 +29,9 @@
         </button>
       </span>
     </template>
-    <!-- idle(첫 동기화 전)도 «맞추는 중» — 확인 안 된 «보관 중»은 띄우지 않는다 (MA-433) -->
-    <template v-else-if="status.state === 'syncing' || !status.lastSync">{{ L.syncing }}</template>
+    <!-- idle(첫 동기화 전)도 «맞추는 중» — 확인 안 된 «보관 중»은 띄우지 않는다 (MA-433)
+         첫 동기화가 limit·pending으로 끝나면 그 문구가 보여야 하므로 idle일 때만 (MA-438) -->
+    <template v-else-if="status.state === 'syncing' || (status.state === 'idle' && !status.lastSync)">{{ L.syncing }}</template>
     <template v-else-if="status.state === 'limit'">{{ L.limit }}</template>
     <template v-else-if="status.state === 'pending'">{{ L.pending }}</template>
     <template v-else>{{ L.ok.replace("{time}", time(status.lastSync)) }}</template>
