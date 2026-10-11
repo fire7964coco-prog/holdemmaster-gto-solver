@@ -16,7 +16,7 @@ import {
 import { mergeSaved, SyncRow } from "./saved-sync";
 
 /** 출시 스위치 — 켜기 전에 본체에 MB로 알린다(본체 /solver FAQ 15언어 · MB-244). */
-export const SAVED_SYNC_LAUNCHED = false;
+export const SAVED_SYNC_LAUNCHED = true;
 /** localhost 검사용: localStorage `solver.savedSync.test` = "1"이면 스위치가 꺼져 있어도 켠다. */
 const TEST_KEY = "solver.savedSync.test";
 
