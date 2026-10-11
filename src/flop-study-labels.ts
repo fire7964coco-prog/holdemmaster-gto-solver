@@ -1,11 +1,11 @@
 import type { Locale, LocaleDict } from "./i18n";
 
-// 플랍 조회 문구 (2단계: PC 화면 · ko·en). 나머지 언어는 5단계 문구 회차 전까지 영어로 대체한다.
+// 플랍 조회 문구 (2~4단계: PC·모바일 화면 · ko·en). 나머지 언어는 5단계 문구 회차 전까지 영어로 대체한다.
 // 상황·액션 이름(오픈한 자리·체크·벳 …)은 hand-review-labels `M`을 그대로 쓴다.
 const ko = {
   title: "플랍 조회", navTitle: "플랍 조회",
   precomputedAccuracy: "미리 계산한 결과 · 정밀도 {pct}",
-  board: "보드", pickBoard: "보드 고르기", closePicker: "닫기", randomFlop: "무작위",
+  board: "보드", pickBoard: "보드 고르기", closePicker: "닫기", randomFlop: "무작위", changeSetup: "상황·보드 바꾸기",
   pickPrompt: "카드 3장을 고르세요 ({count}/3)",
   start: "처음", notReady: "준비 중",
   notReadyNote: "이 상황은 아직 미리 계산되지 않았습니다 — 솔버에서 직접 계산할 수 있습니다.",
@@ -29,7 +29,7 @@ const ko = {
 const en: typeof ko = {
   title: "Flop study", navTitle: "Flop study",
   precomputedAccuracy: "Precomputed result · accuracy {pct}",
-  board: "Board", pickBoard: "Choose board", closePicker: "Close", randomFlop: "Random",
+  board: "Board", pickBoard: "Choose board", closePicker: "Close", randomFlop: "Random", changeSetup: "Change spot & board",
   pickPrompt: "Choose 3 cards ({count}/3)",
   start: "Start", notReady: "Coming soon",
   notReadyNote: "This situation has not been precomputed yet — you can solve it yourself in the solver.",

@@ -10,103 +10,138 @@
       <span>{{ spot.oop }} vs {{ spot.ip }} · {{ R.pot }} {{ bb(spot.startingPot) }}</span>
     </div>
 
-    <div class="study-panel study-top">
-      <div class="study-group">
-        <h3>{{ R.preflop }}</h3>
-        <div class="study-options">
-          <button
-            v-for="item in potTypes"
-            :key="item.id"
-            :data-testid="'study-pot-' + item.id"
-            :aria-pressed="potType === item.id"
-            @click="choosePot(item.id)"
-          >
-            {{ item.label }}
-          </button>
-        </div>
-      </div>
-      <div class="study-group">
-        <h3>{{ R.opener }}</h3>
-        <div class="study-options">
-          <button
-            v-for="pos in OPENERS"
-            :key="pos"
-            :data-testid="'study-opener-' + pos"
-            :aria-pressed="spot.opener === pos"
-            :disabled="!spotFor(pos)"
-            :class="{ 'not-ready': spotFor(pos) && !openerReady(pos) }"
-            @click="chooseSeats(pos, spot.caller)"
-          >
-            {{ pos
-            }}<small v-if="spotFor(pos) && !openerReady(pos)" class="study-badge">{{
-              S.notReady
-            }}</small>
-          </button>
-        </div>
-      </div>
-      <div class="study-group">
-        <h3>{{ potType === "srp" ? R.caller : R.threeBettor }}</h3>
-        <div class="study-options">
-          <button
-            v-for="pos in secondSeats"
-            :key="pos"
-            :data-testid="'study-caller-' + pos"
-            :aria-pressed="spot.caller === pos"
-            :disabled="!spotFor(spot.opener, pos)"
-            :class="{ 'not-ready': spotFor(spot.opener, pos) && !isReady(spotFor(spot.opener, pos)) }"
-            @click="chooseSeats(spot.opener, pos)"
-          >
-            {{ pos
-            }}<small
-              v-if="spotFor(spot.opener, pos) && !isReady(spotFor(spot.opener, pos))"
-              class="study-badge"
-              :data-testid="'study-not-ready-' + pos"
-              >{{ S.notReady }}</small
-            >
-          </button>
-        </div>
-      </div>
-      <div class="study-group study-board">
-        <h3>{{ S.board }}</h3>
-        <div class="study-board-row">
-          <span
-            v-for="c in flop"
-            :key="c"
-            class="study-card"
-            :class="suitClass(c)"
-            data-testid="study-board-card"
-            >{{ card(c) }}</span
-          >
-          <button
-            data-testid="study-pick-board"
-            :aria-expanded="picking"
-            @click="togglePicker"
-          >
-            {{ picking ? S.closePicker : S.pickBoard }}
-          </button>
-          <button data-testid="study-random" @click="chooseRandom">
-            {{ S.randomFlop }}
-          </button>
-        </div>
-      </div>
+    <!-- 모바일: 상황·보드를 한 줄로 줄이고, 고르는 칸은 아래 시트로 연다 (설계 §1) -->
+    <div class="study-panel study-mobile-bar" data-testid="study-mobile-bar">
+      <span class="study-mobile-pot">{{ potLabel }}</span>
+      <span
+        v-for="c in flop"
+        :key="c"
+        class="study-card"
+        :class="suitClass(c)"
+        >{{ card(c) }}</span
+      >
+      <button data-testid="study-mobile-random" @click="chooseRandom">
+        {{ S.randomFlop }}
+      </button>
+      <button
+        data-testid="study-open-setup"
+        :aria-expanded="setupOpen"
+        @click="setupOpen = true"
+      >
+        {{ S.changeSetup }}
+      </button>
     </div>
+    <div
+      v-if="setupOpen || selectedKey"
+      class="study-backdrop"
+      @click="closeSheets"
+    />
 
-    <div v-if="picking" class="study-panel" data-testid="study-picker">
-      <h3>{{ format(S.pickPrompt, { count: String(pending.length) }) }}</h3>
-      <div class="study-deck">
-        <template v-for="s in [3, 2, 1, 0]" :key="s"
-          ><button
-            v-for="r in RANKS"
-            :key="r"
-            :data-testid="'study-card-' + (r * 4 + s)"
-            :aria-label="card(r * 4 + s)"
-            :aria-pressed="pending.includes(r * 4 + s)"
-            :class="suitClass(r * 4 + s)"
-            @click="pickCard(r * 4 + s)"
+    <div class="study-setup" :class="{ open: setupOpen }" data-testid="study-setup">
+      <div class="study-sheet-head">
+        <h2>{{ S.changeSetup }}</h2>
+        <button data-testid="study-close-setup" @click="setupOpen = false">
+          {{ S.closePicker }}
+        </button>
+      </div>
+      <div class="study-panel study-top">
+        <div class="study-group">
+          <h3>{{ R.preflop }}</h3>
+          <div class="study-options">
+            <button
+              v-for="item in potTypes"
+              :key="item.id"
+              :data-testid="'study-pot-' + item.id"
+              :aria-pressed="potType === item.id"
+              @click="choosePot(item.id)"
+            >
+              {{ item.label }}
+            </button>
+          </div>
+        </div>
+        <div class="study-group">
+          <h3>{{ R.opener }}</h3>
+          <div class="study-options">
+            <button
+              v-for="pos in OPENERS"
+              :key="pos"
+              :data-testid="'study-opener-' + pos"
+              :aria-pressed="spot.opener === pos"
+              :disabled="!spotFor(pos)"
+              :class="{ 'not-ready': spotFor(pos) && !openerReady(pos) }"
+              @click="chooseSeats(pos, spot.caller)"
+            >
+              {{ pos
+              }}<small v-if="spotFor(pos) && !openerReady(pos)" class="study-badge">{{
+                S.notReady
+              }}</small>
+            </button>
+          </div>
+        </div>
+        <div class="study-group">
+          <h3>{{ potType === "srp" ? R.caller : R.threeBettor }}</h3>
+          <div class="study-options">
+            <button
+              v-for="pos in secondSeats"
+              :key="pos"
+              :data-testid="'study-caller-' + pos"
+              :aria-pressed="spot.caller === pos"
+              :disabled="!spotFor(spot.opener, pos)"
+              :class="{ 'not-ready': spotFor(spot.opener, pos) && !isReady(spotFor(spot.opener, pos)) }"
+              @click="chooseSeats(spot.opener, pos)"
+            >
+              {{ pos
+              }}<small
+                v-if="spotFor(spot.opener, pos) && !isReady(spotFor(spot.opener, pos))"
+                class="study-badge"
+                :data-testid="'study-not-ready-' + pos"
+                >{{ S.notReady }}</small
+              >
+            </button>
+          </div>
+        </div>
+        <div class="study-group study-board">
+          <h3>{{ S.board }}</h3>
+          <div class="study-board-row">
+            <span
+              v-for="c in flop"
+              :key="c"
+              class="study-card"
+              :class="suitClass(c)"
+              data-testid="study-board-card"
+              >{{ card(c) }}</span
+            >
+            <button
+              data-testid="study-pick-board"
+              :aria-expanded="picking"
+              @click="togglePicker"
+            >
+              {{ picking ? S.closePicker : S.pickBoard }}
+            </button>
+            <button data-testid="study-random" @click="chooseRandom">
+              {{ S.randomFlop }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="picking" class="study-panel" data-testid="study-picker">
+        <h3>{{ format(S.pickPrompt, { count: String(pending.length) }) }}</h3>
+        <div class="study-deck">
+          <template v-for="s in [3, 2, 1, 0]" :key="s"
+            ><button
+              v-for="r in RANKS"
+              :key="r"
+              :data-testid="'study-card-' + (r * 4 + s)"
+              :aria-label="card(r * 4 + s)"
+              :aria-pressed="pending.includes(r * 4 + s)"
+              :class="suitClass(r * 4 + s)"
+              @click="pickCard(r * 4 + s)"
+            >
+              {{ card(r * 4 + s) }}
+            </button></template
           >
-            {{ card(r * 4 + s) }}
-          </button></template
-        >
+        </div>
       </div>
     </div>
 
@@ -225,6 +260,16 @@
               format(S.combos, { count: num(summary.combos, 1) })
             }}
           </p>
+          <div class="study-stack" data-testid="study-stack">
+            <i
+              v-for="(item, a) in summary.actions"
+              :key="a"
+              :style="{
+                width: 100 * item.frequency + '%',
+                background: colors[a],
+              }"
+            />
+          </div>
           <button
             v-for="(item, a) in summary.actions"
             :key="a"
@@ -307,11 +352,20 @@
         </template>
       </section>
 
-      <section class="study-panel study-detail" data-testid="study-detail">
-        <h2>
-          {{ S.handDetail
-          }}<template v-if="selectedKey && summary"> · {{ selectedKey }}</template>
-        </h2>
+      <section
+        class="study-panel study-detail"
+        :class="{ open: selectedKey }"
+        data-testid="study-detail"
+      >
+        <div class="study-sheet-head">
+          <h2>
+            {{ S.handDetail
+            }}<template v-if="selectedKey && summary"> · {{ selectedKey }}</template>
+          </h2>
+          <button data-testid="study-close-detail" @click="selectedKey = ''">
+            {{ S.closePicker }}
+          </button>
+        </div>
         <p v-if="!selectedKey || !summary" class="study-meta">
           {{ S.chooseCell }}
         </p>
@@ -470,7 +524,8 @@ export default defineComponent({
       loading = ref(false),
       errorCode = ref("");
     const picking = ref(false),
-      pending = ref<number[]>([]);
+      pending = ref<number[]>([]),
+      setupOpen = ref(false);
     let epoch = 0;
 
     const spots = computed<SrpSpot[]>(() =>
@@ -619,11 +674,23 @@ export default defineComponent({
         : S.value.handOverAllIn
     );
 
+    // 모바일 시트(상황·보드 / 핸드 상세)를 바깥을 눌러 닫는다
+    const closeSheets = () => {
+      setupOpen.value = false;
+      selectedKey.value = "";
+    };
+
     const potTypes = computed(() => [
       { id: "srp" as const, label: R.value.singleRaised },
       { id: "3bet" as const, label: R.value.threeBet },
       { id: "4bet" as const, label: R.value.fourBet },
     ]);
+    const potLabel = computed(
+      () =>
+        `${potTypes.value.find((p) => p.id === potType.value)!.label} · ${
+          spot.value.opener
+        } → ${spot.value.caller}`
+    );
 
     const format = (template: string, values: Record<string, string>) =>
       template.replace(/\{(\w+)\}/g, (_, k) => values[k] ?? "");
@@ -751,6 +818,9 @@ export default defineComponent({
       OPENERS,
       potType,
       potTypes,
+      potLabel,
+      setupOpen,
+      closeSheets,
       secondSeats,
       spot,
       spotFor,
@@ -1134,5 +1204,171 @@ p {
   border-radius: 3px;
   overflow: hidden;
   background: rgb(var(--c-bg-3));
+}
+/* PC에서는 모바일 전용 부품을 숨기고, 상황·보드 묶음은 원래 자리에 그대로 둔다 */
+.study-mobile-bar,
+.study-backdrop,
+.study-stack,
+.study-setup > .study-sheet-head,
+.study-sheet-head button {
+  display: none;
+}
+.study-setup {
+  display: contents;
+}
+.study-sheet-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+@media (max-width: 767px) {
+  .study-page {
+    height: auto;
+    gap: 6px;
+  }
+  .study-toolbar {
+    font-size: 10px;
+  }
+  .study-mobile-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+  }
+  .study-mobile-pot {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 11px;
+  }
+  .study-mobile-bar .study-card {
+    font-size: 12px;
+    min-width: 24px;
+    padding: 3px 4px;
+  }
+  .study-mobile-bar button,
+  .study-sheet-head button {
+    display: block;
+    padding: 5px 7px;
+    min-height: 30px;
+    font-size: 11px;
+    flex: none;
+  }
+  .study-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgb(0 0 0 / 0.45);
+  }
+  /* 아래 시트: 상황·보드 고르기 / 핸드 상세 */
+  .study-setup,
+  .study-detail {
+    display: none;
+  }
+  .study-setup.open,
+  .study-columns > .study-detail.open {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+    background: rgb(var(--c-bg-1));
+    border: 1px solid rgb(var(--c-line));
+    border-bottom: 0;
+    border-radius: 12px 12px 0 0;
+  }
+  .study-columns > .study-detail.open {
+    display: block;
+    max-height: 55vh;
+  }
+  .study-setup > .study-sheet-head {
+    display: flex;
+  }
+  .study-sheet-head h2 {
+    margin: 0;
+  }
+  .study-detail .study-sheet-head {
+    margin-bottom: 6px;
+  }
+  .study-setup .study-panel {
+    border: 0;
+    padding: 0;
+  }
+  .study-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .study-options button {
+    min-height: 32px;
+  }
+  .study-deck button {
+    min-height: 32px;
+  }
+  .study-line {
+    padding: 8px;
+  }
+  /* 세 칸 → 위에서 아래로: 액션 요약 · 13×13 */
+  .study-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: none;
+  }
+  .study-columns > .study-panel {
+    overflow: visible;
+    padding: 8px;
+  }
+  .study-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+  .study-summary > :not(.study-summary-row) {
+    flex-basis: 100%;
+    margin: 0;
+  }
+  .study-summary h2 {
+    display: none;
+  }
+  .study-stack {
+    display: flex;
+    height: 10px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: rgb(var(--c-bg-3));
+  }
+  .study-summary-row {
+    display: flex;
+    gap: 6px;
+    width: auto;
+    margin: 0;
+    padding: 4px 8px;
+    font-size: 11px;
+    min-height: 30px;
+    align-items: center;
+  }
+  .study-summary-row .study-track,
+  .study-summary-row small {
+    display: none;
+  }
+  .study-grid {
+    width: 100%;
+  }
+  .study-cell span {
+    font-size: 8px;
+  }
 }
 </style>
