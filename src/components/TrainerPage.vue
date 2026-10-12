@@ -209,6 +209,9 @@
             {{ positionLabel }} ({{ question.node.selectedSpot.player.toUpperCase() }})
             {{ L.toAct }}
           </span>
+          <span class="text-xs text-neutral-500" data-testid="trainer-opponent">
+            vs {{ opponentLabel }} ({{ question.player === "oop" ? "IP" : "OOP" }})
+          </span>
           <span class="ml-auto text-xs text-neutral-400">
             {{ L.potLabel }} {{ amountBb(question.node.selectedSpot.pot ?? question.node.startingPot) }}
             · {{ L.stackLabel }}
@@ -2676,6 +2679,14 @@ export default defineComponent({
         ? (preset && oopLabelOf(preset)) || "OOP"
         : (preset && ipLabelOf(preset)) || "IP";
     });
+    // 상대 자리 — 첫 결정 문제엔 «Line:» 줄이 없어 상대가 안 보였다(후기 10-11). «vs»는 15언어 프리셋 분류명과 같은 표기
+    const opponentLabel = computed(() => {
+      if (!question.value) return "";
+      const preset = PRESETS.find((item) => item.id === question.value?.presetId);
+      return question.value.player === "oop"
+        ? (preset && ipLabelOf(preset)) || "IP"
+        : (preset && oopLabelOf(preset)) || "OOP";
+    });
     const amountBb = (value: number) =>
       localizeNumber(formatBb(value, question.value?.node.unitScale || 10));
     const historyLabel = (action: { name: string; amount: string }) =>
@@ -2750,6 +2761,7 @@ export default defineComponent({
       openSpot,
       presetTitle,
       positionLabel,
+      opponentLabel,
       L,
       isTr,
       isKo,
