@@ -223,6 +223,8 @@ module.exports = (envArgs = {}) => {
                 ignore: [
                   "**/trainer-decisions.json",
                   "**/preset-results/**",
+                  // 플랍 통계 요약(31상황 약 3MB) — 복기 묶음(R2_REVIEW_ONLY)과 같이 npokers 제외
+                  "**/flop-reports/**",
                   "**/manifest*.webmanifest",
                   "**/icons/**",
                   "**/favicon.png",
