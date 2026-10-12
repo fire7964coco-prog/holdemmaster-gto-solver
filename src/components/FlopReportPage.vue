@@ -232,19 +232,19 @@
                   {{ T.colFlop }}{{ arrow("flop") }}
                 </button>
               </th>
-              <th>
+              <th v-if="!narrow">
                 <button :aria-sort="ariaSort('weight')" data-testid="report-sort-weight" @click="sortBy('weight')">
                   {{ T.colShare }}{{ arrow("weight") }}
                 </button>
               </th>
               <template v-if="metric === 'strategy'">
-                <th v-for="(c, i) in columns" :key="c.action">
+                <th v-for="(c, i) in tableColumns" :key="c.action">
                   <button
                     :aria-sort="ariaSort('column', c)"
                     :data-testid="'report-sort-col-' + i"
                     @click="sortBy('column', c)"
                   >
-                    <i class="report-dot" :style="{ background: colors[i] }" />{{
+                    <i class="report-dot" :style="{ background: tableColors[i] }" />{{
                       columnText(c)
                     }}{{ arrow("column", c) }}
                   </button>
@@ -261,9 +261,9 @@
           <tbody>
             <tr class="report-average-row" data-testid="report-average-row">
               <td>{{ groupKey ? format(T.filteredAverage, { name: groupName(groupKey) }) : T.overall }}</td>
-              <td>{{ pct(baseline.share) }}</td>
+              <td v-if="!narrow">{{ pct(baseline.share) }}</td>
               <template v-if="metric === 'strategy'">
-                <td v-for="(f, i) in columnValues(baseline.freq, columns)" :key="i">{{ pct(f) }}</td>
+                <td v-for="(f, i) in baselineColumns" :key="i">{{ pct(f) }}</td>
               </template>
               <td>{{ baseline.ev === null ? "—" : num(baseline.ev, 2) }}</td>
               <td v-if="metric === 'ev'" />
@@ -281,10 +281,10 @@
               <td class="report-flop">
                 <span v-for="c in row.cards" :key="c" :class="suitClass(c)">{{ card(c) }}</span>
               </td>
-              <td>{{ pct(row.weight / report.totalWeight, 2) }}</td>
+              <td v-if="!narrow">{{ pct(row.weight / report.totalWeight, 2) }}</td>
               <template v-if="metric === 'strategy'">
                 <td
-                  v-for="(f, i) in columnValues(row.freq[nodeIndex], columns)"
+                  v-for="(f, i) in columnValues(row.freq[nodeIndex], tableColumns)"
                   :key="i"
                   :class="versusAverage(f, baselineColumns[i])"
                 >
@@ -314,7 +314,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, shallowRef, watch } from "vue";
+import { computed, defineComponent, onUnmounted, ref, shallowRef, watch } from "vue";
 import { i18n, localizeNumber } from "../i18n";
 import { useStore } from "../store";
 import { flopReportLabels, FlopReportLabels } from "../flop-report-labels";
@@ -355,6 +355,8 @@ import { actionColors } from "../action-colors";
 type GroupLabelKey = Extract<keyof FlopReportLabels, `group_${string}`>;
 const ALL_SPOTS = [...SRP_SPOTS, ...THREE_BET_SPOTS, ...FOUR_BET_SPOTS];
 const PAGE = 300;
+// 폰(767px 이하, FlopStudyPage와 같은 경계): 표는 «플랍 · 체크 % · 벳 % · EV» 4열 (설계 §3)
+const NARROW = "(max-width: 767px)";
 // 요약 파일은 앱 정적 파일 (public/flop-reports · 도구/flop-report-build.js). 한 번 받은 상황은 다시 받지 않는다.
 const cache = new Map<string, FlopReport>();
 
@@ -378,6 +380,11 @@ export default defineComponent({
       loading = ref(false),
       errorCode = ref("");
     let epoch = 0;
+    const media = window.matchMedia(NARROW);
+    const narrow = ref(media.matches);
+    const onMedia = () => (narrow.value = media.matches);
+    media.addEventListener("change", onMedia);
+    onUnmounted(() => media.removeEventListener("change", onMedia));
 
     const spots = computed<SrpSpot[]>(() =>
       potType.value === "4bet"
@@ -411,9 +418,14 @@ export default defineComponent({
     const columns = computed(() =>
       node.value ? reportColumns(node.value.actions, merged.value || metric.value === "ev") : []
     );
-    const colors = computed(() =>
-      actionColors(columns.value.map((c) => (c.action === "Bet" ? "Bet(1)" : c.action)))
+    const colorsOf = (cols: ReportColumn[]) =>
+      actionColors(cols.map((c) => (c.action === "Bet" ? "Bet(1)" : c.action)));
+    const colors = computed(() => colorsOf(columns.value));
+    // 표 열: 폰에서는 막대의 «크기별»과 상관없이 벳을 합친다 (두 노드 모두 체크 + 벳뿐이라 체크 · 벳 2열)
+    const tableColumns = computed(() =>
+      narrow.value && node.value ? reportColumns(node.value.actions, true) : columns.value
     );
+    const tableColors = computed(() => colorsOf(tableColumns.value));
     const overall = computed<ReportAverage>(() =>
       report.value
         ? averageRows(report.value.rows, nodeIndex.value, report.value.totalWeight)
@@ -429,7 +441,7 @@ export default defineComponent({
     );
     // 표의 색 기준 = 고른 묶음이 있으면 그 묶음 평균, 없으면 전체 평균 (Wizard «필터된 평균»)
     const baseline = computed(() => selectedGroup.value ?? overall.value);
-    const baselineColumns = computed(() => columnValues(baseline.value.freq, columns.value));
+    const baselineColumns = computed(() => columnValues(baseline.value.freq, tableColumns.value));
     const tableRows = computed(() =>
       report.value
         ? sortRows(selectedGroup.value?.rows ?? report.value.rows, nodeIndex.value, sort.value)
@@ -438,7 +450,7 @@ export default defineComponent({
     const visibleRows = computed(() => tableRows.value.slice(0, limit.value));
     watch([groupKey, sort, nodeIndex, spotId], () => (limit.value = PAGE));
     // 크기별 ↔ 합침이면 열 객체가 바뀌므로 열 정렬은 처음으로 돌린다
-    watch([columns], () => {
+    watch([tableColumns], () => {
       if (sort.value.by === "column") sort.value = { by: "flop", desc: true };
     });
 
@@ -620,6 +632,9 @@ export default defineComponent({
       groupKey,
       columns,
       colors,
+      narrow,
+      tableColumns,
+      tableColors,
       overall,
       groups,
       baseline,
@@ -929,5 +944,61 @@ td.below {
 .report-more {
   display: block;
   margin: 8px auto 0;
+}
+/* 폰: 한 줄로 쌓고 페이지가 스크롤한다 · 표는 4열 (narrow) · 가로 스크롤 없음 */
+@media (max-width: 767px) {
+  .report-page {
+    height: auto;
+    gap: 6px;
+  }
+  .report-toolbar {
+    flex-wrap: wrap;
+    gap: 2px 8px;
+    font-size: 10px;
+  }
+  .report-panel {
+    padding: 8px 10px;
+  }
+  .report-top,
+  .report-controls {
+    gap: 8px 12px;
+  }
+  button {
+    min-height: 30px;
+    padding: 5px 7px;
+  }
+  .report-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .report-columns > .report-panel {
+    overflow: visible;
+  }
+  .report-bar-row {
+    grid-template-columns: minmax(0, 1fr) 40px minmax(56px, 1.3fr) 54px;
+    gap: 6px;
+    padding: 5px 6px;
+  }
+  .report-bar-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .report-table {
+    table-layout: fixed;
+  }
+  .report-table th {
+    top: 0;
+  }
+  .report-table td {
+    padding: 6px 3px;
+  }
+  .report-table th:first-child,
+  .report-table td:first-child {
+    width: 34%;
+  }
+  .report-average-row td:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 </style>
