@@ -23,9 +23,9 @@ export const HAND_REVIEW_LAUNCHED = true;
 // 플랍 조회 사이드바 메뉴 스위치 (설계안 참고자료/플랍조회_설계안_2026-10-10.md · 5단계 사장님 ○ 10-12 · 문구 판정 MA-461·469).
 // ?view=flop-study 직접 주소로도 열린다. 자료·캐시는 위 복기와 같이 쓴다.
 export const FLOP_STUDY_LAUNCHED = true;
-// 플랍 통계 사이드바 메뉴 스위치 (설계안 참고자료/플랍통계_설계안_2026-10-12.md · 4단계 문구 회차·사장님 ○ 뒤 켠다).
+// 플랍 통계 사이드바 메뉴 스위치 (설계안 참고자료/플랍통계_설계안_2026-10-12.md · S-079·S-080 판정 OK · 사장님 ○ 10-12에 켬).
 // ?view=flop-report 직접 주소로는 열린다. 자료 = 앱 정적 파일 public/flop-reports (R2 아님).
-export const FLOP_REPORT_LAUNCHED = false;
+export const FLOP_REPORT_LAUNCHED = true;
 const cache = new Map<string, Hmr1File>();
 
 export async function loadReviewFlop(
