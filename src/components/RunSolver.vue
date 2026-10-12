@@ -237,6 +237,8 @@
             ? L.finalizing
             : store.isSolverPaused
             ? L.pausedStatus
+            : stoppedEarly
+            ? L.stoppedEarly
             : L.finished
         }}
       </div>
@@ -341,6 +343,7 @@ const M = {
     finalizing: "마무리 중...",
     pausedStatus: "일시정지됨.",
     finished: "계산 완료!",
+    stoppedEarly: "계산을 멈췄습니다 — 목표 오차에 닿기 전의 결과입니다.",
     allocatingMemory: "메모리 할당 중...",
     iterations: (count: number) => `반복: ${count}회`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -390,6 +393,7 @@ const M = {
     finalizing: "Finalizing…",
     pausedStatus: "Paused.",
     finished: "Solver finished!",
+    stoppedEarly: "Stopped before reaching the target exploitability.",
     allocatingMemory: "Allocating memory…",
     iterations: (count: number) => `Iterations: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -439,6 +443,7 @@ const M = {
     finalizing: "仕上げ処理中…",
     pausedStatus: "一時停止中。",
     finished: "計算が完了しました！",
+    stoppedEarly: "目標誤差に届く前に計算を止めました。",
     allocatingMemory: "メモリを割り当て中…",
     iterations: (count: number) => `イテレーション: ${count}回`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -488,6 +493,7 @@ const M = {
     finalizing: "Finalizando…",
     pausedStatus: "En pausa.",
     finished: "¡Cálculo terminado!",
+    stoppedEarly: "Cálculo detenido antes de alcanzar el error objetivo.",
     allocatingMemory: "Asignando memoria…",
     iterations: (count: number) => `Iteraciones: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -537,6 +543,7 @@ const M = {
     finalizing: "Finalizando…",
     pausedStatus: "Pausado.",
     finished: "Cálculo concluído!",
+    stoppedEarly: "Cálculo interrompido antes de atingir o erro objetivo.",
     allocatingMemory: "Alocando memória…",
     iterations: (count: number) => `Iterações: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -588,6 +595,7 @@ const M = {
     finalizing: "Wird abgeschlossen…",
     pausedStatus: "Pausiert.",
     finished: "Berechnung abgeschlossen!",
+    stoppedEarly: "Berechnung vor Erreichen der Zielabweichung gestoppt.",
     allocatingMemory: "Speicher wird zugewiesen…",
     iterations: (count: number) => `Iterationen: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -640,6 +648,7 @@ const M = {
     finalizing: "即将完成…",
     pausedStatus: "已暂停。",
     finished: "计算完成！",
+    stoppedEarly: "计算已在达到目标可剥削度之前停止。",
     allocatingMemory: "正在分配内存…",
     iterations: (count: number) => `迭代：${count} 次`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -695,6 +704,7 @@ const M = {
     finalizing: "即將完成…",
     pausedStatus: "已暫停。",
     finished: "計算完成！",
+    stoppedEarly: "計算已在達到目標可剝削度之前停止。",
     allocatingMemory: "正在配置記憶體…",
     iterations: (count: number) => `疊代：${count} 次`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -749,6 +759,7 @@ const M = {
     finalizing: "Finalisation…",
     pausedStatus: "En pause.",
     finished: "Calcul terminé !",
+    stoppedEarly: "Calcul arrêté avant d'atteindre l'exploitabilité cible.",
     allocatingMemory: "Allocation de la mémoire…",
     iterations: (count: number) => `Itérations : ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -800,6 +811,7 @@ const M = {
     finalizing: "Menyelesaikan…",
     pausedStatus: "Dijeda.",
     finished: "Perhitungan selesai!",
+    stoppedEarly: "Perhitungan dihentikan sebelum mencapai target exploitability.",
     allocatingMemory: "Mengalokasikan memori…",
     iterations: (count: number) => `Iterasi: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -851,6 +863,7 @@ const M = {
     finalizing: "Sedang menyelesaikan…",
     pausedStatus: "Dijeda.",
     finished: "Pengiraan selesai!",
+    stoppedEarly: "Pengiraan dihentikan sebelum mencapai sasaran exploitability.",
     allocatingMemory: "Memperuntukkan memori…",
     iterations: (count: number) => `Iterasi: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -900,6 +913,7 @@ const M = {
     finalizing: "अंतिम चरण पूरा हो रहा है…",
     pausedStatus: "गणना रुकी हुई है।",
     finished: "गणना पूरी हुई!",
+    stoppedEarly: "Exploitability के लक्ष्य तक पहुँचने से पहले गणना रोक दी गई।",
     allocatingMemory: "मेमोरी आवंटित हो रही है…",
     iterations: (count: number) => `Iterations: ${count}`,
     exploitabilityLine: (value: string, percent: string) => `Exploitability: ${value} (${percent})`,
@@ -947,6 +961,7 @@ const M = {
     finalizing: "Tamamlanıyor…",
     pausedStatus: "Duraklatıldı.",
     finished: "Hesaplama bitti!",
+    stoppedEarly: "Hesaplama, hedef exploitability'ye ulaşmadan durduruldu.",
     allocatingMemory: "Bellek ayrılıyor…",
     iterations: (count: number) => `İterasyon: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -996,6 +1011,7 @@ const M = {
     finalizing: "Đang hoàn tất…",
     pausedStatus: "Đã tạm dừng.",
     finished: "Solver đã xong!",
+    stoppedEarly: "Đã dừng trước khi đạt exploitability mục tiêu.",
     allocatingMemory: "Đang cấp phát bộ nhớ…",
     iterations: (count: number) => `Vòng lặp: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -1045,6 +1061,7 @@ const M = {
     finalizing: "Завершение…",
     pausedStatus: "Пауза.",
     finished: "Расчёт завершён!",
+    stoppedEarly: "Расчёт остановлен до достижения целевой exploitability.",
     allocatingMemory: "Выделение памяти…",
     iterations: (count: number) => `Итераций: ${count}`,
     exploitabilityLine: (value: string, percent: string) =>
@@ -1405,6 +1422,12 @@ export default defineComponent({
       !store.hasSolverRun && !lockStore.busy && memoryUsageSelected.value <= maxMemoryUsage &&
       targetExploitability.value > 0 && maxIterations.value >= 0 &&
       maxIterations.value % 1 === 0 && maxIterations.value <= 100000);
+
+    // 목표 오차에 닿기 전에 끝난 계산(중지·반복 한도)을 «계산 완료!»로 부르지 않는다
+    const stoppedEarly = computed(() => {
+      const meta = store.solverResultMeta;
+      return !!meta && meta.achievedExploitabilityPct > meta.targetExploitabilityPct * (1 + 1e-9);
+    });
 
     const iterationText = computed(() => {
       if (currentIteration.value === -1) {
@@ -1880,6 +1903,7 @@ export default defineComponent({
       memoryUsageSelected,
       canRun,
       iterationText,
+      stoppedEarly,
       exploitabilityText,
       timeText,
       buildTree,
