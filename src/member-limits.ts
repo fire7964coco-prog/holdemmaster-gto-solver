@@ -52,80 +52,80 @@ export const isMemberScenario = (scenario: string) => {
 export const isMemberFreeSample = (scenario: string, fileName: string) =>
   MEMBER_FREE_SAMPLES.includes(`${scenario}/${fileName}`);
 
-// 문구 15언어(3단계 · 검수장 판정 S-087). 말투·어휘는 저장 목록 동기화 줄(saved-sync-labels.ts)과 복기 «상황» 용어에 맞춘다
+// 문구 15언어(3단계 · 검수장 판정 S-087 MA-501 → saveFull «무제한» 대신 «10개 넘게»(계정 보관 한도 1,000이 있어서) · 재판정 S-088). 말투·어휘는 저장 목록 동기화 줄(saved-sync-labels.ts)과 복기 «상황» 용어에 맞춘다
 // (es·pt·de·fr·tr·ru 반말 · hi आप). «무료 회원»이 어색한 언어는 «회원(계정 무료)»으로 푼다.
 const ko = {
-  saveFull: "로그인하면 개수 제한 없이 저장하고 폰·PC에서 불러올 수 있어요",
+  saveFull: "로그인하면 10개 넘게 저장하고 폰·PC에서 불러올 수 있어요",
   importOver: "가져오면 이 기기 저장이 10개를 넘어요 — 로그인하면 전부 가져올 수 있어요",
   memberScenario: "이 상황은 무료 회원 전용이에요 — 로그인하면 바로 볼 수 있어요",
 };
 const en: typeof ko = {
-  saveFull: "Sign in to save without a limit and open your list on any phone or PC",
+  saveFull: "Sign in to save more than 10 items and open your list on any phone or PC",
   importOver: "This import would take this device past 10 saved items — sign in to import all of it",
-  memberScenario: "This situation is for free members — sign in to open it right away",
+  memberScenario: "This situation is only for free members — sign in to open it right away",
 };
 const ja: typeof ko = {
-  saveFull: "ログインすると、件数の上限なしで保存でき、スマホでもPCでも開けます",
+  saveFull: "ログインすると10件より多く保存でき、スマホでもPCでも開けます",
   importOver: "インポートするとこの端末の保存が10件を超えます — ログインするとすべてインポートできます",
   memberScenario: "この状況は無料会員専用です — ログインするとすぐに見られます",
 };
 const es: typeof ko = {
-  saveFull: "Inicia sesión para guardar sin límite y abrir tu lista en cualquier móvil o PC",
+  saveFull: "Inicia sesión para guardar más de 10 elementos y abrir tu lista en cualquier móvil o PC",
   importOver: "Con esta importación este dispositivo pasaría de 10 elementos guardados — inicia sesión para importarlo todo",
   memberScenario: "Esta situación es solo para miembros (cuenta gratuita) — inicia sesión para verla ahora mismo",
 };
 const pt: typeof ko = {
-  saveFull: "Entre na sua conta para salvar sem limite e abrir sua lista em qualquer celular ou PC",
+  saveFull: "Entre na sua conta para salvar mais de 10 itens e abrir sua lista em qualquer celular ou PC",
   importOver: "Esta importação faria este dispositivo passar de 10 itens salvos — entre na sua conta para importar tudo",
   memberScenario: "Esta situação é só para membros (conta gratuita) — entre na sua conta para ver agora mesmo",
 };
 const de: typeof ko = {
-  saveFull: "Melde dich an, um ohne Limit zu speichern und deine Liste auf jedem Handy oder PC zu öffnen",
+  saveFull: "Melde dich an, um mehr als 10 Einträge zu speichern und deine Liste auf jedem Handy oder PC zu öffnen",
   importOver: "Mit diesem Import hätte dieses Gerät mehr als 10 gespeicherte Einträge – melde dich an, um alles zu importieren",
   memberScenario: "Diese Situation ist nur für Mitglieder (kostenloses Konto) – melde dich an, um sie sofort zu sehen",
 };
 const zh: typeof ko = {
-  saveFull: "登录后可不限数量保存，手机和电脑都能打开你的列表",
+  saveFull: "登录后可保存超过 10 个，手机和电脑都能打开你的列表",
   importOver: "导入后此设备的保存将超过 10 个 — 登录后即可全部导入",
   memberScenario: "此场景仅限免费会员 — 登录后即可查看",
 };
 const zhHant: typeof ko = {
-  saveFull: "登入後可不限數量儲存，手機和電腦都能開啟你的清單",
+  saveFull: "登入後可儲存超過 10 個，手機和電腦都能開啟你的清單",
   importOver: "匯入後此裝置的儲存將超過 10 個 — 登入後即可全部匯入",
   memberScenario: "此情境僅限免費會員 — 登入後即可查看",
 };
 const fr: typeof ko = {
-  saveFull: "Connecte-toi pour enregistrer sans limite et ouvrir ta liste sur n'importe quel téléphone ou PC",
+  saveFull: "Connecte-toi pour enregistrer plus de 10 éléments et ouvrir ta liste sur n'importe quel téléphone ou PC",
   importOver: "Cette importation ferait dépasser 10 éléments enregistrés sur cet appareil — connecte-toi pour tout importer",
   memberScenario: "Cette situation est réservée aux membres (compte gratuit) — connecte-toi pour la voir tout de suite",
 };
 const id: typeof ko = {
-  saveFull: "Masuk untuk menyimpan tanpa batas dan membuka daftar di HP atau PC mana pun",
+  saveFull: "Masuk untuk menyimpan lebih dari 10 item dan membuka daftar di HP atau PC mana pun",
   importOver: "Impor ini akan membuat simpanan di perangkat ini lebih dari 10 — masuk untuk mengimpor semuanya",
   memberScenario: "Situasi ini khusus anggota (akun gratis) — masuk untuk langsung melihatnya",
 };
 const ms: typeof ko = {
-  saveFull: "Log masuk untuk menyimpan tanpa had dan membuka senarai di mana-mana telefon atau PC",
+  saveFull: "Log masuk untuk menyimpan lebih daripada 10 item dan membuka senarai di mana-mana telefon atau PC",
   importOver: "Import ini akan menjadikan simpanan pada peranti ini melebihi 10 — log masuk untuk import semuanya",
   memberScenario: "Keadaan ini khas untuk ahli (akaun percuma) — log masuk untuk terus melihatnya",
 };
 const hi: typeof ko = {
-  saveFull: "लॉग इन करें, फिर बिना किसी सीमा के सेव करें और लिस्ट किसी भी फ़ोन या PC पर खोलें",
+  saveFull: "लॉग इन करें, फिर 10 से ज़्यादा आइटम सेव करें और लिस्ट किसी भी फ़ोन या PC पर खोलें",
   importOver: "इसे इंपोर्ट करने पर इस डिवाइस पर सेव किए गए आइटम 10 से ज़्यादा हो जाएँगे — लॉग इन करें, फिर सब इंपोर्ट कर सकते हैं",
   memberScenario: "यह स्थिति सिर्फ़ सदस्यों के लिए है (खाता मुफ़्त है) — लॉग इन करें और तुरंत देखें",
 };
 const tr: typeof ko = {
-  saveFull: "Sınırsız kaydetmek ve listeni her telefonda veya PC'de açmak için giriş yap",
+  saveFull: "10'dan fazla öğe kaydetmek ve listeni her telefonda veya PC'de açmak için giriş yap",
   importOver: "Bu içe aktarma bu cihazdaki kayıtları 10'un üzerine çıkarır — hepsini içe aktarmak için giriş yap",
   memberScenario: "Bu durum yalnızca üyelere açık (hesap ücretsiz) — hemen görmek için giriş yap",
 };
 const vi: typeof ko = {
-  saveFull: "Đăng nhập để lưu không giới hạn và mở danh sách trên mọi điện thoại hoặc PC",
+  saveFull: "Đăng nhập để lưu hơn 10 mục và mở danh sách trên mọi điện thoại hoặc PC",
   importOver: "Nhập tệp này sẽ khiến số mục đã lưu trên thiết bị này vượt quá 10 — đăng nhập để nhập toàn bộ",
   memberScenario: "Tình huống này chỉ dành cho thành viên (tài khoản miễn phí) — đăng nhập để xem ngay",
 };
 const ru: typeof ko = {
-  saveFull: "Войди, чтобы сохранять без ограничений и открывать список на любом телефоне или ПК",
+  saveFull: "Войди, чтобы сохранять больше 10 элементов и открывать список на любом телефоне или ПК",
   importOver: "После импорта на этом устройстве будет больше 10 сохранённых элементов — войди, чтобы импортировать всё",
   memberScenario: "Эта ситуация доступна только участникам (аккаунт бесплатный) — войди, чтобы сразу её открыть",
 };
