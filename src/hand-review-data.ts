@@ -20,9 +20,9 @@ export const HAND_REVIEW_DATA = {
 // 사이드바 메뉴 노출 스위치 — 11상황 자료를 올린 뒤 출시(2026-10-09 사장님 ○) → 20상황 · 10-11 3벳 9개 추가 → 31상황 · 10-11 4벳 11개 추가. 09-29 «중간 공개 없음» 조건 충족.
 // ?view=hand-review 직접 주소로는 열린다 (검사·내부 확인용).
 export const HAND_REVIEW_LAUNCHED = true;
-// 플랍 조회 사이드바 메뉴 스위치 (설계안 참고자료/플랍조회_설계안_2026-10-10.md · 5단계 사장님 ○ 뒤 true).
-// false여도 ?view=flop-study 직접 주소로는 열린다 (검사·내부 확인용). 자료·캐시는 위 복기와 같이 쓴다.
-export const FLOP_STUDY_LAUNCHED = false;
+// 플랍 조회 사이드바 메뉴 스위치 (설계안 참고자료/플랍조회_설계안_2026-10-10.md · 5단계 사장님 ○ 10-12 · 문구 판정 MA-461·469).
+// ?view=flop-study 직접 주소로도 열린다. 자료·캐시는 위 복기와 같이 쓴다.
+export const FLOP_STUDY_LAUNCHED = true;
 const cache = new Map<string, Hmr1File>();
 
 export async function loadReviewFlop(

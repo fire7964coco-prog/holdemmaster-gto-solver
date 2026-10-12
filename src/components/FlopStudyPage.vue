@@ -640,8 +640,15 @@ export default defineComponent({
     });
 
     // [솔버로 열기] — SpotPicker.apply와 같은 길 + 보드(실제 무늬) + 미리 계산과 같은 벳 크기
+    const spotBetSize = (field: typeof BET_FIELDS[number]) =>
+      field.endsWith("Raise")
+        ? SPOT_BET_SIZES.raise
+        : field.includes("Flop")
+        ? SPOT_BET_SIZES.flopBet
+        : SPOT_BET_SIZES.laterBet;
     function openInSolver() {
-      // 레인지·보드가 비어 있어도 스택·팟을 바꿨거나 트리를 편집했으면 묻는다 (S-076 코드 소견 · 20·100 = store.ts 기본값)
+      // 레인지·보드가 비어 있어도 팟·스택·벳 크기·동크·트리 편집을 바꿨으면 묻는다
+      // (S-076 코드 소견 · MA-469 통지 · 20·100 = store.ts 기본값, 벳 크기 기본값 = spotBetSize)
       const filled =
         config.range[0].some(Boolean) ||
         config.range[1].some(Boolean) ||
@@ -649,7 +656,11 @@ export default defineComponent({
         config.startingPot !== 20 ||
         config.effectiveStack !== 100 ||
         config.addedLines !== "" ||
-        config.removedLines !== "";
+        config.removedLines !== "" ||
+        config.donkOption ||
+        config.oopTurnDonk !== "" ||
+        config.oopRiverDonk !== "" ||
+        BET_FIELDS.some((field) => config[field] !== spotBetSize(field));
       if (filled && !window.confirm(S.value.confirmOverwrite)) return;
       const s = spot.value;
       config.board = [...flop.value];
@@ -662,12 +673,7 @@ export default defineComponent({
       config.donkOption = false;
       config.oopTurnDonk = "";
       config.oopRiverDonk = "";
-      for (const field of BET_FIELDS)
-        config[field] = field.endsWith("Raise")
-          ? SPOT_BET_SIZES.raise
-          : field.includes("Flop")
-          ? SPOT_BET_SIZES.flopBet
-          : SPOT_BET_SIZES.laterBet;
+      for (const field of BET_FIELDS) config[field] = spotBetSize(field);
       store.pendingRangeText = [s.oopRange, s.ipRange];
       store.sideView = "tree-config";
     }
