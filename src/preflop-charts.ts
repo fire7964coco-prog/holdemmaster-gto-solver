@@ -649,44 +649,62 @@ const gridIndexOf = (hi: number, lo: number, suited: boolean) => {
 };
 
 /**
- * 한 클래스 표기("66+", "K8s-K5s", "AJo+", "54s")를 [hi, lo, suited][] 목록으로.
+ * 한 클래스 표기("66+", "K8s-K5s", "AJo+", "54s", "AK", "T9s+", "KQo-JTo")를 [hi, lo, suited][] 목록으로.
  * 에퀴티 계산기(equity.ts)의 레인지 파서도 이 함수를 그대로 쓴다 — 문법이 한 곳에만 있어야 한다.
+ * 문법은 솔버 엔진(rust/postflop-solver/src/range.rs)과 같다. 다른 점은 구간의 순서("A2s-A5s")를
+ * 받아 준다는 것뿐이다. 해석할 수 없는 표기는 비슷한 다른 레인지로 바꾸지 않고 오류로 던진다(Q2-01).
  */
 export const expandClass = (cls: string): [number, number, boolean][] => {
+  const fail = (): never => {
+    throw new Error(`레인지 표기 해석 불가: ${cls}`);
+  };
+  // 한 핸드 표기 → hi·lo 랭크와 수트 구분("" = 수트·오프수트 둘 다)
+  const single = (text: string) => {
+    const m = text.match(/^([2-9TJQKA])([2-9TJQKA])([so]?)$/);
+    if (!m) return fail();
+    const hi = rankIndex(m[1]);
+    const lo = rankIndex(m[2]);
+    if (hi < lo) return fail(); // "KA"처럼 높은 랭크가 뒤
+    if (hi === lo && m[3]) return fail(); // "AAs"
+    return { hi, lo, suit: m[3] };
+  };
   const out: [number, number, boolean][] = [];
-  const m = cls.match(/^([2-9TJQKA])([2-9TJQKA])([so]?)(\+?)$/);
-  const range = cls.match(/^([2-9TJQKA])([2-9TJQKA])([so]?)-([2-9TJQKA])([2-9TJQKA])([so]?)$/);
-  if (range) {
-    const hi = rankIndex(range[1]);
-    const from = rankIndex(range[2]);
-    const to = rankIndex(range[5]);
-    const suited = range[3] === "s";
-    if (rankIndex(range[4]) !== hi) {
-      // 페어 구간 "44-22"
-      for (let r = Math.min(hi, rankIndex(range[4])); r <= Math.max(hi, rankIndex(range[4])); r++)
-        out.push([r, r, false]);
-      return out;
+  const push = (hi: number, lo: number, suit: string) => {
+    if (hi === lo) out.push([hi, lo, false]);
+    else {
+      if (suit !== "o") out.push([hi, lo, true]);
+      if (suit !== "s") out.push([hi, lo, false]);
     }
-    for (let lo = Math.min(from, to); lo <= Math.max(from, to); lo++)
-      out.push([hi, lo, suited]);
+  };
+
+  const dash = cls.split("-");
+  if (dash.length > 2) return fail();
+  if (dash.length === 2) {
+    const a = single(dash[0]);
+    const b = single(dash[1]);
+    if (a.suit !== b.suit) return fail();
+    const gap = a.hi - a.lo;
+    if (gap === b.hi - b.lo) {
+      // 간격이 같은 구간 "88-55", "KQo-JTo"
+      for (let hi = Math.min(a.hi, b.hi); hi <= Math.max(a.hi, b.hi); hi++) push(hi, hi - gap, a.suit);
+    } else if (a.hi === b.hi) {
+      // 첫 랭크가 같은 구간 "A5s-A2s"
+      for (let lo = Math.min(a.lo, b.lo); lo <= Math.max(a.lo, b.lo); lo++) push(a.hi, lo, a.suit);
+    } else return fail();
     return out;
   }
-  if (!m) throw new Error(`레인지 표기 해석 불가: ${cls}`);
-  const hi = rankIndex(m[1]);
-  const lo = rankIndex(m[2]);
-  const suited = m[3] === "s";
-  if (hi === lo) {
-    // 페어 ("66", "66+")
-    const top = m[4] ? 12 : hi;
-    for (let r = hi; r <= top; r++) out.push([r, r, false]);
-    return out;
-  }
-  if (m[4]) {
+
+  const plus = cls.endsWith("+");
+  const s = single(plus ? cls.slice(0, -1) : cls);
+  if (!plus) push(s.hi, s.lo, s.suit);
+  else if (s.hi - s.lo <= 1) {
+    // 페어·커넥터 "66+", "T9s+" = 같은 간격으로 A까지 올림
+    const gap = s.hi - s.lo;
+    for (let hi = s.hi; hi <= 12; hi++) push(hi, hi - gap, s.suit);
+  } else {
     // "A9s+" = 킥커를 hi 바로 아래까지 올림
-    for (let k = lo; k < hi; k++) out.push([hi, k, suited]);
-    return out;
+    for (let lo = s.lo; lo < s.hi; lo++) push(s.hi, lo, s.suit);
   }
-  out.push([hi, lo, suited]);
   return out;
 };
 

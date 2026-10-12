@@ -115,7 +115,7 @@ import { appLabels, feedbackLabels } from "../solver-feedback-labels";
 import {
   feedbackOpen, feedbackResumePending, closeFeedback, getFeedbackSession,
   getFeedbackContext, postFeedback, loadFeedbackDraft, saveFeedbackDraft,
-  clearFeedbackDraft, feedbackLandingUrl,
+  clearFeedbackDraft, feedbackLandingUrl, type FeedbackDraft,
 } from "../solver-feedback";
 
 // Verbatim value from Holdem_Project/lib/solver-feedback-config.ts LINK_PATTERN
@@ -170,12 +170,26 @@ export default defineComponent({
     let previousOverflow = "";
     let documentLocked = false;
     let accountId: string | null = null;
+    // 화면의 본문을 쓴 계정(로그인 전에 쓴 본문이면 null) — 다른 계정에 보이거나 제출되지 않게(Q2-06)
+    let bodyOwner: string | null = null;
 
     const persist = (pendingSubmit = false) => saveFeedbackDraft({
       locale: locale.value, body: body.value, downside: downside.value,
       rating: rating.value, nickname: nicknameWasEdited.value ? nickname.value : undefined,
-      nicknameUserId: nicknameWasEdited.value ? nicknameOwner.value : undefined, pendingSubmit,
+      nicknameUserId: nicknameWasEdited.value ? nicknameOwner.value : undefined,
+      bodyUserId: (accountId ?? bodyOwner) || undefined, pendingSubmit,
     });
+    const fillDraft = (draft: FeedbackDraft | null) => {
+      body.value = draft?.body || "";
+      downside.value = draft?.downside || "";
+      rating.value = draft?.rating ?? null;
+      nickname.value = draft?.nickname || "";
+      nicknameWasEdited.value = draft?.nickname !== undefined;
+      nicknameOwner.value = draft?.nicknameUserId;
+      downsideOpen.value = !!downside.value;
+    };
+    const hasDraftContent = (draft: FeedbackDraft | null) =>
+      !!draft && (draft.body.length > 0 || draft.downside.length > 0 || draft.rating !== null || draft.pendingSubmit);
     const markEdited = () => { changed = true; error.value = ""; };
     watch([body, downside, rating, nickname], () => {
       if (feedbackOpen.value && !initializing && !saved.value) persist(false);
@@ -304,7 +318,15 @@ export default defineComponent({
         }
         const currentUser = await getCurrentUser();
         if (currentUser?.id !== accountId) {
+          const shownOwner = accountId ?? bodyOwner;
           accountId = currentUser?.id || null;
+          // 앞 계정이 쓴 본문을 새 계정 이름으로 보내지 않는다(Q2-06)
+          if (shownOwner && shownOwner !== accountId) {
+            bodyOwner = null;
+            fillDraft(null);
+            contextReady.value = false;
+            return;
+          }
           contextReady.value = false;
           nicknameWasEdited.value = false;
           nicknameOwner.value = undefined;
@@ -383,16 +405,17 @@ export default defineComponent({
       feedbackResumePending.value = false;
       locale.value = resume && draft ? draft.locale : i18n.locale;
       const usableDraft = draft?.locale === locale.value ? draft : null;
-      const keepDraft = !!usableDraft && (usableDraft.body.length > 0 || usableDraft.downside.length > 0 || usableDraft.rating !== null || usableDraft.pendingSubmit);
-      body.value = usableDraft?.body || "";
-      downside.value = usableDraft?.downside || "";
-      rating.value = usableDraft?.rating ?? null;
-      nickname.value = usableDraft?.nickname || "";
-      nicknameWasEdited.value = usableDraft?.nickname !== undefined;
-      nicknameOwner.value = usableDraft?.nicknameUserId;
-      downsideOpen.value = !!downside.value;
+      // 계정이 적힌 초안은 지금 계정이 같다고 확인한 뒤에만 채운다(Q2-06)
+      // 이 수정 전에 저장된 초안은 bodyUserId가 없다 — 닉네임을 고친 계정을 주인으로 본다
+      const heldOwner = usableDraft?.bodyUserId ?? usableDraft?.nicknameUserId ?? null;
+      const heldDraft = heldOwner ? usableDraft : null;
+      const openDraft = heldDraft ? null : usableDraft;
+      let keepDraft = hasDraftContent(openDraft);
+      bodyOwner = null;
+      fillDraft(openDraft);
       // Claim before any await: reloads or another auth callback cannot auto-post twice.
-      const resumeClaimed = !resume || persist(false);
+      // 화면이 아니라 원본 초안으로 선점한다 — 주인 있는 초안은 아직 화면에 안 채웠다(Q2-06)
+      const resumeClaimed = !resume || (!!draft && saveFeedbackDraft({ ...draft, pendingSubmit: false }));
       if (!resumeClaimed) error.value = "unavailable";
       lockDocument();
       await nextTick();
@@ -404,6 +427,14 @@ export default defineComponent({
         if (authenticated.value) {
           accountId = (await getCurrentUser())?.id || null;
           if (generation !== currentGeneration || !feedbackOpen.value) return;
+          if (heldDraft && heldOwner === accountId && !changed) {
+            initializing = true;
+            fillDraft(heldDraft);
+            bodyOwner = accountId;
+            keepDraft = hasDraftContent(heldDraft);
+            await nextTick();
+            initializing = false;
+          }
           await loadContext(keepDraft, currentGeneration);
         }
       } catch { error.value = "unavailable"; }
@@ -411,7 +442,8 @@ export default defineComponent({
         if (generation === currentGeneration) loading.value = false;
       }
       // A first public name must be seen and confirmed by a click; a draft owned by another account is never sent.
-      const sameOwner = !usableDraft?.nicknameUserId || usableDraft.nicknameUserId === accountId;
+      const sameOwner = (!usableDraft?.nicknameUserId || usableDraft.nicknameUserId === accountId) &&
+        (!heldDraft || heldOwner === accountId);
       if (resume && resumeClaimed && authenticated.value && contextReady.value && sameOwner && !nicknameRequired.value &&
         !emailNameNeedsChange.value && !!nickname.value && !error.value) await submit();
     };

@@ -470,7 +470,7 @@
       :store-name="storeName"
       :has-items="data.length > 0"
       :revision="syncRevision"
-      @replaced="loadData"
+      @replaced="onSyncReplaced"
     />
   </div>
 
@@ -983,6 +983,22 @@ export default defineComponent({
       channel.postMessage(message);
       syncRevision.value++;
     };
+    // 이름을 쓰는 중에 동기화가 끝나면 다시 읽지 않는다 — 입력칸·새 항목이 사라지고 버튼이 잠긴 채 남았다.
+    // 표시만 해 두고, 이름 쓰기가 끝나 기기에 쓴 뒤 다시 읽는다(아래 afterEdit)
+    let reloadAfterEdit = false;
+    const onSyncReplaced = () => {
+      if (isEditing.value) reloadAfterEdit = true;
+      else void loadData();
+    };
+    const afterEdit =
+      <A extends unknown[]>(fn: (...args: A) => Promise<void>) =>
+      async (...args: A) => {
+        await fn(...args);
+        if (reloadAfterEdit && !isEditing.value) {
+          reloadAfterEdit = false;
+          await loadData();
+        }
+      };
 
     channel.onmessage = async (event: MessageEvent<Message>) => {
       if (errorOccured.value) return;
@@ -1649,8 +1665,8 @@ export default defineComponent({
       addOrOverwriteItem,
       isNameValid,
       renameItem,
-      tryRename,
-      cancelRename,
+      tryRename: afterEdit(tryRename),
+      cancelRename: afterEdit(cancelRename),
       addGroup,
       deleteItem,
       importError,
@@ -1660,6 +1676,7 @@ export default defineComponent({
       exportJson,
       FEATURE_TRAINER,
       syncRevision,
+      onSyncReplaced,
       loadData,
     };
   },

@@ -377,12 +377,15 @@ export default defineComponent({
       data.value = null;
       error.value = "";
       displayPlayer.value = "oop";
+      // 늦게 온 앞 프리셋 응답이 새 프리셋 제목 아래 뜨지 않게
+      const id = props.preset.id;
       try {
-        const res = await fetch(`preset-results/${props.preset.id}.json`);
+        const res = await fetch(`preset-results/${id}.json`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        data.value = await res.json();
+        const json = await res.json();
+        if (id === props.preset.id) data.value = json;
       } catch (e) {
-        error.value = e instanceof Error ? e.message : String(e);
+        if (id === props.preset.id) error.value = e instanceof Error ? e.message : String(e);
       }
     };
 

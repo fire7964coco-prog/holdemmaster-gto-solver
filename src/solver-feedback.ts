@@ -16,6 +16,8 @@ export type FeedbackDraft = {
   rating: number | null;
   nickname?: string;
   nicknameUserId?: string;
+  /** 본문을 쓴 계정. 없으면 로그인 전에 쓴 초안 — 로그인한 계정이 이어 받는다(Q2-06) */
+  bodyUserId?: string;
   pendingSubmit: boolean;
 };
 export type FeedbackInput = {
@@ -44,10 +46,12 @@ export function loadFeedbackDraft(): FeedbackDraft | null {
       typeof d.downside !== "string" || d.body.length > 20000 || d.downside.length > 20000 ||
       (d.rating !== null && (!Number.isInteger(d.rating) || d.rating < 1 || d.rating > 5)) ||
       (d.nickname !== undefined && typeof d.nickname !== "string") ||
-      (d.nicknameUserId !== undefined && typeof d.nicknameUserId !== "string")) return null;
+      (d.nicknameUserId !== undefined && typeof d.nicknameUserId !== "string") ||
+      (d.bodyUserId !== undefined && typeof d.bodyUserId !== "string")) return null;
     return { locale: d.locale, body: d.body, downside: d.downside, rating: d.rating,
       ...(d.nickname !== undefined ? { nickname: d.nickname } : {}),
       ...(d.nicknameUserId !== undefined ? { nicknameUserId: d.nicknameUserId } : {}),
+      ...(d.bodyUserId !== undefined ? { bodyUserId: d.bodyUserId } : {}),
       pendingSubmit: d.pendingSubmit === true };
   } catch { return null; }
 }

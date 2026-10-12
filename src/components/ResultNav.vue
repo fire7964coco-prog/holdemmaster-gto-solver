@@ -1280,6 +1280,8 @@ export default defineComponent({
     };
 
     const play = async (spotIndex: number, actionIndex: number) => {
+      // 계산 중에는 선택 표시도 바꾸지 않는다 — 표시만 바뀌고 결과는 이전 요청 것이 남는다(Q2-02)
+      if (props.isLocked) return;
       const spot = spots.value[spotIndex] as SpotPlayer;
 
       if (spot.selectedIndex !== -1) {
@@ -1303,6 +1305,7 @@ export default defineComponent({
     };
 
     const deal = async (card: number) => {
+      if (props.isLocked) return; // play와 같은 이유(Q2-02)
       const spot = selectedChance.value;
       if (!spot) throw new Error("null spot");
 
@@ -1322,6 +1325,7 @@ export default defineComponent({
       rankDir: number,
       suitDir: number
     ) => {
+      if (props.isLocked) return; // play와 같은 이유(Q2-02)
       const offset = rankDir ? 4 * rankDir : suitDir;
       let card = spot.selectedIndex + offset;
 

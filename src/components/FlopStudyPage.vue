@@ -750,6 +750,8 @@ export default defineComponent({
       const token = ++epoch;
       file.value = null;
       errorCode.value = "";
+      // 앞 요청의 finally는 epoch가 바뀌어 loading을 못 끈다 — 미준비로 일찍 끝나도 꺼진 채로 시작(Q2-05)
+      loading.value = false;
       if (!isReady(spot.value)) return;
       loading.value = true;
       try {

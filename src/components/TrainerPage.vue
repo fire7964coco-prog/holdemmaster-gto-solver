@@ -482,7 +482,7 @@
                     :class="row.isMine ? 'text-brand font-semibold' : 'text-neutral-300'"
                   >
                     <span class="inline-block w-6 text-right tabular-nums text-neutral-500">
-                      {{ index + 1 }}
+                      {{ row.rank }}
                     </span>
                     <span class="ml-2">{{ row.nickname }}</span>
                     <span class="ml-2 tabular-nums text-neutral-500">
@@ -2688,6 +2688,9 @@ export default defineComponent({
       if (!question.value || evaluation.value) return;
       evaluation.value = evaluateTrainerAction(question.value, actionIndex);
       const result = evaluation.value;
+      // 답을 고른 순간의 모드로 기록한다 — 저장을 기다리는 사이 오늘의 문제로 넘어가면
+      // 일반 문제 답이 오늘의 첫 기록으로 남았다(Q2-03)
+      const answeredDaily = dailyMode.value;
       await addTrainerAttempt({
         clientId: newClientId(),
         timestamp: Date.now(),
@@ -2700,7 +2703,7 @@ export default defineComponent({
         evLossBb: result.evLossBb,
       });
       attempts.value = await getTrainerAttempts();
-      if (dailyMode.value) {
+      if (answeredDaily) {
         recordDaily(result.evLossBb);
         // 로그인 상태면 오늘의 순위에도 올린다 (첫 기록만 유효 — 서버가 중복 무시)
         if (account.value) void submitToBoard();

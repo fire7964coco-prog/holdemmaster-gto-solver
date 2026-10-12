@@ -438,13 +438,17 @@ export default defineComponent({
       }
     });
 
+    let initGen = 0;
     const init = async () => {
       if (!handler) return;
+      const gen = ++initGen;
 
       const cardsBuffer = [
         await handler.privateCards(0),
         await handler.privateCards(1),
       ];
+      // 기다리는 사이 clear()됐으면(곧바로 트리 다시 빌드) 옛 카드로 되살리지 않는다
+      if (!isSolverFinished.value || gen !== initGen) return;
 
       cards.value = Array.from({ length: 2 }, (_, player) => {
         return Array.from(cardsBuffer[player]);

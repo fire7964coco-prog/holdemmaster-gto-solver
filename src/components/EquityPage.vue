@@ -1351,12 +1351,12 @@ export default defineComponent({
       return !rangeError.value && rangeCombos.value > 0;
     });
 
-    // 입력을 고치면 옛 결과는 지운다 (바뀐 입력 옆에 옛 숫자가 남으면 오해한다)
-    watch([hero, villainHand, board, rangeText], () => {
-      if (!running.value) {
-        result.value = null;
-        errorCode.value = "";
-      }
+    // 입력을 고치면 옛 결과는 지운다 (바뀐 입력 옆에 옛 숫자가 남으면 오해한다).
+    // 계산 중이면 그 계산도 멈춘다 — 끝난 뒤 바뀐 입력 옆에 옛 입력의 결과가 뜨던 것(Q2-04)
+    watch([hero, villainHand, board, rangeText, villainMode], () => {
+      if (running.value) stop();
+      result.value = null;
+      errorCode.value = "";
     });
 
     /* ── 계산 ─────────────────────────────────────────────── */

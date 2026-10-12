@@ -15,6 +15,8 @@ export type LeaderboardRow = {
   nickname: string;
   lossBb: number;
   isMine: boolean;
+  /** 순위 (1부터). 동점은 공동 순위 — myRank와 같은 규칙(1,1,3) · 사장님 10-12 «공동 1위» */
+  rank: number;
 };
 
 export type Leaderboard = {
@@ -64,10 +66,12 @@ export const fetchLeaderboard = async (day: string): Promise<Leaderboard | null>
     }
 
     return {
+      // 손실 오름차순이므로 같은 손실의 첫 줄 번호가 «더 작은 손실 수 + 1»이다
       rows: data.map((row) => ({
         nickname: String(row.nickname || "?"),
         lossBb: Number(row.loss_bb),
         isMine: Boolean(myId && row.user_id === myId),
+        rank: data.findIndex((other) => Number(other.loss_bb) === Number(row.loss_bb)) + 1,
       })),
       total: count ?? data.length,
       myRank,

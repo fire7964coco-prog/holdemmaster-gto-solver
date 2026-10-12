@@ -41,6 +41,8 @@ const KIND: Record<SavedStore, "range" | "config"> = {
 /** 90일 넘은 지운 표시는 기기·계정에서 실제로 지운다 (S-068). */
 export const TOMBSTONE_KEEP_MS = 90 * 24 * 60 * 60 * 1000;
 const CHUNK = 200;
+const PAGE = 1000; // 받기 한 쪽 줄 수 (Supabase 기본 응답 한도와 같다)
+const MAX_PAGES = 10; // 종류당 서버 전체 한도 3,000줄의 넉넉한 위
 
 export type SavedSyncState = "idle" | "syncing" | "ok" | "pending" | "limit";
 export const savedSyncStatus = reactive<
@@ -112,6 +114,7 @@ const toRemote = (r: SyncRow, userId: string, kind: string) => ({
 });
 
 const running = new Map<SavedStore, Promise<boolean>>();
+const rerun = new Set<SavedStore>();
 const listeners = new Set<(store: SavedStore) => void>();
 /** 동기화가 기기 목록을 바꿨을 때 (저장 목록 화면이 다시 읽는다) */
 export const onSavedReplaced = (fn: (store: SavedStore) => void) => {
@@ -126,8 +129,15 @@ export const onSavedReplaced = (fn: (store: SavedStore) => void) => {
  */
 export const syncSavedStore = (store: SavedStore): Promise<boolean> => {
   const prev = running.get(store);
-  if (prev) return prev;
-  const job = runSync(store).finally(() => running.delete(store));
+  if (prev) {
+    // 도는 중에 들어온 요청은 끝난 뒤 한 번 더 돌린다 — 그 사이 저장한 것이 «대기»로 남지 않게
+    rerun.add(store);
+    return prev;
+  }
+  const job = runSync(store).finally(() => {
+    running.delete(store);
+    if (rerun.delete(store)) void syncSavedStore(store);
+  });
   running.set(store, job);
   return job;
 };
@@ -146,13 +156,24 @@ async function runSync(store: SavedStore): Promise<boolean> {
       count: rows.length,
       newest: Math.max(0, ...rows.map((r) => r.updatedAt ?? 0)),
     };
-    const { data, error } = await supabase
-      .from(TABLE)
-      .select("client_id,name0,name1,name2,name3,is_group,value,updated_at,deleted_at")
-      .eq("user_id", user.id)
-      .eq("kind", kind);
-    if (error) throw error;
-    const remote = (data as RemoteRow[]).map(fromRemote);
+    // 한 번에 다 받지 않는다 — 서버가 응답을 1,000줄로 자르면 지운 표시가 빠져 지운 항목이
+    // 되살아난다(Q2-07). client_id 순으로 빈 쪽이 올 때까지 이어 받는다.
+    // 서버 한도(종류당 전체 3,000줄)보다 넉넉한 쪽 수에서 멈추고, 그래도 남으면 실패로 둔다.
+    const remoteRows: RemoteRow[] = [];
+    for (let page = 0; ; page++) {
+      if (page >= MAX_PAGES) throw new Error("too many remote rows");
+      const { data, error } = await supabase
+        .from(TABLE)
+        .select("client_id,name0,name1,name2,name3,is_group,value,updated_at,deleted_at")
+        .eq("user_id", user.id)
+        .eq("kind", kind)
+        .order("client_id", { ascending: true })
+        .range(remoteRows.length, remoteRows.length + PAGE - 1);
+      if (error) throw error;
+      if (!data || data.length === 0) break;
+      remoteRows.push(...(data as RemoteRow[]));
+    }
+    const remote = remoteRows.map(fromRemote);
 
     const now = Date.now(),
       cutoff = now - TOMBSTONE_KEEP_MS;
