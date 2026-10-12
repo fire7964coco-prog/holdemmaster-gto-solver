@@ -130,6 +130,24 @@ export const getCurrentUser = async (): Promise<AccountUser | null> => {
   return toUser(data.session);
 };
 
+/**
+ * 회원 전용 자료 요청에 붙일 로그인 토큰. 로그인한 흔적이 없으면 supabase-js를 내려받지 않고 null.
+ * refresh = 자료 서버가 401을 준 뒤 한 번 새로 받을 때.
+ */
+export const getAccessToken = async (refresh = false): Promise<string | null> => {
+  if (!hasStoredSession() && !isClientLoaded()) return null;
+  const supabase = await getClient();
+  if (!supabase) return null;
+  try {
+    const { data } = refresh
+      ? await supabase.auth.refreshSession()
+      : await supabase.auth.getSession();
+    return data.session?.access_token ?? null;
+  } catch {
+    return null;
+  }
+};
+
 export const onAuthChange = (handler: (user: AccountUser | null) => void) => {
   let unsubscribe: (() => void) | null = null;
   let cancelled = false;
@@ -167,7 +185,8 @@ export const takeLoginPurpose = (): "feedback" | null => {
 
 /** 로그인에서 돌아와 열 화면 (저장 목록 동기화 · 없으면 App이 트레이너로 연다). 다음 signIn 한 번에만 쓰인다. */
 const LOGIN_RETURN_KEY = "solver.login.returnView.v1";
-const RETURN_VIEWS = ["oop-range", "ip-range", "tree-config"];
+// hand-review·flop-study = 회원 전용 상황 한 줄에서 시작한 로그인(member-limits.ts)
+const RETURN_VIEWS = ["oop-range", "ip-range", "tree-config", "hand-review", "flop-study"];
 let nextReturnView: string | null = null;
 export const setLoginReturnView = (view: string) => {
   nextReturnView = RETURN_VIEWS.includes(view) ? view : null;

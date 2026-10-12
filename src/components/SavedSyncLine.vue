@@ -1,14 +1,20 @@
 <template>
   <!-- 저장 목록 아래 한 줄 — 로그인 권유 / 동기화 상태 (설계 참고자료/계정동기화_설계안_2026-10-11.md §3) -->
   <div
-    v-if="enabled && (user || hasItems)"
+    v-if="enabled && (user || hasItems || nudged)"
     class="saved-sync-line text-xs text-neutral-400 leading-relaxed"
     data-testid="saved-sync-line"
     :data-store="storeName"
-    :data-state="user ? status.state : 'signed-out'"
+    :data-state="user ? status.state : full ? 'full' : 'signed-out'"
   >
     <template v-if="!user">
-      <span>{{ L.invite }}</span>
+      <!-- 회원 전용 ①: 비회원 저장이 다 찼을 때만 개수 안내(9개까지는 기존 권유 그대로 · 사장님 10-12) ·
+           찬 상태에서 [저장]·가져오기를 누르면 팝업 없이 이 줄을 강조한다 -->
+      <span
+        :class="{ 'saved-sync-nudged': nudged }"
+        :data-testid="nudged ? 'saved-sync-nudged' : undefined"
+        >{{ nudged === "import" ? M.importOver : full ? M.saveFull : L.invite }}</span
+      >
       <span class="inline-flex gap-2 ml-1 align-middle">
         <button
           class="saved-sync-button"
@@ -60,6 +66,7 @@ import {
   syncSavedStore,
 } from "../saved-sync-run";
 import { savedSyncLabels } from "../saved-sync-labels";
+import { memberLabels, memberLimitsEnabled, SAVE_LIMIT } from "../member-limits";
 
 export default defineComponent({
   props: {
@@ -68,16 +75,43 @@ export default defineComponent({
     hasItems: { type: Boolean, required: true },
     /** 저장 목록이 이 기기에서 바뀔 때마다 1씩 오른다 → 계정에 반영 */
     revision: { type: Number, required: true },
+    /** 저장된 항목 수(폴더 제외) — 비회원 저장 한도 판단용 */
+    itemCount: { type: Number, default: 0 },
+    /** 한도가 찬 상태에서 저장·가져오기를 누를 때마다 1씩 오른다 → 이 줄을 강조 */
+    nudge: { type: Number, default: 0 },
+    nudgeKind: { type: String as PropType<"save" | "import">, default: "save" },
   },
-  emits: ["replaced"],
+  // room: 비회원 한도가 걸릴 때 더 저장할 수 있는 수 · 한도가 없으면(로그인·스위치 꺼짐·확인 전) null
+  emits: ["replaced", "room"],
   setup(props, { emit }) {
     const store = useStore();
     const enabled = savedSyncEnabled();
     const L = computed(() => savedSyncLabels(i18n.locale));
+    const M = computed(() => memberLabels(i18n.locale));
     const isKo = computed(() => i18n.locale === "ko");
     const user = ref<AccountUser | null>(null);
     const busy = ref(false);
     const status = computed(() => savedSyncStatus[props.storeName]);
+    // 로그인 여부를 확인하기 전에는 제한하지 않는다(로그인한 사람이 잠깐이라도 막히지 않게)
+    const authResolved = ref(false);
+    const capped = computed(
+      () => enabled && memberLimitsEnabled() && authResolved.value && !user.value
+    );
+    const full = computed(() => capped.value && props.itemCount >= SAVE_LIMIT);
+    watch(
+      () => (capped.value ? SAVE_LIMIT - props.itemCount : null),
+      (room) => emit("room", room),
+      { immediate: true }
+    );
+    const nudged = ref<"" | "save" | "import">("");
+    watch(
+      () => props.nudge,
+      () => {
+        if (capped.value) nudged.value = props.nudgeKind;
+      }
+    );
+    // 목록이 바뀌거나 로그인하면 강조를 거둔다
+    watch([() => props.itemCount, user], () => (nudged.value = ""));
 
     let stopAuth: (() => void) | null = null;
     let stopReplaced: (() => void) | null = null;
@@ -87,8 +121,16 @@ export default defineComponent({
         if (s === props.storeName) emit("replaced");
       });
       // 로그인한 흔적이 없으면 supabase-js(214KB)를 내려받지 않는다 — 권유 줄만 보인다 (account.ts 원칙)
-      if (!hasStoredSession() && !isClientLoaded()) return;
-      user.value = await getCurrentUser();
+      if (!hasStoredSession() && !isClientLoaded()) {
+        authResolved.value = true;
+        return;
+      }
+      try {
+        user.value = await getCurrentUser();
+      } finally {
+        // 로그인 흔적이 있는데 세션을 못 받았으면(오프라인에서 토큰 만료 등) 회원일 가능성이 높다 → 이 화면에선 제한하지 않는다
+        authResolved.value = !!user.value || !hasStoredSession();
+      }
       stopAuth = onAuthChange((u) => {
         const signedIn = !user.value && u;
         user.value = u;
@@ -123,7 +165,7 @@ export default defineComponent({
         minute: "2-digit",
       });
 
-    return { enabled, L, isKo, user, busy, status, start, time };
+    return { enabled, L, M, isKo, user, busy, status, start, time, full, nudged };
   },
 });
 </script>
@@ -131,6 +173,10 @@ export default defineComponent({
 <style scoped>
 .saved-sync-line {
   padding: 2px 2px 0;
+}
+.saved-sync-nudged {
+  color: rgb(252 211 77);
+  font-weight: 600;
 }
 .saved-sync-button {
   padding: 1px 8px;

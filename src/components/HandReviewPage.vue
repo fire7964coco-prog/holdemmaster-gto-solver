@@ -181,8 +181,9 @@
             data-testid="review-status"
             :data-code="statusCode"
           >
-            {{ statusText
-            }}<button
+            <MemberLoginLine v-if="statusCode === 'MEMBER_ONLY'" />
+            <template v-else>{{ statusText }}</template
+            ><button
               v-if="retryable"
               data-testid="review-retry"
               @click="retry"
@@ -504,6 +505,7 @@ import { canPractice, createReviewPracticeBank } from "../hand-review-practice";
 import { customTrainerState } from "../custom-trainer";
 import { saveCustomTrainerBank } from "../custom-trainer-db";
 import { useStore } from "../store";
+import MemberLoginLine from "./MemberLoginLine.vue";
 
 type Street = "flop" | "turn" | "river";
 type Row = {
@@ -523,6 +525,7 @@ const policy = {
 } as const;
 
 export default defineComponent({
+  components: { MemberLoginLine },
   setup() {
     const L = computed(() => M[i18n.locale]);
     const spotId = ref("srp-btn-bb"),

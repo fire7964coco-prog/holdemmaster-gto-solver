@@ -197,6 +197,7 @@
       :data-code="statusCode"
     >
       <template v-if="loading">{{ R.loading }}</template>
+      <MemberLoginLine v-else-if="statusCode === 'MEMBER_ONLY'" />
       <template v-else
         >{{ statusText
         }}<button
@@ -471,6 +472,7 @@ import { Hmr1File } from "../review/hmr1";
 import { canonicalizeFlop } from "../review/flop-canon";
 import { parseAction } from "../review/flop-line";
 import { ReviewError } from "../review/errors";
+import MemberLoginLine from "./MemberLoginLine.vue";
 import { flopNode } from "../hand-review-model";
 import {
   actionFilterMask,
@@ -493,6 +495,7 @@ const BET_FIELDS = (["oop", "ip"] as const).flatMap((p) =>
 );
 
 export default defineComponent({
+  components: { MemberLoginLine },
   setup() {
     const S = computed(() => flopStudyLabels(i18n.locale));
     const R = computed(() => M[i18n.locale]);

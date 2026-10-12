@@ -1,6 +1,8 @@
 import { parseHmr1, Hmr1File } from "./review/hmr1";
 import { ReviewError } from "./review/errors";
 import { SPOT_UNIT_SCALE } from "./preflop-spots";
+import { getAccessToken } from "./account";
+import { isMemberFreeSample, isMemberScenario } from "./member-limits";
 
 // Deployment changes only this configuration. Data is served separately, never bundled.
 // 자료 = Cloudflare R2 `holdem-review-data` → Worker(도구/review-data-worker). 자료를 바꿀 땐 v2/로 새로 올린다.
@@ -39,20 +41,48 @@ export async function loadReviewFlop(
   const url = `${HAND_REVIEW_DATA.baseUrl.replace(/\/$/, "")}/${
     spot.id
   }/${fileName}`;
+  // 회원 전용 상황(맛보기 파일 제외)은 로그인 토큰을 붙인다 — 없으면 요청하지 않고 MEMBER_ONLY(화면은 그 자리 한 줄).
+  // 무료 상황 요청에는 머리를 붙이지 않는다(사전 확인 요청이 생기지 않게).
+  const member =
+    isMemberScenario(spot.id) && !isMemberFreeSample(spot.id, fileName);
+  let token = member ? await getAccessToken() : null;
+  if (member && !token)
+    throw new ReviewError("MEMBER_ONLY", "Sign-in required", {
+      scenario: spot.id,
+    });
   const found = cache.get(url);
   if (found) {
     cache.delete(url);
     cache.set(url, found);
     return found;
   }
-  const abort = new AbortController(),
-    timeout = setTimeout(() => abort.abort(), HAND_REVIEW_DATA.timeoutMs);
+  const abort = new AbortController();
+  let timeout = setTimeout(() => abort.abort(), HAND_REVIEW_DATA.timeoutMs);
   try {
-    const response = await fetch(url, {
-      signal: abort.signal,
-      credentials: "omit",
-      mode: "cors",
-    });
+    const get = () =>
+      fetch(url, {
+        signal: abort.signal,
+        credentials: "omit",
+        mode: "cors",
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+    let response = await get();
+    // 토큰이 만료됐으면 한 번 새로 받아 다시 요청 · 그래도 401이면 한 줄로 돌아간다
+    if (member && response.status === 401) {
+      token = await getAccessToken(true);
+      if (!token)
+        throw new ReviewError("MEMBER_ONLY", "Sign-in required", {
+          scenario: spot.id,
+        });
+      clearTimeout(timeout);
+      timeout = setTimeout(() => abort.abort(), HAND_REVIEW_DATA.timeoutMs);
+      response = await get();
+    }
+    // 새 토큰으로도 401 = 로그인은 돼 있는데 서버 쪽 확인 실패(키 목록 못 받음 등) → 로그인 줄이 아니라 «다시 시도»
+    if (member && response.status === 401)
+      throw new ReviewError("LOAD_FAILED", "Member token rejected", {
+        scenario: spot.id,
+      });
     if (response.status === 404)
       throw new ReviewError("MISSING_FILE", "Flop file missing");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);

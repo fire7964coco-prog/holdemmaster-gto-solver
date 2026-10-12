@@ -470,7 +470,11 @@
       :store-name="storeName"
       :has-items="data.length > 0"
       :revision="syncRevision"
+      :item-count="itemCount"
+      :nudge="limitNudge"
+      :nudge-kind="limitNudgeKind"
       @replaced="onSyncReplaced"
+      @room="saveRoom = $event"
     />
   </div>
 
@@ -979,6 +983,17 @@ export default defineComponent({
     const channel = new BroadcastChannel(`item-picker-${props.storeName}`);
     // 저장 목록 계정 동기화: 이 기기에서 바꾼 뒤마다 올라간다 (SavedSyncLine이 계정에 반영)
     const syncRevision = ref(0);
+    // 회원 전용 ①: 더 저장할 수 있는 수(SavedSyncLine이 알려 준다 · null = 한도 없음 — npokers 빌드는 늘 null)
+    const saveRoom = ref<number | null>(null);
+    const limitNudge = ref(0);
+    const limitNudgeKind = ref<"save" | "import">("save");
+    // 이름 쓰는 중인 새 항목도 센다 — [저장]을 누른 순간 자리를 차지한다(그 사이 다른 탭이 더해도 한도를 넘지 않게)
+    const countItems = (items: (Item | Group)[]): number =>
+      items.reduce(
+        (n, item) => n + (item.isGroup ? countItems(item.items) : 1),
+        0
+      );
+    const itemCount = computed(() => countItems(data.value));
     const notify = (message: Message) => {
       channel.postMessage(message);
       syncRevision.value++;
@@ -1131,6 +1146,19 @@ export default defineComponent({
     const addOrOverwriteItem = async (value?: unknown, name?: string) => {
       if (errorOccured.value) return;
 
+      // 회원 전용 ①: 비회원 한도가 찼으면 새로 더하는 것만 막고 아래 한 줄을 강조한다(팝업 없음).
+      // 덮어쓰기·이름 바꾸기·삭제·불러오기는 언제나 · 다른 탭의 메시지(value가 있음)는 막지 않는다
+      if (
+        value === undefined &&
+        selectedItem.value?.item?.isGroup !== false &&
+        saveRoom.value !== null &&
+        saveRoom.value <= 0
+      ) {
+        limitNudgeKind.value = "save";
+        limitNudge.value++;
+        return;
+      }
+
       if (selectedItem.value?.item?.isGroup === false) {
         // overwrite
         selectedItem.value.item.value = value ?? props.value;
@@ -1241,6 +1269,20 @@ export default defineComponent({
           if (item.path[item.path.length - 1] === "") {
             await deleteItem(false);
           }
+          return;
+        }
+
+        // 회원 전용 ①: 이름을 쓰는 사이 다른 탭이 더해 한도를 넘었으면 이 새 항목은 저장하지 않는다
+        if (
+          !item.isGroup &&
+          item.path[item.path.length - 1] === "" &&
+          saveRoom.value !== null &&
+          saveRoom.value < 0
+        ) {
+          editingName.value = "";
+          await deleteItem(false);
+          limitNudgeKind.value = "save";
+          limitNudge.value++;
           return;
         }
 
@@ -1613,6 +1655,14 @@ export default defineComponent({
         return;
       }
 
+      // 회원 전용 ①: 비회원 한도를 넘기면 일부만 넣지 않고 전부 거절한다(폴더가 꼬인다) → 아래 한 줄로 로그인 안내
+      const newItems = itemsToAdd.filter((item) => item.isGroup === 0).length;
+      if (saveRoom.value !== null && newItems > saveRoom.value) {
+        limitNudgeKind.value = "import";
+        limitNudge.value++;
+        return;
+      }
+
       errorOccured.value ||= !(await Db.bulkAdd(props.storeName, itemsToAdd));
       notify({ type: "importJson" });
       await loadData();
@@ -1677,6 +1727,10 @@ export default defineComponent({
       FEATURE_TRAINER,
       syncRevision,
       onSyncReplaced,
+      saveRoom,
+      limitNudge,
+      limitNudgeKind,
+      itemCount,
       loadData,
     };
   },
