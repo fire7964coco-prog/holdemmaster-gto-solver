@@ -35,6 +35,7 @@ export const SavedSyncLine = EmptyPage;
 /** 오늘의 문제 없음 — AboutPage의 완료 표시가 참조하는 최소 형태만 유지 */
 export const dailyState = reactive({ done: false, lossBb: 0, streak: 0, bestStreak: 0 });
 export const loadDailyState = () => {};
+export const requestDailyStart = () => {};
 
 /** 이 빌드에 트레이너 일체(교육예제·트레이너·오늘의문제·리더보드·계정)가 있는가 */
 export const FEATURE_TRAINER = false;

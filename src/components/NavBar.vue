@@ -66,8 +66,12 @@
              ⚠ npokers는 페깅할 본진이 없다(스토어에서 바로 설치). 여기서 지우면 사용자가
                 폰 언어에 영구히 갇힌다 — 양쪽 빌드에서 무작정 지우지 말 것.
              ⚠ 항목을 늘리면 상자가 넓어져 «다른 언어» 화면이 밀린다 — select-fit-verify.js 필수 -->
+        <!-- 폰에서는 상자 대신 짧은 언어 코드만 보이고, 투명한 선택 상자를 그 위에 겹친다 —
+             상자 폭을 가장 긴 항목(Bahasa Indonesia·Português)이 정해 390px에서 15언어 중
+             11언어가 최대 23px 넘쳤다(Q3-04). 누르면 같은 기본 목록이 열린다 -->
+        <span v-if="showLangSelect" class="relative flex h-full items-center">
+        <span class="lang-code" aria-hidden="true">{{ langCode }}<svg class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 7.5 10 12l4.5-4.5z"/></svg></span>
         <select
-          v-if="showLangSelect"
           class="lang-select"
           :aria-label="L.langSwitchLabel"
           :value="locale"
@@ -91,6 +95,7 @@
           <option value="vi">Tiếng Việt</option>
           <option value="ru">Русский</option>
         </select>
+        </span>
         <a
           :href="communityUrl"
           class="flex px-2 md:px-4 h-full items-center font-semibold hover:bg-neutral-700 text-brand text-sm"
@@ -283,6 +288,9 @@ export default defineComponent({
       // 언어 전환 시 그 언어의 본체 홈(/en 등)으로 갈아타야 하므로 computed
       communityUrl: computed(() => mainSiteUrl("", "navbar")),
       locale: computed(() => i18n.locale),
+      langCode: computed(() =>
+        i18n.locale === "zh" ? "简" : i18n.locale === "zh-hant" ? "繁" : i18n.locale.toUpperCase()
+      ),
       L,
       onLocaleChange,
     };
@@ -299,6 +307,15 @@ export default defineComponent({
      네비바가 10px 넘쳤다(en·ja). 모바일에서만 글자를 한 단계 줄여 자리를 만든다.
      왼쪽 여백(pl-2)은 건드리지 말 것 — 줄이면 «ResultadosPortuguês»로 붙어 보인다. */
   @apply !py-0 !pl-2 !pr-6 md:!pr-7;
+}
+@media (max-width: 767px) {
+  .lang-select {
+    @apply absolute inset-0 w-full opacity-0;
+  }
+}
+/* md:hidden을 템플릿에 두면 이 scoped 규칙의 flex가 이겨 PC에서도 코드가 보였다 */
+.lang-code {
+  @apply flex md:hidden items-center gap-0.5 px-2 text-xs font-semibold text-neutral-400;
 }
 .lang-select:focus {
   @apply !ring-0;

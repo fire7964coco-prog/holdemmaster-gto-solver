@@ -630,6 +630,7 @@ import {
   loadDailyState,
   makeDailyQuestion,
   recordDaily,
+  takeDailyStartRequest,
   todayKey,
 } from "../daily";
 import { canShareCard, drawDailyCard, saveCard, shareCard } from "../share-card";
@@ -2767,8 +2768,26 @@ export default defineComponent({
       dailyCopied.value = false;
       nextQuestion();
     };
+    // 판정은 오늘 «기록된» 결과(dailyState.lossBb)로 — 같은 문제를 나중에 다시
+    // 풀어 다른 결과가 나와도 공유 문구·성적 카드는 처음 기록을 따른다.
+    // 공유 문구가 지금 화면의 판정을 쓰면 손실은 첫 기록인데 판정만 새 답이 됐다(Q3-02)
+    const recordedDailyTone = (): "best" | "good" | "miss" => {
+      const loss = dailyState.lossBb;
+      return loss <= limits.value.bestBb
+        ? "best"
+        : loss <= limits.value.goodBb
+        ? "good"
+        : "miss";
+    };
+    const toneLabel = (tone: "best" | "good" | "miss") =>
+      tone === "best"
+        ? L.value.verdictBest
+        : tone === "good"
+        ? L.value.verdictGood
+        : L.value.verdictMiss;
+
     const copyDaily = async () => {
-      const text = dailyShareText(verdict.value.text);
+      const text = dailyShareText(toneLabel(recordedDailyTone()));
       try {
         await navigator.clipboard.writeText(text);
         dailyCopied.value = true;
@@ -2784,21 +2803,9 @@ export default defineComponent({
     const cardFileName = () => `gto-daily-${todayKey()}.png`;
     const openCard = () => {
       if (!question.value) return;
-      // 판정은 오늘 «기록된» 결과(dailyState.lossBb)로 — 같은 문제를 나중에 다시
-      // 풀어 다른 결과가 나와도 카드는 처음 기록을 따른다 (공유 문구와 동일 기준)
       const loss = dailyState.lossBb;
-      const tone: "best" | "good" | "miss" =
-        loss <= limits.value.bestBb
-          ? "best"
-          : loss <= limits.value.goodBb
-          ? "good"
-          : "miss";
-      const toneText =
-        tone === "best"
-          ? L.value.verdictBest
-          : tone === "good"
-          ? L.value.verdictGood
-          : L.value.verdictMiss;
+      const tone = recordedDailyTone();
+      const toneText = toneLabel(tone);
       const node = question.value.node;
       cardCanvas = drawDailyCard({
         dateLabel: dailyCardDate(),
@@ -2883,6 +2890,8 @@ export default defineComponent({
     };
 
     onMounted(async () => {
+      // 자료를 못 받아도 요청은 여기서 쓴다 — 남아 있으면 나중에 평소대로 연 트레이너가 오늘의 문제로 떴다
+      const startDaily = takeDailyStartRequest();
       try {
         const response = await fetch("trainer-decisions.json");
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -2891,6 +2900,7 @@ export default defineComponent({
         if (errors.length) throw new Error(errors.slice(0, 3).join(", "));
         bank.value = loaded;
         attempts.value = await getTrainerAttempts();
+        if (startDaily) dailyMode.value = true;
         nextQuestion();
       } catch (error) {
         loadError.value = error instanceof Error ? error.message : String(error);

@@ -443,12 +443,22 @@ export default defineComponent({
       if (!handler) return;
       const gen = ++initGen;
 
-      const cardsBuffer = [
-        await handler.privateCards(0),
-        await handler.privateCards(1),
-      ];
       // 기다리는 사이 clear()됐으면(곧바로 트리 다시 빌드) 옛 카드로 되살리지 않는다
-      if (!isSolverFinished.value || gen !== initGen) return;
+      const stale = () => !isSolverFinished.value || gen !== initGen;
+      let cardsBuffer: Uint16Array[];
+      try {
+        cardsBuffer = [
+          await handler.privateCards(0),
+          await handler.privateCards(1),
+        ];
+      } catch (error) {
+        // 새 트리를 만들며 옛 worker를 바꾸면 남은 요청이 SOLVER_WORKER_REPLACED로 끝난다 —
+        // 이미 버린 결과의 정상 취소라 오류 알림을 띄우지 않는다(Q3-05). 그 밖의 실패는 그대로 알린다
+        // worker를 먼저 바꾸고 상태를 나중에 바꾸는 경로(실패 복구 등)도 있어 이유로도 본다
+        if (stale() || (error as Error)?.message === "SOLVER_WORKER_REPLACED") return;
+        throw error;
+      }
+      if (stale()) return;
 
       cards.value = Array.from({ length: 2 }, (_, player) => {
         return Array.from(cardsBuffer[player]);

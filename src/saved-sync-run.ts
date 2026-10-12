@@ -159,16 +159,21 @@ async function runSync(store: SavedStore): Promise<boolean> {
     // 한 번에 다 받지 않는다 — 서버가 응답을 1,000줄로 자르면 지운 표시가 빠져 지운 항목이
     // 되살아난다(Q2-07). client_id 순으로 빈 쪽이 올 때까지 이어 받는다.
     // 서버 한도(종류당 전체 3,000줄)보다 넉넉한 쪽 수에서 멈추고, 그래도 남으면 실패로 둔다.
+    // 다음 쪽은 «몇 번째부터»가 아니라 «마지막으로 받은 client_id 다음부터» 받는다 — 받는 사이
+    // 다른 기기가 앞쪽의 오래된 지운 표시를 정리하면 줄이 당겨져 지운 표시를 건너뛰었다(Q3-03)
     const remoteRows: RemoteRow[] = [];
     for (let page = 0; ; page++) {
       if (page >= MAX_PAGES) throw new Error("too many remote rows");
-      const { data, error } = await supabase
+      let query = supabase
         .from(TABLE)
         .select("client_id,name0,name1,name2,name3,is_group,value,updated_at,deleted_at")
         .eq("user_id", user.id)
-        .eq("kind", kind)
+        .eq("kind", kind);
+      const last = remoteRows[remoteRows.length - 1];
+      if (last) query = query.gt("client_id", last.client_id);
+      const { data, error } = await query
         .order("client_id", { ascending: true })
-        .range(remoteRows.length, remoteRows.length + PAGE - 1);
+        .limit(PAGE);
       if (error) throw error;
       if (!data || data.length === 0) break;
       remoteRows.push(...(data as RemoteRow[]));

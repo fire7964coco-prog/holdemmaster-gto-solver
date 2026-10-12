@@ -61,7 +61,7 @@
         <button
           v-if="FEATURE_TRAINER"
           class="button-base bg-surface-3 text-ink-primary border border-neutral-700 hover:bg-surface-4 flex items-center gap-2"
-          @click="store.sideView = 'trainer'"
+          @click="openDaily"
         >
           {{ L.ctaDaily }}
           <span v-if="dailyState.done" class="text-emerald-400" :aria-label="L.dailyDone">✓</span>
@@ -191,7 +191,7 @@
 import { computed, defineComponent } from "vue";
 import { requestInstall, canShowInstallButton } from "../pwa";
 // 빌드 2벌 분기 — npokers 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
-import { dailyState, loadDailyState, FEATURE_TRAINER } from "@features";
+import { dailyState, loadDailyState, requestDailyStart, FEATURE_TRAINER } from "@features";
 import { useStore } from "../store";
 import { mainSiteUrl } from "../outbound";
 import { i18n } from "../i18n";
@@ -1190,9 +1190,16 @@ export default defineComponent({
 
     loadDailyState();
 
+    const store = useStore();
+    const openDaily = () => {
+      requestDailyStart();
+      store.sideView = "trainer";
+    };
+
     return {
       sentenceGap,
-      store: useStore(),
+      store,
+      openDaily,
       dailyState,
       FEATURE_TRAINER,
       L,

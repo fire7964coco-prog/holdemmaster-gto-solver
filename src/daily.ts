@@ -45,6 +45,23 @@ const seededRandom = (seed: number) => {
   };
 };
 
+/**
+ * 다음에 열리는 트레이너를 오늘의 문제로 시작하게 한다 — 소개의 «오늘의 문제» 버튼과
+ * 공유 문구의 링크(`daily=1`). 없으면 일반 문제가 떠서 다시 눌러야 했다(Q3-01).
+ * 한 번 쓰면 지운다 — 다른 메뉴에 갔다 돌아온 트레이너는 평소처럼 연다.
+ */
+let dailyStartRequested =
+  typeof location !== "undefined" &&
+  new URLSearchParams(location.search).get("daily") === "1";
+export const requestDailyStart = () => {
+  dailyStartRequested = true;
+};
+export const takeDailyStartRequest = () => {
+  const requested = dailyStartRequested;
+  dailyStartRequested = false;
+  return requested;
+};
+
 export const dailyState = reactive({
   /** 오늘 문제를 풀었는가 */
   done: false,
@@ -166,7 +183,7 @@ export const dailyShareText = (verdict: string) => {
       `मेरा परिणाम: ${verdict} (EV नुकसान ${dailyState.lossBb.toFixed(3)}bb)`,
       dailyState.streak > 1 ? `लगातार ${dailyState.streak} दिन अभ्यास` : "",
       "",
-      "यही सवाल हल करें → https://solver.holdemmaster.com/?view=trainer&lang=hi",
+      "यही सवाल हल करें → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=hi",
       "(HoldemMaster GTO Solver · हर दिन 1 सवाल)",
     ]
       .filter(Boolean)
@@ -178,7 +195,7 @@ export const dailyShareText = (verdict: string) => {
       `結果: ${verdict}（EVロス ${dailyState.lossBb.toFixed(3)}bb）`,
       dailyState.streak > 1 ? `${dailyState.streak}日連続チャレンジ中` : "",
       "",
-      "同じ問題に挑戦 → https://solver.holdemmaster.com/?view=trainer&lang=ja",
+      "同じ問題に挑戦 → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=ja",
       "（HoldemMaster GTOソルバー・毎日1問）",
     ]
       .filter(Boolean)
@@ -190,7 +207,7 @@ export const dailyShareText = (verdict: string) => {
       `Mi resultado: ${verdict} (pérdida de EV ${dailyState.lossBb.toFixed(3)}bb)`,
       dailyState.streak > 1 ? `Racha de ${dailyState.streak} días` : "",
       "",
-      "Resuelve el mismo reto → https://solver.holdemmaster.com/?view=trainer&lang=es",
+      "Resuelve el mismo reto → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=es",
       "(HoldemMaster GTO Solver · un reto al día)",
     ]
       .filter(Boolean)
@@ -204,7 +221,7 @@ export const dailyShareText = (verdict: string) => {
       )}bb)`,
       dailyState.streak > 1 ? `Sequência de ${dailyState.streak} dias` : "",
       "",
-      "Resolva o mesmo desafio → https://solver.holdemmaster.com/?view=trainer&lang=pt",
+      "Resolva o mesmo desafio → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=pt",
       "(HoldemMaster GTO Solver · um desafio por dia)",
     ]
       .filter(Boolean)
@@ -220,7 +237,7 @@ export const dailyShareText = (verdict: string) => {
       )}bb)`,
       dailyState.streak > 1 ? `${dailyState.streak} Tage in Folge` : "",
       "",
-      "Dieselbe Aufgabe lösen → https://solver.holdemmaster.com/?view=trainer&lang=de",
+      "Dieselbe Aufgabe lösen → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=de",
       "(HoldemMaster GTO Solver · eine Aufgabe pro Tag)",
     ]
       .filter(Boolean)
@@ -235,7 +252,7 @@ export const dailyShareText = (verdict: string) => {
       `我的结果：${verdict}（EV 损失 ${dailyState.lossBb.toFixed(3)}bb）`,
       dailyState.streak > 1 ? `已连续挑战 ${dailyState.streak} 天` : "",
       "",
-      "来做同一道题 → https://solver.holdemmaster.com/?view=trainer&lang=zh",
+      "来做同一道题 → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=zh",
       "（HoldemMaster GTO 求解器 · 每天一题）",
     ]
       .filter(Boolean)
@@ -250,7 +267,7 @@ export const dailyShareText = (verdict: string) => {
       `我的結果：${verdict}（EV 損失 ${dailyState.lossBb.toFixed(3)}bb）`,
       dailyState.streak > 1 ? `已連續挑戰 ${dailyState.streak} 天` : "",
       "",
-      "來做同一道題 → https://solver.holdemmaster.com/?view=trainer&lang=zh-hant",
+      "來做同一道題 → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=zh-hant",
       "（HoldemMaster GTO 解算器 · 每天一題）",
     ]
       .filter(Boolean)
@@ -267,7 +284,7 @@ export const dailyShareText = (verdict: string) => {
       )}bb)`,
       dailyState.streak > 1 ? `Série de ${dailyState.streak} jours` : "",
       "",
-      "Relève le même défi → https://solver.holdemmaster.com/?view=trainer&lang=fr",
+      "Relève le même défi → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=fr",
       "(HoldemMaster GTO Solver · un défi par jour)",
     ]
       .filter(Boolean)
@@ -284,7 +301,7 @@ export const dailyShareText = (verdict: string) => {
       )}bb)`,
       dailyState.streak > 1 ? `Streak ${dailyState.streak} hari` : "",
       "",
-      "Coba tantangan yang sama → https://solver.holdemmaster.com/?view=trainer&lang=id",
+      "Coba tantangan yang sama → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=id",
       "(HoldemMaster GTO Solver · satu tantangan per hari)",
     ]
       .filter(Boolean)
@@ -299,7 +316,7 @@ export const dailyShareText = (verdict: string) => {
       `Hasil saya: ${verdict} (kerugian EV ${dailyState.lossBb.toFixed(3)}bb)`,
       dailyState.streak > 1 ? `Streak ${dailyState.streak} hari` : "",
       "",
-      "Cuba cabaran yang sama → https://solver.holdemmaster.com/?view=trainer&lang=ms",
+      "Cuba cabaran yang sama → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=ms",
       "(HoldemMaster GTO Solver · satu cabaran sehari)",
     ]
       .filter(Boolean)
@@ -313,7 +330,7 @@ export const dailyShareText = (verdict: string) => {
       `Sonucum: ${verdict} (EV kaybı ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
       dailyState.streak > 1 ? `${dailyState.streak} günlük seri` : "",
       "",
-      "Aynı soruyu sen de çöz → https://solver.holdemmaster.com/?view=trainer&lang=tr",
+      "Aynı soruyu sen de çöz → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=tr",
       "(HoldemMaster GTO Solver · her gün bir soru)",
     ]
       .filter(Boolean)
@@ -325,7 +342,7 @@ export const dailyShareText = (verdict: string) => {
       `Kết quả của tôi: ${verdict} (EV mất ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
       dailyState.streak > 1 ? `${dailyState.streak} ngày liên tiếp` : "",
       "",
-      "Giải cùng thử thách này → https://solver.holdemmaster.com/?view=trainer&lang=vi",
+      "Giải cùng thử thách này → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=vi",
       "(HoldemMaster GTO Solver · mỗi ngày một thử thách)",
     ]
       .filter(Boolean)
@@ -337,7 +354,7 @@ export const dailyShareText = (verdict: string) => {
       `Мой результат: ${verdict} (потеря EV ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
       dailyState.streak > 1 ? `${dailyState.streak} ${ruPlural(dailyState.streak, "день", "дня", "дней")} подряд` : "",
       "",
-      "Реши ту же задачу → https://solver.holdemmaster.com/?view=trainer&lang=ru",
+      "Реши ту же задачу → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=ru",
       "(HoldemMaster GTO-солвер · одна задача в день)",
     ]
       .filter(Boolean)
@@ -349,7 +366,7 @@ export const dailyShareText = (verdict: string) => {
       `My result: ${verdict} (EV loss ${dailyState.lossBb.toFixed(3)}bb)`,
       dailyState.streak > 1 ? `${dailyState.streak}-day streak` : "",
       "",
-      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&lang=en",
+      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=en",
       "(HoldemMaster GTO Solver · one puzzle a day)",
     ]
       .filter(Boolean)
@@ -360,7 +377,7 @@ export const dailyShareText = (verdict: string) => {
     `내 결과: ${verdict} (EV 손실 ${dailyState.lossBb.toFixed(3)}bb)`,
     dailyState.streak > 1 ? `${dailyState.streak}일 연속 풀이 중` : "",
     "",
-    "같은 문제 풀어보기 → https://solver.holdemmaster.com/?view=trainer",
+    "같은 문제 풀어보기 → https://solver.holdemmaster.com/?view=trainer&daily=1",
     "(홀덤마스터 GTO 솔버 · 매일 1문제)",
   ]
     .filter(Boolean)
