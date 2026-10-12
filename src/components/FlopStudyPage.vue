@@ -2,9 +2,9 @@
   <!-- 플랍 조회 2단계: PC 화면 (설계 참고자료/플랍조회_설계안_2026-10-10.md §1 · §7-2) -->
   <section class="study-page" data-testid="flop-study-page">
     <div class="study-toolbar">
-      <span>{{
+      <span v-if="file">{{
         format(S.precomputedAccuracy, {
-          pct: pct((file?.header.targetPct ?? 0.3) / 100),
+          pct: pct(file.header.targetPct / 100),
         })
       }}</span>
       <span>{{ spot.oop }} vs {{ spot.ip }} · {{ R.pot }} {{ bb(spot.startingPot) }}</span>
@@ -367,7 +367,7 @@
           </button>
         </div>
         <p v-if="!selectedKey || !summary" class="study-meta">
-          {{ S.chooseCell }}
+          {{ mode === "range" ? S.chooseCellRange : S.chooseCell }}
         </p>
         <p v-else-if="!reachedCombos.length" class="study-meta">
           {{ S.notInRange }}
@@ -641,10 +641,15 @@ export default defineComponent({
 
     // [솔버로 열기] — SpotPicker.apply와 같은 길 + 보드(실제 무늬) + 미리 계산과 같은 벳 크기
     function openInSolver() {
+      // 레인지·보드가 비어 있어도 스택·팟을 바꿨거나 트리를 편집했으면 묻는다 (S-076 코드 소견 · 20·100 = store.ts 기본값)
       const filled =
         config.range[0].some(Boolean) ||
         config.range[1].some(Boolean) ||
-        config.board.length > 0;
+        config.board.length > 0 ||
+        config.startingPot !== 20 ||
+        config.effectiveStack !== 100 ||
+        config.addedLines !== "" ||
+        config.removedLines !== "";
       if (filled && !window.confirm(S.value.confirmOverwrite)) return;
       const s = spot.value;
       config.board = [...flop.value];
