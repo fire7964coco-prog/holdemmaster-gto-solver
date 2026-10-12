@@ -197,7 +197,10 @@
       :data-code="statusCode"
     >
       <template v-if="loading">{{ R.loading }}</template>
-      <MemberLoginLine v-else-if="statusCode === 'MEMBER_ONLY'" />
+      <MemberLoginLine
+        v-else-if="statusCode === 'MEMBER_ONLY'"
+        :return-state="{ spot: spot.id, flop }"
+      />
       <template v-else
         >{{ statusText
         }}<button
@@ -451,7 +454,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, shallowRef, watch } from "vue";
+import { computed, defineComponent, onBeforeUnmount, ref, shallowRef, watch } from "vue";
 import { i18n, localizeNumber } from "../i18n";
 import { useStore, useConfigStore } from "../store";
 import { flopStudyLabels } from "../flop-study-labels";
@@ -473,6 +476,7 @@ import { canonicalizeFlop } from "../review/flop-canon";
 import { parseAction } from "../review/flop-line";
 import { ReviewError } from "../review/errors";
 import MemberLoginLine from "./MemberLoginLine.vue";
+import { onLoginReturnState } from "../account";
 import { flopNode } from "../hand-review-model";
 import {
   actionFilterMask,
@@ -826,6 +830,29 @@ export default defineComponent({
     }
 
     void load();
+
+    // 회원 상황 한 줄에서 로그인하고 돌아왔으면 그때의 상황·플랍으로 다시 연다
+    const stopReturn = onLoginReturnState("flop-study", (state) => {
+      const r = state as { spot?: unknown; flop?: unknown } | null;
+      const back = ALL_SPOTS.find((s) => s.id === r?.spot);
+      const cards = r?.flop;
+      if (
+        !back ||
+        !Array.isArray(cards) ||
+        cards.length !== 3 ||
+        !cards.every((c) => Number.isInteger(c) && c >= 0 && c < 52) ||
+        new Set(cards).size !== 3
+      )
+        return;
+      potType.value = SRP_SPOTS.includes(back)
+        ? "srp"
+        : THREE_BET_SPOTS.includes(back)
+        ? "3bet"
+        : "4bet";
+      spotId.value = back.id;
+      setFlop(cards as number[]);
+    });
+    onBeforeUnmount(stopReturn);
 
     return {
       S,

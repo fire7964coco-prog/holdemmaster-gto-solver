@@ -181,7 +181,15 @@
             data-testid="review-status"
             :data-code="statusCode"
           >
-            <MemberLoginLine v-if="statusCode === 'MEMBER_ONLY'" />
+            <MemberLoginLine
+              v-if="statusCode === 'MEMBER_ONLY'"
+              :return-state="{
+                spot: spot.id,
+                hero: heroPlayer,
+                heroCards,
+                board,
+              }"
+            />
             <template v-else>{{ statusText }}</template
             ><button
               v-if="retryable"
@@ -506,6 +514,7 @@ import { customTrainerState } from "../custom-trainer";
 import { saveCustomTrainerBank } from "../custom-trainer-db";
 import { useStore } from "../store";
 import MemberLoginLine from "./MemberLoginLine.vue";
+import { onLoginReturnState } from "../account";
 
 type Street = "flop" | "turn" | "river";
 type Row = {
@@ -1154,6 +1163,47 @@ export default defineComponent({
       disposeStreet("river");
       delete (window as Window & { __review?: typeof exposed }).__review;
     });
+    // 회원 상황 한 줄에서 로그인하고 돌아왔으면 그때의 상황·내 카드·플랍으로 되살려 자료를 다시 받는다
+    // (자료는 플랍 3장에서 받으므로 그 앞의 판 기록은 없다)
+    const stopReturn = onLoginReturnState("hand-review", (state) => {
+      const returned = state as {
+        spot?: unknown;
+        hero?: unknown;
+        heroCards?: unknown;
+        board?: unknown;
+      } | null;
+      if (!returned) return;
+      const all = [...SRP_SPOTS, ...THREE_BET_SPOTS, ...FOUR_BET_SPOTS];
+      const back = all.find((s) => s.id === returned.spot);
+      const cards = (v: unknown, n: number) =>
+        Array.isArray(v) &&
+        v.length === n &&
+        v.every((c) => Number.isInteger(c) && c >= 0 && c < 52)
+          ? (v as number[])
+          : null;
+      const hero = cards(returned.heroCards, 2),
+        flopCards = cards(returned.board, 3);
+      if (
+        back &&
+        (returned.hero === 0 || returned.hero === 1) &&
+        hero &&
+        flopCards &&
+        new Set([...hero, ...flopCards]).size === 5
+      ) {
+        reset();
+        potType.value = SRP_SPOTS.includes(back)
+          ? "srp"
+          : THREE_BET_SPOTS.includes(back)
+          ? "3bet"
+          : "4bet";
+        spotId.value = back.id;
+        heroPlayer.value = returned.hero;
+        heroCards.value = [...hero];
+        board.value = [...flopCards];
+        void loadFlop();
+      }
+    });
+    onBeforeUnmount(stopReturn);
     return {
       L,
       spots,

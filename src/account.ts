@@ -188,16 +188,47 @@ const LOGIN_RETURN_KEY = "solver.login.returnView.v1";
 // hand-review·flop-study = 회원 전용 상황 한 줄에서 시작한 로그인(member-limits.ts)
 const RETURN_VIEWS = ["oop-range", "ip-range", "tree-config", "hand-review", "flop-study"];
 let nextReturnView: string | null = null;
-export const setLoginReturnView = (view: string) => {
+// 그 화면에서 고르던 것(회원 상황 한 줄 → 복기·플랍 조회의 상황·카드). 돌아온 화면이 한 번 꺼내 쓴다
+let nextReturnState: unknown = null;
+let returnedState: { view: string; state: unknown } | null = null;
+const returnWaiters = new Map<string, (state: unknown) => void>();
+export const setLoginReturnView = (view: string, state: unknown = null) => {
   nextReturnView = RETURN_VIEWS.includes(view) ? view : null;
+  nextReturnState = nextReturnView ? state : null;
+};
+/**
+ * 로그인에서 돌아온 화면이 자기 상태를 한 번 받는다. 화면이 먼저 열려 있을 수 있어(마지막 화면 기억)
+ * 기다렸다가 받는다 — 앱이 돌아온 표시를 읽는 순간(takeLoginReturnView) 부른다. 모양 확인은 받는 쪽이 한다.
+ * @returns 기다리기를 그만두는 함수(화면을 닫을 때)
+ */
+export const onLoginReturnState = (view: string, apply: (state: unknown) => void) => {
+  if (returnedState?.view === view) {
+    const state = returnedState.state;
+    returnedState = null;
+    apply(state);
+    return () => {};
+  }
+  returnWaiters.set(view, apply);
+  return () => {
+    if (returnWaiters.get(view) === apply) returnWaiters.delete(view);
+  };
 };
 export const takeLoginReturnView = (): string | null => {
   try {
     const raw = sessionStorage.getItem(LOGIN_RETURN_KEY);
     sessionStorage.removeItem(LOGIN_RETURN_KEY);
     const d = JSON.parse(raw ?? "null");
-    return RETURN_VIEWS.includes(d?.view) && Number.isFinite(d.at) &&
-      Date.now() - d.at >= 0 && Date.now() - d.at <= LOGIN_PURPOSE_TTL_MS ? d.view : null;
+    const ok = RETURN_VIEWS.includes(d?.view) && Number.isFinite(d.at) &&
+      Date.now() - d.at >= 0 && Date.now() - d.at <= LOGIN_PURPOSE_TTL_MS;
+    returnedState = ok && d.state != null ? { view: d.view, state: d.state } : null;
+    const waiter = returnedState && returnWaiters.get(returnedState.view);
+    if (waiter && returnedState) {
+      const state = returnedState.state;
+      returnedState = null;
+      returnWaiters.delete(d.view);
+      waiter(state);
+    }
+    return ok ? d.view : null;
   } catch { return null; }
 };
 
@@ -206,10 +237,11 @@ export const signIn = async (provider: "google" | "kakao", purpose?: "feedback")
   try {
     if (purpose) sessionStorage.setItem(LOGIN_PURPOSE_KEY, JSON.stringify({ purpose, at: Date.now() }));
     else sessionStorage.removeItem(LOGIN_PURPOSE_KEY);
-    if (nextReturnView) sessionStorage.setItem(LOGIN_RETURN_KEY, JSON.stringify({ view: nextReturnView, at: Date.now() }));
+    if (nextReturnView) sessionStorage.setItem(LOGIN_RETURN_KEY, JSON.stringify({ view: nextReturnView, state: nextReturnState, at: Date.now() }));
     else sessionStorage.removeItem(LOGIN_RETURN_KEY);
   } catch { /* storage may be unavailable: no purpose means no auto-submit */ }
   nextReturnView = null;
+  nextReturnState = null;
   const supabase = await getClient();
   if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能", "Les comptes sont désactivés dans cette version", "Fitur akun dinonaktifkan di versi ini", "Ciri akaun tidak tersedia dalam versi ini", "इस संस्करण में खाते की सुविधा उपलब्ध नहीं है", "Bu sürümde hesap özelliği kapalı", "Tính năng tài khoản đã bị tắt trong phiên bản này", "Аккаунты в этой версии отключены"));
   const { error } = await supabase.auth.signInWithOAuth({

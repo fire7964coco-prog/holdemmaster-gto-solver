@@ -33,7 +33,11 @@ import { savedSyncLabels } from "../saved-sync-labels";
 import { memberLabels } from "../member-limits";
 
 export default defineComponent({
-  setup() {
+  props: {
+    /** 로그인에서 돌아오면 그 화면이 되살릴 상태(고른 상황·카드) — sessionStorage에 잠깐 둔다 */
+    returnState: { type: null, default: null },
+  },
+  setup(props) {
     const store = useStore();
     const L = computed(() => savedSyncLabels(i18n.locale));
     const M = computed(() => memberLabels(i18n.locale));
@@ -42,8 +46,8 @@ export default defineComponent({
     const start = async (provider: "google" | "kakao") => {
       busy.value = true;
       try {
-        // 로그인에서 돌아오면 같은 화면(복기·플랍 조회)으로
-        setLoginReturnView(store.sideView);
+        // 로그인에서 돌아오면 같은 화면(복기·플랍 조회)의 같은 상황·카드로
+        setLoginReturnView(store.sideView, props.returnState);
         await signIn(provider);
       } catch {
         busy.value = false;
