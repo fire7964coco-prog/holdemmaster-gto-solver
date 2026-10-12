@@ -63,6 +63,19 @@
           {{ L.daily }}
           <span v-if="dailyState.done" :aria-label="L.done">✓</span>
         </button>
+        <!-- RNG 연습: 끔 → High → Low 순으로 돈다 (기기에 기억 · 오늘의 문제에선 숫자를 숨김) -->
+        <button
+          type="button"
+          data-testid="trainer-rng-mode"
+          :title="R.modeHelp"
+          :class="
+            'button-base filter-btn ml-0 md:ml-2 ' +
+            (rngMode === 'off' ? 'bg-neutral-700 hover:bg-neutral-600' : 'button-blue')
+          "
+          @click="cycleRngMode"
+        >
+          {{ R.mode[rngMode] }}
+        </button>
       </div>
 
       <!-- 통계는 칩으로 압축 — 위쪽 공간을 덜 먹어야 문제가 화면 중앙에 온다 -->
@@ -267,6 +280,13 @@
               >
                 {{ handLabels.draw }}
               </span>
+              <span
+                v-if="rngActive"
+                data-testid="trainer-rng-roll"
+                class="hand-tag bg-brand/15 text-brand tabular-nums"
+              >
+                RNG {{ rngRoll }}
+              </span>
             </div>
           </div>
         </div>
@@ -332,6 +352,42 @@
           <p class="mt-1 text-xs text-neutral-500">
             {{ L.mixedNote }}
           </p>
+
+          <!-- RNG 구간: 1~100을 솔버 빈도로 나눈 띠 + 내 숫자 위치 -->
+          <div v-if="rngResult" data-testid="trainer-rng-result" class="mt-3 panel-inner">
+            <div class="text-xs text-neutral-400">
+              {{ R.bandsTitle }} ·
+              <b class="text-brand tabular-nums">{{ R.yourNumber }} {{ rngRoll }}</b>
+            </div>
+            <div class="relative mt-1.5 h-2 flex rounded bg-neutral-900">
+              <div
+                v-for="(band, b) in rngBandList"
+                :key="band.action"
+                :class="
+                  'h-full ' +
+                  (band.action === rngResult.rolledAction
+                    ? 'bg-brand/80'
+                    : b % 2
+                    ? 'bg-neutral-600'
+                    : 'bg-neutral-500')
+                "
+                :style="{ width: band.to - band.from + 1 + '%' }"
+              ></div>
+              <div
+                class="absolute -top-1 -bottom-1 w-0.5 rounded bg-white"
+                :style="{ left: 'calc(' + (rngRoll - 0.5) + '% - 1px)' }"
+              ></div>
+            </div>
+            <div class="mt-1.5 text-xs text-neutral-400 tabular-nums">
+              <span v-for="(band, b) in rngBandList" :key="band.action">
+                <template v-if="b"> · </template>
+                <span :class="band.action === rngResult.rolledAction ? 'text-brand font-semibold' : ''">
+                  {{ evaluation.actions[band.action].label }} {{ band.from }}–{{ band.to }}
+                </span>
+              </span>
+            </div>
+            <div class="mt-1 text-xs text-neutral-300">{{ rngNote }}</div>
+          </div>
 
           <div class="mt-4 space-y-2.5">
             <div v-for="action in evaluation.actions" :key="action.index">
@@ -607,6 +663,7 @@ import {
 import { i18n, localizeNumber, ruPlural } from "../i18n";
 import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
+import { RngMode, classifyRngAnswer, rngAction, rngBands, rollRng } from "../trainer-rng";
 import { cardText, formatBb } from "../utils";
 import {
   evaluateTrainerAction,
@@ -2258,6 +2315,40 @@ const M = {
   },
 } as const;
 
+// RNG 연습 문구 — 2단계는 ko·en만, 나머지 언어는 en으로 보인다(3단계에서 15언어)
+const RNG_M = {
+  ko: {
+    mode: { off: "RNG: 끔", high: "RNG: High", low: "RNG: Low" },
+    modeHelp:
+      "무작위 숫자(1~100) 연습 — 문제마다 숫자를 받고 그 숫자에 해당하는 액션을 고릅니다. High: 높은 숫자일수록 공격적인 액션 · Low: 낮은 숫자일수록 공격적인 액션. 오늘의 문제에는 쓰지 않습니다.",
+    bandsTitle: "숫자 구간",
+    yourNumber: "내 숫자",
+    noteBest: (action: string) => `숫자에 맞는 액션(${action})을 골랐습니다.`,
+    noteMixed: (action: string) => `솔버가 섞는 액션이라 허용 — 이 숫자에선 ${action}입니다.`,
+    noteOther: (action: string) => `이 숫자에선 ${action}입니다.`,
+  },
+  en: {
+    mode: { off: "RNG: Off", high: "RNG: High", low: "RNG: Low" },
+    modeHelp:
+      "Random number (1–100) practice — each hand gets a number, and you pick the action that number points to. High: higher numbers mean more aggressive actions · Low: lower numbers mean more aggressive actions. Not used for the Daily Puzzle.",
+    bandsTitle: "RNG ranges",
+    yourNumber: "Your number",
+    noteBest: (action: string) => `You picked the action for this number (${action}).`,
+    noteMixed: (action: string) =>
+      `Acceptable — the solver mixes this action, but this number calls for ${action}.`,
+    noteOther: (action: string) => `This number calls for ${action}.`,
+  },
+};
+const RNG_MODE_KEY = "trainer-rng-mode";
+const readRngMode = (): RngMode => {
+  try {
+    const value = localStorage.getItem(RNG_MODE_KEY);
+    return value === "high" || value === "low" ? value : "off";
+  } catch {
+    return "off";
+  }
+};
+
 export default defineComponent({
   components: { CustomTrainerPage },
   setup() {
@@ -2359,10 +2450,62 @@ export default defineComponent({
       } as TrainerQuestion;
     };
 
+    /* RNG 연습 — 숫자는 문제마다 새로 뽑고, 오늘의 문제에선 쓰지 않는다 */
+    const R = computed(() => RNG_M[i18n.locale as keyof typeof RNG_M] ?? RNG_M.en);
+    const rngMode = ref<RngMode>(readRngMode());
+    const rngRoll = ref(rollRng());
+    const cycleRngMode = () => {
+      rngMode.value = rngMode.value === "off" ? "high" : rngMode.value === "high" ? "low" : "off";
+      try {
+        localStorage.setItem(RNG_MODE_KEY, rngMode.value);
+      } catch {
+        /* 저장이 막힌 환경이면 이번 방문에만 적용 */
+      }
+    };
+    const rngActive = computed(
+      () => rngMode.value !== "off" && !dailyMode.value && !!question.value
+    );
+    const rngBandList = computed(() => {
+      const mode = rngMode.value;
+      if (!rngActive.value || !question.value || mode === "off") return [];
+      const frequencies = evaluateTrainerAction(question.value, 0).actions.map((a) => a.frequency);
+      return rngBands(question.value.node.selectedSpot.actions, frequencies, mode);
+    });
+    const rngResult = computed(() => {
+      const result = evaluation.value;
+      if (!result || !rngBandList.value.length) return null;
+      return classifyRngAnswer({
+        selectedAction: result.selectedAction,
+        frequencies: result.actions.map((a) => a.frequency),
+        evLossBb: result.evLossBb,
+        goodBb: limits.value.goodBb,
+        bands: rngBandList.value,
+        roll: rngRoll.value,
+      });
+    });
+    const rngNote = computed(() => {
+      const r = rngResult.value;
+      const result = evaluation.value;
+      if (!r || !result) return "";
+      const action = result.actions[rngAction(rngBandList.value, rngRoll.value)]?.label ?? "";
+      return r.verdict === "best"
+        ? R.value.noteBest(action)
+        : r.mixed
+        ? R.value.noteMixed(action)
+        : R.value.noteOther(action);
+    });
+
     // 판정 문구·색은 세 곳(데스크톱 패널·모바일 바·공유 문구)에서 쓴다
     const verdict = computed(() => {
       const result = evaluation.value;
       if (!result) return { text: "", className: "" };
+      // RNG가 켜졌으면 숫자 구간으로 채점 (기록되는 EV 손실·통계는 그대로)
+      const rng = rngResult.value;
+      if (rng) {
+        if (rng.verdict === "best") return { text: L.value.verdictBest, className: "text-emerald-300" };
+        if (rng.verdict === "good") return { text: L.value.verdictGood, className: "text-blue-300" };
+        return { text: L.value.verdictMiss, className: "text-orange-300" };
+      }
       if (result.evLossBb <= limits.value.bestBb)
         return { text: L.value.verdictBest, className: "text-emerald-300" };
       if (result.evLossBb <= limits.value.goodBb)
@@ -2379,6 +2522,7 @@ export default defineComponent({
 
     const nextQuestion = () => {
       evaluation.value = null;
+      rngRoll.value = rollRng();
       if (!bank.value) return;
       if (dailyMode.value) {
         question.value = makeDailyQuestion(bank.value);
@@ -2703,6 +2847,14 @@ export default defineComponent({
     };
 
     return {
+      R,
+      rngMode,
+      rngRoll,
+      cycleRngMode,
+      rngActive,
+      rngBandList,
+      rngResult,
+      rngNote,
       customTrainerState,
       customLabels: computed(() => customTrainerLabels[i18n.locale]),
       categories,
