@@ -20,6 +20,8 @@ export const HandReviewPage = EmptyPage; // R2_REVIEW_ONLY
 export const handReviewLabels = (_locale: Locale) => ({ title: "", navTitle: "" }); // R2_REVIEW_ONLY
 export const FlopStudyPage = EmptyPage; // R2_REVIEW_ONLY
 export const flopStudyLabels = (_locale: Locale) => ({ title: "", navTitle: "" }); // R2_REVIEW_ONLY
+export const FlopReportPage = EmptyPage; // R2_REVIEW_ONLY
+export const flopReportLabels = (_locale: Locale) => ({ title: "", navTitle: "" }); // R2_REVIEW_ONLY
 export const CustomTrainerEntry = EmptyPage;
 export const createCustomTrainerCapture = () => null;
 export const PresetsPage = EmptyPage;
