@@ -1,8 +1,8 @@
 // GTO 트레이너 «무작위 숫자(RNG)» 연습 — 숫자 구간·채점 (설계 참고자료/트레이너RNG_설계안_2026-10-12.md)
 // 위자드와 같다: 1~100 · High = 높은 숫자가 공격적 액션 · Low = 낮은 숫자가 공격적 액션 · 숫자 구간의 액션이 «최선».
 
-/** 출시 스위치 — 15언어 문구(3단계) 판정·사장님 ○ 뒤 true. 그 전엔 주소에 ?rng=1을 붙여야 칩이 보인다 */
-export const TRAINER_RNG_LAUNCHED = false;
+/** 출시 스위치 — S-081 15언어 판정 OK(MA-484) · 사장님 ○ 10-12에 켬 */
+export const TRAINER_RNG_LAUNCHED = true;
 export const trainerRngEnabled = () => {
   try {
     return TRAINER_RNG_LAUNCHED || new URLSearchParams(window.location.search).has("rng");
