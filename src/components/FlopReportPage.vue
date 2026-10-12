@@ -465,6 +465,7 @@ export default defineComponent({
         seat: seat(f.player),
         when: nodeIndex.value === 0 ? T.value.whenFirst : T.value.whenAfterCheck,
         pct: pct(f.bet, 0),
+        minPct: pct(f.minShare, 0),
         most: groupName(f.most.key),
         mostPct: pct(f.most.bet, 0),
         least: groupName(f.least.key),

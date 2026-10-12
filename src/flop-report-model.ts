@@ -293,6 +293,7 @@ export function summaryFacts(
   return {
     player: report.nodes[nodeIndex].player,
     bet: betOf(averageRows(report.rows, nodeIndex, report.totalWeight).freq),
+    minShare,
     most: sorted[0],
     least: sorted[sorted.length - 1],
   };
