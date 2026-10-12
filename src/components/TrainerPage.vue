@@ -65,6 +65,7 @@
         </button>
         <!-- RNG 연습: 끔 → High → Low 순으로 돈다 (기기에 기억 · 오늘의 문제에선 숫자를 숨김) -->
         <button
+          v-if="rngEnabled"
           type="button"
           data-testid="trainer-rng-mode"
           :title="R.modeHelp"
@@ -663,7 +664,14 @@ import {
 import { i18n, localizeNumber, ruPlural } from "../i18n";
 import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
-import { RngMode, classifyRngAnswer, rngAction, rngBands, rollRng } from "../trainer-rng";
+import {
+  RngMode,
+  classifyRngAnswer,
+  rngAction,
+  rngBands,
+  rollRng,
+  trainerRngEnabled,
+} from "../trainer-rng";
 import { cardText, formatBb } from "../utils";
 import {
   evaluateTrainerAction,
@@ -2452,7 +2460,8 @@ export default defineComponent({
 
     /* RNG 연습 — 숫자는 문제마다 새로 뽑고, 오늘의 문제에선 쓰지 않는다 */
     const R = computed(() => RNG_M[i18n.locale as keyof typeof RNG_M] ?? RNG_M.en);
-    const rngMode = ref<RngMode>(readRngMode());
+    const rngEnabled = trainerRngEnabled();
+    const rngMode = ref<RngMode>(rngEnabled ? readRngMode() : "off");
     const rngRoll = ref(rollRng());
     const cycleRngMode = () => {
       rngMode.value = rngMode.value === "off" ? "high" : rngMode.value === "high" ? "low" : "off";
@@ -2848,6 +2857,7 @@ export default defineComponent({
 
     return {
       R,
+      rngEnabled,
       rngMode,
       rngRoll,
       cycleRngMode,
