@@ -2,6 +2,10 @@
   <section id="custom-trainer-top" class="custom-trainer max-w-3xl pb-10">
     <div class="flex flex-wrap items-center gap-2">
       <h2 class="text-base font-semibold text-brand">{{ L.tab }}</h2>
+      <!-- RNG 연습: GTO 트레이너와 같은 칩·같은 기억값 (끔 → High → Low) -->
+      <button v-if="rngEnabled" type="button" data-testid="custom-trainer-rng-mode" :title="G.modeHelp" :class="['custom-button', rngMode === 'off' ? 'bg-neutral-700' : 'button-blue']" @click="cycleRngMode">
+        {{ G.mode[rngMode] }}
+      </button>
       <button v-if="bank?.origin" type="button" data-testid="custom-trainer-back-review" class="custom-button ml-auto bg-neutral-700" @click="backToReview">
         {{ L.backToReview }}
       </button>
@@ -46,6 +50,9 @@
                 <span v-for="(card, index) in handCards" :key="index" :class="card.colorClass">{{ card.rank }}{{ card.suit }}</span>
               </div>
             </div>
+            <div v-if="rngActive" class="self-end text-center">
+              <span data-testid="custom-trainer-rng-roll" class="inline-block rounded bg-brand/15 px-2 py-0.5 text-sm font-semibold text-brand tabular-nums">RNG {{ rngRoll }}</span>
+            </div>
           </div>
           <p class="mt-4 text-sm font-semibold">{{ L.prompt }}</p>
           <div class="mt-2 grid gap-2 md:grid-cols-2">
@@ -53,13 +60,31 @@
               {{ actionLabel(action) }}
             </button>
           </div>
-          <div v-if="evaluation" data-testid="custom-trainer-verdict" :data-loss="evaluation.evLossBb" :data-best-limit="limits.bestBb" :data-good-limit="limits.goodBb" :data-verdict="verdictKind" :data-reference="answer.reference" class="mt-4 border-t border-neutral-700 pt-3" aria-live="polite">
+          <div v-if="evaluation" data-testid="custom-trainer-verdict" :data-loss="evaluation.evLossBb" :data-best-limit="limits.bestBb" :data-good-limit="limits.goodBb" :data-verdict="verdictKind" :data-rng="rngResult ? rngResult.verdict : ''" :data-reference="answer.reference" class="mt-4 border-t border-neutral-700 pt-3" aria-live="polite">
             <div class="flex flex-wrap items-baseline justify-between gap-2">
               <b :class="answer.reference ? 'text-neutral-300' : verdictKind === 'best' ? 'text-emerald-300' : verdictKind === 'good' ? 'text-blue-300' : 'text-orange-300'">{{ answer.reference ? R.referenceOnly : verdict }}</b>
               <span class="text-sm text-neutral-300">{{ L.evLoss }} {{ displayValue(evaluation.evLossBb) }}</span>
             </div>
             <p v-if="answer.reference" data-testid="custom-trainer-reference" class="mt-1 text-xs text-neutral-400">{{ R.practiceReferenceNote }}</p>
             <p v-else-if="answer.mixed" data-testid="custom-trainer-mixed" class="mt-1 text-xs text-neutral-400">{{ R.mixedAction }}</p>
+            <!-- RNG 구간: 1~100을 솔버 빈도로 나눈 띠 + 내 숫자 위치 (GTO 트레이너와 같은 모양) -->
+            <div v-if="rngResult" data-testid="custom-trainer-rng-result" class="mt-3 rounded-lg bg-neutral-900/60 px-3 py-2">
+              <div class="text-xs text-neutral-400">
+                {{ G.bandsTitle }} ·
+                <b class="text-brand tabular-nums">{{ G.yourNumber }} {{ rngRoll }}</b>
+              </div>
+              <div class="relative mt-1.5 flex h-2 rounded bg-neutral-900">
+                <div v-for="(band, b) in rngBandList" :key="band.action" :class="'h-full ' + (band.action === rngResult.rolledAction ? 'bg-brand/80' : b % 2 ? 'bg-neutral-600' : 'bg-neutral-500')" :style="{ width: band.to - band.from + 1 + '%' }"></div>
+                <div class="absolute -top-1 -bottom-1 w-0.5 rounded bg-white" :style="{ left: 'calc(' + (rngRoll - 0.5) + '% - 1px)' }"></div>
+              </div>
+              <div class="mt-1.5 text-xs text-neutral-400 tabular-nums">
+                <span v-for="(band, b) in rngBandList" :key="band.action">
+                  <template v-if="b"> · </template>
+                  <span :class="band.action === rngResult.rolledAction ? 'text-brand font-semibold' : ''">{{ actionLabel(question.node.selectedSpot.actions[band.action]) }} {{ band.from }}–{{ band.to }}</span>
+                </span>
+              </div>
+              <div class="mt-1 text-xs text-neutral-300">{{ rngNote }}</div>
+            </div>
             <div class="mt-3 grid gap-2 text-sm">
               <div v-for="action in evaluation.actions" :key="action.index" class="rounded-lg bg-neutral-900/60 px-3 py-2">
                 <b :class="action.isBest ? 'text-emerald-300' : 'text-neutral-300'">{{ actionLabel(question.node.selectedSpot.actions[action.index]) }} <span v-if="action.isBest">✓</span></b>
@@ -91,6 +116,9 @@ import { listCustomTrainerBanks, deleteCustomTrainerBank, getCustomTrainerAttemp
 import { evaluateTrainerAction, trainerActionLabel, trainerCardPair } from "../trainer";
 import type { TrainerEvaluation } from "../trainer";
 import { M, ruChipLabel } from "../custom-trainer-labels";
+import { classifyRngAnswer, nextRngMode, readRngMode, rngAction, rngBands, rollRng, trainerRngEnabled } from "../trainer-rng";
+import type { RngMode } from "../trainer-rng";
+import { RNG_M } from "../trainer-rng-labels";
 import { M as REVIEW_LABELS } from "../hand-review-labels";
 import { useStore } from "../store";
 import { i18n, localizeNumber, pctText } from "../i18n";
@@ -128,9 +156,47 @@ export default defineComponent({
     const boardCards = computed(() => question.value?.node.currentBoard.map(cardText) ?? []);
     const handCards = computed(() => question.value ? trainerCardPair(question.value.handPair) : []);
     const limits = computed(() => question.value ? customLossLimits(question.value.node) : { potBb: 0, bestBb: 0, goodBb: 0 });
-    const answer = computed(() => question.value && evaluation.value && bank.value
-      ? classifyCustomTrainerAnswer(bank.value, question.value.node, question.value.handIndex, evaluation.value.selectedAction, evaluation.value.evLossBb)
-      : { kind: "best" as const, mixed: false, reference: false });
+    /* RNG 연습 — 숫자는 문제마다 새로 뽑는다. 복습 목록·기록은 지금처럼 EV 손실 기준 */
+    const G = computed(() => RNG_M[i18n.locale as keyof typeof RNG_M] ?? RNG_M.en);
+    const rngEnabled = trainerRngEnabled();
+    const rngMode = ref<RngMode>(rngEnabled ? readRngMode() : "off");
+    const rngRoll = ref(rollRng());
+    const cycleRngMode = () => { rngMode.value = nextRngMode(rngMode.value); };
+    const rngActive = computed(() => rngMode.value !== "off" && !!question.value);
+    const rngBandList = computed(() => {
+      const mode = rngMode.value;
+      if (!rngActive.value || !question.value || mode === "off") return [];
+      const frequencies = evaluateTrainerAction(question.value, 0).actions.map(a => a.frequency);
+      return rngBands(question.value.node.selectedSpot.actions, frequencies, mode);
+    });
+    const rngResult = computed(() => {
+      const result = evaluation.value;
+      if (!result || !rngBandList.value.length) return null;
+      return classifyRngAnswer({
+        selectedAction: result.selectedAction,
+        frequencies: result.actions.map(a => a.frequency),
+        evLossBb: result.evLossBb,
+        goodBb: limits.value.goodBb,
+        bands: rngBandList.value,
+        roll: rngRoll.value,
+      });
+    });
+    const rngNote = computed(() => {
+      const r = rngResult.value;
+      const node = question.value?.node;
+      if (!r || !node) return "";
+      const rolled = node.selectedSpot.actions[rngAction(rngBandList.value, rngRoll.value)];
+      const action = rolled ? actionLabel(rolled) : "";
+      return r.verdict === "best" ? G.value.noteBest(action) : r.mixed ? G.value.noteMixed(action) : G.value.noteOther(action);
+    });
+    const answer = computed(() => {
+      if (!question.value || !evaluation.value || !bank.value) return { kind: "best" as const, mixed: false, reference: false };
+      const graded = classifyCustomTrainerAnswer(bank.value, question.value.node, question.value.handIndex, evaluation.value.selectedAction, evaluation.value.evLossBb);
+      // RNG가 켜졌으면 숫자 구간으로 채점(«참고용» 자리는 그대로 참고용) — 섞는 액션 안내는 RNG 문구가 맡는다
+      const rng = rngResult.value;
+      if (!rng || graded.reference) return graded;
+      return { kind: rng.verdict === "miss" ? "bad" as const : rng.verdict, mixed: false, reference: false };
+    });
     const verdictKind = computed(() => answer.value.kind);
     const verdict = computed(() => verdictKind.value === "best" ? L.value.verdictBest : verdictKind.value === "good" ? L.value.verdictGood : L.value.verdictBad);
     const source = computed(() => bank.value ? (bank.value.origin
@@ -167,6 +233,7 @@ export default defineComponent({
       if (!bank.value || saving.value) return;
       const previousId = question.value?.id;
       evaluation.value = null;
+      rngRoll.value = rollRng();
       if (reviewMode.value && reviewAttempts.value.length) {
         const attempt = reviewAttempts.value[reviewIndex++ % reviewAttempts.value.length];
         question.value = restoreCustomTrainerQuestion(bank.value, attempt);
@@ -256,7 +323,7 @@ export default defineComponent({
     const leave = () => { customTrainerState.active = false; };
     const backToReview = () => { store.sideView = "hand-review"; };
     const seatName = (player: "oop" | "ip") => bank.value?.origin?.seats[player === "oop" ? 0 : 1] ?? player.toUpperCase();
-    return { L, R, answer, backToReview, seatName, customTrainerState, banks, bank, question, evaluation, attempts, loading, saving, error, reviewMode, reviewAttempts,
+    return { L, R, G, rngEnabled, rngMode, rngRoll, cycleRngMode, rngActive, rngBandList, rngResult, rngNote, answer, backToReview, seatName, customTrainerState, banks, bank, question, evaluation, attempts, loading, saving, error, reviewMode, reviewAttempts,
       number, amount, displayValue, percent, source, bankTitle, actionLabel, boardCards, handCards, limits, verdictKind, verdict,
       choose, nextQuestion, toggleReview, deleteSpot, leave };
   },

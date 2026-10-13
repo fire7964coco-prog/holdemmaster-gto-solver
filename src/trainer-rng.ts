@@ -14,6 +14,27 @@ export const trainerRngEnabled = () => {
 export type RngMode = "off" | "high" | "low";
 export type RngVerdict = "best" | "good" | "miss";
 
+/** 설정은 기기에 기억 — GTO 트레이너와 «내 스팟» 연습이 같은 값을 쓴다 */
+const RNG_MODE_KEY = "trainer-rng-mode";
+export const readRngMode = (): RngMode => {
+  try {
+    const value = localStorage.getItem(RNG_MODE_KEY);
+    return value === "high" || value === "low" ? value : "off";
+  } catch {
+    return "off";
+  }
+};
+/** 끔 → High → Low 순으로 돌리고 기억한다 */
+export const nextRngMode = (mode: RngMode): RngMode => {
+  const next: RngMode = mode === "off" ? "high" : mode === "high" ? "low" : "off";
+  try {
+    localStorage.setItem(RNG_MODE_KEY, next);
+  } catch {
+    /* 저장이 막힌 환경이면 이번 방문에만 적용 */
+  }
+  return next;
+};
+
 /** 솔버가 이 빈도 이상 쓰는 다른 액션은 숫자와 달라도 «허용» — 복기·내 스팟과 같은 3.5% */
 export const RNG_FREQUENCY_FLOOR = 0.035;
 
