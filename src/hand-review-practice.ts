@@ -37,7 +37,7 @@ function trainerAction(raw: string) {
   return { name: a.kind === "AllIn" ? "Allin" : a.kind, amount: a.amount === undefined ? "" : String(a.amount) };
 }
 
-function encode(hand: readonly [number, number], perm: SuitPermutation) {
+export function encodeHand(hand: readonly [number, number], perm: SuitPermutation) {
   const [a, b] = hand.map(c => applyPerm(c, perm)).sort((x, y) => x - y);
   return a | (b << 8);
 }
@@ -64,10 +64,13 @@ export function canPractice(node: ReviewNode | null | undefined) {
   return !!node && practiceWeights(node).some(w => w > 0);
 }
 
-export async function createReviewPracticeBank(src: ReviewPracticeSource): Promise<CustomTrainerBank | null> {
+export type ReviewDecisionSource = Pick<ReviewPracticeSource,
+  "heroPlayer" | "board" | "inversePerm" | "node" | "line" | "linePath" | "startingPot" | "effectiveStack" | "unit">;
+
+/** One server node → trainer question format (also used by the flop trainer · 트레이너확대 설계안 §2). */
+export function reviewNodeDecision(src: ReviewDecisionSource, weights = practiceWeights(src.node)): TrainerDecision | null {
   const node = src.node, p = node.player;
-  if (p !== src.heroPlayer) return null;
-  const weights = practiceWeights(node);
+  if (p !== src.heroPlayer || p === null) return null;
   if (!weights.some(w => w > 0)) return null;
   const n = node.hands[p].length, actions = node.actions.length;
   const strategy = new Array<number>(n * actions).fill(0);
@@ -82,7 +85,7 @@ export async function createReviewPracticeBank(src: ReviewPracticeSource): Promi
     }
   });
   const sides = [0, 1].map(s => s === p ? weights : Array.from(node.ranges[s], v => (v > 0 ? v : 0)));
-  const cards = [0, 1].map(s => node.hands[s].map(hand => encode(hand, src.inversePerm)));
+  const cards = [0, 1].map(s => node.hands[s].map(hand => encodeHand(hand, src.inversePerm)));
   const zeros = (s: number) => new Array<number>(cards[s].length).fill(0);
   const history: TrainerHistoryAction[] = src.line.map(item => ({ player: sideName(item.player), ...trainerAction(item.action) }));
   const path = [...src.linePath];
@@ -113,6 +116,12 @@ export async function createReviewPracticeBank(src: ReviewPracticeSource): Promi
     effectiveStack: src.effectiveStack,
     unitScale: src.unit,
   };
+  return decision;
+}
+
+export async function createReviewPracticeBank(src: ReviewPracticeSource): Promise<CustomTrainerBank | null> {
+  const decision = reviewNodeDecision(src);
+  if (!decision) return null;
   const identity = JSON.stringify({ review: src.spotId, hero: src.heroPlayer, board: src.board, line: src.line });
   const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(identity));
   const hash12 = Array.from(new Uint8Array(hash), byte => byte.toString(16).padStart(2, "0")).join("").slice(0, 12);

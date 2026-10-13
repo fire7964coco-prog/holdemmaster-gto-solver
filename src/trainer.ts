@@ -1,4 +1,5 @@
 import { PRESETS, presetTitleOf } from "./presets";
+import { SRP_SPOTS, THREE_BET_SPOTS, FOUR_BET_SPOTS, SPOT_UNIT_SCALE } from "./preflop-spots";
 import { Results, SpotPlayer } from "./result-types";
 import { cardText, formatAmount } from "./utils";
 import { i18n, localizeNumber } from "./i18n";
@@ -443,10 +444,14 @@ export const BEST_LOSS_FLOOR_BB = 0.02;
 export const GOOD_LOSS_FLOOR_BB = 0.05;
 const MIN_WEAKNESS_SAMPLES = 3;
 
-/** 프리셋의 시작 팟(bb). 기록에는 presetId만 있으므로 여기서 되찾는다 */
+/** 프리셋의 시작 팟(bb). 기록에는 presetId만 있으므로 여기서 되찾는다.
+ * «모든 플랍» 문제는 presetId 자리에 상황 id(srp-btn-bb 등)가 들어간다 → 그 상황의 시작 팟 */
 export const presetPotBb = (presetId: string) => {
   const preset = PRESETS.find((item) => item.id === presetId);
-  if (!preset) return 5.5;
+  if (!preset) {
+    const spot = [...SRP_SPOTS, ...THREE_BET_SPOTS, ...FOUR_BET_SPOTS].find((item) => item.id === presetId);
+    return spot ? spot.startingPot / SPOT_UNIT_SCALE : 5.5;
+  }
   return preset.startingPot / (preset.unitScale || 1);
 };
 
