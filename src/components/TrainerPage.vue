@@ -232,7 +232,8 @@
       </div>
 
       <p class="order-4 md:order-2 mt-2 text-right text-xs text-neutral-500">
-        {{ $n(L.footerLine(decisionCount, bank.targetExploitabilityPct)) }}
+        <!-- «모든 플랍» 출제면 교육 예제 수 대신 미리 계산한 상황 수·실제 플랍 수 (유튜브 쪽 지적 10-13) · 소수 없는 줄이라 $n 안 씀(de 22.100이 22,100으로 뒤집힘) -->
+        {{ flopFiltersShown ? L.flopFooterLine(flopFooterSpots, flopFooterFlops) : $n(L.footerLine(decisionCount, bank.targetExploitabilityPct)) }}
       </p>
 
       <!--
@@ -420,6 +421,10 @@
           </div>
           <div class="md:hidden text-sm font-semibold text-neutral-300">
             {{ L.mobileDetailTitle }}
+          </div>
+          <!-- 화면의 «팟»은 지금 결정 시점의 팟이고 판정은 상황 시작 팟 기준이라, 답한 뒤에도 기준을 보여 준다 (유튜브 쪽 지적 10-13) -->
+          <div v-if="!rngResult" data-testid="trainer-judge-basis" class="mt-0.5 text-xs text-neutral-500">
+            {{ $n(L.judgeBasis(limits.potBb.toFixed(1), limits.bestBb.toFixed(2), limits.goodBb.toFixed(2))) }}
           </div>
           <p class="mt-1 text-xs text-neutral-500">
             {{ L.mixedNote }}
@@ -758,7 +763,7 @@ import { cardText, formatBb } from "../utils";
 import { HAND_REVIEW_DATA, loadReviewFlop } from "../hand-review-data";
 import { isMemberScenario } from "../member-limits";
 import { flopBoardLabels, flopTrainerLabels } from "../flop-trainer-labels";
-import { flopStudyEntry } from "../flop-study-model";
+import { flopStudyEntry, REAL_FLOP_COUNT } from "../flop-study-model";
 import { GROUP_AXES, GROUP_KEYS } from "../flop-report-model";
 import { flopReportLabels } from "../flop-report-labels";
 import {
@@ -879,6 +884,10 @@ const M = {
     gtoNoteAfter: " 0.35% 이하 최적 · 1% 이하 허용 · 그 이상 다시 볼 스팟.",
     spotLimits: (pot: string, best: string, good: string) =>
       `이 스팟(팟 ${pot}bb)에서는 ${best}bb · ${good}bb입니다.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `판정 기준은 이 상황의 시작 팟 ${pot}bb입니다 — 최적 ≤${best}bb · 허용 ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `미리 계산한 ${spots}개 상황 · 실제 플랍 ${flops}개에서 고르게 출제`,
     resetHistoryLabel: "학습 기록 초기화",
     cardAlt: "오늘의 문제 성적 카드",
     shareApps: "카카오톡·SNS로 공유",
@@ -981,6 +990,10 @@ const M = {
     gtoNoteAfter: ": ≤0.35% Best play · ≤1% Acceptable · above that, Review this spot.",
     spotLimits: (pot: string, best: string, good: string) =>
       `For this spot (${pot}bb pot) that's Best play ≤${best}bb · Acceptable ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Judged against this spot's starting pot (${pot}bb): Best play ≤${best}bb · Acceptable ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} precomputed spots · dealt evenly from all ${flops} real flops`,
     resetHistoryLabel: "Reset history",
     cardAlt: "Daily Puzzle result card",
     shareApps: "Share",
@@ -1086,6 +1099,10 @@ const M = {
     gtoNoteAfter: " 0.35%以下は最適な選択・1%以下は許容できる選択・それ以上は復習すべきスポット。",
     spotLimits: (pot: string, best: string, good: string) =>
       `このスポット（ポット${pot}bb）では ${best}bb・${good}bb が境界です。`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `判定はこのスポットの開始ポット（${pot}bb）が基準です：最適 ≤${best}bb・許容 ≤${good}bb。`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `事前計算した${spots}スポット · 実際の${flops}種類のフロップから均等に出題`,
     resetHistoryLabel: "学習記録をリセット",
     cardAlt: "今日のGTO問題のリザルトカード",
     shareApps: "アプリでシェア",
@@ -1189,6 +1206,10 @@ const M = {
     gtoNoteAfter: ": ≤0.35% mejor jugada · ≤1% aceptable · más que eso, repasa el spot.",
     spotLimits: (pot: string, best: string, good: string) =>
       `En este spot (bote de ${pot}bb) eso es ${best}bb · ${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Se juzga con el bote inicial de este spot (${pot}bb): Mejor jugada ≤${best}bb · Aceptable ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spots precalculados · repartidos por igual entre los ${flops} flops reales`,
     resetHistoryLabel: "Borrar historial",
     cardAlt: "Tarjeta de resultado del reto del día",
     shareApps: "Compartir en apps",
@@ -1293,6 +1314,10 @@ const M = {
       ": ≤0,35% Melhor jogada · ≤1% Aceitável · acima disso, Revise este spot.",
     spotLimits: (pot: string, best: string, good: string) =>
       `Neste spot (pote de ${pot}bb): Melhor jogada ≤${best}bb · Aceitável ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Avaliado pelo pote inicial deste spot (${pot}bb): Melhor jogada ≤${best}bb · Aceitável ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spots pré-calculados · sorteados por igual entre os ${flops} flops reais`,
     resetHistoryLabel: "Apagar histórico",
     cardAlt: "Card de resultado do desafio do dia",
     shareApps: "Compartilhar em apps",
@@ -1403,6 +1428,10 @@ const M = {
       ": ≤0,35% Beste Wahl · ≤1% Vertretbar · darüber Nochmal ansehen.",
     spotLimits: (pot: string, best: string, good: string) =>
       `In diesem Spot (Pot ${pot}bb): Beste Wahl ≤${best}bb · Vertretbar ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Bewertet am Start-Pot dieses Spots (${pot}bb): Beste Wahl ≤${best}bb · Vertretbar ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} vorberechnete Spots · gleichmäßig aus allen ${flops} echten Flops`,
     resetHistoryLabel: "Trainer-Verlauf löschen",
     cardAlt: "Ergebniskarte der Tagesaufgabe",
     shareApps: "In Apps teilen",
@@ -1528,6 +1557,10 @@ const M = {
     //   두 경계값이 각각 어느 판정인지도 밝힌다 (en은 Best/Acceptable 라벨이 붙어 있다)
     spotLimits: (pot: string, best: string, good: string) =>
       `按这个牌局的起始底池（${pot}bb）算，就是最优 ≤${best}bb、可以接受 ≤${good}bb。`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `按这个牌局的起始底池（${pot}bb）判定：最优 ≤${best}bb、可以接受 ≤${good}bb。`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `预先计算的${spots}个牌局 · 从全部${flops}种实际翻牌中平均出题`,
     resetHistoryLabel: "清空学习记录",
     cardAlt: "今日题目成绩卡",
     // ko는 「카카오톡·SNS」지만 중국어권에 카카오톡은 없다. 실제 동작은 브라우저의
@@ -1656,6 +1689,10 @@ const M = {
     //   화면 위쪽에 뜨는 «현재 노드의 팟»과 다른 수라, 둘 다 「底池」라고만 쓰면 안 된다
     spotLimits: (pot: string, best: string, good: string) =>
       `按這個牌局的起始底池（${pot}bb）算，就是最佳 ≤${best}bb、可以接受 ≤${good}bb。`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `按這個牌局的起始底池（${pot}bb）判定：最佳 ≤${best}bb、可以接受 ≤${good}bb。`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `預先計算的${spots}個牌局 · 從全部${flops}種實際翻牌中平均出題`,
     resetHistoryLabel: "清空學習紀錄",
     cardAlt: "今日題目成績卡",
     // ko는 「카카오톡·SNS」지만 중화권에 카카오톡은 없다. 실제 동작은 브라우저의
@@ -1769,6 +1806,10 @@ const M = {
     gtoNoteAfter: " : ≤0,35 % Meilleur choix · ≤1 % Acceptable · au-delà, Spot à revoir.",
     spotLimits: (pot: string, best: string, good: string) =>
       `Pour ce spot (pot de ${pot}bb), ça donne Meilleur choix ≤${best}bb · Acceptable ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Jugé sur le pot de départ de ce spot (${pot}bb) : Meilleur choix ≤${best}bb · Acceptable ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spots précalculés · tirés uniformément parmi les ${flops} flops réels`,
     resetHistoryLabel: "Réinitialiser l'historique",
     cardAlt: "Carte de résultat du défi du jour",
     shareApps: "Partager",
@@ -1879,6 +1920,10 @@ const M = {
     gtoNoteAfter: ": ≤0,35% Pilihan terbaik · ≤1% Cukup baik · di atas itu, Perlu ditinjau.",
     spotLimits: (pot: string, best: string, good: string) =>
       `Untuk spot ini (pot ${pot}bb), artinya Pilihan terbaik ≤${best}bb · Cukup baik ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Dinilai dari pot awal spot ini (${pot}bb): Pilihan terbaik ≤${best}bb · Cukup baik ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spot yang dihitung sebelumnya · diundi merata dari ${flops} flop nyata`,
     resetHistoryLabel: "Hapus riwayat",
     cardAlt: "Kartu hasil Tantangan Harian",
     shareApps: "Bagikan",
@@ -1978,6 +2023,10 @@ const M = {
     gtoNoteBold: "pot के अनुपात में",
     gtoNoteAfter: " मापा जाता है: आम तौर पर ≤0.35% सर्वोत्तम और ≤1% स्वीकार्य। गणना की सूक्ष्म त्रुटि को ध्यान में रखते हुए सीमाएँ कम से कम 0.02bb और 0.05bb रखी जाती हैं। इस स्पॉट की लागू सीमाएँ नीचे देखें।",
     spotLimits: (pot: string, best: string, good: string) => `इस स्पॉट में (${pot}bb pot): सर्वोत्तम ≤${best}bb · स्वीकार्य ≤${good}bb।`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `इस स्पॉट के शुरुआती pot (${pot}bb) से आँका जाता है: सर्वोत्तम ≤${best}bb · स्वीकार्य ≤${good}bb।`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `पहले से गणना किए गए ${spots} स्पॉट · सभी ${flops} असली Flops में से बराबर संभावना से`,
     resetHistoryLabel: "इतिहास रीसेट करें",
     cardAlt: "आज की चुनौती का परिणाम कार्ड",
     shareApps: "शेयर करें",
@@ -2083,6 +2132,10 @@ const M = {
     gtoNoteAfter: ": ≤0.35% Pilihan terbaik · ≤1% Boleh diterima · lebih daripada itu, Perlu disemak.",
     spotLimits: (pot: string, best: string, good: string) =>
       `Untuk spot ini (pot ${pot}bb), ertinya Pilihan terbaik ≤${best}bb · Boleh diterima ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Dinilai berdasarkan pot permulaan spot ini (${pot}bb): Pilihan terbaik ≤${best}bb · Boleh diterima ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spot yang dikira awal · dicabut sama rata daripada ${flops} flop sebenar`,
     resetHistoryLabel: "Set semula rekod",
     cardAlt: "Kad hasil Cabaran Harian",
     shareApps: "Kongsi",
@@ -2190,6 +2243,10 @@ const M = {
     gtoNoteAfter: " EV kaybıdır: ≤%0,35 En iyi oyun · ≤%1 Kabul edilebilir · daha fazlası Bu spotu tekrar et.",
     spotLimits: (pot: string, best: string, good: string) =>
       `Bu spot için (pot: ${pot}bb): En iyi oyun ≤${best}bb · Kabul edilebilir ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Bu spotun başlangıç potuna (${pot}bb) göre değerlendirilir: En iyi oyun ≤${best}bb · Kabul edilebilir ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `Önceden hesaplanmış ${spots} spot · ${flops} gerçek floptan eşit olasılıkla`,
     resetHistoryLabel: "Geçmişi sıfırla",
     cardAlt: "Günün sorusu sonuç kartı",
     shareApps: "Paylaş",
@@ -2294,6 +2351,10 @@ const M = {
     gtoNoteAfter: ": ≤0,35% Nước đi tốt nhất · ≤1% Chấp nhận được · cao hơn thì Xem lại spot này.",
     spotLimits: (pot: string, best: string, good: string) =>
       `Với spot này (pot ${pot}bb): Nước đi tốt nhất ≤${best}bb · Chấp nhận được ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Chấm theo pot ban đầu của spot này (${pot}bb): Nước đi tốt nhất ≤${best}bb · Chấp nhận được ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spot tính sẵn · ra đề đều từ ${flops} flop thực tế`,
     resetHistoryLabel: "Xóa lịch sử",
     cardAlt: "Thẻ kết quả thử thách hôm nay",
     shareApps: "Chia sẻ",
@@ -2400,6 +2461,10 @@ const M = {
     gtoNoteAfter: ": ≤0,35% Лучший ход · ≤1% Допустимо · больше — Нужен разбор.",
     spotLimits: (pot: string, best: string, good: string) =>
       `Для этого спота (банк ${pot}bb): Лучший ход ≤${best}bb · Допустимо ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Оценка по стартовому банку этого спота (${pot}bb): Лучший ход ≤${best}bb · Допустимо ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `Заранее рассчитанных спотов: ${spots} · равномерно из всех ${flops} реальных флопов`,
     resetHistoryLabel: "Сбросить историю тренировок",
     cardAlt: "Карточка результата задачи дня",
     shareApps: "Поделиться",
@@ -2693,6 +2758,13 @@ export default defineComponent({
     loadDailyState();
     let reviewIndex = 0;
 
+    // «모든 플랍» 하단 줄: 이 사용자에게 열린 상황 수(회원 전용은 로그인했을 때만) · 실제 플랍 수
+    const flopFooterSpots = computed(
+      () =>
+        flopTrainerScenarios("all", HAND_REVIEW_DATA.readyScenarios, (id) => !isMemberScenario(id) || !!account.value)
+          .length
+    );
+    const flopFooterFlops = computed(() => REAL_FLOP_COUNT.toLocaleString(i18n.locale));
     const decisionCount = computed(
       () => bank.value?.presets.reduce((sum, item) => sum + item.nodes.length, 0) ?? 0
     );
@@ -2738,7 +2810,8 @@ export default defineComponent({
         if (seen.has(item.questionId)) return false;
         seen.add(item.questionId);
         return (
-          item.evLossBb > 0.05 &&
+          // 판정과 같은 기준: «허용» 경계(팟 대비)를 넘은 문제만 — 예전 절대 0.05bb는 «최적»도 담았다 (유튜브 쪽 지적 10-13)
+          !isAcceptable(item) &&
           (category.value === "all" || item.category === category.value)
         );
       });
@@ -3350,6 +3423,8 @@ export default defineComponent({
       loadError,
       reviewMode,
       decisionCount,
+      flopFooterSpots,
+      flopFooterFlops,
       averageLoss,
       totalLoss,
       excellentRate,
