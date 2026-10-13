@@ -77,6 +77,33 @@
         >
           {{ R.mode[rngMode] }}
         </button>
+        <!-- 출제: 기본(교육 예제 · 오프라인) / 모든 플랍(서버 자료) — 기기에 기억 · 기본값은 기본 -->
+        <button
+          type="button"
+          data-testid="trainer-source"
+          :title="F.sourceHelp"
+          :class="
+            'button-base filter-btn ml-0 md:ml-2 ' +
+            (source === 'flop' ? 'button-blue' : 'bg-neutral-700 hover:bg-neutral-600')
+          "
+          @click="setSource(source === 'flop' ? 'basic' : 'flop')"
+        >
+          {{ source === "flop" ? F.sourceFlop : F.sourceBasic }}
+        </button>
+        <button
+          v-if="source === 'flop'"
+          type="button"
+          data-testid="trainer-close-only"
+          :title="F.closeHelp"
+          :aria-pressed="closeOnly"
+          :class="
+            'button-base filter-btn ' +
+            (closeOnly ? 'button-blue' : 'bg-neutral-700 hover:bg-neutral-600')
+          "
+          @click="toggleCloseOnly"
+        >
+          {{ F.closeOnly }}
+        </button>
       </div>
 
       <!-- 통계는 칩으로 압축 — 위쪽 공간을 덜 먹어야 문제가 화면 중앙에 온다 -->
@@ -207,6 +234,24 @@
           {{ L.dailyStreakLabel }} <b class="text-brand">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
         </span>
         <button class="ml-auto link-like" @click="scrollToStats">{{ L.details }}</button>
+      </div>
+
+      <!-- «모든 플랍»: 플랍 파일을 받는 동안 · 못 받았을 때 (오프라인이면 기본 문제로 돌린다) -->
+      <div
+        v-if="!question && (flopLoading || flopError)"
+        data-testid="trainer-flop-status"
+        class="order-3 md:order-4 mt-3 md:mt-4 rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm"
+      >
+        <template v-if="flopLoading">
+          <span class="spinner inline-block mr-3"></span>{{ F.loading }}
+        </template>
+        <div v-else class="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <span class="text-neutral-300">{{ flopError === "offline" ? F.offline : F.failed }}</span>
+          <button v-if="flopError !== 'offline'" class="link-like" @click="retryFlop">{{ F.retry }}</button>
+          <button class="link-like" data-testid="trainer-use-basic" @click="setSource('basic')">
+            {{ F.useBasic }}
+          </button>
+        </div>
       </div>
 
       <!-- 좌: 문제 / 우: 채점. 답을 봐도 문제가 화면에서 사라지지 않게 나란히 둔다 -->
@@ -507,6 +552,15 @@
             <button class="button-base button-green px-6" @click="goNext">
               {{ dailyMode && dailyState.done ? L.keepPracticing : L.nextHand }}
             </button>
+            <!-- 다시 풀기 — 오늘의 문제는 첫 기록만 세므로 숨긴다 -->
+            <button
+              v-if="!dailyMode"
+              data-testid="trainer-again"
+              class="text-sm text-neutral-300 hover:text-neutral-100"
+              @click="retrySame"
+            >
+              {{ F.again }}
+            </button>
             <a
               v-if="articleUrl"
               :href="articleUrl"
@@ -674,6 +728,21 @@ import {
   trainerRngEnabled,
 } from "../trainer-rng";
 import { cardText, formatBb } from "../utils";
+import { HAND_REVIEW_DATA, loadReviewFlop } from "../hand-review-data";
+import { isMemberScenario } from "../member-limits";
+import { flopTrainerLabels } from "../flop-trainer-labels";
+import { flopStudyEntry } from "../flop-study-model";
+import {
+  FlopTrainerCategory,
+  FlopTrainerQuestion,
+  dealFlopTrainer,
+  dealFromFlop,
+  flopTrainerScenarios,
+  flopTrainerSpot,
+  makeFlopTrainerQuestion,
+  parseFlopQuestionId,
+  restoreFlopTrainerQuestion,
+} from "../flop-trainer";
 import {
   evaluateTrainerAction,
   makeTrainerQuestion,
@@ -2489,6 +2558,26 @@ const RNG_M = {
   },
 };
 const RNG_MODE_KEY = "trainer-rng-mode";
+// «출제» 칩 · «가까운 결정만» — 기기에 기억 (RNG 칩과 같은 방식)
+type TrainerSource = "basic" | "flop";
+const SOURCE_KEY = "trainer-source";
+const CLOSE_ONLY_KEY = "trainer-close-only";
+const readStored = (key: string) => {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+const writeStored = (key: string, value: string) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* 저장이 막힌 환경이면 이번 방문에만 적용 */
+  }
+};
+const asFlopQuestion = (q: TrainerQuestion | null) =>
+  q && (q as Partial<FlopTrainerQuestion>).source === "flop" ? (q as FlopTrainerQuestion) : null;
 const readRngMode = (): RngMode => {
   try {
     const value = localStorage.getItem(RNG_MODE_KEY);
@@ -2512,7 +2601,15 @@ export default defineComponent({
     );
     // 카카오 로그인은 한국어 화면에서만 (사용자 결정 2026-08-21)
     const isKo = computed(() => i18n.locale === "ko");
-    const categories: TrainerCategory[] = ["all", "srp", "3bp", "blind"];
+    const F = computed(() => flopTrainerLabels(i18n.locale));
+    // 첫 화면이 오프라인이면 기억해 둔 «모든 플랍»이어도 기본으로 연다(지금과 같게 · 설계안 §2)
+    const source = ref<TrainerSource>(
+      readStored(SOURCE_KEY) === "flop" && navigator.onLine !== false ? "flop" : "basic"
+    );
+    const closeOnly = ref(readStored(CLOSE_ONLY_KEY) === "1");
+    const categories = computed<TrainerCategory[]>(() =>
+      source.value === "flop" ? ["all", "srp", "3bp", "4bp", "blind"] : ["all", "srp", "3bp", "blind"]
+    );
     let unsubscribeAuth: () => void = () => undefined;
     const category = ref<TrainerCategory>("all");
     const bank = ref<TrainerBank | null>(null);
@@ -2599,6 +2696,78 @@ export default defineComponent({
       } as TrainerQuestion;
     };
 
+    /* «모든 플랍» — 문제마다 서버 플랍 파일 1개 · 답을 고르는 동안 다음 문제를 미리 받는다 */
+    const flopLoading = ref(false);
+    const flopError = ref<"" | "offline" | "failed">("");
+    let flopEpoch = 0;
+    let lastFlopLoad: (() => Promise<FlopTrainerQuestion | null>) | null = null;
+    let prefetched: Promise<FlopTrainerQuestion | null> | null = null;
+    let prefetchKey = "";
+    // 회원 전용 상황(림프 팟)은 로그인했을 때만 낸다 — 자료 Worker가 어차피 막는다
+    const flopScenarioList = () =>
+      flopTrainerScenarios(
+        category.value as FlopTrainerCategory,
+        HAND_REVIEW_DATA.readyScenarios,
+        (id) => !isMemberScenario(id) || !!account.value
+      );
+    const flopKey = () => `${category.value}|${closeOnly.value}|${!!account.value}`;
+    const fetchFlopQuestion = async () => {
+      const scenarios = flopScenarioList();
+      // 물을 핸드가 없는 플랍(«가까운 결정만»에서 드묾)은 다음 플랍으로
+      for (let tries = 0; tries < 5; tries++) {
+        const deal = dealFlopTrainer(scenarios);
+        const spot = deal && flopTrainerSpot(deal.scenario);
+        if (!deal || !spot) return null;
+        const file = await loadReviewFlop(spot, deal.canonical.fileName);
+        const made = makeFlopTrainerQuestion(
+          file,
+          deal,
+          closeOnly.value ? { closeWithinBb: lossLimits(deal.scenario).goodBb } : {}
+        );
+        if (made) return made;
+      }
+      return null;
+    };
+    const takeFlopQuestion = () => {
+      const ready = prefetched && prefetchKey === flopKey() ? prefetched : null;
+      prefetched = null;
+      return ready ?? fetchFlopQuestion();
+    };
+    const prefetchFlop = () => {
+      if (source.value !== "flop" || dailyMode.value || reviewMode.value) return;
+      prefetchKey = flopKey();
+      prefetched = fetchFlopQuestion();
+      prefetched.catch(() => undefined); // 실패는 그 문제를 꺼낼 때 다룬다
+    };
+    const restoreFlopQuestion = async (id: string) => {
+      const parsed = parseFlopQuestionId(id);
+      const spot = parsed && flopTrainerSpot(parsed.scenario);
+      if (!parsed || !spot) return null;
+      const file = await loadReviewFlop(spot, dealFromFlop(parsed.scenario, parsed.flop).canonical.fileName);
+      return restoreFlopTrainerQuestion(file, id);
+    };
+    const showFlop = async (load: () => Promise<FlopTrainerQuestion | null>) => {
+      const token = ++flopEpoch;
+      lastFlopLoad = load;
+      question.value = null;
+      flopError.value = "";
+      flopLoading.value = true;
+      try {
+        const made = await load();
+        if (token !== flopEpoch) return;
+        question.value = made;
+        if (made) prefetchFlop();
+        else flopError.value = "failed";
+      } catch {
+        if (token === flopEpoch) flopError.value = navigator.onLine === false ? "offline" : "failed";
+      } finally {
+        if (token === flopEpoch) flopLoading.value = false;
+      }
+    };
+    const retryFlop = () => {
+      if (lastFlopLoad) void showFlop(lastFlopLoad);
+    };
+
     /* RNG 연습 — 숫자는 문제마다 새로 뽑고, 오늘의 문제에선 쓰지 않는다 */
     const R = computed(() => RNG_M[i18n.locale as keyof typeof RNG_M] ?? RNG_M.en);
     const rngEnabled = trainerRngEnabled();
@@ -2673,16 +2842,32 @@ export default defineComponent({
     const nextQuestion = () => {
       evaluation.value = null;
       rngRoll.value = rollRng();
+      // 받는 중이던 플랍은 버린다(늦게 와도 화면을 덮지 않게)
+      flopEpoch++;
+      flopLoading.value = false;
+      flopError.value = "";
       if (!bank.value) return;
       if (dailyMode.value) {
         question.value = makeDailyQuestion(bank.value);
       } else if (reviewMode.value && reviewAttempts.value.length) {
         const attempt = reviewAttempts.value[reviewIndex % reviewAttempts.value.length];
         reviewIndex++;
-        question.value = restoreQuestion(attempt);
+        // «모든 플랍» 문제는 그 플랍 파일을 다시 받아 되살린다
+        if (parseFlopQuestionId(attempt.questionId))
+          void showFlop(() => restoreFlopQuestion(attempt.questionId));
+        else question.value = restoreQuestion(attempt);
+      } else if (source.value === "flop") {
+        void showFlop(takeFlopQuestion);
       } else {
         question.value = makeTrainerQuestion(bank.value, category.value);
       }
+    };
+    // 같은 핸드 다시 — 문제는 그대로, 채점·RNG 숫자만 새로
+    const retrySame = () => {
+      if (!question.value) return;
+      evaluation.value = null;
+      rngRoll.value = rollRng();
+      scrollToId("trainer-top");
     };
 
     const choose = async (actionIndex: number) => {
@@ -2751,7 +2936,29 @@ export default defineComponent({
     };
 
     const changeCategory = (value: TrainerCategory) => {
+      // 약점 표의 «4벳 팟 연습»은 «모든 플랍»에서만 낼 수 있다
+      if (value === "4bp" && source.value !== "flop") {
+        source.value = "flop";
+        writeStored(SOURCE_KEY, "flop");
+      }
       category.value = value;
+      reviewMode.value = false;
+      dailyMode.value = false;
+      nextQuestion();
+    };
+    const setSource = (value: TrainerSource) => {
+      source.value = value;
+      writeStored(SOURCE_KEY, value);
+      prefetched = null;
+      if (value === "basic" && category.value === "4bp") category.value = "all";
+      reviewMode.value = false;
+      dailyMode.value = false;
+      nextQuestion();
+    };
+    const toggleCloseOnly = () => {
+      closeOnly.value = !closeOnly.value;
+      writeStored(CLOSE_ONLY_KEY, closeOnly.value ? "1" : "0");
+      prefetched = null;
       reviewMode.value = false;
       dailyMode.value = false;
       nextQuestion();
@@ -2971,28 +3178,48 @@ export default defineComponent({
     });
     const openSpot = () => {
       if (!question.value) return;
+      // «모든 플랍» 문제 = 플랍 조회의 그 상황·플랍·라인으로
+      const flopQuestion = asFlopQuestion(question.value);
+      if (flopQuestion) {
+        flopStudyEntry.link = {
+          spot: flopQuestion.presetId,
+          flop: [...flopQuestion.flop],
+          line: [...flopQuestion.path],
+        };
+        store.sideView = "flop-study";
+        return;
+      }
       store.pendingPresetPreview = question.value.presetId;
       store.sideView = "presets";
     };
     // presetTitle은 문제 생성 시점에 고정되므로 표시용은 locale 반응형으로 다시 계산
-    const presetTitle = computed(() =>
-      question.value ? presetTitleById(question.value.presetId) : ""
-    );
-    const positionLabel = computed(() => {
+    // «모든 플랍» 상황 이름 = 칩 줄의 팟 이름 + 플랍 조회와 같은 자리 표기(«3벳팟 · CO → BTN»)
+    const flopSpot = computed(() => {
+      const flopQuestion = asFlopQuestion(question.value);
+      return flopQuestion ? flopTrainerSpot(flopQuestion.presetId) : null;
+    });
+    const presetTitle = computed(() => {
       if (!question.value) return "";
+      const spot = flopSpot.value;
+      if (!spot) return presetTitleById(question.value.presetId);
+      const pot = trainerCategoryLabel(
+        spot.id.startsWith("4bp-") ? "4bp" : spot.id.startsWith("3bp-") ? "3bp" : "srp"
+      );
+      return `${pot} · ${spot.opener} → ${spot.caller}`;
+    });
+    const seatLabel = (player: "oop" | "ip"): string => {
+      const spot = flopSpot.value;
+      if (spot) return player === "oop" ? spot.oop : spot.ip;
       const preset = PRESETS.find((item) => item.id === question.value?.presetId);
-      return question.value.player === "oop"
+      return player === "oop"
         ? (preset && oopLabelOf(preset)) || "OOP"
         : (preset && ipLabelOf(preset)) || "IP";
-    });
+    };
+    const positionLabel = computed(() => (question.value ? seatLabel(question.value.player) : ""));
     // 상대 자리 — 첫 결정 문제엔 «Line:» 줄이 없어 상대가 안 보였다(후기 10-11). «vs»는 15언어 프리셋 분류명과 같은 표기
-    const opponentLabel = computed(() => {
-      if (!question.value) return "";
-      const preset = PRESETS.find((item) => item.id === question.value?.presetId);
-      return question.value.player === "oop"
-        ? (preset && ipLabelOf(preset)) || "IP"
-        : (preset && oopLabelOf(preset)) || "OOP";
-    });
+    const opponentLabel = computed(() =>
+      question.value ? seatLabel(question.value.player === "oop" ? "ip" : "oop") : ""
+    );
     const amountBb = (value: number) =>
       localizeNumber(formatBb(value, question.value?.node.unitScale || 10));
     const historyLabel = (action: { name: string; amount: string }) =>
@@ -3001,15 +3228,19 @@ export default defineComponent({
         question.value?.node.startingPot || 0,
         question.value?.node.unitScale || 10
       );
-    const historyPlayerLabel = (player: "oop" | "ip") => {
-      const preset = PRESETS.find((item) => item.id === question.value?.presetId);
-      return player === "oop"
-        ? (preset && oopLabelOf(preset)) || "OOP"
-        : (preset && ipLabelOf(preset)) || "IP";
-    };
+    const historyPlayerLabel = seatLabel;
 
     return {
       R,
+      F,
+      source,
+      closeOnly,
+      setSource,
+      toggleCloseOnly,
+      flopLoading,
+      flopError,
+      retryFlop,
+      retrySame,
       rngEnabled,
       rngMode,
       rngRoll,

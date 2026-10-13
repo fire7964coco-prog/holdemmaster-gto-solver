@@ -42,7 +42,8 @@ export type TrainerBank = {
   presets: TrainerPresetData[];
 };
 
-export type TrainerCategory = "all" | "srp" | "3bp" | "blind";
+/** «4bp»는 «모든 플랍» 출제에만 있다(교육 예제에는 4벳 팟이 없음) */
+export type TrainerCategory = "all" | "srp" | "3bp" | "4bp" | "blind";
 
 export type TrainerQuestion = {
   id: string;
@@ -171,7 +172,7 @@ export const trainerCategory = (
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
     "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru",
-    Record<TrainerCategory, string>
+    Record<Exclude<TrainerCategory, "4bp">, string>
   > = {
     ko: {
       all: "전체",
@@ -268,6 +269,9 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       blind: "Блайнд vs блайнд",
     },
   };
+  // 4벳 팟 = 그 언어 3벳 팟 이름의 숫자만 바꾼다 — 칩 줄에서 «3벳팟»·«4벳 팟»처럼 표기가 갈리지 않게
+  // (15언어 모두 «3»이 한 번만 들어 있다 · 3단계 검수장 판정 대상)
+  if (category === "4bp") return labels[i18n.locale]["3bp"].replace("3", "4");
   return labels[i18n.locale][category];
 };
 
@@ -505,12 +509,14 @@ export const trainerWeakness = (
     evLossBb: number;
   }[]
 ): { rows: TrainerWeakness[]; weakest: TrainerWeakness | null } => {
-  const categories: Exclude<TrainerCategory, "all">[] = ["srp", "3bp", "blind"];
-  const rows = categories.map((category) => {
+  const categories: Exclude<TrainerCategory, "all">[] = ["srp", "3bp", "4bp", "blind"];
+  const rows = categories.flatMap((category) => {
     const target = attempts.filter((item) => item.category === category);
     const sum = target.reduce((total, item) => total + item.evLossBb, 0);
     // 카테고리끼리는 팟 크기가 달라서 절대 bb로 견주면 3벳팟이 부당하게 나쁘게 나온다
     const sumPct = target.reduce((total, item) => total + lossPercentOfPot(item), 0);
+    // 4벳 팟은 «모든 플랍»에서 푼 적이 있을 때만 줄을 보인다
+    if (category === "4bp" && !target.length) return [];
     return {
       category,
       label: trainerCategoryLabel(category),

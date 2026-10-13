@@ -41,7 +41,7 @@ export type TrainerAttempt = {
   timestamp: number;
   questionId: string;
   presetId: string;
-  category: "srp" | "3bp" | "blind";
+  category: "srp" | "3bp" | "4bp" | "blind";
   handPair: number;
   selectedAction: number;
   bestAction: number;
