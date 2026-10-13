@@ -2758,13 +2758,11 @@ export default defineComponent({
     loadDailyState();
     let reviewIndex = 0;
 
-    // «모든 플랍» 하단 줄: 이 사용자에게 열린 상황 수(회원 전용은 로그인했을 때만) · 실제 플랍 수
-    const flopFooterSpots = computed(
-      () =>
-        flopTrainerScenarios("all", HAND_REVIEW_DATA.readyScenarios, (id) => !isMemberScenario(id) || !!account.value)
-          .length
+    // «모든 플랍» 하단 줄: 지금 실제로 출제하는 풀 — 범주·회원 반영 상황 수 · 보드 고르기 반영 플랍 수(MA-531)
+    const flopFooterSpots = computed(() => flopScenarioList().length);
+    const flopFooterFlops = computed(() =>
+      (flopBoardActive.value ? flopBoardCount.value : REAL_FLOP_COUNT).toLocaleString(i18n.locale)
     );
-    const flopFooterFlops = computed(() => REAL_FLOP_COUNT.toLocaleString(i18n.locale));
     const decisionCount = computed(
       () => bank.value?.presets.reduce((sum, item) => sum + item.nodes.length, 0) ?? 0
     );
