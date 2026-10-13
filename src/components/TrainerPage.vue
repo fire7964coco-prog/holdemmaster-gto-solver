@@ -90,8 +90,9 @@
         >
           {{ source === "flop" ? F.sourceFlop : F.sourceBasic }}
         </button>
+        <!-- 복습·오늘의 문제는 이 거르기 없이 출제하므로 칩을 숨긴다(MA-512 통지) -->
         <button
-          v-if="source === 'flop'"
+          v-if="flopFiltersShown"
           type="button"
           data-testid="trainer-close-only"
           :title="F.closeHelp"
@@ -105,7 +106,7 @@
           {{ F.closeOnly }}
         </button>
         <button
-          v-if="source === 'flop'"
+          v-if="flopFiltersShown"
           type="button"
           data-testid="trainer-board"
           :title="BL.boardHelp"
@@ -120,7 +121,7 @@
         </button>
       </div>
       <TrainerBoardFilter
-        v-if="source === 'flop' && flopBoardOpen"
+        v-if="flopFiltersShown && flopBoardOpen"
         :filter="flopBoardFilter"
         :count="flopBoardCount"
         @update="setFlopBoardFilter"
@@ -2665,6 +2666,8 @@ export default defineComponent({
     const flopBoardFilter = ref<FlopBoardFilter>(readBoardFilter());
     const flopBoardOpen = ref(false);
     const flopBoardActive = computed(() => isBoardFilterActive(flopBoardFilter.value));
+    // «가까운 결정만»·«보드» 칩 — 복습·오늘의 문제는 이 조건 없이 출제하므로 그때는 숨긴다
+    const flopFiltersShown = computed(() => source.value === "flop" && !dailyMode.value && !reviewMode.value);
     const flopBoardCount = computed(() => filteredFlops(flopBoardFilter.value).length);
     const flopBoardChipText = computed(() => {
       const f = flopBoardFilter.value;
@@ -3320,6 +3323,7 @@ export default defineComponent({
       flopBoardFilter,
       flopBoardOpen,
       flopBoardActive,
+      flopFiltersShown,
       flopBoardCount,
       flopBoardChipText,
       setFlopBoardFilter,
