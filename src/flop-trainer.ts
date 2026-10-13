@@ -7,6 +7,7 @@ import { canonicalizeFlop, CanonicalFlop } from "./review/flop-canon";
 import { flopNode, flopReach, ReviewNode } from "./hand-review-model";
 import { encodeHand, practiceWeights, reviewNodeDecision } from "./hand-review-practice";
 import { randomFlop, flopText, parseFlopText } from "./flop-study-model";
+import { boardClass, GROUP_AXES, GroupAxis } from "./flop-report-model";
 import {
   SRP_SPOTS,
   THREE_BET_SPOTS,
@@ -64,14 +65,46 @@ export type FlopTrainerDeal = {
   canonical: CanonicalFlop;
 };
 
-/** ① 상황 = 균등 ② 플랍 = 실제 22,100플랍 균등. 받을 파일 = canonical.fileName */
+/** 보드 고르기 — 축마다 고른 칸(빈 배열·없음 = 전체), 축끼리는 «그리고». 칸 이름은 플랍 통계 묶기(GROUP_KEYS)와 같다.
+ *  board = 특정 플랍(실제 카드 3장)만 · 있으면 축 조건은 보지 않는다. */
+export type FlopBoardFilter = Partial<Record<GroupAxis, readonly string[]>> & { board?: readonly number[] };
+
+export const isBoardFilterActive = (filter: FlopBoardFilter | undefined) =>
+  !!filter && (!!filter.board || GROUP_AXES.some((axis) => !!filter[axis]?.length));
+
+export function flopMatchesFilter(flop: readonly number[], filter: FlopBoardFilter) {
+  const cls = boardClass(flop);
+  return GROUP_AXES.every((axis) => !filter[axis]?.length || filter[axis]!.includes(cls[axis]));
+}
+
+let allFlops: number[][] | null = null;
+/** 실제 22,100플랍(내림차순 카드) — 한 번만 만든다 */
+const realFlops = () => {
+  if (!allFlops) {
+    allFlops = [];
+    for (let a = 51; a >= 2; a--)
+      for (let b = a - 1; b >= 1; b--) for (let c = b - 1; c >= 0; c--) allFlops.push([a, b, c]);
+  }
+  return allFlops;
+};
+
+/** 조건에 맞는 실제 플랍 목록 — 개수는 화면 표시(«n개 플랍»)·빈 조합 판단에 쓴다 */
+export function filteredFlops(filter: FlopBoardFilter): number[][] {
+  if (filter.board) return [[...filter.board].sort((a, b) => b - a)];
+  return realFlops().filter((flop) => flopMatchesFilter(flop, filter));
+}
+
+/** ① 상황 = 균등 ② 플랍 = 실제 22,100플랍 균등(보드 고르기가 있으면 맞는 플랍 중 균등). 받을 파일 = canonical.fileName
+ *  맞는 플랍이 없으면(예: 트립스+모노톤) null */
 export function dealFlopTrainer(
   scenarios: readonly string[],
-  rng: () => number = Math.random
+  rng: () => number = Math.random,
+  filter?: FlopBoardFilter
 ): FlopTrainerDeal | null {
-  if (!scenarios.length) return null;
+  const pool = isBoardFilterActive(filter) ? filteredFlops(filter!) : null;
+  if (!scenarios.length || pool?.length === 0) return null;
   const scenario = scenarios[Math.floor(rng() * scenarios.length)];
-  const flop = randomFlop(rng);
+  const flop = pool ? [...pool[Math.floor(rng() * pool.length)]] : randomFlop(rng);
   return { scenario, flop, canonical: canonicalizeFlop(flop) };
 }
 
