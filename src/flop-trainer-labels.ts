@@ -229,3 +229,31 @@ const checkedLabels: LocaleDict<FlopTrainerLabels> = {
 };
 
 export const flopTrainerLabels = (locale: Locale): FlopTrainerLabels => checkedLabels[locale];
+
+// 보드 고르기 (설계안 §5 · 2단계 = ko·en만 · 3단계에서 15언어로 채우고 LocaleDict로 바꾼다).
+// 축·칸 이름과 «플랍 n개»는 플랍 통계(flop-report-labels), 카드 고르기 안내·닫기는 플랍 조회(flop-study-labels)를 쓴다.
+const boardKo = {
+  boardAll: "보드: 전체",
+  boardChip: "보드: {value}",
+  boardHelp: "출제할 플랍을 높은 카드·무늬·페어·연결성으로 거르거나 특정 플랍 하나로 정합니다.",
+  boardRule: "한 줄 안에서는 하나라도 맞으면, 줄끼리는 모두 맞는 플랍만 냅니다.",
+  specificFlop: "특정 플랍",
+  pickCards: "카드 고르기",
+  boardReset: "전체로 되돌리기",
+  boardEmpty: "이 조합의 플랍이 없습니다.",
+};
+export type FlopBoardLabels = typeof boardKo;
+const boardLabels: Partial<Record<Locale, FlopBoardLabels>> = {
+  ko: boardKo,
+  en: {
+    boardAll: "Board: All",
+    boardChip: "Board: {value}",
+    boardHelp: "Filter the flops you get by high card, suits, pairing and connectedness, or fix one specific flop.",
+    boardRule: "Within a row any choice can match; across rows, a flop must match every row.",
+    specificFlop: "Specific flop",
+    pickCards: "Pick cards",
+    boardReset: "Reset to all",
+    boardEmpty: "No flops match this combination.",
+  },
+};
+export const flopBoardLabels = (locale: Locale): FlopBoardLabels => boardLabels[locale] ?? boardLabels.en!;

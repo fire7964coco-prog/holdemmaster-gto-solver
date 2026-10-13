@@ -104,7 +104,27 @@
         >
           {{ F.closeOnly }}
         </button>
+        <button
+          v-if="source === 'flop'"
+          type="button"
+          data-testid="trainer-board"
+          :title="BL.boardHelp"
+          :aria-expanded="flopBoardOpen"
+          :class="
+            'button-base filter-btn ' +
+            (flopBoardActive ? 'button-blue' : 'bg-neutral-700 hover:bg-neutral-600')
+          "
+          @click="flopBoardOpen = !flopBoardOpen"
+        >
+          {{ flopBoardChipText }} {{ flopBoardOpen ? "▴" : "▾" }}
+        </button>
       </div>
+      <TrainerBoardFilter
+        v-if="source === 'flop' && flopBoardOpen"
+        :filter="flopBoardFilter"
+        :count="flopBoardCount"
+        @update="setFlopBoardFilter"
+      />
 
       <!-- 통계는 칩으로 압축 — 위쪽 공간을 덜 먹어야 문제가 화면 중앙에 온다 -->
       <div id="trainer-stats" class="order-4 md:order-2 flex flex-wrap gap-1.5 mt-3">
@@ -246,8 +266,13 @@
           <span class="spinner inline-block mr-3"></span>{{ F.loading }}
         </template>
         <div v-else class="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <span class="text-neutral-300">{{ flopError === "offline" ? F.offline : F.failed }}</span>
-          <button v-if="flopError !== 'offline'" class="link-like" @click="retryFlop">{{ F.retry }}</button>
+          <span class="text-neutral-300">{{
+            flopError === "offline" ? F.offline : flopError === "empty" ? BL.boardEmpty : F.failed
+          }}</span>
+          <button v-if="flopError === 'empty'" class="link-like" @click="setFlopBoardFilter({})">
+            {{ BL.boardReset }}
+          </button>
+          <button v-else-if="flopError !== 'offline'" class="link-like" @click="retryFlop">{{ F.retry }}</button>
           <button class="link-like" data-testid="trainer-use-basic" @click="setSource('basic')">
             {{ F.useBasic }}
           </button>
@@ -674,6 +699,7 @@
 const SPOT_COUNT = PRESETS.length; // PRESETS import below is hoisted
 import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
 import CustomTrainerPage from "./CustomTrainerPage.vue";
+import TrainerBoardFilter from "./TrainerBoardFilter.vue";
 import { customTrainerState } from "../custom-trainer";
 import { M as customTrainerLabels } from "../custom-trainer-labels";
 import { noteTrainerSolved } from "../pwa";
@@ -730,13 +756,18 @@ import {
 import { cardText, formatBb } from "../utils";
 import { HAND_REVIEW_DATA, loadReviewFlop } from "../hand-review-data";
 import { isMemberScenario } from "../member-limits";
-import { flopTrainerLabels } from "../flop-trainer-labels";
+import { flopBoardLabels, flopTrainerLabels } from "../flop-trainer-labels";
 import { flopStudyEntry } from "../flop-study-model";
+import { GROUP_AXES, GROUP_KEYS } from "../flop-report-model";
+import { flopReportLabels } from "../flop-report-labels";
 import {
+  FlopBoardFilter,
   FlopTrainerCategory,
   FlopTrainerQuestion,
   dealFlopTrainer,
   dealFromFlop,
+  filteredFlops,
+  isBoardFilterActive,
   flopTrainerScenarios,
   flopTrainerSpot,
   makeFlopTrainerQuestion,
@@ -2562,6 +2593,7 @@ const RNG_MODE_KEY = "trainer-rng-mode";
 type TrainerSource = "basic" | "flop";
 const SOURCE_KEY = "trainer-source";
 const CLOSE_ONLY_KEY = "trainer-close-only";
+const BOARD_KEY = "trainer-board";
 const readStored = (key: string) => {
   try {
     return localStorage.getItem(key);
@@ -2576,6 +2608,28 @@ const writeStored = (key: string, value: string) => {
     /* 저장이 막힌 환경이면 이번 방문에만 적용 */
   }
 };
+// 보드 고르기 — 기억해 둔 값은 칸 이름·카드를 다시 확인해 쓴다(틀리면 전체)
+const readBoardFilter = (): FlopBoardFilter => {
+  try {
+    const raw = JSON.parse(readStored(BOARD_KEY) ?? "{}");
+    const board = raw?.board;
+    if (
+      Array.isArray(board) &&
+      board.length === 3 &&
+      new Set(board).size === 3 &&
+      board.every((c) => Number.isInteger(c) && c >= 0 && c < 52)
+    )
+      return { board: [...board].sort((a, b) => b - a) };
+    const filter: FlopBoardFilter = {};
+    for (const axis of GROUP_AXES) {
+      const keys = Array.isArray(raw?.[axis]) ? GROUP_KEYS[axis].filter((k) => raw[axis].includes(k)) : [];
+      if (keys.length) filter[axis] = keys;
+    }
+    return filter;
+  } catch {
+    return {};
+  }
+};
 const asFlopQuestion = (q: TrainerQuestion | null) =>
   q && (q as Partial<FlopTrainerQuestion>).source === "flop" ? (q as FlopTrainerQuestion) : null;
 const readRngMode = (): RngMode => {
@@ -2588,7 +2642,7 @@ const readRngMode = (): RngMode => {
 };
 
 export default defineComponent({
-  components: { CustomTrainerPage },
+  components: { CustomTrainerPage, TrainerBoardFilter },
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale]);
@@ -2607,6 +2661,19 @@ export default defineComponent({
       readStored(SOURCE_KEY) === "flop" && navigator.onLine !== false ? "flop" : "basic"
     );
     const closeOnly = ref(readStored(CLOSE_ONLY_KEY) === "1");
+    const BL = computed(() => flopBoardLabels(i18n.locale));
+    const flopBoardFilter = ref<FlopBoardFilter>(readBoardFilter());
+    const flopBoardOpen = ref(false);
+    const flopBoardActive = computed(() => isBoardFilterActive(flopBoardFilter.value));
+    const flopBoardCount = computed(() => filteredFlops(flopBoardFilter.value).length);
+    const flopBoardChipText = computed(() => {
+      const f = flopBoardFilter.value;
+      if (!flopBoardActive.value) return BL.value.boardAll;
+      const value = f.board
+        ? f.board.map((c) => "23456789TJQKA"[c >> 2] + "♣♦♥♠"[c & 3]).join("")
+        : flopReportLabels(i18n.locale).flopCount.replace("{count}", flopBoardCount.value.toLocaleString(i18n.locale));
+      return BL.value.boardChip.replace("{value}", value);
+    });
     const categories = computed<TrainerCategory[]>(() =>
       source.value === "flop" ? ["all", "srp", "3bp", "4bp", "blind"] : ["all", "srp", "3bp", "blind"]
     );
@@ -2698,7 +2765,7 @@ export default defineComponent({
 
     /* «모든 플랍» — 문제마다 서버 플랍 파일 1개 · 답을 고르는 동안 다음 문제를 미리 받는다 */
     const flopLoading = ref(false);
-    const flopError = ref<"" | "offline" | "failed">("");
+    const flopError = ref<"" | "offline" | "failed" | "empty">("");
     let flopEpoch = 0;
     let lastFlopLoad: (() => Promise<FlopTrainerQuestion | null>) | null = null;
     let prefetched: Promise<FlopTrainerQuestion | null> | null = null;
@@ -2710,12 +2777,13 @@ export default defineComponent({
         HAND_REVIEW_DATA.readyScenarios,
         (id) => !isMemberScenario(id) || !!account.value
       );
-    const flopKey = () => `${category.value}|${closeOnly.value}|${!!account.value}`;
+    const flopKey = () =>
+      `${category.value}|${closeOnly.value}|${!!account.value}|${JSON.stringify(flopBoardFilter.value)}`;
     const fetchFlopQuestion = async () => {
       const scenarios = flopScenarioList();
       // 물을 핸드가 없는 플랍(«가까운 결정만»에서 드묾)은 다음 플랍으로
       for (let tries = 0; tries < 5; tries++) {
-        const deal = dealFlopTrainer(scenarios);
+        const deal = dealFlopTrainer(scenarios, Math.random, flopBoardFilter.value);
         const spot = deal && flopTrainerSpot(deal.scenario);
         if (!deal || !spot) return null;
         const file = await loadReviewFlop(spot, deal.canonical.fileName);
@@ -2857,7 +2925,10 @@ export default defineComponent({
           void showFlop(() => restoreFlopQuestion(attempt.questionId));
         else question.value = restoreQuestion(attempt);
       } else if (source.value === "flop") {
-        void showFlop(takeFlopQuestion);
+        if (flopBoardActive.value && !flopBoardCount.value) {
+          question.value = null;
+          flopError.value = "empty";
+        } else void showFlop(takeFlopQuestion);
       } else {
         question.value = makeTrainerQuestion(bank.value, category.value);
       }
@@ -2958,6 +3029,14 @@ export default defineComponent({
     const toggleCloseOnly = () => {
       closeOnly.value = !closeOnly.value;
       writeStored(CLOSE_ONLY_KEY, closeOnly.value ? "1" : "0");
+      prefetched = null;
+      reviewMode.value = false;
+      dailyMode.value = false;
+      nextQuestion();
+    };
+    const setFlopBoardFilter = (filter: FlopBoardFilter) => {
+      flopBoardFilter.value = filter;
+      writeStored(BOARD_KEY, JSON.stringify(filter));
       prefetched = null;
       reviewMode.value = false;
       dailyMode.value = false;
@@ -3237,6 +3316,13 @@ export default defineComponent({
       closeOnly,
       setSource,
       toggleCloseOnly,
+      BL,
+      flopBoardFilter,
+      flopBoardOpen,
+      flopBoardActive,
+      flopBoardCount,
+      flopBoardChipText,
+      setFlopBoardFilter,
       flopLoading,
       flopError,
       retryFlop,
