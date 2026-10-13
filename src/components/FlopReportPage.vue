@@ -2,9 +2,11 @@
   <!-- 플랍 통계 2단계: PC 화면 (설계 참고자료/플랍통계_설계안_2026-10-12.md §3 · §7-2) -->
   <section class="report-page" data-testid="flop-report-page">
     <div class="report-toolbar">
-      <span>{{
-        format(T.intro, { pct: pct((report?.targetPct ?? 0.3) / 100, 1) })
+      <!-- 자료가 없는 상황(준비 중·실패)에는 «1,755개 평균 · 목표 오차» 소개를 띄우지 않는다 (MA-481 소견 ③) -->
+      <span v-if="report">{{
+        format(T.intro, { pct: pct(report.targetPct / 100, 1) })
       }}</span>
+      <span v-else />
       <span>{{ spot.oop }} vs {{ spot.ip }} · {{ R.pot }} {{ bb(spot.startingPot) }}</span>
     </div>
 
@@ -454,9 +456,9 @@ export default defineComponent({
       if (sort.value.by === "column") sort.value = { by: "flop", desc: true };
     });
 
-    // 쉬운 말 한 줄 — 묶기가 없으면 하이카드 기준
+    // 쉬운 말 한 줄 — 묶음끼리 비교하는 문장이라 묶기 «없음»에서는 띄우지 않는다 (MA-483 통지)
     const facts = computed(() =>
-      report.value ? summaryFacts(report.value, nodeIndex.value, axis.value ?? "high") : null
+      report.value && axis.value ? summaryFacts(report.value, nodeIndex.value, axis.value) : null
     );
     const factsText = computed(() => {
       const f = facts.value;
@@ -479,9 +481,10 @@ export default defineComponent({
       );
       return Math.max(...values.map(Math.abs), 1e-9);
     });
+    // 음수 막대는 회색 — 빨강은 표에서 «평균 이하» 한 뜻으로만 쓴다 (MA-481 소견 ②)
     const evBarStyle = (ev: number | null) => ({
       width: ev === null ? "0%" : (100 * Math.abs(ev)) / evRange.value + "%",
-      background: ev !== null && ev < 0 ? "#b9535d" : "rgb(var(--c-brand))",
+      background: ev !== null && ev < 0 ? "rgb(var(--c-text-muted))" : "rgb(var(--c-brand))",
     });
     const barValue = (avg: ReportAverage) => {
       if (metric.value === "ev") return avg.ev === null ? "—" : num(avg.ev, 2) + "bb";

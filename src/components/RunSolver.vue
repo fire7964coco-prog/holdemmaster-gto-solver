@@ -911,7 +911,7 @@ const M = {
     resume: "जारी रखें",
     solving: "गणना चल रही है…",
     finalizing: "अंतिम चरण पूरा हो रहा है…",
-    pausedStatus: "गणना रुकी हुई है।",
+    pausedStatus: "गणना पर विराम है।",
     finished: "गणना पूरी हुई!",
     stoppedEarly: "Exploitability के लक्ष्य तक पहुँचने से पहले गणना रोक दी गई।",
     allocatingMemory: "मेमोरी आवंटित हो रही है…",
@@ -1443,7 +1443,13 @@ export default defineComponent({
       } else {
         const valueText = localizeNumber(exploitability.value.toFixed(2));
         const percent = (exploitability.value * 100) / savedConfig.startingPot;
-        const percentText = localizeNumber(`${percent.toFixed(2)}%`);
+        // 목표 전 멈춤인데 반올림하면 목표와 같아 보이면(0.3002% → «0.30%») 자릿수를 늘린다 (MA-493 통지 ①)
+        let digits = 2;
+        const target = store.solverResultMeta?.targetExploitabilityPct;
+        if (stoppedEarly.value && target !== undefined) {
+          while (digits < 4 && Number(percent.toFixed(digits)) <= target) digits++;
+        }
+        const percentText = localizeNumber(`${percent.toFixed(digits)}%`);
         return L.value.exploitabilityLine(valueText, percentText);
       }
     });

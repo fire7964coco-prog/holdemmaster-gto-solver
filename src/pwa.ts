@@ -23,6 +23,7 @@ const KEY_TRAINER_SOLVED = "pwa.trainerSolved";
 const KEY_TOOL_USES = "pwa.toolUses";
 const KEY_DISMISSED_AT = "pwa.bannerDismissedAt";
 const KEY_INSTALLED = "pwa.installed";
+const KEY_OFFLINE_WANTED = "pwa.offlineWanted";
 
 // 배너를 닫으면 2주간 다시 묻지 않는다.
 const DISMISS_DAYS = 14;
@@ -193,6 +194,8 @@ const postToServiceWorker = (message: unknown) => {
 /** 트레이너 결정 데이터 + 교육 예제 13종을 기기에 저장시킨다 */
 export const saveOffline = () => {
   if (!navigator.serviceWorker?.controller) return;
+  // 한 번 저장한 사람은 새 버전이 옛 캐시를 지운 뒤에도 일반 탭에서 다시 채운다
+  writeValue(KEY_OFFLINE_WANTED, "1");
   pwa.offlineSaving = true;
   postToServiceWorker({ type: "cache-data" });
 };
@@ -291,8 +294,8 @@ export const setupPwa = () => {
       .then(async () => {
         await navigator.serviceWorker.ready;
         checkOfflineStatus();
-        // 이미 설치해서 쓰는 중이면 학습 데이터를 자동으로 확보한다
-        if (pwa.standalone) saveOffline();
+        // 이미 설치해서 쓰는 중이거나 전에 오프라인 저장을 한 사람이면 학습 데이터를 자동으로 확보한다
+        if (pwa.standalone || readCount(KEY_OFFLINE_WANTED) === 1) saveOffline();
       })
       .catch((e) => console.warn("[pwa] 서비스워커 등록 실패", e));
   };
