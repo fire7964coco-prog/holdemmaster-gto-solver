@@ -268,6 +268,14 @@ const M = {
     action: (name: string): string =>
       ({ Fold: "Фолд", Check: "Чек", Call: "Колл", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ин", "All-in": "Олл-ин" } as Record<string, string>)[name] ?? name,
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    strategyCombos: "Strategy (Combos)",
+    strategy: "Strategy",
+    equity: "Equity",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({
@@ -415,6 +423,7 @@ export default defineComponent({
         }[option];
 
       return {
+        ...(i18n.locale === "ar" ? { locale: "en-US" } : {}),
         responsive: true,
         maintainAspectRatio: false,
         animation: false,

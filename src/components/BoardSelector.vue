@@ -212,6 +212,15 @@ const M = {
     warnBody: (n: number) =>
       `Отредактированное дерево рассчитано на борд из ${n} карт.`,
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    inputError: "Could not read the cards. Enter 3–5 cards, such as AsKd7c or As Kd 7c. Your previous board is kept.",
+    placeholder: "e.g., AsKd7c",
+    clear: "Clear",
+    randomFlop: "Random Flop",
+    warnLabel: "Warning:",
+    warnBody: (n: number) => `The edited tree assumes a board with cards: ${n}.`,
+  },
 } as const;
 
 export default defineComponent({

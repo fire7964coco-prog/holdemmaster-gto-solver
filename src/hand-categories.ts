@@ -533,6 +533,47 @@ export const DRAW_LABELS_RU: Record<DrawKey, string> = {
   no_draw: "Без дро",
 };
 
+// ar: confirmed rank names from the terminology table §3-2 (AR2 translation exception).
+export const AR_HAND_RANK_NAMES = {
+  royal_flush: "رويال فلاش",
+  straight_flush: "ستريت فلاش",
+  quads: "فور أوف كايند",
+  full_house: "فول هاوس",
+  flush: "فلاش",
+  straight: "ستريت",
+  trips: "سيت/تريبس",
+  two_pair: "زوجان",
+  one_pair: "زوج",
+  high_card: "ورقة عالية",
+} as const;
+
+export const MADE_LABELS_AR: Record<MadeKey, string> = {
+  straight_flush: "ستريت فلاش",
+  quads: "فور أوف كايند",
+  full_house: "فول هاوس",
+  flush: "فلاش",
+  straight: "ستريت",
+  trips: "سيت/تريبس",
+  two_pair: "زوجان",
+  overpair: "زوج أعلى من البورد",
+  top_pair: "أعلى زوج",
+  second_pair: "الزوج الثاني",
+  weak_pair: "زوج ضعيف",
+  underpair: "زوج أقل من البورد",
+  ace_high: "آس عالي",
+  king_high: "ملك عالي",
+  nothing: "لا يد مكتملة",
+};
+
+export const DRAW_LABELS_AR: Record<DrawKey, string> = {
+  combo_draw: "درو مزدوج",
+  flush_draw: "درو فلاش",
+  oesd: "OESD",
+  gutshot: "درو ستريت داخلي",
+  backdoor_fd: "درو فلاش خلفي",
+  no_draw: "بلا درو",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -563,6 +604,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_VI
     : i18n.locale === "ru"
     ? MADE_LABELS_RU
+    : i18n.locale === "ar"
+    ? MADE_LABELS_AR
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -593,6 +636,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_VI
     : i18n.locale === "ru"
     ? DRAW_LABELS_RU
+    : i18n.locale === "ar"
+    ? DRAW_LABELS_AR
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

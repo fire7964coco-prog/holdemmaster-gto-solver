@@ -35,6 +35,8 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       tr: "npokers",
       vi: "npokers",
       ru: "npokers",
+      // ar-todo: English scaffold; translation follows AR2.
+      ar: "npokers",
     }
   : {
       /* 간판 교체 (2026-08-24, 트랙 B — 작업계획.md 가드레일 G3):
@@ -66,4 +68,6 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       // ru는 «GTO-тренажёр»(확정표 §3-1 · share-card brand와 같은 꼴 · ru 문자열 안 «GTO Trainer» 0).
       // 매니페스트 name·short_name·iOS 홈 화면 라벨은 영어 공용 앱 이름이라 그대로 둔다(확정표 §8 #26).
       ru: "HoldemMaster GTO-тренажёр",
+      // ar-todo: English scaffold; translation follows AR2.
+      ar: "HoldemMaster GTO Trainer",
     };

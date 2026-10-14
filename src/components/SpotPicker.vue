@@ -81,7 +81,7 @@
 import { computed, defineComponent, nextTick, ref } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { formatAmount } from "../utils";
-import { i18n } from "../i18n";
+import { i18n, ltrIso } from "../i18n";
 import { Position } from "../preflop-charts";
 import {
   Caller,
@@ -275,6 +275,17 @@ const M = {
     betsFilled: (flop: string, later: string, raise: string) =>
       `Поля сайзингов были пустыми, поэтому подставлены значения по умолчанию — Флоп ${flop} · Тёрн/Ривер ${later} · Рейз ${raise}`,
     next: "Далее: ③ Борд",
+  },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    title: "Fill ranges by position",
+    note: "Pick who opened and who called, then press the button below — both ranges, the pot and the stack are filled in at once. The ranges are the same as in Preflop Charts (6-max cash, 100bb).",
+    opener: "Open",
+    caller: "Call",
+    apply: "Fill both ranges",
+    applied: (oop: string, ip: string, pot: string, stack: string) => `${ltrIso(`${oop} (OOP)`)} · ${ltrIso(`${ip} (IP)`)} ranges filled in. Pot ${pot}bb · Stack ${stack}bb`,
+    betsFilled: (flop: string, later: string, raise: string) => `Bet sizes were empty, so defaults were filled in too — Flop ${ltrIso(flop)} · Turn/River ${ltrIso(later)} · Raise ${ltrIso(raise)}`,
+    next: "Next: ③ Board",
   },
 } as const;
 

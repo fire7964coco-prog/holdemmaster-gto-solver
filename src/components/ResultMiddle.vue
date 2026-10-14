@@ -196,7 +196,7 @@
 import { computed, defineComponent, reactive, ref, toRefs, watch } from "vue";
 import { capitalize } from "../utils";
 import * as Types from "../result-types";
-import { i18n } from "../i18n";
+import { i18n, ltrIso } from "../i18n";
 
 // display-only label maps (internal mode values remain in English)
 const M = {
@@ -575,6 +575,31 @@ const M = {
     chart: "График:",
     strategyCombos: "Стратегия (комбо)",
     equity: "Эквити",
+  },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    modeLabels: {
+      basics: "Basics",
+      graphs: "Graphs",
+      compare: "Compare",
+      turn: "Turn",
+      river: "River",
+    } as Record<string, string>,
+    player: "Player:",
+    auto: (player: string) => `Auto (${ltrIso(player)})`,
+    barHeight: "Bar Height:",
+    normalized: "Normalized",
+    absolute: "Absolute",
+    full: "Full",
+    suit: "Suit:",
+    grouped: "Grouped",
+    individual: "Individual",
+    display: "Display:",
+    strategy: "Strategy",
+    weight: "Weight",
+    chart: "Chart:",
+    strategyCombos: "Strategy (Combos)",
+    equity: "Equity",
   },
 } as const;
 

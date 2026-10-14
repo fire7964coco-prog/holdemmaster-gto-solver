@@ -94,6 +94,7 @@
           <option value="zh-hant">繁體中文</option>
           <option value="vi">Tiếng Việt</option>
           <option value="ru">Русский</option>
+          <option value="ar">العربية</option>
         </select>
         </span>
         <a
@@ -247,6 +248,14 @@ const M = {
     communitySuffix: "\u00a0HoldemMaster",
     langSwitchLabel: "Выбор языка",
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    resultsDisabledHint: "Opens when ⑤ Run Solver is finished",
+    solver: "Solver",
+    community: "HoldemMaster",
+    communitySuffix: " Community",
+    langSwitchLabel: "Select language",
+  },
 } as const;
 
 export default defineComponent({
@@ -274,7 +283,8 @@ export default defineComponent({
         value === "hi" ||
         value === "tr" ||
         value === "vi" ||
-        value === "ru"
+        value === "ru" ||
+        value === "ar"
       )
         setLocale(value);
     };

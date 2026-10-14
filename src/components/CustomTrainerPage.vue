@@ -121,7 +121,7 @@ import type { RngMode } from "../trainer-rng";
 import { RNG_M } from "../trainer-rng-labels";
 import { M as REVIEW_LABELS } from "../hand-review-labels";
 import { useStore } from "../store";
-import { i18n, localizeNumber, pctText } from "../i18n";
+import { i18n, localizeNumber, pctText, ltrIso } from "../i18n";
 import { cardText, formatAmount } from "../utils";
 
 export default defineComponent({
@@ -145,10 +145,16 @@ export default defineComponent({
     const number = localizeNumber;
     // ru nouns depend on the displayed count; bb stays attached (U1 §2-1).
     const ruUnit = (n: number, scale: number) => scale === 10 ? "bb" : ` ${ruChipLabel(n, true)}`; // toFixed(3) 표시 → few형
-    const displayValue = (value: number) => i18n.locale === "ru"
+    // ar-todo: label form avoids Arabic count-dependent chip nouns.
+    const arAmount = (value: string, scale: number) => scale === 10 ? `${number(value)}bb` : `${M.ar.amountLabel} (${L.value.chips}): ${number(value)}`;
+    const displayValue = (value: number) => i18n.locale === "ar"
+      ? arAmount(value.toFixed(3), bank.value?.unitScale ?? 1)
+      : i18n.locale === "ru"
       ? `${number(value.toFixed(3))}${ruUnit(value, bank.value?.unitScale ?? 1)}`
       : `${number(value.toFixed(3))} ${unit.value}`;
-    const amount = (value: number) => i18n.locale === "ru"
+    const amount = (value: number) => i18n.locale === "ar"
+      ? arAmount(formatAmount(value, bank.value?.unitScale ?? 1), bank.value?.unitScale ?? 1)
+      : i18n.locale === "ru"
       ? `${number(formatAmount(value, bank.value?.unitScale ?? 1))}${ruUnit(Number(formatAmount(value, bank.value?.unitScale ?? 1)), bank.value?.unitScale ?? 1)}`
       : `${number(formatAmount(value, bank.value?.unitScale ?? 1))} ${unit.value}`;
     const percent = (value: number) =>
@@ -210,6 +216,9 @@ export default defineComponent({
         const pot = formatAmount(item.startingPot, item.unitScale);
         const stack = formatAmount(item.effectiveStack, item.unitScale);
         return `${board} · ${L.value.pot} ${number(pot)}${ruUnit(Number(pot), item.unitScale)} · ${L.value.stack} ${number(stack)}${ruUnit(Number(stack), item.unitScale)}`;
+      }
+      if (i18n.locale === "ar") {
+        return `${ltrIso(board)} · ${L.value.pot} ${arAmount(formatAmount(item.startingPot, item.unitScale), item.unitScale)} · ${L.value.stack} ${arAmount(formatAmount(item.effectiveStack, item.unitScale), item.unitScale)}`;
       }
       const unitName = item.unitScale === 10 ? "bb" : L.value.chips;
       return `${board} · ${L.value.pot} ${number(formatAmount(item.startingPot, item.unitScale))} ${unitName} · ${L.value.stack} ${number(formatAmount(item.effectiveStack, item.unitScale))} ${unitName}`;

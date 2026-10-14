@@ -164,6 +164,13 @@ const M = {
     draws: "Дро",
     noDraws: "Нет данных о дро",
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    hands: "Hands",
+    noHands: "No hands to display",
+    draws: "Draws",
+    noDraws: "No draw information",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)

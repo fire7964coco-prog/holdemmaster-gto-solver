@@ -185,6 +185,11 @@ const M = {
     combos: "組合",
     equity: "勝率",
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    combos: "Combos",
+    equity: "Equity",
+  },
 } as const;
 
 const EPS = 2e-6;

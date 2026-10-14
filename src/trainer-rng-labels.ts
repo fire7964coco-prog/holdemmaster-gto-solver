@@ -161,4 +161,16 @@ export const RNG_M = {
       `Допустимо — солвер смешивает это действие, но для этого числа нужно: ${action}.`,
     noteOther: (action: string) => `Для этого числа нужно: ${action}.`,
   },
+  // ar-todo: English scaffold; translation follows AR2.
+  ar: {
+    mode: { off: "RNG: Off", high: "RNG: High", low: "RNG: Low" },
+    modeHelp:
+      "Random number (1–100) practice — each hand gets a number, and you pick the action that number points to. High: higher numbers mean more aggressive actions · Low: lower numbers mean more aggressive actions. Not used for the Daily Puzzle.",
+    bandsTitle: "RNG ranges",
+    yourNumber: "Your number",
+    noteBest: (action: string) => `You picked the action for this number (${action}).`,
+    noteMixed: (action: string) =>
+      `Acceptable — the solver mixes this action, but this number calls for ${action}.`,
+    noteOther: (action: string) => `This number calls for ${action}.`,
+  },
 };

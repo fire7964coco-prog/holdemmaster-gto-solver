@@ -652,6 +652,40 @@ const M = {
     betSizeSub: "Настройки дерева",
     run: "Запустить солвер",
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    stepDefaults: "Default settings",
+    stepNeeded: "Input needed",
+    stepComplete: "Input complete",
+    stepRunNeeded: "Run Solver",
+    stepRunComplete: "Solver finished",
+    stepLegend: "✓ Done · ○ To do · Yellow dot = next task",
+    exploreLabel: "Explore",
+    exploreLabelSuffix: " & Study",
+    about: "About",
+    guide: "How to Use",
+    presets: "Study Spots",
+    presetsBadge: "Instant",
+    trainer: "GTO Trainer",
+    trainerBadge: "Graded",
+    preflop: "Preflop Charts",
+    // 뱃지까지 한 줄에 들어와야 한다 — 「Open·Defend」는 1280×720에서 두 줄로 접혔다
+    preflopBadge: "Ranges",
+    equity: "Equity Calculator",
+    // 뱃지는 «무엇을 내주는가»를 한 마디로 — 라벨과 같은 말(Equity)을 반복하면 오작동처럼 보인다.
+    // ko 승률 · ja 勝率 · es % victoria 와 같은 자리다. «Win %»는 퍼센트 기호가 있어
+    // bb/100을 뜻하는 «win rate»와 혼동되지 않는다 (2026-08-20 눈검수).
+    equityBadge: "Win %",
+    customLabel: "Custom Spot",
+    // ⚠ 이 라벨이 두 줄로 접히면 1280×720에서 ⑤가 화면 밖으로 밀린다 (한 줄로 유지할 것)
+    customLabelSuffix: " — Solve",
+    oopRange: "OOP Range",
+    ipRange: "IP Range",
+    board: "Board",
+    betSize: "Bet Sizes",
+    betSizeSub: "Tree Settings",
+    run: "Run Solver",
+  },
 } as const;
 
 export default defineComponent({
@@ -791,7 +825,7 @@ export default defineComponent({
   }
   .side-bar-group.fade-start { --fade-l: 16px; }
   .side-bar-group.fade-end { --fade-r: 16px; }
-  .side-bar-group:dir(rtl) {
+  :global(html[dir="rtl"] .side-bar-group){
     -webkit-mask-image: linear-gradient(to left, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
     mask-image: linear-gradient(to left, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
   }
@@ -808,7 +842,7 @@ export default defineComponent({
   @apply text-brand bg-surface-3;
   box-shadow: inset 2px 0 0 rgb(var(--c-brand));
 }
-.side-bar-item.text-blue-300:dir(rtl) { box-shadow: inset -2px 0 0 rgb(var(--c-brand)); }
+:global(html[dir="rtl"] .side-bar-item.text-blue-300){ box-shadow: inset -2px 0 0 rgb(var(--c-brand)); }
 @media (min-width: 768px) {
   .mobile-menu-groups { display: none; }
   .side-bar-item .step-status { position: absolute; inset-inline-end: 5px; top: 4px; font-size: 10px; }

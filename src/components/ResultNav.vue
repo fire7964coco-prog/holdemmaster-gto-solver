@@ -243,7 +243,7 @@ import { decodeResults } from "../results-decode";
 import { computed, defineComponent, nextTick, toRefs, ref, watch } from "vue";
 import { useSavedConfigStore } from "../store";
 import { useStore } from "../store";
-import { i18n } from "../i18n";
+import { i18n, ltrIso } from "../i18n";
 import { cardText, average, colorString, formatAmount } from "../utils";
 import { handler } from "../global-worker";
 import {
@@ -651,6 +651,26 @@ const M = {
       ({ Fold: "Фолд", Check: "Чек", Call: "Колл", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ин", "All-in": "Олл-ин" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% банка)`,
+  },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${ltrIso(player)} wins`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "End",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% pot)`,
   },
 } as const;
 

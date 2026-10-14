@@ -920,7 +920,7 @@ export default defineComponent({
 
 <style scoped>
 .study-mobile-cards { display: contents; }
-.study-mobile-bar:dir(rtl) .study-mobile-cards { display: flex; gap: 4px; }
+:global(html[dir="rtl"] .study-mobile-bar .study-mobile-cards){ display: flex; gap: 4px; }
 .study-page {
   display: flex;
   flex-direction: column;

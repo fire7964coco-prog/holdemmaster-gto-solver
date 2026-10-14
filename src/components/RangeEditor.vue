@@ -117,7 +117,7 @@
         </div>
 
         <span class="inline-block ml-auto">
-          {{ $n(numCombos.toFixed(1)) }} {{ L.combos }} ({{
+          <template v-if="isAr">{{ L.combos }}: {{ arCount(numCombos) }}</template><template v-else>{{ $n(numCombos.toFixed(1)) }} {{ L.combos }}</template> ({{
             $pct($n(((numCombos * 100) / ((52 * 51) / 2)).toFixed(1)))
           }})
         </span>
@@ -141,7 +141,7 @@ import { computed, defineComponent, ref, watch } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { ranks, rankPat } from "../utils";
 import { RangeManager } from "../../pkg/range/range";
-import { i18n } from "../i18n";
+import { i18n, ltrIso, numberLocaleTag } from "../i18n";
 
 import DbItemPicker from "./DbItemPicker.vue";
 
@@ -281,6 +281,15 @@ const M = {
     combos: "комбо",
     parseError: (range: string) =>
       `Не удалось разобрать диапазон: ${range || "(пустая строка)"}`,
+  },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. Tapping a cell that already has that weight clears it. The hand name and weight you tapped appear in large text above.",
+    clear: "Clear",
+    errorPrefix: "Error:",
+    weight: "Weight:",
+    combos: "combos",
+    parseError: (range: string) => `Failed to parse range: ${ltrIso(range || "(empty string)")}`,
   },
 } as const;
 
@@ -474,6 +483,8 @@ export default defineComponent({
       rangeTextError,
       weight,
       numCombos,
+      arCount: (count: number) => count.toLocaleString(numberLocaleTag(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }),
+      isAr: computed(() => i18n.locale === "ar"),
       activeCell,
       onCellKeydown,
       onRangeTextChange,

@@ -365,6 +365,15 @@ const M = {
     finalizing: "Завершение…",
     paused: "Солвер на паузе.",
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    startRange: "① Start with ranges",
+    viewPresets: "View Study Spots",
+    notRun: "You haven’t calculated your own results yet.\nYou can view example results directly in the “Study Spots” menu.\nTo calculate your own spot, complete ①~⑤, then press “Run Solver”.",
+    running: "Running the solver…",
+    finalizing: "Finalizing…",
+    paused: "Solver paused.",
+  },
 } as const;
 
 export default defineComponent({
@@ -714,13 +723,13 @@ export default defineComponent({
   scrollbar-width: thin;
   overscroll-behavior-x: contain;
 }
-.result-toolbar:dir(rtl) .result-current-path { margin-left: 0; margin-right: auto; }
+:global(html[dir="rtl"] .result-toolbar .result-current-path){ margin-left: 0; margin-right: auto; }
 .result-current-path > span { flex-shrink: 0; }
 .result-current-path:focus-visible { outline: 2px solid rgb(var(--c-brand)); outline-offset: 2px; }
 .result-path-arrow { color: rgb(var(--c-text-muted)); }
 .result-path-current { color: rgb(var(--c-brand)); font-weight: 700; }
 @media (max-width: 767px) {
-  .result-toolbar:dir(rtl) .result-current-path { margin-left: 0; margin-right: 0; }
+  :global(html[dir="rtl"] .result-toolbar .result-current-path){ margin-left: 0; margin-right: 0; }
   .result-current-path { flex-basis: 100%; min-height: 24px; margin-inline-start: 0; }
   /* One summary instance, moved ahead of the matrix only at mobile widths. */
   .result-details { display: contents; }

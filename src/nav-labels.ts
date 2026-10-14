@@ -28,4 +28,6 @@ export const navResults: Record<Locale, string> = {
   vi: "Kết quả",
   // 모바일 탭 80px — 넘치면 2차 «Результат»(RunSolver 이동 버튼도 이 값을 쓴다 · 확정표 §5-2 R1)
   ru: "Результаты",
+  // ar-todo: English scaffold; translation follows AR2.
+  ar: "Results",
 };

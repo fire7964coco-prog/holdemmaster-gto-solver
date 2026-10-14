@@ -119,7 +119,9 @@ const toUser = (session: Session | null): AccountUser | null => {
       (meta.full_name as string) ||
       (meta.name as string) ||
       session.user.email?.split("@")[0] ||
-      pick("회원", "Player", "プレイヤー", "jugador", "Jogador", "Spieler", "玩家", "玩家", "Joueur", "Pemain", "Pemain", "खिलाड़ी", "Oyuncu", "Người chơi", "Игрок"),
+      pick("회원", "Player", "プレイヤー", "jugador", "Jogador", "Spieler", "玩家", "玩家", "Joueur", "Pemain", "Pemain", "खिलाड़ी", "Oyuncu", "Người chơi", "Игрок",
+        // ar-todo
+        "Player"),
   };
 };
 
@@ -243,7 +245,9 @@ export const signIn = async (provider: "google" | "kakao", purpose?: "feedback")
   nextReturnView = null;
   nextReturnState = null;
   const supabase = await getClient();
-  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能", "Les comptes sont désactivés dans cette version", "Fitur akun dinonaktifkan di versi ini", "Ciri akaun tidak tersedia dalam versi ini", "इस संस्करण में खाते की सुविधा उपलब्ध नहीं है", "Bu sürümde hesap özelliği kapalı", "Tính năng tài khoản đã bị tắt trong phiên bản này", "Аккаунты в этой версии отключены"));
+  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能", "Les comptes sont désactivés dans cette version", "Fitur akun dinonaktifkan di versi ini", "Ciri akaun tidak tersedia dalam versi ini", "इस संस्करण में खाते की सुविधा उपलब्ध नहीं है", "Bu sürümde hesap özelliği kapalı", "Tính năng tài khoản đã bị tắt trong phiên bản này", "Аккаунты в этой версии отключены",
+    // ar-todo
+    "Accounts are disabled in this build"));
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
@@ -329,10 +333,14 @@ export const syncAttempts = async (
   localAttempts: TrainerAttempt[]
 ): Promise<{ result: SyncResult; missingLocally: TrainerAttempt[] }> => {
   const supabase = await getClient();
-  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能", "Les comptes sont désactivés dans cette version", "Fitur akun dinonaktifkan di versi ini", "Ciri akaun tidak tersedia dalam versi ini", "इस संस्करण में खाते की सुविधा उपलब्ध नहीं है", "Bu sürümde hesap özelliği kapalı", "Tính năng tài khoản đã bị tắt trong phiên bản này", "Аккаунты в этой версии отключены"));
+  if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能", "Les comptes sont désactivés dans cette version", "Fitur akun dinonaktifkan di versi ini", "Ciri akaun tidak tersedia dalam versi ini", "इस संस्करण में खाते की सुविधा उपलब्ध नहीं है", "Bu sürümde hesap özelliği kapalı", "Tính năng tài khoản đã bị tắt trong phiên bản này", "Аккаунты в этой версии отключены",
+    // ar-todo
+    "Accounts are disabled in this build"));
   const { data: sessionData } = await supabase.auth.getSession();
   const userId = sessionData.session?.user.id;
-  if (!userId) throw new Error(pick("로그인이 필요합니다", "Please sign in first", "ログインが必要です", "Primero inicia sesión", "Faça login primeiro", "Melde dich zuerst an", "请先登录", "請先登入", "Connecte-toi d'abord", "Silakan login dulu", "Sila log masuk dahulu", "पहले लॉग इन करें", "Önce giriş yap", "Hãy đăng nhập trước", "Сначала войди в аккаунт"));
+  if (!userId) throw new Error(pick("로그인이 필요합니다", "Please sign in first", "ログインが必要です", "Primero inicia sesión", "Faça login primeiro", "Melde dich zuerst an", "请先登录", "請先登入", "Connecte-toi d'abord", "Silakan login dulu", "Sila log masuk dahulu", "पहले लॉग इन करें", "Önce giriş yap", "Hãy đăng nhập trước", "Сначала войди в аккаунт",
+    // ar-todo
+    "Please sign in first"));
 
   const uploadable = localAttempts.filter((item) => item.clientId);
   if (uploadable.length) {

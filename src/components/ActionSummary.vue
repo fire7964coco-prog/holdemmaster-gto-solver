@@ -14,7 +14,8 @@
           {{ $pct($n(tile.freq.toFixed(1))) + " " }}
         </span>
         <span dir="ltr" class="text-[0.65rem] text-white/70 tabular-nums">
-          {{ $n(tile.combos.toFixed(1)) }}<br />{{ L.combos }}
+          <template v-if="isAr">{{ L.combos }}: {{ arCount(tile.combos) }}</template>
+          <template v-else>{{ $n(tile.combos.toFixed(1)) }}<br />{{ L.combos }}</template>
         </span>
       </div>
     </div>
@@ -26,7 +27,7 @@ import { computed, defineComponent } from "vue";
 import { Results, Spot, SpotPlayer } from "../result-types";
 import { useStore } from "../store";
 import { formatAmount } from "../utils";
-import { i18n, pick, localizeNumber } from "../i18n";
+import { i18n, pick, localizeNumber, numberLocaleTag } from "../i18n";
 
 const M = {
   ko: {
@@ -73,6 +74,10 @@ const M = {
   },
   ru: {
     combos: "комбо",
+  },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    combos: "combos",
   },
 } as const;
 
@@ -193,6 +198,16 @@ const actionLabel = (
       Raise: "Рейз",
       Allin: "Олл-ин",
       "All-in": "Олл-ин",
+    },
+    // ar-todo: English source.
+    {
+      Fold: "Fold",
+      Check: "Check",
+      Call: "Call",
+      Bet: "Bet",
+      Raise: "Raise",
+      Allin: "All-in",
+      "All-in": "All-in",
     }
   );
   const label = map[name] ?? name;
@@ -221,7 +236,9 @@ const actionLabel = (
         "du pot",
         "dari pot",
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
-        "pot", "pot", "pot", "pot", "банка" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
+        "pot", "pot", "pot", "pot", "банка",
+    // ar-todo: English source.
+    "pot" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
       )})`
     );
   }
@@ -319,7 +336,9 @@ export default defineComponent({
       return ret.reverse();
     });
 
-    return { tiles, L };
+    return { tiles, L, isAr: computed(() => i18n.locale === "ar"),
+      arCount: (count: number) => count.toLocaleString(numberLocaleTag(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }),
+    };
   },
 });
 </script>

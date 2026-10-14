@@ -927,6 +927,31 @@ const M = {
     action: (name: string): string =>
       ({ Fold: "Фолд", Check: "Чек", Call: "Колл", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ин", "All-in": "Олл-ин" } as Record<string, string>)[name] ?? name,
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    summary: "Summary",
+    barWidth: "Bar Width:",
+    normalized: "Normalized",
+    absolute: "Absolute",
+    full: "Full",
+    display: "Display:",
+    actionPct: "Action %",
+    actionEv: "Action EV",
+    exportCsv: "Export summary as a CSV file",
+    all: "All",
+    hand: "Hand",
+    strategy: "Strategy",
+    weightBar: "Weight (Bar)",
+    weight: "Weight",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (Bar)",
+    combos: "Combos",
+    noReport: (chanceType: string) => chanceType === "turn" ? "No turn report available" : "No river report available",
+    noResults: "No results",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({

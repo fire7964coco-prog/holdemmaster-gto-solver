@@ -164,6 +164,11 @@ const M = {
     noGraph: "График недоступен",
     equity: "Эквити",
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    noGraph: "No graph available",
+    equity: "Equity",
+  },
 } as const;
 
 export default defineComponent({
@@ -356,6 +361,7 @@ export default defineComponent({
       };
 
       return {
+        ...(i18n.locale === "ar" ? { locale: "en-US" } : {}),
         responsive: true,
         maintainAspectRatio: false,
         animation: false,

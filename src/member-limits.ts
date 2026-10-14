@@ -129,9 +129,15 @@ const ru: typeof ko = {
   importOver: "После импорта на этом устройстве будет больше 10 сохранённых элементов — войди, чтобы импортировать всё",
   memberScenario: "Эта ситуация доступна только участникам (аккаунт бесплатный) — войди, чтобы сразу её открыть",
 };
+// ar-todo: English scaffold; translation follows AR2.
+const ar: typeof ko = {
+  saveFull: "Sign in to save more than 10 items and open your list on any phone or PC",
+  importOver: "This import would take this device past 10 saved items — sign in to import all of it",
+  memberScenario: "This situation is only for free members — sign in to open it right away",
+};
 export type MemberLabels = typeof ko;
 // This assignment checks both the locale set and every required key at build time.
 const checkedLabels: LocaleDict<MemberLabels> = {
-  ko, en, ja, es, pt, de, zh, "zh-hant": zhHant, fr, id, ms, hi, tr, vi, ru,
+  ko, en, ja, es, pt, de, zh, "zh-hant": zhHant, fr, id, ms, hi, tr, vi, ru, ar,
 };
 export const memberLabels = (locale: Locale): MemberLabels => checkedLabels[locale];

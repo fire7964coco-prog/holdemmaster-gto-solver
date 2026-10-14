@@ -516,6 +516,23 @@ const M = {
     addedLines: "Добавлено линий:",
     removedLines: "Удалено линий:",
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    treeError: "Error: Failed to build the tree (loaded a broken tree?)",
+    pot: "Pot",
+    stack: "Stack",
+    noActions: "(No actions)",
+    wins: "wins",
+    invalidTerminals: "Invalid terminal nodes:",
+    addBetAction: "Add Bet Action",
+    removeNode: "Remove Selected Node",
+    betAmount: "Bet Amount:",
+    potRate: (pct: string) => `(${pct}% of the pot)`,
+    saveEdits: "Save Edits",
+    cancelEdits: "Cancel Edits",
+    addedLines: "Added lines:",
+    removedLines: "Removed lines:",
+  },
 } as const;
 
 export default defineComponent({
@@ -974,6 +991,6 @@ export default defineComponent({
 .text-blue-300 {
   color: rgb(var(--c-brand));
 }
-.tree-bet-amount:dir(rtl) > input { margin-left: 0; margin-right: 0.5rem; }
-.flex:dir(rtl) > .tree-invalid-lines { margin-left: 0; margin-right: 0.5rem; }
+:global(html[dir="rtl"] .tree-bet-amount > input){ margin-left: 0; margin-right: 0.5rem; }
+:global(html[dir="rtl"] .flex > .tree-invalid-lines){ margin-left: 0; margin-right: 0.5rem; }
 </style>

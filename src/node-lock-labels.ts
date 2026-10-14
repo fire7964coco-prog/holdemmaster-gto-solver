@@ -275,6 +275,24 @@ export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = {
     banner: "Часть стратегии зафиксирована — это не равновесная (GTO) стратегия · Зафиксировано узлов: {count}",
     noReach: "Вес reach этого узла равен 0, поэтому начальные частоты показать нельзя.",
   },
+  // ar-todo: English scaffold; translation follows AR2.
+  ar: {
+    title: "Lock this node’s strategy",
+    apply: "Lock and solve again",
+    clearAll: "Unlock all and solve again",
+    remove: "Unlock and solve again",
+    before: "Before locking",
+    after: "After locking",
+    frequency: "Frequency",
+    comparison: "Before/after comparison",
+    exploitability: "Exploitability",
+    sumError: "Enter integers from 0 to 100 for each action, totaling 100.",
+    skippedChance: "A path with an unspecified card cannot be locked. Select the card first.",
+    engineError: "The strategy could not be locked. Check the input values and solve again.",
+    assumption: "Values under the fixed-strategy assumption",
+    banner: "Solved with part of the strategy fixed — not an equilibrium (GTO) strategy · Locked nodes: {count}",
+    noReach: "This node’s reach weight is 0, so initial frequencies are unavailable.",
+  },
 };
 
 export const nodeLockLabels = () => NODE_LOCK_MESSAGES[i18n.locale];

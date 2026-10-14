@@ -62,7 +62,7 @@
     </div>
     <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
       <span data-testid="trainer-board-count" :class="count ? 'text-neutral-300' : 'text-red-400'">
-        {{ count ? format(T.flopCount, { count: count.toLocaleString(locale) }) : B.boardEmpty }}
+        {{ count ? format(T.flopCount, { count: count.toLocaleString(numberLocaleTag(locale)) }) : B.boardEmpty }}
       </span>
       <button v-if="active" type="button" class="link-like" data-testid="trainer-board-reset" @click="emit({})">
         {{ B.boardReset }}
@@ -73,7 +73,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue";
-import { i18n } from "../i18n";
+import { i18n, numberLocaleTag } from "../i18n";
 import { flopBoardLabels } from "../flop-trainer-labels";
 import { flopReportLabels, FlopReportLabels } from "../flop-report-labels";
 import { flopStudyLabels } from "../flop-study-labels";
@@ -138,6 +138,7 @@ export default defineComponent({
     const suitClass = (c: number) => ["clubs", "diamonds", "hearts", "spades"][c & 3];
 
     return {
+      numberLocaleTag,
       B,
       locale,
       T,

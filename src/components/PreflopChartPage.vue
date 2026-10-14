@@ -159,7 +159,7 @@
       <div class="flex-grow min-w-0">
         <div class="flex flex-wrap gap-2 mb-4">
           <div v-for="s in active.stats" :key="s.label" class="stat-chip">
-            {{ s.label }} <b :data-testid="s.testid">{{ (isVi || isTr || isRu) && s.label === L.statCombos ? s.value : $n(s.value) }}</b>
+            {{ s.label }} <b :data-testid="s.testid">{{ (isVi || isTr || isRu || isAr) && s.label === L.statCombos ? s.value : $n(s.value) }}</b>
           </div>
         </div>
 
@@ -1531,6 +1531,95 @@ const M = {
       "3-бет) + диапазоны наших учебных спотов (собрано 08.2026)",
     phase2: "Мы продолжим добавлять новые пары позиций и ситуации.",
   },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    modeRfi: "Opening (RFI)",
+    modeDefend: "vs Open (Defense)",
+    mode3bet: "vs 3-bet (after opening)",
+    mode4bet: "vs 4-bet (after 3-betting)",
+    intro4bet:
+      "How to respond when your 3-bet gets 4-bet — red is 5-bet (all-in), green is call, everything else is a fold. Frequencies are conditional on having 3-bet, so hands you never 3-bet are blank. 6-max cash, 100bb. 4-bet sizes: BB 3-bets 11bb → 24bb · SB 3-bets 10bb → 22bb · later positions (CO·BTN) 3-bet 7.5bb → 19bb · BB vs an SB open 3-bets 9bb → 22bb.",
+    legend5bet: "5-bet (all-in)",
+    legendCond4bet: "Blank = never 3-bet in the first place",
+    stat5bet: "5-bet %",
+    statContinue4bet: "Continue % (of 3-bets)",
+    copy5bet: "Copy 5-bet range",
+    note4bet:
+      "Stats are % of your 3-bet range. At 100bb the 5-bet is effectively a single all-in size — value is AA·KK (occasionally trapping by calling); QQ·AK mix in 5-bets only against bluff-laden BTN·SB 4-bets and call against the narrow CO·HJ·UTG 4-bets (vs a UTG 4-bet even KK calls). Calling is about equity realization, not pot odds: with position (BTN·CO 3-bettor) calls widen to medium hands like TT·AJs (vs a UTG 4-bet only JJ·TT), and BB vs SB, facing a bluff-heavy SB 4-bet, widens further to 99-66·ATs·KQs·AJo-ATo; the out-of-position BB 3-bettor keeps it to QQ·JJ·AK against the narrow CO·HJ·UTG 4-bets (against the bluff-laden BTN 4-bet, down to TT-77·AJs-ATs·AQo). Fold everything? No — the 4-bet range contains bluffs like A5s-A4s.",
+    how4bet2:
+      "If red + green don't fill the cell, the rest is folded. Cells with both " +
+      "colors mix 5-bets and calls. Hands outside the 3-betting range never " +
+      "face this spot, so they are blank.",
+    intro3bet:
+      "How to respond when your open-raise gets 3-bet — red is 4-bet, green is call, everything else is a fold. Frequencies are conditional on having opened, so hands you never open are blank. 6-max cash, 100bb, 2.5bb open (3bb for SB opens); 3-bets are 11bb from the BB and 10bb from the SB (9bb for BB vs an SB open), and 7.5bb from positions behind you.",
+    legend4bet: "4-bet",
+    legendCond: "Blank = never opened in the first place",
+    stat4bet: "4-bet %",
+    statContinue: "Continue % (of opens)",
+    copy4bet: "Copy 4-bet range",
+    note3bet:
+      "The stats are shares of your opening range, not of all hands. 4-bet value centers on QQ+/AK (AA-KK when UTG opens, with QQ mostly calling), with a few bluffs like A5s-A4s mixed in (more when the SB opens, including offsuit broadways like AJo and KQo). The calling range is built on pairs and suited broadways; out of position it is narrower than the same opener's in-position range. Connectors rarely call when UTG opens (some T9s, plus a little 98s against a BTN 3-bet); from the other seats, more of them are mixed into the calls.",
+    squeezeNote:
+      "A squeeze is a 3-bet with both an opener and a caller in the pot (about " +
+      "11-12bb here). The caller makes total defense tighter than heads-up and " +
+      "pushes the 3-bet toward value. Overcalls favor suited, connected hands " +
+      "that can make the nuts multiway.",
+    how3bet2:
+      "If red + green don't fill the cell, the rest is folded. Cells with both " +
+      "colors mix 4-bets and calls. Hands outside the opening range never face " +
+      "this spot, so they are blank.",
+    intro: "Opening ranges by position (RFI) — which hands should you raise when everyone folds to you? Based on 6-max cash, 100bb, 2.5bb open. Partially filled cells mark borderline hands where public sources disagree on opening (fill height = share of sources favoring an open).",
+    provenanceNote: "Public-source consensus + internal derivation — not solver output. See “How was this chart built?” below.",
+    introDefend:
+      "How to respond when someone open-raises before you — the most " +
+      "common matchups. Red is 3-bet, green is call, and the stacked height is " +
+      "your total defend frequency. 6-max cash, 100bb, 2.5bb open (3bb for SB opens).",
+    legendOpen: "Open (100%)",
+    legendMixed: "Borderline hands (fill = share of sources favoring an open)",
+    legendFold: "Fold",
+    legend3bet: "3-bet",
+    legendCall: "Call",
+    legendMixedDefend: "Fill height = frequency (split cells are mixed)",
+    stat3bet: "3-bet %",
+    statCall: "Call %",
+    statTotal: "Total defend",
+    copy3bet: "Copy 3-bet range",
+    copyCall: "Copy call range",
+    sbNote:
+      "In the SB you're essentially 3-bet-or-fold against a BTN open — you're " +
+      "out of position with BB still left to act, so calling saddles you with " +
+      "both disadvantages at once.",
+    ipNote:
+      "Even with position, an early-position opening range is strong, and " +
+      "calling risks a squeeze from the blinds still left to act. In-position " +
+      "defense is therefore a narrow, 3-bet-centric range, with calls mostly " +
+      "limited to pairs and premium suited hands.",
+    statPercent: "Open %",
+    statCombos: "Combos opened",
+    statHands: "Hands opened",
+    statMixed: "Borderline hands",
+    copy: "Copy range text",
+    copied: "✓ Copied",
+    sendOop: "① Send to OOP Range",
+    sendIp: "② Send to IP Range",
+    howTitle: "How to read this",
+    how1: "The top-left to bottom-right diagonal is pairs; above it (right) is suited, below it (left) is offsuit.",
+    how2: "Partially filled cells mark borderline hands where sources disagree on whether to open. Fill height represents the share of sources favoring an open, not a solver result.",
+    how3: "The [Send to Range] buttons load this range into the custom-spot range editor — try solving the postflop play yourself.",
+    howDefend2:
+      "If red + green don't fill the whole cell, the rest is folded. Cells showing both colors mix 3-bets and calls at those ratios.",
+    howDefend3:
+      "Paste a copied range into the custom-spot range inputs (① / ②) to solve the postflop play with this defense range yourself.",
+    sourceTitle: "How was this chart built?",
+    sourceBody: "We cross-checked several freely published GTO resources hand by hand to build a consensus range, marking borderline hands the sources disagree on with the share of sources favoring an open (75/50/25%). BTN and SB were also checked against the solver-verified ranges used by this app's Study Spots.",
+    sourceList:
+      "Public sources cross-checked: nlh.poker · Preflop Wizard · HoldemPro · " +
+      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB solved frequencies) · " +
+      "GTO Gecko · RiverOdds (defense anchors) · GTO Wizard blog · FreeBetRange " +
+      "(IP defense & squeeze principles) · 888poker · Run It Once (vs 3-bet " +
+      "frequencies) + our own study-spot ranges (collected 08/2026)",
+    phase2: "We'll keep adding more matchups and scenarios.",
+  },
 } as const;
 
 type ModeKey = "rfi" | "defend" | "vs3bet" | "vs4bet";
@@ -1579,6 +1668,7 @@ export default defineComponent({
     const isVi = computed(() => i18n.locale === "vi");
     const isTr = computed(() => i18n.locale === "tr");
     const isRu = computed(() => i18n.locale === "ru");
+    const isAr = computed(() => i18n.locale === "ar");
 
     // npokers 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
     noteToolUsed();
@@ -1710,7 +1800,7 @@ export default defineComponent({
               testid: "preflop-percent",
             },
             // tr만 천 단위 마침표(확정표 §2 — 1.326) · 다른 언어 출력은 그대로
-            { label: t.statCombos, value: `${i18n.locale === "ru" ? Math.round(s.combos).toLocaleString("ru-RU") : Math.round(s.combos)} / ${i18n.locale === "ru" ? "1\u00a0326" : i18n.locale === "tr" || i18n.locale === "vi" ? "1.326" : "1326"}` },
+            { label: t.statCombos, value: `${i18n.locale === "ru" ? Math.round(s.combos).toLocaleString("ru-RU") : i18n.locale === "ar" ? Math.round(s.combos).toLocaleString("en-US") : Math.round(s.combos)} / ${i18n.locale === "ru" ? "1\u00a0326" : i18n.locale === "ar" ? "1,326" : i18n.locale === "tr" || i18n.locale === "vi" ? "1.326" : "1326"}` },
             { label: t.statHands, value: `${s.hands} / 169` },
             { label: t.statMixed, value: String(s.mixedHands) },
           ],
@@ -1938,6 +2028,7 @@ export default defineComponent({
       isVi,
       isTr,
       isRu,
+      isAr,
       L,
     };
   },
@@ -1945,7 +2036,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-:dir(rtl) > span[dir="ltr"].ms-1 { margin-left: 0; margin-right: 0.25rem; }
+:global(html[dir="rtl"] .preflop-page button > span[dir="ltr"].ms-1){ margin-left: 0; margin-right: 0.25rem; }
 .preflop-page {
   font-variant-numeric: tabular-nums;
 }

@@ -134,7 +134,7 @@ import {
 import { trackOutbound } from "../outbound";
 import { Results, Spot, DisplayOptions } from "../result-types";
 import { cardText, parseCardString } from "../utils";
-import { i18n } from "../i18n";
+import { i18n, autoIso } from "../i18n";
 
 import ResultBasics from "./ResultBasics.vue";
 import ResultTable from "./ResultTable.vue";
@@ -334,6 +334,19 @@ const M = {
     loading: "Загрузка результатов…",
     playerLabel: "Игрок:",
     oopHint: "Это стратегия игрока, который ходит первым (OOP). Чтобы увидеть соперника (IP), выбери IP в поле «Игрок» выше.",
+  },
+  // ar-todo: English source; translation follows in the next phase.
+  ar: {
+    backToList: "← Back",
+    pot: "Pot",
+    stack: "Stack",
+    flopOnlyNote: "Flop strategy only. Want to click through turn and river? →",
+    solveThisSpot: "Solve this spot yourself",
+    readArticle: "Read the article",
+    loadError: (e: string) => `Couldn't load the precomputed results: ${autoIso(e)}`,
+    loading: "Loading results…",
+    playerLabel: "Player:",
+    oopHint: "This is the strategy of the player who acts first (OOP). To see the opponent (IP), set “Player” above to IP.",
   },
 } as const;
 

@@ -16,7 +16,7 @@ import { directionForLocale } from "./document-direction";
 
 // ⚠ "zh"(간체)와 "zh-hant"(번체)는 «별개 언어»다 — 용어 자체가 다르므로 기계 변환 금지
 // (德州扑克/德州撲克 · 求解器/解算器 · 概率/機率 · 弃牌/蓋牌).
-export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru";
+export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar";
 
 /* 🔴 2026-08-27에 키를 갈았다 — «solver.locale» → «solver.locale.pegged».
  *
@@ -52,7 +52,8 @@ const readStored = (): Locale | null => {
       value === "hi" ||
       value === "tr" ||
       value === "vi" ||
-      value === "ru"
+      value === "ru" ||
+      value === "ar"
       ? value
       : null;
   } catch {
@@ -78,7 +79,8 @@ const detect = (): Locale => {
     fromUrl === "hi" ||
     fromUrl === "tr" ||
     fromUrl === "vi" ||
-    fromUrl === "ru"
+    fromUrl === "ru" ||
+    fromUrl === "ar"
   ) {
     try {
       localStorage.setItem(KEY, fromUrl);
@@ -106,6 +108,7 @@ const detect = (): Locale => {
   if (lang.startsWith("tr")) return "tr";
   if (lang.startsWith("vi")) return "vi";
   if (lang.startsWith("ru")) return "ru";
+  if (lang.startsWith("ar")) return "ar";
   // ⚠ 중국어는 간체(zh-CN)와 번체(zh-hant)가 별개 언어다. **번체 판정이 «먼저» 와야 한다** —
   //   startsWith("zh")를 앞에 두면 zh-TW·zh-HK가 전부 간체로 새어 나간다(2026-08-22까지 실제로 그랬다).
   //   번체권 = 대만(zh-TW)·홍콩(zh-HK)·마카오(zh-MO), 그리고 명시적 문자표기 zh-Hant-*.
@@ -213,6 +216,12 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Бесплатный GTO-солвер, который работает прямо в браузере — ничего не нужно устанавливать. Считай постфлоп-стратегию в техасском холдеме по диапазону, борду и сайзингу. От HoldemMaster.",
   },
+  // ar-todo: translate from en.
+  ar: {
+    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em",
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
+  },
 };
 
 /* npokers 빌드(스토어용 순수 솔버)의 탭 제목·메타 설명 — 빌드 2벌 분기(2026-08-24).
@@ -296,6 +305,12 @@ const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Бесплатный GTO-солвер, который работает прямо в браузере — ничего не нужно устанавливать. Считай постфлоп-стратегию в техасском холдеме по диапазону, борду и сайзингу.",
   },
+  // ar-todo: translate from en.
+  ar: {
+    title: "npokers — Free Online GTO Solver for Texas Hold'em",
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+  },
 };
 
 /* 빌드 2벌 분기 — 어느 사전을 쓸지는 빌드 타임에 정해진다 (webpack DefinePlugin) */
@@ -323,6 +338,8 @@ const DOC_LANG: Record<Locale, string> = {
   tr: "tr",
   vi: "vi",
   ru: "ru",
+  // 문서 언어 태그는 번역하지 않는다.
+  ar: "ar",
 };
 
 /* 설치된 앱의 이름(창 제목·홈 화면 라벨)은 «매니페스트»가 정한다 — 문서 제목이 아니다.
@@ -354,7 +371,7 @@ const applyDocumentLocale = (locale: Locale) => {
 
 export const i18n = reactive({ locale: detect() });
 
-/** 언어별 라벨 파일(.ts)의 사전 타입 — 15개 언어 블록이 전부 있어야 빌드가 통과한다. */
+/** 언어별 라벨 파일(.ts)의 사전 타입 — 16개 언어 블록이 전부 있어야 빌드가 통과한다. */
 export type LocaleDict<T> = Record<Locale, T>;
 applyDocumentLocale(i18n.locale);
 
@@ -367,6 +384,14 @@ export const setLocale = (locale: Locale) => {
     /* 무시 */
   }
 };
+
+/** ar의 숫자·시각은 서양 숫자와 구분자. 기존 로캘 태그는 그대로 전달한다. */
+export const numberLocaleTag = (locale: string = i18n.locale): string =>
+  locale === "ar" ? "en-US" : locale;
+
+/** ar 문자열의 라틴 구절 / 방향을 모르는 사용자 문자열에만 사용한다. */
+export const ltrIso = (text: string): string => "\u2066" + text + "\u2069";
+export const autoIso = (text: string): string => "\u2068" + text + "\u2069";
 
 /**
  * 화면에 «찍히는» 수치의 소수점을 언어에 맞춘다 — 브라질·독일은 «,»가 소수점이다.
@@ -446,7 +471,8 @@ export const pick = <T>(
   hi: T = en,
   tr: T = en,
   vi: T = en,
-  ru: T = en
+  ru: T = en,
+  ar: T = en
 ): T =>
   i18n.locale === "ko"
     ? ko
@@ -476,6 +502,8 @@ export const pick = <T>(
     ? vi
     : i18n.locale === "ru"
     ? ru
+    : i18n.locale === "ar"
+    ? ar
     : en;
 
 /** Russian noun form only; callers format the number. Fractions use the few form. */

@@ -160,7 +160,9 @@ export default defineComponent({
       }
     };
     const time = (t: number) =>
-      new Date(t).toLocaleTimeString(i18n.locale === "zh-hant" ? "zh-Hant" : i18n.locale, {
+      i18n.locale === "ar"
+        ? new Date(t).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false })
+        : new Date(t).toLocaleTimeString(i18n.locale === "zh-hant" ? "zh-Hant" : i18n.locale, {
         hour: "2-digit",
         minute: "2-digit",
       });

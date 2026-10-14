@@ -30,7 +30,7 @@
     -->
     <script>
       (function () {
-        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr", "vi", "ru"];
+        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr", "vi", "ru", "ar"];
         var l = null;
         try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
         if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale.pegged"); } catch (e) { l = null; } }
@@ -48,12 +48,14 @@
           else if (n.indexOf("tr") === 0) l = "tr"; // tr-TR·tr-CY
           else if (n.indexOf("vi") === 0) l = "vi";
           else if (n.indexOf("ru") === 0) l = "ru";
+          else if (n.indexOf("ar") === 0) l = "ar";
           else if (n.indexOf("zh") === 0) l = (/^zh-(tw|hk|mo)($|[-_])/.test(n) || n.indexOf("hant") >= 0) ? "zh-hant" : "zh";
           else l = "en";
         }
         // webpack이 런타임과 같은 src/rtl-locales.json 목록을 넣는다(시험 스위치 없음).
         var RTL_LOCALES = <%= JSON.stringify(htmlWebpackPlugin.options.rtlLocales) %>;
         document.documentElement.dir = RTL_LOCALES.indexOf(l) >= 0 ? "rtl" : "ltr";
+        if (l === "ar") document.documentElement.lang = "ar";
         if (l === "en") return; // 기본 파일이 이미 영어다
         var link = document.querySelector('link[rel="manifest"]');
         if (link) link.href = "/manifest-" + l + ".webmanifest";

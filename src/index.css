@@ -104,7 +104,7 @@ input[type="number"], table, .tabular-nums { font-variant-numeric: tabular-nums;
 /* Numeric controls keep their physical scale inside mirrored application chrome. */
 input[type="number"], input[type="range"] { direction: ltr; unicode-bidi: isolate; }
 /* Tailwind forms places its caret on the physical right in either direction. */
-select:dir(rtl) {
+html[dir="rtl"] select:not([dir="ltr"]):not([dir="ltr"] *) {
   background-position: left 0.5rem center;
   padding-left: 2.5rem;
   padding-right: 0.75rem;
@@ -244,7 +244,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   border-top: 1px solid rgb(var(--c-line));
 }
 .result-toolbar .nodelock { position: static; max-width: 100%; }
-.result-toolbar:dir(rtl) .nodelock-popover { left: auto; right: 0; }
+html[dir="rtl"] .result-toolbar .nodelock-popover { left: auto; right: 0; }
 .result-toolbar .custom-trainer-entry { max-width: 100%; }
 .practice-button.button-blue {
   color: rgb(var(--c-text-primary));
