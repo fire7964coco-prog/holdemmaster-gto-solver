@@ -9,7 +9,7 @@
 
   <div
     v-if="!isTreeError"
-    ref="navDiv"
+    data-rtl-island="action-path" ref="navDiv" dir="ltr"
     class="flex h-[10.5rem] gap-1 p-1 overflow-x-auto whitespace-nowrap snug"
   >
     <div
@@ -127,7 +127,7 @@
     <div class="underline">
       {{ L.invalidTerminals }}
     </div>
-    <div class="ml-2">
+    <div dir="ltr" data-rtl-island="action-path" class="tree-invalid-lines ms-2">
       <div v-for="invalidLine in invalidLinesArray" :key="invalidLine">
         {{ invalidLine }}
       </div>
@@ -164,13 +164,13 @@
       {{ L.removeNode }}
     </button>
 
-    <div class="pl-3">
+    <div class="tree-bet-amount ps-3">
       {{ L.betAmount }}
-      <input
+      <input data-rtl-island="bet-input" dir="ltr"
         v-model="betAmount"
         type="number"
         :class="
-          'w-24 ml-2 px-2 py-1 rounded-lg text-sm text-center ' +
+          'w-24 ms-2 px-2 py-1 rounded-lg text-sm text-center ' +
           (betAmount < minAmount || betAmount > maxAmount || betAmount % 1 !== 0
             ? 'input-error'
             : '')
@@ -179,7 +179,7 @@
         :max="maxAmount"
         @keydown.enter="addBetAction"
       />
-      <span v-if="!isSelectedTerminal && !isAfterAllin" class="ml-2">
+      <span v-if="!isSelectedTerminal && !isAfterAllin" class="ms-2">
         {{ $n(L.potRate((amountRate * 100).toFixed(1))) }}
       </span>
     </div>
@@ -223,10 +223,10 @@
           :key="addedLine"
           class="flex items-center"
         >
-          <button class="mr-2" @click="deleteAddedLine(index)">
+          <button class="me-2" @click="deleteAddedLine(index)">
             <TrashIcon class="w-5 h-5 text-neutral-400" />
           </button>
-          <span>{{ addedLine }}</span>
+          <span dir="ltr" data-rtl-island="action-path">{{ addedLine }}</span>
         </div>
       </div>
     </div>
@@ -241,10 +241,10 @@
           :key="removedLine"
           class="flex items-center"
         >
-          <button class="mr-2" @click="deleteRemovedLine(index)">
+          <button class="me-2" @click="deleteRemovedLine(index)">
             <TrashIcon class="w-5 h-5 text-neutral-400" />
           </button>
-          <span>{{ removedLine }}</span>
+          <span dir="ltr" data-rtl-island="action-path">{{ removedLine }}</span>
         </div>
       </div>
     </div>
@@ -974,4 +974,6 @@ export default defineComponent({
 .text-blue-300 {
   color: rgb(var(--c-brand));
 }
+.tree-bet-amount:dir(rtl) > input { margin-left: 0; margin-right: 0.5rem; }
+.flex:dir(rtl) > .tree-invalid-lines { margin-left: 0; margin-right: 0.5rem; }
 </style>

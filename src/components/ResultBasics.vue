@@ -1,5 +1,5 @@
 <template>
-  <div class="result-basics w-full h-full">
+  <div data-rtl-island="range-matrix" dir="ltr" class="result-basics w-full h-full">
     <table
       class="w-full h-full table-fixed select-none snug"
       :style="{

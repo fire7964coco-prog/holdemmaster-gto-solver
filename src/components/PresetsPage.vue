@@ -8,9 +8,9 @@
 
   <div v-else class="presets-page max-w-4xl">
     <div
-      class="flex pl-3 pr-3 py-2 text-ink-secondary bg-surface-2 border border-neutral-700 rounded-lg text-sm"
+      class="flex ps-3 pe-3 py-2 text-ink-secondary bg-surface-2 border border-neutral-700 rounded-lg text-sm"
     >
-      <InformationCircleIcon class="inline w-5 h-5 mt-[0.1875rem] mr-1.5 shrink-0" />
+      <InformationCircleIcon class="inline w-5 h-5 mt-[0.1875rem] me-1.5 shrink-0" />
       <div>
         <span class="font-semibold text-brand">{{ L.infoBtn1 }}</span
         >{{ L.infoText1
@@ -25,7 +25,7 @@
       <div :class="[isJa ? 'text-sm' : 'text-base', 'font-bold text-neutral-200']">
         {{ presetCategoryOf(group.items[0]) }}
       </div>
-      <div class="mt-0.5 text-xs text-neutral-500">
+      <div dir="ltr" class="mt-0.5 text-xs text-neutral-500">
         OOP: {{ oopLabelOf(group.items[0]) }} · IP:
         {{ ipLabelOf(group.items[0]) }} · {{ L.pot }}
         {{ $n(String(group.items[0].startingPot / group.items[0].unitScale)) }}bb ·
@@ -45,7 +45,7 @@
         <div class="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-3">
           <div class="flex items-center gap-3 min-w-0">
             <span class="font-semibold">{{ presetTitleOf(p) }}</span>
-            <span class="font-bold tracking-wide shrink-0">
+            <span dir="ltr" class="font-bold tracking-wide shrink-0">
               <span
                 v-for="(c, i) in boardCards(p.board)"
                 :key="i"
@@ -55,7 +55,7 @@
               </span>
             </span>
           </div>
-          <span class="lg:ml-auto flex flex-wrap items-center gap-1.5 shrink-0">
+          <span class="lg:ms-auto flex flex-wrap items-center gap-1.5 shrink-0">
             <a
               v-if="articleUrl(p)"
               :href="articleUrl(p)"

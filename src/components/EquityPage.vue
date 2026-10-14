@@ -18,7 +18,7 @@
               {{ L.fill }}
             </button>
           </div>
-          <div class="panel-inner flex flex-wrap items-center gap-2">
+          <div data-rtl-island="board-cards" dir="ltr" class="panel-inner flex flex-wrap items-center gap-2">
             <CardSlot
               v-for="i in 2"
               :key="i"
@@ -53,7 +53,7 @@
             </div>
           </div>
 
-          <div v-if="villainMode === 'hand'" class="panel-inner flex flex-wrap items-center gap-2">
+          <div v-if="villainMode === 'hand'" data-rtl-island="board-cards" dir="ltr" class="panel-inner flex flex-wrap items-center gap-2">
             <CardSlot
               v-for="i in 2"
               :key="i"
@@ -73,7 +73,7 @@
           </div>
 
           <div v-else>
-            <textarea
+            <textarea data-rtl-island="range-input" dir="ltr"
               ref="rangeInput"
               v-model="rangeText"
               rows="3"
@@ -113,7 +113,7 @@
               {{ L.fill }}
             </button>
           </div>
-          <div class="panel-inner flex flex-wrap items-center gap-2">
+          <div data-rtl-island="board-cards" dir="ltr" class="panel-inner flex flex-wrap items-center gap-2">
             <CardSlot
               v-for="i in 5"
               :key="i"
@@ -127,7 +127,7 @@
         </div>
 
         <!-- 모바일에서는 선택 맥락을 카드판에 붙이고 각 무늬를 7+6장으로 펼친다. -->
-        <div ref="cardPicker" class="equity-card-picker max-w-full mb-3">
+        <div data-rtl-island="card-picker" ref="cardPicker" dir="ltr" class="equity-card-picker max-w-full mb-3">
           <div class="equity-selection-summary" data-testid="equity-selection-summary">
             <button
               v-for="selection in selectionSummary"
@@ -201,7 +201,7 @@
           >
             {{ L.clear }}
           </button>
-          <span v-if="running" class="text-sm text-neutral-400 tabular-nums">
+          <span dir="ltr" v-if="running" class="text-sm text-neutral-400 tabular-nums">
             {{ $pct(Math.round(progress * 100)) + " " }}
           </span>
         </div>
@@ -222,7 +222,7 @@
 
           <div v-else>
             <div class="flex flex-wrap items-end gap-3 mb-1">
-              <div class="text-4xl font-bold text-yellow-400 tabular-nums">
+              <div dir="ltr" class="text-4xl font-bold text-yellow-400 tabular-nums">
                 <span data-testid="equity-result">{{ $n(result.equity.toFixed(1)) }}</span
                 >%
               </div>
@@ -232,7 +232,7 @@
             </div>
 
             <!-- 에퀴티 막대: 노랑(내 쪽) / 회색(상대) -->
-            <div class="h-3 w-full rounded-full overflow-hidden bg-neutral-700 my-3">
+            <div data-rtl-island="numeric-bar" dir="ltr" class="h-3 w-full rounded-full overflow-hidden bg-neutral-700 my-3">
               <div
                 class="h-full bg-yellow-400"
                 :style="{ width: result.equity.toFixed(2) + '%' }"
@@ -241,12 +241,12 @@
 
             <div class="flex flex-wrap gap-2 mb-3">
               <div class="stat-chip">
-                {{ L.win }} <b data-testid="equity-win">{{ $pct($n(result.win.toFixed(1))) }}</b>
+                {{ L.win }} <b dir="ltr" data-testid="equity-win">{{ $pct($n(result.win.toFixed(1))) }}</b>
               </div>
-              <div class="stat-chip">{{ L.tie }} <b>{{ $pct($n(result.tie.toFixed(1))) }}</b></div>
-              <div class="stat-chip">{{ L.lose }} <b>{{ $pct($n(result.lose.toFixed(1))) }}</b></div>
+              <div class="stat-chip">{{ L.tie }} <b dir="ltr">{{ $pct($n(result.tie.toFixed(1))) }}</b></div>
+              <div class="stat-chip">{{ L.lose }} <b dir="ltr">{{ $pct($n(result.lose.toFixed(1))) }}</b></div>
               <div class="stat-chip">
-                {{ L.combos }} <b>{{ result.villainCombos }}</b>
+                {{ L.combos }} <b dir="ltr">{{ result.villainCombos }}</b>
               </div>
             </div>
 
@@ -275,7 +275,7 @@
 
         <div class="panel mb-4">
           <div class="section-title">{{ L.howTitle }}</div>
-          <ul class="list-disc pl-5 text-sm text-neutral-300 space-y-1.5 mt-2">
+          <ul class="list-disc ps-5 text-sm text-neutral-300 space-y-1.5 mt-2">
             <li>{{ L.how1 }}</li>
             <li>{{ L.how2 }}</li>
             <li>{{ L.how3 }}</li>

@@ -12,7 +12,7 @@
       role="presentation"
       @click="closeLaunch"
     >
-      <div class="px-8 pt-24 text-left w-full max-w-md mx-auto">
+      <div class="px-8 pt-24 text-start w-full max-w-md mx-auto">
         <div class="text-3xl font-bold text-brand-ink/70 leading-tight">
           {{ L.greeting }}
         </div>

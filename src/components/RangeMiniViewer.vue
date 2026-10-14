@@ -1,5 +1,5 @@
 <template>
-  <table class="shadow-md">
+  <table data-rtl-island="range-mini" dir="ltr" class="shadow-md">
     <tr v-for="row in 13" :key="row" :class="compact ? 'h-[6px]' : 'h-2.5'">
       <td
         v-for="col in 13"

@@ -1,5 +1,5 @@
 <template>
-  <div class="result-table flex flex-col w-full border-l border-neutral-600 overflow-x-auto">
+  <div data-rtl-island="numeric-table" dir="ltr" class="result-table flex flex-col w-full border-l border-neutral-600 overflow-x-auto">
     <div class="result-table-toolbar flex shrink-0 h-12 border-b border-neutral-600">
       <div class="flex h-full px-4 items-center text-lg font-semibold">
         {{ L.summary }}

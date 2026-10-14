@@ -225,6 +225,9 @@ const TONE_COLORS = { best: "#6ee7b7", good: "#93c5fd", miss: "#fdba74" };
 
 const FONT =
   "'Pretendard', 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif";
+// 기존 15언어의 글꼴 선택은 그대로 두고 RTL 문서에서만 아랍 글꼴을 앞세운다.
+const RTL_FONT =
+  "'Segoe UI', 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Geeza Pro', 'Tahoma', " + FONT;
 
 // 아이콘·인사 화면과 같은 스페이드 도안 (원본 viewBox 0 0 180 180)
 const SPADE_PATH =
@@ -273,6 +276,8 @@ const drawPokerCard = (
   y: number,
   w: number
 ) => {
+  ctx.save();
+  ctx.direction = "ltr";
   const h = w * 1.38;
   const info = cardText(cardId);
   const color = SUIT_COLORS[cardId & 3];
@@ -288,6 +293,7 @@ const drawPokerCard = (
   ctx.fillText(info.rank, x + w / 2, y + h * 0.46);
   ctx.font = `400 ${Math.round(w * 0.44)}px ${FONT}`;
   ctx.fillText(info.suit, x + w / 2, y + h * 0.86);
+  ctx.restore();
   return w;
 };
 
@@ -314,6 +320,10 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   canvas.height = HEIGHT;
   const ctx = canvas.getContext("2d");
   if (!ctx) return canvas;
+  const rtl = document.documentElement.dir === "rtl";
+  const font = rtl ? RTL_FONT : FONT;
+  const textX = (x: number) => rtl ? WIDTH - x : x;
+  ctx.direction = rtl ? "rtl" : "ltr";
 
   // 바탕
   ctx.fillStyle = BG;
@@ -322,25 +332,28 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   const T = CARD_TEXT[i18n.locale];
 
   // 상단 브랜드 줄: 앰버 배지(스페이드) + 서비스명
-  roundedRect(ctx, 72, 72, 92, 92, 24);
+  roundedRect(ctx, rtl ? WIDTH - 72 - 92 : 72, 72, 92, 92, 24);
   ctx.fillStyle = AMBER;
   ctx.fill();
-  drawSpade(ctx, 78, 78, 80, DARK_GREEN);
-  ctx.textAlign = "left";
+  drawSpade(ctx, rtl ? WIDTH - 78 - 80 : 78, 78, 80, DARK_GREEN);
+  ctx.textAlign = rtl ? "right" : "left";
   ctx.fillStyle = TEXT;
-  ctx.font = `700 44px ${FONT}`;
-  ctx.fillText(T.brand, 192, 112);
+  ctx.font = `700 44px ${font}`;
+  ctx.fillText(T.brand, textX(192), 112);
   ctx.fillStyle = TEXT_DIM;
-  ctx.font = `400 32px ${FONT}`;
-  ctx.fillText(T.tagline, 192, 156);
+  ctx.font = `400 32px ${font}`;
+  ctx.fillText(T.tagline, textX(192), 156);
 
   // 제목 + 날짜
   ctx.fillStyle = AMBER;
-  ctx.font = `800 76px ${FONT}`;
-  ctx.fillText(T.heading, 72, 292);
+  ctx.font = `800 76px ${font}`;
+  ctx.fillText(T.heading, textX(72), 292);
   ctx.fillStyle = TEXT_DIM;
-  ctx.font = `600 40px ${FONT}`;
-  ctx.fillText(input.dateLabel, 72, 352);
+  ctx.font = `600 40px ${font}`;
+  ctx.save();
+  ctx.direction = "ltr"; // 날짜 자릿수·빗금 순서는 문서 방향과 관계없이 유지한다.
+  ctx.fillText(input.dateLabel, textX(72), 352);
+  ctx.restore();
 
   // 문제 패널: 스팟 이름 + 보드/핸드 (핸드 줄 바닥 panelY+593 + 여백 40)
   const panelY = 408;
@@ -354,10 +367,10 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
 
   ctx.textAlign = "center";
   ctx.fillStyle = TEXT;
-  ctx.font = `700 42px ${FONT}`;
+  ctx.font = `700 42px ${font}`;
   ctx.fillText(input.spotTitle, WIDTH / 2, panelY + 76);
   ctx.fillStyle = TEXT_FAINT;
-  ctx.font = `400 30px ${FONT}`;
+  ctx.font = `400 30px ${font}`;
   ctx.fillText(
     `${input.positionLabel} · ${input.potLabel}`,
     WIDTH / 2,
@@ -365,12 +378,12 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   );
 
   ctx.fillStyle = TEXT_FAINT;
-  ctx.font = `600 28px ${FONT}`;
+  ctx.font = `600 28px ${font}`;
   ctx.fillText(T.board, WIDTH / 2, panelY + 190);
   drawCardRow(ctx, input.board, WIDTH / 2, panelY + 212, 118, 18);
 
   ctx.fillStyle = TEXT_FAINT;
-  ctx.font = `600 28px ${FONT}`;
+  ctx.font = `600 28px ${font}`;
   ctx.fillText(T.hand, WIDTH / 2, panelY + 430 - 22);
   drawCardRow(ctx, input.hand, WIDTH / 2, panelY + 430, 118, 18);
 
@@ -381,14 +394,14 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   ctx.fillStyle = TONE_COLORS[input.verdictTone];
   const verdictLine = T.result(input.verdictText);
   let verdictSize = 84;
-  ctx.font = `800 ${verdictSize}px ${FONT}`;
+  ctx.font = `800 ${verdictSize}px ${font}`;
   while (verdictSize > 48 && ctx.measureText(verdictLine).width > WIDTH - 144) {
     verdictSize -= 4;
-    ctx.font = `800 ${verdictSize}px ${FONT}`;
+    ctx.font = `800 ${verdictSize}px ${font}`;
   }
   ctx.fillText(verdictLine, WIDTH / 2, verdictY);
   ctx.fillStyle = TEXT_DIM;
-  ctx.font = `500 36px ${FONT}`;
+  ctx.font = `500 36px ${font}`;
   ctx.fillText(
     T.evLine(localizeNumber(input.evLossBb.toFixed(3)), input.streak),
     WIDTH / 2,
@@ -400,9 +413,10 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   ctx.fillStyle = AMBER;
   ctx.fillRect(0, barY, WIDTH, 120);
   ctx.fillStyle = DARK_GREEN;
-  ctx.font = `700 38px ${FONT}`;
+  ctx.font = `700 38px ${font}`;
   ctx.fillText(T.invite, WIDTH / 2, barY + 52);
   ctx.font = `600 32px ${FONT}`;
+  ctx.direction = "ltr";
   ctx.fillText("solver.holdemmaster.com", WIDTH / 2, barY + 96);
 
   return canvas;

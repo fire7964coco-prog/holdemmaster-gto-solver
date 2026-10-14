@@ -10,10 +10,10 @@
         {{ tile.label }}
       </div>
       <div class="flex items-end justify-between mt-0.5">
-        <span class="text-lg font-bold text-white tabular-nums">
+        <span dir="ltr" class="text-lg font-bold text-white tabular-nums">
           {{ $pct($n(tile.freq.toFixed(1))) + " " }}
         </span>
-        <span class="text-[0.65rem] text-white/70 tabular-nums">
+        <span dir="ltr" class="text-[0.65rem] text-white/70 tabular-nums">
           {{ $n(tile.combos.toFixed(1)) }}<br />{{ L.combos }}
         </span>
       </div>

@@ -13,7 +13,7 @@
           <div>
             <div class="my-1">
               <label for="tree-startingPot" class="inline-block w-[7.5rem]">{{ L.startingPot }}</label>
-              <input
+              <input dir="ltr"
                 id="tree-startingPot"
                 name="startingPot"
                 autocomplete="off"
@@ -37,7 +37,7 @@
 
             <div class="my-1">
               <label for="tree-effectiveStack" class="inline-block w-[7.5rem]">{{ L.effectiveStack }}</label>
-              <input
+              <input dir="ltr"
                 id="tree-effectiveStack"
                 name="effectiveStack"
                 autocomplete="off"
@@ -60,7 +60,7 @@
             </div>
           </div>
 
-          <div class="ml-auto p-1">
+          <div class="ms-auto p-1">
             <button class="button-base button-blue" @click="clearConfig">
               {{ L.reset }}
             </button>
@@ -72,7 +72,7 @@
           class="flex font-semibold text-red-400"
         >
           <div class="underline">{{ L.error }}</div>
-          <div class="ml-2">
+          <div class="ms-2">
             <div v-for="error in errorBasics" :key="error">
               {{ error }}
             </div>
@@ -82,11 +82,11 @@
         <div class="mt-6">
           <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
             <span class="font-semibold shrink-0">{{ L.oopBetSizes }}</span>
-            <label class="inline-block shrink-0 ml-0 md:ml-2">
+            <label class="inline-block shrink-0 ms-0 md:ms-2">
               <input
                 v-model="config.donkOption"
                 type="checkbox"
-                class="mr-1 align-middle rounded cursor-pointer peer"
+                class="me-1 align-middle rounded cursor-pointer peer"
                 :disabled="hasEdit"
               />
               <span class="cursor-pointer peer-disabled:cursor-not-allowed">
@@ -103,13 +103,13 @@
                 :interactive="true"
               >
                 <QuestionMarkCircleIcon class="inline w-5 h-5" />
-                <div class="inline-block ml-0.5 text-sm underline">
+                <div class="inline-block ms-0.5 text-sm underline">
                   {{ L.howToInput }}
                 </div>
                 <template #content>
                   <div class="px-1 py-0.5 text-justify">
                     {{ L.inputHelpIntro }}
-                    <ul class="pl-6 list-disc">
+                    <ul class="ps-6 list-disc">
                       <li class="mt-1">{{ L.inputHelpPercent }}</li>
                       <li class="mt-1">{{ L.inputHelpMultiple }}</li>
                       <li class="mt-1">{{ L.inputHelpAllin }}</li>
@@ -127,7 +127,7 @@
               <div class="my-1 underline">{{ L.flop }}</div>
               <div class="my-1">
                 <label for="tree-oopFlopBet" class="inline-block w-14">{{ L.bet }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-oopFlopBet"
                   :aria-label="[L.oopBetSizes, L.flop, L.bet].join(' · ')"
                   name="oopFlopBet"
@@ -149,7 +149,7 @@
               </div>
               <div class="my-1">
                 <label for="tree-oopFlopRaise" class="inline-block w-14">{{ L.raise }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-oopFlopRaise"
                   :aria-label="[L.oopBetSizes, L.flop, L.raise].join(' · ')"
                   name="oopFlopRaise"
@@ -175,7 +175,7 @@
               <div class="my-1 underline">{{ L.turn }}</div>
               <div class="my-1">
                 <label for="tree-oopTurnBet" class="inline-block w-14">{{ L.bet }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-oopTurnBet"
                   :aria-label="[L.oopBetSizes, L.turn, L.bet].join(' · ')"
                   name="oopTurnBet"
@@ -197,7 +197,7 @@
               </div>
               <div class="my-1">
                 <label for="tree-oopTurnRaise" class="inline-block w-14">{{ L.raise }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-oopTurnRaise"
                   :aria-label="[L.oopBetSizes, L.turn, L.raise].join(' · ')"
                   name="oopTurnRaise"
@@ -219,7 +219,7 @@
               </div>
               <div v-if="config.donkOption" class="my-1">
                 <label for="tree-oopTurnDonk" class="inline-block w-14">{{ L.donk }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-oopTurnDonk"
                   :aria-label="[L.oopBetSizes, L.turn, L.donk].join(' · ')"
                   name="oopTurnDonk"
@@ -245,7 +245,7 @@
               <div class="my-1 underline">{{ L.river }}</div>
               <div class="my-1">
                 <label for="tree-oopRiverBet" class="inline-block w-14">{{ L.bet }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-oopRiverBet"
                   :aria-label="[L.oopBetSizes, L.river, L.bet].join(' · ')"
                   name="oopRiverBet"
@@ -267,7 +267,7 @@
               </div>
               <div class="my-1">
                 <label for="tree-oopRiverRaise" class="inline-block w-14">{{ L.raise }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-oopRiverRaise"
                   :aria-label="[L.oopBetSizes, L.river, L.raise].join(' · ')"
                   name="oopRiverRaise"
@@ -289,7 +289,7 @@
               </div>
               <div v-if="config.donkOption" class="my-1">
                 <label for="tree-oopRiverDonk" class="inline-block w-14">{{ L.donk }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-oopRiverDonk"
                   :aria-label="[L.oopBetSizes, L.river, L.donk].join(' · ')"
                   name="oopRiverDonk"
@@ -341,7 +341,7 @@
               <div class="my-1 underline">{{ L.flop }}</div>
               <div class="my-1">
                 <label for="tree-ipFlopBet" class="inline-block w-14">{{ L.bet }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-ipFlopBet"
                   :aria-label="[L.ipBetSizes, L.flop, L.bet].join(' · ')"
                   name="ipFlopBet"
@@ -363,7 +363,7 @@
               </div>
               <div class="my-1">
                 <label for="tree-ipFlopRaise" class="inline-block w-14">{{ L.raise }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-ipFlopRaise"
                   :aria-label="[L.ipBetSizes, L.flop, L.raise].join(' · ')"
                   name="ipFlopRaise"
@@ -389,7 +389,7 @@
               <div class="my-1 underline">{{ L.turn }}</div>
               <div class="my-1">
                 <label for="tree-ipTurnBet" class="inline-block w-14">{{ L.bet }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-ipTurnBet"
                   :aria-label="[L.ipBetSizes, L.turn, L.bet].join(' · ')"
                   name="ipTurnBet"
@@ -411,7 +411,7 @@
               </div>
               <div class="my-1">
                 <label for="tree-ipTurnRaise" class="inline-block w-14">{{ L.raise }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-ipTurnRaise"
                   :aria-label="[L.ipBetSizes, L.turn, L.raise].join(' · ')"
                   name="ipTurnRaise"
@@ -437,7 +437,7 @@
               <div class="my-1 underline">{{ L.river }}</div>
               <div class="my-1">
                 <label for="tree-ipRiverBet" class="inline-block w-14">{{ L.bet }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-ipRiverBet"
                   :aria-label="[L.ipBetSizes, L.river, L.bet].join(' · ')"
                   name="ipRiverBet"
@@ -459,7 +459,7 @@
               </div>
               <div class="my-1">
                 <label for="tree-ipRiverRaise" class="inline-block w-14">{{ L.raise }}</label>
-                <input
+                <input dir="ltr"
                   id="tree-ipRiverRaise"
                   :aria-label="[L.ipBetSizes, L.river, L.raise].join(' · ')"
                   name="ipRiverRaise"
@@ -488,7 +488,7 @@
           class="flex mt-1 font-semibold text-red-400"
         >
           <div class="underline">{{ L.error }}</div>
-          <div class="ml-2">
+          <div class="ms-2">
             <div v-for="error in errorOop" :key="error">
               {{ error }}
             </div>
@@ -509,12 +509,12 @@
             data-testid="tree-advanced-summary"
           >
             <span class="font-semibold" data-testid="tree-advanced-label">{{ L.advancedSettings }}</span>
-            <span class="block md:inline md:ml-2 text-xs text-neutral-500" data-testid="tree-advanced-hint">{{ L.advancedHint }}</span>
+            <span class="block md:inline md:ms-2 text-xs text-neutral-500" data-testid="tree-advanced-hint">{{ L.advancedHint }}</span>
           </summary>
           <div class="mt-3">
             <div class="my-1">
               <label for="tree-rakePercent" class="inline-block w-20">{{ L.rake }}</label>
-              <input
+              <input dir="ltr"
                 id="tree-rakePercent"
                 name="rakePercent"
                 autocomplete="off"
@@ -537,7 +537,7 @@
 
             <div class="my-1">
               <label for="tree-rakeCap" class="inline-block w-20">{{ L.rakeCap }}</label>
-              <input
+              <input dir="ltr"
                 id="tree-rakeCap"
                 name="rakeCap"
                 autocomplete="off"
@@ -575,7 +575,7 @@
                   </template>
                 </Tippy>
               </div>
-              <input
+              <input dir="ltr"
                 id="tree-addAllInThreshold"
                 name="addAllInThreshold"
                 v-model="config.addAllInThreshold"
@@ -620,7 +620,7 @@
                   </template>
                 </Tippy>
               </div>
-              <input
+              <input dir="ltr"
                 id="tree-forceAllInThreshold"
                 name="forceAllInThreshold"
                 v-model="config.forceAllInThreshold"
@@ -665,7 +665,7 @@
                   </template>
                 </Tippy>
               </div>
-              <input
+              <input dir="ltr"
                 id="tree-mergingThreshold"
                 name="mergingThreshold"
                 v-model="config.mergingThreshold"
@@ -710,7 +710,7 @@
           class="flex mt-1 font-semibold text-red-400"
         >
           <div class="underline">{{ L.error }}</div>
-          <div class="ml-2">
+          <div class="ms-2">
             <div v-for="error in errorMisc" :key="error">
               {{ error }}
             </div>
@@ -722,7 +722,7 @@
           class="flex mt-1 font-semibold text-orange-400"
         >
           <div class="underline">{{ L.warning }}</div>
-          <div class="ml-2">
+          <div class="ms-2">
             <div
               v-for="warning in warningMisc"
               :key="warning"
@@ -752,7 +752,7 @@
         <div class="font-semibold underline w-[7.75rem]">
           {{ L.addedLines }}
         </div>
-        <div class="flex flex-col">
+        <div dir="ltr" class="flex flex-col">
           <div v-for="addedLine in addedLinesArray" :key="addedLine">
             {{ addedLine }}
           </div>
@@ -763,7 +763,7 @@
         <div class="font-semibold underline w-[7.75rem]">
           {{ L.removedLines }}
         </div>
-        <div class="flex flex-col">
+        <div dir="ltr" class="flex flex-col">
           <div v-for="removedLine in removedLinesArray" :key="removedLine">
             {{ removedLine }}
           </div>
@@ -779,7 +779,7 @@
         class="flex mt-2 font-semibold text-orange-400"
       >
         <div class="underline">{{ L.warning }}</div>
-        <div class="ml-2">
+        <div class="ms-2">
           {{ L.boardMismatch(config.expectedBoardLength, config.board.length) }}
           <br />
           {{ L.boardMismatchHint }}
@@ -792,7 +792,7 @@
       class="flex mt-2 font-semibold text-red-400"
     >
       <div class="underline">{{ L.error }}</div>
-      <div class="ml-2">
+      <div class="ms-2">
         <div v-for="error in errorLines" :key="error">
           {{ error }}
         </div>

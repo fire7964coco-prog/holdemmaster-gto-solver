@@ -1,5 +1,5 @@
 <template>
-  <button
+  <button data-rtl-island="card" dir="ltr"
     :class="
       'relative rounded-lg border select-none enabled:shadow ' +
       (isSelected

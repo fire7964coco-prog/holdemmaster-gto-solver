@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full h-full px-2 py-1 gap-2.5">
+  <div data-rtl-island="numeric-comparison" dir="ltr" class="flex flex-col w-full h-full px-2 py-1 gap-2.5">
     <div class="flex text-lg font-semibold">
       <div class="flex items-center">
         <span>OOP</span>

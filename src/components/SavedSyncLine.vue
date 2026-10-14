@@ -15,7 +15,7 @@
         :data-testid="nudged ? 'saved-sync-nudged' : undefined"
         >{{ nudged === "import" ? M.importOver : full ? M.saveFull : L.invite }}</span
       >
-      <span class="inline-flex gap-2 ml-1 align-middle">
+      <span class="inline-flex gap-2 ms-1 align-middle">
         <button
           class="saved-sync-button"
           data-testid="saved-sync-google"

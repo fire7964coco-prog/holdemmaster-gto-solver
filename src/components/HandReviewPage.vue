@@ -25,7 +25,7 @@
         data-testid="review-scenario"
       >
         <h2>{{ L.situation }}</h2>
-        <p class="review-meta">
+        <p dir="ltr" class="review-meta">
           {{ spot.opener }} → {{ spot.caller }} · {{ L.pot }}
           {{ bb(spot.startingPot) }}
         </p>
@@ -98,7 +98,7 @@
       <section class="review-middle" data-testid="review-history">
         <div class="review-panel review-records">
           <div class="review-cards">
-            <div class="review-cardline">
+            <div data-rtl-island="board-cards" dir="ltr" class="review-cardline">
               <strong>{{ L.hand }}</strong
               ><span
                 v-for="c in heroCards"
@@ -110,7 +110,7 @@
                 L.chooseHand
               }}</span>
             </div>
-            <div class="review-cardline">
+            <div data-rtl-island="board-cards" dir="ltr" class="review-cardline">
               <strong>{{ L[street] }}</strong
               ><span
                 v-for="c in board"
@@ -123,7 +123,7 @@
               }}</span>
             </div>
           </div>
-          <div class="review-record-list">
+          <div data-rtl-island="action-path" dir="ltr" class="review-record-list">
             <button
               v-for="(row, i) in records"
               :key="i"
@@ -235,7 +235,7 @@
           </div>
           <template v-if="canPickCards">
             <h2>{{ cardPrompt }}</h2>
-            <div class="review-deck">
+            <div data-rtl-island="card-picker" dir="ltr" class="review-deck">
               <template v-for="s in [3, 2, 1, 0]" :key="s"
                 ><button
                   v-for="r in ranks"
@@ -333,7 +333,7 @@
                   : selectedRow.verdict.grade,
               ]"
               >{{ verdictText(selectedRow.verdict) }}</strong
-            ><span v-if="selectedRow.verdict.lossBb !== null">{{
+            ><span dir="ltr" v-if="selectedRow.verdict.lossBb !== null">{{
               loss(selectedRow.verdict.lossBb)
             }}</span>
           </p>
@@ -380,7 +380,7 @@
             </p>
           </div>
           <div
-            class="review-frequency"
+            data-rtl-island="numeric-bar" dir="ltr" class="review-frequency"
             v-for="(action, i) in selectedRow.node.actions"
             :key="i"
             :data-testid="'review-frequency-' + i"
@@ -395,13 +395,13 @@
                 }"
               />
             </div>
-            <b>{{
+            <b dir="ltr">{{
               selectedRow.verdict.frequencies.length
                 ? pct(selectedRow.verdict.frequencies[i])
                 : "—"
             }}</b>
           </div>
-          <div class="review-response" v-if="selectedRow.response">
+          <div dir="ltr" class="review-response" v-if="selectedRow.response">
             <h3>{{ L.opponentResponse }}</h3>
             <span
               v-for="(item, i) in selectedRow.response.actions"
@@ -412,7 +412,7 @@
             </span>
             <details v-if="selectedRow.response.foldingHands.length">
               <summary>{{ L.foldingHands }}</summary>
-              <div class="review-folding">
+              <div dir="ltr" class="review-folding">
                 <span
                   v-for="(item, i) in selectedRow.response.foldingHands"
                   :key="item.hand.join('-')"
@@ -426,7 +426,7 @@
           </div>
           <details class="review-grid-details" open>
             <summary>{{ L.handGrid }}</summary>
-            <div class="review-hand-grid" role="img" :aria-label="L.handGrid">
+            <div data-rtl-island="range-matrix" dir="ltr" class="review-hand-grid" role="img" :aria-label="L.handGrid">
               <div
                 v-for="cell in grid"
                 :key="cell.key"
@@ -1507,7 +1507,7 @@ p {
 .review-picker h2 small {
   font-size: 10px;
   font-weight: 400;
-  float: right;
+  float: inline-end;
 }
 .review-deck {
   display: grid;
@@ -1549,7 +1549,7 @@ p {
   padding: 4px 0 9px;
 }
 .review-status button {
-  margin-left: 8px;
+  margin-inline-start: 8px;
 }
 .review-picker progress {
   width: 100%;

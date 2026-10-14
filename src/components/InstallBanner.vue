@@ -3,7 +3,7 @@
     v-if="pwa.showBanner"
     :data-feedback-install="feedbackFeatures.feedback ? '' : undefined /* F1_FEEDBACK_ONLY */"
     :class="
-      'fixed z-40 bottom-0 inset-x-0 md:bottom-4 md:right-4 md:left-auto md:w-[26rem] ' +
+      'fixed z-40 bottom-0 inset-x-0 md:bottom-4 md:end-4 md:start-auto md:w-[26rem] ' +
       'border-t md:border md:rounded-lg border-neutral-600 bg-neutral-800 shadow-2xl ' +
       'px-4 py-3 text-sm'
     "

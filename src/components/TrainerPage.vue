@@ -12,7 +12,7 @@
       {{ L.loadFailed }} {{ loadError }}
     </div>
     <div v-else-if="!bank" class="py-8">
-      <span class="spinner inline-block mr-3"></span>{{ L.loading }}
+      <span class="spinner inline-block me-3"></span>{{ L.loading }}
     </div>
 
     <template v-else>
@@ -43,7 +43,7 @@
         <button
           v-if="reviewAttempts.length"
           :class="
-            'button-base filter-btn ml-0 md:ml-2 ' +
+            'button-base filter-btn ms-0 md:ms-2 ' +
             (reviewMode ? 'button-green' : 'bg-neutral-700 hover:bg-neutral-600')
           "
           @click="toggleReview"
@@ -53,7 +53,7 @@
         <!-- 오늘의 문제: 날짜가 씨앗이라 모두 같은 문제를 받는다 -->
         <button
           :class="
-            'button-base filter-btn ml-0 md:ml-2 flex items-center gap-1.5 ' +
+            'button-base filter-btn ms-0 md:ms-2 flex items-center gap-1.5 ' +
             (dailyMode
               ? 'bg-brand text-brand-ink hover:bg-brand-hover'
               : 'bg-neutral-700 hover:bg-neutral-600')
@@ -70,7 +70,7 @@
           data-testid="trainer-rng-mode"
           :title="R.modeHelp"
           :class="
-            'button-base filter-btn ml-0 md:ml-2 ' +
+            'button-base filter-btn ms-0 md:ms-2 ' +
             (rngMode === 'off' ? 'bg-neutral-700 hover:bg-neutral-600' : 'button-blue')
           "
           @click="cycleRngMode"
@@ -83,7 +83,7 @@
           data-testid="trainer-source"
           :title="F.sourceHelp"
           :class="
-            'button-base filter-btn ml-0 md:ml-2 ' +
+            'button-base filter-btn ms-0 md:ms-2 ' +
             (source === 'flop' ? 'button-blue' : 'bg-neutral-700 hover:bg-neutral-600')
           "
           @click="setSource(source === 'flop' ? 'basic' : 'flop')"
@@ -129,9 +129,9 @@
 
       <!-- 통계는 칩으로 압축 — 위쪽 공간을 덜 먹어야 문제가 화면 중앙에 온다 -->
       <div id="trainer-stats" class="order-4 md:order-2 flex flex-wrap gap-1.5 mt-3">
-        <span class="stat-chip">{{ L.solved }} <b>{{ attempts.length }}</b></span>
+        <span class="stat-chip">{{ L.solved }} <b dir="ltr">{{ attempts.length }}</b></span>
         <span v-if="dailyState.streak" class="stat-chip">
-          {{ L.dailyStreakLabel }} <span><b>{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}</span>
+          {{ L.dailyStreakLabel }} <span><b dir="ltr">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}</span>
           <span v-if="dailyState.bestStreak > dailyState.streak" class="text-neutral-600">
             {{ L.bestPrefix }} {{ dailyState.bestStreak }}
           </span>
@@ -141,9 +141,9 @@
           <b :class="streak >= 3 ? 'text-emerald-300' : ''">{{ streak }}</b>
           <span v-if="bestStreak > 0" class="text-neutral-600">{{ L.bestPrefix }} {{ bestStreak }}</span>
         </span>
-        <span class="stat-chip">{{ L.totalLossLabel }} <span><b>{{ $n(totalLoss.toFixed(3)) }}</b>bb</span></span>
-        <span class="stat-chip">{{ L.avgLossLabel }} <span><b>{{ $n(averageLoss.toFixed(3)) }}</b>bb</span></span>
-        <span class="stat-chip">{{ L.goodRateLabel }} <b>{{ $pct(excellentRate.toFixed(0)) }}</b></span>
+        <span class="stat-chip">{{ L.totalLossLabel }} <span dir="ltr"><b dir="ltr">{{ $n(totalLoss.toFixed(3)) }}</b>bb</span></span>
+        <span class="stat-chip">{{ L.avgLossLabel }} <span dir="ltr"><b dir="ltr">{{ $n(averageLoss.toFixed(3)) }}</b>bb</span></span>
+        <span class="stat-chip">{{ L.goodRateLabel }} <b dir="ltr">{{ $pct(excellentRate.toFixed(0)) }}</b></span>
       </div>
 
       <!-- 약점 분석: 카테고리별 평균 EV 손실 -->
@@ -194,7 +194,7 @@
             {{ L.accountBefore }}<b class="text-emerald-300">{{ account.nickname }}</b>{{ L.accountAfter }}
           </span>
           <span v-if="syncMessage" class="text-neutral-500">{{ syncMessage }}</span>
-          <span class="ml-auto flex items-center gap-3">
+          <span class="ms-auto flex items-center gap-3">
             <button
               class="link-like"
               :disabled="syncing"
@@ -211,7 +211,7 @@
           <span class="text-neutral-400">
             {{ L.localOnlyBefore }}<b class="text-neutral-200">{{ L.localOnlyBold }}</b>{{ L.localOnlyAfter }}
           </span>
-          <span class="ml-auto flex items-center gap-2">
+          <span class="ms-auto flex items-center gap-2">
             <button class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1" @click="doSignIn('google')">
               {{ L.googleSignIn }}
             </button>
@@ -231,7 +231,7 @@
         </div>
       </div>
 
-      <p class="order-4 md:order-2 mt-2 text-right text-xs text-neutral-500">
+      <p class="order-4 md:order-2 mt-2 text-end text-xs text-neutral-500">
         <!-- «모든 플랍» 출제면 교육 예제 수 대신 미리 계산한 상황 수·실제 플랍 수 (유튜브 쪽 지적 10-13) · 소수 없는 줄이라 $n 안 씀(de 22.100이 22,100으로 뒤집힘) -->
         {{ flopFiltersShown ? L.flopFooterLine(flopFooterSpots, flopFooterFlops) : $n(L.footerLine(decisionCount, bank.targetExploitabilityPct)) }}
       </p>
@@ -244,18 +244,18 @@
       <div
         class="order-2 md:hidden mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-400"
       >
-        <span>{{ L.solved }} <b class="text-neutral-200">{{ attempts.length }}</b></span>
+        <span>{{ L.solved }} <b dir="ltr" class="text-neutral-200">{{ attempts.length }}</b></span>
         <span>
           {{ L.streakLabel }}
           <b :class="streak >= 3 ? 'text-emerald-300' : 'text-neutral-200'">{{ streak }}</b>
         </span>
         <span v-if="attempts.length">
-          {{ L.goodRateLabel }} <template v-if="isTr">%</template><b class="text-neutral-200">{{ excellentRate.toFixed(0) }}</b><template v-if="!isTr">%</template>
+          {{ L.goodRateLabel }} <template v-if="isTr">%</template><b dir="ltr" class="text-neutral-200">{{ excellentRate.toFixed(0) }}</b><template v-if="!isTr">%</template>
         </span>
         <span v-if="dailyState.streak">
-          {{ L.dailyStreakLabel }} <b class="text-brand">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
+          {{ L.dailyStreakLabel }} <b dir="ltr" class="text-brand">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
         </span>
-        <button class="ml-auto link-like" @click="scrollToStats">{{ L.details }}</button>
+        <button class="ms-auto link-like" @click="scrollToStats">{{ L.details }}</button>
       </div>
 
       <!-- «모든 플랍»: 플랍 파일을 받는 동안 · 못 받았을 때 (오프라인이면 기본 문제로 돌린다) -->
@@ -265,7 +265,7 @@
         class="order-3 md:order-4 mt-3 md:mt-4 rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm"
       >
         <template v-if="flopLoading">
-          <span class="spinner inline-block mr-3"></span>{{ F.loading }}
+          <span class="spinner inline-block me-3"></span>{{ F.loading }}
         </template>
         <div v-else class="flex flex-wrap items-center gap-x-3 gap-y-2">
           <span class="text-neutral-300">{{
@@ -298,14 +298,14 @@
           <span class="text-xs text-neutral-500" data-testid="trainer-opponent">
             vs {{ opponentLabel }} ({{ question.player === "oop" ? "IP" : "OOP" }})
           </span>
-          <span class="ml-auto text-xs text-neutral-400">
+          <span class="ms-auto text-xs text-neutral-400">
             {{ L.potLabel }} {{ amountBb(question.node.selectedSpot.pot ?? question.node.startingPot) }}
             · {{ L.stackLabel }}
             {{ amountBb(question.node.selectedSpot.stack ?? question.node.effectiveStack) }}
           </span>
         </div>
 
-        <div v-if="question.node.history.length" class="mt-3 text-sm text-neutral-400">
+        <div data-rtl-island="action-path" dir="ltr" v-if="question.node.history.length" class="mt-3 text-sm text-neutral-400">
           {{ L.lineLabel }}
           <span
             v-for="(action, index) in question.node.history"
@@ -322,7 +322,7 @@
         >
           <div class="text-center">
             <div class="text-xs text-neutral-500 mb-1">{{ L.boardLabel }}</div>
-            <div class="text-xl md:text-2xl font-bold tracking-wide">
+            <div data-rtl-island="board-cards" dir="ltr" class="text-xl md:text-2xl font-bold tracking-wide">
               <span
                 v-for="(card, index) in boardCards"
                 :key="index"
@@ -334,7 +334,7 @@
           </div>
           <div class="text-center">
             <div class="text-xs text-neutral-500 mb-1">{{ L.myHand }}</div>
-            <div class="text-2xl md:text-3xl font-bold tracking-wide">
+            <div data-rtl-island="hand-cards" dir="ltr" class="text-2xl md:text-3xl font-bold tracking-wide">
               <span
                 v-for="(card, index) in handCards"
                 :key="index"
@@ -353,7 +353,7 @@
               >
                 {{ handLabels.draw }}
               </span>
-              <span
+              <span dir="ltr"
                 v-if="rngActive"
                 data-testid="trainer-rng-roll"
                 class="hand-tag bg-brand/15 text-brand tabular-nums"
@@ -392,7 +392,7 @@
                 )
               }}
             </span>
-            <span
+            <span dir="ltr"
               v-if="evaluation"
               class="text-xs font-semibold tabular-nums text-neutral-400"
             >
@@ -415,7 +415,7 @@
           </div>
           <div class="hidden md:block mt-0.5 text-sm text-neutral-400">
             {{ L.evLoss }}
-            <b class="tabular-nums text-neutral-200">
+            <b dir="ltr" class="tabular-nums text-neutral-200">
               {{ $n(evaluation.evLossBb.toFixed(3)) }}bb
             </b>
           </div>
@@ -434,9 +434,9 @@
           <div v-if="rngResult" data-testid="trainer-rng-result" class="mt-3 panel-inner">
             <div class="text-xs text-neutral-400">
               {{ R.bandsTitle }} ·
-              <b class="text-brand tabular-nums">{{ R.yourNumber }} {{ rngRoll }}</b>
+              <b dir="ltr" class="text-brand tabular-nums">{{ R.yourNumber }} {{ rngRoll }}</b>
             </div>
-            <div class="relative mt-1.5 h-2 flex rounded bg-neutral-900">
+            <div data-rtl-island="rng" dir="ltr" class="relative mt-1.5 h-2 flex rounded bg-neutral-900">
               <div
                 v-for="(band, b) in rngBandList"
                 :key="band.action"
@@ -455,7 +455,7 @@
                 :style="{ left: 'calc(' + (rngRoll - 0.5) + '% - 1px)' }"
               ></div>
             </div>
-            <div class="mt-1.5 text-xs text-neutral-400 tabular-nums">
+            <div dir="ltr" class="mt-1.5 text-xs text-neutral-400 tabular-nums">
               <span v-for="(band, b) in rngBandList" :key="band.action">
                 <template v-if="b"> · </template>
                 <span :class="band.action === rngResult.rolledAction ? 'text-brand font-semibold' : ''">
@@ -472,15 +472,15 @@
                 <span :class="action.isBest ? 'font-bold text-emerald-300' : ''">
                   {{ action.label }}{{ action.isBest ? L.bestEvTag : "" }}
                 </span>
-                <span class="ml-auto tabular-nums text-xs text-neutral-500">
+                <span dir="ltr" class="ms-auto tabular-nums text-xs text-neutral-500">
                   {{ $pct($n((action.frequency * 100).toFixed(1))) + " " }}
                 </span>
-                <span class="w-16 text-right tabular-nums">
+                <span dir="ltr" class="w-16 text-end tabular-nums">
                   {{ $n(action.evBb.toFixed(3)) }}
                 </span>
               </div>
               <!-- 숫자를 못 읽어도 차이가 보이게 -->
-              <div class="mt-1 h-1 rounded bg-neutral-900 overflow-hidden">
+              <div data-rtl-island="numeric-bar" dir="ltr" class="mt-1 h-1 rounded bg-neutral-900 overflow-hidden">
                 <div
                   :class="
                     'h-full rounded ' +
@@ -557,11 +557,11 @@
                     :key="index"
                     :class="row.isMine ? 'text-brand font-semibold' : 'text-neutral-300'"
                   >
-                    <span class="inline-block w-6 text-right tabular-nums text-neutral-500">
+                    <span dir="ltr" class="inline-block w-6 text-end tabular-nums text-neutral-500">
                       {{ row.rank }}
                     </span>
-                    <span class="ml-2">{{ row.nickname }}</span>
-                    <span class="ml-2 tabular-nums text-neutral-500">
+                    <span class="ms-2">{{ row.nickname }}</span>
+                    <span dir="ltr" class="ms-2 tabular-nums text-neutral-500">
                       {{ $n(row.lossBb.toFixed(3)) }}bb
                     </span>
                   </li>
@@ -650,13 +650,13 @@
           <div :class="'text-sm font-bold ' + verdict.className">{{ verdict.text }}</div>
           <div class="text-xs text-neutral-400">
             {{ L.evLoss }}
-            <b class="tabular-nums text-neutral-200">
+            <b dir="ltr" class="tabular-nums text-neutral-200">
               {{ $n(evaluation.evLossBb.toFixed(3)) }}bb
             </b>
-            <button class="link-like ml-2" @click="scrollToDetail">{{ L.details }}</button>
+            <button class="link-like ms-2" @click="scrollToDetail">{{ L.details }}</button>
           </div>
         </div>
-        <button class="button-base button-green ml-auto shrink-0 px-5" @click="goNext">
+        <button class="button-base button-green ms-auto shrink-0 px-5" @click="goNext">
           {{ dailyMode && dailyState.done ? L.keepPracticing : L.nextHand }}
         </button>
       </div>
@@ -685,7 +685,7 @@
               {{ L.saveImage }}
             </button>
             <button
-              class="ml-auto text-sm text-neutral-400 hover:text-neutral-200"
+              class="ms-auto text-sm text-neutral-400 hover:text-neutral-200"
               @click="closeCard"
             >
               {{ L.close }}
@@ -3323,6 +3323,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* LTR numeric values keep their glyph order while their frame spacing follows the parent. */
+:dir(rtl) > span[dir="ltr"].ms-auto { margin-left: 0; margin-right: auto; }
+:dir(rtl) > span[dir="ltr"].ms-2 { margin-left: 0; margin-right: 0.5rem; }
 /* .stat-chip은 index.css로 옮겼다 — 다른 화면도 같은 칩을 쓴다 */
 .hand-tag {
   @apply rounded px-2 py-0.5 text-xs font-semibold;

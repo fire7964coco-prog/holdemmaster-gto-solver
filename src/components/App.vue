@@ -19,8 +19,8 @@
             ref="contentHeading"
             tabindex="-1"
             :class="
-              'app-section-heading mb-3 md:mb-4 pl-2.5 pr-3 py-0.5 text-base font-semibold border-l-2 ' +
-              'border-blue-600 rounded rounded-br-none'
+              'app-section-heading mb-3 md:mb-4 ps-2.5 pe-3 py-0.5 text-base font-semibold border-s-2 ' +
+              'border-blue-600 rounded rounded-ee-none'
             "
           >
             {{ header }}

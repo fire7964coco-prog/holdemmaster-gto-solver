@@ -11,7 +11,7 @@
       @click="manual = !open"
     >
       <span class="font-semibold">{{ L.title }}</span>
-      <span class="text-neutral-400" aria-hidden="true">{{ open ? "▾" : "▸" }}</span>
+      <span :class="['inline-block text-neutral-400', { 'rtl:-scale-x-100': !open }]" aria-hidden="true">{{ open ? "▾" : "▸" }}</span>
     </button>
 
     <div v-if="open" class="mt-1">
@@ -20,6 +20,7 @@
       <div class="spot-row" role="group" :aria-label="L.opener">
         <span class="spot-row-label">{{ L.opener }}</span>
         <button
+          dir="ltr" data-rtl-island="seat-values"
           v-for="pos in OPENERS"
           :key="pos"
           type="button"
@@ -35,6 +36,7 @@
       <div class="spot-row" role="group" :aria-label="L.caller">
         <span class="spot-row-label">{{ L.caller }}</span>
         <button
+          dir="ltr" data-rtl-island="seat-values"
           v-for="pos in CALLERS"
           :key="pos"
           type="button"
@@ -426,7 +428,7 @@ export default defineComponent({
   gap: 0.5rem;
   width: 100%;
   min-height: 32px;
-  text-align: left;
+  text-align: start;
 }
 .spot-row {
   display: flex;

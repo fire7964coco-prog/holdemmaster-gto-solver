@@ -1,11 +1,11 @@
 <template>
   <div
     v-if="store.sharedSpotLoaded"
-    class="flex items-center gap-2 mb-3 pl-2.5 pr-3 py-1.5 text-emerald-300 bg-emerald-950 border border-emerald-700 rounded-md text-sm"
+    class="flex items-center gap-2 mb-3 ps-2.5 pe-3 py-1.5 text-emerald-300 bg-emerald-950 border border-emerald-700 rounded-md text-sm"
   >
     {{ L.sharedSpotBanner }}
     <button
-      class="ml-auto px-1 text-emerald-500 hover:text-emerald-300"
+      class="ms-auto px-1 text-emerald-500 hover:text-emerald-300"
       @click="store.sharedSpotLoaded = false"
     >
       ✕
@@ -16,9 +16,9 @@
     {{ L.numThreadsLabel }}
     <input
       v-model="numThreads"
-      type="number"
+      type="number" dir="ltr"
       :class="
-        'w-20 ml-2 px-2 py-1 rounded-lg text-sm text-center ' +
+        'w-20 ms-2 px-2 py-1 rounded-lg text-sm text-center ' +
         (numThreads < 1 ||
         numThreads > (isSingleThread ? 1 : 64) ||
         numThreads % 1 !== 0
@@ -30,7 +30,7 @@
       :disabled="isSingleThread || isTreeBuilding || store.isSolverRunning || store.isFinalizing"
     />
     <button
-      class="ml-3 button-base button-blue"
+      class="ms-3 button-base button-blue"
       :class="{ 'button-primary': !isTreeBuilt }"
       :disabled="
         isTreeBuilding || lockStore.busy ||
@@ -46,7 +46,7 @@
     </button>
 
     <button
-      class="ml-2 button-base button-green"
+      class="ms-2 button-base button-green"
       @click="copySpotUrl"
     >
       {{ shareCopied ? L.copied : L.shareSpot }}
@@ -74,7 +74,7 @@
         <template #content>
           <div class="px-1 py-0.5 text-justify">
             {{ L.precisionTipIntro }}
-            <ul class="pl-6 list-disc">
+            <ul class="ps-6 list-disc">
               <li class="mt-1">
                 {{ L.precisionTipFp }}
               </li>
@@ -86,34 +86,34 @@
         </template>
       </Tippy>
     </div>
-    <div class="mt-1 ml-2">
+    <div class="mt-1 ms-2">
       <label :class="{ 'cursor-pointer': !store.hasSolverRun }">
         <input
           v-model="isCompressionEnabled"
-          class="mr-2 cursor-pointer disabled:cursor-default"
+          class="me-2 cursor-pointer disabled:cursor-default"
           type="radio"
           name="compression"
           :value="false"
           :disabled="store.hasSolverRun"
         />
-        <span class="inline-block w-[6.75rem] ml-1">{{ L.fp32Label }}</span>
+        <span class="inline-block w-[6.75rem] ms-1">{{ L.fp32Label }}</span>
         {{
           L.ramNeeded(formatMemory(memoryUsage))
         }}
         {{ memoryUsage > maxMemoryUsage ? L.limitExceeded : "" }}
       </label>
     </div>
-    <div class="ml-2">
+    <div class="ms-2">
       <label :class="{ 'cursor-pointer': !store.hasSolverRun }">
         <input
           v-model="isCompressionEnabled"
-          class="mr-2 cursor-pointer disabled:cursor-default"
+          class="me-2 cursor-pointer disabled:cursor-default"
           type="radio"
           name="compression"
           :value="true"
           :disabled="store.hasSolverRun"
         />
-        <span class="inline-block w-[6.75rem] ml-1">{{ L.int16Label }}</span>
+        <span class="inline-block w-[6.75rem] ms-1">{{ L.int16Label }}</span>
         {{
           L.ramNeeded(formatMemory(memoryUsageCompressed))
         }}
@@ -155,9 +155,9 @@
       </Tippy>
       <input
         v-model="targetExploitability"
-        type="number"
+        type="number" dir="ltr"
         :class="
-          'w-20 ml-3 px-2 py-1 rounded-lg text-sm text-center ' +
+          'w-20 ms-3 px-2 py-1 rounded-lg text-sm text-center ' +
           (targetExploitability <= 0 ? 'input-error' : '')
         "
         :disabled="store.hasSolverRun && !store.isSolverPaused"
@@ -171,9 +171,9 @@
       {{ L.maxIterationsLabel }}
       <input
         v-model="maxIterations"
-        type="number"
+        type="number" dir="ltr"
         :class="
-          'w-[5.5rem] ml-2 px-2 py-1 rounded-lg text-sm text-center ' +
+          'w-[5.5rem] ms-2 px-2 py-1 rounded-lg text-sm text-center ' +
           (maxIterations < 0 ||
           maxIterations % 1 !== 0 ||
           maxIterations > 100000
@@ -228,7 +228,7 @@
       <div class="flex items-center">
         <span
           v-if="store.isSolverRunning || store.isFinalizing"
-          class="spinner inline-block mr-3"
+          class="spinner inline-block me-3"
         ></span>
         {{
           store.isSolverRunning
@@ -1921,6 +1921,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* The input's text is LTR; its spacing belongs to the surrounding RTL row. */
+.solver-run-toolbar:dir(rtl) > input { margin-left: 0; margin-right: 0.5rem; }
+.solver-run-settings:dir(rtl) input.ms-3 { margin-left: 0; margin-right: 0.75rem; }
+.solver-run-settings:dir(rtl) input.ms-2 { margin-left: 0; margin-right: 0.5rem; }
 .solver-run-toolbar {
   @apply rounded-lg border border-neutral-700 bg-surface-2 p-3;
 }

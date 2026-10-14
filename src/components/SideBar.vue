@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="app-sidebar flex flex-col shrink-0 w-full md:w-56 my-0 md:my-2 md:overflow-y-auto border-b md:border-b-0 md:border-r border-neutral-700"
+    class="app-sidebar flex flex-col shrink-0 w-full md:w-56 my-0 md:my-2 md:overflow-y-auto border-b md:border-b-0 md:border-e border-neutral-700"
   >
     <div class="mobile-menu-groups md:hidden">
       <button :aria-pressed="!isCustom" :class="{ 'menu-group-active': !isCustom }" @click="openGroup(false)">{{ L.exploreLabel }}</button>
@@ -116,7 +116,7 @@
     <button :class="itemStyle('board')" @click="store.sideView = 'board'">
       ③ {{ L.board }}
       <span class="step-status" :class="{ 'step-next': nextStep === 2 }" :title="readySteps[2] ? L.stepComplete : L.stepNeeded" aria-hidden="true">{{ readySteps[2] ? '✓' : '○' }}</span>
-      <span class="hidden md:flex mt-1 justify-center font-semibold">
+      <span dir="ltr" class="hidden md:flex mt-1 justify-center font-semibold">
         <span
           v-for="(item, i) in boardTexts"
           :key="i"
@@ -683,8 +683,15 @@ export default defineComponent({
           // 가운데로 붙인다 — 예전엔 «보일 만큼만» 움직여 활성 항목이 언제나 가장자리에
           // 딱 붙고, 옆 항목은 마지막 한 글자만 남았다(«지 ✓») — 스크롤줄이 아니라
           // 글자가 깨진 것처럼 보였다. 양쪽을 고르게 보여 주면 «더 있다»가 읽힌다.
-          const target = item.offsetLeft - (group.clientWidth - item.offsetWidth) / 2;
-          group.scrollLeft = Math.max(0, Math.min(target, group.scrollWidth - group.clientWidth));
+          if (getComputedStyle(group).direction === "rtl") {
+            const itemRect = item.getBoundingClientRect();
+            const groupRect = group.getBoundingClientRect();
+            const delta = itemRect.left + itemRect.width / 2 - groupRect.left - groupRect.width / 2;
+            group.scrollLeft = Math.max(group.clientWidth - group.scrollWidth, Math.min(0, group.scrollLeft + delta));
+          } else {
+            const target = item.offsetLeft - (group.clientWidth - item.offsetWidth) / 2;
+            group.scrollLeft = Math.max(0, Math.min(target, group.scrollWidth - group.clientWidth));
+          }
           syncMenuFade(group);
         }
       }
@@ -692,8 +699,9 @@ export default defineComponent({
     // 양끝 페이드는 «더 스크롤할 게 있다»를 뜻한다 — 끝까지 갔으면 그쪽은 끄다.
     const syncMenuFade = (group: HTMLElement) => {
       const max = group.scrollWidth - group.clientWidth;
-      group.classList.toggle("fade-start", group.scrollLeft > 4);
-      group.classList.toggle("fade-end", group.scrollLeft < max - 4);
+      const position = getComputedStyle(group).direction === "rtl" ? -group.scrollLeft : group.scrollLeft;
+      group.classList.toggle("fade-start", position > 4);
+      group.classList.toggle("fade-end", position < max - 4);
     };
     const onMenuScroll = (event: Event) => syncMenuFade(event.currentTarget as HTMLElement);
 
@@ -746,7 +754,7 @@ export default defineComponent({
   position: relative;
   @apply block shrink-0 whitespace-nowrap mx-1 my-1 px-3 py-2 rounded-md text-sm;
   @apply md:shrink md:whitespace-normal md:mx-2 md:my-0.5 md:px-3 md:py-1.5 md:rounded-md md:text-[0.8125rem];
-  @apply text-left select-none;
+  @apply text-start select-none;
   @apply transition-colors hover:bg-neutral-700;
 }
 
@@ -769,9 +777,9 @@ export default defineComponent({
 .mobile-menu-groups { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 4px; padding: 4px 8px; background: rgb(var(--c-bg-1)); }
 .mobile-menu-groups button { min-height: 40px; padding: 4px 8px; border: 1px solid rgb(var(--c-line)); border-radius: 6px; color: rgb(var(--c-text-secondary)); font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
 .mobile-menu-groups .menu-group-active { color: rgb(var(--c-brand)); background: rgb(var(--c-bg-3)); border-color: rgb(var(--c-brand)); }
-.step-status { display: inline-block; margin-left: 5px; color: rgb(var(--c-text-muted)); font-size: 12px; }
+.step-status { display: inline-block; margin-inline-start: 5px; color: rgb(var(--c-text-muted)); font-size: 12px; }
 .step-next { color: rgb(var(--c-brand)); }
-.step-next::after { content: ""; display: inline-block; width: 4px; height: 4px; margin: 0 0 2px 3px; border-radius: 50%; background: currentColor; }
+.step-next::after { content: ""; display: inline-block; width: 4px; height: 4px; margin: 0 0 2px; margin-inline-start: 3px; border-radius: 50%; background: currentColor; }
 @media (max-width: 767px) {
   .side-bar-group.mobile-group-active {
     display: flex; min-width: 0; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain;
@@ -783,6 +791,10 @@ export default defineComponent({
   }
   .side-bar-group.fade-start { --fade-l: 16px; }
   .side-bar-group.fade-end { --fade-r: 16px; }
+  .side-bar-group:dir(rtl) {
+    -webkit-mask-image: linear-gradient(to left, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+    mask-image: linear-gradient(to left, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+  }
   .side-bar-item { min-height: 40px; margin-top: 2px; margin-bottom: 3px; }
 }
 /* 패널 도입으로 항목 폭이 18px 줄어 EN «Equity Calculator Win %»가 두 줄로 접혔다
@@ -796,10 +808,11 @@ export default defineComponent({
   @apply text-brand bg-surface-3;
   box-shadow: inset 2px 0 0 rgb(var(--c-brand));
 }
+.side-bar-item.text-blue-300:dir(rtl) { box-shadow: inset -2px 0 0 rgb(var(--c-brand)); }
 @media (min-width: 768px) {
   .mobile-menu-groups { display: none; }
-  .side-bar-item .step-status { position: absolute; right: 5px; top: 4px; font-size: 10px; }
-  .side-bar-item:has(.step-status) { padding-right: 20px; }
+  .side-bar-item .step-status { position: absolute; inset-inline-end: 5px; top: 4px; font-size: 10px; }
+  .side-bar-item:has(.step-status) { padding-inline-end: 20px; }
   .side-bar-item:has(table) {
     display: flex;
     align-items: center;

@@ -1,5 +1,5 @@
 <template>
-  <section v-if="visible" class="nodelock relative shrink-0 min-w-0 text-sm">
+  <section v-if="visible" data-rtl-island="nodelock" dir="ltr" class="nodelock relative shrink-0 min-w-0 text-sm">
     <button
       type="button"
       data-testid="nodelock-toggle"
@@ -8,7 +8,7 @@
       aria-controls="nodelock-content"
       @click="opened = !opened"
     >
-      <span class="shrink-0" aria-hidden="true">{{ opened ? "▾" : "▸" }}</span>
+      <span class="shrink-0 rtl:-scale-x-100" aria-hidden="true">{{ opened ? "▾" : "▸" }}</span>
       <span class="min-w-0 break-words">{{ L.title }}</span>
       <span v-if="lockStore.locks.length" class="shrink-0 text-amber-300">({{ lockStore.locks.length }})</span>
     </button>
@@ -36,7 +36,7 @@
           <label v-for="(action, index) in editableSpot.actions" :key="index" class="nodelock-action grid min-w-0 grid-cols-[minmax(0,1fr)_6rem] items-center gap-3">
             <span class="min-w-0 break-all font-mono" :style="{ color: action.color }">{{ action.name }}:{{ action.amount }}</span>
             <span class="flex min-w-0 items-center gap-1">
-              <input
+              <input dir="ltr"
                 v-model.number="percentages[index]"
                 type="number"
                 inputmode="numeric"

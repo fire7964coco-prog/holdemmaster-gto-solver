@@ -2,11 +2,11 @@
   <div class="range-editor flex flex-col md:flex-row md:flex-wrap gap-4 mt-1">
     <div class="shrink-0 w-full md:w-[34rem] max-w-full min-w-0">
       <p data-testid="range-mobile-hint" class="md:hidden mb-2 text-xs text-neutral-500">{{ L.mobileHint }}</p>
-      <div class="range-cell-summary md:hidden" aria-live="polite" aria-atomic="true">
+      <div dir="ltr" class="range-cell-summary md:hidden" aria-live="polite" aria-atomic="true">
         <strong>{{ activeCell ? cellText(activeCell.row, activeCell.col) : '—' }}</strong>
         <span>· {{ L.weight }} {{ activeCell ? $pct($n(cellValue(activeCell.row, activeCell.col).toString())) : '—' }}</span>
       </div>
-      <table class="w-full table-fixed select-none snug" role="grid" :aria-label="player === 0 ? 'OOP' : 'IP'" @mouseleave="dragEnd">
+      <table data-rtl-island="range-matrix" dir="ltr" class="w-full table-fixed select-none snug" role="grid" :aria-label="player === 0 ? 'OOP' : 'IP'" @mouseleave="dragEnd">
         <tr v-for="row in 13" :key="row" class="h-7 md:h-9" role="row">
           <td
             v-for="col in 13"
@@ -61,7 +61,7 @@
 
       <div class="mt-3">
         <div class="flex items-start gap-2">
-          <input
+          <input data-rtl-island="range-input" dir="ltr"
             v-model="rangeText"
             type="text"
             :name="`range-${player}`"
@@ -87,10 +87,10 @@
         </div>
       </div>
 
-      <div class="range-weight flex flex-wrap gap-2 mt-3 items-center text-sm tabular-nums">
+      <div data-rtl-island="range-control" dir="ltr" class="range-weight flex flex-wrap gap-2 mt-3 items-center text-sm tabular-nums">
         <div>
           {{ L.weight }}
-          <input
+          <input data-rtl-island="range-control" dir="ltr"
             v-model="weight"
             type="range"
             :aria-label="L.weight"
@@ -100,7 +100,7 @@
             step="5"
             @change="onWeightChange"
           />
-          <input
+          <input data-rtl-island="range-input" dir="ltr"
             v-model="weight"
             type="number"
             :aria-label="L.weight"

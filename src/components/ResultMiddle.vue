@@ -29,7 +29,7 @@
     </button>
 
     <div
-      class="result-options flex ml-auto shrink-0 items-center justify-start gap-2 snug"
+      class="result-options flex ms-auto shrink-0 items-center justify-start gap-2 snug"
     >
       <div
         v-if="['basics', 'graphs'].includes(displayMode)"

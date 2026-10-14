@@ -5,8 +5,8 @@
       <button class="button-base button-blue" @click="$emit('close')">
         {{ L.backToList }}
       </button>
-      <span class="font-bold text-lg ml-1">{{ presetTitleOf(preset) }}</span>
-      <span class="font-bold tracking-wide">
+      <span class="font-bold text-lg ms-1">{{ presetTitleOf(preset) }}</span>
+      <span data-rtl-island="board-cards" dir="ltr" class="font-bold tracking-wide">
         <span
           v-for="(c, i) in boardTexts"
           :key="i"
@@ -17,10 +17,10 @@
       </span>
       <!-- 스팟 정보는 칩으로 — 트레이너와 같은 눈금을 쓴다 -->
       <span class="stat-chip">
-        {{ L.pot }} <span><b>{{ $n(String(preset.startingPot / preset.unitScale)) }}</b>bb</span>
+        {{ L.pot }} <span data-rtl-island="numeric-value" dir="ltr"><b>{{ $n(String(preset.startingPot / preset.unitScale)) }}</b>bb</span>
       </span>
       <span class="stat-chip">
-        {{ L.stack }} <span><b>{{ $n(String(preset.effectiveStack / preset.unitScale)) }}</b>bb</span>
+        {{ L.stack }} <span data-rtl-island="numeric-value" dir="ltr"><b>{{ $n(String(preset.effectiveStack / preset.unitScale)) }}</b>bb</span>
       </span>
     </div>
 
@@ -48,7 +48,7 @@
       {{ L.loadError(error) }}
     </div>
     <div v-else-if="!data" class="mt-4">
-      <span class="spinner inline-block mr-3"></span>{{ L.loading }}
+      <span class="spinner inline-block me-3"></span>{{ L.loading }}
     </div>
 
     <template v-else>
@@ -58,7 +58,7 @@
            (2026-08-21: ko 101·en 108·ja 143·es 106px vs 고정폭 안쪽 94px로 4개 국어 전부 잘렸다) -->
       <div class="flex flex-wrap items-center gap-2 mt-3">
         <span class="text-sm">{{ L.playerLabel }}</span>
-        <select
+        <select data-rtl-island="seat-values" dir="ltr"
           v-model="displayPlayer"
           class="max-w-full sm:max-w-[18rem] px-2 py-1 rounded-lg text-sm"
         >
@@ -77,7 +77,7 @@
       <!-- 본문: 결과 화면과 동일한 구도 (모바일 세로 스택 / 데스크톱 좌우) -->
       <div class="flex flex-col md:flex-row mt-3 gap-3">
         <!-- ResultBasics 루트가 h-full이라 높이는 래퍼에서 지정해야 함 -->
-        <div class="preview-matrix shrink-0 min-w-0 md:[flex:11]">
+        <div data-rtl-island="range-matrix" dir="ltr" class="preview-matrix shrink-0 min-w-0 md:[flex:11]">
           <ResultBasics
             :cards="data.cards"
             :selected-spot="data.selectedSpot"

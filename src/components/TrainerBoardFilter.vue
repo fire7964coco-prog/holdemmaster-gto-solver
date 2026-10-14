@@ -1,7 +1,7 @@
 <template>
   <!-- 보드 고르기 (설계안 §5): 축 4줄(줄 안 «또는» · 줄끼리 «그리고») + 특정 플랍 하나 · 바꿀 때마다 부모가 새 문제를 낸다 -->
   <div
-    data-testid="trainer-board-panel"
+    data-rtl-island="card-filter" dir="ltr" data-testid="trainer-board-panel"
     class="order-1 mt-2 rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-3 text-xs md:text-sm"
   >
     <div class="mb-2 text-neutral-300">{{ B.boardRule }}</div>

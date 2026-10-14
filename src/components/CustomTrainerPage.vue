@@ -6,10 +6,10 @@
       <button v-if="rngEnabled" type="button" data-testid="custom-trainer-rng-mode" :title="G.modeHelp" :class="['custom-button', rngMode === 'off' ? 'bg-neutral-700' : 'button-blue']" @click="cycleRngMode">
         {{ G.mode[rngMode] }}
       </button>
-      <button v-if="bank?.origin" type="button" data-testid="custom-trainer-back-review" class="custom-button ml-auto bg-neutral-700" @click="backToReview">
+      <button v-if="bank?.origin" type="button" data-testid="custom-trainer-back-review" class="custom-button ms-auto bg-neutral-700" @click="backToReview">
         {{ L.backToReview }}
       </button>
-      <button type="button" data-testid="custom-trainer-presets" :class="['custom-button bg-neutral-700', bank?.origin ? '' : 'ml-auto']" @click="leave">
+      <button type="button" data-testid="custom-trainer-presets" :class="['custom-button bg-neutral-700', bank?.origin ? '' : 'ms-auto']" @click="leave">
         {{ L.presetTab }}
       </button>
     </div>
@@ -34,29 +34,29 @@
             <b class="text-brand">{{ seatName(question.player) }}</b>
             <span class="text-neutral-300">{{ L.pot }} {{ amount(question.node.selectedSpot.pot ?? question.node.startingPot) }} · {{ L.stack }} {{ amount(question.node.selectedSpot.stack ?? question.node.effectiveStack) }}</span>
           </div>
-          <p v-if="question.node.history.length" class="mt-2 text-xs leading-relaxed text-neutral-400">
+          <p data-rtl-island="action-path" dir="ltr" v-if="question.node.history.length" class="mt-2 text-xs leading-relaxed text-neutral-400">
             {{ L.line }}: {{ question.node.history.map(item => `${seatName(item.player)} ${actionLabel(item)}`).join(" → ") }}
           </p>
           <div class="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-3 rounded-lg bg-surface-1 p-3">
             <div class="text-center">
               <p class="mb-1 text-xs text-neutral-400">{{ L.board }}</p>
-              <div class="flex justify-center gap-1 text-2xl font-bold">
+              <div data-rtl-island="board-cards" dir="ltr" class="flex justify-center gap-1 text-2xl font-bold">
                 <span v-for="(card, index) in boardCards" :key="index" :class="card.colorClass">{{ card.rank }}{{ card.suit }}</span>
               </div>
             </div>
             <div class="text-center">
               <p class="mb-1 text-xs text-neutral-400">{{ L.hand }}</p>
-              <div class="flex justify-center gap-1 text-3xl font-bold">
+              <div data-rtl-island="hand-cards" dir="ltr" class="flex justify-center gap-1 text-3xl font-bold">
                 <span v-for="(card, index) in handCards" :key="index" :class="card.colorClass">{{ card.rank }}{{ card.suit }}</span>
               </div>
             </div>
             <div v-if="rngActive" class="self-end text-center">
-              <span data-testid="custom-trainer-rng-roll" class="inline-block rounded bg-brand/15 px-2 py-0.5 text-sm font-semibold text-brand tabular-nums">RNG {{ rngRoll }}</span>
+              <span dir="ltr" data-testid="custom-trainer-rng-roll" class="inline-block rounded bg-brand/15 px-2 py-0.5 text-sm font-semibold text-brand tabular-nums">RNG {{ rngRoll }}</span>
             </div>
           </div>
           <p class="mt-4 text-sm font-semibold">{{ L.prompt }}</p>
           <div class="mt-2 grid gap-2 md:grid-cols-2">
-            <button v-for="(action, index) in question.node.selectedSpot.actions" :key="index" type="button" :data-testid="`custom-trainer-action-${index}`" :disabled="!!evaluation || saving" :class="['custom-button border text-left', evaluation?.selectedAction === index ? 'border-brand bg-brand/10 text-brand' : 'border-neutral-600 bg-neutral-700']" @click="choose(index)">
+            <button v-for="(action, index) in question.node.selectedSpot.actions" :key="index" type="button" :data-testid="`custom-trainer-action-${index}`" :disabled="!!evaluation || saving" :class="['custom-button border text-start', evaluation?.selectedAction === index ? 'border-brand bg-brand/10 text-brand' : 'border-neutral-600 bg-neutral-700']" @click="choose(index)">
               {{ actionLabel(action) }}
             </button>
           </div>
@@ -71,13 +71,13 @@
             <div v-if="rngResult" data-testid="custom-trainer-rng-result" class="mt-3 rounded-lg bg-neutral-900/60 px-3 py-2">
               <div class="text-xs text-neutral-400">
                 {{ G.bandsTitle }} ·
-                <b class="text-brand tabular-nums">{{ G.yourNumber }} {{ rngRoll }}</b>
+                <b dir="ltr" class="text-brand tabular-nums">{{ G.yourNumber }} {{ rngRoll }}</b>
               </div>
-              <div class="relative mt-1.5 flex h-2 rounded bg-neutral-900">
+              <div data-rtl-island="rng" dir="ltr" class="relative mt-1.5 flex h-2 rounded bg-neutral-900">
                 <div v-for="(band, b) in rngBandList" :key="band.action" :class="'h-full ' + (band.action === rngResult.rolledAction ? 'bg-brand/80' : b % 2 ? 'bg-neutral-600' : 'bg-neutral-500')" :style="{ width: band.to - band.from + 1 + '%' }"></div>
                 <div class="absolute -top-1 -bottom-1 w-0.5 rounded bg-white" :style="{ left: 'calc(' + (rngRoll - 0.5) + '% - 1px)' }"></div>
               </div>
-              <div class="mt-1.5 text-xs text-neutral-400 tabular-nums">
+              <div dir="ltr" class="mt-1.5 text-xs text-neutral-400 tabular-nums">
                 <span v-for="(band, b) in rngBandList" :key="band.action">
                   <template v-if="b"> · </template>
                   <span :class="band.action === rngResult.rolledAction ? 'text-brand font-semibold' : ''">{{ actionLabel(question.node.selectedSpot.actions[band.action]) }} {{ band.from }}–{{ band.to }}</span>

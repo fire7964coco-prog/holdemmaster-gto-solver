@@ -485,7 +485,7 @@
     <div class="flex">
       {{ L.importFailed }}
       <button
-        class="w-6 h-6 ml-auto text-neutral-200 opacity-70 hover:opacity-100"
+        class="w-6 h-6 ms-auto text-neutral-200 opacity-70 hover:opacity-100"
         @click="importError = ''"
       >
         <XMarkIcon class="w-full h-full" />
@@ -1752,13 +1752,13 @@ input.input-error {
 }
 
 .group {
-  @apply relative pl-5;
+  @apply relative ps-5;
 }
 
 .group::before {
   content: "";
   height: calc(100% - 1.4rem * var(--guide-decrease) - 0.825rem);
-  @apply absolute top-0.5 left-2.5 border-l border-dotted border-neutral-600;
+  @apply absolute top-0.5 start-2.5 border-s border-dotted border-neutral-600;
 }
 
 .group-inside {
@@ -1767,25 +1767,25 @@ input.input-error {
 
 .group-inside::before {
   content: "";
-  @apply absolute top-[0.7rem] -left-[0.5625rem] w-2.5 border-t border-dotted border-neutral-600;
+  @apply absolute top-[0.7rem] -start-[0.5625rem] w-2.5 border-t border-dotted border-neutral-600;
 }
 
 .item-toplevel {
-  @apply relative pl-5;
+  @apply relative ps-5;
 }
 
 .item-toplevel::before {
   content: "";
-  @apply absolute top-1/2 left-[0.0625rem] w-2.5 border-t border-dotted border-neutral-600;
+  @apply absolute top-1/2 start-[0.0625rem] w-2.5 border-t border-dotted border-neutral-600;
 }
 
 .item-inside {
-  @apply relative pl-5;
+  @apply relative ps-5;
 }
 
 .item-inside::before {
   content: "";
-  @apply absolute top-1/2 -left-[0.5625rem] w-5 border-t border-dotted border-neutral-600;
+  @apply absolute top-1/2 -start-[0.5625rem] w-5 border-t border-dotted border-neutral-600;
 }
 
 .right-arrow,
@@ -1795,12 +1795,12 @@ input.input-error {
 
 .right-arrow::before {
   content: "";
-  @apply absolute w-1.5 h-1.5 -mt-0.5 top-1/2 left-1.5 border-t-2 border-r-2 border-neutral-400 rotate-45;
+  @apply absolute w-1.5 h-1.5 -mt-0.5 top-1/2 start-1.5 border-t-2 border-r-2 border-neutral-400 rotate-45;
 }
 
 .bottom-arrow::before {
   content: "";
-  @apply absolute w-1.5 h-1.5 -mt-[0.1875rem] top-1/2 left-[0.4375rem] border-r-2 border-b-2 border-neutral-400 rotate-45;
+  @apply absolute w-1.5 h-1.5 -mt-[0.1875rem] top-1/2 start-[0.4375rem] border-r-2 border-b-2 border-neutral-400 rotate-45;
 }
 
 .button-overrides {
@@ -1818,4 +1818,5 @@ input.input-error {
   @apply bg-transparent text-neutral-400;
   box-shadow: inset 0 0 0 1px rgb(var(--c-line));
 }
+.right-arrow:dir(rtl)::before { @apply -rotate-[135deg]; }
 </style>

@@ -38,9 +38,9 @@
         @click="tab.select()"
       >
         {{ tab.label }}
-        <span
+        <span dir="ltr"
           :class="
-            'ml-1 text-xs font-normal ' +
+            'ms-1 text-xs font-normal ' +
             (tab.active ? 'text-brand-ink/75' : 'text-neutral-500')
           "
         >
@@ -52,7 +52,7 @@
     <div class="flex flex-col lg:flex-row gap-4">
       <!-- 13×13 격자 -->
       <div class="shrink-0 w-full max-w-[26rem] lg:max-w-[28rem]">
-        <table
+        <table data-rtl-island="range-matrix" dir="ltr"
           class="w-full border-collapse select-none"
           data-testid="preflop-grid"
         >
@@ -181,7 +181,7 @@
 
         <div class="panel mb-4">
           <div class="section-title">{{ L.howTitle }}</div>
-          <ul class="list-disc pl-5 text-sm text-neutral-300 space-y-1.5">
+          <ul class="list-disc ps-5 text-sm text-neutral-300 space-y-1.5">
             <li v-for="(line, i) in active.how" :key="i">{{ line }}</li>
           </ul>
         </div>
@@ -1945,6 +1945,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+:dir(rtl) > span[dir="ltr"].ms-1 { margin-left: 0; margin-right: 0.25rem; }
 .preflop-page {
   font-variant-numeric: tabular-nums;
 }

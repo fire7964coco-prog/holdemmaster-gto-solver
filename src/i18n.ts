@@ -12,6 +12,7 @@
  *   localStorage.setItem("solver.locale", "ko")를 미리 심는다 (헤드리스 크롬은 영어 브라우저다).
  */
 import { reactive } from "vue";
+import { directionForLocale } from "./document-direction";
 
 // ⚠ "zh"(간체)와 "zh-hant"(번체)는 «별개 언어»다 — 용어 자체가 다르므로 기계 변환 금지
 // (德州扑克/德州撲克 · 求解器/解算器 · 概率/機率 · 弃牌/蓋牌).
@@ -343,6 +344,7 @@ const applyManifestLocale = (locale: Locale) => {
 
 const applyDocumentLocale = (locale: Locale) => {
   document.documentElement.lang = DOC_LANG[locale];
+  document.documentElement.dir = directionForLocale(locale);
   applyManifestLocale(locale);
   document.title = DOC_META[locale].title;
   document

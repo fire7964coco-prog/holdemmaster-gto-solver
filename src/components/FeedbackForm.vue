@@ -469,7 +469,7 @@ export default defineComponent({
 <style scoped>
 .feedback-overlay { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgb(0 0 0 / 62%); }
 .feedback-panel { width: min(100%, 460px); max-height: 100%; min-height: 0; display: flex; flex-direction: column; color: rgb(var(--c-text-primary)); background: rgb(var(--c-bg-1)); border: 1px solid rgb(var(--c-line)); border-radius: 14px; box-shadow: 0 20px 65px rgb(0 0 0 / 35%); overflow: hidden; font-size: 14px; line-height: 1.45; }
-.feedback-header { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 18px; border-bottom: 1px solid rgb(var(--c-line)); }
+.feedback-header { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding-block: 8px; padding-inline: 18px 8px; border-bottom: 1px solid rgb(var(--c-line)); }
 .feedback-header h2 { flex: 1; min-width: 0; margin: 0; font-size: 17px; font-weight: 650; line-height: 1.4; }
 .feedback-close { flex: 0 0 44px; width: 44px; height: 44px; font-size: 27px; color: rgb(var(--c-text-secondary)); border-radius: 8px; }
 .feedback-content { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 14px 18px 12px; }
@@ -487,7 +487,7 @@ export default defineComponent({
 #feedback-downside { height: 76px; }
 .feedback-field textarea::placeholder { color: rgb(var(--c-text-muted)); font-size: 14px; }
 .feedback-field textarea:focus, .feedback-field input:focus { outline: 2px solid rgb(var(--c-brand)); outline-offset: 1px; border-color: transparent; }
-.feedback-text-button { min-height: 44px; padding: 7px 0; color: rgb(var(--c-text-secondary)); text-decoration: underline; text-underline-offset: 3px; text-align: left; }
+.feedback-text-button { min-height: 44px; padding: 7px 0; color: rgb(var(--c-text-secondary)); text-decoration: underline; text-underline-offset: 3px; text-align: start; }
 .feedback-downside-toggle { display: block; width: 100%; margin-top: -4px; }
 .feedback-name { margin-top: 4px; padding-top: 3px; border-top: 1px solid rgb(var(--c-line)); }
 .feedback-posting-as { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; color: rgb(var(--c-text-secondary)); }
@@ -511,8 +511,8 @@ export default defineComponent({
 @media (max-width: 639px) {
   .feedback-overlay { align-items: flex-end; padding: 0; }
   .feedback-panel { width: 100%; max-height: 100%; border-radius: 14px 14px 0 0; border-bottom: 0; }
-  .feedback-content { padding-left: 16px; padding-right: 16px; }
-  .feedback-header { padding-left: 16px; }
-  .feedback-footer { padding-left: 16px; padding-right: 16px; }
+  .feedback-content { padding-inline: 16px; }
+  .feedback-header { padding-inline-start: 16px; }
+  .feedback-footer { padding-inline: 16px; }
 }
 </style>

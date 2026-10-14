@@ -157,14 +157,14 @@
         <p v-if="facts" class="report-summary" data-testid="report-summary">
           {{ factsText }}
         </p>
-        <div class="report-legend" v-if="metric === 'strategy'">
+        <div dir="ltr" class="report-legend" v-if="metric === 'strategy'">
           <span v-for="(c, i) in columns" :key="i"
             ><i :style="{ background: colors[i] }" />{{ columnText(c) }}</span
           >
         </div>
 
         <button
-          class="report-bar-row"
+          data-rtl-island="numeric-bar" dir="ltr" class="report-bar-row"
           data-testid="report-overall"
           :aria-pressed="groupKey === null"
           :data-freq="overall.freq.join(',')"
@@ -172,7 +172,7 @@
           @click="groupKey = null"
         >
           <span class="report-bar-name">{{ T.overall }}</span>
-          <span class="report-bar-share">{{ pct(1, 0) }}</span>
+          <span dir="ltr" class="report-bar-share">{{ pct(1, 0) }}</span>
           <span class="report-bar">
             <template v-if="metric === 'strategy'"
               ><i
@@ -190,7 +190,7 @@
           <button
             v-for="g in groups"
             :key="g.key"
-            class="report-bar-row"
+            data-rtl-island="numeric-bar" dir="ltr" class="report-bar-row"
             :data-testid="'report-group-row-' + g.key"
             :data-share="g.share"
             :data-freq="g.freq.join(',')"
@@ -198,7 +198,7 @@
             @click="groupKey = groupKey === g.key ? null : g.key"
           >
             <span class="report-bar-name">{{ groupName(g.key) }}</span>
-            <span class="report-bar-share">{{ pct(g.share) }}</span>
+            <span dir="ltr" class="report-bar-share">{{ pct(g.share) }}</span>
             <span class="report-bar">
               <template v-if="metric === 'strategy'"
                 ><i
@@ -226,7 +226,7 @@
           </button>
         </div>
         <p class="report-meta">{{ T.rowHelp }} {{ T.evHelp }}</p>
-        <table class="report-table" data-testid="report-table">
+        <table data-rtl-island="numeric-table" dir="ltr" class="report-table" data-testid="report-table">
           <thead>
             <tr>
               <th>
@@ -737,7 +737,7 @@ h2 {
   font-size: 13px;
 }
 h2 small {
-  margin-left: 6px;
+  margin-inline-start: 6px;
   font-weight: 500;
   font-size: 11px;
   color: rgb(var(--c-text-muted));
@@ -776,10 +776,10 @@ p {
 .report-label {
   color: rgb(var(--c-text-muted));
   font-size: 11px;
-  margin-right: 2px;
+  margin-inline-end: 2px;
 }
 .report-badge {
-  margin-left: 5px;
+  margin-inline-start: 5px;
   padding: 0 4px;
   border-radius: 3px;
   background: rgb(var(--c-bg-3));

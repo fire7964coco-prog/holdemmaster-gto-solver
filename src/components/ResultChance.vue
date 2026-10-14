@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full h-full">
+  <div data-rtl-island="card-picker" dir="ltr" class="flex w-full h-full">
     <div
       class="flex flex-col h-full items-center pt-[1%] gap-[1%]"
       style="flex: 4"
@@ -25,7 +25,7 @@
       </div>
 
       <div
-        ref="chartParentDiv"
+        data-rtl-island="numeric-graph" ref="chartParentDiv"
         class="relative flex-grow max-h-[50%] my-1.5"
         style="width: calc(84.5% + 3.25rem)"
       >

@@ -3,7 +3,7 @@
     <button
       type="button"
       data-testid="result-custom-train"
-      class="button-base button-blue practice-button whitespace-normal text-left text-sm"
+      class="button-base button-blue practice-button whitespace-normal text-start text-sm"
       :disabled="disabled || busy"
       :aria-busy="busy"
       @click="start"

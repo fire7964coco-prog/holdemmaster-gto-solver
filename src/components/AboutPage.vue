@@ -125,13 +125,13 @@
       <div class="mt-3 space-y-2.5">
         <div v-for="(s, i) in L.steps" :key="i" class="flex items-baseline gap-3">
           <span
-            class="shrink-0 w-5 text-right text-sm font-semibold text-brand tabular-nums"
+            class="shrink-0 w-5 text-end text-sm font-semibold text-brand tabular-nums"
             >{{ i + 1 }}</span
           >
           <span class="text-sm text-neutral-300">{{ s }}</span>
         </div>
         <div class="flex items-baseline gap-3" data-w2="lock-step">
-          <span class="shrink-0 w-5 text-right text-sm font-semibold text-brand tabular-nums">
+          <span class="shrink-0 w-5 text-end text-sm font-semibold text-brand tabular-nums">
             {{ L.steps.length + 1 }}
           </span>
           <span class="text-sm text-neutral-300" data-w2="lock-step-text">

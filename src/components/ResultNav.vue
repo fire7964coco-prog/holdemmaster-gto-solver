@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="navDiv"
+    data-rtl-island="action-path" ref="navDiv" dir="ltr"
     class="result-nav flex shrink-0 gap-1 p-1 overflow-x-auto whitespace-nowrap snug"
   >
     <div

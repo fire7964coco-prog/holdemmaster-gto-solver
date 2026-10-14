@@ -7,6 +7,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
+// 첫 페인트와 런타임이 같은 방향 목록을 받는다. 지금은 빈 목록(15언어 모두 LTR).
+const rtlLocales = require("./src/rtl-locales.json");
 
 // Supabase 접속 정보는 저장소에 올리지 않고 빌드 시점에만 주입한다(.env.local, gitignore됨).
 // 값이 없으면 빈 문자열이 들어가고, 솔버는 계정 저장 기능을 자동으로 숨긴다.
@@ -205,6 +207,7 @@ module.exports = (envArgs = {}) => {
       __SUPABASE_URL__: JSON.stringify(isNpokers ? "" : env.SUPABASE_URL ?? ""),
       __SUPABASE_ANON_KEY__: JSON.stringify(isNpokers ? "" : env.SUPABASE_ANON_KEY ?? ""),
       __APP_TARGET__: JSON.stringify(target),
+      __RTL_LOCALES__: JSON.stringify(rtlLocales),
       __F1_TEST_BUILD__: JSON.stringify(isFeedbackTestBuild),
       // 오류 신고에 찍히는 빌드 번호 — 어느 배포에서 난 문제인지 구분한다
       __BUILD_ID__: JSON.stringify(
@@ -237,6 +240,7 @@ module.exports = (envArgs = {}) => {
     }),
     new HTMLWebpackPlugin({
       template: isNpokers ? "index-npokers.html" : "index.html",
+      rtlLocales,
     }),
     new MiniCSSExtractPlugin({ filename: "[contenthash].css" }),
     new VueLoaderPlugin(),

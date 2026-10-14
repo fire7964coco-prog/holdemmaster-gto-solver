@@ -13,13 +13,15 @@
     <!-- 모바일: 상황·보드를 한 줄로 줄이고, 고르는 칸은 아래 시트로 연다 (설계 §1) -->
     <div class="study-panel study-mobile-bar" data-testid="study-mobile-bar">
       <span class="study-mobile-pot">{{ potLabel }}</span>
-      <span
-        v-for="c in flop"
-        :key="c"
-        class="study-card"
-        :class="suitClass(c)"
-        >{{ card(c) }}</span
-      >
+      <span data-rtl-island="board-cards" dir="ltr" class="study-mobile-cards">
+        <span
+          v-for="c in flop"
+          :key="c"
+          class="study-card"
+          :class="suitClass(c)"
+          >{{ card(c) }}</span
+        >
+      </span>
       <button data-testid="study-mobile-random" @click="chooseRandom">
         {{ S.randomFlop }}
       </button>
@@ -102,7 +104,7 @@
         </div>
         <div class="study-group study-board">
           <h3>{{ S.board }}</h3>
-          <div class="study-board-row">
+          <div data-rtl-island="board-cards" dir="ltr" class="study-board-row">
             <span
               v-for="c in flop"
               :key="c"
@@ -127,7 +129,7 @@
 
       <div v-if="picking" class="study-panel" data-testid="study-picker">
         <h3>{{ format(S.pickPrompt, { count: String(pending.length) }) }}</h3>
-        <div class="study-deck">
+        <div data-rtl-island="card-picker" dir="ltr" class="study-deck">
           <template v-for="s in [3, 2, 1, 0]" :key="s"
             ><button
               v-for="r in RANKS"
@@ -153,7 +155,7 @@
     </div>
 
     <div
-      class="study-panel study-line"
+      data-rtl-island="action-path" dir="ltr" class="study-panel study-line"
       data-testid="study-line"
       v-if="file && !statusCode"
     >
@@ -184,7 +186,7 @@
           <i :style="{ background: stepColors[i][a] }" />{{
             actionText(item.action)
           }}
-          <b>{{ pct(item.frequency) }}</b>
+          <b dir="ltr">{{ pct(item.frequency) }}</b>
         </button>
       </div>
     </div>
@@ -264,7 +266,7 @@
               format(S.combos, { count: num(summary.combos, 1) })
             }}
           </p>
-          <div class="study-stack" data-testid="study-stack">
+          <div data-rtl-island="numeric-bar" dir="ltr" class="study-stack" data-testid="study-stack">
             <i
               v-for="(item, a) in summary.actions"
               :key="a"
@@ -286,8 +288,8 @@
             @click="toggleFilter(a)"
           >
             <span>{{ actionText(item.action) }}</span>
-            <b>{{ pct(item.frequency) }}</b>
-            <div class="study-track">
+            <b dir="ltr">{{ pct(item.frequency) }}</b>
+            <div data-rtl-island="numeric-bar" dir="ltr" class="study-track">
               <i
                 :style="{
                   width: 100 * item.frequency + '%',
@@ -320,7 +322,7 @@
             }}
           </h2>
           <div
-            class="study-grid"
+            data-rtl-island="range-matrix" dir="ltr" class="study-grid"
             data-testid="study-grid"
             :data-mode="mode"
             :data-player="viewPlayer"
@@ -376,7 +378,7 @@
         <p v-else-if="!reachedCombos.length" class="study-meta">
           {{ S.notInRange }}
         </p>
-        <table v-else-if="mode === 'range'" class="study-combos">
+        <table v-else-if="mode === 'range'" data-rtl-island="numeric-table" dir="ltr" class="study-combos">
           <thead>
             <tr>
               <th>{{ S.combo }}</th>
@@ -402,7 +404,7 @@
             </tr>
           </tbody>
         </table>
-        <table v-else class="study-combos">
+        <table v-else data-rtl-island="numeric-table" dir="ltr" class="study-combos">
           <thead>
             <tr>
               <th rowspan="2">{{ S.combo }}</th>
@@ -917,6 +919,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.study-mobile-cards { display: contents; }
+.study-mobile-bar:dir(rtl) .study-mobile-cards { display: flex; gap: 4px; }
 .study-page {
   display: flex;
   flex-direction: column;
@@ -1112,7 +1116,7 @@ p {
   font-size: 11px;
 }
 .study-badge {
-  margin-left: 5px;
+  margin-inline-start: 5px;
   padding: 0 4px;
   border-radius: 3px;
   background: rgb(var(--c-bg-3));
@@ -1136,7 +1140,7 @@ p {
   gap: 3px 8px;
   margin-top: 6px;
   width: 100%;
-  text-align: left;
+  text-align: start;
   font-size: 12px;
 }
 .study-summary-row[aria-pressed="true"] {
@@ -1151,7 +1155,7 @@ p {
   margin-top: 8px;
 }
 .study-filter-help button {
-  margin-left: 6px;
+  margin-inline-start: 6px;
   padding: 2px 6px;
   font-size: 10px;
 }

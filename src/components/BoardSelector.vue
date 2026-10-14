@@ -3,7 +3,7 @@
     모바일에서는 카드 폭을 화면에 맞춰 13열이 한 화면에 들어오게 한다.
     고정 40px일 때는 판이 624px라 옆으로 스크롤해야 했다(아래는 400px가 비어 있는데도).
   -->
-  <div class="max-w-full md:overflow-x-auto">
+  <div data-rtl-island="card-picker" dir="ltr" class="max-w-full md:overflow-x-auto">
     <div v-for="suit in 4" :key="suit" class="flex md:min-w-max">
       <BoardSelectorCard
         v-for="rank in 13"
@@ -21,7 +21,7 @@
 
   <div class="flex flex-wrap mt-4 mx-1 gap-3">
     <input
-      id="board-text-input"
+      data-rtl-island="board-input" id="board-text-input" dir="ltr"
       data-testid="board-input"
       v-model="boardText"
       type="text"

@@ -3,11 +3,11 @@
     class="app-nav sticky flex top-0 z-30 w-full h-10 px-3 justify-center bg-neutral-800 text-gray-50 border-b border-neutral-700"
   >
     <div class="flex relative w-full">
-      <div class="hidden md:flex items-center z-10">
-        <span class="pl-4 pr-1.5 text-lg silver-spade select-none" aria-hidden="true"
+      <div dir="ltr" class="hidden md:flex items-center z-10">
+        <span class="ps-4 pe-1.5 text-lg silver-spade select-none" aria-hidden="true"
           >♠</span
         >
-        <span class="pr-4 text-lg font-semibold">{{ brandName }}</span>
+        <span class="pe-4 text-lg font-semibold">{{ brandName }}</span>
       </div>
 
       <!-- 모바일: 일반 플로우(왼쪽 정렬), md+: 기존처럼 절대배치 중앙
@@ -16,7 +16,7 @@
            찌그러지고 글자가 버튼 밖으로 4px 넘쳐 옆 탭과 붙어 보였다
            (2026-08-21 독일어 UX 검수에서 발견 — es·pt는 이미 라이브에서 그 상태였다) -->
       <div
-        class="flex md:absolute md:w-full md:h-full md:left-0 md:top-0 gap-1 md:gap-3 md:justify-center"
+        class="flex md:absolute md:w-full md:h-full md:start-0 md:top-0 gap-1 md:gap-3 md:justify-center"
       >
         <button
           :class="
@@ -27,7 +27,7 @@
           @click="store.navView = 'solver'"
         >
           <ComputerDesktopIcon class="hidden md:block shrink-0 w-6 h-6" />
-          <span class="text-sm md:text-base md:pl-3">{{ L.solver }}</span>
+          <span class="text-sm md:text-base md:ps-3">{{ L.solver }}</span>
         </button>
         <button
           :class="
@@ -43,12 +43,12 @@
           @click="store.navView = 'results'"
         >
           <ChartBarIcon class="hidden md:block shrink-0 w-6 h-6" />
-          <span class="text-sm md:text-base md:pl-3">{{ L.results }}</span>
+          <span class="text-sm md:text-base md:ps-3">{{ L.results }}</span>
         </button>
         <span v-if="!store.isSolverFinished" id="results-disabled-hint" class="sr-only">{{ L.resultsDisabledHint }}</span>
       </div>
 
-      <div class="flex ml-auto h-full items-center z-10">
+      <div class="flex ms-auto h-full items-center z-10">
         <!-- F1_FEEDBACK_ONLY_START -->
         <button v-if="feedbackFeatures.feedback" type="button" data-testid="feedback-menu"
           class="flex shrink-0 items-center justify-center w-11 md:w-auto md:px-3 h-full text-sm text-neutral-300 hover:text-brand hover:bg-neutral-700"
@@ -305,8 +305,8 @@ export default defineComponent({
   @apply !border-0 !bg-transparent text-neutral-400 hover:text-neutral-200;
   /* ⚠ 상자 폭은 «가장 긴 항목»(Português)이 정한다 — 포르투갈어를 넣자 390px에서
      네비바가 10px 넘쳤다(en·ja). 모바일에서만 글자를 한 단계 줄여 자리를 만든다.
-     왼쪽 여백(pl-2)은 건드리지 말 것 — 줄이면 «ResultadosPortuguês»로 붙어 보인다. */
-  @apply !py-0 !pl-2 !pr-6 md:!pr-7;
+     왼쪽 여백(ps-2)은 건드리지 말 것 — 줄이면 «ResultadosPortuguês»로 붙어 보인다. */
+  @apply !py-0 !ps-2 !pe-6 md:!pe-7;
 }
 @media (max-width: 767px) {
   .lang-select {

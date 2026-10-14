@@ -11,7 +11,7 @@
     <div v-else class="flex w-full max-w-screen-xl mx-auto px-4 py-6 items-center">
       <span
         v-if="store.isSolverRunning || store.isFinalizing"
-        class="spinner inline-block mr-3"
+        class="spinner inline-block me-3"
       ></span>
       {{
         store.isSolverRunning
@@ -74,7 +74,7 @@
       />
       <div
         v-if="resultNav?.navigationPath.length"
-        ref="pathDiv"
+        data-rtl-island="action-path" ref="pathDiv" dir="ltr"
         class="result-current-path"
         tabindex="0"
         role="status"
@@ -102,6 +102,7 @@
 
     <div
       v-if="store.navView === 'results' && selectedSpot && results"
+      :dir="displayMode === 'compare' ? 'ltr' : undefined"
       class="result-body flex flex-col md:flex-row flex-grow min-h-0 overflow-y-auto md:overflow-y-visible"
     >
       <template v-if="displayMode === 'basics'">
@@ -706,19 +707,21 @@ export default defineComponent({
   min-width: 0;
   align-items: center;
   gap: 7px;
-  margin-left: auto;
+  margin-inline-start: auto;
   overflow-x: auto;
   white-space: nowrap;
   color: rgb(var(--c-text-secondary));
   scrollbar-width: thin;
   overscroll-behavior-x: contain;
 }
+.result-toolbar:dir(rtl) .result-current-path { margin-left: 0; margin-right: auto; }
 .result-current-path > span { flex-shrink: 0; }
 .result-current-path:focus-visible { outline: 2px solid rgb(var(--c-brand)); outline-offset: 2px; }
 .result-path-arrow { color: rgb(var(--c-text-muted)); }
 .result-path-current { color: rgb(var(--c-brand)); font-weight: 700; }
 @media (max-width: 767px) {
-  .result-current-path { flex-basis: 100%; min-height: 24px; margin-left: 0; }
+  .result-toolbar:dir(rtl) .result-current-path { margin-left: 0; margin-right: 0; }
+  .result-current-path { flex-basis: 100%; min-height: 24px; margin-inline-start: 0; }
   /* One summary instance, moved ahead of the matrix only at mobile widths. */
   .result-details { display: contents; }
   .result-details > * { width: calc(100% - 12px); margin: 0 6px; }

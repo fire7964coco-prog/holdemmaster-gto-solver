@@ -7,7 +7,7 @@
   <div
     v-if="errorState.toast"
     :class="
-      'fixed z-50 bottom-0 inset-x-0 md:bottom-4 md:left-4 md:right-auto md:w-[24rem] ' +
+      'fixed z-50 bottom-0 inset-x-0 md:bottom-4 md:start-4 md:end-auto md:w-[24rem] ' +
       'border-t md:border md:rounded-lg border-orange-700/60 bg-neutral-800 shadow-2xl ' +
       'px-4 py-3 text-sm'
     "

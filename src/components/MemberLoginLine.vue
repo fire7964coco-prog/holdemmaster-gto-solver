@@ -2,7 +2,7 @@
   <!-- 회원 전용 ② 상황 한 줄 (설계 참고자료/회원전용_설계안_2026-10-12.md §2 «앱») — 팝업 없음 -->
   <span data-testid="member-only-line">
     {{ M.memberScenario }}
-    <span class="inline-flex gap-2 ml-1 align-middle">
+    <span class="inline-flex gap-2 ms-1 align-middle">
       <button
         class="member-login-button"
         data-testid="member-login-google"

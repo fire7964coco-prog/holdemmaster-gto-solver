@@ -8,7 +8,7 @@
       <div class="font-semibold text-brand">
         {{ L.quickTitle }}
       </div>
-      <ol class="mt-1.5 ml-5 list-decimal space-y-1 text-sm">
+      <ol class="mt-1.5 ms-5 list-decimal space-y-1 text-sm">
         <li>
           <span class="hidden md:inline">{{ L.quickStep1Desktop }}</span>
           <span class="md:hidden">{{ L.quickStep1Mobile }}</span>
@@ -3474,7 +3474,7 @@ export default defineComponent({
  */
 .guide-h {
   @apply mt-6 mb-2.5 text-base font-semibold text-ink-primary;
-  @apply border-l-2 border-brand pl-2.5;
+  @apply border-s-2 border-brand ps-2.5;
 }
 /* 표를 «카드»로 만들어 문단과 구분한다 (전부 같은 회색 평면이 문제였다) */
 .guide-table {
@@ -3488,7 +3488,7 @@ export default defineComponent({
 }
 .guide-table .term {
   @apply font-semibold text-ink-primary bg-surface-2;
-  @apply border-r border-neutral-700;
+  @apply border-e border-neutral-700;
 }
 .guide-table .term {
   width: 28%;
@@ -3498,13 +3498,15 @@ export default defineComponent({
   overflow-wrap: anywhere;
 }
 .guide-steps {
-  @apply ml-5 list-none space-y-2.5 text-sm;
+  @apply ms-5 list-none space-y-2.5 text-sm;
 }
 .hint {
   @apply mt-0.5 text-xs text-neutral-500;
 }
 code {
   @apply bg-neutral-800 px-1.5 py-0.5 rounded text-xs;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 .link-like {
   @apply text-brand underline underline-offset-2 font-semibold;

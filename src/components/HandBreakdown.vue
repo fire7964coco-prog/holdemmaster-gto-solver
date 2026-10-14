@@ -15,11 +15,11 @@
         >
           <div class="flex justify-between">
             <span class="text-neutral-200">{{ row.label }}</span>
-            <span class="text-neutral-300 tabular-nums">
+            <span dir="ltr" class="text-neutral-300 tabular-nums">
               {{ $pct($n(row.pct.toFixed(1))) + " " }}
             </span>
           </div>
-          <div class="mt-0.5 h-1.5 w-full rounded-sm bg-neutral-700">
+          <div data-rtl-island="numeric-bar" dir="ltr" class="mt-0.5 h-1.5 w-full rounded-sm bg-neutral-700">
             <div
               class="h-full rounded-sm"
               :style="{
@@ -43,11 +43,11 @@
         >
           <div class="flex justify-between">
             <span class="text-neutral-200">{{ row.label }}</span>
-            <span class="text-neutral-300 tabular-nums">
+            <span dir="ltr" class="text-neutral-300 tabular-nums">
               {{ $pct($n(row.pct.toFixed(1))) + " " }}
             </span>
           </div>
-          <div class="mt-0.5 h-1.5 w-full rounded-sm bg-neutral-700">
+          <div data-rtl-island="numeric-bar" dir="ltr" class="mt-0.5 h-1.5 w-full rounded-sm bg-neutral-700">
             <div
               class="h-full rounded-sm"
               :style="{
