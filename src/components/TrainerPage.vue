@@ -224,6 +224,13 @@
             >
               {{ L.kakaoSignIn }}
             </button>
+            <!-- 텔레그램은 전 언어(본체 MB-341 · 구글 없는 사람용) -->
+            <button
+              class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1"
+              @click="doSignIn('custom:telegram')"
+            >
+              {{ L.telegramSignIn }}
+            </button>
           </span>
         </template>
         <div v-if="accountError" class="w-full text-red-300">
@@ -734,6 +741,7 @@ import {
   isAccountEnabled,
   onAuthChange,
   signIn,
+  type LoginProvider,
   signOut,
   syncAttempts,
   hasStoredSession,
@@ -839,6 +847,7 @@ const M = {
       " 저장됩니다. 홀덤마스터 계정에 보관하면 다른 기기에서도 이어서 풀 수 있어요.",
     googleSignIn: "구글로 계속하기",
     kakaoSignIn: "카카오",
+    telegramSignIn: "텔레그램",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT}개 교육 프리셋 · ${nodes}개 결정 노드 · 계산 목표 오차 ${pct}%`,
     details: "자세히 ↓",
@@ -944,6 +953,7 @@ const M = {
       ". Link a HoldemMaster account to pick up where you left off on any device.",
     googleSignIn: "Continue with Google",
     kakaoSignIn: "Continue with Kakao",
+    telegramSignIn: "Continue with Telegram",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} Study Spots · ${nodes} decision nodes · target exploitability ${pct}%`,
     details: "Details ↓",
@@ -1053,6 +1063,7 @@ const M = {
       "保存されます。HoldemMasterアカウントに保存すると、他の端末でも続きから解けます。",
     googleSignIn: "Googleで続ける",
     kakaoSignIn: "カカオトークで続ける",
+    telegramSignIn: "Telegramで続ける",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT}個の学習スポット・${nodes}個の決定ノード・計算目標誤差 ${pct}%`,
     details: "詳細 ↓",
@@ -1160,6 +1171,7 @@ const M = {
       ". Vincula una cuenta de HoldemMaster para continuar donde te quedaste en cualquier dispositivo.",
     googleSignIn: "Continuar con Google",
     kakaoSignIn: "Kakao",
+    telegramSignIn: "Telegram",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} presets de estudio · ${nodes} nodos de decisión · error objetivo ${pct}%`,
     details: "Detalles ↓",
@@ -1267,6 +1279,7 @@ const M = {
       ". Vincule uma conta HoldemMaster para continuar de onde parou em qualquer dispositivo.",
     googleSignIn: "Continuar com o Google",
     kakaoSignIn: "Continuar com o Kakao",
+    telegramSignIn: "Continuar com o Telegram",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} Spots de estudo · ${nodes} nós de decisão · erro objetivo ${pct}%`,
     details: "Detalhes ↓",
@@ -1380,6 +1393,7 @@ const M = {
       " gespeichert. Verknüpf ein HoldemMaster-Konto, um auf jedem Gerät dort weiterzumachen, wo du aufgehört hast.",
     googleSignIn: "Weiter mit Google",
     kakaoSignIn: "Weiter mit Kakao",
+    telegramSignIn: "Weiter mit Telegram",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} Lernspots · ${nodes} Entscheidungsknoten · Zielabweichung ${pct}%`,
     details: "Details ↓",
@@ -1505,6 +1519,7 @@ const M = {
       "。绑定 HoldemMaster 账号，换台设备也能接着做。",
     googleSignIn: "用 Google 继续",
     kakaoSignIn: "用 Kakao 继续",
+    telegramSignIn: "用 Telegram 继续",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} 个教学案例 · ${nodes} 个决策节点 · 目标可剥削度 ${pct}%`,
     details: "详情 ↓",
@@ -1636,6 +1651,7 @@ const M = {
       "。綁定 HoldemMaster 帳號，換台裝置也能接著做。",
     googleSignIn: "用 Google 繼續",
     kakaoSignIn: "用 Kakao 繼續",
+    telegramSignIn: "用 Telegram 繼續",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} 個教學案例 · ${nodes} 個決策節點 · 目標可剝削度 ${pct}%`,
     details: "詳情 ↓",
@@ -1756,6 +1772,7 @@ const M = {
       ". Associe un compte HoldemMaster pour reprendre où tu en étais sur n'importe quel appareil.",
     googleSignIn: "Continuer avec Google",
     kakaoSignIn: "Continuer avec Kakao",
+    telegramSignIn: "Continuer avec Telegram",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} Spots d'étude · ${nodes} nœuds de décision · exploitabilité cible ${pct} %`,
     details: "Détails ↓",
@@ -1872,6 +1889,7 @@ const M = {
       ". Tautkan akun HoldemMaster untuk melanjutkan dari perangkat mana pun.",
     googleSignIn: "Lanjutkan dengan Google",
     kakaoSignIn: "Lanjutkan dengan Kakao",
+    telegramSignIn: "Lanjutkan dengan Telegram",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} Spot belajar · ${nodes} node keputusan · target exploitability ${pct}%`,
     details: "Detail ↓",
@@ -1983,6 +2001,7 @@ const M = {
     localOnlyAfter: " सेव होती है। HoldemMaster खाते से जुड़कर किसी भी डिवाइस पर यहीं से आगे बढ़ सकते हैं।",
     googleSignIn: "Google से जारी रखें",
     kakaoSignIn: "Kakao से जारी रखें",
+    telegramSignIn: "Telegram से जारी रखें",
     footerLine: (nodes: number, pct: number) => `${SPOT_COUNT} अभ्यास स्पॉट · ${nodes} निर्णय बिंदु · लक्ष्य exploitability ${pct}%`,
     details: "विवरण ↓",
     toAct: "की बारी",
@@ -2083,6 +2102,7 @@ const M = {
       ". Pautkan akaun HoldemMaster untuk menyambung semula pada mana-mana peranti.",
     googleSignIn: "Teruskan dengan Google",
     kakaoSignIn: "Teruskan dengan Kakao",
+    telegramSignIn: "Teruskan dengan Telegram",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} Spot belajar · ${nodes} node keputusan · sasaran exploitability ${pct}%`,
     details: "Butiran ↓",
@@ -2197,6 +2217,7 @@ const M = {
       " kayıtlı. Bir HoldemMaster hesabı bağlarsan her cihazda kaldığın yerden devam edebilirsin.",
     googleSignIn: "Google ile devam et",
     kakaoSignIn: "Kakao ile devam et",
+    telegramSignIn: "Telegram ile devam et",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} örnek spot · ${nodes} karar node'u · hedef exploitability %${pct}`,
     details: "Ayrıntılar ↓",
@@ -2305,6 +2326,7 @@ const M = {
       ". Liên kết tài khoản HoldemMaster để tiếp tục từ chỗ đang dở trên mọi thiết bị.",
     googleSignIn: "Tiếp tục với Google",
     kakaoSignIn: "Tiếp tục với Kakao",
+    telegramSignIn: "Tiếp tục với Telegram",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} spot mẫu · ${nodes} node quyết định · exploitability mục tiêu ${pct}%`,
     details: "Chi tiết ↓",
@@ -2415,6 +2437,7 @@ const M = {
       ". Войди в аккаунт HoldemMaster, чтобы продолжать с того же места на любом устройстве.",
     googleSignIn: "Войти через Google",
     kakaoSignIn: "Войти через Kakao",
+    telegramSignIn: "Войти через Telegram",
     footerLine: (nodes: number, pct: number) =>
       `${SPOT_COUNT} ${ruPlural(SPOT_COUNT, "учебный спот", "учебных спота", "учебных спотов")} · узлы решений: ${nodes} · целевая exploitability ${pct}%`,
     details: "Подробнее ↓",
@@ -2525,6 +2548,7 @@ const M = {
       ". سجّل الدخول بحساب HoldemMaster لتتابع من النقطة نفسها على أي جهاز.",
     googleSignIn: "تسجيل الدخول عبر Google",
     kakaoSignIn: "تسجيل الدخول عبر Kakao",
+    telegramSignIn: "تسجيل الدخول عبر Telegram",
     footerLine: (nodes: number, pct: number) =>
       `المواقف التدريبية: ${SPOT_COUNT} · نقاط القرار: ${nodes} · Exploitability المستهدفة \u2066${pct}%\u2069`,
     details: "التفاصيل ↓",
@@ -3175,7 +3199,7 @@ export default defineComponent({
       }
     };
 
-    const doSignIn = async (provider: "google" | "kakao") => {
+    const doSignIn = async (provider: LoginProvider) => {
       accountError.value = "";
       try {
         await signIn(provider);

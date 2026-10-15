@@ -20,6 +20,14 @@
       >
         {{ L.kakao }}
       </button>
+      <button
+        class="member-login-button"
+        data-testid="member-login-telegram"
+        :disabled="busy"
+        @click="start('custom:telegram')"
+      >
+        {{ L.telegram }}
+      </button>
     </span>
   </span>
 </template>
@@ -27,7 +35,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
 import { i18n } from "../i18n";
-import { setLoginReturnView, signIn } from "../account";
+import { setLoginReturnView, signIn, type LoginProvider } from "../account";
 import { useStore } from "../store";
 import { savedSyncLabels } from "../saved-sync-labels";
 import { memberLabels } from "../member-limits";
@@ -43,7 +51,7 @@ export default defineComponent({
     const M = computed(() => memberLabels(i18n.locale));
     const isKo = computed(() => i18n.locale === "ko");
     const busy = ref(false);
-    const start = async (provider: "google" | "kakao") => {
+    const start = async (provider: LoginProvider) => {
       busy.value = true;
       try {
         // 로그인에서 돌아오면 같은 화면(복기·플랍 조회)의 같은 상황·카드로

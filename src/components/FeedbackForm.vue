@@ -33,6 +33,7 @@
               <p class="feedback-draft-preview">{{ body }}</p>
               <button type="button" data-feedback-google class="feedback-secondary" :disabled="busy" @click="login('google')">{{ L.loginGoogle }}</button>
               <button v-if="locale === 'ko'" type="button" data-feedback-kakao class="feedback-secondary" :disabled="busy" @click="login('kakao')">{{ L.loginKakao }}</button>
+              <button type="button" data-feedback-telegram class="feedback-secondary" :disabled="busy" @click="login('custom:telegram')">{{ L.loginTelegram }}</button>
               <button type="button" class="feedback-text-button" :disabled="busy" @click="cancelLogin">{{ L.nicknameCancel }}</button>
             </div>
             <template v-else>
@@ -109,7 +110,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, nextTick, onBeforeUnmount, ref, watch } from "vue";
-import { getCurrentUser, signIn } from "../account";
+import { getCurrentUser, signIn, type LoginProvider } from "../account";
 import { i18n, type Locale } from "../i18n";
 import { appLabels, feedbackLabels } from "../solver-feedback-labels";
 import {
@@ -368,7 +369,7 @@ export default defineComponent({
         error.value = "unavailable";
       } finally { busy.value = false; }
     };
-    const login = async (provider: "google" | "kakao") => {
+    const login = async (provider: LoginProvider) => {
       if (busy.value || (provider === "kakao" && locale.value !== "ko")) return;
       if (!persist(true)) { error.value = "unavailable"; return; }
       busy.value = true;

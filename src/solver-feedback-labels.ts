@@ -23,6 +23,7 @@ export type FeedbackLabels = {
   loginTitle: string;
   loginGoogle: string;
   loginKakao: string;
+  loginTelegram: string;
   linkWarn: string;
   saved: string;
   errors: Record<string, string>;
@@ -46,6 +47,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "로그인하면 쓴 글이 그대로 올라갑니다",
     loginGoogle: "구글로 계속",
     loginKakao: "카카오로 계속",
+    loginTelegram: "텔레그램으로 계속",
     linkWarn: "링크는 넣을 수 없어요",
     saved: "남겼습니다. 고마워요!",
     errors: {
@@ -88,6 +90,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "Sign in and your text is posted as written",
     loginGoogle: "Continue with Google",
     loginKakao: "Continue with Kakao",
+    loginTelegram: "Continue with Telegram",
     linkWarn: "Links can't be included",
     saved: "Posted. Thank you!",
     errors: {
@@ -130,6 +133,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "ログインすると、書いた内容がそのまま投稿されます",
     loginGoogle: "Googleで続ける",
     loginKakao: "Kakaoで続ける",
+    loginTelegram: "Telegramで続ける",
     linkWarn: "リンクは入れられません",
     saved: "投稿しました。ありがとうございます！",
     errors: {
@@ -172,6 +176,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "Inicia sesión y tu texto se publica tal como lo escribiste",
     loginGoogle: "Continuar con Google",
     loginKakao: "Continuar con Kakao",
+    loginTelegram: "Continuar con Telegram",
     linkWarn: "No se pueden incluir enlaces",
     saved: "Publicado. ¡Gracias!",
     errors: {
@@ -214,6 +219,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "Entre e seu texto é publicado do jeito que você escreveu",
     loginGoogle: "Continuar com Google",
     loginKakao: "Continuar com Kakao",
+    loginTelegram: "Continuar com Telegram",
     linkWarn: "Não é possível incluir links",
     saved: "Publicado. Obrigado!",
     errors: {
@@ -256,6 +262,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "Nach dem Anmelden wird dein Text so gepostet, wie du ihn geschrieben hast",
     loginGoogle: "Weiter mit Google",
     loginKakao: "Weiter mit Kakao",
+    loginTelegram: "Weiter mit Telegram",
     linkWarn: "Links sind nicht möglich",
     saved: "Gepostet. Danke!",
     errors: {
@@ -298,6 +305,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "登录后，你写的内容会原样发布",
     loginGoogle: "使用 Google 继续",
     loginKakao: "使用 Kakao 继续",
+    loginTelegram: "使用 Telegram 继续",
     linkWarn: "不能包含链接",
     saved: "已发布，谢谢！",
     errors: {
@@ -340,6 +348,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "登入後，你寫的內容會原樣發布",
     loginGoogle: "使用 Google 繼續",
     loginKakao: "使用 Kakao 繼續",
+    loginTelegram: "使用 Telegram 繼續",
     linkWarn: "不能包含連結",
     saved: "已發布，謝謝！",
     errors: {
@@ -382,6 +391,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "Connecte-toi et ton texte est publié tel que tu l'as écrit",
     loginGoogle: "Continuer avec Google",
     loginKakao: "Continuer avec Kakao",
+    loginTelegram: "Continuer avec Telegram",
     linkWarn: "Les liens ne sont pas autorisés",
     saved: "Publié. Merci !",
     errors: {
@@ -424,6 +434,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "Masuk, lalu tulisan Anda langsung terkirim apa adanya",
     loginGoogle: "Lanjutkan dengan Google",
     loginKakao: "Lanjutkan dengan Kakao",
+    loginTelegram: "Lanjutkan dengan Telegram",
     linkWarn: "Tautan tidak bisa dimasukkan",
     saved: "Terkirim. Terima kasih!",
     errors: {
@@ -466,6 +477,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "Log masuk dan tulisan anda dihantar seperti yang ditulis",
     loginGoogle: "Teruskan dengan Google",
     loginKakao: "Teruskan dengan Kakao",
+    loginTelegram: "Teruskan dengan Telegram",
     linkWarn: "Pautan tidak boleh dimasukkan",
     saved: "Dihantar. Terima kasih!",
     errors: {
@@ -508,6 +520,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "लॉग इन करें — आपका लिखा हुआ वैसे ही पोस्ट हो जाएगा",
     loginGoogle: "Google से जारी रखें",
     loginKakao: "Kakao से जारी रखें",
+    loginTelegram: "Telegram से जारी रखें",
     linkWarn: "लिंक नहीं डाले जा सकते",
     saved: "पोस्ट हो गया। धन्यवाद!",
     errors: {
@@ -550,6 +563,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "Giriş yap, yazdığın olduğu gibi paylaşılsın",
     loginGoogle: "Google ile devam et",
     loginKakao: "Kakao ile devam et",
+    loginTelegram: "Telegram ile devam et",
     linkWarn: "Bağlantı eklenemez",
     saved: "Paylaşıldı. Teşekkürler!",
     errors: {
@@ -592,6 +606,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "Đăng nhập để bài viết được đăng đúng như bạn viết",
     loginGoogle: "Tiếp tục với Google",
     loginKakao: "Tiếp tục với Kakao",
+    loginTelegram: "Tiếp tục với Telegram",
     linkWarn: "Không thể chèn liên kết",
     saved: "Đã đăng. Cảm ơn bạn!",
     errors: {
@@ -634,6 +649,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "Войди — и текст опубликуется в том виде, в каком написан",
     loginGoogle: "Войти через Google",
     loginKakao: "Войти через Kakao",
+    loginTelegram: "Войти через Telegram",
     linkWarn: "Ссылки добавлять нельзя",
     saved: "Опубликовано. Спасибо!",
     errors: {
@@ -676,6 +692,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     loginTitle: "سجّل الدخول ليُنشر نصك كما هو",
     loginGoogle: "تسجيل الدخول عبر Google",
     loginKakao: "تسجيل الدخول عبر Kakao",
+    loginTelegram: "تسجيل الدخول عبر Telegram",
     linkWarn: "لا يمكن إضافة روابط",
     saved: "تم النشر. شكرًا لك!",
     errors: {

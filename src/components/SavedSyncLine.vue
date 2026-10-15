@@ -33,6 +33,14 @@
         >
           {{ L.kakao }}
         </button>
+        <button
+          class="saved-sync-button"
+          data-testid="saved-sync-telegram"
+          :disabled="busy"
+          @click="start('custom:telegram')"
+        >
+          {{ L.telegram }}
+        </button>
       </span>
     </template>
     <!-- idle(첫 동기화 전)도 «맞추는 중» — 확인 안 된 «보관 중»은 띄우지 않는다 (MA-433)
@@ -55,6 +63,7 @@ import {
   onAuthChange,
   setLoginReturnView,
   signIn,
+  type LoginProvider,
 } from "../account";
 import { useStore } from "../store";
 import type { SavedStore } from "../db";
@@ -149,7 +158,7 @@ export default defineComponent({
       }
     );
 
-    const start = async (provider: "google" | "kakao") => {
+    const start = async (provider: LoginProvider) => {
       busy.value = true;
       try {
         // 로그인에서 돌아오면 이 화면(레인지·트리 설정)으로 — 트레이너로 가지 않게

@@ -13,7 +13,7 @@
  */
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { TrainerAttempt } from "./db";
-import { pick } from "./i18n";
+import { i18n, pick } from "./i18n";
 
 declare const __SUPABASE_URL__: string;
 declare const __SUPABASE_ANON_KEY__: string;
@@ -96,10 +96,28 @@ export const bootstrapAccount = async () => {
   if (!returning && !hasStoredSession()) return false;
   try {
     await getCurrentUser();
+    if (returning) await fixNewProfileLanguage();
   } finally {
     cleanAuthParams();
   }
   return returning;
+};
+
+/**
+ * OAuth 가입은 언어를 못 실어 보내 본체 트리거가 profiles.language='ko'로 만든다.
+ * 본체는 /auth/callback에서 고치지만 솔버는 origin으로 돌아오므로 여기서 같은 규칙으로 고친다
+ * (방금 만든 계정 · 아직 'ko'일 때만 · 본인 행 update는 RLS profiles_update가 허용).
+ */
+const fixNewProfileLanguage = async () => {
+  if (i18n.locale === "ko") return;
+  try {
+    const supabase = await getClient();
+    if (!supabase) return;
+    const { data } = await supabase.auth.getSession();
+    const user = data.session?.user;
+    if (!user?.created_at || Date.now() - new Date(user.created_at).getTime() > 10 * 60 * 1000) return;
+    await supabase.from("profiles").update({ language: i18n.locale }).eq("id", user.id).eq("language", "ko");
+  } catch { /* 언어 표기는 부가 정보 — 실패해도 로그인은 그대로 */ }
 };
 
 export type AccountUser = {
@@ -233,7 +251,10 @@ export const takeLoginReturnView = (): string | null => {
   } catch { return null; }
 };
 
-export const signIn = async (provider: "google" | "kakao", purpose?: "feedback") => {
+/** 텔레그램은 Supabase 커스텀 OIDC 공급자(본체 MB-341) — 스코프는 공급자 설정값을 쓴다. 회원 email·phone이 빈 값이다. */
+export type LoginProvider = "google" | "kakao" | "custom:telegram";
+
+export const signIn = async (provider: LoginProvider, purpose?: "feedback") => {
   // 다른 화면에서 시작한 로그인이 중단된 후기 초안을 자동 제출하지 않도록 매번 덮어쓴다.
   try {
     if (purpose) sessionStorage.setItem(LOGIN_PURPOSE_KEY, JSON.stringify({ purpose, at: Date.now() }));
