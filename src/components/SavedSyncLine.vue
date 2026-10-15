@@ -22,7 +22,7 @@
           :disabled="busy"
           @click="start('google')"
         >
-          {{ L.google }}
+          <ProviderIcon provider="google" />{{ L.google }}
         </button>
         <button
           v-if="isKo"
@@ -31,7 +31,7 @@
           :disabled="busy"
           @click="start('kakao')"
         >
-          {{ L.kakao }}
+          <ProviderIcon provider="kakao" />{{ L.kakao }}
         </button>
         <button
           class="saved-sync-button"
@@ -39,7 +39,7 @@
           :disabled="busy"
           @click="start('custom:telegram')"
         >
-          {{ L.telegram }}
+          <ProviderIcon provider="custom:telegram" />{{ L.telegram }}
         </button>
       </span>
     </template>
@@ -77,7 +77,10 @@ import {
 import { savedSyncLabels } from "../saved-sync-labels";
 import { memberLabels, memberLimitsEnabled, SAVE_LIMIT } from "../member-limits";
 
+import ProviderIcon from "./ProviderIcon.vue";
+
 export default defineComponent({
+  components: { ProviderIcon },
   props: {
     storeName: { type: String as PropType<SavedStore>, required: true },
     /** 저장 목록에 항목이 하나라도 있는가 — 없으면 권유 줄을 띄우지 않는다 */

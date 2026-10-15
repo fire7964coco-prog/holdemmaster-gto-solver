@@ -146,6 +146,7 @@
       <span class="step-status" :class="{ 'step-next': nextStep === 4 }" :title="readySteps[4] ? L.stepRunComplete : L.stepRunNeeded" aria-hidden="true">{{ readySteps[4] ? '✓' : '○' }}</span>
     </button>
     </div>
+    <SiteNotice v-if="FEATURE_TRAINER" />
   </aside>
 </template>
 
@@ -160,6 +161,7 @@ import { flopStudyLabels, FLOP_STUDY_LAUNCHED } from "@features"; // R2_REVIEW_O
 import { flopReportLabels, FLOP_REPORT_LAUNCHED } from "@features"; // R2_REVIEW_ONLY
 
 import RangeMiniViewer from "./RangeMiniViewer.vue";
+import SiteNotice from "./SiteNotice.vue";
 
 const M = {
   ko: {
@@ -691,6 +693,7 @@ const M = {
 export default defineComponent({
   components: {
     RangeMiniViewer,
+    SiteNotice,
   },
 
   setup() {

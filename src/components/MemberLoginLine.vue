@@ -9,7 +9,7 @@
         :disabled="busy"
         @click="start('google')"
       >
-        {{ L.google }}
+        <ProviderIcon provider="google" />{{ L.google }}
       </button>
       <button
         v-if="isKo"
@@ -18,7 +18,7 @@
         :disabled="busy"
         @click="start('kakao')"
       >
-        {{ L.kakao }}
+        <ProviderIcon provider="kakao" />{{ L.kakao }}
       </button>
       <button
         class="member-login-button"
@@ -26,7 +26,7 @@
         :disabled="busy"
         @click="start('custom:telegram')"
       >
-        {{ L.telegram }}
+        <ProviderIcon provider="custom:telegram" />{{ L.telegram }}
       </button>
     </span>
   </span>
@@ -39,8 +39,10 @@ import { setLoginReturnView, signIn, type LoginProvider } from "../account";
 import { useStore } from "../store";
 import { savedSyncLabels } from "../saved-sync-labels";
 import { memberLabels } from "../member-limits";
+import ProviderIcon from "./ProviderIcon.vue";
 
 export default defineComponent({
+  components: { ProviderIcon },
   props: {
     /** 로그인에서 돌아오면 그 화면이 되살릴 상태(고른 상황·카드) — sessionStorage에 잠깐 둔다 */
     returnState: { type: null, default: null },

@@ -213,7 +213,7 @@
           </span>
           <span class="ms-auto flex items-center gap-2">
             <button class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1" @click="doSignIn('google')">
-              {{ L.googleSignIn }}
+              <ProviderIcon provider="google" />{{ L.googleSignIn }}
             </button>
             <!-- 카카오는 한국어 화면에서만 — 다른 언어권에는 없는 서비스이고,
                  일본어 「カカオ」는 초콜릿 원료로 읽힌다 (사용자 결정 2026-08-21) -->
@@ -222,14 +222,14 @@
               class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1"
               @click="doSignIn('kakao')"
             >
-              {{ L.kakaoSignIn }}
+              <ProviderIcon provider="kakao" />{{ L.kakaoSignIn }}
             </button>
             <!-- 텔레그램은 전 언어(본체 MB-341 · 구글 없는 사람용) -->
             <button
               class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1"
               @click="doSignIn('custom:telegram')"
             >
-              {{ L.telegramSignIn }}
+              <ProviderIcon provider="custom:telegram" />{{ L.telegramSignIn }}
             </button>
           </span>
         </template>
@@ -776,6 +776,7 @@ import { flopBoardLabels, flopTrainerLabels } from "../flop-trainer-labels";
 import { flopStudyEntry, REAL_FLOP_COUNT } from "../flop-study-model";
 import { GROUP_AXES, GROUP_KEYS } from "../flop-report-model";
 import { flopReportLabels } from "../flop-report-labels";
+import ProviderIcon from "./ProviderIcon.vue";
 import {
   FlopBoardFilter,
   FlopTrainerCategory,
@@ -2671,7 +2672,7 @@ const asFlopQuestion = (q: TrainerQuestion | null) =>
   q && (q as Partial<FlopTrainerQuestion>).source === "flop" ? (q as FlopTrainerQuestion) : null;
 
 export default defineComponent({
-  components: { CustomTrainerPage, TrainerBoardFilter },
+  components: { ProviderIcon, CustomTrainerPage, TrainerBoardFilter },
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale] as (typeof M)[keyof typeof M] & { dayStreakPrefix?: string });

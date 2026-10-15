@@ -31,9 +31,9 @@
             <div v-if="loginStage" data-feedback-login class="feedback-login">
               <p>{{ L.loginTitle }}</p>
               <p class="feedback-draft-preview">{{ body }}</p>
-              <button type="button" data-feedback-google class="feedback-secondary" :disabled="busy" @click="login('google')">{{ L.loginGoogle }}</button>
-              <button v-if="locale === 'ko'" type="button" data-feedback-kakao class="feedback-secondary" :disabled="busy" @click="login('kakao')">{{ L.loginKakao }}</button>
-              <button type="button" data-feedback-telegram class="feedback-secondary" :disabled="busy" @click="login('custom:telegram')">{{ L.loginTelegram }}</button>
+              <button type="button" data-feedback-google class="feedback-secondary" :disabled="busy" @click="login('google')"><ProviderIcon provider="google" />{{ L.loginGoogle }}</button>
+              <button v-if="locale === 'ko'" type="button" data-feedback-kakao class="feedback-secondary" :disabled="busy" @click="login('kakao')"><ProviderIcon provider="kakao" />{{ L.loginKakao }}</button>
+              <button type="button" data-feedback-telegram class="feedback-secondary" :disabled="busy" @click="login('custom:telegram')"><ProviderIcon provider="custom:telegram" />{{ L.loginTelegram }}</button>
               <button type="button" class="feedback-text-button" :disabled="busy" @click="cancelLogin">{{ L.nicknameCancel }}</button>
             </div>
             <template v-else>
@@ -113,6 +113,7 @@ import { computed, defineComponent, nextTick, onBeforeUnmount, ref, watch } from
 import { getCurrentUser, signIn, type LoginProvider } from "../account";
 import { i18n, type Locale } from "../i18n";
 import { appLabels, feedbackLabels } from "../solver-feedback-labels";
+import ProviderIcon from "./ProviderIcon.vue";
 import {
   feedbackOpen, feedbackResumePending, closeFeedback, getFeedbackSession,
   getFeedbackContext, postFeedback, loadFeedbackDraft, saveFeedbackDraft,
@@ -126,6 +127,7 @@ const normalized = (value: string) => value.replace(/\r\n/g, "\n").trim();
 const charCount = (value: string) => [...normalized(value)].length;
 
 export default defineComponent({
+  components: { ProviderIcon },
   name: "FeedbackForm",
   setup() {
     const locale = ref<Locale>(i18n.locale);
