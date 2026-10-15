@@ -35,7 +35,7 @@
             <span class="text-neutral-300">{{ L.pot }} {{ amount(question.node.selectedSpot.pot ?? question.node.startingPot) }} · {{ L.stack }} {{ amount(question.node.selectedSpot.stack ?? question.node.effectiveStack) }}</span>
           </div>
           <p data-rtl-island="action-path" dir="ltr" v-if="question.node.history.length" class="mt-2 text-xs leading-relaxed text-neutral-400">
-            {{ L.line }}: {{ question.node.history.map(item => `${seatName(item.player)} ${actionLabel(item)}`).join(" → ") }}
+            {{ lineLabelText }} {{ question.node.history.map(historyText).join(" → ") }}
           </p>
           <div class="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-3 rounded-lg bg-surface-1 p-3">
             <div class="text-center">
@@ -77,10 +77,10 @@
                 <div v-for="(band, b) in rngBandList" :key="band.action" :class="'h-full ' + (band.action === rngResult.rolledAction ? 'bg-brand/80' : b % 2 ? 'bg-neutral-600' : 'bg-neutral-500')" :style="{ width: band.to - band.from + 1 + '%' }"></div>
                 <div class="absolute -top-1 -bottom-1 w-0.5 rounded bg-white" :style="{ left: 'calc(' + (rngRoll - 0.5) + '% - 1px)' }"></div>
               </div>
-              <div dir="ltr" class="mt-1.5 text-xs text-neutral-400 tabular-nums">
+              <div :dir="isAr ? 'rtl' : 'ltr'" class="mt-1.5 text-xs text-neutral-400 tabular-nums">
                 <span v-for="(band, b) in rngBandList" :key="band.action">
                   <template v-if="b"> · </template>
-                  <span :class="band.action === rngResult.rolledAction ? 'text-brand font-semibold' : ''">{{ actionLabel(question.node.selectedSpot.actions[band.action]) }} {{ band.from }}–{{ band.to }}</span>
+                  <span :class="band.action === rngResult.rolledAction ? 'text-brand font-semibold' : ''">{{ bandText(actionLabel(question.node.selectedSpot.actions[band.action]), band.from, band.to) }}</span>
                 </span>
               </div>
               <div class="mt-1 text-xs text-neutral-300">{{ rngNote }}</div>
@@ -121,7 +121,7 @@ import type { RngMode } from "../trainer-rng";
 import { RNG_M } from "../trainer-rng-labels";
 import { M as REVIEW_LABELS } from "../hand-review-labels";
 import { useStore } from "../store";
-import { i18n, localizeNumber, pctText, ltrIso } from "../i18n";
+import { i18n, localizeNumber, pctText, ltrIso, arLabelIso } from "../i18n";
 import { cardText, formatAmount } from "../utils";
 
 export default defineComponent({
@@ -145,8 +145,8 @@ export default defineComponent({
     const number = localizeNumber;
     // ru nouns depend on the displayed count; bb stays attached (U1 §2-1).
     const ruUnit = (n: number, scale: number) => scale === 10 ? "bb" : ` ${ruChipLabel(n, true)}`; // toFixed(3) 표시 → few형
-    // ar: label form «المبلغ (رقائق): N» avoids Arabic count-dependent chip nouns (확정표 §7-1).
-    const arAmount = (value: string, scale: number) => scale === 10 ? `${number(value)}bb` : `${number(value)} (${L.value.chips})`;
+    // ar: «N (رقائق)» avoids count-dependent chip nouns and a duplicate pot/stack label (§7-1).
+    const arAmount = (value: string, scale: number) => scale === 10 ? ltrIso(`${number(value)}bb`) : `${ltrIso(number(value))} (${L.value.chips})`;
     const displayValue = (value: number) => i18n.locale === "ar"
       ? arAmount(value.toFixed(3), bank.value?.unitScale ?? 1)
       : i18n.locale === "ru"
@@ -225,8 +225,15 @@ export default defineComponent({
     };
     const actionLabel = (action: { name: string; amount: string }) => {
       const label = trainerActionLabel({ name: action.name, amount: "" }, 0, 1);
+      if (i18n.locale === "ar") {
+        return arLabelIso(!action.amount || Number(action.amount) === 0 ? label : `${label} ${amount(Number(action.amount))}`);
+      }
       return !action.amount || Number(action.amount) === 0 ? label : `${label} ${amount(Number(action.amount))}`;
     };
+    const bandText = (label: string, from: number, to: number) => i18n.locale === "ar"
+      ? arLabelIso(label, `${from}–${to}`)
+      : `${label} ${from}–${to}`;
+    const lineLabelText = computed(() => i18n.locale === "ar" ? arLabelIso(`${L.value.line}:`) : `${L.value.line}:`);
     const reviewAttempts = computed(() => {
       if (!bank.value) return [];
       const seen = new Set<string>();
@@ -332,7 +339,10 @@ export default defineComponent({
     const leave = () => { customTrainerState.active = false; };
     const backToReview = () => { store.sideView = "hand-review"; };
     const seatName = (player: "oop" | "ip") => bank.value?.origin?.seats[player === "oop" ? 0 : 1] ?? player.toUpperCase();
-    return { L, R, G, rngEnabled, rngMode, rngRoll, cycleRngMode, rngActive, rngBandList, rngResult, rngNote, answer, backToReview, seatName, customTrainerState, banks, bank, question, evaluation, attempts, loading, saving, error, reviewMode, reviewAttempts,
+    const historyText = (action: { player: "oop" | "ip"; name: string; amount: string }) => i18n.locale === "ar"
+      ? arLabelIso(`${ltrIso(seatName(action.player))} ${actionLabel(action)}`)
+      : `${seatName(action.player)} ${actionLabel(action)}`;
+    return { isAr: computed(() => i18n.locale === "ar"), bandText, lineLabelText, historyText, L, R, G, rngEnabled, rngMode, rngRoll, cycleRngMode, rngActive, rngBandList, rngResult, rngNote, answer, backToReview, seatName, customTrainerState, banks, bank, question, evaluation, attempts, loading, saving, error, reviewMode, reviewAttempts,
       number, amount, displayValue, percent, source, bankTitle, actionLabel, boardCards, handCards, limits, verdictKind, verdict,
       choose, nextQuestion, toggleReview, deleteSpot, leave };
   },

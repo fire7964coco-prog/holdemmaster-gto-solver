@@ -286,7 +286,7 @@ export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = {
     comparison: "مقارنة قبل/بعد",
     exploitability: "Exploitability",
     sumError: "أدخل لكل قرار عددًا صحيحًا من 0 إلى 100 — ويجب أن يكون المجموع 100.",
-    skippedChance: "لا يمكن تثبيت خط لم تُختَر ورقته بعد. اختر الورقة أولًا.",
+    skippedChance: "لا يمكن تثبيت خط لم تُختر ورقته بعد. اختر الورقة أولًا.",
     engineError: "تعذّر تثبيت الاستراتيجية. تحقّق من القيم المدخلة ثم أعد الحساب.",
     assumption: "القيم مع الاستراتيجية المثبّتة",
     banner: "جزء من الاستراتيجية مثبّت — هذه ليست استراتيجية توازن (GTO) · نقاط القرار المثبّتة: {count}",

@@ -1,7 +1,7 @@
 {
   "name": "HoldemMaster GTO Trainer",
   "short_name": "GTO Trainer",
-  "description": "سولفر ومدرّب GTO مجاني. المواقف التدريبية: 14 — كلها تُفتح فورًا، حتى دون اتصال.",
+  "description": "سولفر ومدرّب GTO مجاني. المواقف التدريبية: 13 — كلها تُفتح فورًا، حتى دون اتصال.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "/?view=trainer&lang=ar",

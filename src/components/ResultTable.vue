@@ -7,7 +7,7 @@
 
       <div class="flex h-full ml-auto pr-4 items-center gap-4 snug">
         <div class="flex flex-col items-start justify-center h-full">
-          <div class="text-sm">{{ L.barWidth }}</div>
+          <div :dir="isAr ? 'rtl' : undefined" class="text-sm">{{ L.barWidth }}</div>
           <select
             v-model="displayOptions.barWidth"
             :aria-label="L.barWidth"
@@ -26,7 +26,7 @@
           v-if="tableMode !== 'chance'"
           class="flex flex-col items-start justify-center h-full"
         >
-          <div class="text-sm">{{ L.display }}</div>
+          <div :dir="isAr ? 'rtl' : undefined" class="text-sm">{{ L.display }}</div>
           <select
             v-model="(displayOptions as DisplayOptionsBasics).content"
             :aria-label="L.display"
@@ -1597,6 +1597,7 @@ export default defineComponent({
 
     return {
       isTr,
+      isAr: computed(() => i18n.locale === "ar"),
       toFixed1,
       toFixed,
       toFixedAdaptive,

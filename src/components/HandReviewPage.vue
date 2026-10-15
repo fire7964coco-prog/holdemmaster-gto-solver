@@ -25,9 +25,8 @@
         data-testid="review-scenario"
       >
         <h2>{{ L.situation }}</h2>
-        <p dir="ltr" class="review-meta">
-          {{ spot.opener }} → {{ spot.caller }} · {{ L.pot }}
-          {{ bb(spot.startingPot) }}
+        <p :dir="isAr ? 'rtl' : 'ltr'" class="review-meta">
+          {{ reviewMeta }}
         </p>
         <div class="review-settings">
           <div class="review-group">
@@ -154,6 +153,7 @@
               >
               <span
                 v-if="row.verdict"
+                :dir="isAr ? 'rtl' : undefined"
                 :class="[
                   'review-grade',
                   row.verdict.referenceOnly ? 'reference' : row.verdict.grade,
@@ -401,14 +401,14 @@
                 : "—"
             }}</b>
           </div>
-          <div dir="ltr" class="review-response" v-if="selectedRow.response">
+          <div :dir="isAr ? 'rtl' : 'ltr'" class="review-response" v-if="selectedRow.response">
             <h3>{{ L.opponentResponse }}</h3>
             <span
               v-for="(item, i) in selectedRow.response.actions"
               :key="item.action"
               :data-testid="'review-response-' + i"
               :data-frequency="item.frequency"
-              >{{ actionText(item.action) }} {{ pct(item.frequency) }}
+              >{{ responseText(item.action, item.frequency) }}
             </span>
             <details v-if="selectedRow.response.foldingHands.length">
               <summary>{{ L.foldingHands }}</summary>
@@ -459,7 +459,7 @@ import {
   shallowRef,
   watch,
 } from "vue";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, arLabelIso, ltrIso } from "../i18n";
 import { M } from "../hand-review-labels";
 import {
   SRP_SPOTS,
@@ -734,6 +734,9 @@ export default defineComponent({
         Raise: "raise",
         AllIn: "allin",
       } as const;
+      if (i18n.locale === "ar") {
+        return arLabelIso(L.value[key[a.kind]], a.amount === undefined ? undefined : bb(a.amount));
+      }
       return (
         L.value[key[a.kind]] +
         (a.amount === undefined ? "" : " " + bb(a.amount))
@@ -747,6 +750,12 @@ export default defineComponent({
         : raw.startsWith("AllIn")
         ? "#9c3d66"
         : "#b9535d";
+    const reviewMeta = computed(() => i18n.locale === "ar"
+      ? `${ltrIso(`${spot.value.opener} → ${spot.value.caller}`)} · ${arLabelIso(L.value.pot, bb(spot.value.startingPot))}`
+      : `${spot.value.opener} → ${spot.value.caller} · ${L.value.pot} ${bb(spot.value.startingPot)}`);
+    const responseText = (action: string, frequency: number) => i18n.locale === "ar"
+      ? arLabelIso(actionText(action), pct(frequency))
+      : `${actionText(action)} ${pct(frequency)}`;
     const verdictText = (v: ReviewVerdict) =>
       v.errorCode
         ? statusLabel(v.errorCode)
@@ -1205,6 +1214,9 @@ export default defineComponent({
     });
     onBeforeUnmount(stopReturn);
     return {
+      isAr: computed(() => i18n.locale === "ar"),
+      reviewMeta,
+      responseText,
       L,
       spots,
       spot,

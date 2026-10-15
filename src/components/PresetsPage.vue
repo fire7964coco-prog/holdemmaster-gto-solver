@@ -26,7 +26,7 @@
         {{ presetCategoryOf(group.items[0]) }}
       </div>
       <div :dir="isAr ? 'rtl' : 'ltr'" class="mt-0.5 text-xs text-neutral-500">
-        <bdi>OOP: {{ oopLabelOf(group.items[0]) }}</bdi> · <bdi>IP:
+        <bdi :dir="isAr ? 'rtl' : undefined">OOP: {{ oopLabelOf(group.items[0]) }}</bdi> · <bdi :dir="isAr ? 'rtl' : undefined">IP:
         {{ ipLabelOf(group.items[0]) }}</bdi> · {{ L.pot }}
         {{ $n(String(group.items[0].startingPot / group.items[0].unitScale)) }}bb ·
         {{ L.stack }}

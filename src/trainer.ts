@@ -2,7 +2,7 @@ import { PRESETS, presetTitleOf } from "./presets";
 import { SRP_SPOTS, THREE_BET_SPOTS, FOUR_BET_SPOTS, SPOT_UNIT_SCALE } from "./preflop-spots";
 import { Results, SpotPlayer } from "./result-types";
 import { cardText, formatAmount } from "./utils";
-import { i18n, localizeNumber } from "./i18n";
+import { i18n, localizeNumber, arLabelIso, ltrIso } from "./i18n";
 import {
   classifyMade,
   classifyDraw,
@@ -332,10 +332,10 @@ export const trainerActionLabel = (
       ? // 확정표 §6 R14: «Бет 3,3 (33% банка)» — % 붙임 · «банка» 생격 고정
         `${label} ${amount} (${pct}% банка)`
       : i18n.locale === "ar"
-      ? `${label} ${amount} (${pct}% من البوت)`
+      ? arLabelIso(`${label} ${ltrIso(amount)} (${ltrIso(`${pct}%`)} من البوت)`)
       : `${label} ${amount} (${pct}% pot)`;
   }
-  return `${label} ${amount}`;
+  return i18n.locale === "ar" ? arLabelIso(label, amount) : `${label} ${amount}`;
 };
 
 export const trainerCardPair = (pair: number) => {

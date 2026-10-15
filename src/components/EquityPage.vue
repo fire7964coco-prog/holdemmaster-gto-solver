@@ -128,12 +128,13 @@
 
         <!-- 모바일에서는 선택 맥락을 카드판에 붙이고 각 무늬를 7+6장으로 펼친다. -->
         <div data-rtl-island="card-picker" ref="cardPicker" dir="ltr" class="equity-card-picker max-w-full mb-3">
-          <div class="equity-selection-summary" data-testid="equity-selection-summary">
+          <div :dir="isAr ? 'rtl' : undefined" class="equity-selection-summary" data-testid="equity-selection-summary">
             <button
               v-for="selection in selectionSummary"
               :key="selection.target"
               type="button"
               class="equity-selection-target"
+              :style="isAr ? { textAlign: 'right' } : undefined"
               :class="{ 'equity-selection-active': target === selection.target }"
               :aria-pressed="target === selection.target"
               :aria-label="selection.label + ' · ' + selection.cards.map(cardSymbol).join(' ')"
@@ -141,7 +142,7 @@
               @click="selectTarget(selection.target)"
             >
               <span class="equity-selection-label">{{ selection.label }}</span>
-              <span class="equity-selection-cards" aria-live="polite">
+              <span :dir="isAr ? 'ltr' : undefined" class="equity-selection-cards" aria-live="polite">
                 <template v-if="selection.target === 'villain' && villainMode === 'range'">
                   {{ L.modeRange }}
                 </template>
@@ -1204,7 +1205,7 @@ const M = {
       "«\u2066K8s:0.75\u2069» تُطبَّق كما هي.",
     anyTwo: "أي ورقتين",
     rangeError: (token: string) => `تعذّر قراءة: ${ltrIso(token)}`,
-    rangeSummary: (combos: number, percent: string) => `التركيبات: ${combos.toLocaleString("en-US")} · ${percent}% من كل التركيبات`,
+    rangeSummary: (combos: number, percent: string) => `التركيبات: ${combos.toLocaleString("en-US")} · \u2066${percent}%\u2069 من كل التركيبات`,
     boardTitle: "③ البورد",
     boardHintEmpty: "فارغ = بريفلوب (يمكن 3/4/5 أوراق)",
     boardHintBad: "يجب أن يحوي البورد 0 أو 3 أو 4 أو 5 أوراق.",
@@ -1215,7 +1216,7 @@ const M = {
     clear: "مسح الكل",
     resultTitle: "النتيجة",
     resultEmpty: "اختر ورقتيك ويد الخصم أو نطاقه، ثم اضغط «احسب».",
-    vsSide: (value: string) => `الخصم ${value}%`,
+    vsSide: (value: string) => `الخصم \u2066${value}%\u2069`,
     win: "فوز",
     tie: "تعادل",
     lose: "خسارة",
@@ -1488,6 +1489,7 @@ export default defineComponent({
 
     return {
       L,
+      isAr: computed(() => i18n.locale === "ar"),
       hero,
       villainHand,
       board,

@@ -179,7 +179,7 @@
         :max="maxAmount"
         @keydown.enter="addBetAction"
       />
-      <span v-if="!isSelectedTerminal && !isAfterAllin" class="ms-2">
+      <span v-if="!isSelectedTerminal && !isAfterAllin" class="ms-2" :class="isAr ? 'inline-block whitespace-nowrap' : undefined" :dir="isAr ? 'rtl' : undefined">
         {{ $n(L.potRate((amountRate * 100).toFixed(1))) }}
       </span>
     </div>
@@ -260,7 +260,7 @@ import { TreeManager } from "../../pkg/tree/tree";
 
 import { CheckIcon } from "@heroicons/vue/20/solid";
 import { TrashIcon } from "@heroicons/vue/24/outline";
-import { i18n } from "../i18n";
+import { i18n, ltrIso } from "../i18n";
 
 const M = {
   ko: {
@@ -517,16 +517,16 @@ const M = {
     removedLines: "Удалено линий:",
   },
   ar: {
-    treeError: "خطأ: تعذّر بناء الشجرة (هل الشجرة المحملة تالفة؟)",
+    treeError: "خطأ: تعذّر بناء الشجرة (هل الشجرة المحمَّلة تالفة؟)",
     pot: "البوت",
     stack: "الستاك",
     noActions: "(لا قرارات)",
     wins: "يفوز",
-    invalidTerminals: "نقاط قرار نهائية غير صالحة:",
+    invalidTerminals: "نقاط نهاية غير صالحة:",
     addBetAction: "إضافة رهان",
     removeNode: "حذف نقطة القرار المحددة",
     betAmount: "مبلغ الرهان:",
-    potRate: (pct: string) => `(${pct}% من البوت)`,
+    potRate: (pct: string) => `(${ltrIso(pct + "%")} من البوت)`,
     saveEdits: "حفظ التعديلات",
     cancelEdits: "إلغاء التعديلات",
     addedLines: "الخطوط المضافة:",
@@ -955,6 +955,7 @@ export default defineComponent({
     return {
       navDiv,
       L,
+      isAr: computed(() => i18n.locale === "ar"),
       isTreeError,
       spots,
       selectedSpotIndex,

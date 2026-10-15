@@ -1761,7 +1761,7 @@ const M = {
     advancedHint: "الريك · أول إن · الدمج — لا حاجة لتغييرها عادةً",
     advancedSettings: "خيارات متقدمة ◂",
     basicSettings: "الإعدادات الأساسية",
-    chipNote: "أدخل المبالغ برقائق صحيحة. اعتبر 10 رقائق = 1bb إن أردت التفكير بوحدة bb (مثلًا: بوت 55 = 5.5bb · ستاك 1000 = 100bb). عند إدخال البوت أو الستاك أو تغييرهما يدويًا تبقى النتائج بالرقائق؛ وعند تحميل موقف من «مواقف تدريبية» وتشغيل الحساب دون تغيير البوت والستاك تُحوَّل النتائج إلى bb.",
+    chipNote: "أدخل المبالغ بأعداد صحيحة من الرقائق. اعتبر 10 رقائق = 1bb إن أردت التفكير بوحدة bb (مثلًا: بوت 55 = 5.5bb · ستاك 1000 = 100bb). عند إدخال البوت أو الستاك أو تغييرهما يدويًا تبقى النتائج بالرقائق؛ وعند تحميل موقف من «مواقف تدريبية» وتشغيل الحساب دون تغيير البوت والستاك تُحوَّل النتائج إلى bb.",
     startingPot: "البوت الابتدائي:",
     effectiveStack: "الستاك الفعلي:",
     rake: "الريك:",
@@ -1773,7 +1773,7 @@ const M = {
     donkOption: "أحجام منفصلة لرهانات الدونك",
     howToInput: "طريقة الإدخال",
     inputHelpIntro: "يمكنك إدخال عدة أحجام رهان تفصل بينها فواصل أو مسافات، بأي صيغة من الصيغ أدناه. الحقل الفارغ = لا رهان ولا زيادة.",
-    inputHelpPercent: "عدد يمثل نسبة مئوية من البوت (مثلًا «\u206650\u2069»). في الزيادة يحسب الحجم هكذا: مجاراة أولًا، ثم إضافة النسبة المحددة من البوت الناتج. مثلًا: إذا كان البوت قبل الرهان 100 وراهن الخصم 75، فالزيادة 50% = \u206675 + (100 + 75 + 75) × 50% = 200\u2069.",
+    inputHelpPercent: "عدد يمثل نسبة مئوية من البوت (مثلًا «\u206650\u2069»). في الزيادة يحسب الحجم هكذا: مجاراة أولًا، ثم إضافة النسبة المحددة من البوت الناتج. مثلًا: إذا كان البوت قبل الرهان 100 وراهن الخصم 75، فالزيادة \u206650%\u2069 = \u206675 + (100 + 75 + 75) × 50% = 200\u2069.",
     inputHelpMultiple: "مضاعف لحجم الرهان السابق (مثلًا «\u20662.5x\u2069»). للزيادة فقط.",
     inputHelpAllin: "أول إن (مثلًا «\u2066a\u2069»).",
     inputHelpFixed: "إضافة مبلغ ثابت (مثلًا «\u2066100c\u2069»). وفي الزيادة يمكنك أيضًا وضع حد لعدد الزيادات (مثلًا «\u206620c3r\u2069»).",
@@ -1788,7 +1788,7 @@ const M = {
     addAllInLabel: "حد إضافة الأول إن:",
     addAllInHelp: "يضيف خيار أول إن إلى كل نقطة قرار تكون فيها نسبة أكبر رهان ممكن إلى البوت أقل من هذا الحد.",
     forceAllInLabel: "حد الأول إن الإجباري:",
-    forceAllInHelp1: "إذا كان SPR (نسبة الستاك إلى البوت) بعد مجاراة الخصم للرهان أقل من هذا الحد، يحل أول إن محل هذا الرهان. القيمة الموصى بها نحو 15–20%.",
+    forceAllInHelp1: "إذا كان SPR (نسبة الستاك إلى البوت) بعد مجاراة الخصم للرهان أقل من هذا الحد، يحل أول إن محل هذا الرهان. القيمة الموصى بها نحو \u206615–20%\u2069.",
     forceAllInHelp2: "هذا الخيار يشبه «all-in threshold» في PioSOLVER. يستبدل PioSOLVER الرهان بأول إن عندما تتجاوز نسبة المبلغ الموضوع في البوت إلى الستاك الابتدائي هذا الحد.",
     forceAllInHelp3: "مع إهمال التقريب، صيغة التحويل هي (s = SPR الابتدائي، r = حد PioSOLVER):",
     forceAllInFormula: "\u2066الحد = s × (1 − r) / (1 + 2 × s × r)\u2069.",
@@ -1803,7 +1803,7 @@ const M = {
     removedLines: "الخطوط المحذوفة:",
     // 확정표 §3-4의 «수 + أوراق» 꼴 대신 콜론형 — §8 #14(변수 바로 뒤 아랍 명사) 검사와 충돌하지 않게
     boardMismatch: (expected: number, actual: number) =>
-      `الشجرة المعدَّلة محسوبة لبورد عدد أوراقه: ${expected}، وعدد أوراق البورد الآن: ${actual}.`,
+      `الشجرة المعدَّلة محسوبة لبورد من ${expected} أوراق، وعدد أوراق البورد الآن: ${actual}.`,
     boardMismatchHint:
       "لتجاهل الشجرة المعدَّلة اضغط «تجاهل التعديلات وإلغاء القفل».",
   },
@@ -1905,7 +1905,7 @@ const N: Partial<Record<keyof typeof M, { chipNote: string }>> | null =
         },
         ar: {
           chipNote:
-            "أدخل المبالغ برقائق صحيحة. اعتبر 10 رقائق = 1bb إن أردت التفكير بوحدة bb (مثلًا: بوت 55 = 5.5bb · ستاك 1000 = 100bb). عند إدخال البوت أو الستاك أو تغييرهما يدويًا تبقى النتائج بالرقائق.",
+            "أدخل المبالغ بأعداد صحيحة من الرقائق. اعتبر 10 رقائق = 1bb إن أردت التفكير بوحدة bb (مثلًا: بوت 55 = 5.5bb · ستاك 1000 = 100bb). عند إدخال البوت أو الستاك أو تغييرهما يدويًا تبقى النتائج بالرقائق.",
         },
       }
     : null;
@@ -2054,7 +2054,7 @@ export default defineComponent({
       if (config.rakePercent > 100) {
         errors.push(
           pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%", "Der Rake darf 100% nicht überschreiten", "抽水不能超过 100%", "抽水不能超過 100%", "Le rake ne peut pas dépasser 100 %", "Rake tidak boleh melebihi 100%", "Rake tidak boleh melebihi 100%", "Rake 100% से अधिक नहीं हो सकता", "Rake %100'ü aşamaz", "Rake không được vượt quá 100%", "Рейк не может превышать 100%",
-    "لا يمكن أن يتجاوز الريك 100%")
+    "لا يمكن أن يتجاوز الريك \u2066100%\u2069")
         );
       }
       if (config.rakeCap < 0) {
@@ -2248,7 +2248,7 @@ export default defineComponent({
             "不建议把强制全下的阈值设到 30% 以上。\n想知道这个设置是做什么的，看上面的“怎么填”。", "不建議把強制全下的門檻設到 30% 以上。\n想知道這個設定是做什麼的，請看上面的「怎麼填」。",
             "Régler le seuil de all-in forcé au-dessus de 30 % n'est pas recommandé.\nVa voir « Comment remplir » pour comprendre ce réglage.", "Menyetel ambang all-in paksa di atas 30% tidak disarankan.\nLihat teks bantuan di samping pengaturan ini untuk memahami pengaruhnya.",
             "Menetapkan ambang all-in paksa melebihi 30% tidak disyorkan.\nLihat “Cara isi” di sebelah tetapan ini untuk memahami kesannya.", "Bet को all-in बनाने की सीमा 30% से अधिक रखना उचित नहीं है।\nयह सेटिंग कैसे काम करती है, इसके लिए मदद का टेक्स्ट देखें।", "Zorunlu all-in eşiğini %30'un üzerine ayarlaman önerilmez.\nBu ayarın ne işe yaradığını “Zorunlu all-in eşiği” yanındaki yardım metninde görebilirsin.", "Không nên đặt ngưỡng buộc all-in cao hơn 30%.\nXem phần giải thích bên cạnh “Ngưỡng buộc all-in” để biết cài đặt này hoạt động thế nào.", "Ставить порог принудительного олл-ина выше 30% не рекомендуется.\nЧто делает эта настройка, смотри в подсказке рядом с ней.",
-    "لا ننصح بضبط حد الأول إن الإجباري على أكثر من 30%.\nلمعرفة عمل هذا الإعداد راجع الشرح بجانبه.")
+    "لا ننصح بضبط حد الأول إن الإجباري على أكثر من \u206630%\u2069.\nلمعرفة طريقة عمل هذا الإعداد راجع الشرح بجانبه.")
         );
       }
       return warnings;
@@ -2274,7 +2274,7 @@ export default defineComponent({
             "发现了无效的线路（是不是加载了损坏的设置？）", "發現了無效的線路（是不是載入了損壞的設定？）",
             "Ligne invalide trouvée (configuration corrompue chargée ?)", "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
             "Line tidak sah ditemui (memuatkan tetapan yang rosak?)", "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (cấu hình đã tải bị hỏng?)", "Найдена недопустимая линия (загружена повреждённая конфигурация?)",
-    "خط غير صالح (هل التكوين المحمل تالف؟)")
+    "خط غير صالح (هل التكوين المحمَّل تالف؟)")
         );
       }
       if (
@@ -2298,7 +2298,7 @@ export default defineComponent({
             "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
             "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
             "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayar (bozuk bir ayar mı yüklendi?)", "Cấu hình không hợp lệ (cấu hình đã tải bị hỏng?)", "Недопустимая конфигурация (загружена повреждённая конфигурация?)",
-    "تكوين غير صالح (هل التكوين المحمل تالف؟)")
+    "تكوين غير صالح (هل التكوين المحمَّل تالف؟)")
         );
       }
       return errors;

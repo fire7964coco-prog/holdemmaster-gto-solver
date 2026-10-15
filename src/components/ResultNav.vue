@@ -669,7 +669,7 @@ const M = {
     action: (name: string): string =>
       ({ Fold: "فولد", Check: "تشيك", Call: "كول", Bet: "رهان", Raise: "رايز", Allin: "أول إن", "All-in": "أول إن" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
-      `${label} ${formatted} (${percent}% من البوت)`,
+      `${label} ${formatted} (\u2066${percent}%\u2069 من البوت)`,
   },
 } as const;
 

@@ -130,9 +130,9 @@ const ru: typeof ko = {
   memberScenario: "Эта ситуация доступна только участникам (аккаунт бесплатный) — войди, чтобы сразу её открыть",
 };
 const ar: typeof ko = {
-  saveFull: "سجّل الدخول لتحفظ أكثر من 10 عناصر وتفتح قائمتك على أي هاتف أو حاسوب",
+  saveFull: "سجّل الدخول لحفظ أكثر من 10 عناصر وفتح قائمتك على أي هاتف أو حاسوب",
   importOver: "بهذا الاستيراد تتجاوز العناصر المحفوظة على هذا الجهاز 10 — سجّل الدخول لاستيراد الملف كله",
-  memberScenario: "هذا الموقف متاح للأعضاء فقط (الحساب مجاني) — سجّل الدخول لتفتحه فورًا",
+  memberScenario: "هذا الموقف متاح للأعضاء فقط (الحساب مجاني) — سجّل الدخول لفتحه فورًا",
 };
 export type MemberLabels = typeof ko;
 // This assignment checks both the locale set and every required key at build time.

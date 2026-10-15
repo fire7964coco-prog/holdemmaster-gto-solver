@@ -391,6 +391,9 @@ export const numberLocaleTag = (locale: string = i18n.locale): string =>
 /** ar 문자열의 라틴 구절 / 방향을 모르는 사용자 문자열에만 사용한다. */
 export const ltrIso = (text: string): string => "\u2066" + text + "\u2069";
 export const autoIso = (text: string): string => "\u2068" + text + "\u2069";
+/** ar 라벨은 RTL 한 단위로, 뒤의 수치·단위는 LTR 한 단위로 유지한다. ar 분기에서만 호출. */
+export const arLabelIso = (label: string, value?: string): string =>
+  "\u2067" + label + (value === undefined ? "" : " " + ltrIso(value)) + "\u2069";
 
 /**
  * 화면에 «찍히는» 수치의 소수점을 언어에 맞춘다 — 브라질·독일은 «,»가 소수점이다.
@@ -409,6 +412,17 @@ export const autoIso = (text: string): string => "\u2068" + text + "\u2069";
  * 템플릿에서는 전역 속성 `$n(...)`으로 쓴다 (index.ts에서 등록).
  */
 export const localizeNumber = (text: string) => {
+  // AR6: keep the complete numeric token (including %/comparison sign) LTR.
+  // Existing LTR isolates remain unchanged; Arabic label isolates may contain one.
+  if (i18n.locale === "ar")
+    return text.replace(/[≤≥<>]?\d+(?:[.,]\d+)*(?:[\/–-]\d+(?:[.,]\d+)*)*%/g, (token, offset) => {
+      const directions: string[] = [];
+      for (const ch of text.slice(0, offset)) {
+        if (/[\u2066-\u2068]/.test(ch)) directions.push(ch);
+        else if (ch === "\u2069") directions.pop();
+      }
+      return directions[directions.length - 1] === "\u2066" ? token : ltrIso(token);
+    });
   // ⚠ 아래 fr 치환문의 "$1…%" 공백은 «U+202F 리터럴»이다 — 일반 공백으로 «고치면» 깨진다
   if (i18n.locale === "fr")
     return text.replace(/(\d)\.(\d)/g, "$1,$2").replace(/(\d)\s?%/g, "$1 %");
@@ -428,7 +442,7 @@ export const localizeNumber = (text: string) => {
  * ⚠ style 문자열(width: 50%)·벳 사이즈 입력 문법(«50%»)에는 쓰지 않는다.
  */
 export const pctText = (s: string | number) =>
-  i18n.locale === "tr" ? "%" + s : s + "%";
+  i18n.locale === "tr" ? "%" + s : i18n.locale === "ar" ? ltrIso(s + "%") : s + "%";
 
 /** 정수부·소수부를 나눠 그리는 화면(결과 표·13×13 격자)에서 쓰는 소수점 문자 */
 export const decimalMark = () =>

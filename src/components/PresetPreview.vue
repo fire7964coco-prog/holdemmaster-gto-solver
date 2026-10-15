@@ -62,8 +62,8 @@
           v-model="displayPlayer"
           class="max-w-full sm:max-w-[18rem] px-2 py-1 rounded-lg text-sm"
         >
-          <option value="oop">OOP ({{ oopLabelOf(preset) }})</option>
-          <option value="ip">IP ({{ ipLabelOf(preset) }})</option>
+          <option value="oop">{{ seatOption("OOP", oopLabelOf(preset)) }}</option>
+          <option value="ip">{{ seatOption("IP", ipLabelOf(preset)) }}</option>
         </select>
         <span
           v-if="displayPlayer === 'oop'"
@@ -134,7 +134,7 @@ import {
 import { trackOutbound } from "../outbound";
 import { Results, Spot, DisplayOptions } from "../result-types";
 import { cardText, parseCardString } from "../utils";
-import { i18n, autoIso } from "../i18n";
+import { i18n, autoIso, arLabelIso, ltrIso } from "../i18n";
 
 import ResultBasics from "./ResultBasics.vue";
 import ResultTable from "./ResultTable.vue";
@@ -342,10 +342,10 @@ const M = {
     flopOnlyNote: "استراتيجية الفلوب فقط. تريد استعراض التيرن والريفر أيضًا؟ ←",
     solveThisSpot: "حلّ هذا الموقف بنفسك",
     readArticle: "اقرأ المقالة",
-    loadError: (e: string) => `تعذّر تحميل النتائج: ${autoIso(e)}`,
+    loadError: (e: string) => `تعذّر تحميل النتائج المحسوبة مسبقًا: ${autoIso(e)}`,
     loading: "جارٍ تحميل النتائج…",
     playerLabel: "اللاعب:",
-    oopHint: "هذه استراتيجية اللاعب الذي يتصرف أولًا (OOP). لرؤية الخصم (IP) اختر IP في خانة «اللاعب» أعلاه.",
+    oopHint: "هذه استراتيجية اللاعب الذي يتصرف أولًا (OOP). لرؤية الخصم (IP) اختر IP في خانة «اللاعب:» أعلاه.",
   },
 } as const;
 
@@ -420,6 +420,9 @@ export default defineComponent({
     );
 
     const L = computed(() => M[i18n.locale]);
+    const seatOption = (side: string, label: string) => i18n.locale === "ar"
+      ? arLabelIso(`${ltrIso(side)} — ${label.replace(/ \((.*)\)$/, "، $1")}`)
+      : `${side} (${label})`;
 
     return {
       data,
@@ -429,6 +432,7 @@ export default defineComponent({
       boardTexts,
       articleUrl,
       L,
+      seatOption,
       presetTitleOf,
       oopLabelOf,
       ipLabelOf,

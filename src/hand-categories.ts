@@ -560,13 +560,13 @@ export const MADE_LABELS_AR: Record<MadeKey, string> = {
   second_pair: "الزوج الثاني",
   weak_pair: "زوج ضعيف",
   underpair: "زوج أقل من البورد",
-  ace_high: "آس عالي",
-  king_high: "ملك عالي",
+  ace_high: "آس عالٍ",
+  king_high: "ملك عالٍ",
   nothing: "لا يد مكتملة",
 };
 
 export const DRAW_LABELS_AR: Record<DrawKey, string> = {
-  combo_draw: "درو مزدوج",
+  combo_draw: "درو مركّب",
   flush_draw: "درو فلاش",
   oesd: "OESD",
   gutshot: "درو ستريت داخلي",

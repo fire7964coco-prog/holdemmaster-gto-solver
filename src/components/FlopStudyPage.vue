@@ -457,7 +457,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, ref, shallowRef, watch } from "vue";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, arLabelIso } from "../i18n";
 import { useStore, useConfigStore } from "../store";
 import { flopStudyLabels } from "../flop-study-labels";
 import { M } from "../hand-review-labels";
@@ -737,6 +737,9 @@ export default defineComponent({
         Raise: "raise",
         AllIn: "allin",
       } as const;
+      if (i18n.locale === "ar") {
+        return arLabelIso(R.value[key[a.kind]], a.amount === undefined ? undefined : bb(a.amount));
+      }
       return (
         R.value[key[a.kind]] +
         (a.amount === undefined ? "" : " " + bb(a.amount))

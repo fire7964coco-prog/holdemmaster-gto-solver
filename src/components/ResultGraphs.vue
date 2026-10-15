@@ -165,7 +165,7 @@ const M = {
     equity: "Эквити",
   },
   ar: {
-    noGraph: "الرسم غير متاح",
+    noGraph: "الرسم البياني غير متاح",
     equity: "الإكويتي",
   },
 } as const;

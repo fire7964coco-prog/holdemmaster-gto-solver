@@ -124,7 +124,7 @@
       {{ L.ramLimit }}
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4" :class="{ 'ar-target-row': isAr }">
       {{ L.targetLabel }}
       <Tippy
         class="inline-block cursor-help"
@@ -156,6 +156,7 @@
       <input
         v-model="targetExploitability"
         type="number" dir="ltr"
+        :style="isAr ? { order: 1, marginLeft: '0', marginRight: '0' } : undefined"
         :class="
           'w-20 ms-3 px-2 py-1 rounded-lg text-sm text-center ' +
           (targetExploitability <= 0 ? 'input-error' : '')
@@ -1086,7 +1087,7 @@ const M = {
     precisionTipFp:
       "عدد عشري 32 بت (FP): يُنصح به عندما يكون استهلاك الذاكرة دون الحد (\u20663.9 GB\u2069). نحو 7 أرقام معنوية وأداء أفضل.",
     precisionTipInt:
-      "عدد صحيح 16 بت: بديل عندما يتجاوز وضع \u206632-bit FP\u2069 حد الذاكرة. نحو 4 أرقام معنوية، لذا لا يناسب Exploitability مستهدفة أقل من 0.1%، كما أنه أبطأ من \u206632-bit FP\u2069.",
+      "عدد صحيح 16 بت: بديل عندما يتجاوز وضع \u206632-bit FP\u2069 حد الذاكرة. نحو 4 أرقام معنوية، لذا لا يناسب Exploitability مستهدفة أقل من \u20660.1%\u2069، كما أنه أبطأ من \u206632-bit FP\u2069.",
     fp32Label: `${ltrIso("32-bit FP")}:`,
     int16Label: `${ltrIso("16-bit")} صحيح:`,
     ramNeeded: (size: string) => `يحتاج ${ltrIso(size)} من الذاكرة`,
@@ -1097,7 +1098,7 @@ const M = {
       "تحدّد المسافة المقبولة عن توازن ناش. كلما صغرت القيمة كانت النتيجة أدق، لكن الحساب يستغرق وقتًا أطول.",
     exploitTipDetailLabel: "التفاصيل:",
     exploitTipDetail:
-      "في توازن ناش تكون استراتيجية كل لاعب هي MES (الاستراتيجية الأكثر استغلالًا) ضد استراتيجية الآخر. وبناءً على ذلك نعرّف المسافة بين الاستراتيجية الناتجة وتوازن ناش هكذا:",
+      "في توازن ناش تكون استراتيجية كل لاعب هي MES (استراتيجية الاستغلال الأقصى) ضد استراتيجية الآخر. وبناءً على ذلك نعرّف المسافة بين الاستراتيجية الناتجة وتوازن ناش هكذا:",
     exploitTipFormula: "المسافة = (EV لـMES الخصم) − (EV الفعلي للخصم)",
     exploitTipOutro:
       "هذه المسافة ليست سالبة أبدًا، وتساوي صفرًا فقط إذا كانت الاستراتيجية الناتجة جزءًا من توازن ناش. Exploitability هي متوسط هذه المسافة لكلا اللاعبين.",
@@ -1137,7 +1138,7 @@ const invalidLineMessage = () => pick(
   "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
   "Line tidak sah ditemui (memuatkan tetapan yang rosak?)",
   "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (cấu hình đã tải bị hỏng?)", "Найдена недопустимая линия (загружена повреждённая конфигурация?)",
-    "يوجد خط غير صالح (هل حُمِّل تكوين تالف؟)"
+    "يوجد خط غير صالح (هل التكوين المحمَّل تالف؟)"
 );
 
 const checkConfig = (
@@ -1423,7 +1424,7 @@ const checkConfig = (
       "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
       "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
       "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)", "Cấu hình không hợp lệ (cấu hình đã tải bị hỏng?)", "Недопустимая конфигурация (загружена повреждённая конфигурация?)",
-    "تكوين غير صالح (هل حُمِّل تكوين تالف؟)");
+    "تكوين غير صالح (هل التكوين المحمَّل تالف؟)");
   }
 
   return null;
@@ -1966,6 +1967,7 @@ export default defineComponent({
       lockStore,
       lockLabels,
       L,
+      isAr: computed(() => i18n.locale === "ar"),
       UNITS,
       formatMemory,
       navResultsLabel,
@@ -2000,6 +2002,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.ar-target-row { display: flex; align-items: center; gap: 0.25rem; }
 /* The input's text is LTR; its spacing belongs to the surrounding RTL row. */
 :global(html[dir="rtl"] .solver-run-toolbar > input){ margin-left: 0; margin-right: 0.5rem; }
 :global(html[dir="rtl"] .solver-run-settings input.ms-3){ margin-left: 0; margin-right: 0.75rem; }

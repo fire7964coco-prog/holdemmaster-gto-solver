@@ -2,8 +2,8 @@
   <div class="range-editor flex flex-col md:flex-row md:flex-wrap gap-4 mt-1">
     <div class="shrink-0 w-full md:w-[34rem] max-w-full min-w-0">
       <p data-testid="range-mobile-hint" class="md:hidden mb-2 text-xs text-neutral-500">{{ L.mobileHint }}</p>
-      <div dir="ltr" class="range-cell-summary md:hidden" aria-live="polite" aria-atomic="true">
-        <strong>{{ activeCell ? cellText(activeCell.row, activeCell.col) : '—' }}</strong>
+      <div :dir="isAr ? 'rtl' : 'ltr'" class="range-cell-summary md:hidden" aria-live="polite" aria-atomic="true">
+        <strong :dir="isAr ? 'ltr' : undefined">{{ activeCell ? cellText(activeCell.row, activeCell.col) : '—' }}</strong>
         <span>· {{ L.weight }} {{ activeCell ? $pct($n(cellValue(activeCell.row, activeCell.col).toString())) : '—' }}</span>
       </div>
       <table data-rtl-island="range-matrix" dir="ltr" class="w-full table-fixed select-none snug" role="grid" :aria-label="player === 0 ? 'OOP' : 'IP'" @mouseleave="dragEnd">
@@ -89,7 +89,7 @@
 
       <div data-rtl-island="range-control" dir="ltr" class="range-weight flex flex-wrap gap-2 mt-3 items-center text-sm tabular-nums">
         <div>
-          {{ L.weight }}
+          {{ weightLabel }}
           <input data-rtl-island="range-control" dir="ltr"
             v-model="weight"
             type="range"
@@ -141,7 +141,7 @@ import { computed, defineComponent, ref, watch } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { ranks, rankPat } from "../utils";
 import { RangeManager } from "../../pkg/range/range";
-import { i18n, ltrIso, numberLocaleTag } from "../i18n";
+import { i18n, ltrIso, arLabelIso, numberLocaleTag } from "../i18n";
 
 import DbItemPicker from "./DbItemPicker.vue";
 
@@ -283,7 +283,7 @@ const M = {
       `Не удалось разобрать диапазон: ${range || "(пустая строка)"}`,
   },
   ar: {
-    mobileHint: "حدّد الوزن بالشريط أسفل الجدول، ثم اضغط على خلية لتطبيقه. الضغط على خلية فيها الوزن نفسه يمسحها. عند الضغط يظهر اسم اليد ووزن الخلية بخط كبير في الأعلى.",
+    mobileHint: "حدّد الوزن بالشريط أسفل المصفوفة، ثم اضغط على خلية لتطبيقه. الضغط على خلية فيها الوزن نفسه يمسحها. عند الضغط يظهر اسم اليد ووزن الخلية بخط كبير في الأعلى.",
     clear: "مسح",
     errorPrefix: "خطأ:",
     weight: "الوزن:",
@@ -484,6 +484,7 @@ export default defineComponent({
       numCombos,
       arCount: (count: number) => count.toLocaleString(numberLocaleTag(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }),
       isAr: computed(() => i18n.locale === "ar"),
+      weightLabel: computed(() => i18n.locale === "ar" ? arLabelIso(L.value.weight) : L.value.weight),
       activeCell,
       onCellKeydown,
       onRangeTextChange,

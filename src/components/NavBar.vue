@@ -102,7 +102,7 @@
           class="flex px-2 md:px-4 h-full items-center font-semibold hover:bg-neutral-700 text-brand text-sm"
           target="_blank"
         >
-          {{ L.community }}<span class="hidden md:inline">{{ L.communitySuffix }}</span>
+          {{ communityLabel }}<span class="hidden md:inline">{{ L.communitySuffix }}</span>
         </a>
         <!-- 소스코드 공개(AGPL) 링크는 소개 페이지 하단 크레딧으로 일원화됨 -->
       </div>
@@ -111,7 +111,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onBeforeUnmount, ref } from "vue";
 import { useStore } from "../store";
 
 import { ComputerDesktopIcon, ChartBarIcon } from "@heroicons/vue/24/solid";
@@ -253,6 +253,7 @@ const M = {
     resultsDisabledHint: "يُفتح بعد الخطوة ⑤ تشغيل السولفر",
     solver: "السولفر",
     community: "مجتمع",
+    communityMobile: "المجتمع",
     communitySuffix: "\u00a0HoldemMaster",
     langSwitchLabel: "اختيار اللغة",
   },
@@ -266,6 +267,12 @@ export default defineComponent({
   setup() {
     // 왼쪽 탭 이름은 nav-labels.ts가 정본 — 계산 완료 뒤 RunSolver의 이동 버튼과 글자가 같아야 한다
     const L = computed(() => ({ ...M[i18n.locale], results: navResults[i18n.locale] }));
+    // Match Tailwind md without adding any DOM nodes in the existing 15 locales.
+    const desktopQuery = window.matchMedia("(min-width: 768px)");
+    const desktopNav = ref(desktopQuery.matches);
+    const updateDesktopNav = (event: MediaQueryListEvent) => { desktopNav.value = event.matches; };
+    desktopQuery.addEventListener("change", updateDesktopNav);
+    onBeforeUnmount(() => desktopQuery.removeEventListener("change", updateDesktopNav));
     const onLocaleChange = (event: Event) => {
       const value = (event.target as HTMLSelectElement).value;
       if (
@@ -298,6 +305,7 @@ export default defineComponent({
       // 언어 전환 시 그 언어의 본체 홈(/en 등)으로 갈아타야 하므로 computed
       communityUrl: computed(() => mainSiteUrl("", "navbar")),
       locale: computed(() => i18n.locale),
+      communityLabel: computed(() => i18n.locale === "ar" && !desktopNav.value ? M.ar.communityMobile : L.value.community),
       langCode: computed(() =>
         i18n.locale === "zh" ? "简" : i18n.locale === "zh-hant" ? "繁" : i18n.locale.toUpperCase()
       ),

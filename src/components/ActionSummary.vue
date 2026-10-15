@@ -9,12 +9,12 @@
       <div class="action-summary-label text-xs font-semibold text-white/90">
         {{ tile.label }}
       </div>
-      <div class="flex items-end justify-between mt-0.5">
+      <div class="flex items-end justify-between mt-0.5" :class="isAr ? 'flex-wrap' : undefined">
         <span dir="ltr" class="text-lg font-bold text-white tabular-nums">
           {{ $pct($n(tile.freq.toFixed(1))) + " " }}
         </span>
-        <span dir="ltr" class="text-[0.65rem] text-white/70 tabular-nums">
-          <template v-if="isAr">{{ L.combos }}: {{ arCount(tile.combos) }}</template>
+        <span :dir="isAr ? 'rtl' : 'ltr'" class="text-[0.65rem] text-white/70 tabular-nums" :class="isAr ? 'whitespace-nowrap' : undefined">
+          <template v-if="isAr">{{ L.combos }}: <bdi dir="ltr">{{ arCount(tile.combos) }}</bdi></template>
           <template v-else>{{ $n(tile.combos.toFixed(1)) }}<br />{{ L.combos }}</template>
         </span>
       </div>

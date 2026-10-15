@@ -197,7 +197,7 @@
             :aria-pressed="groupKey === g.key"
             @click="groupKey = groupKey === g.key ? null : g.key"
           >
-            <span class="report-bar-name">{{ groupName(g.key) }}</span>
+            <span class="report-bar-name" :dir="isAr ? 'rtl' : undefined">{{ groupName(g.key) }}</span>
             <span dir="ltr" class="report-bar-share">{{ pct(g.share) }}</span>
             <span class="report-bar">
               <template v-if="metric === 'strategy'"
@@ -317,7 +317,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onUnmounted, ref, shallowRef, watch } from "vue";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, arLabelIso } from "../i18n";
 import { useStore } from "../store";
 import { flopReportLabels, FlopReportLabels } from "../flop-report-labels";
 import { flopStudyLabels } from "../flop-study-labels";
@@ -495,7 +495,9 @@ export default defineComponent({
         (s, c, i) => (/^(?:Check|Call|Fold)$/.test(c.action) ? s : s + values[i]),
         0
       );
-      return `${R.value.bet} ${pct(bet, 0)}`;
+      return i18n.locale === "ar"
+        ? arLabelIso(R.value.bet, pct(bet, 0))
+        : `${R.value.bet} ${pct(bet, 0)}`;
     };
     const evClass = (ev: number | null) =>
       ev === null || baseline.value.ev === null
@@ -561,6 +563,11 @@ export default defineComponent({
       if (c.action.startsWith("AllIn")) return r.allin;
       const amount = Number(/\((\d+)\)$/.exec(c.action)?.[1] ?? 0);
       const potSize = report.value?.pot ?? spot.value.startingPot;
+      if (i18n.locale === "ar") {
+        return c.action.startsWith("Raise")
+          ? arLabelIso(r.raise, bb(amount))
+          : arLabelIso(r.bet, localizeNumber(`\u2066${Math.round((100 * amount) / potSize)}%\u2069`));
+      }
       return c.action.startsWith("Raise")
         ? `${r.raise} ${bb(amount)}`
         : format(T.value.betPct, { pct: localizeNumber(`${Math.round((100 * amount) / potSize)}%`) });
@@ -615,6 +622,7 @@ export default defineComponent({
     void load();
 
     return {
+      isAr: computed(() => i18n.locale === "ar"),
       T,
       versus,
       S,

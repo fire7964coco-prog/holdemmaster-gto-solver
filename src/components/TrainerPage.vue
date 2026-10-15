@@ -250,7 +250,7 @@
           <b :class="streak >= 3 ? 'text-emerald-300' : 'text-neutral-200'">{{ streak }}</b>
         </span>
         <span v-if="attempts.length">
-          {{ L.goodRateLabel }} <template v-if="isTr">%</template><b dir="ltr" class="text-neutral-200">{{ excellentRate.toFixed(0) }}</b><template v-if="!isTr">%</template>
+          {{ L.goodRateLabel }} <template v-if="isTr">%</template><b dir="ltr" class="text-neutral-200">{{ isAr ? $pct(excellentRate.toFixed(0)) : excellentRate.toFixed(0) }}</b><template v-if="!isTr">{{ isAr ? "" : "%" }}</template>
         </span>
         <span v-if="dailyState.streak">
           {{ L.dailyStreakLabel }} {{ L.dayStreakPrefix ?? "" }}<b dir="ltr" class="text-brand">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
@@ -292,11 +292,11 @@
             {{ presetTitle }}
           </span>
           <span class="text-xs text-neutral-500">
-            {{ ltrText(`${positionLabel} (${question.node.selectedSpot.player.toUpperCase()})`) }}
+            {{ playerText(positionLabel, question.node.selectedSpot.player.toUpperCase()) }}
             {{ L.toAct }}
           </span>
           <span class="text-xs text-neutral-500" data-testid="trainer-opponent">
-            {{ versusText }} {{ ltrText(`${opponentLabel} (${question.player === "oop" ? "IP" : "OOP"})`) }}
+            {{ versusText }} {{ playerText(opponentLabel, question.player === "oop" ? "IP" : "OOP") }}
           </span>
           <span class="ms-auto text-xs text-neutral-400">
             {{ L.potLabel }} {{ amountBb(question.node.selectedSpot.pot ?? question.node.startingPot) }}
@@ -306,14 +306,13 @@
         </div>
 
         <div data-rtl-island="action-path" dir="ltr" v-if="question.node.history.length" class="mt-3 text-sm text-neutral-400">
-          {{ L.lineLabel }}
+          {{ rtlText(L.lineLabel) }}
           <span
             v-for="(action, index) in question.node.history"
             :key="index"
             class="ml-1"
           >
-            {{ historyPlayerLabel(action.player) }}
-            {{ historyLabel(action) }}<span v-if="index + 1 < question.node.history.length"> →</span>
+            {{ historyText(action) }}<span v-if="index + 1 < question.node.history.length"> →</span>
           </span>
         </div>
 
@@ -455,11 +454,11 @@
                 :style="{ left: 'calc(' + (rngRoll - 0.5) + '% - 1px)' }"
               ></div>
             </div>
-            <div dir="ltr" class="mt-1.5 text-xs text-neutral-400 tabular-nums">
+            <div :dir="isAr ? 'rtl' : 'ltr'" class="mt-1.5 text-xs text-neutral-400 tabular-nums">
               <span v-for="(band, b) in rngBandList" :key="band.action">
                 <template v-if="b"> · </template>
                 <span :class="band.action === rngResult.rolledAction ? 'text-brand font-semibold' : ''">
-                  {{ evaluation.actions[band.action].label }} {{ band.from }}–{{ band.to }}
+                  {{ bandText(evaluation.actions[band.action].label, band.from, band.to) }}
                 </span>
               </span>
             </div>
@@ -748,7 +747,7 @@ import {
   oopLabelOf,
   presetTitleById,
 } from "../presets";
-import { i18n, localizeNumber, ruPlural, numberLocaleTag, autoIso, ltrIso } from "../i18n";
+import { i18n, localizeNumber, ruPlural, numberLocaleTag, autoIso, ltrIso, arLabelIso } from "../i18n";
 import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
 import {
@@ -2508,7 +2507,7 @@ const M = {
     avgLossLabel: "متوسط خسارة EV",
     goodRateLabel: "قرارات جيدة",
     weaknessTitle: "نقاط ضعفك",
-    avgOfPot: (pct: string) => `بمعدل ${pct}% من البوت`,
+    avgOfPot: (pct: string) => `بمعدل \u2066${pct}%\u2069 من البوت`,
     handCount: (n: number) => `(الأيدي: ${n})`,
     notSolved: "لا محاولات",
     weakestBefore: "أكبر خسارة: ",
@@ -2517,7 +2516,7 @@ const M = {
     weaknessHint: "حلّ 3 أيدٍ أو أكثر في كل فئة لترى أين تخسر EV.",
     accountBefore: "محفوظ في حساب ",
     accountAfter: "",
-    syncingNow: "جارٍ المزامنة…",
+    syncingNow: "تجري المزامنة…",
     syncNow: "مزامنة الآن",
     signOutLabel: "تسجيل الخروج",
     localOnlyBefore: "يُحفظ تقدّمك ",
@@ -2527,7 +2526,7 @@ const M = {
     googleSignIn: "تسجيل الدخول عبر Google",
     kakaoSignIn: "تسجيل الدخول عبر Kakao",
     footerLine: (nodes: number, pct: number) =>
-      `المواقف التدريبية: ${SPOT_COUNT} · نقاط القرار: ${nodes} · Exploitability المستهدفة ${pct}%`,
+      `المواقف التدريبية: ${SPOT_COUNT} · نقاط القرار: ${nodes} · Exploitability المستهدفة \u2066${pct}%\u2069`,
     details: "التفاصيل ↓",
     toAct: "يلعب",
     potLabel: "البوت",
@@ -2552,7 +2551,7 @@ const M = {
     boardCount: (n: number) => `لاعبو اليوم: ${n}`,
     boardMyRank: (r: number) => `مركزي: #${r}`,
     boardLoginHint:
-      "سجّل الدخول ليظهر اسمك في اللوحة — يمكن للجميع رؤيتها.",
+      "سجّل الدخول ليظهر اسمك في لوحة الصدارة — يمكن للجميع رؤيتها.",
     boardUnavailable: "لوحة الصدارة غير متاحة الآن.",
     copied: "تم النسخ!",
     copyResult: "نسخ نص النتيجة",
@@ -2571,7 +2570,7 @@ const M = {
     gtoNoteBefore:
       "يمزج GTO القرارات باليد نفسها — القرار النادر ليس خطأ بالضرورة. المعيار هو خسارة EV ",
     gtoNoteBold: "نسبةً إلى البوت",
-    gtoNoteAfter: ": ≤0.35% أفضل قرار · ≤1% مقبول · أكثر من ذلك — يحتاج مراجعة.",
+    gtoNoteAfter: ": \u2066≤0.35%\u2069 أفضل قرار · \u2066≤1%\u2069 مقبول · أكثر من ذلك — يحتاج مراجعة.",
     spotLimits: (pot: string, best: string, good: string) =>
       `لهذا الموقف (البوت ${pot}bb): أفضل قرار ≤${best}bb · مقبول ≤${good}bb.`,
     judgeBasis: (pot: string, best: string, good: string) =>
@@ -2655,6 +2654,13 @@ export default defineComponent({
     const versusText = computed(() => "versus" in L.value ? L.value.versus : "vs");
     const autoText = (text: string | null) => i18n.locale === "ar" ? autoIso(text ?? "") : text;
     const ltrText = (text: string) => i18n.locale === "ar" ? ltrIso(text) : text;
+    const rtlText = (text: string) => i18n.locale === "ar" ? arLabelIso(text) : text;
+    const playerText = (label: string, side: string) => i18n.locale === "ar"
+      ? arLabelIso(`${label} (${ltrIso(side)})`)
+      : `${label} (${side})`;
+    const bandText = (label: string, from: number, to: number) => i18n.locale === "ar"
+      ? arLabelIso(label, `${from}–${to}`)
+      : `${label} ${from}–${to}`;
     // 결과 요약 줄(좋은 판단 비율): 굵은 숫자 뒤 «%»는 tr에서만 숫자 앞으로(%35) — 굵기 범위를 바꾸지 않으려고 $pct 대신 자리만 옮긴다. 통계 칩은 $pct로 숫자·%를 함께 굵게(10-09)
     const isTr = computed(() => i18n.locale === "tr");
     /* 두 문장을 잇는 공백 — 서양어는 필요하고, CJK는 「。」가 이미 여백을 품고 있어
@@ -3108,7 +3114,7 @@ export default defineComponent({
       cardCanvas = drawDailyCard({
         dateLabel: dailyCardDate(),
         spotTitle: presetTitleById(question.value.presetId),
-        positionLabel: `${i18n.locale === "ar" ? ltrIso(`${positionLabel.value} (${node.selectedSpot.player.toUpperCase()})`) : `${positionLabel.value} (${node.selectedSpot.player.toUpperCase()})`} ${L.value.toAct}`,
+        positionLabel: `${playerText(positionLabel.value, node.selectedSpot.player.toUpperCase())} ${L.value.toAct}`,
         potLabel: `${L.value.potLabel} ${amountBb(node.selectedSpot.pot ?? node.startingPot)}`,
         board: node.currentBoard,
         hand: [question.value.handPair >>> 8, question.value.handPair & 0xff],
@@ -3320,8 +3326,16 @@ export default defineComponent({
         question.value?.node.unitScale || 10
       );
     const historyPlayerLabel = seatLabel;
+    const historyText = (action: { player: "oop" | "ip"; name: string; amount: string }) => {
+      const text = `${historyPlayerLabel(action.player)} ${historyLabel(action)}`;
+      return i18n.locale === "ar" ? arLabelIso(text) : text;
+    };
 
     return {
+      isAr: computed(() => i18n.locale === "ar"),
+      rtlText,
+      playerText,
+      bandText,
       R,
       F,
       source,
@@ -3418,6 +3432,7 @@ export default defineComponent({
       amountBb,
       historyLabel,
       historyPlayerLabel,
+      historyText,
       accountEnabled: isAccountEnabled,
       account,
       syncing,

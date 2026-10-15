@@ -1,13 +1,13 @@
 <template>
   <!-- 보드 고르기 (설계안 §5): 축 4줄(줄 안 «또는» · 줄끼리 «그리고») + 특정 플랍 하나 · 바꿀 때마다 부모가 새 문제를 낸다 -->
   <div
-    data-rtl-island="card-filter" dir="ltr" data-testid="trainer-board-panel"
+    :data-rtl-island="locale === 'ar' ? undefined : 'card-filter'" :dir="locale === 'ar' ? 'rtl' : 'ltr'" data-testid="trainer-board-panel"
     class="order-1 mt-2 rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-3 text-xs md:text-sm"
   >
     <div dir="auto" class="mb-2 text-neutral-300">{{ B.boardRule }}</div>
     <div v-for="axis in axes" :key="axis" class="board-row" :data-testid="'trainer-board-' + axis">
       <span dir="auto" class="board-axis">{{ T[`group_${axis}`] }}</span>
-      <div :class="axis === 'high' ? 'board-ranks' : 'flex flex-wrap gap-1'">
+      <div :class="axis === 'high' ? 'board-ranks' : 'flex flex-wrap gap-1'" :dir="locale === 'ar' && axis === 'high' ? 'ltr' : undefined" :data-rtl-island="locale === 'ar' && axis === 'high' ? 'card-filter' : undefined">
         <button
           v-for="key in keys[axis]"
           :key="key"
@@ -26,7 +26,7 @@
     </div>
     <div class="board-row" data-testid="trainer-board-specific">
       <span dir="auto" class="board-axis">{{ B.specificFlop }}</span>
-      <div class="flex flex-wrap items-center gap-1.5">
+      <div class="flex flex-wrap items-center gap-1.5" :dir="locale === 'ar' ? 'ltr' : undefined" :data-rtl-island="locale === 'ar' ? 'board-cards' : undefined">
         <template v-if="filter.board">
           <span v-for="c in filter.board" :key="c" class="board-card" :class="suitClass(c)">{{ card(c) }}</span>
         </template>
@@ -43,7 +43,7 @@
     </div>
     <div v-if="picking" class="mt-2" data-testid="trainer-board-picker">
       <div dir="auto" class="mb-1.5 text-neutral-300">{{ format(S.pickPrompt, { count: String(pending.length) }) }}</div>
-      <div class="board-deck">
+      <div class="board-deck" :dir="locale === 'ar' ? 'ltr' : undefined" :data-rtl-island="locale === 'ar' ? 'card-picker' : undefined">
         <template v-for="s in [3, 2, 1, 0]" :key="s"
           ><button
             v-for="r in RANKS"
