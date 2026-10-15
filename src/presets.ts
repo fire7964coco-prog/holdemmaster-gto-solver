@@ -1043,7 +1043,7 @@ export const PRESETS: Preset[] = [
       "İki geniş range çok bağlantılı bir board'da çarpışıyor: her yerde iki çift, kent ve draw'lar. El kategorisi paneli tam burada işe yarıyor.",
     lessonVi: "Hai range rộng va chạm trên board cực kỳ liền nhau: Hai Đôi, Sảnh và draw ở khắp nơi. Khung Nhóm tay bài phát huy tác dụng ở đây.",
     lessonRu: "Два широких диапазона сталкиваются на сверхсвязанном борде: две пары, стриты и дро повсюду. Здесь особенно полезны панели «Руки» и «Дро».",
-    lessonAr: "نطاقان واسعان يتصادمان على بورد شديد الاتصال: زوجان وستريت ودرو في كل مكان. هنا يبرز قسما «الأيدي» و«الدرو».",
+    lessonAr: "نطاقان واسعان يتصادمان على بورد شديد الترابط: زوجان وستريت ودرو في كل مكان. هنا يبرز قسما «الأيدي» و«الدرو».",
     titleJa: "ローのコネクトボード（2トーン）",
     lessonJa:
       "ワイドレンジ同士がぶつかる非常にコネクトしたボードです。ツーペア・ストレート・ドローが続出します。分類パネルがにぎやかになるスポットです。",

@@ -1204,7 +1204,7 @@ const M = {
       "الصق هنا النطاق المنسوخ بزر [نسخ النطاق] من «مخططات بريفلوب». الصيغة ذات الأوزان مثل " +
       "«\u2066K8s:0.75\u2069» تُطبَّق كما هي.",
     anyTwo: "أي ورقتين",
-    rangeError: (token: string) => `تعذّر قراءة: ${ltrIso(token)}`,
+    rangeError: (token: string) => `تعذّرت قراءة: ${ltrIso(token)}`,
     rangeSummary: (combos: number, percent: string) => `التركيبات: ${combos.toLocaleString("en-US")} · \u2066${percent}%\u2069 من كل التركيبات`,
     boardTitle: "③ البورد",
     boardHintEmpty: "فارغ = بريفلوب (يمكن 3/4/5 أوراق)",

@@ -121,8 +121,8 @@
                 : 'group-hover:opacity-100 opacity-70'
             "
           >
-            <div>{{ L.pot }} {{ amountText(spot.pot) }}</div>
-            <div>{{ L.stack }} {{ amountText(spot.stack) }}</div>
+            <div :dir="isAr ? 'rtl' : undefined">{{ L.pot }} {{ isAr ? ltrIso(amountText(spot.pot)) : amountText(spot.pot) }}</div>
+            <div :dir="isAr ? 'rtl' : undefined">{{ L.stack }} {{ isAr ? ltrIso(amountText(spot.stack)) : amountText(spot.stack) }}</div>
           </div>
         </div>
 
@@ -231,7 +231,7 @@
               </span>
             </div>
           </div>
-          <div class="px-3">{{ L.pot }} {{ amountText(spot.pot) }}</div>
+          <div class="px-3" :dir="isAr ? 'rtl' : undefined">{{ L.pot }} {{ isAr ? ltrIso(amountText(spot.pot)) : amountText(spot.pot) }}</div>
         </div>
       </template>
     </div>
@@ -243,7 +243,7 @@ import { decodeResults } from "../results-decode";
 import { computed, defineComponent, nextTick, toRefs, ref, watch } from "vue";
 import { useSavedConfigStore } from "../store";
 import { useStore } from "../store";
-import { i18n, ltrIso } from "../i18n";
+import { i18n, ltrIso, arLabelIso } from "../i18n";
 import { cardText, average, colorString, formatAmount } from "../utils";
 import { handler } from "../global-worker";
 import {
@@ -656,7 +656,7 @@ const M = {
     pot: "البوت",
     stack: "الستاك",
     equity: "الإكويتي",
-    win: (player: string) => `يفوز ${ltrIso(player)}`,
+    win: (player: string) => arLabelIso("يفوز", player),
     spotPlayer: (player: string): string =>
       (
         {
@@ -669,7 +669,7 @@ const M = {
     action: (name: string): string =>
       ({ Fold: "فولد", Check: "تشيك", Call: "كول", Bet: "رهان", Raise: "رايز", Allin: "أول إن", "All-in": "أول إن" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
-      `${label} ${formatted} (\u2066${percent}%\u2069 من البوت)`,
+      arLabelIso(`${label} ${ltrIso(formatted)} (\u2066${percent}%\u2069 من البوت)`),
   },
 } as const;
 
@@ -781,7 +781,7 @@ export default defineComponent({
         const percent = Math.round((value * 100) / spot.pot);
         return L.value.betPot(label, formatted, percent);
       }
-      return `${label} ${formatted}`;
+      return i18n.locale === "ar" ? arLabelIso(label, formatted) : `${label} ${formatted}`;
     };
 
     // Display-only path: keep the lock/export history and its label unchanged.
@@ -797,7 +797,7 @@ export default defineComponent({
         }
         if (spot.type === "chance") {
           const card = spot.selectedIndex < 0 ? null : cardText(spot.selectedIndex);
-          return `${spotPlayerLabel(spot.player)} ${card ? card.rank + card.suit : "?"}`;
+          return i18n.locale === "ar" ? arLabelIso(spotPlayerLabel(spot.player), card ? card.rank + card.suit : "?") : `${spotPlayerLabel(spot.player)} ${card ? card.rank + card.suit : "?"}`;
         }
         return spotPlayerLabel(spot.player);
       });
@@ -1416,7 +1416,7 @@ export default defineComponent({
     };
 
     return {
-      navDiv,
+      isAr: computed(() => i18n.locale === "ar"), ltrIso, navDiv,
       spots,
       rates,
       selectedSpotIndex,

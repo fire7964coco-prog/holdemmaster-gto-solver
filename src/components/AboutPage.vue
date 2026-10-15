@@ -165,7 +165,7 @@
       <p class="mt-3">
         {{ L.creditBefore }}
         <a
-          href="https://github.com/b-inary/wasm-postflop"
+          href="https://github.com/b-inary/wasm-postflop" :dir="isAr ? 'ltr' : undefined" :style="isAr ? { unicodeBidi: 'isolate' } : undefined"
           class="text-neutral-400 underline decoration-neutral-600 underline-offset-2 hover:text-neutral-200"
           target="_blank"
           >WASM Postflop</a
@@ -926,7 +926,7 @@ const M = {
     notes:
       "على iOS وSafari تفرض قيود المتصفح الحساب بخيط واحد، فيكون أبطأ — على macOS ننصح بـChrome. الذاكرة المتاحة محدودة بـ\u20664 GB\u2069 (حد WebAssembly)، لذا يكون حساب المواقف الكبيرة أسهل على الحاسوب.",
     creditBefore: "يعتمد هذا التطبيق على",
-    creditMid1: " (من تطوير Wataru Inariba، \u2066AGPL-3.0\u2069)، وقد ترجمه وطوّره",
+    creditMid1: " (من تطوير \u2066Wataru Inariba\u2069، \u2066AGPL-3.0\u2069)، وقد ترجمه وطوّره",
     creditBrand: "HoldemMaster",
     creditMid2: ". الشيفرة المصدرية المعدَّلة كاملةً منشورة على",
     creditAfter: " بالترخيص نفسه.",
@@ -1259,7 +1259,7 @@ export default defineComponent({
     };
 
     return {
-      sentenceGap,
+      isAr: computed(() => i18n.locale === "ar"), sentenceGap,
       store,
       openDaily,
       dailyState,

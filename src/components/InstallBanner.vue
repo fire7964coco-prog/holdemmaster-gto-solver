@@ -504,7 +504,7 @@ const M = {
   ar: {
     iconAlt: "أيقونة مدرّب GTO من HoldemMaster",
     title: "إضافة إلى الشاشة الرئيسية؟",
-    samsung1: "قد يمنع Samsung Internet ",
+    samsung1: "قد يمنع \u2066Samsung Internet\u2069 ",
     samsungB1: "التثبيت لأسباب أمنية",
     samsung2: " — هذا فحص يجريه المتصفح، لا هذا التطبيق. ",
     samsungB2: "افتح في Chrome",

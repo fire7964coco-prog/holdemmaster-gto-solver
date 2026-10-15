@@ -1138,7 +1138,7 @@ const invalidLineMessage = () => pick(
   "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
   "Line tidak sah ditemui (memuatkan tetapan yang rosak?)",
   "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (cấu hình đã tải bị hỏng?)", "Найдена недопустимая линия (загружена повреждённая конфигурация?)",
-    "يوجد خط غير صالح (هل التكوين المحمَّل تالف؟)"
+    "خط غير صالح (هل التكوين المحمَّل تالف؟)"
 );
 
 const checkConfig = (
