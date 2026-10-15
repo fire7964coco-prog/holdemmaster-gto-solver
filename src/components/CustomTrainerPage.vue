@@ -18,13 +18,14 @@
     <p v-else-if="!banks.length" data-testid="custom-trainer-empty" class="mt-4 rounded-lg border border-neutral-700 p-4 text-neutral-300">{{ L.empty }}</p>
     <template v-else>
       <div class="mt-3 flex flex-wrap items-end gap-2">
-        <label class="min-w-0 flex-1 text-xs text-neutral-400">
+        <!-- 폰: 스팟 이름이 길어 잘리므로 선택 칸에 한 줄을 통째로 준다(삭제 버튼은 다음 줄 끝) -->
+        <label class="min-w-0 flex-1 basis-full sm:basis-0 text-xs text-neutral-400">
           {{ L.chooseSpot }}
-          <select v-model="customTrainerState.selectedBankId" data-testid="custom-trainer-select" :disabled="saving" class="mt-1 block w-full min-w-0 rounded border-neutral-600 bg-neutral-800 text-sm text-neutral-200">
+          <select v-model="customTrainerState.selectedBankId" data-testid="custom-trainer-select" :disabled="saving" class="mt-1 block w-full min-w-0 rounded border-neutral-600 bg-neutral-800 text-[13px] sm:text-sm text-neutral-200">
             <option v-for="item in banks" :key="item.id" :value="item.id">{{ bankTitle(item) }}</option>
           </select>
         </label>
-        <button type="button" data-testid="custom-trainer-delete" :disabled="saving" class="custom-button bg-neutral-700 text-neutral-300" @click="deleteSpot">{{ L.deleteSpot }}</button>
+        <button type="button" data-testid="custom-trainer-delete" :disabled="saving" class="custom-button ms-auto sm:ms-0 bg-neutral-700 text-neutral-300" @click="deleteSpot">{{ L.deleteSpot }}</button>
       </div>
       <article v-if="bank" data-testid="custom-trainer-bank" :data-bank-id="bank.id" :data-node-count="bank.nodes.length" class="mt-3">
         <p data-testid="custom-trainer-source" class="text-xs leading-relaxed text-neutral-400">{{ source }}</p>

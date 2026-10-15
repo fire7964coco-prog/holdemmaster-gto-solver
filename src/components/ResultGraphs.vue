@@ -1,7 +1,7 @@
 <template>
-  <div data-rtl-island="numeric-graph" dir="ltr" class="flex w-full h-full">
-    <div v-if="!results.isEmpty" class="flex flex-col h-full" style="flex: 4">
-      <div class="w-full px-4 pt-4 pb-2" style="flex: 7">
+  <div data-rtl-island="numeric-graph" dir="ltr" class="result-graphs flex w-full h-full">
+    <div v-if="!results.isEmpty" class="result-graphs-main flex flex-col h-full" style="flex: 4">
+      <div class="result-graphs-chart w-full px-4 pt-4 pb-2" style="flex: 7">
         <div class="relative h-full">
           <LineChart
             class="absolute left-0 top-0 w-full h-full"
@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <div class="relative mx-4 mt-6 mb-8" style="flex: 2">
+      <div class="result-graphs-strategy relative mx-4 mt-6 mb-8" style="flex: 2">
         <div
           v-if="displayPlayer === ['', 'oop', 'ip'][playerIndex + 1]"
           class="absolute flex left-[3.25rem] top-0 h-full"
@@ -36,6 +36,7 @@
     </div>
 
     <ResultTable
+      class="result-graphs-table"
       style="flex: 3"
       table-mode="graphs"
       :graph-type="displayOptions.contentGraphs"
@@ -396,7 +397,7 @@ export default defineComponent({
         plugins: {
           legend: {
             labels: {
-              font: { size: 16 },
+              font: { size: window.innerWidth < 768 ? 13 : 16 },
               color: C.chartLegend,
               boxHeight: 12,
             },
@@ -502,3 +503,14 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+/* 폰: 결과 본문에 높이가 없어(.result-body flex:none) 옆 배치면 차트가 눌린다 → 위아래로 쌓고 높이를 준다 */
+@media (max-width: 767px) {
+  .result-graphs { flex-direction: column; height: auto; gap: 10px; }
+  .result-graphs-main { flex: none !important; height: auto; }
+  .result-graphs-chart { flex: none !important; height: 300px; padding: 8px 8px 4px; }
+  .result-graphs-strategy { flex: none !important; height: 44px; margin: 8px 8px 0; }
+  .result-graphs-table { flex: none !important; width: calc(100% - 12px); margin: 0 6px 10px; }
+}
+</style>
