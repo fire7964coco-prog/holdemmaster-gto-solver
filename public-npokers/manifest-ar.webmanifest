@@ -1,7 +1,7 @@
 {
   "name": "npokers",
   "short_name": "npokers",
-  "description": "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+  "description": "سولفر GTO مجاني يعمل مباشرة في متصفحك دون تثبيت. احسب استراتيجية ما بعد الفلوب في تكساس هولدم حسب النطاق والبورد وحجم الرهان.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "/?lang=ar",
@@ -37,9 +37,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Preflop Charts",
-      "short_name": "Charts",
-      "description": "Opening & defense ranges by position",
+      "name": "مخططات بريفلوب",
+      "short_name": "المخططات",
+      "description": "نطاقات الافتتاح والدفاع حسب الموقع",
       "url": "/?view=preflop&lang=ar",
       "icons": [
         {
@@ -49,9 +49,9 @@
       ]
     },
     {
-      "name": "Equity Calculator",
-      "short_name": "Equity",
-      "description": "Hand and range equity",
+      "name": "حاسبة الإكويتي",
+      "short_name": "الإكويتي",
+      "description": "إكويتي اليد والنطاق",
       "url": "/?view=equity&lang=ar",
       "icons": [
         {

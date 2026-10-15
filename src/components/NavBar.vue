@@ -248,13 +248,13 @@ const M = {
     communitySuffix: "\u00a0HoldemMaster",
     langSwitchLabel: "Выбор языка",
   },
-  // ar-todo: English source; translation follows in the next phase.
+  // 아랍어 — 이다파 어순 «مجتمع HoldemMaster»(확정표 §3-3 · §5-2). 앞 공백 U+00A0
   ar: {
-    resultsDisabledHint: "Opens when ⑤ Run Solver is finished",
-    solver: "Solver",
-    community: "HoldemMaster",
-    communitySuffix: " Community",
-    langSwitchLabel: "Select language",
+    resultsDisabledHint: "يُفتح بعد الخطوة ⑤ تشغيل السولفر",
+    solver: "السولفر",
+    community: "مجتمع",
+    communitySuffix: "\u00a0HoldemMaster",
+    langSwitchLabel: "اختيار اللغة",
   },
 } as const;
 

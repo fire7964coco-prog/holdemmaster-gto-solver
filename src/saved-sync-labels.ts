@@ -139,15 +139,15 @@ const ru: typeof ko = {
   pending: "Ещё не загружено в аккаунт — повторим, когда снова откроешь этот экран или сохранишь",
   limit: "Достигнут лимит аккаунта — на этом устройстве сохранение продолжается",
 };
-// ar-todo: English scaffold; translation follows AR2.
+// 아랍어 — 확정표 §3-4 saved-sync-labels · {time}은 «15:05»(SavedSyncLine ar 분기 en-US 24시간)
 const ar: typeof ko = {
-  invite: "Sign in to open your saved list on any phone or PC",
-  google: "Continue with Google",
-  kakao: "Continue with Kakao",
-  syncing: "Syncing with your account…",
-  ok: "Kept in your account · last synced {time}",
-  pending: "Not uploaded yet — we'll retry next time you open this screen or save",
-  limit: "Account limit reached — still saving on this device",
+  invite: "سجّل الدخول لتفتح قائمتك المحفوظة على أي هاتف أو حاسوب",
+  google: "تسجيل الدخول عبر Google",
+  kakao: "تسجيل الدخول عبر Kakao",
+  syncing: "جارٍ المزامنة مع الحساب…",
+  ok: "محفوظ في الحساب · آخر مزامنة {time}",
+  pending: "لم يُرفع إلى الحساب بعد — سنعيد المحاولة عند فتح هذه الشاشة أو الحفظ مجددًا",
+  limit: "تم بلوغ حد الحساب — يستمر الحفظ على هذا الجهاز",
 };
 export type SavedSyncLabels = Record<keyof typeof ko, string>;
 // This assignment checks both the locale set and every required key at build time.

@@ -141,15 +141,14 @@ const actionLabelsRu: Record<string, string> = {
   Allin: "Олл-ин",
   "All-in": "Олл-ин",
 };
-// ar-todo: English action labels; translation follows AR2.
 const actionLabelsAr: Record<string, string> = {
-  Fold: "Fold",
-  Check: "Check",
-  Call: "Call",
-  Bet: "Bet",
-  Raise: "Raise",
-  Allin: "All-in",
-  "All-in": "All-in",
+  Fold: "فولد",
+  Check: "تشيك",
+  Call: "كول",
+  Bet: "رهان",
+  Raise: "رايز",
+  Allin: "أول إن",
+  "All-in": "أول إن",
 };
 const actionName = (name: string) =>
   i18n.locale === "ko"
@@ -280,12 +279,11 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "3-бет-пот",
       blind: "Блайнд vs блайнд",
     },
-    // ar-todo: English scaffold; translation follows AR2.
     ar: {
-      all: "All",
-      srp: "Single Raised",
-      "3bp": "3-Bet Pot",
-      blind: "Blind vs Blind",
+      all: "الكل",
+      srp: "رايز واحد",
+      "3bp": "بوت \u20663-bet\u2069",
+      blind: "بلايند ضد بلايند",
     },
   };
   // 4벳 팟 = 그 언어 3벳 팟 이름의 숫자만 바꾼다 — 칩 줄에서 «3벳팟»·«4벳 팟»처럼 표기가 갈리지 않게
@@ -334,8 +332,7 @@ export const trainerActionLabel = (
       ? // 확정표 §6 R14: «Бет 3,3 (33% банка)» — % 붙임 · «банка» 생격 고정
         `${label} ${amount} (${pct}% банка)`
       : i18n.locale === "ar"
-      ? // ar-todo
-        `${label} ${amount} (${pct}% pot)`
+      ? `${label} ${amount} (${pct}% من البوت)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return `${label} ${amount}`;

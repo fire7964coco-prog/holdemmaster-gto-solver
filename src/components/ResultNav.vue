@@ -652,25 +652,24 @@ const M = {
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${percent}% банка)`,
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    pot: "Pot",
-    stack: "Stack",
-    equity: "Equity",
-    win: (player: string) => `${ltrIso(player)} wins`,
+    pot: "البوت",
+    stack: "الستاك",
+    equity: "الإكويتي",
+    win: (player: string) => `يفوز ${ltrIso(player)}`,
     spotPlayer: (player: string): string =>
       (
         {
-          flop: "Flop",
-          turn: "Turn",
-          river: "River",
-          end: "End",
+          flop: "الفلوب",
+          turn: "التيرن",
+          river: "الريفر",
+          end: "النهاية",
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
     action: (name: string): string =>
-      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+      ({ Fold: "فولد", Check: "تشيك", Call: "كول", Bet: "رهان", Raise: "رايز", Allin: "أول إن", "All-in": "أول إن" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
-      `${label} ${formatted} (${percent}% pot)`,
+      `${label} ${formatted} (${percent}% من البوت)`,
   },
 } as const;
 

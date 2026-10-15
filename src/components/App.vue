@@ -406,20 +406,20 @@ export default defineComponent({
         "run-solver": "Jalankan Solver",
         treeEdit: "Pratonton & Sunting Tree",
       },
-      // ar-todo: English source; translation follows in the next phase.
+      // 아랍어 — 확정표 §5-3 (treeEdit = TreeConfig treePreviewEdit와 한 글자 일치)
       ar: {
-        about: "About",
-        guide: "How to Use — Step by Step",
-        presets: "Study Spots — One-Click Examples",
-        trainer: "GTO Trainer — See the EV of Every Decision",
-        preflop: "Preflop Charts — Opening & Defense Ranges",
-        equity: "Equity Calculator — Hand & Range Equity",
-        "oop-range": "OOP Range",
-        "ip-range": "IP Range",
-        board: "Board",
-        "tree-config": "Tree Settings",
-        "run-solver": "Run Solver",
-        treeEdit: "Tree Preview & Edit",
+        about: "عن الأداة",
+        guide: "طريقة الاستخدام — خطوة بخطوة",
+        presets: "مواقف تدريبية — أمثلة بضغطة واحدة",
+        trainer: "مدرّب GTO — شاهد EV كل قرار",
+        preflop: "مخططات بريفلوب — نطاقات الافتتاح والدفاع",
+        equity: "حاسبة الإكويتي — إكويتي اليد والنطاق",
+        "oop-range": "نطاق OOP",
+        "ip-range": "نطاق IP",
+        board: "البورد",
+        "tree-config": "إعدادات الشجرة",
+        "run-solver": "تشغيل السولفر",
+        treeEdit: "عرض الشجرة وتحريرها",
       },
     } as const;
     const header = computed(() => {

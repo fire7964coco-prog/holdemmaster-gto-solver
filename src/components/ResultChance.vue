@@ -268,13 +268,12 @@ const M = {
     action: (name: string): string =>
       ({ Fold: "Фолд", Check: "Чек", Call: "Колл", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ин", "All-in": "Олл-ин" } as Record<string, string>)[name] ?? name,
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    strategyCombos: "Strategy (Combos)",
-    strategy: "Strategy",
-    equity: "Equity",
+    strategyCombos: "الاستراتيجية (تركيبات)",
+    strategy: "الاستراتيجية",
+    equity: "الإكويتي",
     action: (name: string): string =>
-      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+      ({ Fold: "فولد", Check: "تشيك", Call: "كول", Bet: "رهان", Raise: "رايز", Allin: "أول إن", "All-in": "أول إن" } as Record<string, string>)[name] ?? name,
   },
 } as const;
 

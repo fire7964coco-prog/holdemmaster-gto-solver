@@ -365,14 +365,13 @@ const M = {
     finalizing: "Завершение…",
     paused: "Солвер на паузе.",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    startRange: "① Start with ranges",
-    viewPresets: "View Study Spots",
-    notRun: "You haven’t calculated your own results yet.\nYou can view example results directly in the “Study Spots” menu.\nTo calculate your own spot, complete ①~⑤, then press “Run Solver”.",
-    running: "Running the solver…",
-    finalizing: "Finalizing…",
-    paused: "Solver paused.",
+    startRange: "① البدء بالنطاقات",
+    viewPresets: "عرض المواقف التدريبية",
+    notRun: "لا توجد نتائج محسوبة لموقفك بعد.\nيمكنك رؤية نتائج الأمثلة مباشرة في قسم «مواقف تدريبية».\nلحساب موقفك، أكمل الخطوات ①–⑤ ثم اضغط «تشغيل السولفر».",
+    running: "جارٍ الحساب…",
+    finalizing: "جارٍ الإنهاء…",
+    paused: "السولفر متوقف مؤقتًا.",
   },
 } as const;
 

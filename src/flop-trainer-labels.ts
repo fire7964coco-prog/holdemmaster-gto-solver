@@ -226,20 +226,19 @@ const checkedLabels: LocaleDict<FlopTrainerLabels> = {
     useBasic: "Решать базовые задачи",
     again: "Эту же руку ещё раз",
   },
-  // ar-todo: English scaffold; translation follows AR2.
   ar: {
-    sourceBasic: "Source: Basic",
-    sourceFlop: "Source: All flops",
+    sourceBasic: "الأسئلة: الأساسية",
+    sourceFlop: "الأسئلة: كل الفلوبات",
     sourceHelp:
-      "All flops: questions come from spots and flops pre-solved on our server (internet required). Basic: decision points from the study spots (works offline).",
-    closeOnly: "Close spots only",
-    closeHelp: "Only deals hands where the best and second-best actions are within the “Acceptable” EV margin.",
-    loading: "Loading flop…",
-    offline: "An internet connection is required.",
-    failed: "Couldn't load a question.",
-    retry: "Retry",
-    useBasic: "Practice basic questions",
-    again: "Same hand again",
+      "كل الفلوبات: الأسئلة مأخوذة من مواقف وفلوبات محسوبة مسبقًا على خادمنا (يتطلب الإنترنت). الأساسية: نقاط القرار من المواقف التدريبية (تعمل دون اتصال).",
+    closeOnly: "قرارات متقاربة فقط",
+    closeHelp: "يعرض فقط الأيدي التي يقع فيها فرق EV بين أفضل قرار وثاني أفضل قرار ضمن حد «مقبول».",
+    loading: "جارٍ تحميل الفلوب…",
+    offline: "الاتصال بالإنترنت مطلوب.",
+    failed: "تعذّر تحميل السؤال.",
+    retry: "إعادة المحاولة",
+    useBasic: "التدريب على الأسئلة الأساسية",
+    again: "اليد نفسها مرة أخرى",
   },
 };
 
@@ -401,16 +400,15 @@ const boardLabels: LocaleDict<FlopBoardLabels> = {
     boardReset: "Сбросить на все",
     boardEmpty: "Нет флопов с такой комбинацией.",
   },
-  // ar-todo: English scaffold; translation follows AR2.
   ar: {
-    boardAll: "Board: All",
-    boardChip: "Board: {value}",
-    boardHelp: "Filter the flops you get by high card, suits, pairing and connectedness, or fix one specific flop.",
-    boardRule: "Within a row any choice can match; a flop must match every row you've set (empty rows allow all).",
-    specificFlop: "Specific flop",
-    pickCards: "Pick cards",
-    boardReset: "Reset to all",
-    boardEmpty: "No flops match this combination.",
+    boardAll: "البورد: الكل",
+    boardChip: "البورد: {value}",
+    boardHelp: "صفِّ فلوبات الأسئلة حسب أعلى ورقة والنقوش والأزواج والاتصال، أو اختر فلوبًا واحدًا محددًا.",
+    boardRule: "في الصف الواحد يكفي تطابق أي خيار؛ ويجب أن يطابق الفلوب كل صف فيه اختيار (الصف الفارغ يقبل الكل).",
+    specificFlop: "فلوب محدد",
+    pickCards: "اختيار الأوراق",
+    boardReset: "إعادة إلى الكل",
+    boardEmpty: "لا فلوبات تطابق هذا الاختيار.",
   },
 };
 export const flopBoardLabels = (locale: Locale): FlopBoardLabels => boardLabels[locale];

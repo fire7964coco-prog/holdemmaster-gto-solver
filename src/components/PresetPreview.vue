@@ -335,18 +335,17 @@ const M = {
     playerLabel: "Игрок:",
     oopHint: "Это стратегия игрока, который ходит первым (OOP). Чтобы увидеть соперника (IP), выбери IP в поле «Игрок» выше.",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    backToList: "← Back",
-    pot: "Pot",
-    stack: "Stack",
-    flopOnlyNote: "Flop strategy only. Want to click through turn and river? →",
-    solveThisSpot: "Solve this spot yourself",
-    readArticle: "Read the article",
-    loadError: (e: string) => `Couldn't load the precomputed results: ${autoIso(e)}`,
-    loading: "Loading results…",
-    playerLabel: "Player:",
-    oopHint: "This is the strategy of the player who acts first (OOP). To see the opponent (IP), set “Player” above to IP.",
+    backToList: "→ القائمة",
+    pot: "البوت",
+    stack: "الستاك",
+    flopOnlyNote: "استراتيجية الفلوب فقط. تريد استعراض التيرن والريفر أيضًا؟ ←",
+    solveThisSpot: "حلّ هذا الموقف بنفسك",
+    readArticle: "اقرأ المقالة",
+    loadError: (e: string) => `تعذّر تحميل النتائج: ${autoIso(e)}`,
+    loading: "جارٍ تحميل النتائج…",
+    playerLabel: "اللاعب:",
+    oopHint: "هذه استراتيجية اللاعب الذي يتصرف أولًا (OOP). لرؤية الخصم (IP) اختر IP في خانة «اللاعب» أعلاه.",
   },
 } as const;
 

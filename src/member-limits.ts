@@ -129,11 +129,10 @@ const ru: typeof ko = {
   importOver: "После импорта на этом устройстве будет больше 10 сохранённых элементов — войди, чтобы импортировать всё",
   memberScenario: "Эта ситуация доступна только участникам (аккаунт бесплатный) — войди, чтобы сразу её открыть",
 };
-// ar-todo: English scaffold; translation follows AR2.
 const ar: typeof ko = {
-  saveFull: "Sign in to save more than 10 items and open your list on any phone or PC",
-  importOver: "This import would take this device past 10 saved items — sign in to import all of it",
-  memberScenario: "This situation is only for free members — sign in to open it right away",
+  saveFull: "سجّل الدخول لتحفظ أكثر من 10 عناصر وتفتح قائمتك على أي هاتف أو حاسوب",
+  importOver: "بهذا الاستيراد تتجاوز العناصر المحفوظة على هذا الجهاز 10 — سجّل الدخول لاستيراد الملف كله",
+  memberScenario: "هذا الموقف متاح للأعضاء فقط (الحساب مجاني) — سجّل الدخول لتفتحه فورًا",
 };
 export type MemberLabels = typeof ko;
 // This assignment checks both the locale set and every required key at build time.

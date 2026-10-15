@@ -192,17 +192,16 @@ const CARD_TEXT = {
       `Потеря EV ${bb}bb${streak > 1 ? ` · ${streak} ${ruPlural(streak, "день", "дня", "дней")} подряд` : ""}`,
     invite: "Реши сегодняшнюю задачу",
   },
-  // ar-todo: translate from en.
   ar: {
-    brand: "HoldemMaster GTO Trainer",
-    tagline: "One puzzle a day · same for everyone",
-    heading: "Daily GTO Puzzle",
-    board: "Board",
-    hand: "My Hand",
-    result: (verdict: string) => `My result: ${verdict}`,
+    brand: "مدرّب GTO من HoldemMaster",
+    tagline: "سؤال واحد كل يوم · السؤال نفسه للجميع",
+    heading: "سؤال اليوم في GTO",
+    board: "البورد",
+    hand: "يدي",
+    result: (verdict: string) => `نتيجتي: ${verdict}`,
     evLine: (bb: string, streak: number) =>
-      `EV loss ${bb}bb${streak > 1 ? ` · Consecutive days: ${streak}` : ""}`,
-    invite: "Try today's puzzle",
+      `خسارة EV ${bb}bb${streak > 1 ? ` · أيام متتالية: ${streak}` : ""}`,
+    invite: "حلّ سؤال اليوم",
   },
 } as const;
 

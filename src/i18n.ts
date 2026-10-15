@@ -216,11 +216,11 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Бесплатный GTO-солвер, который работает прямо в браузере — ничего не нужно устанавливать. Считай постфлоп-стратегию в техасском холдеме по диапазону, борду и сайзингу. От HoldemMaster.",
   },
-  // ar-todo: translate from en.
+  // 아랍어 — «مدرّب GTO»·«سولفر GTO»(확정표 §1-6·§3-1 · ar 문자열 안 «GTO Trainer» 0 — §8 #24)
   ar: {
-    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em",
+    title: "مدرّب GTO من HoldemMaster — سولفر GTO مجاني في المتصفح",
     description:
-      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
+      "سولفر GTO مجاني يعمل مباشرة في متصفحك دون تثبيت. احسب استراتيجية ما بعد الفلوب في تكساس هولدم حسب النطاق والبورد وحجم الرهان. من HoldemMaster.",
   },
 };
 
@@ -305,11 +305,10 @@ const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Бесплатный GTO-солвер, который работает прямо в браузере — ничего не нужно устанавливать. Считай постфлоп-стратегию в техасском холдеме по диапазону, борду и сайзингу.",
   },
-  // ar-todo: translate from en.
   ar: {
-    title: "npokers — Free Online GTO Solver for Texas Hold'em",
+    title: "npokers — سولفر GTO مجاني أونلاين لتكساس هولدم",
     description:
-      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+      "سولفر GTO مجاني يعمل مباشرة في متصفحك دون تثبيت. احسب استراتيجية ما بعد الفلوب في تكساس هولدم حسب النطاق والبورد وحجم الرهان.",
   },
 };
 

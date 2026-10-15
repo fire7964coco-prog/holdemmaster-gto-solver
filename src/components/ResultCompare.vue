@@ -185,10 +185,9 @@ const M = {
     combos: "組合",
     equity: "勝率",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    combos: "Combos",
-    equity: "Equity",
+    combos: "تركيبات",
+    equity: "الإكويتي",
   },
 } as const;
 

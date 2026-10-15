@@ -360,15 +360,15 @@ export const dailyShareText = (verdict: string) => {
       .filter(Boolean)
       .join("\n");
   }
-  // ar-todo: English scaffold; retain DD/MM/YYYY and label-first streak.
+  // ar: 각 줄은 아랍 글자 또는 «[»로 시작 · URL은 콜론 뒤 LRI 격리(«→» 없음) — 확정표 §3-4
   if (i18n.locale === "ar") {
     return [
-      `[Daily GTO Puzzle · ${dailyCardDate()}]`,
-      `My result: ${verdict} (EV loss ${dailyState.lossBb.toFixed(3)}bb)`,
-      dailyState.streak > 1 ? `Day streak: ${dailyState.streak}` : "",
+      `[سؤال اليوم في GTO · ${dailyCardDate()}]`,
+      `نتيجتي: ${verdict} (خسارة EV ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `أيام متتالية: ${dailyState.streak}` : "",
       "",
-      `Try the same puzzle → ${ltrIso("https://solver.holdemmaster.com/?view=trainer&daily=1&lang=ar")}`,
-      "(HoldemMaster GTO Solver · one puzzle a day)",
+      `حلّ السؤال نفسه: ${ltrIso("https://solver.holdemmaster.com/?view=trainer&daily=1&lang=ar")}`,
+      "(سولفر GTO من HoldemMaster · سؤال واحد كل يوم)",
     ]
       .filter(Boolean)
       .join("\n");

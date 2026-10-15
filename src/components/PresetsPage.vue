@@ -25,9 +25,9 @@
       <div :class="[isJa ? 'text-sm' : 'text-base', 'font-bold text-neutral-200']">
         {{ presetCategoryOf(group.items[0]) }}
       </div>
-      <div dir="ltr" class="mt-0.5 text-xs text-neutral-500">
-        OOP: {{ oopLabelOf(group.items[0]) }} · IP:
-        {{ ipLabelOf(group.items[0]) }} · {{ L.pot }}
+      <div :dir="isAr ? 'rtl' : 'ltr'" class="mt-0.5 text-xs text-neutral-500">
+        <bdi>OOP: {{ oopLabelOf(group.items[0]) }}</bdi> · <bdi>IP:
+        {{ ipLabelOf(group.items[0]) }}</bdi> · {{ L.pot }}
         {{ $n(String(group.items[0].startingPot / group.items[0].unitScale)) }}bb ·
         {{ L.stack }}
         {{ $n(String(group.items[0].effectiveStack / group.items[0].unitScale)) }}bb
@@ -350,21 +350,20 @@ const M = {
     footnote:
       "Range ini ialah anggaran daripada permainan dalam talian standard 100bb. Muat satu spot, ubah range-nya, kemudian bandingkan — cara belajar yang sangat bagus.",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    infoBtn1: "[⚡ View results]",
+    infoBtn1: "[⚡ النتائج]",
     infoText1:
-      " shows the solved strategy instantly. Use ",
-    infoBtn2: "[Solve it yourself]",
+      " يعرض استراتيجية السولفر فورًا. اضغط ",
+    infoBtn2: "[حلّها بنفسك]",
     infoText2:
-      " only when you want to tweak the ranges or explore turn and river play.",
-    pot: "Pot",
-    stack: "Stack",
-    articleLink: "Read article",
-    viewResults: "View results",
-    solveYourself: "Solve it yourself",
+      " فقط إذا أردت تغيير النطاقات أو مراجعة اللعب على التيرن والريفر.",
+    pot: "البوت",
+    stack: "الستاك",
+    articleLink: "اقرأ المقالة",
+    viewResults: "النتائج",
+    solveYourself: "حلّها بنفسك",
     footnote:
-      "Ranges are approximations of standard 100bb online play. Load a spot, tweak the ranges, and compare — a great way to study.",
+      "النطاقات قريبة من اللعب الأونلاين المعتاد بستاك 100bb. حمّل الموقف وغيّر النطاقات وقارن النتائج — طريقة ممتازة للتعلّم.",
   },
 } as const;
 
@@ -469,6 +468,8 @@ export default defineComponent({
     const L = computed(() => M[i18n.locale]);
     // 일본어 분류명은 전각이라 한 단계 작게 쓴다 (사용자 결정 2026-08-21)
     const isJa = computed(() => i18n.locale === "ja");
+    // ar: 요약 줄에 아랍 낱말(البوت·الستاك)이 섞여 LTR 섬이면 «bb»가 떨어져 나간다 — 값 쪽은 사전에서 격리
+    const isAr = computed(() => i18n.locale === "ar");
 
     return {
       grouped,
@@ -483,6 +484,7 @@ export default defineComponent({
       presetLessonOf,
       presetCategoryOf,
       isJa,
+      isAr,
       oopLabelOf,
       ipLabelOf,
     };

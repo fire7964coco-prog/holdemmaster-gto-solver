@@ -164,10 +164,9 @@ const M = {
     noGraph: "График недоступен",
     equity: "Эквити",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    noGraph: "No graph available",
-    equity: "Equity",
+    noGraph: "الرسم غير متاح",
+    equity: "الإكويتي",
   },
 } as const;
 

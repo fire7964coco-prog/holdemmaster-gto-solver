@@ -4,9 +4,9 @@
     data-rtl-island="card-filter" dir="ltr" data-testid="trainer-board-panel"
     class="order-1 mt-2 rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-3 text-xs md:text-sm"
   >
-    <div class="mb-2 text-neutral-300">{{ B.boardRule }}</div>
+    <div dir="auto" class="mb-2 text-neutral-300">{{ B.boardRule }}</div>
     <div v-for="axis in axes" :key="axis" class="board-row" :data-testid="'trainer-board-' + axis">
-      <span class="board-axis">{{ T[`group_${axis}`] }}</span>
+      <span dir="auto" class="board-axis">{{ T[`group_${axis}`] }}</span>
       <div :class="axis === 'high' ? 'board-ranks' : 'flex flex-wrap gap-1'">
         <button
           v-for="key in keys[axis]"
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="board-row" data-testid="trainer-board-specific">
-      <span class="board-axis">{{ B.specificFlop }}</span>
+      <span dir="auto" class="board-axis">{{ B.specificFlop }}</span>
       <div class="flex flex-wrap items-center gap-1.5">
         <template v-if="filter.board">
           <span v-for="c in filter.board" :key="c" class="board-card" :class="suitClass(c)">{{ card(c) }}</span>
@@ -42,7 +42,7 @@
       </div>
     </div>
     <div v-if="picking" class="mt-2" data-testid="trainer-board-picker">
-      <div class="mb-1.5 text-neutral-300">{{ format(S.pickPrompt, { count: String(pending.length) }) }}</div>
+      <div dir="auto" class="mb-1.5 text-neutral-300">{{ format(S.pickPrompt, { count: String(pending.length) }) }}</div>
       <div class="board-deck">
         <template v-for="s in [3, 2, 1, 0]" :key="s"
           ><button
@@ -61,7 +61,7 @@
       </div>
     </div>
     <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-      <span data-testid="trainer-board-count" :class="count ? 'text-neutral-300' : 'text-red-400'">
+      <span dir="auto" data-testid="trainer-board-count" :class="count ? 'text-neutral-300' : 'text-red-400'">
         {{ count ? format(T.flopCount, { count: count.toLocaleString(numberLocaleTag(locale)) }) : B.boardEmpty }}
       </span>
       <button v-if="active" type="button" class="link-like" data-testid="trainer-board-reset" @click="emit({})">

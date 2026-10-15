@@ -7,7 +7,7 @@
           pct: pct(file.header.targetPct / 100),
         })
       }}</span>
-      <span>{{ spot.oop }} vs {{ spot.ip }} · {{ R.pot }} {{ bb(spot.startingPot) }}</span>
+      <span>{{ spot.oop }} {{ versus }} {{ spot.ip }} · {{ R.pot }} {{ bb(spot.startingPot) }}</span>
     </div>
 
     <!-- 모바일: 상황·보드를 한 줄로 줄이고, 고르는 칸은 아래 시트로 연다 (설계 §1) -->
@@ -505,6 +505,7 @@ export default defineComponent({
   setup() {
     const S = computed(() => flopStudyLabels(i18n.locale));
     const R = computed(() => M[i18n.locale]);
+    const versus = computed(() => (i18n.locale === "ar" ? "ضد" : "vs"));
 
     const store = useStore();
     const config = useConfigStore();
@@ -858,6 +859,7 @@ export default defineComponent({
 
     return {
       S,
+      versus,
       R,
       RANKS,
       OPENERS,

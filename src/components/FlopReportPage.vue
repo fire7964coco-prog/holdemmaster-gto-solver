@@ -7,7 +7,7 @@
         format(T.intro, { pct: pct(report.targetPct / 100, 1) })
       }}</span>
       <span v-else />
-      <span>{{ spot.oop }} vs {{ spot.ip }} · {{ R.pot }} {{ bb(spot.startingPot) }}</span>
+      <span>{{ spot.oop }} {{ versus }} {{ spot.ip }} · {{ R.pot }} {{ bb(spot.startingPot) }}</span>
     </div>
 
     <div class="report-panel report-top">
@@ -367,6 +367,7 @@ export default defineComponent({
     const T = computed(() => flopReportLabels(i18n.locale));
     const S = computed(() => flopStudyLabels(i18n.locale));
     const R = computed(() => M[i18n.locale]);
+    const versus = computed(() => (i18n.locale === "ar" ? "ضد" : "vs"));
     const store = useStore();
 
     const potType = ref<"srp" | "3bet" | "4bet">("srp"),
@@ -615,6 +616,7 @@ export default defineComponent({
 
     return {
       T,
+      versus,
       S,
       R,
       OPENERS,

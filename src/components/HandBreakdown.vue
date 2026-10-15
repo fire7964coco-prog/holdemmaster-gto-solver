@@ -164,12 +164,11 @@ const M = {
     draws: "Дро",
     noDraws: "Нет данных о дро",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    hands: "Hands",
-    noHands: "No hands to display",
-    draws: "Draws",
-    noDraws: "No draw information",
+    hands: "الأيدي",
+    noHands: "لا أيدي للعرض",
+    draws: "الدرو",
+    noDraws: "لا معلومات عن الدرو",
   },
 } as const;
 

@@ -145,8 +145,8 @@ export default defineComponent({
     const number = localizeNumber;
     // ru nouns depend on the displayed count; bb stays attached (U1 §2-1).
     const ruUnit = (n: number, scale: number) => scale === 10 ? "bb" : ` ${ruChipLabel(n, true)}`; // toFixed(3) 표시 → few형
-    // ar-todo: label form avoids Arabic count-dependent chip nouns.
-    const arAmount = (value: string, scale: number) => scale === 10 ? `${number(value)}bb` : `${M.ar.amountLabel} (${L.value.chips}): ${number(value)}`;
+    // ar: label form «المبلغ (رقائق): N» avoids Arabic count-dependent chip nouns (확정표 §7-1).
+    const arAmount = (value: string, scale: number) => scale === 10 ? `${number(value)}bb` : `${number(value)} (${L.value.chips})`;
     const displayValue = (value: number) => i18n.locale === "ar"
       ? arAmount(value.toFixed(3), bank.value?.unitScale ?? 1)
       : i18n.locale === "ru"

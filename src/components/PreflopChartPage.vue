@@ -1531,94 +1531,62 @@ const M = {
       "3-бет) + диапазоны наших учебных спотов (собрано 08.2026)",
     phase2: "Мы продолжим добавлять новые пары позиций и ситуации.",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    modeRfi: "Opening (RFI)",
-    modeDefend: "vs Open (Defense)",
-    mode3bet: "vs 3-bet (after opening)",
-    mode4bet: "vs 4-bet (after 3-betting)",
-    intro4bet:
-      "How to respond when your 3-bet gets 4-bet — red is 5-bet (all-in), green is call, everything else is a fold. Frequencies are conditional on having 3-bet, so hands you never 3-bet are blank. 6-max cash, 100bb. 4-bet sizes: BB 3-bets 11bb → 24bb · SB 3-bets 10bb → 22bb · later positions (CO·BTN) 3-bet 7.5bb → 19bb · BB vs an SB open 3-bets 9bb → 22bb.",
-    legend5bet: "5-bet (all-in)",
-    legendCond4bet: "Blank = never 3-bet in the first place",
-    stat5bet: "5-bet %",
-    statContinue4bet: "Continue % (of 3-bets)",
-    copy5bet: "Copy 5-bet range",
-    note4bet:
-      "Stats are % of your 3-bet range. At 100bb the 5-bet is effectively a single all-in size — value is AA·KK (occasionally trapping by calling); QQ·AK mix in 5-bets only against bluff-laden BTN·SB 4-bets and call against the narrow CO·HJ·UTG 4-bets (vs a UTG 4-bet even KK calls). Calling is about equity realization, not pot odds: with position (BTN·CO 3-bettor) calls widen to medium hands like TT·AJs (vs a UTG 4-bet only JJ·TT), and BB vs SB, facing a bluff-heavy SB 4-bet, widens further to 99-66·ATs·KQs·AJo-ATo; the out-of-position BB 3-bettor keeps it to QQ·JJ·AK against the narrow CO·HJ·UTG 4-bets (against the bluff-laden BTN 4-bet, down to TT-77·AJs-ATs·AQo). Fold everything? No — the 4-bet range contains bluffs like A5s-A4s.",
-    how4bet2:
-      "If red + green don't fill the cell, the rest is folded. Cells with both " +
-      "colors mix 5-bets and calls. Hands outside the 3-betting range never " +
-      "face this spot, so they are blank.",
-    intro3bet:
-      "How to respond when your open-raise gets 3-bet — red is 4-bet, green is call, everything else is a fold. Frequencies are conditional on having opened, so hands you never open are blank. 6-max cash, 100bb, 2.5bb open (3bb for SB opens); 3-bets are 11bb from the BB and 10bb from the SB (9bb for BB vs an SB open), and 7.5bb from positions behind you.",
-    legend4bet: "4-bet",
-    legendCond: "Blank = never opened in the first place",
-    stat4bet: "4-bet %",
-    statContinue: "Continue % (of opens)",
-    copy4bet: "Copy 4-bet range",
-    note3bet:
-      "The stats are shares of your opening range, not of all hands. 4-bet value centers on QQ+/AK (AA-KK when UTG opens, with QQ mostly calling), with a few bluffs like A5s-A4s mixed in (more when the SB opens, including offsuit broadways like AJo and KQo). The calling range is built on pairs and suited broadways; out of position it is narrower than the same opener's in-position range. Connectors rarely call when UTG opens (some T9s, plus a little 98s against a BTN 3-bet); from the other seats, more of them are mixed into the calls.",
-    squeezeNote:
-      "A squeeze is a 3-bet with both an opener and a caller in the pot (about " +
-      "11-12bb here). The caller makes total defense tighter than heads-up and " +
-      "pushes the 3-bet toward value. Overcalls favor suited, connected hands " +
-      "that can make the nuts multiway.",
-    how3bet2:
-      "If red + green don't fill the cell, the rest is folded. Cells with both " +
-      "colors mix 4-bets and calls. Hands outside the opening range never face " +
-      "this spot, so they are blank.",
-    intro: "Opening ranges by position (RFI) — which hands should you raise when everyone folds to you? Based on 6-max cash, 100bb, 2.5bb open. Partially filled cells mark borderline hands where public sources disagree on opening (fill height = share of sources favoring an open).",
-    provenanceNote: "Public-source consensus + internal derivation — not solver output. See “How was this chart built?” below.",
-    introDefend:
-      "How to respond when someone open-raises before you — the most " +
-      "common matchups. Red is 3-bet, green is call, and the stacked height is " +
-      "your total defend frequency. 6-max cash, 100bb, 2.5bb open (3bb for SB opens).",
-    legendOpen: "Open (100%)",
-    legendMixed: "Borderline hands (fill = share of sources favoring an open)",
-    legendFold: "Fold",
-    legend3bet: "3-bet",
-    legendCall: "Call",
-    legendMixedDefend: "Fill height = frequency (split cells are mixed)",
-    stat3bet: "3-bet %",
-    statCall: "Call %",
-    statTotal: "Total defend",
-    copy3bet: "Copy 3-bet range",
-    copyCall: "Copy call range",
-    sbNote:
-      "In the SB you're essentially 3-bet-or-fold against a BTN open — you're " +
-      "out of position with BB still left to act, so calling saddles you with " +
-      "both disadvantages at once.",
-    ipNote:
-      "Even with position, an early-position opening range is strong, and " +
-      "calling risks a squeeze from the blinds still left to act. In-position " +
-      "defense is therefore a narrow, 3-bet-centric range, with calls mostly " +
-      "limited to pairs and premium suited hands.",
-    statPercent: "Open %",
-    statCombos: "Combos opened",
-    statHands: "Hands opened",
-    statMixed: "Borderline hands",
-    copy: "Copy range text",
-    copied: "✓ Copied",
-    sendOop: "① Send to OOP Range",
-    sendIp: "② Send to IP Range",
-    howTitle: "How to read this",
-    how1: "The top-left to bottom-right diagonal is pairs; above it (right) is suited, below it (left) is offsuit.",
-    how2: "Partially filled cells mark borderline hands where sources disagree on whether to open. Fill height represents the share of sources favoring an open, not a solver result.",
-    how3: "The [Send to Range] buttons load this range into the custom-spot range editor — try solving the postflop play yourself.",
-    howDefend2:
-      "If red + green don't fill the whole cell, the rest is folded. Cells showing both colors mix 3-bets and calls at those ratios.",
-    howDefend3:
-      "Paste a copied range into the custom-spot range inputs (① / ②) to solve the postflop play with this defense range yourself.",
-    sourceTitle: "How was this chart built?",
-    sourceBody: "We cross-checked several freely published GTO resources hand by hand to build a consensus range, marking borderline hands the sources disagree on with the share of sources favoring an open (75/50/25%). BTN and SB were also checked against the solver-verified ranges used by this app's Study Spots.",
-    sourceList:
-      "Public sources cross-checked: nlh.poker · Preflop Wizard · HoldemPro · " +
-      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB solved frequencies) · " +
-      "GTO Gecko · RiverOdds (defense anchors) · GTO Wizard blog · FreeBetRange " +
-      "(IP defense & squeeze principles) · 888poker · Run It Once (vs 3-bet " +
-      "frequencies) + our own study-spot ranges (collected 08/2026)",
-    phase2: "We'll keep adding more matchups and scenarios.",
+    modeRfi: "افتتاح (RFI)",
+    modeDefend: "ضد الافتتاح (دفاع)",
+    mode3bet: "ضد \u20663-bet\u2069 (بعد الافتتاح)",
+    mode4bet: "ضد \u20664-bet\u2069 (بعد \u20663-bet\u2069)",
+    intro4bet: "كيف ترد عندما يرد الخصم على الـ\u20663-bet\u2069 منك بـ\u20664-bet\u2069: الأحمر = \u20665-bet\u2069 (أول إن)، والأخضر = المجاراة (كول)، وكل ما عداهما الطي (فولد). التكرارات محسوبة على افتراض لعب الـ\u20663-bet\u2069، لذلك الأيدي الخارجة عن نطاق الـ\u20663-bet\u2069 فارغة. كاش \u20666-max\u2069، 100bb. أحجام الـ\u20664-bet\u2069: \u20663-bet\u2069 من BB بحجم 11bb يقابله \u20664-bet\u2069 بحجم 24bb · من SB بحجم 10bb يقابله 22bb · من المواقع المتأخرة (CO·BTN) بحجم 7.5bb يقابله 19bb · من BB ضد افتتاح SB بحجم 9bb يقابله 22bb.",
+    legend5bet: "\u20665-bet\u2069 (أول إن)",
+    legendCond4bet: "فارغ = اليد خارج نطاق الـ\u20663-bet\u2069",
+    stat5bet: "نسبة الـ\u20665-bet\u2069",
+    statContinue4bet: "المتابعة (ضمن نطاق الـ\u20663-bet\u2069)",
+    copy5bet: "نسخ نطاق الـ\u20665-bet\u2069",
+    note4bet: "النسب محسوبة من نطاق الـ\u20663-bet\u2069 لديك. مع ستاك 100bb يكون الـ\u20665-bet\u2069 عمليًا أول إن بحجم واحد — أيدي القيمة هي AA·KK (وأحيانًا تلعب كفخ بالمجاراة)؛ أما QQ·AK فتمزج الـ\u20665-bet\u2069 فقط ضد \u20664-bet\u2069 كثير البلف من BTN·SB، وتجاري ضد \u20664-bet\u2069 الضيق من CO·HJ·UTG (ضد \u20664-bet\u2069 من UTG تجاري حتى KK). المجاراة تعتمد على تحقيق الإكويتي لا على احتمالات البوت: في الموقع (إذا كان الـ\u20663-bet\u2069 من BTN·CO) تتسع المجاراة إلى أيد متوسطة مثل TT·AJs (ضد \u20664-bet\u2069 من UTG فقط JJ·TT)، وBB ضد SB، أمام \u20664-bet\u2069 كثير البلف من SB، يوسعها أكثر حتى \u206699–66·ATs·KQs·AJo–ATo\u2069؛ أما BB صاحب الـ\u20663-bet\u2069 خارج الموقع فيكتفي بـQQ·JJ·AK ضد \u20664-bet\u2069 الضيق من CO·HJ·UTG (وضد \u20664-bet\u2069 كثير البلف من BTN يصل حتى \u2066TT–77·AJs–ATs·AQo\u2069). هل تطوي كل شيء؟ لا — نطاق الـ\u20664-bet\u2069 يحوي أيدي بلف مثل \u2066A5s–A4s\u2069.",
+    how4bet2: "إذا لم يملأ الأحمر والأخضر الخلية كلها فالباقي طي. الخلايا التي فيها اللونان تمزج الـ\u20665-bet\u2069 والمجاراة. الأيدي خارج نطاق الـ\u20663-bet\u2069 لا تصل إلى هذا الموقف، لذلك هي فارغة.",
+    intro3bet: "كيف ترد عندما يرد الخصم على افتتاحك بـ\u20663-bet\u2069: الأحمر = \u20664-bet\u2069، والأخضر = المجاراة (كول)، وكل ما عداهما الطي (فولد). التكرارات محسوبة على افتراض الافتتاح، لذلك الأيدي التي لا تفتتح بها فارغة. كاش \u20666-max\u2069، 100bb، افتتاح 2.5bb (3bb عند الافتتاح من SB)؛ حجم الـ\u20663-bet\u2069 هو 11bb من BB و10bb من SB (9bb من BB ضد افتتاح SB)، و7.5bb من المواقع التي تلعب بعدك.",
+    legend4bet: "\u20664-bet\u2069",
+    legendCond: "فارغ = اليد خارج نطاق الافتتاح",
+    stat4bet: "نسبة الـ\u20664-bet\u2069",
+    statContinue: "المتابعة (ضمن نطاق الافتتاح)",
+    copy4bet: "نسخ نطاق الـ\u20664-bet\u2069",
+    note3bet: "النسب محسوبة من نطاق افتتاحك لا من كل الأيدي. قيمة الـ\u20664-bet\u2069 تتركز في \u2066QQ+/AK\u2069 (عند الافتتاح من UTG هي \u2066AA–KK\u2069، وQQ تجاري غالبًا)، مع قليل من أيدي البلف مثل \u2066A5s–A4s\u2069 (أكثر عند الافتتاح من SB، ومنها أيدي برودواي من نقشين مختلفين مثل AJo وKQo). نطاق المجاراة مبني على الأزواج وأيدي برودواي من النقش نفسه، وخارج الموقع يكون أضيق من نطاق صاحب الافتتاح نفسه في الموقع. عند الافتتاح من UTG نادرًا ما تجاري الأيدي المتصلة (بعض T9s وقليل من 98s ضد \u20663-bet\u2069 من BTN)؛ ومن المقاعد الأخرى يدخل عدد أكبر منها في المجاراة.",
+    squeezeNote: "السكويز (Squeeze) هو \u20663-bet\u2069 بعد افتتاح ومجاراة في البوت (هنا نحو 11–12bb). وجود المجاري يجعل الدفاع الكلي أضيق مما لو كان اللاعبان وحدهما، ويدفع الـ\u20663-bet\u2069 نحو القيمة. المجاراة الثانية (Overcall) تناسب الأيدي المتصلة من النقش نفسه التي يمكن أن تصنع أقوى يد ممكنة في البوتات متعددة اللاعبين.",
+    how3bet2: "إذا لم يملأ الأحمر والأخضر الخلية كلها فالباقي طي. الخلايا التي فيها اللونان تمزج الـ\u20664-bet\u2069 والمجاراة. الأيدي خارج نطاق الافتتاح لا تصل إلى هذا الموقف، لذلك هي فارغة.",
+    intro: "نطاقات الافتتاح حسب الموقع (RFI) — بأي أيد تفتتح إذا طوى الجميع قبلك؟ على أساس كاش \u20666-max\u2069، 100bb، افتتاح 2.5bb. الخلايا المملوءة جزئيًا أيد حدية تختلف فيها المصادر المفتوحة حول الافتتاح (ارتفاع التعبئة = نسبة المصادر المؤيدة للافتتاح).",
+    provenanceNote: "إجماع المصادر المفتوحة + استنتاج داخلي — ليست نتيجة السولفر. التفاصيل في «كيف صنعنا هذا المخطط؟» أدناه.",
+    introDefend: "كيف ترد على افتتاح قبلك — أكثر أزواج المواقع شيوعًا. الأحمر = \u20663-bet\u2069، والأخضر = المجاراة (كول)، والارتفاع الكلي = تكرار دفاعك. كاش \u20666-max\u2069، 100bb، افتتاح 2.5bb (3bb عند الافتتاح من SB).",
+    legendOpen: "افتتاح (100%)",
+    legendMixed: "الأيدي الحدية (التعبئة = نسبة المصادر المؤيدة للافتتاح)",
+    legendFold: "فولد",
+    legend3bet: "\u20663-bet\u2069",
+    legendCall: "كول",
+    legendMixedDefend: "ارتفاع التعبئة = التكرار (الخلايا المقسومة استراتيجية مختلطة)",
+    stat3bet: "نسبة الـ\u20663-bet\u2069",
+    statCall: "نسبة الكول",
+    statTotal: "نسبة الدفاع",
+    copy3bet: "نسخ نطاق الـ\u20663-bet\u2069",
+    copyCall: "نسخ نطاق الكول",
+    sbNote: "في SB ضد افتتاح BTN تلعب عمليًا \u20663-bet\u2069 أو تطوي: أنت خارج الموقع وما زال BB سيلعب بعدك، فالمجاراة تجمع العيبين معًا.",
+    ipNote: "حتى في الموقع، نطاق الافتتاح من المواقع المبكرة قوي، والمجاراة تعرضك لسكويز من SB أو BB، وهما لم يلعبا بعد. لذلك الدفاع في الموقع نطاق ضيق يرتكز على الـ\u20663-bet\u2069، والمجاراة تقتصر غالبًا على الأزواج وأقوى الأيدي من النقش نفسه.",
+    statPercent: "نسبة الافتتاح",
+    statCombos: "تركيبات الافتتاح",
+    statHands: "أيدي الافتتاح",
+    statMixed: "الأيدي الحدية",
+    copy: "نسخ النطاق",
+    copied: "✓ تم النسخ",
+    sendOop: "① إلى نطاق OOP",
+    sendIp: "② إلى نطاق IP",
+    howTitle: "كيف تقرأ المخطط",
+    how1: "القطر من أعلى اليسار إلى أسفل اليمين هو الأزواج؛ فوقه (يمينًا) الأيدي من النقش نفسه، وتحته (يسارًا) الأيدي من نقشين مختلفين.",
+    how2: "الخلايا المملوءة جزئيًا أيد حدية تختلف فيها المصادر حول الافتتاح. ارتفاع التعبئة يمثل نسبة المصادر المؤيدة للافتتاح، لا نتيجة السولفر.",
+    how3: "الزران [① إلى نطاق OOP] و[② إلى نطاق IP] يحملان هذا النطاق إلى محرر النطاق في «موقف مخصّص» — جرّب حساب اللعب بعد الفلوب بنفسك.",
+    howDefend2: "إذا لم يملأ الأحمر والأخضر الخلية كلها فالباقي طي. الخلايا التي يظهر فيها اللونان تمزج الـ\u20663-bet\u2069 والمجاراة بهذه النسب.",
+    howDefend3: "الصق النطاق المنسوخ في حقلي النطاق في «موقف مخصّص» (① / ②) لتحسب بنفسك اللعب بعد الفلوب بنطاق الدفاع هذا.",
+    sourceTitle: "كيف صنعنا هذا المخطط؟",
+    sourceBody: "راجعنا يدًا بيد عدة مصادر GTO منشورة مجانًا لنبني نطاق إجماع، وحددنا الأيدي الحدية التي تختلف فيها المصادر بنسبة المصادر المؤيدة للافتتاح (75/50/25%). كما قارنا نطاقي BTN وSB بالنطاقات التي تحقق منها السولفر في «مواقف تدريبية» في هذا التطبيق.",
+    sourceList: "المصادر المفتوحة التي راجعناها: nlh.poker · Preflop Wizard · HoldemPro · \u2066The Felt (about-poker.com)\u2069 · BeyondGTO · ThinkGTO (تكرارات السولفر لـBB ضد SB) · GTO Gecko · RiverOdds (مراجع الدفاع) · مدونة GTO Wizard · FreeBetRange (مبادئ الدفاع في الموقع والسكويز) · 888poker · Run It Once (التكرارات ضد \u20663-bet\u2069) + نطاقات مواقفنا التدريبية (تاريخ الجمع: 08/2026)",
+    phase2: "سنواصل إضافة أزواج مواقع وحالات جديدة.",
   },
 } as const;
 

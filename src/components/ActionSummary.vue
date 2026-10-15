@@ -75,9 +75,8 @@ const M = {
   ru: {
     combos: "комбо",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    combos: "combos",
+    combos: "التركيبات",
   },
 } as const;
 
@@ -199,15 +198,14 @@ const actionLabel = (
       Allin: "Олл-ин",
       "All-in": "Олл-ин",
     },
-    // ar-todo: English source.
     {
-      Fold: "Fold",
-      Check: "Check",
-      Call: "Call",
-      Bet: "Bet",
-      Raise: "Raise",
-      Allin: "All-in",
-      "All-in": "All-in",
+      Fold: "فولد",
+      Check: "تشيك",
+      Call: "كول",
+      Bet: "رهان",
+      Raise: "رايز",
+      Allin: "أول إن",
+      "All-in": "أول إن",
     }
   );
   const label = map[name] ?? name;
@@ -237,8 +235,7 @@ const actionLabel = (
         "dari pot",
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
         "pot", "pot", "pot", "pot", "банка",
-    // ar-todo: English source.
-    "pot" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
+    "من البوت" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
       )})`
     );
   }

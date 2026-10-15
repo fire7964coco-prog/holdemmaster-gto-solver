@@ -282,14 +282,13 @@ const M = {
     parseError: (range: string) =>
       `Не удалось разобрать диапазон: ${range || "(пустая строка)"}`,
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. Tapping a cell that already has that weight clears it. The hand name and weight you tapped appear in large text above.",
-    clear: "Clear",
-    errorPrefix: "Error:",
-    weight: "Weight:",
-    combos: "combos",
-    parseError: (range: string) => `Failed to parse range: ${ltrIso(range || "(empty string)")}`,
+    mobileHint: "حدّد الوزن بالشريط أسفل الجدول، ثم اضغط على خلية لتطبيقه. الضغط على خلية فيها الوزن نفسه يمسحها. عند الضغط يظهر اسم اليد ووزن الخلية بخط كبير في الأعلى.",
+    clear: "مسح",
+    errorPrefix: "خطأ:",
+    weight: "الوزن:",
+    combos: "التركيبات",
+    parseError: (range: string) => `تعذّرت قراءة النطاق: ${(range && ltrIso(range)) || "(نص فارغ)"}`,
   },
 } as const;
 

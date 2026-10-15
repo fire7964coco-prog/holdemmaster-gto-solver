@@ -498,7 +498,7 @@
 <script lang="ts">
 import { computed, defineComponent, nextTick, ref } from "vue";
 import * as Db from "../db";
-import { i18n, pick } from "../i18n";
+import { i18n, pick, autoIso } from "../i18n";
 
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 import { FEATURE_TRAINER, SavedSyncLine } from "@features";
@@ -732,21 +732,20 @@ const M = {
     exportJsonLabel: "Экспорт JSON",
     importFailed: "Ошибка: импорт не удался. Причина указана ниже — импортировать можно только файлы, сохранённые через «Экспорт JSON» в этом списке.",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    noSavedRanges: "You have no saved ranges yet. Click “Save” and enter a name to keep your current range here. Use “Load” to bring it back next time.",
-    noSavedConfigs: "You have no saved configurations yet. Click “Save” and enter a name to keep your current configuration here. Use “Load” to bring it back next time.",
-    emptyGroup: "(Empty group)",
-    errorReload: "An error occurred. Please reload the page.",
-    load: "Load",
-    overwrite: "Overwrite",
-    save: "Save",
-    rename: "Rename",
-    addGroup: "Add Group",
-    deleteLabel: "Delete",
-    importJsonLabel: "Import JSON",
-    exportJsonLabel: "Export JSON",
-    importFailed: "Error: Import failed. Check the reason below — only files saved with “Export JSON” in this list can be imported.",
+    noSavedRanges: "لا نطاقات محفوظة بعد. اضغط «حفظ» وأدخل اسمًا ليبقى النطاق الحالي هنا. في المرة القادمة اضغط «تحميل» لاستعادته.",
+    noSavedConfigs: "لا تكوينات محفوظة بعد. اضغط «حفظ» وأدخل اسمًا ليبقى التكوين الحالي هنا. في المرة القادمة اضغط «تحميل» لاستعادته.",
+    emptyGroup: "(مجموعة فارغة)",
+    errorReload: "حدث خطأ. أعد تحميل الصفحة.",
+    load: "تحميل",
+    overwrite: "استبدال",
+    save: "حفظ",
+    rename: "إعادة تسمية",
+    addGroup: "إضافة مجموعة",
+    deleteLabel: "حذف",
+    importJsonLabel: "استيراد JSON",
+    exportJsonLabel: "تصدير JSON",
+    importFailed: "خطأ: تعذّر الاستيراد. السبب مذكور أدناه — لا يمكن استيراد إلا الملفات المحفوظة عبر «تصدير JSON» في هذه القائمة.",
   },
 } as const;
 
@@ -1246,15 +1245,12 @@ export default defineComponent({
         .filter((name) => name !== editingName.value);
       const defaultName = item.isGroup
         ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo", "Neue Gruppe", "新建分组", "新增群組", "Nouveau groupe", "Grup baru", "Kumpulan baharu", "नया समूह", "Yeni grup", "Nhóm mới", "Новая группа",
-    // ar-todo: English source.
-    "New group")
+    "مجموعة جديدة")
         : props.storeName === "ranges"
         ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range", "Neue Range", "新建范围", "新增範圍", "Nouvelle range", "Range baru", "Range baharu", "नई range", "Yeni range", "Range mới", "Новый диапазон",
-    // ar-todo: English source.
-    "New range")
+    "نطاق جديد")
         : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração", "Neue Einstellung", "新建设置", "新增設定", "Nouvelle configuration", "Konfigurasi baru", "Tetapan baharu", "नई सेटिंग", "Yeni ayar", "Cấu hình mới", "Новая конфигурация",
-    // ar-todo: English source.
-    "New configuration");
+    "تكوين جديد");
       if (editingName.value === "") {
         let i = 2;
         let newName = defaultName;
@@ -1620,8 +1616,7 @@ export default defineComponent({
           "Erreur d'analyse (format JSON invalide)",
           "Kesalahan pembacaan (format JSON tidak valid)",
           "Ralat pembacaan (format JSON tidak sah)", "पार्स नहीं हो सका (JSON प्रारूप अमान्य है)", "Okuma hatası (geçersiz JSON biçimi)", "Lỗi đọc dữ liệu (định dạng JSON không hợp lệ)", "Ошибка чтения (неверный формат JSON)",
-    // ar-todo: English source.
-    "Parse error (invalid JSON format)");
+    "خطأ في القراءة (صيغة JSON غير صالحة)");
         return;
       }
 
@@ -1638,8 +1633,7 @@ export default defineComponent({
           "Le type de données ne correspond pas",
           "Tipe data tidak cocok",
           "Jenis data tidak sepadan", "डेटा का प्रकार मेल नहीं खाता", "Veri türü uyuşmuyor", "Kiểu dữ liệu không khớp", "Тип данных не совпадает",
-    // ar-todo: English source.
-    "Data type mismatch");
+    "نوع البيانات غير مطابق");
         return;
       }
 
@@ -1656,15 +1650,13 @@ export default defineComponent({
           "La version ne correspond pas",
           "Versi tidak cocok",
           "Versi tidak sepadan", "वर्ज़न मेल नहीं खाता", "Sürüm uyuşmuyor", "Phiên bản không khớp", "Версия не совпадает",
-    // ar-todo: English source.
-    "Version mismatch");
+    "الإصدار غير مطابق");
         return;
       }
 
       if (!checkJson(obj.data)) {
         importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos", "Ungültige Daten", "无效的数据", "無效的資料", "Données invalides", "Data tidak valid", "Data tidak sah", "अमान्य डेटा", "Geçersiz veri", "Dữ liệu không hợp lệ", "Неверные данные",
-    // ar-todo: English source.
-    "Invalid data");
+    "بيانات غير صالحة");
         return;
       }
 
@@ -1682,8 +1674,7 @@ export default defineComponent({
           `Impossible de créer le groupe « ${itemsToAdd} » : un élément du même nom existe déjà`,
           `Tidak bisa membuat grup “${itemsToAdd}”: sudah ada item dengan nama yang sama`,
           `Kumpulan “${itemsToAdd}” tidak dapat dibuat kerana sudah ada item dengan nama yang sama`, `"${itemsToAdd}" समूह नहीं बना सकते, क्योंकि इस नाम का आइटम पहले से मौजूद है`, `“${itemsToAdd}” grubu oluşturulamıyor: aynı adda bir öğe zaten var`, `Không thể tạo nhóm “${itemsToAdd}” vì đã có mục cùng tên`, `Нельзя создать группу «${itemsToAdd}»: элемент с таким названием уже есть`,
-    // ar-todo: English source.
-    `Cannot create group "${itemsToAdd}" because an item with the same name already exists`);
+    `تعذّر إنشاء المجموعة «${autoIso(itemsToAdd)}» لأن عنصرًا بالاسم نفسه موجود بالفعل`);
         return;
       }
 

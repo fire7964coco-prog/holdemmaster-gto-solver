@@ -161,16 +161,15 @@ export const RNG_M = {
       `Допустимо — солвер смешивает это действие, но для этого числа нужно: ${action}.`,
     noteOther: (action: string) => `Для этого числа нужно: ${action}.`,
   },
-  // ar-todo: English scaffold; translation follows AR2.
   ar: {
-    mode: { off: "RNG: Off", high: "RNG: High", low: "RNG: Low" },
+    mode: { off: "RNG: إيقاف", high: "RNG: High", low: "RNG: Low" },
     modeHelp:
-      "Random number (1–100) practice — each hand gets a number, and you pick the action that number points to. High: higher numbers mean more aggressive actions · Low: lower numbers mean more aggressive actions. Not used for the Daily Puzzle.",
-    bandsTitle: "RNG ranges",
-    yourNumber: "Your number",
-    noteBest: (action: string) => `You picked the action for this number (${action}).`,
+      "تدريب بالرقم العشوائي (1–100) — تحصل كل يد على رقم، وتختار القرار الذي يشير إليه هذا الرقم. High: كلما ارتفع الرقم كان القرار أكثر عدوانية · Low: كلما انخفض الرقم كان القرار أكثر عدوانية. لا يُستخدم في سؤال اليوم.",
+    bandsTitle: "نطاقات RNG",
+    yourNumber: "رقمك",
+    noteBest: (action: string) => `القرار المختار لهذا الرقم (${action}).`,
     noteMixed: (action: string) =>
-      `Acceptable — the solver mixes this action, but this number calls for ${action}.`,
-    noteOther: (action: string) => `This number calls for ${action}.`,
+      `مقبول — يمزج السولفر هذا القرار، لكن المطلوب لهذا الرقم: ${action}.`,
+    noteOther: (action: string) => `المطلوب لهذا الرقم: ${action}.`,
   },
 };

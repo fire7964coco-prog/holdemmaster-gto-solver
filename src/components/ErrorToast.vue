@@ -253,18 +253,17 @@ const M = {
       "Вставь это в пост в сообществе — так мы быстрее исправим ошибку. Личных данных там нет.",
     promptCopy: "Скопируй текст ниже",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    title: "An error was logged",
-    body1: "If something looked wrong, please let us know. The details are stored ",
-    bodyB1: "only on this device",
-    body2: " — sharing them is entirely up to you.",
-    copied: "Copied",
-    copyButton: "Copy error details",
-    close: "Close",
+    title: "تم تسجيل خطأ",
+    body1: "إذا ظهر لك شيء غير صحيح فأخبرنا. تُحفظ التفاصيل ",
+    bodyB1: "على هذا الجهاز فقط",
+    body2: " — ومشاركتها قرارك وحدك.",
+    copied: "تم النسخ",
+    copyButton: "نسخ تفاصيل الخطأ",
+    close: "إغلاق",
     copiedHint:
-      "Paste it into a community post and we'll use it to fix the issue. It contains no personal information.",
-    promptCopy: "Copy the text below",
+      "الصق النص في منشور في المجتمع لنستعمله في إصلاح المشكلة. لا يحتوي على أي معلومات شخصية.",
+    promptCopy: "انسخ النص أدناه",
   },
 } as const;
 
@@ -286,8 +285,7 @@ export default defineComponent({
         "Coba lagi dengan satu thread",
         "Cuba semula dengan satu thread",
         "एक थ्रेड से फिर कोशिश करें", "Tek thread ile tekrar dene", "Thử lại với một thread", "Повторить в одном потоке",
-    // ar-todo: English source.
-    "Retry with a single thread"
+    "إعادة المحاولة بخيط واحد"
       )
     );
     const copied = ref(false);

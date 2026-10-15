@@ -276,16 +276,15 @@ const M = {
       `Поля сайзингов были пустыми, поэтому подставлены значения по умолчанию — Флоп ${flop} · Тёрн/Ривер ${later} · Рейз ${raise}`,
     next: "Далее: ③ Борд",
   },
-  // ar-todo: English source; translation follows in the next phase.
   ar: {
-    title: "Fill ranges by position",
-    note: "Pick who opened and who called, then press the button below — both ranges, the pot and the stack are filled in at once. The ranges are the same as in Preflop Charts (6-max cash, 100bb).",
-    opener: "Open",
-    caller: "Call",
-    apply: "Fill both ranges",
-    applied: (oop: string, ip: string, pot: string, stack: string) => `${ltrIso(`${oop} (OOP)`)} · ${ltrIso(`${ip} (IP)`)} ranges filled in. Pot ${pot}bb · Stack ${stack}bb`,
-    betsFilled: (flop: string, later: string, raise: string) => `Bet sizes were empty, so defaults were filled in too — Flop ${ltrIso(flop)} · Turn/River ${ltrIso(later)} · Raise ${ltrIso(raise)}`,
-    next: "Next: ③ Board",
+    title: "ملء النطاقات حسب الموقع",
+    note: "اختر موقع الافتتاح وموقع المجاراة، ثم اضغط الزر أدناه — فيمتلئ النطاقان والبوت والستاك دفعة واحدة. النطاقات هي نفسها في «مخططات بريفلوب» (كاش \u20666-max\u2069، 100bb).",
+    opener: "افتتاح",
+    caller: "كول",
+    apply: "ملء النطاقين",
+    applied: (oop: string, ip: string, pot: string, stack: string) => `تم ملء النطاقين: ${ltrIso(`${oop} (OOP)`)} · ${ltrIso(`${ip} (IP)`)}. البوت ${pot}bb · الستاك ${stack}bb`,
+    betsFilled: (flop: string, later: string, raise: string) => `كانت أحجام الرهان فارغة، فأضيفت القيم الافتراضية أيضًا — الفلوب ${ltrIso(flop)} · التيرن/الريفر ${ltrIso(later)} · رايز ${ltrIso(raise)}`,
+    next: "التالي: ③ البورد",
   },
 } as const;
 

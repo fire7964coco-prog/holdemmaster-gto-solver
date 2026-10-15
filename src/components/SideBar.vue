@@ -652,39 +652,39 @@ const M = {
     betSizeSub: "Настройки дерева",
     run: "Запустить солвер",
   },
-  // ar-todo: English source; translation follows in the next phase.
+  // 아랍어 — 확정표 §5-1 1차 값. 접히면 2차(guide «الدليل» · preflop «بريفلوب» · betSizeSub «الشجرة» ·
+  // run «الحساب»은 stepRunNeeded·NavBar resultsDisabledHint·RunSolver runSolver와 4곳 함께)
   ar: {
-    stepDefaults: "Default settings",
-    stepNeeded: "Input needed",
-    stepComplete: "Input complete",
-    stepRunNeeded: "Run Solver",
-    stepRunComplete: "Solver finished",
-    stepLegend: "✓ Done · ○ To do · Yellow dot = next task",
-    exploreLabel: "Explore",
-    exploreLabelSuffix: " & Study",
-    about: "About",
-    guide: "How to Use",
-    presets: "Study Spots",
-    presetsBadge: "Instant",
-    trainer: "GTO Trainer",
-    trainerBadge: "Graded",
-    preflop: "Preflop Charts",
+    stepDefaults: "الإعدادات الافتراضية",
+    stepNeeded: "مطلوب إدخال",
+    stepComplete: "الإدخال مكتمل",
+    stepRunNeeded: "تشغيل السولفر",
+    stepRunComplete: "انتهى الحساب",
+    stepLegend: "✓ تم · ○ لاحقًا · النقطة الصفراء = الخطوة التالية",
+    exploreLabel: "استكشاف",
+    exploreLabelSuffix: " وتعلّم",
+    about: "عن الأداة",
+    guide: "طريقة الاستخدام",
+    presets: "مواقف تدريبية",
+    presetsBadge: "فوري",
+    trainer: "مدرّب GTO",
+    trainerBadge: "تقييم EV",
+    preflop: "مخططات بريفلوب",
     // 뱃지까지 한 줄에 들어와야 한다 — 「Open·Defend」는 1280×720에서 두 줄로 접혔다
-    preflopBadge: "Ranges",
-    equity: "Equity Calculator",
+    preflopBadge: "نطاقات",
+    // tr·es·ru 선례 — «حاسبة الإكويتي» + 뱃지는 넘친다
+    equity: "الإكويتي",
     // 뱃지는 «무엇을 내주는가»를 한 마디로 — 라벨과 같은 말(Equity)을 반복하면 오작동처럼 보인다.
-    // ko 승률 · ja 勝率 · es % victoria 와 같은 자리다. «Win %»는 퍼센트 기호가 있어
-    // bb/100을 뜻하는 «win rate»와 혼동되지 않는다 (2026-08-20 눈검수).
-    equityBadge: "Win %",
-    customLabel: "Custom Spot",
+    equityBadge: "نسبة الفوز",
+    customLabel: "موقف مخصّص",
     // ⚠ 이 라벨이 두 줄로 접히면 1280×720에서 ⑤가 화면 밖으로 밀린다 (한 줄로 유지할 것)
-    customLabelSuffix: " — Solve",
-    oopRange: "OOP Range",
-    ipRange: "IP Range",
-    board: "Board",
-    betSize: "Bet Sizes",
-    betSizeSub: "Tree Settings",
-    run: "Run Solver",
+    customLabelSuffix: " — احسب",
+    oopRange: "نطاق OOP",
+    ipRange: "نطاق IP",
+    board: "البورد",
+    betSize: "أحجام الرهان",
+    betSizeSub: "إعدادات الشجرة",
+    run: "تشغيل السولفر",
   },
 } as const;
 

@@ -145,12 +145,12 @@ const M = {
     titleLine2: "GTO Trainer.",
     footer: "Solver GTO percuma · Berfungsi luar talian",
   },
-  // ar-todo: English source; translation follows in the next phase.
+  // 아랍어 — R16 «مدرّب GTO.»(8자 · 캡처 확인)
   ar: {
-    greeting: "Welcome to",
+    greeting: "مرحبًا بك في",
     titleLine1: "HoldemMaster",
-    titleLine2: "GTO Trainer.",
-    footer: "Free GTO Solver · Works Offline",
+    titleLine2: "مدرّب GTO.",
+    footer: "سولفر GTO مجاني · يعمل دون اتصال",
   },
 } as const;
 
