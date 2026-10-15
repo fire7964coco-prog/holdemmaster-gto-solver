@@ -24,6 +24,75 @@ const SUPABASE_ANON_KEY = __SUPABASE_ANON_KEY__;
 /** 접속 정보가 주입되지 않은 빌드에서는 계정 기능을 통째로 숨긴다. */
 export const isAccountEnabled = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
+/**
+ * 로그인 공유(SSO · 본체 MB-343): 본체(www)와 «한 장의 쿠키»를 같이 읽고 쓴다.
+ * 이름·옵션은 본체 정본 `Holdem_Project/lib/supabase/cookie-name.ts`(`authCookieOptions`)와 반드시 같게.
+ * 라이브러리도 본체와 같은 @supabase/ssr 0.12 — 쿠키 인코딩(base64url)·쪼개기(name.0, name.1…)가 같아야 서로 읽힌다.
+ */
+const AUTH_COOKIE = "sb-holdemmaster-auth-token";
+const SHARED_DOMAIN = ".holdemmaster.com";
+
+const authCookieOptions = () => {
+  const host = window.location.hostname.toLowerCase();
+  const shared = host === "holdemmaster.com" || host.endsWith(SHARED_DOMAIN);
+  return {
+    name: AUTH_COOKIE,
+    path: "/",
+    sameSite: "lax" as const,
+    maxAge: 400 * 24 * 60 * 60, // @supabase/ssr 기본값과 같다
+    ...(shared ? { domain: SHARED_DOMAIN, secure: true } : {}),
+  };
+};
+
+const hasAuthCookie = () => {
+  try {
+    return document.cookie
+      .split(/;\s*/)
+      .some((pair) => pair.startsWith(`${AUTH_COOKIE}=`) || pair.startsWith(`${AUTH_COOKIE}.0=`));
+  } catch {
+    return false;
+  }
+};
+
+/** 쿠키로 옮기기 전 솔버가 localStorage에 두던 세션 키(`sb-<프로젝트>-auth-token`)와 딸린 키들. */
+const legacyStorageKeys = () => {
+  const keys: string[] = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith("sb-") && /-auth-token(-code-verifier|-user)?$/.test(key)) keys.push(key);
+    }
+  } catch {
+    // 프라이빗 모드 등에서 접근이 막히면 없는 것으로 본다
+  }
+  return keys;
+};
+
+/**
+ * 기존 솔버 회원의 localStorage 세션을 공용 쿠키로 한 번 옮긴다(안 하면 배포 순간 한 번 로그아웃된다).
+ * 실패(만료 등)해도 옛 키는 지운다 — 다시 로그인하면 된다.
+ */
+const migrateLegacySession = async (supabase: SupabaseClient) => {
+  const keys = legacyStorageKeys();
+  if (!keys.length) return;
+  try {
+    if (!hasAuthCookie()) {
+      const sessionKey = keys.find((key) => key.endsWith("-auth-token"));
+      const parsed = JSON.parse((sessionKey && localStorage.getItem(sessionKey)) || "null");
+      const session = parsed?.currentSession ?? parsed; // 아주 옛 supabase-js는 currentSession으로 감쌌다
+      if (session?.access_token && session?.refresh_token) {
+        await supabase.auth.setSession({ access_token: session.access_token, refresh_token: session.refresh_token });
+      }
+    }
+  } catch {
+    // 옮기지 못하면 비로그인으로 시작한다
+  } finally {
+    for (const key of keys) {
+      try { localStorage.removeItem(key); } catch { /* 지우지 못해도 다음 방문에 다시 시도 */ }
+    }
+  }
+};
+
 let clientPromise: Promise<SupabaseClient> | null = null;
 
 /**
@@ -34,18 +103,17 @@ const getClient = async (): Promise<SupabaseClient | null> => {
   if (!isAccountEnabled) return null;
   if (!clientPromise) {
     clientPromise = import(
-      /* webpackChunkName: "supabase" */ "@supabase/supabase-js"
-    ).then((mod) =>
-      mod.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          // 소셜 로그인 후 돌아온 주소에서 세션을 자동으로 회수
-          detectSessionInUrl: true,
-          flowType: "pkce",
-        },
-      })
-    );
+      /* webpackChunkName: "supabase" */ "@supabase/ssr"
+    ).then(async (mod) => {
+      // flowType은 ssr이 pkce로 고정 · 세션 유지·자동 갱신은 ssr 기본값(켜짐)
+      const supabase = mod.createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        cookieOptions: authCookieOptions(),
+        // 소셜 로그인 후 돌아온 주소에서 세션을 자동으로 회수
+        auth: { detectSessionInUrl: true },
+      }) as unknown as SupabaseClient;
+      await migrateLegacySession(supabase);
+      return supabase;
+    });
   }
   return clientPromise;
 };
@@ -57,18 +125,12 @@ export const getSupabase = getClient;
  * 이미 로그인한 흔적이 있는지 저장소만 훑어본다(supabase-js를 내려받지 않고).
  * 트레이너를 여는 모든 사람에게 214KB를 받게 하지 않으려는 것 —
  * 로그인한 적 없으면 [구글로 계속하기]를 누를 때 비로소 내려받는다.
+ * 공용 쿠키를 보므로 본체에서 로그인하고 솔버를 처음 연 사람도 여기서 잡힌다(이게 SSO의 실체).
+ * 아직 옮기지 않은 옛 localStorage 세션도 흔적으로 본다(getClient가 옮긴다).
  */
 export const hasStoredSession = () => {
-  if (!isAccountEnabled || typeof localStorage === "undefined") return false;
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith("sb-") && key.endsWith("-auth-token")) return true;
-    }
-  } catch {
-    // 프라이빗 모드 등에서 접근이 막히면 없는 것으로 본다
-  }
-  return false;
+  if (!isAccountEnabled) return false;
+  return hasAuthCookie() || legacyStorageKeys().some((key) => key.endsWith("-auth-token"));
 };
 
 /** 소셜 로그인에서 막 돌아온 상태인지 (주소에 인증 코드가 붙어 있는지) */
