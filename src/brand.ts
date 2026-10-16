@@ -36,7 +36,6 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       vi: "npokers",
       ru: "npokers",
       ar: "npokers",
-      // it-todo: English scaffold; translate in the next stage.
       it: "npokers",
     }
   : {
@@ -72,6 +71,5 @@ export const BRAND_NAME: Record<Locale, string> = IS_NPOKERS
       // ar은 «مدرّب GTO من HoldemMaster»(share-card brand · InstallBanner iconAlt와 같은 꼴 · ar 문자열 안 «GTO Trainer» 0).
       // 매니페스트 name·short_name·iOS 홈 화면 라벨은 영어 공용 앱 이름이라 그대로 둔다(확정표 §8 #24).
       ar: "مدرّب GTO من HoldemMaster",
-      // it-todo: English scaffold; translate in the next stage.
       it: "HoldemMaster GTO Trainer",
     };

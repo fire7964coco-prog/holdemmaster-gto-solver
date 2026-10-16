@@ -221,15 +221,13 @@ const M = {
     // 확정표 §7-1 «بورد من N أوراق» 대신 콜론형 — §8 #14(변수 바로 뒤 아랍 명사) 검사와 충돌하지 않게
     warnBody: (n: number) => `الشجرة المعدَّلة مبنية لبورد من ${n} أوراق.`,
   },
-  // it-todo: translate the copied English values.
   it: {
-    inputError: "Could not read the cards. Enter 3–5 cards, such as AsKd7c or As Kd 7c. Your previous board is kept.",
-    placeholder: "e.g., AsKd7c",
-    clear: "Clear",
-    randomFlop: "Random Flop",
-    warnLabel: "Warning:",
-    warnBody: (n: number) =>
-      `The edited tree assumes a ${n}-card board.`,
+    inputError: "Impossibile leggere le carte. Inserisci da 3 a 5 carte, ad esempio AsKd7c o As Kd 7c. Il board precedente resta invariato.",
+    placeholder: "es. AsKd7c",
+    clear: "Svuota",
+    randomFlop: "Flop casuale",
+    warnLabel: "Avviso:",
+    warnBody: (n: number) => `L’albero modificato prevede un board di ${n} ${n === 1 ? "carta" : "carte"}.`,
   },
 } as const;
 

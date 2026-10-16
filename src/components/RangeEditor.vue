@@ -290,15 +290,13 @@ const M = {
     combos: "التركيبات",
     parseError: (range: string) => `تعذّرت قراءة النطاق: ${(range && ltrIso(range)) || "(نص فارغ)"}`,
   },
-  // it-todo: translate the copied English values.
   it: {
-    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. Tapping a cell that already has that weight clears it. The hand name and weight you tapped appear in large text above.",
-    clear: "Clear",
-    errorPrefix: "Error:",
-    weight: "Weight:",
-    combos: "combos",
-    parseError: (range: string) =>
-      `Failed to parse range: ${range || "(empty string)"}`,
+    mobileHint: "Imposta il peso con il cursore sotto la griglia, poi tocca una cella per applicarlo. Se la cella ha già quel peso, toccandola la svuoti. Il nome della mano e il peso selezionati appaiono in grande sopra la griglia.",
+    clear: "Svuota",
+    errorPrefix: "Errore:",
+    weight: "Peso:",
+    combos: "combo",
+    parseError: (range: string) => `Impossibile leggere il range: ${range || "(stringa vuota)"}`,
   },
 } as const;
 

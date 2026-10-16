@@ -150,13 +150,12 @@ const actionLabelsAr: Record<string, string> = {
   Allin: "أول إن",
   "All-in": "أول إن",
 };
-// it-todo: action buttons/history get explicit entries instead of the default name path.
 const actionLabelsIt: Record<string, string> = {
-  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
+  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in",
 };
-// it-todo: imperative action buttons; actionLabelsIt above is for history and legends.
+// Italian action buttons use imperatives; history and legends use the nouns above.
 const actionButtonLabelsIt: Record<string, string> = {
-  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
+  Fold: "Fold", Check: "Check", Call: "Chiama", Bet: "Punta", Raise: "Rilancia", Allin: "All-in", "All-in": "All-in",
 };
 const actionName = (name: string, role: "label" | "button" = "label") =>
   i18n.locale === "ko"
@@ -295,12 +294,11 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "بوت \u20663-bet\u2069",
       blind: "بلايند ضد بلايند",
     },
-    // it-todo: translate the copied English values.
     it: {
-      all: "All",
-      srp: "Single Raised",
-      "3bp": "3-Bet Pot",
-      blind: "Blind vs Blind",
+      all: "Tutti",
+      srp: "Piatto con un rilancio",
+      "3bp": "Piatto 3-bet",
+      blind: "Scontro tra bui",
     },
   };
   // 4벳 팟 = 그 언어 3벳 팟 이름의 숫자만 바꾼다 — 칩 줄에서 «3벳팟»·«4벳 팟»처럼 표기가 갈리지 않게
@@ -352,7 +350,7 @@ export const trainerActionLabel = (
       : i18n.locale === "ar"
       ? arLabelIso(`${label} ${ltrIso(amount)} (${ltrIso(`${pct}%`)} من البوت)`)
       : i18n.locale === "it"
-      ? `${label} ${amount} (${pct}% pot)` // it-todo
+      ? `${label} ${amount} (${pct}% del piatto)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return i18n.locale === "ar" ? arLabelIso(label, amount) : `${label} ${amount}`;

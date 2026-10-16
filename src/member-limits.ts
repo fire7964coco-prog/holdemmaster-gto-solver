@@ -134,11 +134,10 @@ const ar: typeof ko = {
   importOver: "بهذا الاستيراد تتجاوز العناصر المحفوظة على هذا الجهاز 10 — سجّل الدخول لاستيراد الملف كله",
   memberScenario: "هذا الموقف متاح للأعضاء فقط (الحساب مجاني) — سجّل الدخول لفتحه فورًا",
 };
-// it-todo: translate the copied English values.
 const it: typeof ko = {
-  saveFull: "Sign in to save more than 10 items and open your list on any phone or PC",
-  importOver: "This import would take this device past 10 saved items — sign in to import all of it",
-  memberScenario: "This situation is only for free members — sign in to open it right away",
+  saveFull: "Accedi per salvare più di 10 elementi e aprire la tua lista da qualsiasi telefono o PC",
+  importOver: "Con questa importazione supereresti i 10 elementi salvati sul dispositivo: accedi per importare l’intero file",
+  memberScenario: "Questa situazione è riservata a chi ha un account gratuito: accedi per aprirla subito",
 };
 export type MemberLabels = typeof ko;
 // This assignment checks both the locale set and every required key at build time.

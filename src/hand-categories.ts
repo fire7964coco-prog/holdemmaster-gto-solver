@@ -606,14 +606,13 @@ export const MADE_LABELS_IT: Record<MadeKey, string> = {
   nothing: "Nessuna mano fatta",
 };
 
-// it-todo: translate the copied English draw labels.
 export const DRAW_LABELS_IT: Record<DrawKey, string> = {
-  combo_draw: "Combo Draw",
-  flush_draw: "Flush Draw",
-  oesd: "OESD",
+  combo_draw: "Progetto combinato",
+  flush_draw: "Progetto di colore",
+  oesd: "Scala bilaterale",
   gutshot: "Gutshot",
-  backdoor_fd: "Backdoor FD",
-  no_draw: "No Draw",
+  backdoor_fd: "Progetto di colore backdoor",
+  no_draw: "Nessun progetto",
 };
 
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */

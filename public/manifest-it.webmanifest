@@ -1,7 +1,7 @@
 {
   "name": "HoldemMaster GTO Trainer",
   "short_name": "GTO Trainer",
-  "description": "A free GTO solver and trainer. All 13 Study Spots open instantly, even offline.",
+  "description": "Solver e trainer GTO gratuiti. Tutti i 13 esempi si aprono subito, anche offline.",
   "lang": "it",
   "dir": "ltr",
   "start_url": "/?view=trainer&lang=it",
@@ -37,9 +37,9 @@
   ],
   "shortcuts": [
     {
-      "name": "GTO Trainer",
+      "name": "Trainer GTO",
       "short_name": "Trainer",
-      "description": "Play hands dealt from real ranges and get graded on EV loss",
+      "description": "Gioca mani estratte da range reali e valuta le tue scelte in base all’EV loss",
       "url": "/?view=trainer&lang=it",
       "icons": [
         {
@@ -49,9 +49,9 @@
       ]
     },
     {
-      "name": "13 Study Spots",
-      "short_name": "Study Spots",
-      "description": "See the GTO strategy for 13 spots with no waiting",
+      "name": "13 esempi",
+      "short_name": "Esempi",
+      "description": "Scopri subito la strategia GTO di 13 spot",
       "url": "/?view=presets&lang=it",
       "icons": [
         {

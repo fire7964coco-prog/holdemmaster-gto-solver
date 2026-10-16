@@ -240,20 +240,19 @@ const checkedLabels: LocaleDict<FlopTrainerLabels> = {
     useBasic: "التدريب على الأسئلة الأساسية",
     again: "اليد نفسها مرة أخرى",
   },
-  // it-todo: translate the copied English values.
   it: {
-    sourceBasic: "Source: Basic",
-    sourceFlop: "Source: All flops",
+    sourceBasic: "Fonte: Base",
+    sourceFlop: "Fonte: Tutti i flop",
     sourceHelp:
-      "All flops: questions come from spots and flops pre-solved on our server (internet required). Basic: decision points from the study spots (works offline).",
-    closeOnly: "Close spots only",
-    closeHelp: "Only deals hands where the best and second-best actions are within the “Acceptable” EV margin.",
-    loading: "Loading flop…",
-    offline: "An internet connection is required.",
-    failed: "Couldn't load a question.",
-    retry: "Retry",
-    useBasic: "Practice basic questions",
-    again: "Same hand again",
+      "[Fonte: Tutti i flop]: domande da spot e flop precalcolati sul nostro server (serve internet). [Fonte: Base]: decisioni tratte dagli esempi di studio (disponibili offline).",
+    closeOnly: "Solo scelte vicine",
+    closeHelp: "Propone solo mani in cui la differenza di EV tra l’azione migliore e la seconda rientra nel margine di «Accettabile».",
+    loading: "Caricamento del flop…",
+    offline: "Serve una connessione a internet.",
+    failed: "Impossibile caricare una domanda.",
+    retry: "Riprova",
+    useBasic: "Allenati sui preset",
+    again: "Ripeti la stessa mano",
   },
 };
 
@@ -425,16 +424,15 @@ const boardLabels: LocaleDict<FlopBoardLabels> = {
     boardReset: "إعادة إلى الكل",
     boardEmpty: "لا فلوبات تطابق هذا الاختيار.",
   },
-  // it-todo: translate the copied English values.
   it: {
-    boardAll: "Board: All",
+    boardAll: "Board: Tutti",
     boardChip: "Board: {value}",
-    boardHelp: "Filter the flops you get by high card, suits, pairing and connectedness, or fix one specific flop.",
-    boardRule: "Within a row any choice can match; a flop must match every row you've set (empty rows allow all).",
-    specificFlop: "Specific flop",
-    pickCards: "Pick cards",
-    boardReset: "Reset to all",
-    boardEmpty: "No flops match this combination.",
+    boardHelp: "Filtra i flop per carta più alta, semi, coppie sul board e connessione, oppure scegli un flop specifico.",
+    boardRule: "In ogni riga basta soddisfare una delle scelte; il flop deve soddisfare tutte le righe impostate. Le righe vuote ammettono tutti i flop.",
+    specificFlop: "Flop specifico",
+    pickCards: "Scegli carte",
+    boardReset: "Mostra tutti",
+    boardEmpty: "Nessun flop corrisponde a questa combinazione.",
   },
 };
 export const flopBoardLabels = (locale: Locale): FlopBoardLabels => boardLabels[locale];

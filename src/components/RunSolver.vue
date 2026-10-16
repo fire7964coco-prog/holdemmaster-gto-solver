@@ -1118,56 +1118,53 @@ const M = {
       `Exploitability: ${value} (${percent})`,
     timeLine: (seconds: string) => `الوقت: ${seconds} ث`,
   },
-  // it-todo: translate the copied English values.
   it: {
     sharedSpotBanner:
-      "Shared spot loaded — press [Build Tree] → [Run Solver] to start solving.",
-    numThreadsLabel: "Number of threads:",
-    buildTree: "Build Tree",
-    copied: "Copied!",
-    shareSpot: "🔗 Share Spot",
-    statusLabel: "Status:",
-    statusNotLoaded: "Module not loaded",
-    statusBuilding: "Building tree…",
-    statusError: (message: string) => `Error: ${message}`,
-    statusBuilt: (threads: number) =>
-      `Tree built successfully (${threads} thread${threads === 1 ? "" : "s"})`,
-    precisionMode: "Precision mode:",
+      "Spot condiviso caricato: premi [Crea albero] → [Avvia solver] per iniziare il calcolo.",
+    numThreadsLabel: "Numero di thread:",
+    buildTree: "Crea albero",
+    copied: "Copiato!",
+    shareSpot: "🔗 Condividi spot",
+    statusLabel: "Stato:",
+    statusNotLoaded: "Modulo non caricato",
+    statusBuilding: "Creazione dell’albero…",
+    statusError: (message: string) => `Errore: ${message}`,
+    statusBuilt: (threads: number) => `Albero creato (${threads} thread)`,
+    precisionMode: "Modalità di precisione:",
     precisionTipIntro:
-      "The precision mode mainly affects memory usage. There are also a few other differences.",
+      "La modalità di precisione influisce soprattutto sull’uso della memoria. Ci sono anche alcune altre differenze.",
     precisionTipFp:
-      "32-bit floating point (FP): recommended when memory usage is below the limit (3.9GB). About 7 significant digits and better performance.",
+      "Virgola mobile a 32 bit (FP): consigliata quando l’uso della memoria resta sotto il limite di 3,9 GB. Offre circa 7 cifre significative e prestazioni migliori.",
     precisionTipInt:
-      "16-bit integer: an alternative when the 32-bit FP mode exceeds the memory limit. About 4 significant digits, so it is not suitable for a target exploitability below 0.1%, and it performs worse than 32-bit FP.",
-    fp32Label: "32-bit FP:",
-    int16Label: "16-bit integer:",
-    ramNeeded: (size: string) => `needs ${size} of RAM`,
-    limitExceeded: "(limit exceeded)",
-    ramLimit: "RAM limit: 3.9GB (= 4GB Wasm limit − 0.1GB margin)",
-    targetLabel: "Target exploitability:",
+      "Interi a 16 bit: un’alternativa quando la modalità FP a 32 bit supera il limite di memoria. Offre circa 4 cifre significative, quindi non è adatta a un’exploitability obiettivo inferiore allo 0,1%, ed è più lenta della modalità FP a 32 bit.",
+    fp32Label: "FP a 32 bit:",
+    int16Label: "Interi a 16 bit:",
+    ramNeeded: (size: string) => `richiede ${size} di RAM`,
+    limitExceeded: "(limite superato)",
+    ramLimit: "Limite RAM: 3,9 GB (= limite Wasm di 4 GB − margine di 0,1 GB)",
+    targetLabel: "Exploitability obiettivo:",
     exploitTipIntro:
-      "Specifies the acceptable distance from the Nash equilibrium. A lower value gives a more accurate result, but the computation takes longer.",
-    exploitTipDetailLabel: "Details:",
+      "Indica la distanza accettabile dall’equilibrio di Nash. Un valore più basso dà un risultato più preciso, ma richiede più tempo di calcolo.",
+    exploitTipDetailLabel: "Dettagli:",
     exploitTipDetail:
-      "In a Nash equilibrium, both players' strategies are MES (Maximally Exploitative Strategies) against each other. Using this property, we define the distance between an obtained strategy and the Nash equilibrium as follows:",
-    exploitTipFormula: "Distance = (Opponent's MES EV) - (Opponent's actual EV)",
+      "In un equilibrio di Nash, la strategia di ciascun giocatore è una MES contro quella dell’altro, cioè massimizza l’EV contro la strategia avversaria. Questa proprietà permette di definire così la distanza tra la strategia ottenuta e l’equilibrio di Nash:",
+    exploitTipFormula: "Distanza = (EV della MES avversaria) - (EV effettivo dell’avversario)",
     exploitTipOutro:
-      "This distance is always non-negative and is zero only if the obtained strategy is a part of a Nash equilibrium. Exploitability is defined as the average distance of both players.",
-    maxIterationsLabel: "Max iterations:",
-    runSolver: "Run Solver",
-    stop: "Stop",
-    pause: "Pause",
-    resume: "Resume",
-    solving: "Solving…",
-    finalizing: "Finalizing…",
-    pausedStatus: "Paused.",
-    finished: "Solver finished!",
-    stoppedEarly: "Stopped before reaching the target exploitability.",
-    allocatingMemory: "Allocating memory…",
-    iterations: (count: number) => `Iterations: ${count}`,
-    exploitabilityLine: (value: string, percent: string) =>
-      `Exploitability: ${value} (${percent})`,
-    timeLine: (seconds: string) => `Time elapsed: ${seconds}s`,
+      "Questa distanza non è mai negativa ed è zero solo se la strategia ottenuta fa parte di un equilibrio di Nash. L’exploitability è la media delle distanze dei due giocatori.",
+    maxIterationsLabel: "Iterazioni massime:",
+    runSolver: "Avvia solver",
+    stop: "Interrompi",
+    pause: "Pausa",
+    resume: "Riprendi",
+    solving: "Calcolo in corso…",
+    finalizing: "Finalizzazione…",
+    pausedStatus: "In pausa.",
+    finished: "Calcolo completato!",
+    stoppedEarly: "Calcolo interrotto prima di raggiungere l’exploitability obiettivo.",
+    allocatingMemory: "Allocazione della memoria…",
+    iterations: (count: number) => `Iterazioni: ${count}`,
+    exploitabilityLine: (value: string, percent: string) => `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Tempo trascorso: ${seconds} s`,
   },
 } as const;
 
@@ -1190,8 +1187,7 @@ const invalidLineMessage = () => pick(
   "Line tidak sah ditemui (memuatkan tetapan yang rosak?)",
   "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (cấu hình đã tải bị hỏng?)", "Найдена недопустимая линия (загружена повреждённая конфигурация?)",
     "خط غير صالح (هل التكوين المحمَّل تالف؟)",
-  // it-todo
-  "Invalid line found (loaded broken configurations?)"
+  "Trovata una linea non valida (hai caricato impostazioni danneggiate?)"
 );
 
 const checkConfig = (
@@ -1210,8 +1206,7 @@ const checkConfig = (
       "Le board doit contenir au moins 3 cartes", "Board harus berisi minimal 3 kartu",
       "Board mesti mengandungi sekurang-kurangnya 3 kad", "Board में कम से कम 3 कार्ड होने चाहिए", "Board'da en az 3 kart olmalı", "Board phải có ít nhất 3 lá", "На борде должно быть не меньше 3 карт",
     "يجب أن يحوي البورد 3 أوراق على الأقل",
-      // it-todo
-      "The board must contain at least 3 cards");
+      "Il board deve contenere almeno 3 carte");
   }
 
   if (config.startingPot <= 0) {
@@ -1227,8 +1222,7 @@ const checkConfig = (
       "Le pot initial doit être positif", "Pot awal harus lebih dari 0",
       "Pot permulaan mesti lebih daripada 0", "शुरुआती pot शून्य से अधिक होना चाहिए", "Başlangıç pot'u 0'dan büyük olmalı", "Pot ban đầu phải lớn hơn 0", "Начальный банк должен быть больше 0",
     "يجب أن يكون البوت الابتدائي أكبر من 0",
-      // it-todo
-      "Starting pot must be positive");
+      "Il piatto iniziale deve essere positivo");
   }
 
   if (config.startingPot > MAX_AMOUNT) {
@@ -1244,15 +1238,13 @@ const checkConfig = (
       `Le pot initial ne doit pas dépasser ${MAX_AMOUNT}`, `Pot awal tidak boleh melebihi ${MAX_AMOUNT}`,
       `Pot permulaan tidak boleh melebihi ${MAX_AMOUNT}`, `शुरुआती pot ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Başlangıç pot'u en fazla ${MAX_AMOUNT} olabilir`, `Pot ban đầu không được vượt quá ${MAX_AMOUNT}`, `Начальный банк не может превышать ${MAX_AMOUNT}`,
     `يجب ألا يتجاوز البوت الابتدائي ${MAX_AMOUNT}`,
-      // it-todo
-      `Starting pot must not exceed ${MAX_AMOUNT}`);
+      `Il piatto iniziale non deve superare ${MAX_AMOUNT}`);
   }
 
   if (config.startingPot % 1 !== 0) {
     return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier", "Pot awal harus bilangan bulat", "Pot permulaan mesti nombor bulat", "शुरुआती pot का मान पूर्णांक होना चाहिए", "Başlangıç pot'u tam sayı olmalı", "Pot ban đầu phải là số nguyên", "Начальный банк должен быть целым числом",
     "يجب أن يكون البوت الابتدائي عددًا صحيحًا",
-      // it-todo
-      "Starting pot must be an integer");
+      "Il piatto iniziale deve essere un numero intero");
   }
 
   if (config.effectiveStack <= 0) {
@@ -1268,8 +1260,7 @@ const checkConfig = (
       "Le stack effectif doit être positif", "Stack efektif harus lebih dari 0",
       "Stack efektif mesti lebih daripada 0", "Effective stack शून्य से अधिक होना चाहिए", "Efektif stack 0'dan büyük olmalı", "Stack hiệu dụng phải lớn hơn 0", "Эффективный стек должен быть больше 0",
     "يجب أن يكون الستاك الفعلي أكبر من 0",
-      // it-todo
-      "Effective stack must be positive");
+      "Lo stack effettivo deve essere positivo");
   }
 
   if (config.effectiveStack > MAX_AMOUNT) {
@@ -1285,8 +1276,7 @@ const checkConfig = (
       `Le stack effectif ne doit pas dépasser ${MAX_AMOUNT}`, `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`,
       `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`, `Effective stack ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Efektif stack en fazla ${MAX_AMOUNT} olabilir`, `Stack hiệu dụng không được vượt quá ${MAX_AMOUNT}`, `Эффективный стек не может превышать ${MAX_AMOUNT}`,
     `يجب ألا يتجاوز الستاك الفعلي ${MAX_AMOUNT}`,
-      // it-todo
-      `Effective stack must not exceed ${MAX_AMOUNT}`);
+      `Lo stack effettivo non deve superare ${MAX_AMOUNT}`);
   }
 
   if (config.effectiveStack % 1 !== 0) {
@@ -1302,8 +1292,7 @@ const checkConfig = (
       "Le stack effectif doit être un nombre entier", "Stack efektif harus bilangan bulat",
       "Stack efektif mesti nombor bulat", "Effective stack का मान पूर्णांक होना चाहिए", "Efektif stack tam sayı olmalı", "Stack hiệu dụng phải là số nguyên", "Эффективный стек должен быть целым числом",
     "يجب أن يكون الستاك الفعلي عددًا صحيحًا",
-      // it-todo
-      "Effective stack must be an integer");
+      "Lo stack effettivo deve essere un numero intero");
   }
 
   const betConfig = [
@@ -1311,85 +1300,73 @@ const checkConfig = (
       s: config.oopFlopBetSanitized,
       kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP", "Bet flop OOP", "OOP flop bet", "OOP flop bet", "Bet flop OOP", "Бет OOP на флопе",
     "رهان OOP على الفلوب",
-        // it-todo
-        "OOP flop bet"),
+        "Puntata OOP al flop"),
     },
     {
       s: config.oopFlopRaiseSanitized,
       kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP", "Raise flop OOP", "OOP flop raise", "OOP flop raise", "Raise flop OOP", "Рейз OOP на флопе",
     "رايز OOP على الفلوب",
-        // it-todo
-        "OOP flop raise"),
+        "Rilancio OOP al flop"),
     },
     {
       s: config.oopTurnBetSanitized,
       kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP", "Bet turn OOP", "OOP turn bet", "OOP turn bet", "Bet turn OOP", "Бет OOP на тёрне",
     "رهان OOP على التيرن",
-        // it-todo
-        "OOP turn bet"),
+        "Puntata OOP al turn"),
     },
     {
       s: config.oopTurnRaiseSanitized,
       kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP", "Raise turn OOP", "OOP turn raise", "OOP turn raise", "Raise turn OOP", "Рейз OOP на тёрне",
     "رايز OOP على التيرن",
-        // it-todo
-        "OOP turn raise"),
+        "Rilancio OOP al turn"),
     },
     {
       s: config.oopRiverBetSanitized,
       kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP", "Bet river OOP", "OOP river bet", "OOP river bet", "Bet river OOP", "Бет OOP на ривере",
     "رهان OOP على الريفر",
-        // it-todo
-        "OOP river bet"),
+        "Puntata OOP al river"),
     },
     {
       s: config.oopRiverRaiseSanitized,
       kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP", "Raise river OOP", "OOP river raise", "OOP river raise", "Raise river OOP", "Рейз OOP на ривере",
     "رايز OOP على الريفر",
-        // it-todo
-        "OOP river raise"),
+        "Rilancio OOP al river"),
     },
     {
       s: config.ipFlopBetSanitized,
       kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP", "Bet flop IP", "IP flop bet", "IP flop bet", "Bet flop IP", "Бет IP на флопе",
     "رهان IP على الفلوب",
-        // it-todo
-        "IP flop bet"),
+        "Puntata IP al flop"),
     },
     {
       s: config.ipFlopRaiseSanitized,
       kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP", "Raise flop IP", "IP flop raise", "IP flop raise", "Raise flop IP", "Рейз IP на флопе",
     "رايز IP على الفلوب",
-        // it-todo
-        "IP flop raise"),
+        "Rilancio IP al flop"),
     },
     {
       s: config.ipTurnBetSanitized,
       kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP", "Bet turn IP", "IP turn bet", "IP turn bet", "Bet turn IP", "Бет IP на тёрне",
     "رهان IP على التيرن",
-        // it-todo
-        "IP turn bet"),
+        "Puntata IP al turn"),
     },
     {
       s: config.ipTurnRaiseSanitized,
       kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP", "Raise turn IP", "IP turn raise", "IP turn raise", "Raise turn IP", "Рейз IP на тёрне",
     "رايز IP على التيرن",
-        // it-todo
-        "IP turn raise"),
+        "Rilancio IP al turn"),
     },
     {
       s: config.ipRiverBetSanitized,
       kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP", "Bet river IP", "IP river bet", "IP river bet", "Bet river IP", "Бет IP на ривере",
     "رهان IP على الريفر",
-        // it-todo
-        "IP river bet"),
+        "Puntata IP al river"),
     },
     {
       s: config.ipRiverRaiseSanitized,
       kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP", "Raise river IP", "IP river raise", "IP river raise", "Raise river IP", "Рейз IP на ривере",
     "رايز IP على الريفر",
-        // it-todo
-        "IP river raise"),
+        "Rilancio IP al river"),
     },
   ];
 
@@ -1403,16 +1380,14 @@ const checkConfig = (
     if (!config.oopTurnDonkSanitized.valid) {
       return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP", "Donk turn OOP", "OOP turn donk", "OOP turn donk", "Donk turn OOP", "Донк OOP на тёрне",
     "دونك OOP على التيرن",
-        // it-todo
-        "OOP turn donk")}: ${
+        "Donk bet OOP al turn")}: ${
         i18n.locale === "ar" ? autoIso(config.oopTurnDonkSanitized.s) : config.oopTurnDonkSanitized.s
       }`;
     }
     if (!config.oopRiverDonkSanitized.valid) {
       return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP", "Donk river OOP", "OOP river donk", "OOP river donk", "Donk river OOP", "Донк OOP на ривере",
     "دونك OOP على الريفر",
-        // it-todo
-        "OOP river donk")}: ${
+        "Donk bet OOP al river")}: ${
         i18n.locale === "ar" ? autoIso(config.oopRiverDonkSanitized.s) : config.oopRiverDonkSanitized.s
       }`;
     }
@@ -1431,8 +1406,7 @@ const checkConfig = (
       "Seuil d'ajout du all-in invalide", "Ambang tambah all-in tidak valid",
       "Ambang tambah all-in tidak sah", "All-in जोड़ने की सीमा अमान्य है", "Geçersiz all-in ekleme eşiği", "Ngưỡng thêm all-in không hợp lệ", "Недопустимый порог добавления олл-ина",
     "حد إضافة الأول إن غير صالح",
-      // it-todo
-      "Invalid add all-in threshold");
+      "Soglia per aggiungere un all-in non valida");
   }
 
   if (config.forceAllInThreshold < 0) {
@@ -1448,8 +1422,7 @@ const checkConfig = (
       "Seuil de all-in forcé invalide", "Ambang all-in paksa tidak valid",
       "Ambang all-in paksa tidak sah", "Bet को all-in बनाने की सीमा अमान्य है", "Geçersiz zorunlu all-in eşiği", "Ngưỡng buộc all-in không hợp lệ", "Недопустимый порог принудительного олл-ина",
     "حد الأول إن الإجباري غير صالح",
-      // it-todo
-      "Invalid force all-in threshold");
+      "Soglia per forzare l’all-in non valida");
   }
 
   if (config.mergingThreshold < 0) {
@@ -1465,8 +1438,7 @@ const checkConfig = (
       "Seuil de fusion invalide", "Ambang penggabungan tidak valid",
       "Ambang penggabungan tidak sah", "Bet मिलाने की सीमा अमान्य है", "Geçersiz birleştirme eşiği", "Ngưỡng gộp không hợp lệ", "Недопустимый порог слияния",
     "حد الدمج غير صالح",
-      // it-todo
-      "Invalid merging threshold");
+      "Soglia di unione non valida");
   }
 
   if (
@@ -1485,8 +1457,7 @@ const checkConfig = (
       `Board invalide (${config.expectedBoardLength} cartes requises)`, `Board tidak valid (butuh ${config.expectedBoardLength} kartu)`,
       `Board tidak sah (perlu ${config.expectedBoardLength} kad)`, `अमान्य Board (${config.expectedBoardLength} कार्ड चाहिए)`, `Geçersiz board (${config.expectedBoardLength} kart gerekli)`, `Board không hợp lệ (cần ${config.expectedBoardLength} lá)`, `Недопустимый борд (нужно ${config.expectedBoardLength} ${ruPlural(config.expectedBoardLength, "карта", "карты", "карт")})`,
     `البورد غير صالح (عدد الأوراق المطلوب: ${config.expectedBoardLength})`,
-      // it-todo
-      `Invalid board (${config.expectedBoardLength} cards required)`);
+      `Board non valido (carte richieste: ${config.expectedBoardLength})`);
   }
 
   const addedLinesArray =
@@ -1528,8 +1499,7 @@ const checkConfig = (
       "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
       "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)", "Cấu hình không hợp lệ (cấu hình đã tải bị hỏng?)", "Недопустимая конфигурация (загружена повреждённая конфигурация?)",
     "تكوين غير صالح (هل التكوين المحمَّل تالف؟)",
-      // it-todo
-      "Invalid configurations (loaded broken configurations?)");
+      "Impostazioni non valide (hai caricato impostazioni danneggiate?)");
   }
 
   return null;
@@ -2010,8 +1980,7 @@ export default defineComponent({
           "Pour partager un spot, renseigne d'abord les ranges OOP et IP et au moins 3 cartes de board.", "Untuk membagikan spot, isi dulu range OOP dan IP serta minimal 3 kartu board.",
           "Untuk berkongsi spot, isi dahulu range OOP dan IP serta sekurang-kurangnya 3 kad board.", "स्पॉट शेयर करने से पहले OOP और IP की range तथा Board के कम से कम 3 कार्ड दर्ज करें।", "Spot paylaşmak için önce OOP ve IP range'lerini ve en az 3 board kartını gir.", "Để chia sẻ spot, trước hết hãy nhập range OOP, range IP và ít nhất 3 lá board.", "Чтобы поделиться спотом, сначала введи диапазоны OOP и IP и не меньше 3 карт борда.",
     "لمشاركة موقف، أدخل أولًا نطاقي OOP وIP و3 أوراق على الأقل في البورد.",
-          // it-todo
-          "To share a spot, enter the OOP and IP ranges and at least 3 board cards first.");
+          "Per condividere uno spot, inserisci prima i range OOP e IP e almeno 3 carte del board.");
         return;
       }
       if (url.length > 8192) {
@@ -2029,8 +1998,7 @@ export default defineComponent({
           "Pautan perkongsian terlalu panjang — ringkaskan tetapan tree atau eksport sebagai fail konfigurasi.",
           "शेयर लिंक बहुत लंबा है — ट्री की सेटिंग कम करें या उन्हें कॉन्फ़िगरेशन फ़ाइल के रूप में एक्सपोर्ट करें।", "Paylaşım bağlantısı çok uzun — ağaç ayarlarını sadeleştir ya da yapılandırma dosyası olarak dışa aktar.", "Liên kết chia sẻ quá dài — hãy đơn giản hóa cài đặt cây hoặc xuất ra tệp cấu hình.", "Ссылка для отправки слишком длинная — упрости настройки дерева или экспортируй их в файл конфигурации.",
     "رابط المشاركة طويل جدًا — بسّط إعدادات الشجرة أو صدّرها كملف تكوين.",
-          // it-todo
-          "The share link is too long — simplify the tree settings or export them as a configuration file."
+          "Il collegamento di condivisione è troppo lungo: semplifica le impostazioni dell’albero oppure esportale in un file."
         );
         return;
       }
@@ -2055,7 +2023,7 @@ export default defineComponent({
       i18n.locale === "fr" ? { gb: "\u00a0Go", mb: "\u00a0Mo" }
         : i18n.locale === "ru" ? { gb: "\u00a0\u0413\u0411", mb: "\u00a0\u041c\u0411" } // \uc6a9\uc5b4\ud655\uc815\ud45c \u00a72-1
         : i18n.locale === "ar" ? { gb: " GB", mb: " MB" } // ar: 라틴 단위 · 사용처에서 ltrIso 격리(확정표 §2-1)
-        : i18n.locale === "it" ? { gb: "\u00a0GB", mb: "\u00a0MB" } // it-todo: Latin units, Italian spacing.
+        : i18n.locale === "it" ? { gb: "\u00a0GB", mb: "\u00a0MB" }
         : { gb: " GB", mb: " MB" }
     );
 

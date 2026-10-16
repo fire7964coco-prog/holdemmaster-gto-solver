@@ -170,12 +170,11 @@ const M = {
     draws: "الدرو",
     noDraws: "لا معلومات عن الدرو",
   },
-  // it-todo: translate the copied English values.
   it: {
-    hands: "Hands",
-    noHands: "No hands to display",
-    draws: "Draws",
-    noDraws: "No draw information",
+    hands: "Mani fatte",
+    noHands: "Nessuna mano da mostrare",
+    draws: "Progetti",
+    noDraws: "Nessuna informazione sui progetti",
   },
 } as const;
 

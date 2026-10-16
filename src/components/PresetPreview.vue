@@ -347,18 +347,17 @@ const M = {
     playerLabel: "اللاعب:",
     oopHint: "هذه استراتيجية اللاعب الذي يتصرف أولًا (OOP). لرؤية الخصم (IP) اختر IP في خانة «اللاعب:» أعلاه.",
   },
-  // it-todo: translate the copied English values.
   it: {
-    backToList: "← Back",
-    pot: "Pot",
+    backToList: "← Indietro",
+    pot: "Piatto",
     stack: "Stack",
-    flopOnlyNote: "Flop strategy only. Want to click through turn and river? →",
-    solveThisSpot: "Solve this spot yourself",
-    readArticle: "Read the article",
-    loadError: (e: string) => `Couldn't load the precomputed results: ${e}`,
-    loading: "Loading results…",
-    playerLabel: "Player:",
-    oopHint: "This is the strategy of the player who acts first (OOP). To see the opponent (IP), set “Player” above to IP.",
+    flopOnlyNote: "Solo strategia al flop. Vuoi esplorare turn e river? →",
+    solveThisSpot: "Calcola questo spot",
+    readArticle: "Leggi l’articolo",
+    loadError: (e: string) => `Impossibile caricare i risultati precalcolati: ${e}`,
+    loading: "Caricamento dei risultati…",
+    playerLabel: "Giocatore:",
+    oopHint: "Questa è la strategia di chi agisce per primo (OOP). Per vedere l’avversario (IP), scegli IP nel campo «Giocatore:» qui sopra.",
   },
 } as const;
 

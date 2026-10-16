@@ -174,17 +174,16 @@ export const RNG_M = {
       `مقبول — يمزج السولفر هذا القرار، لكن المطلوب لهذا الرقم: ${action}.`,
     noteOther: (action: string) => `المطلوب لهذا الرقم: ${action}.`,
   },
-  // it-todo: translate the copied English values.
   it: {
-    mode: { off: "RNG: Off", high: "RNG: High", low: "RNG: Low" },
+    mode: { off: "RNG: No", high: "RNG: High", low: "RNG: Low" },
     modeHelp:
-      "Random number (1–100) practice — each hand gets a number, and you pick the action that number points to. High: higher numbers mean more aggressive actions · Low: lower numbers mean more aggressive actions. Not used for the Daily Puzzle.",
-    bandsTitle: "RNG ranges",
-    yourNumber: "Your number",
-    noteBest: (action: string) => `You picked the action for this number (${action}).`,
+      "Allenamento con un numero casuale (1–100): ogni mano riceve un numero e tu scegli l’azione corrispondente. High: i numeri più alti indicano azioni più aggressive · Low: i numeri più bassi indicano azioni più aggressive. Non si usa nella [Sfida del giorno].",
+    bandsTitle: "Intervalli RNG",
+    yourNumber: "Il tuo numero",
+    noteBest: (action: string) => `Hai scelto l’azione corrispondente a questo numero (${action}).`,
     noteMixed: (action: string) =>
-      `Acceptable — the solver mixes this action, but this number calls for ${action}.`,
-    noteOther: (action: string) => `This number calls for ${action}.`,
+      `Accettabile: il solver usa anche questa azione nella strategia mista, ma a questo numero corrisponde «${action}».`,
+    noteOther: (action: string) => `A questo numero corrisponde l’azione «${action}».`,
   },
 } satisfies LocaleDict<{
   mode: Record<"off" | "high" | "low", string>;

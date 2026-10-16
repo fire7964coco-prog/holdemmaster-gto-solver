@@ -165,16 +165,15 @@ const ar: typeof ko = {
   pending: "لم يُرفع إلى الحساب بعد — سنعيد المحاولة عند فتح هذه الشاشة أو الحفظ مجددًا",
   limit: "تم بلوغ حد الحساب — يستمر الحفظ على هذا الجهاز",
 };
-// it-todo: translate the copied English values.
 const it: typeof ko = {
-  invite: "Sign in to open your saved list on any phone or PC",
-  google: "Continue with Google",
-  kakao: "Continue with Kakao",
-  telegram: "Continue with Telegram",
-  syncing: "Syncing with your account…",
-  ok: "Kept in your account · last synced {time}",
-  pending: "Not uploaded yet — we'll retry next time you open this screen or save",
-  limit: "Account limit reached — still saving on this device",
+  invite: "Accedi per aprire la tua lista salvata da qualsiasi telefono o PC",
+  google: "Continua con Google",
+  kakao: "Continua con Kakao",
+  telegram: "Continua con Telegram",
+  syncing: "Sincronizzazione con il tuo account…",
+  ok: "Salvato nel tuo account · ultima sincronizzazione {time}",
+  pending: "Non ancora caricato: riproveremo quando riaprirai questa schermata o salverai",
+  limit: "Limite dell’account raggiunto: il salvataggio su questo dispositivo resta attivo",
 };
 export type SavedSyncLabels = Record<keyof typeof ko, string>;
 // This assignment checks both the locale set and every required key at build time.

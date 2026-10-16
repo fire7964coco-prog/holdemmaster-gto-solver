@@ -1,7 +1,7 @@
 {
   "name": "npokers",
   "short_name": "npokers",
-  "description": "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+  "description": "Solver GTO gratuito nel browser, senza installazione. Calcola la strategia postflop del Texas Hold’em con range, board e dimensioni di puntata.",
   "lang": "it",
   "dir": "ltr",
   "start_url": "/?lang=it",
@@ -37,9 +37,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Preflop Charts",
-      "short_name": "Charts",
-      "description": "Opening & defense ranges by position",
+      "name": "Range preflop",
+      "short_name": "Range",
+      "description": "Range di apertura e difesa per posizione",
       "url": "/?view=preflop&lang=it",
       "icons": [
         {
@@ -49,9 +49,9 @@
       ]
     },
     {
-      "name": "Equity Calculator",
+      "name": "Calcolatore di equity",
       "short_name": "Equity",
-      "description": "Hand and range equity",
+      "description": "Equity di mani e range",
       "url": "/?view=equity&lang=it",
       "icons": [
         {

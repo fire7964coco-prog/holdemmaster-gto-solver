@@ -152,12 +152,11 @@ const M = {
     titleLine2: "مدرّب GTO.",
     footer: "سولفر GTO مجاني · يعمل دون اتصال",
   },
-  // it-todo: translate the copied English values.
   it: {
-    greeting: "Welcome to",
+    greeting: "Ti diamo il benvenuto su",
     titleLine1: "HoldemMaster",
     titleLine2: "GTO Trainer.",
-    footer: "Free GTO Solver · Works Offline",
+    footer: "Solver GTO gratuito · Funziona offline",
   },
 } as const;
 

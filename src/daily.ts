@@ -373,16 +373,14 @@ export const dailyShareText = (verdict: string) => {
       .filter(Boolean)
       .join("\n");
   }
-  // it-todo: English copy; date/number/URL already follow the Italian contract.
   if (i18n.locale === "it") {
     return [
-      `[Daily GTO Puzzle · ${dailyCardDate()}]`,
-      `My result: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
-      // it-todo: translate both noun forms; only n=1 is singular (§7).
-      dailyState.streak > 0 ? (dailyState.streak === 1 ? `${dailyState.streak}-day streak` : `${dailyState.streak}-day streak`) : "",
+      `[Sfida GTO del giorno · ${dailyCardDate()}]`,
+      `Il mio risultato: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 0 ? (dailyState.streak === 1 ? `${dailyState.streak} giorno consecutivo` : `${dailyState.streak} giorni consecutivi`) : "",
       "",
-      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=it",
-      "(HoldemMaster GTO Solver · one puzzle a day)",
+      "Prova la stessa sfida → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=it",
+      "(HoldemMaster GTO Trainer · una sfida al giorno)",
     ].filter(Boolean).join("\n");
   }
   if (i18n.locale === "en") {

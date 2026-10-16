@@ -286,18 +286,15 @@ const M = {
     betsFilled: (flop: string, later: string, raise: string) => `كانت أحجام الرهان فارغة، فأضيفت القيم الافتراضية أيضًا — الفلوب ${ltrIso(flop)} · التيرن/الريفر ${ltrIso(later)} · رايز ${ltrIso(raise)}`,
     next: "التالي: ③ البورد",
   },
-  // it-todo: translate the copied English values.
   it: {
-    title: "Fill ranges by position",
-    note: "Pick who opened and who called, then press the button below — both ranges, the pot and the stack are filled in at once. The ranges are the same as in Preflop Charts (6-max cash, 100bb).",
-    opener: "Open",
+    title: "Riempi i range per posizione",
+    note: "Scegli chi ha aperto e chi ha chiamato, poi premi il pulsante qui sotto: entrambi i range, il piatto e lo stack vengono compilati insieme. I range sono gli stessi di «Range preflop» (cash game 6-max, 100bb).",
+    opener: "Apertura",
     caller: "Call",
-    apply: "Fill both ranges",
-    applied: (oop: string, ip: string, pot: string, stack: string) =>
-      `${oop} (OOP) · ${ip} (IP) ranges filled in. Pot ${pot}bb · Stack ${stack}bb`,
-    betsFilled: (flop: string, later: string, raise: string) =>
-      `Bet sizes were empty, so defaults were filled in too — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
-    next: "Next: ③ Board",
+    apply: "Riempi entrambi i range",
+    applied: (oop: string, ip: string, pot: string, stack: string) => `Range compilati: ${oop} (OOP) · ${ip} (IP). Piatto ${pot}bb · Stack ${stack}bb`,
+    betsFilled: (flop: string, later: string, raise: string) => `Le dimensioni di puntata erano vuote: sono stati inseriti anche i valori predefiniti — Flop ${flop} · Turn/River ${later} · Rilancio ${raise}`,
+    next: "Prossimo passo: ③ Board",
   },
 } as const;
 

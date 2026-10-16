@@ -169,9 +169,8 @@ const M = {
     noGraph: "الرسم البياني غير متاح",
     equity: "الإكويتي",
   },
-  // it-todo: translate the copied English values.
   it: {
-    noGraph: "No graph available",
+    noGraph: "Nessun grafico disponibile",
     equity: "Equity",
   },
 } as const;

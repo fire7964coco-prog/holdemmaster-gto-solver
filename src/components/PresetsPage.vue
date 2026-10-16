@@ -365,21 +365,20 @@ const M = {
     footnote:
       "النطاقات قريبة من اللعب الأونلاين المعتاد بستاك 100bb. حمّل الموقف وغيّر النطاقات وقارن النتائج — طريقة ممتازة للتعلّم.",
   },
-  // it-todo: translate the copied English values.
   it: {
-    infoBtn1: "[⚡ View results]",
+    infoBtn1: "[⚡ Mostra risultati]",
     infoText1:
-      " shows the solved strategy instantly. Use ",
-    infoBtn2: "[Solve it yourself]",
+      " mostra subito la strategia calcolata. Usa ",
+    infoBtn2: "[Calcola tu]",
     infoText2:
-      " only when you want to tweak the ranges or explore turn and river play.",
-    pot: "Pot",
+      " solo se vuoi modificare i range o esplorare il gioco su turn e river.",
+    pot: "Piatto",
     stack: "Stack",
-    articleLink: "Read article",
-    viewResults: "View results",
-    solveYourself: "Solve it yourself",
+    articleLink: "Leggi l’articolo",
+    viewResults: "Mostra risultati",
+    solveYourself: "Calcola tu",
     footnote:
-      "Ranges are approximations of standard 100bb online play. Load a spot, tweak the ranges, and compare — a great way to study.",
+      "I range approssimano il gioco online standard a 100bb. Carica uno spot, modifica i range e confronta i risultati: è un ottimo modo per studiare.",
   },
 } as const;
 

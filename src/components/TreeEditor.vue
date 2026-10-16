@@ -262,10 +262,7 @@ import { CheckIcon } from "@heroicons/vue/20/solid";
 import { TrashIcon } from "@heroicons/vue/24/outline";
 import { i18n, ltrIso } from "../i18n";
 
-// it-todo: display-only action nouns; engine names and encoded paths stay unchanged.
-const actionNamesIt: Record<string, string> = {
-  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
-};
+const actionNamesIt: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" };
 const displayActionName = (name: string) => i18n.locale === "it" ? actionNamesIt[name] ?? name : name;
 
 const M = {
@@ -538,22 +535,21 @@ const M = {
     addedLines: "الخطوط المضافة:",
     removedLines: "الخطوط المحذوفة:",
   },
-  // it-todo: translate the copied English values.
   it: {
-    treeError: "Error: Failed to build the tree (loaded a broken tree?)",
-    pot: "Pot",
+    treeError: "Errore: impossibile creare l’albero (hai caricato un albero danneggiato?)",
+    pot: "Piatto",
     stack: "Stack",
-    noActions: "(No actions)",
-    wins: "wins",
-    invalidTerminals: "Invalid terminal nodes:",
-    addBetAction: "Add Bet Action",
-    removeNode: "Remove Selected Node",
-    betAmount: "Bet Amount:",
-    potRate: (pct: string) => `(${pct}% of the pot)`,
-    saveEdits: "Save Edits",
-    cancelEdits: "Cancel Edits",
-    addedLines: "Added lines:",
-    removedLines: "Removed lines:",
+    noActions: "(Nessuna azione)",
+    wins: "vince",
+    invalidTerminals: "Nodi terminali non validi:",
+    addBetAction: "Aggiungi puntata",
+    removeNode: "Rimuovi nodo selezionato",
+    betAmount: "Puntata:",
+    potRate: (pct: string) => `(${pct}% del piatto)`,
+    saveEdits: "Salva modifiche",
+    cancelEdits: "Annulla modifiche",
+    addedLines: "Linee aggiunte:",
+    removedLines: "Linee rimosse:",
   },
 } as const;
 

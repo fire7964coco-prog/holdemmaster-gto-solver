@@ -154,10 +154,7 @@ import { expandUniform, NodeLock, sameHistory, useNodeLockStore } from "../node-
 import { Results, Spot } from "../result-types";
 import { useStore } from "../store";
 
-// it-todo: display-only action nouns; stored locks retain the engine action names.
-const actionNamesIt: Record<string, string> = {
-  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
-};
+const actionNamesIt: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" };
 const displayActionName = (name: string) => {
   if (i18n.locale !== "it") return name;
   // Comparison snapshots keep the engine's combined "Bet:50" token.
