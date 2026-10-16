@@ -3458,7 +3458,7 @@ const M = {
     customTitleAfter: " nell’ordine indicato",
     step1Bold: "① Range OOP / ② Range IP",
     step1After:
-      " — seleziona le mani nella griglia 13×13 con un clic e trascina, oppure inserisci il range come testo: ",
+      " — seleziona le mani nella griglia 13×13 facendo clic e trascinando, oppure inserisci il range come testo: ",
     step1Hint:
       "22+ = tutte le coppie servite · A2s+ = da A2s ad AKs · KTo+ = da KTo a KQo. Nella griglia: diagonale = coppie servite, in alto a destra = suited, in basso a sinistra = offsuit",
     exampleHeader:
@@ -3488,7 +3488,7 @@ const M = {
       "Ti permette di spostarti lungo la linea di gioco (flop → puntata → call → turn…). Premi un nodo per vedere la strategia in quel punto",
     rTerm2: "Griglia 13×13 (a sinistra)",
     rDef2:
-      "Ogni casella rappresenta una mano; le proporzioni dei colori indicano la frequenza delle azioni. 🟥 puntata/rilancio (più scuro = importo maggiore) · 🟩 check/call · casella attenuata = mano fuori dal range. La strategia GTO è mista: con la stessa mano alterna le azioni secondo determinate frequenze, per non diventare prevedibile",
+      "Ogni cella rappresenta una mano; le proporzioni dei colori indicano la frequenza delle azioni. 🟥 puntata/rilancio (più scuro = importo maggiore) · 🟩 check/call · cella attenuata = mano fuori dal range. La strategia GTO è mista: con la stessa mano alterna le azioni secondo determinate frequenze, per non diventare prevedibile",
     rTerm3: "Riquadri (in alto a destra)",
     rDef3: "Frequenze delle azioni (%) e numero di combo dell’intero range",
     rTerm4: "Categorie di mani (al centro a destra)",
@@ -3518,9 +3518,9 @@ const M = {
     gradBefore: "La valutazione misura la perdita di valore atteso, espressa come ",
     gradBold: "EV loss (bb)",
     gradAfter:
-      ", anziché limitarsi a giusto o sbagliato. Il GTO alterna più azioni con la stessa mano: un’azione poco frequente non è per forza un errore. Conta quanto EV perde",
+      ", invece di limitarsi a «giusto» o «sbagliato». Il GTO alterna più azioni con la stessa mano: un’azione poco frequente non è per forza un errore. Ciò che conta è quanto EV perde",
     verdictTerm: "Soglie di valutazione",
-    verdictBefore: "Si misurano ",
+    verdictBefore: "Le soglie si misurano ",
     verdictBold: "in rapporto al piatto",
     verdictAfter:
       ": fino allo 0,35% del piatto = Scelta migliore · fino all’1% = Accettabile · oltre = Da rivedere. Per esempio, in un piatto con un rilancio (SRP) da 5,5bb, le soglie sono 0,02bb e 0,06bb; in un piatto 3-bet da 22,5bb sono 0,08bb e 0,23bb.",
@@ -3590,7 +3590,7 @@ const M = {
 
     studyTitle: "Percorso di studio consigliato",
     study1:
-      `Studia i ${SPOT_COUNT} Esempi nell’ordine proposto: ogni spot completa quelli precedenti`,
+      `Studia i ${SPOT_COUNT} Esempi nell’ordine proposto: ogni spot si basa su quelli precedenti`,
     study2:
       "Se ti chiedi «Perché questa mano fa anche check?», confronta l’EV delle azioni nella tabella di dettaglio",
     study3:
@@ -3614,13 +3614,13 @@ const M = {
 
     errTitle: "Hai trovato un problema da correggere?",
     err1: "Se la schermata non funziona o un calcolo si blocca, i dettagli dell’errore vengono registrati automaticamente su questo dispositivo. ",
-    errBold: "I registri restano sul tuo dispositivo",
+    errBold: "Il registro resta sul tuo dispositivo",
     err2:
-      ": possiamo leggerli solo se li copi qui sotto e li pubblichi nella comunità. Contengono solo il messaggio di errore e il tipo di browser, mai i tuoi range o la cronologia di studio.",
+      ": possiamo leggerlo solo se lo copi qui sotto e lo pubblichi nella comunità. Contiene solo il messaggio di errore e il tipo di browser, mai i tuoi range o la cronologia di studio.",
     errLoggedLabel: "Errori registrati",
     errCount: (n: number) => `${n}`,
     errCopied: "Copiato",
-    errCopyBtn: "Copia dettagli errore",
+    errCopyBtn: "Copia i dettagli dell’errore",
     errClearBtn: "Svuota registro",
     errNone: "Nessun errore registrato.",
     errPrompt: "Copia il testo qui sotto",

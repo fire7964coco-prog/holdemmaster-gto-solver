@@ -212,11 +212,11 @@ export const M = {
     verdictBest: "أفضل قرار", verdictGood: "مقبول", verdictBad: "يحتاج مراجعة", evLoss: "خسارة EV", frequency: "التكرار", actionEv: "EV القرار", chips: "رقائق",
   },
   it: {
-    entry: "Allenati su questo spot", busy: "Salvataggio delle domande…", tab: "I miei spot", presetTab: "Allenamento sui preset",
+    entry: "Allenati su questo spot", busy: "Salvataggio delle domande…", tab: "I miei spot", presetTab: "Allenamento sugli esempi",
     empty: "Dopo aver calcolato uno spot, premi [Allenati su questo spot] nella schermata dei risultati per salvare qui le domande.",
     loading: "Caricamento dei tuoi spot…", storageNote: "Questo dispositivo conserva i tuoi 20 spot più recenti e gli ultimi 500 tentativi per spot. I risultati di «I miei spot» vengono conteggiati separatamente. Se salvi di nuovo lo stesso spot, il nuovo calcolo sostituisce il precedente e la cronologia dell’allenamento viene eliminata.",
     source: "Calcolo approssimato · Errore obiettivo {target}% · Errore raggiunto {achieved}%", lockAssumption: "Ipotesi: parte della strategia fissata",
-    reviewSource: "Spot dalla tua analisi di una mano · {method} · Errore obiettivo {target}% · Errore raggiunto {achieved}%", backToReview: "Torna all’analisi",
+    reviewSource: "Spot da «Analisi mani» · {method} · Errore obiettivo {target}% · Errore raggiunto {achieved}%", backToReview: "Torna all’analisi",
     chooseSpot: "Spot salvati", deleteSpot: "Elimina spot", deleteConfirm: "Vuoi eliminare da questo dispositivo lo spot e la sua cronologia di allenamento?",
     loadError: "Impossibile caricare gli spot salvati. Riapri questa schermata.", saveError: "Impossibile salvare. Riprova.",
     captureError: "Impossibile creare domande da questi risultati. Verifica che il calcolo sia terminato.",

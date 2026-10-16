@@ -937,14 +937,14 @@ const M = {
     heroTitle2: "direttamente nel browser.",
     heroSub1: "Senza installare né pagare nulla. Inserisci i range e il board:",
     heroSub2: " il tuo dispositivo calcola la strategia ottimale.",
-    ctaPresets: "Apri gli esempi",
+    ctaPresets: "Apri gli Esempi",
     ctaTrainer: "Trainer GTO",
     ctaDaily: "Sfida del giorno",
     dailyDone: "Fatto",
     ctaGuide: "Guida",
     ctaInstall: "Aggiungi alla schermata Home",
     installNote:
-      "L’installazione salva gli Esempi e il Trainer GTO sul dispositivo, così puoi continuare ad allenarti anche offline. È un collegamento al browser, non un programma, e non richiede autorizzazioni.",
+      "L’installazione salva gli Esempi e il Trainer GTO sul dispositivo, così puoi continuare ad allenarti anche offline. È un collegamento del browser, non un programma, e non richiede autorizzazioni.",
     installSafe: "È sicuro?",
     features: [
       { title: "Gratis", desc: "Tutte le funzioni, senza limiti d’uso" },
@@ -958,8 +958,8 @@ const M = {
     step5Solver: "Dopo il calcolo, prova a modificare la strategia avversaria con [Blocca la strategia del nodo]",
     stepsTitle: "È la prima volta?",
     steps: [
-      "Apri uno spot in Esempi e premi [Mostra risultati]: la soluzione appare subito",
-      "Apri Guida per imparare a leggere i risultati",
+      "Apri uno spot negli Esempi e premi [Mostra risultati]: la soluzione appare subito",
+      "Apri la Guida per imparare a leggere i risultati",
       "Prova il Trainer GTO: scopri quanti bb ti costa ogni decisione",
       "Quando hai preso confidenza, calcola le tue mani con Spot personalizzato (①–⑤)",
     ],
@@ -970,7 +970,7 @@ const M = {
     notes:
       "Su iOS e Safari, i limiti del browser impongono il calcolo con un solo thread, quindi i tempi sono più lunghi. Su macOS consigliamo Chrome. La memoria disponibile è limitata a 4 GB da WebAssembly: per calcolare spot complessi è più comodo usare un PC.",
     creditBefore: "Questa app si basa su",
-    creditMid1: " (di Wataru Inariba, AGPL-3.0), tradotto e arricchito da",
+    creditMid1: " (di Wataru Inariba, AGPL-3.0), localizzato e arricchito da",
     creditBrand: "HoldemMaster",
     creditMid2: ". Il codice sorgente completo, incluse le modifiche, è pubblicato su",
     creditAfter: " con la stessa licenza.",
@@ -1282,7 +1282,7 @@ const N =
           ctaPreflop: "Range preflop",
           ctaEquity: "Calcolatore di equity",
           installNote:
-            "L’installazione salva l’app sul dispositivo, così puoi aprirla anche offline. È un collegamento al browser, non un programma, e non richiede autorizzazioni.",
+            "L’installazione salva l’app sul dispositivo, così puoi aprirla anche offline. È un collegamento del browser, non un programma, e non richiede autorizzazioni.",
           features: [
             { title: "Gratis", desc: "Tutte le funzioni, senza limiti d’uso" },
             { title: "Offline", desc: "Aggiungi l’app alla schermata Home e usala senza internet" },
@@ -1291,7 +1291,7 @@ const N =
           ],
           steps: [
             "Esplora i range di apertura e difesa in Range preflop",
-            "Apri Guida per imparare a leggere i risultati",
+            "Apri la Guida per imparare a leggere i risultati",
             "Quando hai preso confidenza, calcola le tue mani con Spot personalizzato (①–⑤)",
           ],
         },

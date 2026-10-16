@@ -540,8 +540,16 @@ export default defineComponent({
 
     const format = (template: string, values: Record<string, string>) =>
       template.replace(/\{(\w+)\}/g, (_, k) => values[k] ?? "");
-    const num = (value: number, digits: number) =>
-      localizeNumber(value.toFixed(digits));
+    const num = (value: number, digits: number) => {
+      if (i18n.locale === "it") {
+        return Number(value.toFixed(digits)).toLocaleString("it-IT", {
+          useGrouping: true,
+          minimumFractionDigits: digits,
+          maximumFractionDigits: digits,
+        });
+      }
+      return localizeNumber(value.toFixed(digits));
+    };
     const pct = (fraction: number, digits = 1) =>
       localizeNumber(`${(fraction * 100).toFixed(digits)}%`);
     const bb = (chips: number) =>

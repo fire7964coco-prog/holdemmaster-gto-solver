@@ -1598,27 +1598,27 @@ const M = {
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "Vuoto = mano mai usata per la 3-bet",
     stat5bet: "5-bet %",
-    statContinue4bet: "Continua % (del range di 3-bet)",
+    statContinue4bet: "Continuazione % (del range di 3-bet)",
     copy5bet: "Copia range di 5-bet",
     note4bet:
       "Le statistiche indicano percentuali del tuo range di 3-bet. A 100bb, la 5-bet ha di fatto una sola dimensione: all-in. Per valore si usano AA·KK, con cui a volte si fa slow play chiamando; QQ·AK alternano la 5-bet solo contro le 4-bet ricche di bluff di BTN·SB, mentre chiamano contro i range ristretti di CO·HJ·UTG (contro una 4-bet di UTG chiama anche KK). Il call dipende dalla realizzazione dell’equity, non dalle pot odds: in posizione, chi ha fatto 3-bet da BTN·CO chiama anche mani di forza media come TT·AJs (contro una 4-bet di UTG solo JJ·TT). Il BB contro una 4-bet ricca di bluff dello SB allarga ulteriormente il call a 99-66·ATs·KQs·AJo-ATo. Fuori posizione, chi ha fatto 3-bet dal BB si limita a QQ·JJ·AK contro le 4-bet ristrette di CO·HJ·UTG; contro quelle ricche di bluff del BTN arriva invece a TT-77·AJs-ATs·AQo. Foldare tutto? No: il range di 4-bet contiene anche bluff come A5s-A4s.",
     how4bet2:
       "Se rosso e verde non riempiono la cella, la parte restante è fold. Le celle con entrambi i colori mescolano 5-bet e call. Le mani fuori dal range di 3-bet non arrivano mai a questo spot, quindi sono vuote.",
     intro3bet:
-      "Come rispondere a una 3-bet dopo il tuo open raise: rosso = 4-bet, verde = call, il resto = fold. Le frequenze sono condizionate all’apertura: le mani con cui non apri mai sono vuote. Cash game 6-max, 100bb, apertura a 2,5bb (3bb dallo SB); 3-bet a 11bb dal BB e 10bb dallo SB (9bb per BB contro apertura dello SB), a 7,5bb dalle posizioni successive alla tua.",
+      "Come rispondere a una 3-bet dopo il tuo open raise: rosso = 4-bet, verde = call, il resto = fold. Le frequenze sono condizionate all’apertura: le mani con cui non apri mai sono vuote. Cash game 6-max, 100bb, apertura a 2,5bb (3bb dallo SB); 3-bet a 11bb dal BB e 10bb dallo SB (9bb per il BB contro l’apertura dello SB), a 7,5bb dalle posizioni successive alla tua.",
     legend4bet: "4-bet",
     legendCond: "Vuoto = mano mai usata per l’apertura",
     stat4bet: "4-bet %",
-    statContinue: "Continua % (del range di apertura)",
+    statContinue: "Continuazione % (del range di apertura)",
     copy4bet: "Copia range di 4-bet",
     note3bet:
       "Le statistiche sono quote del tuo range di apertura, non di tutte le mani. Le 4-bet per valore si concentrano su QQ+/AK (AA-KK dopo apertura da UTG, con QQ che chiama soprattutto), insieme ad alcuni bluff come A5s-A4s. Dallo SB i bluff aumentano, includendo broadway offsuit come AJo e KQo. Il range di call si basa su coppie e broadway suited; fuori posizione è più ristretto rispetto al range in posizione dello stesso giocatore che ha aperto. Dopo apertura da UTG i connectors chiamano raramente: qualche T9s e, contro una 3-bet del BTN, un po’ di 98s. Dalle altre posizioni, più connectors entrano nel range di call.",
     squeezeNote:
-      "Uno squeeze è una 3-bet in un piatto con un’apertura e un call (qui circa 11-12bb). La presenza del call restringe la difesa totale rispetto all’heads-up e orienta la 3-bet verso il valore. Gli overcall privilegiano mani suited e connesse che possono chiudere nuts nei piatti multiway.",
+      "Uno squeeze è una 3-bet in un piatto con un’apertura e un call (qui circa 11-12bb). La presenza del call restringe la difesa totale rispetto all’heads-up e orienta la 3-bet verso il valore. Gli overcall privilegiano mani suited e connesse che possono chiudere le nuts nei piatti multiway.",
     how3bet2:
       "Se rosso e verde non riempiono la cella, la parte restante è fold. Le celle con entrambi i colori mescolano 4-bet e call. Le mani fuori dal range di apertura non arrivano mai a questo spot, quindi sono vuote.",
     intro: "Range di apertura per posizione (RFI): con quali mani rilanci quando tutti prima di te hanno foldato? Riferimento: cash game 6-max, 100bb, apertura a 2,5bb. Le celle parzialmente riempite indicano mani al limite, sulle quali le fonti pubbliche non concordano: l’altezza corrisponde alla quota di fonti favorevoli all’apertura.",
-    provenanceNote: "Consenso di fonti pubbliche e derivazioni interne; non sono risultati del solver. Vedi «Come è stata costruita questa tabella?» qui sotto.",
+    provenanceNote: "Consenso di fonti pubbliche e derivazioni interne; non sono risultati del solver. Vedi «Com’è stata costruita questa tabella?» qui sotto.",
     introDefend:
       "Come rispondere a un open raise prima di te, negli abbinamenti più comuni. Rosso = 3-bet, verde = call; l’altezza complessiva indica la frequenza di difesa totale. Cash game 6-max, 100bb, apertura a 2,5bb (3bb dallo SB).",
     legendOpen: "Apertura (100%)",
@@ -1652,7 +1652,7 @@ const M = {
       "Se rosso e verde non riempiono tutta la cella, la parte restante è fold. Le celle con entrambi i colori mescolano 3-bet e call nelle proporzioni indicate.",
     howDefend3:
       "Incolla un range copiato nei campi di Spot personalizzato (① / ②) per calcolare il gioco postflop con questo range di difesa.",
-    sourceTitle: "Come è stata costruita questa tabella?",
+    sourceTitle: "Com’è stata costruita questa tabella?",
     sourceBody: "Abbiamo confrontato mano per mano diverse risorse GTO pubblicate gratuitamente per costruire un range di consenso. Per le mani al limite sulle quali le fonti non concordano, indichiamo la quota di fonti favorevoli all’apertura (75/50/25%). I range di BTN e SB sono stati confrontati anche con quelli verificati dal solver e usati negli Esempi di questa app.",
     sourceList:
       "Fonti pubbliche confrontate: nlh.poker · Preflop Wizard · HoldemPro · The Felt (about-poker.com) · BeyondGTO · ThinkGTO (frequenze calcolate per BB vs SB) · GTO Gecko · RiverOdds (riferimenti per la difesa) · blog di GTO Wizard · FreeBetRange (principi di difesa IP e squeeze) · 888poker · Run It Once (frequenze contro 3-bet) + i range dei nostri esempi (raccolta: 08/2026)",

@@ -375,8 +375,8 @@ const M = {
   },
   it: {
     startRange: "① Inizia dai range",
-    viewPresets: "Apri gli esempi",
-    notRun: "Non hai ancora calcolato i tuoi risultati.\nPuoi vedere subito i risultati degli esempi nel menu «Esempi».\nPer calcolare il tuo spot, completa i passi ①~⑤, poi premi «Avvia solver».",
+    viewPresets: "Apri gli Esempi",
+    notRun: "Non hai ancora calcolato i tuoi risultati.\nPuoi vedere subito i risultati degli esempi nel menu «Esempi».\nPer calcolare il tuo spot, completa i passi da ① a ⑤, poi premi «Avvia solver».",
     running: "Calcolo in corso…",
     finalizing: "Finalizzazione…",
     paused: "Solver in pausa.",

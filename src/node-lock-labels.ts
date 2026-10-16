@@ -305,7 +305,7 @@ export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = {
     sumError: "Inserisci per ogni azione un intero da 0 a 100. La somma deve essere 100.",
     skippedChance: "Non puoi bloccare un percorso con una carta non specificata. Scegli prima la carta.",
     engineError: "Impossibile bloccare la strategia. Controlla i valori inseriti e ripeti il calcolo.",
-    assumption: "Valori con l’ipotesi di strategia fissata",
+    assumption: "Valori nell’ipotesi di strategia fissata",
     banner: "Calcolo con parte della strategia fissata: non è una strategia di equilibrio GTO · Nodi bloccati: {count}",
     noReach: "Il peso di arrivo a questo nodo è 0: le frequenze iniziali non sono disponibili.",
   },

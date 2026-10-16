@@ -228,7 +228,7 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
   it: {
     title: "HoldemMaster GTO Trainer — Solver e trainer GTO gratuiti per Texas Hold’em",
     description:
-      "Solver GTO gratuito nel browser, senza installazione. Calcola la strategia postflop del Texas Hold’em con range, board e dimensioni di puntata. Di HoldemMaster.",
+      "Solver GTO gratuito nel browser, senza installazione. Calcola la strategia postflop del Texas Hold’em con range, board e dimensioni di puntata. Un progetto di HoldemMaster.",
   },
 };
 

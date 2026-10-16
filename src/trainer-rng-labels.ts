@@ -180,7 +180,7 @@ export const RNG_M = {
       "Allenamento con un numero casuale (1–100): ogni mano riceve un numero e tu scegli l’azione corrispondente. High: i numeri più alti indicano azioni più aggressive · Low: i numeri più bassi indicano azioni più aggressive. Non si usa nella [Sfida del giorno].",
     bandsTitle: "Intervalli RNG",
     yourNumber: "Il tuo numero",
-    noteBest: (action: string) => `Hai scelto l’azione corrispondente a questo numero (${action}).`,
+    noteBest: (action: string) => `Hai scelto l’azione corrispondente a questo numero: «${action}».`,
     noteMixed: (action: string) =>
       `Accettabile: il solver usa anche questa azione nella strategia mista, ma a questo numero corrisponde «${action}».`,
     noteOther: (action: string) => `A questo numero corrisponde l’azione «${action}».`,

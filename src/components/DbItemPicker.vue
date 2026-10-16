@@ -760,7 +760,7 @@ const M = {
     deleteLabel: "Elimina",
     importJsonLabel: "Importa JSON",
     exportJsonLabel: "Esporta JSON",
-    importFailed: "Errore: importazione non riuscita. Controlla il motivo qui sotto: puoi importare solo file salvati con «Esporta JSON» da questo elenco.",
+    importFailed: "Errore: importazione non riuscita. Controlla il motivo qui sotto: puoi importare solo file salvati con «Esporta JSON» da questa lista.",
   },
 } as const;
 

@@ -136,7 +136,7 @@ const ar: typeof ko = {
 };
 const it: typeof ko = {
   saveFull: "Accedi per salvare più di 10 elementi e aprire la tua lista da qualsiasi telefono o PC",
-  importOver: "Con questa importazione supereresti i 10 elementi salvati sul dispositivo: accedi per importare l’intero file",
+  importOver: "Con questa importazione supereresti il limite di 10 elementi salvati sul dispositivo: accedi per importare l’intero file",
   memberScenario: "Questa situazione è riservata a chi ha un account gratuito: accedi per aprirla subito",
 };
 export type MemberLabels = typeof ko;

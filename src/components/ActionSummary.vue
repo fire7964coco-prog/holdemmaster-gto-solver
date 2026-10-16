@@ -240,7 +240,7 @@ const actionLabel = (
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
         "pot", "pot", "pot", "pot", "банка",
     "من البوت",
-        "piatto" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
+        "del piatto" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
       )})`
     );
   }

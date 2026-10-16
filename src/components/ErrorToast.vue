@@ -266,12 +266,12 @@ const M = {
     promptCopy: "انسخ النص أدناه",
   },
   it: {
-    title: "Registrato un errore",
+    title: "Errore registrato",
     body1: "Se hai notato un problema, segnalacelo. I dettagli restano ",
     bodyB1: "solo su questo dispositivo",
     body2: ": scegli tu se condividerli.",
     copied: "Copiato",
-    copyButton: "Copia dettagli dell’errore",
+    copyButton: "Copia i dettagli dell’errore",
     close: "Chiudi",
     copiedHint:
       "Incolla il testo in un post della comunità: ci aiuterà a risolvere il problema. Non contiene informazioni personali.",

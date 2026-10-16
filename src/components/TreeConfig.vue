@@ -1824,7 +1824,7 @@ const M = {
     donkOption: "Usa dimensioni diverse per le donk bet",
     howToInput: "Come inserire i valori",
     inputHelpIntro:
-      "Puoi inserire più dimensioni di puntata, separate da virgole o spazi, nei formati indicati qui sotto. Se lasci il campo vuoto, non sono previste puntate o rilanci.",
+      "Puoi inserire più dimensioni di puntata, separate da virgole o spazi, nei formati indicati qui sotto. Se lasci il campo vuoto, non ci saranno né puntate né rilanci.",
     inputHelpPercent:
       "Un numero che indica la percentuale del piatto (es. «50»). Per i rilanci, si calcola prima il call e poi si aggiunge la percentuale indicata del piatto risultante. Per esempio, se il piatto prima della puntata è 100 e l’avversario punta 75, un rilancio del 50% è 75 + (100 + 75 + 75) * 50% = 200.",
     inputHelpMultiple:

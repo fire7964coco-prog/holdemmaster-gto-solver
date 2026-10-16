@@ -1249,9 +1249,9 @@ const M = {
     heroHint: "Scegli 2 carte qui sotto",
     fill: "Inserisci qui",
     villainTitle: "② Avversario",
-    modeHand: "vs Mano",
-    modeRange: "vs Range",
-    rangePlaceholder: "Es.: 22+,AQs+,K8s:0.75",
+    modeHand: "vs mano",
+    modeRange: "vs range",
+    rangePlaceholder: "Es. 22+,AQs+,K8s:0.75",
     rangeNote:
       "Incolla il testo ottenuto con [Copia testo del range] in Range preflop. I pesi, per esempio «K8s:0.75», vengono applicati così come sono.",
     anyTwo: "Due carte qualsiasi",

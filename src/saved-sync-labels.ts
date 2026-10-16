@@ -171,8 +171,8 @@ const it: typeof ko = {
   kakao: "Continua con Kakao",
   telegram: "Continua con Telegram",
   syncing: "Sincronizzazione con il tuo account…",
-  ok: "Salvato nel tuo account · ultima sincronizzazione {time}",
-  pending: "Non ancora caricato: riproveremo quando riaprirai questa schermata o salverai",
+  ok: "Lista salvata nel tuo account · ultima sincronizzazione {time}",
+  pending: "Lista non ancora caricata: riproveremo quando riaprirai questa schermata o salverai",
   limit: "Limite dell’account raggiunto: il salvataggio su questo dispositivo resta attivo",
 };
 export type SavedSyncLabels = Record<keyof typeof ko, string>;

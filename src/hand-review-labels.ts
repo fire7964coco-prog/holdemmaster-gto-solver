@@ -437,7 +437,7 @@ export const M = {
   },
   it: {
     title: "Analisi mani", situation: "Situazione", hero: "La tua posizione", opener: "Apertura", caller: "Call", threeBettor: "3-bet", preflop: "Preflop",
-    singleRaised: "Open raise · Call", threeBet: "Piatto 3-bet", fourBet: "Piatto 4-bet", multiway: "3+ giocatori", notSupported: "Analisi non disponibile",
+    singleRaised: "Open · Call", threeBet: "Piatto 3-bet", fourBet: "Piatto 4-bet", multiway: "3+ giocatori", notSupported: "Analisi non disponibile",
     unavailableScenario: "I dati per questa situazione non sono ancora disponibili.", fileMissing: "Non è disponibile un file di risultati per questo flop.",
     loadFailed: "Impossibile caricare il file di risultati.", invalidData: "Impossibile leggere il file di risultati.",
     unsupportedAction: "Questa azione non può essere analizzata.", unsupportedSize: "Questa dimensione non può essere analizzata.",

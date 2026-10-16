@@ -673,7 +673,7 @@ export const PRESETS: Preset[] = [
     titleVi: "Board tầm trung liền nhau, hai chất",
     titleRu: "Связанный средний борд, двухмастный",
     titleAr: "بورد متصل من الأوراق المتوسطة بنقشين",
-    titleIt: "Board con carte medie connesso, two-tone",
+    titleIt: "Board medio connesso, two-tone",
     board: "9h 8h 7c",
     lesson:
       "같은 BTN 대 BB라도 9-8-7 연결 보드에서는 BB가 첫 액션에 23.7%를 먼저 벳합니다 — A하이 보드보다 훨씬 많습니다. 그래도 에퀴티는 BB 48.5%로 BTN이 조금 앞섭니다. 어떤 핸드가 먼저 치는지 확인하세요.",

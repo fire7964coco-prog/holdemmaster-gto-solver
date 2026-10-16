@@ -244,14 +244,14 @@ const checkedLabels: LocaleDict<FlopTrainerLabels> = {
     sourceBasic: "Fonte: Base",
     sourceFlop: "Fonte: Tutti i flop",
     sourceHelp:
-      "[Fonte: Tutti i flop]: domande da spot e flop precalcolati sul nostro server (serve internet). [Fonte: Base]: decisioni tratte dagli esempi di studio (disponibili offline).",
+      "[Fonte: Tutti i flop]: domande da spot e flop precalcolati sul nostro server (serve internet). [Fonte: Base]: decisioni tratte dagli «Esempi» (disponibili offline).",
     closeOnly: "Solo scelte vicine",
     closeHelp: "Propone solo mani in cui la differenza di EV tra l’azione migliore e la seconda rientra nel margine di «Accettabile».",
     loading: "Caricamento del flop…",
     offline: "Serve una connessione a internet.",
     failed: "Impossibile caricare una domanda.",
     retry: "Riprova",
-    useBasic: "Allenati sui preset",
+    useBasic: "Allenati sugli esempi",
     again: "Ripeti la stessa mano",
   },
 };
