@@ -58,7 +58,7 @@
           <p class="mt-4 text-sm font-semibold">{{ L.prompt }}</p>
           <div class="mt-2 grid gap-2 md:grid-cols-2">
             <button v-for="(action, index) in question.node.selectedSpot.actions" :key="index" type="button" :data-testid="`custom-trainer-action-${index}`" :disabled="!!evaluation || saving" :class="['custom-button border text-start', evaluation?.selectedAction === index ? 'border-brand bg-brand/10 text-brand' : 'border-neutral-600 bg-neutral-700']" @click="choose(index)">
-              {{ actionLabel(action) }}
+              {{ actionLabel(action, evaluation ? "label" : "button") }}
             </button>
           </div>
           <div v-if="evaluation" data-testid="custom-trainer-verdict" :data-loss="evaluation.evLossBb" :data-best-limit="limits.bestBb" :data-good-limit="limits.goodBb" :data-verdict="verdictKind" :data-rng="rngResult ? rngResult.verdict : ''" :data-reference="answer.reference" class="mt-4 border-t border-neutral-700 pt-3" aria-live="polite">
@@ -152,11 +152,15 @@ export default defineComponent({
       ? arAmount(value.toFixed(3), bank.value?.unitScale ?? 1)
       : i18n.locale === "ru"
       ? `${number(value.toFixed(3))}${ruUnit(value, bank.value?.unitScale ?? 1)}`
+      : i18n.locale === "it"
+      ? `${number(value.toFixed(3))}${bank.value?.unitScale === 10 ? "bb" : ` ${L.value.chips}`}`
       : `${number(value.toFixed(3))} ${unit.value}`;
     const amount = (value: number) => i18n.locale === "ar"
       ? arAmount(formatAmount(value, bank.value?.unitScale ?? 1), bank.value?.unitScale ?? 1)
       : i18n.locale === "ru"
       ? `${number(formatAmount(value, bank.value?.unitScale ?? 1))}${ruUnit(Number(formatAmount(value, bank.value?.unitScale ?? 1)), bank.value?.unitScale ?? 1)}`
+      : i18n.locale === "it"
+      ? `${number(formatAmount(value, bank.value?.unitScale ?? 1))}${bank.value?.unitScale === 10 ? "bb" : ` ${L.value.chips}`}`
       : `${number(formatAmount(value, bank.value?.unitScale ?? 1))} ${unit.value}`;
     const percent = (value: number) =>
       i18n.locale === "fr" ? `${number(value.toFixed(1))} %` : pctText(number(value.toFixed(1)));
@@ -221,11 +225,15 @@ export default defineComponent({
       if (i18n.locale === "ar") {
         return `${ltrIso(board)} · ${L.value.pot} ${arAmount(formatAmount(item.startingPot, item.unitScale), item.unitScale)} · ${L.value.stack} ${arAmount(formatAmount(item.effectiveStack, item.unitScale), item.unitScale)}`;
       }
+      if (i18n.locale === "it") {
+        const suffix = item.unitScale === 10 ? "bb" : ` ${L.value.chips}`;
+        return `${board} · ${L.value.pot} ${number(formatAmount(item.startingPot, item.unitScale))}${suffix} · ${L.value.stack} ${number(formatAmount(item.effectiveStack, item.unitScale))}${suffix}`;
+      }
       const unitName = item.unitScale === 10 ? "bb" : L.value.chips;
       return `${board} · ${L.value.pot} ${number(formatAmount(item.startingPot, item.unitScale))} ${unitName} · ${L.value.stack} ${number(formatAmount(item.effectiveStack, item.unitScale))} ${unitName}`;
     };
-    const actionLabel = (action: { name: string; amount: string }) => {
-      const label = trainerActionLabel({ name: action.name, amount: "" }, 0, 1);
+    const actionLabel = (action: { name: string; amount: string }, role: "label" | "button" = "label") => {
+      const label = trainerActionLabel({ name: action.name, amount: "" }, 0, 1, role);
       if (i18n.locale === "ar") {
         return arLabelIso(!action.amount || Number(action.amount) === 0 ? label : `${label} ${amount(Number(action.amount))}`);
       }

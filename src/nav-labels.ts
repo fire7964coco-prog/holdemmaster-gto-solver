@@ -30,4 +30,6 @@ export const navResults: Record<Locale, string> = {
   ru: "Результаты",
   // 모바일 탭 80px — 7자(확정표 §5-2 R1 · RunSolver 이동 버튼도 이 값을 쓴다)
   ar: "النتائج",
+  // it-todo: translate the copied English values.
+  it: "Results",
 };

@@ -152,6 +152,13 @@ const M = {
     titleLine2: "مدرّب GTO.",
     footer: "سولفر GTO مجاني · يعمل دون اتصال",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    greeting: "Welcome to",
+    titleLine1: "HoldemMaster",
+    titleLine2: "GTO Trainer.",
+    footer: "Free GTO Solver · Works Offline",
+  },
 } as const;
 
 /* npokers 빌드는 첫 줄 상표만 바꾼다 — 「npokers GTO 솔버입니다.」처럼 읽힌다.

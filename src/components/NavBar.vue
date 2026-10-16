@@ -95,6 +95,7 @@
           <option value="vi">Tiếng Việt</option>
           <option value="ru">Русский</option>
           <option value="ar">العربية</option>
+          <option value="it">Italiano</option>
         </select>
         </span>
         <a
@@ -257,6 +258,14 @@ const M = {
     communitySuffix: "\u00a0HoldemMaster",
     langSwitchLabel: "اختيار اللغة",
   },
+  // it-todo: English scaffold; translate in the next stage.
+  it: {
+    resultsDisabledHint: "Opens when ⑤ Run Solver is finished",
+    solver: "Solver",
+    community: "HoldemMaster",
+    communitySuffix: " Community",
+    langSwitchLabel: "Select language",
+  },
 } as const;
 
 export default defineComponent({
@@ -291,7 +300,8 @@ export default defineComponent({
         value === "tr" ||
         value === "vi" ||
         value === "ru" ||
-        value === "ar"
+        value === "ar" ||
+        value === "it"
       )
         setLocale(value);
     };

@@ -38,7 +38,7 @@
     -->
     <script>
       (function () {
-        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr", "vi", "ru", "ar"];
+        var OK = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr", "vi", "ru", "ar", "it"];
         var l = null;
         try { l = new URLSearchParams(location.search).get("lang"); } catch (e) {}
         if (OK.indexOf(l) < 0) { try { l = localStorage.getItem("solver.locale.pegged"); } catch (e) { l = null; } }
@@ -57,6 +57,7 @@
           else if (n.indexOf("vi") === 0) l = "vi";
           else if (n.indexOf("ru") === 0) l = "ru";
           else if (n.indexOf("ar") === 0) l = "ar";
+          else if (n.indexOf("it") === 0) l = "it";
           else if (n.indexOf("zh") === 0) l = (/^zh-(tw|hk|mo)($|[-_])/.test(n) || n.indexOf("hant") >= 0) ? "zh-hant" : "zh";
           else l = "en";
         }
@@ -64,6 +65,7 @@
         var RTL_LOCALES = <%= JSON.stringify(htmlWebpackPlugin.options.rtlLocales) %>;
         document.documentElement.dir = RTL_LOCALES.indexOf(l) >= 0 ? "rtl" : "ltr";
         if (l === "ar") document.documentElement.lang = "ar";
+        if (l === "it") document.documentElement.lang = "it";
         if (l === "ko") return; // 기본 파일이 이미 한국어다
         var link = document.querySelector('link[rel="manifest"]');
         if (link) link.href = "/manifest-" + l + ".webmanifest";
@@ -71,7 +73,7 @@
         var TITLE = {
           en: "GTO Trainer", ja: "GTOトレーナー", es: "GTO Trainer", pt: "GTO Trainer",
           de: "GTO Trainer", zh: "GTO 训练器", "zh-hant": "GTO 訓練器", fr: "GTO Trainer", id: "GTO Trainer",
-          ms: "GTO Trainer", hi: "GTO Trainer", tr: "GTO Trainer", ru: "GTO Trainer", vi: "GTO Trainer", ar: "GTO Trainer" /* 앱 이름 = 매니페스트 short_name과 같은 영어 공용(확정표 §8 #24) */
+          ms: "GTO Trainer", hi: "GTO Trainer", tr: "GTO Trainer", ru: "GTO Trainer", vi: "GTO Trainer", ar: "GTO Trainer", it: "GTO Trainer" /* it-todo: en copy; 앱 이름 = 매니페스트 short_name과 같은 영어 공용(확정표 §8 #24) */
         };
         var meta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
         if (meta && TITLE[l]) meta.setAttribute("content", TITLE[l]);

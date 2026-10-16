@@ -265,13 +265,26 @@ const M = {
       "الصق النص في منشور في المجتمع لنستعمله في إصلاح المشكلة. لا يحتوي على أي معلومات شخصية.",
     promptCopy: "انسخ النص أدناه",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    title: "An error was logged",
+    body1: "If something looked wrong, please let us know. The details are stored ",
+    bodyB1: "only on this device",
+    body2: " — sharing them is entirely up to you.",
+    copied: "Copied",
+    copyButton: "Copy error details",
+    close: "Close",
+    copiedHint:
+      "Paste it into a community post and we'll use it to fix the issue. It contains no personal information.",
+    promptCopy: "Copy the text below",
+  },
 } as const;
 
 export default defineComponent({
   setup() {
     const L = computed(() => M[i18n.locale]);
     const retrySingleThreadLabel = computed(() =>
-      // i18n.ts pick() 순서: ko, en, ja, es, pt, de, zh, zh-hant, fr, id, ms, hi, tr, vi, ru.
+      // i18n.ts pick() 순서: ko, en, ja, es, pt, de, zh, zh-hant, fr, id, ms, hi, tr, vi, ru, ar, it.
       pick(
         "단일 스레드로 다시 시도",
         "Retry with a single thread",
@@ -285,7 +298,9 @@ export default defineComponent({
         "Coba lagi dengan satu thread",
         "Cuba semula dengan satu thread",
         "एक थ्रेड से फिर कोशिश करें", "Tek thread ile tekrar dene", "Thử lại với một thread", "Повторить в одном потоке",
-    "إعادة المحاولة بخيط واحد"
+    "إعادة المحاولة بخيط واحد",
+        // it-todo
+        "Retry with a single thread"
       )
     );
     const copied = ref(false);

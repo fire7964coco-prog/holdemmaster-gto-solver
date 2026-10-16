@@ -150,7 +150,15 @@ const actionLabelsAr: Record<string, string> = {
   Allin: "أول إن",
   "All-in": "أول إن",
 };
-const actionName = (name: string) =>
+// it-todo: action buttons/history get explicit entries instead of the default name path.
+const actionLabelsIt: Record<string, string> = {
+  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
+};
+// it-todo: imperative action buttons; actionLabelsIt above is for history and legends.
+const actionButtonLabelsIt: Record<string, string> = {
+  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
+};
+const actionName = (name: string, role: "label" | "button" = "label") =>
   i18n.locale === "ko"
     ? actionLabelsKo[name] ?? name
     : i18n.locale === "ja"
@@ -170,6 +178,8 @@ const actionName = (name: string) =>
     ? actionLabelsRu[name] ?? name
     : i18n.locale === "ar"
     ? actionLabelsAr[name] ?? name
+    : i18n.locale === "it"
+    ? (role === "button" ? actionButtonLabelsIt : actionLabelsIt)[name] ?? name
     : actionLabelsEn[name] ?? name;
 
 export const trainerCategory = (
@@ -182,7 +192,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar" | "it",
     Record<Exclude<TrainerCategory, "4bp">, string>
   > = {
     ko: {
@@ -285,6 +295,13 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "بوت \u20663-bet\u2069",
       blind: "بلايند ضد بلايند",
     },
+    // it-todo: translate the copied English values.
+    it: {
+      all: "All",
+      srp: "Single Raised",
+      "3bp": "3-Bet Pot",
+      blind: "Blind vs Blind",
+    },
   };
   // 4벳 팟 = 그 언어 3벳 팟 이름의 숫자만 바꾼다 — 칩 줄에서 «3벳팟»·«4벳 팟»처럼 표기가 갈리지 않게
   // (15언어 모두 «3»이 한 번만 들어 있다 · 3단계 검수장 판정 대상)
@@ -295,9 +312,10 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
 export const trainerActionLabel = (
   action: { name: string; amount: string },
   pot: number,
-  unitScale: number
+  unitScale: number,
+  role: "label" | "button" = "label"
 ) => {
-  const label = actionName(action.name);
+  const label = actionName(action.name, role);
   if (!action.amount || action.amount === "0") return label;
   const value = Number(action.amount);
   const amount = localizeNumber(
@@ -333,6 +351,8 @@ export const trainerActionLabel = (
         `${label} ${amount} (${pct}% банка)`
       : i18n.locale === "ar"
       ? arLabelIso(`${label} ${ltrIso(amount)} (${ltrIso(`${pct}%`)} من البوت)`)
+      : i18n.locale === "it"
+      ? `${label} ${amount} (${pct}% pot)` // it-todo
       : `${label} ${amount} (${pct}% pot)`;
   }
   return i18n.locale === "ar" ? arLabelIso(label, amount) : `${label} ${amount}`;

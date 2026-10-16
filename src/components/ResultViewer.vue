@@ -373,6 +373,15 @@ const M = {
     finalizing: "جارٍ الإنهاء…",
     paused: "السولفر متوقف مؤقتًا.",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    startRange: "① Start with ranges",
+    viewPresets: "View Study Spots",
+    notRun: "You haven’t calculated your own results yet.\nYou can view example results directly in the “Study Spots” menu.\nTo calculate your own spot, complete ①~⑤, then press “Run Solver”.",
+    running: "Running the solver…",
+    finalizing: "Finalizing…",
+    paused: "Solver paused.",
+  },
 } as const;
 
 export default defineComponent({

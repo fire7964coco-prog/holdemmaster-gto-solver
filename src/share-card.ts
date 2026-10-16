@@ -203,6 +203,19 @@ const CARD_TEXT = {
       `خسارة EV ${bb}bb${streak > 1 ? ` · أيام متتالية: ${streak}` : ""}`,
     invite: "حلّ سؤال اليوم",
   },
+  // it-todo: English scaffold; translate in the next stage.
+  it: {
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "One puzzle a day · same for everyone",
+    heading: "Daily GTO Puzzle",
+    board: "Board",
+    hand: "My Hand",
+    result: (verdict: string) => `My result: ${verdict}`,
+    // it-todo: n=1 singular / all other counts plural; keep both translation slots.
+    evLine: (bb: string, streak: number) =>
+      `EV loss ${bb}bb${streak > 0 ? (streak === 1 ? ` · ${streak}-day streak` : ` · ${streak}-day streak`) : ""}`,
+    invite: "Try today's puzzle",
+  },
 } as const;
 
 export type DailyCardInput = {

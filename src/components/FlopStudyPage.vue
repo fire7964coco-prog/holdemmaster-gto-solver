@@ -505,7 +505,7 @@ export default defineComponent({
   setup() {
     const S = computed(() => flopStudyLabels(i18n.locale));
     const R = computed(() => M[i18n.locale]);
-    const versus = computed(() => (i18n.locale === "ar" ? "ضد" : "vs"));
+    const versus = computed(() => (i18n.locale === "ar" ? "ضد" : i18n.locale === "it" ? "vs" : "vs")); // it-todo
 
     const store = useStore();
     const config = useConfigStore();

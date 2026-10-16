@@ -115,6 +115,8 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   ru: { "": "/ru", "/solver": "/ru/solver" },
   // AR2: 2026-10-14 지시서 실측 /ar 200 · /ar/solver 404. 랜딩은 아직 없음.
   ar: { "": "/ar" },
+  // IT3: 지시서 2026-10-16 실측 /it 200 · /it/solver·/it/community 404.
+  it: { "": "/it" },
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

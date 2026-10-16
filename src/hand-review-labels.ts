@@ -435,6 +435,34 @@ export const M = {
     unanalysed: "بلا تحليل", scopeTitle: "شروط المراجعة",
     practiceSpot: "تدريب على هذا الموقف", practiceBusy: "جارٍ إنشاء الأسئلة…", practiceUnavailable: "تعذّر إنشاء الأسئلة: لا تصل أي يد من نطاقك إلى هذا الموقف، أو لا توجد قيم EV للقرارات، أو لا يوجد سوى قرار واحد ممكن.", practiceReferenceNote: "الوصول إلى هذا الموقف نادر جدًا، لذا قيمه غير موثوقة. استعمله للاطلاع فقط — لا يُضاف إلى «مراجعة الأخطاء».", practiceError: "تعذّر حفظ الأسئلة. حاول مرة أخرى.",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    title: "Hand review", situation: "Situation", hero: "Your seat", opener: "Opening seat", caller: "Calling seat", threeBettor: "3-betting seat", preflop: "Preflop",
+    singleRaised: "Open · Call", threeBet: "3-bet pot", fourBet: "4-bet pot", multiway: "3+ players", notSupported: "Cannot be reviewed",
+    unavailableScenario: "Data for this situation is not ready yet.", fileMissing: "No result file is available for this flop.",
+    loadFailed: "Could not load the result file.", invalidData: "Could not read the result file.",
+    unsupportedAction: "This action cannot be analysed.", unsupportedSize: "This size cannot be analysed.",
+    evMissing: "EV unavailable", referenceOnly: "Reference only", mixedAction: "Used by the solver",
+    precomputed: "Precomputed result", onDevice: "Calculated on this device", flop: "Flop", turn: "Turn", river: "River",
+    chooseHand: "Your 2 cards", chooseFlop: "3 flop cards", chooseTurn: "Turn card", chooseRiver: "River card",
+    result: "Results", totalLoss: "Total loss",
+    best: "Best play", good: "Acceptable", mistake: "Review this play",
+    noResults: "Choose your cards and enter actions to see results.", chooseAction: "Choose the action that was played.",
+    opponentResponse: "Opponent response to your play", foldingHands: "Hands that fold",
+    handGrid: "Hand grid", matchedSize: "Size matched {actual} → {used}",
+    undo: "Undo", newHand: "New hand", loading: "Loading data…", solving: "Calculating…",
+    solveFailed: "Could not finish calculating this street.", retry: "Retry", complete: "Hand complete",
+    check: "Check", fold: "Fold", call: "Call", bet: "Bet", raise: "Raise", allin: "All-in",
+    scopeNote: "Free · Online 6-max cash, 100bb. Results may not suit pub games or tournaments. 3-bet and 4-bet pots can be reviewed for 11 seat combinations (not yet: SB 3-betting a UTG, HJ or CO open, or HJ 3-betting a UTG open). Multiway pots cannot be reviewed.",
+    referenceNote: "Spots with a reach-share product below {threshold} are excluded from mistake counts and total loss.",
+    evMissingNote: "EV is unavailable for judging loss. Only frequencies are shown.", reach: "Reach-share product",
+    pot: "Pot", heroOutsideRange: "This hand is outside the default range for the selected seat.",
+    hand: "Your hand",
+    navTitle: "Hand review", cancel: "Cancel",
+    noCompatibleHands: "No opponent hand in this spot is compatible with your cards.", otherSize: "Other size",
+    unanalysed: "Not analysed", scopeTitle: "Review assumptions",
+    practiceSpot: "Practice this spot", practiceBusy: "Creating practice questions…", practiceUnavailable: "Practice questions cannot be created: no hand in your range reaches this spot, action EVs are missing, or there is only one action to choose.", practiceReferenceNote: "This spot is reached too rarely for reliable values. Use it as a reference only; it is not added to your mistake review.", practiceError: "Could not save practice questions. Please try again.",
+  },
 } as const;
 
 export type HandReviewLabelKey = keyof typeof M.en;
@@ -442,3 +470,13 @@ export type HandReviewLabels = Record<HandReviewLabelKey, string>;
 // This assignment checks both the locale set and every required key at build time.
 const checkedLabels: LocaleDict<HandReviewLabels> = M;
 export const handReviewLabels = (locale: Locale): HandReviewLabels => checkedLabels[locale];
+
+// it-todo: imperative buttons are separate from M.it action names in history and tables.
+export const IT_REVIEW_ACTION_BUTTONS = {
+  fold: "Fold",
+  check: "Check",
+  call: "Call",
+  bet: "Bet",
+  raise: "Raise",
+  allin: "All-in",
+};

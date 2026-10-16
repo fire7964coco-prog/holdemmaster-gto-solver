@@ -34,7 +34,7 @@
         <fieldset :disabled="editorDisabled" class="min-w-0 space-y-2">
           <legend class="sr-only">{{ L.frequency }}</legend>
           <label v-for="(action, index) in editableSpot.actions" :key="index" class="nodelock-action grid min-w-0 grid-cols-[minmax(0,1fr)_6rem] items-center gap-3">
-            <span class="min-w-0 break-all font-mono" :style="{ color: action.color }">{{ action.name }}:{{ action.amount }}</span>
+            <span class="min-w-0 break-all font-mono" :style="{ color: action.color }">{{ displayActionName(action.name) }}:{{ action.amount }}</span>
             <span class="flex min-w-0 items-center gap-1">
               <input dir="ltr"
                 v-model.number="percentages[index]"
@@ -44,7 +44,7 @@
                 max="100"
                 step="1"
                 :data-testid="`nodelock-frequency-${index}`"
-                :aria-label="`${action.name}:${action.amount} ${L.frequency} (%)`"
+                :aria-label="`${displayActionName(action.name)}:${action.amount} ${L.frequency} (%)`"
                 :aria-invalid="!validPercentage(percentages[index])"
                 class="w-full min-w-0 rounded border border-neutral-600 bg-neutral-800 px-2 py-1.5 text-right tabular-nums disabled:opacity-50"
               />
@@ -101,12 +101,12 @@
             <tbody>
               <template v-for="action in node.actions" :key="action.name">
                 <tr data-field="frequency" :data-action="action.name" class="border-t border-neutral-700">
-                  <th scope="row" class="break-words py-1 text-left font-normal">{{ action.name }} · {{ L.frequency }}</th>
+                  <th scope="row" class="break-words py-1 text-left font-normal">{{ displayActionName(action.name) }} · {{ L.frequency }}</th>
                   <td :data-before="raw(action.before?.frequency)" class="break-all px-1 py-1 text-right tabular-nums">{{ percent(action.before?.frequency) }}</td>
                   <td :data-after="raw(action.after?.frequency)" class="break-all px-1 py-1 text-right tabular-nums">{{ percent(action.after?.frequency) }}</td>
                 </tr>
                 <tr data-field="action-ev" :data-action="action.name">
-                  <th scope="row" class="break-words py-1 text-left font-normal">{{ action.name }} · EV</th>
+                  <th scope="row" class="break-words py-1 text-left font-normal">{{ displayActionName(action.name) }} · EV</th>
                   <td :data-before="raw(action.before?.ev)" class="break-all px-1 py-1 text-right tabular-nums">{{ evText(action.before?.ev) }}</td>
                   <td :data-after="raw(action.after?.ev)" class="break-all px-1 py-1 text-right tabular-nums">{{ evText(action.after?.ev) }}</td>
                 </tr>
@@ -148,11 +148,23 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from "vue";
-import { localizeNumber } from "../i18n";
+import { i18n, localizeNumber } from "../i18n";
 import { nodeLockLabels } from "../node-lock-labels";
 import { expandUniform, NodeLock, sameHistory, useNodeLockStore } from "../node-lock";
 import { Results, Spot } from "../result-types";
 import { useStore } from "../store";
+
+// it-todo: display-only action nouns; stored locks retain the engine action names.
+const actionNamesIt: Record<string, string> = {
+  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
+};
+const displayActionName = (name: string) => {
+  if (i18n.locale !== "it") return name;
+  // Comparison snapshots keep the engine's combined "Bet:50" token.
+  const separator = name.indexOf(":");
+  const kind = separator < 0 ? name : name.slice(0, separator);
+  return (actionNamesIt[kind] ?? kind) + (separator < 0 ? "" : name.slice(separator));
+};
 
 export default defineComponent({
   props: {
@@ -266,7 +278,7 @@ export default defineComponent({
       lockStore.requestSolve();
     };
     const distributionText = (lock: NodeLock) => lock.actions.map((action, index) =>
-      `${action.name}:${action.amount} ${localizeNumber(lock.percentages[index] + "%")}`).join(" · ");
+      `${displayActionName(action.name)}:${action.amount} ${localizeNumber(lock.percentages[index] + "%")}`).join(" · ");
 
     const comparisonNodes = computed(() => {
       const histories = (lockStore.before?.nodes ?? []).map(node => node.history);
@@ -289,7 +301,7 @@ export default defineComponent({
       return localizeNumber((value / scale).toFixed(3) + (scale > 1 ? "bb" : ""));
     };
 
-    return { lockStore, L, opened, percentages, skippedChance, editableSpot, currentLock, mutationDisabled,
+    return { lockStore, L, displayActionName, opened, percentages, skippedChance, editableSpot, currentLock, mutationDisabled,
       editorDisabled, canClear, visible, initialUnavailable, validPercentage, validDistribution, totalText,
       apply, remove, clearAll, distributionText, comparisonNodes, raw, percent, evText };
   },

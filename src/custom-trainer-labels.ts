@@ -211,6 +211,20 @@ export const M = {
     prompt: "كيف تلعب؟", next: "السؤال التالي", review: "مراجعة الأخطاء", practice: "تدريب عادي", attemptCount: "المحاولات في هذا الموقف: {count}",
     verdictBest: "أفضل قرار", verdictGood: "مقبول", verdictBad: "يحتاج مراجعة", evLoss: "خسارة EV", frequency: "التكرار", actionEv: "EV القرار", chips: "رقائق",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    entry: "Practice this spot", busy: "Saving practice questions…", tab: "My spots", presetTab: "Preset practice",
+    empty: "After solving a spot, choose [Practice this spot] on the results screen to save questions here.",
+    loading: "Loading your spots…", storageNote: "This device stores your 20 most recent spots and 500 latest attempts per spot. My spot results are counted separately. Saving the same spot again replaces its solve and clears its practice history.",
+    source: "Your approximate solve · Target error {target}% · Achieved {achieved}%", lockAssumption: "Assumes part of the strategy is fixed",
+    reviewSource: "Spot from your hand review · {method} · Target error {target}% · Achieved {achieved}%", backToReview: "Back to hand review",
+    chooseSpot: "Saved spots", deleteSpot: "Delete spot", deleteConfirm: "Delete this spot and its practice history from this device?",
+    loadError: "Could not load your saved spots. Please reopen this screen.", saveError: "Could not save. Please try again.",
+    captureError: "Could not create practice questions from these results. Check that the solve has finished.",
+    noQuestion: "There are no playable hands in this spot.", board: "Board", hand: "Your hand", pot: "Pot", stack: "Stack", line: "Line",
+    prompt: "What's your play?", next: "Next question", review: "Review mistakes", practice: "Regular practice", attemptCount: "Attempts in this spot: {count}",
+    verdictBest: "Best play", verdictGood: "Acceptable", verdictBad: "Review this spot", evLoss: "EV loss", frequency: "Frequency", actionEv: "Action EV", chips: "chips",
+  },
 } satisfies LocaleDict<Record<string, string>>;
 
 export type CustomTrainerLabelKey = keyof typeof M.ko;

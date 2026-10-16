@@ -671,6 +671,26 @@ const M = {
     betPot: (label: string, formatted: string, percent: number) =>
       arLabelIso(`${label} ${ltrIso(formatted)} (\u2066${percent}%\u2069 من البوت)`),
   },
+  // it-todo: translate the copied English values.
+  it: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} wins`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "End",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% pot)`,
+  },
 } as const;
 
 export default defineComponent({

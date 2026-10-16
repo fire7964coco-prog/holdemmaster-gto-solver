@@ -275,6 +275,14 @@ const M = {
     action: (name: string): string =>
       ({ Fold: "فولد", Check: "تشيك", Call: "كول", Bet: "رهان", Raise: "رايز", Allin: "أول إن", "All-in": "أول إن" } as Record<string, string>)[name] ?? name,
   },
+  // it-todo: translate the copied English values.
+  it: {
+    strategyCombos: "Strategy (Combos)",
+    strategy: "Strategy",
+    equity: "Equity",
+    action: (name: string): string =>
+      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({
@@ -422,7 +430,7 @@ export default defineComponent({
         }[option];
 
       return {
-        ...(i18n.locale === "ar" ? { locale: "en-US" } : {}),
+        ...(i18n.locale === "ar" ? { locale: "en-US" } : i18n.locale === "it" ? { locale: "it-IT" } : {}),
         responsive: true,
         maintainAspectRatio: false,
         animation: false,

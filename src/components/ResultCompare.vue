@@ -189,6 +189,11 @@ const M = {
     combos: "تركيبات",
     equity: "الإكويتي",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    combos: "Combos",
+    equity: "Equity",
+  },
 } as const;
 
 const EPS = 2e-6;

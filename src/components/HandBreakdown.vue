@@ -170,6 +170,13 @@ const M = {
     draws: "الدرو",
     noDraws: "لا معلومات عن الدرو",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    hands: "Hands",
+    noHands: "No hands to display",
+    draws: "Draws",
+    noDraws: "No draw information",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)

@@ -131,7 +131,7 @@
       <div id="trainer-stats" class="order-4 md:order-2 flex flex-wrap gap-1.5 mt-3">
         <span class="stat-chip">{{ L.solved }} <b dir="ltr">{{ attempts.length }}</b></span>
         <span v-if="dailyState.streak" class="stat-chip">
-          {{ L.dailyStreakLabel }} <span>{{ L.dayStreakPrefix ?? "" }}<b dir="ltr">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}</span>
+          {{ L.dailyStreakLabel }} <span>{{ L.dayStreakPrefix ?? "" }}<b dir="ltr">{{ dailyState.streak }}</b>{{ dayStreakSuffix }}</span>
           <span v-if="dailyState.bestStreak > dailyState.streak" class="text-neutral-600">
             {{ L.bestPrefix }} {{ dailyState.bestStreak }}
           </span>
@@ -260,7 +260,7 @@
           {{ L.goodRateLabel }} <template v-if="isTr">%</template><b dir="ltr" class="text-neutral-200">{{ isAr ? $pct(excellentRate.toFixed(0)) : excellentRate.toFixed(0) }}</b><template v-if="!isTr">{{ isAr ? "" : "%" }}</template>
         </span>
         <span v-if="dailyState.streak">
-          {{ L.dailyStreakLabel }} {{ L.dayStreakPrefix ?? "" }}<b dir="ltr" class="text-brand">{{ dailyState.streak }}</b>{{ L.dayStreakSuffix }}
+          {{ L.dailyStreakLabel }} {{ L.dayStreakPrefix ?? "" }}<b dir="ltr" class="text-brand">{{ dailyState.streak }}</b>{{ dayStreakSuffix }}
         </span>
         <button class="ms-auto link-like" @click="scrollToStats">{{ L.details }}</button>
       </div>
@@ -394,7 +394,8 @@
                 trainerActionLabel(
                   action,
                   question.node.selectedSpot.pot ?? question.node.startingPot,
-                  question.node.unitScale
+                  question.node.unitScale,
+                  evaluation ? "label" : "button"
                 )
               }}
             </span>
@@ -510,7 +511,7 @@
             <div class="text-sm font-semibold text-brand">
               {{ L.dailyDone }}
               <span v-if="dailyState.streak > 1" class="text-neutral-300">
-                · {{ L.dayStreakPrefix ?? "" }}{{ dailyState.streak }}{{ L.dayStreakSuffix }}
+                · {{ L.dayStreakPrefix ?? "" }}{{ dailyState.streak }}{{ dayStreakSuffix }}
               </span>
             </div>
             <div class="mt-1 text-xs text-neutral-400 leading-relaxed">
@@ -2625,6 +2626,116 @@ const M = {
     syncFailed: (msg: string) => `خطأ في المزامنة: ${autoIso(msg)} — النتائج ما زالت محفوظة على هذا الجهاز. اضغط «مزامنة الآن» للمحاولة مجددًا.`,
     signInFailed: (msg: string) => `تعذّر تسجيل الدخول: ${autoIso(msg)} — اضغط زر الدخول مرة أخرى.`,
   },
+  // it-todo: translate the copied English values.
+  it: {
+    versus: "vs",
+    loadFailed: "Failed to load trainer data:",
+    loading: "Loading trainer…",
+    review: (n: number) => `Review (${n})`,
+    daily: "Daily Puzzle",
+    dailyStreakLabel: "Daily Puzzle",
+    done: "Done",
+    solved: "Solved",
+    dayStreakSuffix: (n: number) => n === 1 ? "-day streak" : "-day streak",
+    bestPrefix: "/ best",
+    streakLabel: "Streak",
+    totalLossLabel: "Total EV loss",
+    avgLossLabel: "Avg EV loss",
+    goodRateLabel: "Good-play rate",
+    weaknessTitle: "Leak Finder",
+    avgOfPot: (pct: string) => `avg ${pct}% of the pot`,
+    handCount: (n: number) => `(${n} hand${n === 1 ? "" : "s"})`,
+    notSolved: "Not tried",
+    weakestBefore: "Biggest losses in ",
+    weakestAfter: " —",
+    practiceThis: "Drill this spot type",
+    weaknessHint: "Solve 3+ hands in each category to see where you're leaking.",
+    accountBefore: "Saved to ",
+    accountAfter: "'s account",
+    syncingNow: "Syncing…",
+    syncNow: "Sync now",
+    signOutLabel: "Sign out",
+    localOnlyBefore: "Your progress is saved ",
+    localOnlyBold: "on this device only",
+    localOnlyAfter:
+      ". Link a HoldemMaster account to pick up where you left off on any device.",
+    googleSignIn: "Continue with Google",
+    kakaoSignIn: "Continue with Kakao",
+    telegramSignIn: "Continue with Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} Study Spots · ${nodes} decision nodes · target exploitability ${pct}%`,
+    details: "Details ↓",
+    toAct: "to act",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Line:",
+    boardLabel: "Board",
+    myHand: "Your hand",
+    yourChoice: "Your choice",
+    prompt: "What's your play?",
+    bestEvTag: " · Highest EV",
+    evLoss: "EV loss",
+    mobileDetailTitle: "Frequency & EV by action",
+    mixedNote:
+      "Mixed strategies aren't marked wrong — grading is based on the EV difference between actions.",
+    dailyDone: "Daily Puzzle complete",
+    dailyDoneDesc:
+      "Everyone gets the same puzzle today. Post your result to compare with other players.",
+    makeCard: "Create a result card",
+    boardShow: "View today's leaderboard",
+    boardHide: "Hide leaderboard",
+    boardLoading: "Loading…",
+    boardCount: (n: number) => `${n} player${n === 1 ? "" : "s"} today`,
+    boardMyRank: (r: number) => `My rank #${r}`,
+    boardLoginHint:
+      "Sign in to put your name on the board — viewing is open to everyone.",
+    boardUnavailable: "The leaderboard isn't available yet.",
+    copied: "Copied",
+    copyResult: "Copy result text",
+    openCommunity: "Open community →",
+    pasteHintBefore: "In the community, hit ",
+    pasteHintBold: "[✏️ Write Post]",
+    pasteHintAfter: " and paste.",
+    keepPracticing: "Keep practicing",
+    nextHand: "Next hand",
+    readArticle: "Read the spot breakdown →",
+    viewFull: "View full solution",
+    resultTitle: "Results",
+    resultHintBefore: "Pick an action and you'll see ",
+    resultHintBold: "each action's frequency and EV",
+    resultHintAfter: ", plus how many bb your choice cost.",
+    gtoNoteBefore:
+      "GTO mixes actions with the same hand — a low-frequency choice isn't automatically a mistake. The measure is EV loss ",
+    gtoNoteBold: "relative to the pot",
+    gtoNoteAfter: ": ≤0.35% Best play · ≤1% Acceptable · above that, Review this spot.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `For this spot (${pot}bb pot) that's Best play ≤${best}bb · Acceptable ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Judged against this spot's starting pot (${pot}bb): Best play ≤${best}bb · Acceptable ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} precomputed spots · dealt evenly from all ${flops} real flops`,
+    resetHistoryLabel: "Reset history",
+    cardAlt: "Daily Puzzle result card",
+    shareApps: "Share",
+    saveImage: "Save image",
+    close: "Close",
+    cardHintBefore:
+      "Post your card to a group chat or social media — anyone who sees it plays the ",
+    cardHintBold: "same puzzle",
+    cardHintAfter: " today. The card never spoils the answer.",
+    verdictBest: "Best play",
+    verdictGood: "Acceptable",
+    verdictMiss: "Review this spot",
+    promptCopy: "Copy the text below",
+    shareText:
+      "Today's GTO puzzle — try it yourself: https://solver.holdemmaster.com/?view=trainer&lang=it",
+    confirmReset: "Clear all trainer history on this device?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} saved · ${merged} pulled from other devices`,
+    syncSaved: (uploaded: number) => `${uploaded} saved`,
+    syncFailed: (msg: string) => `Sync failed: ${msg} — your results are still saved on this device. Press “Sync now” to try again.`,
+    signInFailed: (msg: string) => `Sign-in failed: ${msg} — press the sign-in button again to retry.`,
+  },
 } as const;
 
 // «출제» 칩 · «가까운 결정만» — 기기에 기억 (RNG 칩과 같은 방식)
@@ -2676,6 +2787,10 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const L = computed(() => M[i18n.locale] as (typeof M)[keyof typeof M] & { dayStreakPrefix?: string });
+    // it-todo: all three streak render sites call the count-aware Italian suffix.
+    const dayStreakSuffix = computed(() => i18n.locale === "it"
+      ? M.it.dayStreakSuffix(dailyState.streak)
+      : M[i18n.locale].dayStreakSuffix);
     const versusText = computed(() => "versus" in L.value ? L.value.versus : "vs");
     const autoText = (text: string | null) => i18n.locale === "ar" ? autoIso(text ?? "") : text;
     const ltrText = (text: string) => i18n.locale === "ar" ? ltrIso(text) : text;
@@ -2713,7 +2828,7 @@ export default defineComponent({
       if (!flopBoardActive.value) return BL.value.boardAll;
       const value = f.board
         ? ltrText(f.board.map((c) => "23456789TJQKA"[c >> 2] + "♣♦♥♠"[c & 3]).join(""))
-        : flopReportLabels(i18n.locale).flopCount.replace("{count}", flopBoardCount.value.toLocaleString(numberLocaleTag()));
+        : flopReportLabels(i18n.locale).flopCount.replace("{count}", flopBoardCount.value.toLocaleString(numberLocaleTag(), i18n.locale === "it" ? { useGrouping: true } : undefined));
       return BL.value.boardChip.replace("{value}", value);
     });
     const categories = computed<TrainerCategory[]>(() =>
@@ -2735,7 +2850,7 @@ export default defineComponent({
     // «모든 플랍» 하단 줄: 지금 실제로 출제하는 풀 — 범주·회원 반영 상황 수 · 보드 고르기 반영 플랍 수(MA-531)
     const flopFooterSpots = computed(() => flopScenarioList().length);
     const flopFooterFlops = computed(() =>
-      (flopBoardActive.value ? flopBoardCount.value : REAL_FLOP_COUNT).toLocaleString(numberLocaleTag())
+      (flopBoardActive.value ? flopBoardCount.value : REAL_FLOP_COUNT).toLocaleString(numberLocaleTag(), i18n.locale === "it" ? { useGrouping: true } : undefined)
     );
     const decisionCount = computed(
       () => bank.value?.presets.reduce((sum, item) => sum + item.nodes.length, 0) ?? 0
@@ -3407,6 +3522,7 @@ export default defineComponent({
       limits,
       sentenceGap,
       dailyState,
+      dayStreakSuffix,
       // 한국어는 /community, 그 밖의 언어는 «언어별 홈 자체가 그 언어 커뮤니티»다.
       // 본체 app/{en,ja,es,pt,de,zh}/page.tsx가 전부 <CommunityClient pageLocale="…"/>를
       // 렌더한다(2026-08-22 본체 소스 확인). 예전에는 «/en/community가 404»인 것만 보고

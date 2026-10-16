@@ -574,6 +574,48 @@ export const DRAW_LABELS_AR: Record<DrawKey, string> = {
   no_draw: "بلا درو",
 };
 
+// it: confirmed rank names from the terminology table §3-2 (IT3 translation exception).
+export const IT_HAND_RANK_NAMES = {
+  royal_flush: "Scala reale massima",
+  straight_flush: "Scala a colore",
+  quads: "Poker",
+  full_house: "Full",
+  flush: "Colore",
+  straight: "Scala",
+  trips: "Tris",
+  two_pair: "Doppia coppia",
+  one_pair: "Coppia",
+  high_card: "Carta alta",
+} as const;
+
+export const MADE_LABELS_IT: Record<MadeKey, string> = {
+  straight_flush: "Scala a colore",
+  quads: "Poker",
+  full_house: "Full",
+  flush: "Colore",
+  straight: "Scala",
+  trips: "Tris",
+  two_pair: "Doppia coppia",
+  overpair: "Overpair",
+  top_pair: "Top pair",
+  second_pair: "Seconda coppia",
+  weak_pair: "Coppia bassa",
+  underpair: "Underpair",
+  ace_high: "A-high",
+  king_high: "K-high",
+  nothing: "Nessuna mano fatta",
+};
+
+// it-todo: translate the copied English draw labels.
+export const DRAW_LABELS_IT: Record<DrawKey, string> = {
+  combo_draw: "Combo Draw",
+  flush_draw: "Flush Draw",
+  oesd: "OESD",
+  gutshot: "Gutshot",
+  backdoor_fd: "Backdoor FD",
+  no_draw: "No Draw",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -606,6 +648,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_RU
     : i18n.locale === "ar"
     ? MADE_LABELS_AR
+    : i18n.locale === "it"
+    ? MADE_LABELS_IT
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -638,6 +682,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_RU
     : i18n.locale === "ar"
     ? DRAW_LABELS_AR
+    : i18n.locale === "it"
+    ? DRAW_LABELS_IT
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

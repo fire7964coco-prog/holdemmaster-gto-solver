@@ -165,10 +165,21 @@ const ar: typeof ko = {
   pending: "لم يُرفع إلى الحساب بعد — سنعيد المحاولة عند فتح هذه الشاشة أو الحفظ مجددًا",
   limit: "تم بلوغ حد الحساب — يستمر الحفظ على هذا الجهاز",
 };
+// it-todo: translate the copied English values.
+const it: typeof ko = {
+  invite: "Sign in to open your saved list on any phone or PC",
+  google: "Continue with Google",
+  kakao: "Continue with Kakao",
+  telegram: "Continue with Telegram",
+  syncing: "Syncing with your account…",
+  ok: "Kept in your account · last synced {time}",
+  pending: "Not uploaded yet — we'll retry next time you open this screen or save",
+  limit: "Account limit reached — still saving on this device",
+};
 export type SavedSyncLabels = Record<keyof typeof ko, string>;
 // This assignment checks both the locale set and every required key at build time.
 const checkedLabels: LocaleDict<SavedSyncLabels> = {
   ko, en, ja, es, pt, de, zh, "zh-hant": zhHant,
-  fr, id, ms, hi, tr, vi, ru, ar,
+  fr, id, ms, hi, tr, vi, ru, ar, it,
 };
 export const savedSyncLabels = (locale: Locale): SavedSyncLabels => checkedLabels[locale];

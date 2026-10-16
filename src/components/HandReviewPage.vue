@@ -270,7 +270,7 @@
                 :data-testid="'review-action-' + i"
                 @click="chooseAction(parseAction(action))"
               >
-                {{ actionText(action) }}
+                {{ actionText(action, "button") }}
               </button>
             </div>
             <div v-if="otherSizes.length" class="review-other">
@@ -460,7 +460,7 @@ import {
   watch,
 } from "vue";
 import { i18n, localizeNumber, arLabelIso, ltrIso } from "../i18n";
-import { M } from "../hand-review-labels";
+import { M, IT_REVIEW_ACTION_BUTTONS } from "../hand-review-labels";
 import {
   SRP_SPOTS,
   THREE_BET_SPOTS,
@@ -724,7 +724,7 @@ export default defineComponent({
     const suitClass = (c: number) =>
       ["clubs", "diamonds", "hearts", "spades"][c & 3];
     const seat = (p: number) => (p === 0 ? spot.value.oop : spot.value.ip);
-    const actionText = (raw: string) => {
+    const actionText = (raw: string, role: "label" | "button" = "label") => {
       const a = parseAction(raw);
       const key = {
         Fold: "fold",
@@ -736,6 +736,9 @@ export default defineComponent({
       } as const;
       if (i18n.locale === "ar") {
         return arLabelIso(L.value[key[a.kind]], a.amount === undefined ? undefined : bb(a.amount));
+      }
+      if (i18n.locale === "it" && role === "button") {
+        return IT_REVIEW_ACTION_BUTTONS[key[a.kind]] + (a.amount === undefined ? "" : " " + bb(a.amount));
       }
       return (
         L.value[key[a.kind]] +

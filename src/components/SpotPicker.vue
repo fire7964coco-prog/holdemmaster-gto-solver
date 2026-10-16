@@ -286,6 +286,19 @@ const M = {
     betsFilled: (flop: string, later: string, raise: string) => `كانت أحجام الرهان فارغة، فأضيفت القيم الافتراضية أيضًا — الفلوب ${ltrIso(flop)} · التيرن/الريفر ${ltrIso(later)} · رايز ${ltrIso(raise)}`,
     next: "التالي: ③ البورد",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    title: "Fill ranges by position",
+    note: "Pick who opened and who called, then press the button below — both ranges, the pot and the stack are filled in at once. The ranges are the same as in Preflop Charts (6-max cash, 100bb).",
+    opener: "Open",
+    caller: "Call",
+    apply: "Fill both ranges",
+    applied: (oop: string, ip: string, pot: string, stack: string) =>
+      `${oop} (OOP) · ${ip} (IP) ranges filled in. Pot ${pot}bb · Stack ${stack}bb`,
+    betsFilled: (flop: string, later: string, raise: string) =>
+      `Bet sizes were empty, so defaults were filled in too — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
+    next: "Next: ③ Board",
+  },
 } as const;
 
 const BET_FIELDS = [

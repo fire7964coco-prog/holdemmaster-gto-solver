@@ -290,6 +290,16 @@ const M = {
     combos: "التركيبات",
     parseError: (range: string) => `تعذّرت قراءة النطاق: ${(range && ltrIso(range)) || "(نص فارغ)"}`,
   },
+  // it-todo: translate the copied English values.
+  it: {
+    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. Tapping a cell that already has that weight clears it. The hand name and weight you tapped appear in large text above.",
+    clear: "Clear",
+    errorPrefix: "Error:",
+    weight: "Weight:",
+    combos: "combos",
+    parseError: (range: string) =>
+      `Failed to parse range: ${range || "(empty string)"}`,
+  },
 } as const;
 
 import { C } from "../theme";

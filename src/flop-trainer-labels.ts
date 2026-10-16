@@ -240,6 +240,21 @@ const checkedLabels: LocaleDict<FlopTrainerLabels> = {
     useBasic: "التدريب على الأسئلة الأساسية",
     again: "اليد نفسها مرة أخرى",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    sourceBasic: "Source: Basic",
+    sourceFlop: "Source: All flops",
+    sourceHelp:
+      "All flops: questions come from spots and flops pre-solved on our server (internet required). Basic: decision points from the study spots (works offline).",
+    closeOnly: "Close spots only",
+    closeHelp: "Only deals hands where the best and second-best actions are within the “Acceptable” EV margin.",
+    loading: "Loading flop…",
+    offline: "An internet connection is required.",
+    failed: "Couldn't load a question.",
+    retry: "Retry",
+    useBasic: "Practice basic questions",
+    again: "Same hand again",
+  },
 };
 
 export const flopTrainerLabels = (locale: Locale): FlopTrainerLabels => checkedLabels[locale];
@@ -409,6 +424,17 @@ const boardLabels: LocaleDict<FlopBoardLabels> = {
     pickCards: "اختيار الأوراق",
     boardReset: "إعادة إلى الكل",
     boardEmpty: "لا فلوبات تطابق هذا الاختيار.",
+  },
+  // it-todo: translate the copied English values.
+  it: {
+    boardAll: "Board: All",
+    boardChip: "Board: {value}",
+    boardHelp: "Filter the flops you get by high card, suits, pairing and connectedness, or fix one specific flop.",
+    boardRule: "Within a row any choice can match; a flop must match every row you've set (empty rows allow all).",
+    specificFlop: "Specific flop",
+    pickCards: "Pick cards",
+    boardReset: "Reset to all",
+    boardEmpty: "No flops match this combination.",
   },
 };
 export const flopBoardLabels = (locale: Locale): FlopBoardLabels => boardLabels[locale];

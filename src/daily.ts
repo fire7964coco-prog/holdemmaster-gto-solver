@@ -164,7 +164,7 @@ export const dailyCardDate = () => {
   const key = todayKey();
   if (i18n.locale === "de" || i18n.locale === "tr" || i18n.locale === "ru") return key.split("-").reverse().join(".");
   // hi: DD/MM/YYYY with Latin digits, same in the image and copied text.
-  if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi" || i18n.locale === "vi" || i18n.locale === "ar")
+  if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi" || i18n.locale === "vi" || i18n.locale === "ar" || i18n.locale === "it")
     return key.split("-").reverse().join("/");
   if (i18n.locale === "zh" || i18n.locale === "zh-hant") return key;
   return key.replace(/-/g, ".");
@@ -372,6 +372,18 @@ export const dailyShareText = (verdict: string) => {
     ]
       .filter(Boolean)
       .join("\n");
+  }
+  // it-todo: English copy; date/number/URL already follow the Italian contract.
+  if (i18n.locale === "it") {
+    return [
+      `[Daily GTO Puzzle · ${dailyCardDate()}]`,
+      `My result: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      // it-todo: translate both noun forms; only n=1 is singular (§7).
+      dailyState.streak > 0 ? (dailyState.streak === 1 ? `${dailyState.streak}-day streak` : `${dailyState.streak}-day streak`) : "",
+      "",
+      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=it",
+      "(HoldemMaster GTO Solver · one puzzle a day)",
+    ].filter(Boolean).join("\n");
   }
   if (i18n.locale === "en") {
     return [

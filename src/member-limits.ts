@@ -134,9 +134,15 @@ const ar: typeof ko = {
   importOver: "بهذا الاستيراد تتجاوز العناصر المحفوظة على هذا الجهاز 10 — سجّل الدخول لاستيراد الملف كله",
   memberScenario: "هذا الموقف متاح للأعضاء فقط (الحساب مجاني) — سجّل الدخول لفتحه فورًا",
 };
+// it-todo: translate the copied English values.
+const it: typeof ko = {
+  saveFull: "Sign in to save more than 10 items and open your list on any phone or PC",
+  importOver: "This import would take this device past 10 saved items — sign in to import all of it",
+  memberScenario: "This situation is only for free members — sign in to open it right away",
+};
 export type MemberLabels = typeof ko;
 // This assignment checks both the locale set and every required key at build time.
 const checkedLabels: LocaleDict<MemberLabels> = {
-  ko, en, ja, es, pt, de, zh, "zh-hant": zhHant, fr, id, ms, hi, tr, vi, ru, ar,
+  ko, en, ja, es, pt, de, zh, "zh-hant": zhHant, fr, id, ms, hi, tr, vi, ru, ar, it,
 };
 export const memberLabels = (locale: Locale): MemberLabels => checkedLabels[locale];

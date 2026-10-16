@@ -292,6 +292,24 @@ export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = {
     banner: "جزء من الاستراتيجية مثبّت — هذه ليست استراتيجية توازن (GTO) · نقاط القرار المثبّتة: {count}",
     noReach: "وزن reach عند نقطة القرار هذه يساوي 0، فلا يمكن عرض التكرارات الأولية.",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    title: "Lock this node’s strategy",
+    apply: "Lock and solve again",
+    clearAll: "Unlock all and solve again",
+    remove: "Unlock and solve again",
+    before: "Before locking",
+    after: "After locking",
+    frequency: "Frequency",
+    comparison: "Before/after comparison",
+    exploitability: "Exploitability",
+    sumError: "Enter integers from 0 to 100 for each action, totaling 100.",
+    skippedChance: "A path with an unspecified card cannot be locked. Select the card first.",
+    engineError: "The strategy could not be locked. Check the input values and solve again.",
+    assumption: "Values under the fixed-strategy assumption",
+    banner: "Solved with part of the strategy fixed — not an equilibrium (GTO) strategy · {count} locked nodes",
+    noReach: "This node’s reach weight is 0, so initial frequencies are unavailable.",
+  },
 };
 
 export const nodeLockLabels = () => NODE_LOCK_MESSAGES[i18n.locale];

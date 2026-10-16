@@ -1,4 +1,6 @@
 // RNG 연습 문구 — 15언어(3단계) · GTO 트레이너와 «내 스팟» 연습이 같이 쓴다 · 판정명(최선·허용)은 같은 언어 verdictBest·verdictGood 용어를 따른다
+import type { LocaleDict } from "./i18n";
+
 export const RNG_M = {
   ko: {
     mode: { off: "RNG: 끔", high: "RNG: High", low: "RNG: Low" },
@@ -172,4 +174,24 @@ export const RNG_M = {
       `مقبول — يمزج السولفر هذا القرار، لكن المطلوب لهذا الرقم: ${action}.`,
     noteOther: (action: string) => `المطلوب لهذا الرقم: ${action}.`,
   },
-};
+  // it-todo: translate the copied English values.
+  it: {
+    mode: { off: "RNG: Off", high: "RNG: High", low: "RNG: Low" },
+    modeHelp:
+      "Random number (1–100) practice — each hand gets a number, and you pick the action that number points to. High: higher numbers mean more aggressive actions · Low: lower numbers mean more aggressive actions. Not used for the Daily Puzzle.",
+    bandsTitle: "RNG ranges",
+    yourNumber: "Your number",
+    noteBest: (action: string) => `You picked the action for this number (${action}).`,
+    noteMixed: (action: string) =>
+      `Acceptable — the solver mixes this action, but this number calls for ${action}.`,
+    noteOther: (action: string) => `This number calls for ${action}.`,
+  },
+} satisfies LocaleDict<{
+  mode: Record<"off" | "high" | "low", string>;
+  modeHelp: string;
+  bandsTitle: string;
+  yourNumber: string;
+  noteBest: (action: string) => string;
+  noteMixed: (action: string) => string;
+  noteOther: (action: string) => string;
+}>;

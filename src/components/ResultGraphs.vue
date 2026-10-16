@@ -169,6 +169,11 @@ const M = {
     noGraph: "الرسم البياني غير متاح",
     equity: "الإكويتي",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    noGraph: "No graph available",
+    equity: "Equity",
+  },
 } as const;
 
 export default defineComponent({
@@ -361,7 +366,7 @@ export default defineComponent({
       };
 
       return {
-        ...(i18n.locale === "ar" ? { locale: "en-US" } : {}),
+        ...(i18n.locale === "ar" ? { locale: "en-US" } : i18n.locale === "it" ? { locale: "it-IT" } : {}),
         responsive: true,
         maintainAspectRatio: false,
         animation: false,

@@ -78,6 +78,10 @@ const M = {
   ar: {
     combos: "التركيبات",
   },
+  // it-todo: translate the copied English values.
+  it: {
+    combos: "combos",
+  },
 } as const;
 
 const actionLabel = (
@@ -206,6 +210,16 @@ const actionLabel = (
       Raise: "رايز",
       Allin: "أول إن",
       "All-in": "أول إن",
+    },
+    // it-todo
+    {
+      Fold: "Fold",
+      Check: "Check",
+      Call: "Call",
+      Bet: "Bet",
+      Raise: "Raise",
+      Allin: "All-in",
+      "All-in": "All-in",
     }
   );
   const label = map[name] ?? name;
@@ -235,7 +249,9 @@ const actionLabel = (
         "dari pot",
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
         "pot", "pot", "pot", "pot", "банка",
-    "من البوت" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
+    "من البوت",
+        // it-todo
+        "pot" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
       )})`
     );
   }
