@@ -20,7 +20,7 @@ const testSwitch = (name: string): boolean =>
 
 /** 본체 후기창 서버가 받지 않는 로케일 — 저장하면 locale 오류가 난다. 본체가 사전에 넣으면 뺀다
  *  (ru: 본체 회신 10-09 «/ru/solver 회차에서 사전에 넣고 다시 알림») */
-const FEEDBACK_UNSUPPORTED_LOCALES: readonly string[] = ["ar", "it", "pl"]; // IT3: 본체 사전에 it 없음. 등재 회신 뒤 해제. ar 기존 정책 유지.
+const FEEDBACK_UNSUPPORTED_LOCALES: readonly string[] = ["ar", "pl"]; // it 해제 10-17(MB-376 · 본체 사전·SQL 등재). pl은 본체 등재 회신 뒤 해제. ar 기존 정책 유지.
 const feedbackOn = __APP_TARGET__ === "trainer" && (LAUNCHED.feedback || testSwitch("feedback"));
 
 export const feedbackFeatures = Object.freeze({
