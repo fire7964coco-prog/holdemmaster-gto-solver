@@ -115,8 +115,8 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   ru: { "": "/ru", "/solver": "/ru/solver" },
   // AR2: 2026-10-14 지시서 실측 /ar 200 · /ar/solver 404. 랜딩은 아직 없음.
   ar: { "": "/ar" },
-  // IT3: 지시서 2026-10-16 실측 /it 200 · /it/solver·/it/community 404.
-  it: { "": "/it" },
+  // ✅ /it/solver 200 (2026-10-17 curl 실측 · 본체 MB-376 f2085849). 10-16에는 404였다. /it/community는 별개.
+  it: { "": "/it", "/solver": "/it/solver" },
   // PL3: user supplied 2026-10-17 measurement: /pl 200, /pl/solver and /pl/community 404.
   pl: { "": "/pl" },
 };
