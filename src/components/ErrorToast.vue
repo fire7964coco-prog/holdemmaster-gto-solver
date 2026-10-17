@@ -277,6 +277,19 @@ const M = {
       "Incolla il testo in un post della comunità: ci aiuterà a risolvere il problema. Non contiene informazioni personali.",
     promptCopy: "Copia il testo qui sotto",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    title: "An error was logged",
+    body1: "If something looked wrong, please let us know. The details are stored ",
+    bodyB1: "only on this device",
+    body2: " — sharing them is entirely up to you.",
+    copied: "Copied",
+    copyButton: "Copy error details",
+    close: "Close",
+    copiedHint:
+      "Paste it into a community post and we'll use it to fix the issue. It contains no personal information.",
+    promptCopy: "Copy the text below",
+  },
 } as const;
 
 export default defineComponent({
@@ -298,7 +311,7 @@ export default defineComponent({
         "Cuba semula dengan satu thread",
         "एक थ्रेड से फिर कोशिश करें", "Tek thread ile tekrar dene", "Thử lại với một thread", "Повторить в одном потоке",
     "إعادة المحاولة بخيط واحد",
-        "Riprova con un solo thread"
+        "Riprova con un solo thread", /* pl-todo */ "Retry with a single thread"
       )
     );
     const copied = ref(false);

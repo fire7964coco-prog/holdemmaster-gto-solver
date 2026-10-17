@@ -974,6 +974,32 @@ const M = {
     noResults: "Nessun risultato",
     action: (name: string): string => ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    summary: "Summary",
+    barWidth: "Bar Width:",
+    normalized: "Normalized",
+    absolute: "Absolute",
+    full: "Full",
+    display: "Display:",
+    actionPct: "Action %",
+    actionEv: "Action EV",
+    exportCsv: "Export summary as a CSV file",
+    all: "All",
+    hand: "Hand",
+    strategy: "Strategy",
+    weightBar: "Weight (Bar)",
+    weight: "Weight",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (Bar)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `No ${chanceType === "turn" ? "turn" : "river"} report available`,
+    noResults: "No results",
+    action: (name: string): string =>
+      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({
@@ -1213,6 +1239,8 @@ export default defineComponent({
             const label =
               action.amount === "0"
                 ? L.value.action(action.name)
+                : i18n.locale === "pl"
+                ? `${action.name[0]} ${localizeNumber(formatAmount(Number(action.amount), evScale.value))}${evScale.value === 10 ? "bb" : ""}`
                 : localizeNumber(
                     `${action.name[0]} ${formatAmount(
                       Number(action.amount),
@@ -1249,6 +1277,8 @@ export default defineComponent({
             const label =
               action.amount === "0"
                 ? L.value.action(action.name)
+                : i18n.locale === "pl"
+                ? `${action.name[0]} ${localizeNumber(formatAmount(Number(action.amount), evScale.value))}${evScale.value === 10 ? "bb" : ""}`
                 : localizeNumber(
                     `${action.name[0]} ${formatAmount(
                       Number(action.amount),

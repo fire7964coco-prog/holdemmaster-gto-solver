@@ -281,6 +281,14 @@ const M = {
     equity: "Equity",
     action: (name: string): string => ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    strategyCombos: "Strategy (Combos)",
+    strategy: "Strategy",
+    equity: "Equity",
+    action: (name: string): string =>
+      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({
@@ -356,7 +364,7 @@ export default defineComponent({
             const action = spot.actions[actionIndex];
             let label = L.value.action(action.name);
             if (action.amount !== "0") {
-              label += ` ${formatAmount(
+              label += i18n.locale === "pl" ? ` ${localizeNumber(formatAmount(Number(action.amount), store.displayUnitScale))}${store.displayUnitScale === 10 ? "bb" : ""}` : ` ${formatAmount(
                 Number(action.amount),
                 store.displayUnitScale
               )}${store.displayUnitScale === 10 ? "bb" : ""}`;
@@ -428,7 +436,7 @@ export default defineComponent({
         }[option];
 
       return {
-        ...(i18n.locale === "ar" ? { locale: "en-US" } : i18n.locale === "it" ? { locale: "it-IT" } : {}),
+        ...(i18n.locale === "ar" ? { locale: "en-US" } : i18n.locale === "it" ? { locale: "it-IT" } : i18n.locale === "pl" ? { locale: "pl-PL" } : {}),
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
@@ -442,7 +450,7 @@ export default defineComponent({
             stacked: true,
             min: ["ev", "eqr"].includes(option) ? undefined : 0,
             max: option === "strategy" ? 1 : undefined,
-            ticks: { format, color: C.chartTick },
+            ticks: { format: i18n.locale === "pl" ? { ...format, useGrouping: true } : format, color: C.chartTick },
             grid: { color: C.chartGrid },
             afterFit(axis) {
               axis.width = 52;
@@ -472,7 +480,7 @@ export default defineComponent({
                 let label = context.dataset.label ?? "";
                 if (label) label += ": ";
                 if (["strategy-combos", "ev"].includes(option)) {
-                  return localizeNumber(` ${label}${toFixedAdaptive(value)}`);
+                  return i18n.locale === "pl" ? ` ${label}${localizeNumber(toFixedAdaptive(value))}` : localizeNumber(` ${label}${toFixedAdaptive(value)}`);
                 } else {
                   return localizeNumber(` ${label}${toFixed1(value * 100)}%`);
                 }

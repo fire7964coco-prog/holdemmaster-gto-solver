@@ -41,7 +41,7 @@
       role="status"
       class="result-lock-banner shrink-0 px-3 py-2 text-sm text-amber-200 bg-amber-950 border-b border-amber-700 break-words"
     >
-      {{ lockLabels.banner.replace('{count}', String(lockStore.resultLockCount)) }}
+      {{ lockLabels.banner.replace('{count}', String(plCountText(lockStore.resultLockCount))) }}
       <span data-testid="nodelock-exploitability-qualifier" class="block mt-1">
         {{ lockLabels.exploitability }}: {{ lockExploitabilityText }} · {{ lockLabels.assumption }}
       </span>
@@ -215,7 +215,7 @@
 import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import { useSavedConfigStore, useStore } from "../store";
 import { handler } from "../global-worker";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, plCountText } from "../i18n";
 import { useNodeLockStore } from "../node-lock";
 import { nodeLockLabels } from "../node-lock-labels";
 import { CustomTrainerEntry, createCustomTrainerCapture, FEATURE_TRAINER } from "@features";
@@ -381,6 +381,15 @@ const M = {
     finalizing: "Finalizzazione…",
     paused: "Solver in pausa.",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    startRange: "① Start with ranges",
+    viewPresets: "View Study Spots",
+    notRun: "You haven’t calculated your own results yet.\nYou can view example results directly in the “Study Spots” menu.\nTo calculate your own spot, complete ①~⑤, then press “Run Solver”.",
+    running: "Running the solver…",
+    finalizing: "Finalizing…",
+    paused: "Solver paused.",
+  },
 } as const;
 
 export default defineComponent({
@@ -407,6 +416,7 @@ export default defineComponent({
       const value = lockStore.currentExploitability;
       if (value === null || !Number.isFinite(value)) return "—";
       const scale = store.displayUnitScale;
+      if (i18n.locale === "pl") return Number((value / scale).toPrecision(4)).toLocaleString("pl-PL", { useGrouping: true, minimumSignificantDigits: 4, maximumSignificantDigits: 4 }) + (scale > 1 ? "bb" : "");
       return localizeNumber((value / scale).toPrecision(4) + (scale > 1 ? "bb" : ""));
     });
     const savedConfig = useSavedConfigStore();
@@ -671,6 +681,7 @@ export default defineComponent({
     };
 
     return {
+      plCountText,
       feedbackFeatures, // F1_FEEDBACK_ONLY
       FEATURE_TRAINER,
       captureForPractice,

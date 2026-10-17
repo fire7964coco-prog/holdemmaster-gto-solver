@@ -16,7 +16,7 @@ import { directionForLocale } from "./document-direction";
 
 // ⚠ "zh"(간체)와 "zh-hant"(번체)는 «별개 언어»다 — 용어 자체가 다르므로 기계 변환 금지
 // (德州扑克/德州撲克 · 求解器/解算器 · 概率/機率 · 弃牌/蓋牌).
-export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar" | "it";
+export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar" | "it" | "pl";
 
 /* 🔴 2026-08-27에 키를 갈았다 — «solver.locale» → «solver.locale.pegged».
  *
@@ -54,7 +54,8 @@ const readStored = (): Locale | null => {
       value === "vi" ||
       value === "ru" ||
       value === "ar" ||
-      value === "it"
+      value === "it" ||
+      value === "pl"
       ? value
       : null;
   } catch {
@@ -82,7 +83,8 @@ const detect = (): Locale => {
     fromUrl === "vi" ||
     fromUrl === "ru" ||
     fromUrl === "ar" ||
-    fromUrl === "it"
+    fromUrl === "it" ||
+    fromUrl === "pl"
   ) {
     try {
       localStorage.setItem(KEY, fromUrl);
@@ -112,6 +114,7 @@ const detect = (): Locale => {
   if (lang.startsWith("ru")) return "ru";
   if (lang.startsWith("ar")) return "ar";
   if (lang.startsWith("it")) return "it";
+  if (lang.startsWith("pl")) return "pl";
   // ⚠ 중국어는 간체(zh-CN)와 번체(zh-hant)가 별개 언어다. **번체 판정이 «먼저» 와야 한다** —
   //   startsWith("zh")를 앞에 두면 zh-TW·zh-HK가 전부 간체로 새어 나간다(2026-08-22까지 실제로 그랬다).
   //   번체권 = 대만(zh-TW)·홍콩(zh-HK)·마카오(zh-MO), 그리고 명시적 문자표기 zh-Hant-*.
@@ -230,6 +233,12 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Solver GTO gratuito nel browser, senza installazione. Calcola la strategia postflop del Texas Hold’em con range, board e dimensioni di puntata. Un progetto di HoldemMaster.",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em",
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
+  },
 };
 
 /* npokers 빌드(스토어용 순수 솔버)의 탭 제목·메타 설명 — 빌드 2벌 분기(2026-08-24).
@@ -323,6 +332,12 @@ const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Solver GTO gratuito nel browser, senza installazione. Calcola la strategia postflop del Texas Hold’em con range, board e dimensioni di puntata.",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    title: "npokers — Free Online GTO Solver for Texas Hold'em",
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+  },
 };
 
 /* 빌드 2벌 분기 — 어느 사전을 쓸지는 빌드 타임에 정해진다 (webpack DefinePlugin) */
@@ -353,6 +368,8 @@ const DOC_LANG: Record<Locale, string> = {
   // 문서 언어 태그는 번역하지 않는다.
   ar: "ar",
   it: "it",
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: "pl",
 };
 
 /* 설치된 앱의 이름(창 제목·홈 화면 라벨)은 «매니페스트»가 정한다 — 문서 제목이 아니다.
@@ -384,7 +401,7 @@ const applyDocumentLocale = (locale: Locale) => {
 
 export const i18n = reactive({ locale: detect() });
 
-/** 언어별 라벨 파일(.ts)의 사전 타입 — 17개 언어 블록이 전부 있어야 빌드가 통과한다. */
+/** 언어별 라벨 파일(.ts)의 사전 타입 — 18개 언어 블록이 전부 있어야 빌드가 통과한다. */
 export type LocaleDict<T> = Record<Locale, T>;
 applyDocumentLocale(i18n.locale);
 
@@ -400,7 +417,7 @@ export const setLocale = (locale: Locale) => {
 
 /** ar의 숫자·시각은 서양 숫자와 구분자. 기존 로캘 태그는 그대로 전달한다. */
 export const numberLocaleTag = (locale: string = i18n.locale): string =>
-  locale === "ar" ? "en-US" : locale === "it" ? "it-IT" : locale;
+  locale === "ar" ? "en-US" : locale === "it" ? "it-IT" : locale === "pl" ? "pl-PL" : locale;
 
 /** ar 문자열의 라틴 구절 / 방향을 모르는 사용자 문자열에만 사용한다. */
 export const ltrIso = (text: string): string => "\u2066" + text + "\u2069";
@@ -426,6 +443,13 @@ export const arLabelIso = (label: string, value?: string): string =>
  * 템플릿에서는 전역 속성 `$n(...)`으로 쓴다 (index.ts에서 등록).
  */
 export const localizeNumber = (text: string) => {
+  // A complete display number can be grouped safely. Prose/input examples are
+  // not parsed as numbers; raw input/export paths never call this helper.
+  if (i18n.locale === "pl") {
+    const numeric = text.match(/^(-?\d+(?:\.(\d+))?)(bb|%)?$/);
+    if (numeric) return plNumberText(Number(numeric[1]), numeric[2]?.length ?? 0) + (numeric[3] ?? "");
+    return text.replace(/(\d)\.(\d)/g, "$1,$2");
+  }
   // AR6: keep the complete numeric token (including %/comparison sign) LTR.
   // Existing LTR isolates remain unchanged; Arabic label isolates may contain one.
   if (i18n.locale === "ar")
@@ -456,7 +480,7 @@ export const localizeNumber = (text: string) => {
  * ⚠ style 문자열(width: 50%)·벳 사이즈 입력 문법(«50%»)에는 쓰지 않는다.
  */
 export const pctText = (s: string | number) =>
-  i18n.locale === "tr" ? "%" + s : i18n.locale === "ar" ? ltrIso(s + "%") : s + "%";
+  i18n.locale === "tr" ? "%" + s : i18n.locale === "ar" ? ltrIso(s + "%") : i18n.locale === "pl" ? localizeNumber(String(s)) + "%" : s + "%";
 
 /** 정수부·소수부를 나눠 그리는 화면(결과 표·13×13 격자)에서 쓰는 소수점 문자 */
 export const decimalMark = () =>
@@ -467,7 +491,8 @@ export const decimalMark = () =>
   i18n.locale === "tr" ||
   i18n.locale === "vi" ||
   i18n.locale === "ru" ||
-  i18n.locale === "it"
+  i18n.locale === "it" ||
+  i18n.locale === "pl"
     ? ","
     : ".";
 
@@ -484,7 +509,8 @@ export const decimalMark = () =>
  *   ms(2026-09-03)도 같은 이유로 id 뒤 «맨 끝»이다 — 기존 10인자 호출 전수에 11번째 값을 붙였다.
  *   vi(2026-10-07)는 tr 뒤 14번째 인자. 번역은 2026-10-07 6묶음.
  *   ru(2026-10-08)는 vi 뒤 15번째 인자. 모든 호출에 ru 15번째 인자를 둔다.
- *   it(2026-10-16)는 ar 뒤 17번째 필수 인자. 누락을 영어 폴백으로 숨기지 않는다. */
+ *   it(2026-10-16)는 ar 뒤 17번째 필수 인자. 누락을 영어 폴백으로 숨기지 않는다.
+ *   pl(2026-10-17)는 it 뒤 18번째 필수 인자. */
 export const pick = <T>(
   ko: T,
   en: T,
@@ -502,7 +528,8 @@ export const pick = <T>(
   vi: T = en,
   ru: T = en,
   ar: T = en,
-  it: T
+  it: T,
+  pl: T
 ): T =>
   i18n.locale === "ko"
     ? ko
@@ -536,6 +563,8 @@ export const pick = <T>(
     ? ar
     : i18n.locale === "it"
     ? it
+    : i18n.locale === "pl"
+    ? pl
     : en;
 
 /** Russian noun form only; callers format the number. Fractions use the few form. */
@@ -548,3 +577,22 @@ export const ruPlural = (n: number, one: string, few: string, many: string): str
   if (last >= 2 && last <= 4 && (lastTwo < 12 || lastTwo > 14)) return few;
   return many;
 };
+
+/** Polish forms are selected from the displayed precision; never reuse ruPlural. */
+export const plPlural = (
+  n: number,
+  forms: { one: string; few: string; many: string; other: string },
+  formatOptions: Intl.PluralRulesOptions = {}
+): string => {
+  if (!Number.isFinite(n)) throw new RangeError("Polish plural count must be finite");
+  const category = new Intl.PluralRules("pl", formatOptions).select(Math.abs(n));
+  return forms[category as keyof typeof forms];
+};
+
+/** Polish display-only count; never call for range input, exports, or payloads. */
+export const plNumberText = (value: number, fractionDigits: number): string =>
+  Number(value.toFixed(fractionDigits)).toLocaleString("pl-PL", { useGrouping: true, minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
+
+/** Localize a visible Polish counter while preserving every other locale's value. */
+export const plCountText = (value: number): number | string =>
+  i18n.locale === "pl" ? localizeNumber(String(value)) : value;

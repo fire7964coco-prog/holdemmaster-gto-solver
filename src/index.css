@@ -393,3 +393,10 @@ html[dir="rtl"] .result-toolbar .nodelock-popover { left: auto; right: 0; }
     transform: rotate(360deg);
   }
 }
+
+/* PL3: preserve the chosen step helper text when the selected item is bold. */
+@media (min-width: 768px) {
+  html:lang(pl) .app-sidebar .side-bar-item:has(> .step-status) > .text-neutral-500 {
+    font-weight: 400;
+  }
+}

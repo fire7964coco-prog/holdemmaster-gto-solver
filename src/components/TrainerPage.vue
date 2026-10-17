@@ -129,17 +129,17 @@
 
       <!-- 통계는 칩으로 압축 — 위쪽 공간을 덜 먹어야 문제가 화면 중앙에 온다 -->
       <div id="trainer-stats" class="order-4 md:order-2 flex flex-wrap gap-1.5 mt-3">
-        <span class="stat-chip">{{ L.solved }} <b dir="ltr">{{ attempts.length }}</b></span>
+        <span class="stat-chip">{{ L.solved }} <b dir="ltr">{{ plCountText(attempts.length) }}</b></span>
         <span v-if="dailyState.streak" class="stat-chip">
-          {{ L.dailyStreakLabel }} <span>{{ L.dayStreakPrefix ?? "" }}<b dir="ltr">{{ dailyState.streak }}</b>{{ dayStreakSuffix }}</span>
+          {{ L.dailyStreakLabel }} <span>{{ L.dayStreakPrefix ?? "" }}<b dir="ltr">{{ plCountText(dailyState.streak) }}</b>{{ dayStreakSuffix }}</span>
           <span v-if="dailyState.bestStreak > dailyState.streak" class="text-neutral-600">
-            {{ L.bestPrefix }} {{ dailyState.bestStreak }}
+            {{ L.bestPrefix }} {{ plCountText(dailyState.bestStreak) }}
           </span>
         </span>
         <span class="stat-chip">
           {{ L.streakLabel }}
-          <b :class="streak >= 3 ? 'text-emerald-300' : ''">{{ streak }}</b>
-          <span v-if="bestStreak > 0" class="text-neutral-600">{{ L.bestPrefix }} {{ bestStreak }}</span>
+          <b :class="streak >= 3 ? 'text-emerald-300' : ''">{{ plCountText(streak) }}</b>
+          <span v-if="bestStreak > 0" class="text-neutral-600">{{ L.bestPrefix }} {{ plCountText(bestStreak) }}</span>
         </span>
         <span class="stat-chip">{{ L.totalLossLabel }} <span dir="ltr"><b dir="ltr">{{ $n(totalLoss.toFixed(3)) }}</b>bb</span></span>
         <span class="stat-chip">{{ L.avgLossLabel }} <span dir="ltr"><b dir="ltr">{{ $n(averageLoss.toFixed(3)) }}</b>bb</span></span>
@@ -251,16 +251,16 @@
       <div
         class="order-2 md:hidden mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-400"
       >
-        <span>{{ L.solved }} <b dir="ltr" class="text-neutral-200">{{ attempts.length }}</b></span>
+        <span>{{ L.solved }} <b dir="ltr" class="text-neutral-200">{{ plCountText(attempts.length) }}</b></span>
         <span>
           {{ L.streakLabel }}
-          <b :class="streak >= 3 ? 'text-emerald-300' : 'text-neutral-200'">{{ streak }}</b>
+          <b :class="streak >= 3 ? 'text-emerald-300' : 'text-neutral-200'">{{ plCountText(streak) }}</b>
         </span>
         <span v-if="attempts.length">
           {{ L.goodRateLabel }} <template v-if="isTr">%</template><b dir="ltr" class="text-neutral-200">{{ isAr ? $pct(excellentRate.toFixed(0)) : excellentRate.toFixed(0) }}</b><template v-if="!isTr">{{ isAr ? "" : "%" }}</template>
         </span>
         <span v-if="dailyState.streak">
-          {{ L.dailyStreakLabel }} {{ L.dayStreakPrefix ?? "" }}<b dir="ltr" class="text-brand">{{ dailyState.streak }}</b>{{ dayStreakSuffix }}
+          {{ L.dailyStreakLabel }} {{ L.dayStreakPrefix ?? "" }}<b dir="ltr" class="text-brand">{{ plCountText(dailyState.streak) }}</b>{{ dayStreakSuffix }}
         </span>
         <button class="ms-auto link-like" @click="scrollToStats">{{ L.details }}</button>
       </div>
@@ -511,7 +511,7 @@
             <div class="text-sm font-semibold text-brand">
               {{ L.dailyDone }}
               <span v-if="dailyState.streak > 1" class="text-neutral-300">
-                · {{ L.dayStreakPrefix ?? "" }}{{ dailyState.streak }}{{ dayStreakSuffix }}
+                · {{ L.dayStreakPrefix ?? "" }}{{ plCountText(dailyState.streak) }}{{ dayStreakSuffix }}
               </span>
             </div>
             <div class="mt-1 text-xs text-neutral-400 leading-relaxed">
@@ -565,7 +565,7 @@
                     :class="row.isMine ? 'text-brand font-semibold' : 'text-neutral-300'"
                   >
                     <span dir="ltr" class="inline-block w-6 text-end tabular-nums text-neutral-500">
-                      {{ row.rank }}
+                      {{ plCountText(row.rank) }}
                     </span>
                     <span class="ms-2">{{ autoText(row.nickname) }}</span>
                     <span dir="ltr" class="ms-2 tabular-nums text-neutral-500">
@@ -756,7 +756,7 @@ import {
   oopLabelOf,
   presetTitleById,
 } from "../presets";
-import { i18n, localizeNumber, ruPlural, numberLocaleTag, autoIso, ltrIso, arLabelIso } from "../i18n";
+import { i18n, localizeNumber, plCountText, ruPlural, plPlural, numberLocaleTag, autoIso, ltrIso, arLabelIso } from "../i18n";
 import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
 import {
@@ -2735,6 +2735,115 @@ const M = {
     syncFailed: (msg: string) => `Sincronizzazione non riuscita: ${msg}. I risultati restano salvati su questo dispositivo. Premi «Sincronizza ora» per riprovare.`,
     signInFailed: (msg: string) => `Accesso non riuscito: ${msg}. Premi di nuovo il pulsante di accesso per riprovare.`,
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    loadFailed: "Failed to load trainer data:",
+    loading: "Loading trainer…",
+    review: (n: number) => `Review (${localizeNumber(String(n))})`,
+    daily: "Daily Puzzle",
+    dailyStreakLabel: "Daily Puzzle",
+    done: "Done",
+    solved: "Solved",
+    dayStreakSuffix: (n: number) => plPlural(n, { one: "-day streak", few: "-day streak", many: "-day streak", other: "-day streak" }),
+    bestPrefix: "/ best",
+    streakLabel: "Streak",
+    totalLossLabel: "Total EV loss",
+    avgLossLabel: "Avg EV loss",
+    goodRateLabel: "Good-play rate",
+    weaknessTitle: "Leak Finder",
+    avgOfPot: (pct: string) => `avg ${localizeNumber(String(pct))}% of the pot`,
+    handCount: (n: number) => `(${localizeNumber(String(n))} ${plPlural(n, { one: "hand", few: "hands", many: "hands", other: "hands" })})`,
+    notSolved: "Not tried",
+    weakestBefore: "Biggest losses in ",
+    weakestAfter: " —",
+    practiceThis: "Drill this spot type",
+    weaknessHint: "Solve 3+ hands in each category to see where you're leaking.",
+    accountBefore: "Saved to ",
+    accountAfter: "'s account",
+    syncingNow: "Syncing…",
+    syncNow: "Sync now",
+    signOutLabel: "Sign out",
+    localOnlyBefore: "Your progress is saved ",
+    localOnlyBold: "on this device only",
+    localOnlyAfter:
+      ". Link a HoldemMaster account to pick up where you left off on any device.",
+    googleSignIn: "Continue with Google",
+    kakaoSignIn: "Continue with Kakao",
+    telegramSignIn: "Continue with Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${localizeNumber(String(SPOT_COUNT))} Study Spots · ${localizeNumber(String(nodes))} decision nodes · target exploitability ${localizeNumber(String(pct))}%`,
+    details: "Details ↓",
+    toAct: "to act",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Line:",
+    boardLabel: "Board",
+    myHand: "Your hand",
+    yourChoice: "Your choice",
+    prompt: "What's your play?",
+    bestEvTag: " · Highest EV",
+    evLoss: "EV loss",
+    mobileDetailTitle: "Frequency & EV by action",
+    mixedNote:
+      "Mixed strategies aren't marked wrong — grading is based on the EV difference between actions.",
+    dailyDone: "Daily Puzzle complete",
+    dailyDoneDesc:
+      "Everyone gets the same puzzle today. Post your result to compare with other players.",
+    makeCard: "Create a result card",
+    boardShow: "View today's leaderboard",
+    boardHide: "Hide leaderboard",
+    boardLoading: "Loading…",
+    boardCount: (n: number) => plPlural(n, { one: `${localizeNumber(String(n))} player today`, few: `${localizeNumber(String(n))} players today`, many: `${localizeNumber(String(n))} players today`, other: `${localizeNumber(String(n))} players today` }),
+    boardMyRank: (r: number) => `My rank #${localizeNumber(String(r))}`,
+    boardLoginHint:
+      "Sign in to put your name on the board — viewing is open to everyone.",
+    boardUnavailable: "The leaderboard isn't available yet.",
+    copied: "Copied",
+    copyResult: "Copy result text",
+    openCommunity: "Open community →",
+    pasteHintBefore: "In the community, hit ",
+    pasteHintBold: "[✏️ Write Post]",
+    pasteHintAfter: " and paste.",
+    keepPracticing: "Keep practicing",
+    nextHand: "Next hand",
+    readArticle: "Read the spot breakdown →",
+    viewFull: "View full solution",
+    resultTitle: "Results",
+    resultHintBefore: "Pick an action and you'll see ",
+    resultHintBold: "each action's frequency and EV",
+    resultHintAfter: ", plus how many bb your choice cost.",
+    gtoNoteBefore:
+      "GTO mixes actions with the same hand — a low-frequency choice isn't automatically a mistake. The measure is EV loss ",
+    gtoNoteBold: "relative to the pot",
+    gtoNoteAfter: ": ≤0.35% Best play · ≤1% Acceptable · above that, Review this spot.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `For this spot (${localizeNumber(pot)}bb pot) that's Best play ≤${localizeNumber(best)}bb · Acceptable ≤${localizeNumber(good)}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Judged against this spot's starting pot (${localizeNumber(pot)}bb): Best play ≤${localizeNumber(best)}bb · Acceptable ≤${localizeNumber(good)}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${localizeNumber(String(spots))} precomputed spots · dealt evenly from all ${flops} real flops`,
+    resetHistoryLabel: "Reset history",
+    cardAlt: "Daily Puzzle result card",
+    shareApps: "Share",
+    saveImage: "Save image",
+    close: "Close",
+    cardHintBefore:
+      "Post your card to a group chat or social media — anyone who sees it plays the ",
+    cardHintBold: "same puzzle",
+    cardHintAfter: " today. The card never spoils the answer.",
+    verdictBest: "Best play",
+    verdictGood: "Acceptable",
+    verdictMiss: "Review this spot",
+    promptCopy: "Copy the text below",
+    shareText:
+      "Today's GTO puzzle — try it yourself: https://solver.holdemmaster.com/?view=trainer&lang=pl",
+    confirmReset: "Clear all trainer history on this device?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${localizeNumber(String(uploaded))} saved · ${localizeNumber(String(merged))} pulled from other devices`,
+    syncSaved: (uploaded: number) => `${localizeNumber(String(uploaded))} saved`,
+    syncFailed: (msg: string) => `Sync failed: ${msg} — your results are still saved on this device. Press “Sync now” to try again.`,
+    signInFailed: (msg: string) => `Sign-in failed: ${msg} — press the sign-in button again to retry.`,
+  },
 } as const;
 
 // «출제» 칩 · «가까운 결정만» — 기기에 기억 (RNG 칩과 같은 방식)
@@ -2788,6 +2897,8 @@ export default defineComponent({
     const L = computed(() => M[i18n.locale] as (typeof M)[keyof typeof M] & { dayStreakPrefix?: string });
     const dayStreakSuffix = computed(() => i18n.locale === "it"
       ? M.it.dayStreakSuffix(dailyState.streak)
+      : i18n.locale === "pl"
+      ? M.pl.dayStreakSuffix(dailyState.streak)
       : M[i18n.locale].dayStreakSuffix);
     const versusText = computed(() => "versus" in L.value ? L.value.versus : "vs");
     const autoText = (text: string | null) => i18n.locale === "ar" ? autoIso(text ?? "") : text;
@@ -2826,7 +2937,7 @@ export default defineComponent({
       if (!flopBoardActive.value) return BL.value.boardAll;
       const value = f.board
         ? ltrText(f.board.map((c) => "23456789TJQKA"[c >> 2] + "♣♦♥♠"[c & 3]).join(""))
-        : flopReportLabels(i18n.locale).flopCount.replace("{count}", flopBoardCount.value.toLocaleString(numberLocaleTag(), i18n.locale === "it" ? { useGrouping: true } : undefined));
+        : flopReportLabels(i18n.locale).flopCount.replace("{count}", flopBoardCount.value.toLocaleString(numberLocaleTag(), (i18n.locale === "it" || i18n.locale === "pl") ? { useGrouping: true } : undefined));
       return BL.value.boardChip.replace("{value}", value);
     });
     const categories = computed<TrainerCategory[]>(() =>
@@ -2848,7 +2959,7 @@ export default defineComponent({
     // «모든 플랍» 하단 줄: 지금 실제로 출제하는 풀 — 범주·회원 반영 상황 수 · 보드 고르기 반영 플랍 수(MA-531)
     const flopFooterSpots = computed(() => flopScenarioList().length);
     const flopFooterFlops = computed(() =>
-      (flopBoardActive.value ? flopBoardCount.value : REAL_FLOP_COUNT).toLocaleString(numberLocaleTag(), i18n.locale === "it" ? { useGrouping: true } : undefined)
+      (flopBoardActive.value ? flopBoardCount.value : REAL_FLOP_COUNT).toLocaleString(numberLocaleTag(), (i18n.locale === "it" || i18n.locale === "pl") ? { useGrouping: true } : undefined)
     );
     const decisionCount = computed(
       () => bank.value?.presets.reduce((sum, item) => sum + item.nodes.length, 0) ?? 0
@@ -3470,6 +3581,7 @@ export default defineComponent({
     };
 
     return {
+      plCountText,
       isAr: computed(() => i18n.locale === "ar"),
       rtlText,
       playerText,

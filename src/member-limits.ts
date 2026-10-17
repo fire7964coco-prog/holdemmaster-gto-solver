@@ -143,5 +143,11 @@ export type MemberLabels = typeof ko;
 // This assignment checks both the locale set and every required key at build time.
 const checkedLabels: LocaleDict<MemberLabels> = {
   ko, en, ja, es, pt, de, zh, "zh-hant": zhHant, fr, id, ms, hi, tr, vi, ru, ar, it,
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+  saveFull: "Sign in to save more than 10 items and open your list on any phone or PC",
+  importOver: "This import would take this device past 10 saved items — sign in to import all of it",
+  memberScenario: "This situation is only for free members — sign in to open it right away",
+},
 };
 export const memberLabels = (locale: Locale): MemberLabels => checkedLabels[locale];

@@ -10,7 +10,7 @@
     >
       <span class="shrink-0 rtl:-scale-x-100" aria-hidden="true">{{ opened ? "▾" : "▸" }}</span>
       <span class="min-w-0 break-words">{{ L.title }}</span>
-      <span v-if="lockStore.locks.length" class="shrink-0 text-amber-300">({{ lockStore.locks.length }})</span>
+      <span v-if="lockStore.locks.length" class="shrink-0 text-amber-300">({{ plCountText(lockStore.locks.length) }})</span>
     </button>
 
     <div
@@ -148,14 +148,21 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from "vue";
-import { i18n, localizeNumber } from "../i18n";
+import { i18n, localizeNumber, plCountText } from "../i18n";
 import { nodeLockLabels } from "../node-lock-labels";
 import { expandUniform, NodeLock, sameHistory, useNodeLockStore } from "../node-lock";
 import { Results, Spot } from "../result-types";
 import { useStore } from "../store";
 
 const actionNamesIt: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" };
+// pl-todo: English labels; preserve the raw amount in combined engine tokens.
+const actionNamesPl: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" };
 const displayActionName = (name: string) => {
+  if (i18n.locale === "pl") {
+    const separator = name.indexOf(":");
+    const kind = separator < 0 ? name : name.slice(0, separator);
+    return (actionNamesPl[kind] ?? kind) + (separator < 0 ? "" : name.slice(separator));
+  }
   if (i18n.locale !== "it") return name;
   // Comparison snapshots keep the engine's combined "Bet:50" token.
   const separator = name.indexOf(":");
@@ -298,7 +305,7 @@ export default defineComponent({
       return localizeNumber((value / scale).toFixed(3) + (scale > 1 ? "bb" : ""));
     };
 
-    return { lockStore, L, displayActionName, opened, percentages, skippedChance, editableSpot, currentLock, mutationDisabled,
+    return { plCountText, lockStore, L, displayActionName, opened, percentages, skippedChance, editableSpot, currentLock, mutationDisabled,
       editorDisabled, canClear, visible, initialUnavailable, validPercentage, validDistribution, totalText,
       apply, remove, clearAll, distributionText, comparisonNodes, raw, percent, evText };
   },

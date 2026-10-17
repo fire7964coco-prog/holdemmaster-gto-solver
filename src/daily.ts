@@ -9,7 +9,7 @@
  * 데이터는 새로 만들지 않는다. 기존 문제 은행에 날짜 기반 난수를 넣을 뿐이다.
  */
 import { reactive } from "vue";
-import { i18n, localizeNumber, ltrIso, ruPlural } from "./i18n";
+import { i18n, localizeNumber, ltrIso, ruPlural, plPlural } from "./i18n";
 import { makeTrainerQuestion, TrainerBank, TrainerQuestion } from "./trainer";
 
 const KEY_LAST = "daily.lastDate";
@@ -162,7 +162,7 @@ export const recordDaily = (lossBb: number) => {
  */
 export const dailyCardDate = () => {
   const key = todayKey();
-  if (i18n.locale === "de" || i18n.locale === "tr" || i18n.locale === "ru") return key.split("-").reverse().join(".");
+  if (i18n.locale === "de" || i18n.locale === "tr" || i18n.locale === "ru" || i18n.locale === "pl") return key.split("-").reverse().join(".");
   // hi: DD/MM/YYYY with Latin digits, same in the image and copied text.
   if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi" || i18n.locale === "vi" || i18n.locale === "ar" || i18n.locale === "it")
     return key.split("-").reverse().join("/");
@@ -381,6 +381,17 @@ export const dailyShareText = (verdict: string) => {
       "",
       "Prova la stessa sfida → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=it",
       "(HoldemMaster GTO Trainer · una sfida al giorno)",
+    ].filter(Boolean).join("\n");
+  }
+  // pl-todo: English copy, Polish date/number/URL and four-form slots.
+  if (i18n.locale === "pl") {
+    return [
+      `[Daily GTO Puzzle · ${dailyCardDate()}]`,
+      `My result: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 0 ? `${localizeNumber(String(dailyState.streak))}${plPlural(dailyState.streak, { one: "-day streak", few: "-day streak", many: "-day streak", other: "-day streak" })}` : "",
+      "",
+      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=pl",
+      "(HoldemMaster GTO Solver · one puzzle a day)",
     ].filter(Boolean).join("\n");
   }
   if (i18n.locale === "en") {

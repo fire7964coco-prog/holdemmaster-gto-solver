@@ -176,6 +176,13 @@ const M = {
     draws: "Progetti",
     noDraws: "Nessuna informazione sui progetti",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    hands: "Hands",
+    noHands: "No hands to display",
+    draws: "Draws",
+    noDraws: "No draw information",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)

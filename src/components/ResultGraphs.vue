@@ -173,6 +173,11 @@ const M = {
     noGraph: "Nessun grafico disponibile",
     equity: "Equity",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    noGraph: "No graph available",
+    equity: "Equity",
+  },
 } as const;
 
 export default defineComponent({
@@ -360,12 +365,12 @@ export default defineComponent({
       const formatX = { style: "percent", minimumFractionDigits: 0 };
       const formatY = {
         style: styleY,
-        useGrouping: false,
+        useGrouping: i18n.locale === "pl",
         minimumFractionDigits: 0,
       };
 
       return {
-        ...(i18n.locale === "ar" ? { locale: "en-US" } : i18n.locale === "it" ? { locale: "it-IT" } : {}),
+        ...(i18n.locale === "ar" ? { locale: "en-US" } : i18n.locale === "it" ? { locale: "it-IT" } : i18n.locale === "pl" ? { locale: "pl-PL" } : {}),
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
@@ -426,7 +431,7 @@ export default defineComponent({
                 const c2 = cardText(cardPair >>> 8);
                 const label = `${c2.rank}${c2.suit}${c1.rank}${c1.suit}`;
                 if (content === "ev") {
-                  return localizeNumber(` ${label}: ${toFixedAdaptive(value)}`);
+                  return i18n.locale === "pl" ? ` ${label}: ${localizeNumber(toFixedAdaptive(value))}` : localizeNumber(` ${label}: ${toFixedAdaptive(value)}`);
                 } else {
                   return localizeNumber(` ${label}: ${toFixed1(value * 100)}%`);
                 }

@@ -21,6 +21,7 @@ export type Preset = {
   categoryRu: string;
   categoryAr: string;
   categoryIt: string;
+  categoryPl: string;
   title: string;
   titleEn: string;
   titleJa: string;
@@ -38,6 +39,7 @@ export type Preset = {
   titleRu: string;
   titleAr: string;
   titleIt: string;
+  titlePl: string;
   board: string; // 예: "Ah 7d 2c"
   lesson: string; // 이 스팟에서 배우는 것
   lessonEn: string;
@@ -56,6 +58,7 @@ export type Preset = {
   lessonRu: string;
   lessonAr: string;
   lessonIt: string;
+  lessonPl: string;
   oopLabel: string;
   oopLabelEn: string;
   oopLabelJa: string;
@@ -73,6 +76,7 @@ export type Preset = {
   oopLabelRu: string;
   oopLabelAr: string;
   oopLabelIt: string;
+  oopLabelPl: string;
   ipLabel: string;
   ipLabelEn: string;
   ipLabelJa: string;
@@ -90,6 +94,7 @@ export type Preset = {
   ipLabelRu: string;
   ipLabelAr: string;
   ipLabelIt: string;
+  ipLabelPl: string;
   oopRange: string;
   ipRange: string;
   startingPot: number;
@@ -103,7 +108,7 @@ export type Preset = {
 
 /* 현재 언어에 맞는 프리셋 문구 — 화면에서는 preset.title 대신 이걸 쓸 것 */
 export const presetTitleOf = (
-  preset: Pick<Preset, "title" | "titleEn" | "titleJa" | "titleEs" | "titlePt" | "titleDe" | "titleZh" | "titleZhHant" | "titleFr" | "titleId" | "titleMs" | "titleHi" | "titleTr" | "titleVi" | "titleRu" | "titleAr" | "titleIt">
+  preset: Pick<Preset, "title" | "titleEn" | "titleJa" | "titleEs" | "titlePt" | "titleDe" | "titleZh" | "titleZhHant" | "titleFr" | "titleId" | "titleMs" | "titleHi" | "titleTr" | "titleVi" | "titleRu" | "titleAr" | "titleIt" | "titlePl">
 ) =>
   i18n.locale === "ko"
     ? preset.title
@@ -137,11 +142,13 @@ export const presetTitleOf = (
     ? preset.titleAr
     : i18n.locale === "it"
     ? preset.titleIt
+    : i18n.locale === "pl"
+    ? preset.titlePl
     : preset.titleEn;
 // lesson의 «{n}» = 교육 예제 개수(PRESETS.length) — 문구에 숫자를 박지 않는다(검수장 권고).
 // ru «из {n} спотов»는 속격이라 1로 끝나면 단수 «спота».
 export const presetLessonOf = (
-  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId" | "lessonMs" | "lessonHi" | "lessonTr" | "lessonVi" | "lessonRu" | "lessonAr" | "lessonIt">
+  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId" | "lessonMs" | "lessonHi" | "lessonTr" | "lessonVi" | "lessonRu" | "lessonAr" | "lessonIt" | "lessonPl">
 ): string => {
   const n = PRESETS.length;
   return rawLessonOf(preset)
@@ -149,7 +156,7 @@ export const presetLessonOf = (
     .replace(/\{n\}/g, String(n));
 };
 const rawLessonOf = (
-  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId" | "lessonMs" | "lessonHi" | "lessonTr" | "lessonVi" | "lessonRu" | "lessonAr" | "lessonIt">
+  preset: Pick<Preset, "lesson" | "lessonEn" | "lessonJa" | "lessonEs" | "lessonPt" | "lessonDe" | "lessonZh" | "lessonZhHant" | "lessonFr" | "lessonId" | "lessonMs" | "lessonHi" | "lessonTr" | "lessonVi" | "lessonRu" | "lessonAr" | "lessonIt" | "lessonPl">
 ) =>
   i18n.locale === "ko"
     ? preset.lesson
@@ -183,9 +190,11 @@ const rawLessonOf = (
     ? preset.lessonAr
     : i18n.locale === "it"
     ? localizeNumber(preset.lessonIt)
+    : i18n.locale === "pl"
+    ? localizeNumber(preset.lessonPl)
     : preset.lessonEn;
 export const presetCategoryOf = (
-  preset: Pick<Preset, "category" | "categoryEn" | "categoryJa" | "categoryEs" | "categoryPt" | "categoryDe" | "categoryZh" | "categoryZhHant" | "categoryFr" | "categoryId" | "categoryMs" | "categoryHi" | "categoryTr" | "categoryVi" | "categoryRu" | "categoryAr" | "categoryIt">
+  preset: Pick<Preset, "category" | "categoryEn" | "categoryJa" | "categoryEs" | "categoryPt" | "categoryDe" | "categoryZh" | "categoryZhHant" | "categoryFr" | "categoryId" | "categoryMs" | "categoryHi" | "categoryTr" | "categoryVi" | "categoryRu" | "categoryAr" | "categoryIt" | "categoryPl">
 ) =>
   i18n.locale === "ko"
     ? preset.category
@@ -219,9 +228,11 @@ export const presetCategoryOf = (
     ? preset.categoryAr
     : i18n.locale === "it"
     ? preset.categoryIt
+    : i18n.locale === "pl"
+    ? preset.categoryPl
     : preset.categoryEn;
 export const oopLabelOf = (
-  preset: Pick<Preset, "oopLabel" | "oopLabelEn" | "oopLabelJa" | "oopLabelEs" | "oopLabelPt" | "oopLabelDe" | "oopLabelZh" | "oopLabelZhHant" | "oopLabelFr" | "oopLabelId" | "oopLabelMs" | "oopLabelHi" | "oopLabelTr" | "oopLabelVi" | "oopLabelRu" | "oopLabelAr" | "oopLabelIt">
+  preset: Pick<Preset, "oopLabel" | "oopLabelEn" | "oopLabelJa" | "oopLabelEs" | "oopLabelPt" | "oopLabelDe" | "oopLabelZh" | "oopLabelZhHant" | "oopLabelFr" | "oopLabelId" | "oopLabelMs" | "oopLabelHi" | "oopLabelTr" | "oopLabelVi" | "oopLabelRu" | "oopLabelAr" | "oopLabelIt" | "oopLabelPl">
 ) =>
   i18n.locale === "ko"
     ? preset.oopLabel
@@ -255,9 +266,11 @@ export const oopLabelOf = (
     ? preset.oopLabelAr
     : i18n.locale === "it"
     ? preset.oopLabelIt
+    : i18n.locale === "pl"
+    ? preset.oopLabelPl
     : preset.oopLabelEn;
 export const ipLabelOf = (
-  preset: Pick<Preset, "ipLabel" | "ipLabelEn" | "ipLabelJa" | "ipLabelEs" | "ipLabelPt" | "ipLabelDe" | "ipLabelZh" | "ipLabelZhHant" | "ipLabelFr" | "ipLabelId" | "ipLabelMs" | "ipLabelHi" | "ipLabelTr" | "ipLabelVi" | "ipLabelRu" | "ipLabelAr" | "ipLabelIt">
+  preset: Pick<Preset, "ipLabel" | "ipLabelEn" | "ipLabelJa" | "ipLabelEs" | "ipLabelPt" | "ipLabelDe" | "ipLabelZh" | "ipLabelZhHant" | "ipLabelFr" | "ipLabelId" | "ipLabelMs" | "ipLabelHi" | "ipLabelTr" | "ipLabelVi" | "ipLabelRu" | "ipLabelAr" | "ipLabelIt" | "ipLabelPl">
 ) =>
   i18n.locale === "ko"
     ? preset.ipLabel
@@ -291,6 +304,8 @@ export const ipLabelOf = (
     ? preset.ipLabelAr
     : i18n.locale === "it"
     ? preset.ipLabelIt
+    : i18n.locale === "pl"
+    ? preset.ipLabelPl
     : preset.ipLabelEn;
 /** id로 제목 찾기 (트레이너 등 id만 있는 곳용) */
 export const presetTitleById = (id: string) => {
@@ -337,6 +352,8 @@ const SRP = {
   categoryRu: "Сингл-рейз-пот — BTN vs BB (основы)",
   categoryAr: "بوت برايز واحد — BTN ضد BB (الأساسيات)",
   categoryIt: "Piatto con un rilancio — BTN vs BB (fondamenti)",
+  // pl-todo: English scaffold; translate in the next stage.
+  categoryPl: "Single Raised Pot — BTN vs BB (Fundamentals)",
   categoryJa: "シングルレイズポット — BTN vs BB（基本）",
   categoryEs: "Single Raised Pot — BTN vs BB (fundamentos)",
   categoryPt: "Single Raised Pot — BTN vs BB (fundamentos)",
@@ -353,6 +370,8 @@ const SRP = {
   oopLabelRu: "BB (колл)",
   oopLabelAr: "\u2066BB\u2069 (كول)",
   oopLabelIt: "BB (call)",
+  // pl-todo: English scaffold; translate in the next stage.
+  oopLabelPl: "BB (Caller)",
   oopLabelJa: "BB（コーラー）",
   oopLabelEs: "BB (caller)",
   oopLabelPt: "BB (caller)",
@@ -369,6 +388,8 @@ const SRP = {
   ipLabelRu: "BTN (опен)",
   ipLabelAr: "\u2066BTN\u2069 (افتتاح)",
   ipLabelIt: "BTN (apertura)",
+  // pl-todo: English scaffold; translate in the next stage.
+  ipLabelPl: "BTN (Opener)",
   ipLabelJa: "BTN（オープンレイザー）",
   ipLabelEs: "BTN (open-raiser)",
   ipLabelPt: "BTN (open-raiser)",
@@ -399,6 +420,8 @@ const TBP = {
   categoryRu: "3-бет-пот — 3-бет BB, колл BTN (низкий SPR)",
   categoryAr: "بوت \u20663-bet\u2069 — BB يلعب \u20663-bet\u2069 وBTN يجاري (SPR منخفض)",
   categoryIt: "Piatto 3-bet — BB fa 3-bet, BTN chiama (SPR basso)",
+  // pl-todo: English scaffold; translate in the next stage.
+  categoryPl: "3-Bet Pot — BB 3-Bets, BTN Calls (Low SPR)",
   categoryJa: "3ベットポット — BB 3ベット vs BTN コール（低SPR）",
   categoryEs: "Bote de 3-bet — BB 3-betea y BTN paga (SPR bajo)",
   categoryPt: "Pote de 3-bet — BB dá 3-bet e BTN paga (SPR baixo)",
@@ -415,6 +438,8 @@ const TBP = {
   oopLabelRu: "BB (3-бет)",
   oopLabelAr: "\u2066BB\u2069 (\u20663-bet\u2069)",
   oopLabelIt: "BB (3-bet)",
+  // pl-todo: English scaffold; translate in the next stage.
+  oopLabelPl: "BB (3-Bettor)",
   oopLabelJa: "BB（3ベッター）",
   oopLabelEs: "BB (3-bettor)",
   oopLabelPt: "BB (3-bettor)",
@@ -431,6 +456,8 @@ const TBP = {
   ipLabelRu: "BTN (колл)",
   ipLabelAr: "\u2066BTN\u2069 (كول)",
   ipLabelIt: "BTN (call)",
+  // pl-todo: English scaffold; translate in the next stage.
+  ipLabelPl: "BTN (Caller)",
   ipLabelJa: "BTN（コーラー）",
   ipLabelEs: "BTN (caller)",
   ipLabelPt: "BTN (caller)",
@@ -461,6 +488,8 @@ const SBBB = {
   categoryRu: "Блайнд vs блайнд — SB vs BB (широкие диапазоны)",
   categoryAr: "بلايند ضد بلايند — SB ضد BB (نطاقات واسعة)",
   categoryIt: "Scontro tra bui — SB vs BB (range ampi)",
+  // pl-todo: English scaffold; translate in the next stage.
+  categoryPl: "Blind vs Blind — SB vs BB (Wide Ranges)",
   categoryJa: "ブラインド戦（BvB） — SB vs BB（ワイドレンジ）",
   categoryEs: "Guerra de ciegas — SB vs BB (rangos amplios)",
   categoryPt: "Blind vs Blind — SB vs BB (ranges amplos)",
@@ -477,6 +506,8 @@ const SBBB = {
   oopLabelRu: "SB (опен)",
   oopLabelAr: "\u2066SB\u2069 (افتتاح)",
   oopLabelIt: "SB (apertura)",
+  // pl-todo: English scaffold; translate in the next stage.
+  oopLabelPl: "SB (Opener)",
   oopLabelJa: "SB（オープンレイザー）",
   oopLabelEs: "SB (open-raiser)",
   oopLabelPt: "SB (open-raiser)",
@@ -493,6 +524,8 @@ const SBBB = {
   ipLabelRu: "BB (колл)",
   ipLabelAr: "\u2066BB\u2069 (كول)",
   ipLabelIt: "BB (call)",
+  // pl-todo: English scaffold; translate in the next stage.
+  ipLabelPl: "BB (Caller)",
   ipLabelJa: "BB（コーラー）",
   ipLabelEs: "BB (caller)",
   ipLabelPt: "BB (caller)",
@@ -527,6 +560,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Сухой борд туз-хай",
     titleAr: "بورد جاف بآس عالٍ",
     titleIt: "Board A-high dry",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Dry Ace-High Board",
     board: "Ah 7d 2c",
     lesson:
       "레인지 우위 교과서. 이 A하이 보드에서 BB는 첫 액션의 98.2%를 체크합니다(BB 에퀴티 45.1%). 먼저 벳하는 1.9%가 어떤 핸드인지 살펴보세요.",
@@ -538,6 +573,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "Хрестоматийный спот с преимуществом диапазона. На этом борде туз-хай BB первым действием чекает в 98,2% случаев (эквити BB — 45,1%). Посмотри, какие руки составляют те 1,9%, что ставят.",
     lessonAr: "الموقف النموذجي لأفضلية النطاق. على هذا البورد بآس عالٍ يمرّر BB في قراره الأول بنسبة \u206698.2%\u2069 (الإكويتي لدى BB هو \u206645.1%\u2069). انظر إلى الأيدي التي تشكّل نسبة الرهان البالغة \u20661.9%\u2069.",
     lessonIt: "Un classico esempio di vantaggio di range. Su questo board A-high, alla prima decisione il BB fa check nel 98,2% dei casi (equity del BB: 45,1%). Scopri quali mani compongono l’1,9% che punta.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "The textbook range-advantage spot. On this ace-high board BB checks 98.2% of the time on its first action (BB equity 45.1%). See which hands make up the 1.9% that bets.",
     titleJa: "ドライなAハイボード",
     lessonJa:
       "レンジ優位の教科書的スポットです。このAハイボードでBBは最初のアクションで98.2%チェックします（BBのエクイティ45.1%）。先にベットする1.9%がどんなハンドか見てみましょう。",
@@ -576,6 +613,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Сухой борд король-хай",
     titleAr: "بورد جاف بملك عالٍ",
     titleIt: "Board K-high dry",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Dry King-High Board",
     board: "Ks 8d 3c",
     lesson:
       "A하이 보드와 비교해보세요. K 보드도 BTN 우위지만 미묘하게 체크가 늘어납니다. 왜일까요?",
@@ -587,6 +626,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "Сравни с бордом туз-хай. Король-хай тоже в пользу BTN, но чеков чуть больше. Понимаешь почему?",
     lessonAr: "قارنه بالبورد بآس عالٍ. البورد بملك عالٍ ما زال لصالح BTN لكن التمرير أكثر قليلًا. هل تعرف السبب؟",
     lessonIt: "Confrontalo con il board A-high. Anche il K-high favorisce il BTN, ma si fa check un po’ più spesso. Sai capire perché?",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "Compare with the ace-high board. King-high still favors BTN, but there's a bit more checking. Can you tell why?",
     titleJa: "ドライなKハイボード",
     lessonJa:
       "Aハイボードと比較してみましょう。KハイボードでもBTN優位ですが、チェックがわずかに増えます。なぜでしょうか？",
@@ -625,6 +666,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Связанный бродвейный борд, двухмастный",
     titleAr: "بورد برودواي متصل بنقشين",
     titleIt: "Board broadway connesso, two-tone",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Connected Broadway Board, Two-Tone",
     board: "Qs Jd Ts",
     lesson:
       "양쪽 다 맞은 것처럼 보이는 보드. 그런데 BB는 {n}스팟 중 에퀴티 실현율이 가장 낮습니다 — 77.9%, BTN은 119.4%. BB가 99.9% 체크하는 이유를 핸드 분류 패널에서 확인하세요.",
@@ -636,6 +679,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "Кажется, что этот борд попадает в оба диапазона. Но здесь BB реализует эквити хуже, чем в любом из {n} спотов, — 77,9% против 119,4% у BTN — и чекает 99,9%. Почему так, видно на панели «Руки».",
     lessonAr: "بورد يبدو أنه يصيب النطاقين معًا. لكن تحقيق الإكويتي لدى BB هنا هو الأدنى بين كل المواقف (المواقف التدريبية: {n}) — \u206677.9%\u2069 مقابل \u2066119.4%\u2069 لدى BTN — ويمرّر بنسبة \u206699.9%\u2069. قسم «الأيدي» يبيّن السبب.",
     lessonIt: "Sembra un board favorevole a entrambi i range. Eppure qui la realizzazione dell’equity del BB è la più bassa dei {n} spot: 77,9%, contro il 119,4% del BTN. Il BB fa check nel 99,9% dei casi. Il pannello delle categorie di mani aiuta a capire perché.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "A board that looks like it hits both ranges. But BB realizes less equity here than in any of the {n} spots — 77.9% against BTN's 119.4% — and checks 99.9%. The hand-category panel shows why.",
     titleJa: "ブロードウェイのコネクトボード（2トーン）",
     lessonJa:
       "両者に当たったように見えるボードです。ところがBBのエクイティ実現率は{n}スポット中で最も低く、77.9%（BTNは119.4%）。99.9%チェックになる理由を分類パネルで確かめましょう。",
@@ -674,6 +719,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Связанный средний борд, двухмастный",
     titleAr: "بورد متصل من الأوراق المتوسطة بنقشين",
     titleIt: "Board medio connesso, two-tone",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Connected Middle Board, Two-Tone",
     board: "9h 8h 7c",
     lesson:
       "같은 BTN 대 BB라도 9-8-7 연결 보드에서는 BB가 첫 액션에 23.7%를 먼저 벳합니다 — A하이 보드보다 훨씬 많습니다. 그래도 에퀴티는 BB 48.5%로 BTN이 조금 앞섭니다. 어떤 핸드가 먼저 치는지 확인하세요.",
@@ -685,6 +732,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "Снова BTN против BB, но на связанном 9-8-7 BB первым действием ставит в 23,7% случаев — намного чаще, чем на борде туз-хай. При этом эквити всё равно чуть на стороне BTN: у BB 48,5%. Посмотри, какие руки ставят первыми.",
     lessonAr: "BTN ضد BB مرة أخرى، لكن على البورد المتصل \u20669-8-7\u2069 يراهن BB في قراره الأول بنسبة \u206623.7%\u2069 — أكثر بكثير من البورد بآس عالٍ. ومع ذلك يبقى الإكويتي لصالح BTN قليلًا — إكويتي BB هو \u206648.5%\u2069. انظر أي الأيدي تراهن أولًا.",
     lessonIt: "Sempre BTN vs BB, ma sul board connesso 9-8-7 il BB punta per primo nel 23,7% dei casi: molto più spesso che sul board A-high. L’equity resta leggermente a favore del BTN: il BB ha il 48,5%. Scopri con quali mani punta per primo.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "Same BTN vs BB, but on the connected 9-8-7 BB leads 23.7% on its first action — far more than on the ace-high board. Equity still slightly favors BTN — BB has 48.5%. Check which hands lead.",
     titleJa: "ミドルのコネクトボード（2トーン）",
     lessonJa:
       "同じBTN vs BBでも、9-8-7の連結ボードではBBが最初のアクションで23.7%先にベットします（Aハイボードよりずっと多い）。それでもエクイティはBB 48.5%で、わずかにBTNが上です。どのハンドが先に打つか確認しましょう。",
@@ -723,6 +772,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Монотонный борд (все карты одной масти)",
     titleAr: "بورد بنقش واحد (كل الأوراق من النقش نفسه)",
     titleIt: "Board monotone (un solo seme)",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Monotone Board (All One Suit)",
     board: "Qs 9s 2s",
     lesson:
       "큰 벳이 드물어지고 작은 벳/체크 위주가 되는 이유. 플러시 완성 핸드도 자주 체크하는 것을 관찰하세요.",
@@ -734,6 +785,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "Смотри, почему крупные ставки уступают место маленьким и чекам. Заметь, как часто даже готовые флеши просто чекают.",
     lessonAr: "لاحظ لماذا تُفسح الرهانات الكبيرة المجال للرهانات الصغيرة والتمرير. ولاحظ كم مرة يكتفي حتى الفلاش المكتمل بالتمرير.",
     lessonIt: "Osserva perché le puntate grandi lasciano spazio a puntate piccole e check. Nota quanto spesso anche le mani con colore già chiuso fanno solo check.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "Watch why big bets give way to small bets and checks. Notice how often even made flushes just check.",
     titleJa: "モノトーンボード（同スート3枚）",
     lessonJa:
       "大きなベットが減り、小さなベットとチェックが中心になる理由を学びます。完成したフラッシュでさえ頻繁にチェックすることを観察しましょう。",
@@ -772,6 +825,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Спаренный борд",
     titleAr: "بورد مزدوج",
     titleIt: "Board pairato",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Paired Board",
     board: "6c 6d 3h",
     lesson:
       "아무도 잘 못 맞춘 보드 → 블러프 비중이 올라갑니다. 어떤 핸드가 블러프 벳을 하는지 상세 표에서 찾아보세요.",
@@ -783,6 +838,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "В этот борд никто толком не попадает, поэтому частота блефа растёт. Найди в подробной таблице руки, которые ставят блефом.",
     lessonAr: "لا يصيب هذا البورد أحدًا تقريبًا، لذلك يرتفع تكرار البلف. ابحث في الجدول التفصيلي عن الأيدي التي تراهن بلفًا.",
     lessonIt: "Nessuno dei due range si lega bene a questo board, quindi aumenta la frequenza dei bluff. Nella tabella di dettaglio, cerca le mani che puntano in bluff.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "Nobody connects with this board, so the bluffing frequency goes up. Use the detail table to find which hands bet as bluffs.",
     titleJa: "ペアボード",
     lessonJa:
       "どちらのレンジもボードとほとんど噛み合いません → ブラフの比率が上がります。どのハンドがブラフベットをするのか、詳細表で探してみましょう。",
@@ -825,6 +882,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Низкий радужный борд",
     titleAr: "بورد منخفض بثلاثة نقوش",
     titleIt: "Board basso rainbow",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Low Rainbow Board",
     lesson:
       "6-5-2 로우 보드에서 BB는 첫 액션의 96.8%를 체크합니다. 이 스팟의 플랍 벳은 팟 33% 한 가지뿐이고, BB가 그 벳을 고르는 비율은 3.2%입니다. 벳하는 핸드가 무엇인지 보세요.",
     lessonEn:
@@ -835,6 +894,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "На низком 6-5-2 BB первым действием чекает в 96,8% случаев. В этом споте на флопе только один сайзинг — 33% банка, и BB выбирает его в 3,2% случаев. Посмотри, какие руки ставят.",
     lessonAr: "على البورد المنخفض \u20666-5-2\u2069 يمرّر BB في قراره الأول بنسبة \u206696.8%\u2069. في هذا الموقف حجم رهان واحد فقط على الفلوب، \u206633%\u2069 من البوت، ويستعمله BB بنسبة \u20663.2%\u2069. انظر أي الأيدي تراهن.",
     lessonIt: "Sul board basso 6-5-2, alla prima decisione il BB fa check nel 96,8% dei casi. Questo spot prevede una sola dimensione di puntata al flop, il 33% del piatto, che il BB usa nel 3,2% dei casi. Scopri quali mani puntano.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "On the low 6-5-2, BB checks 96.8% of the time on its first action. This spot has a single flop bet size, 33% pot, and BB uses it 3.2% of the time. See which hands bet.",
     titleJa: "ロー・レインボーボード",
     lessonJa:
       "6-5-2のローボードで、BBは最初のアクションで96.8%チェックします。このスポットのフロップのベットサイズはポットの33%の1種類だけで、BBがそれを選ぶのは3.2%です。ベットするハンドを見てみましょう。",
@@ -873,6 +934,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Борд туз-хай в пользу 3-беттора",
     titleAr: "بورد بآس عالٍ — أفضلية صاحب الـ\u20663-bet\u2069",
     titleIt: "Board A-high: vantaggio a chi fa 3-bet",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Ace-High Board, 3-Bettor's Edge",
     board: "Ad Ks 2h",
     lesson:
       "3벳 레인지(AK·AA·KK 다수)에 잘 맞는 플랍 — BB(3벳터) 에퀴티 68.9%. BB는 첫 액션에 레인지 전체로 벳합니다: 팟 33% 57.8%, 팟 66% 42.2%. 두 사이즈를 섞으니 어떤 핸드가 어느 사이즈를 고르는지 비교해 보세요.",
@@ -884,6 +947,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "Флоп, который подходит диапазону 3-бета, где полно AK, AA и KK: у BB, 3-беттора, эквити 68,9%. BB первым действием ставит всем диапазоном — 57,8% по 33% банка и 42,2% по 66% банка. Сравни, какие руки выбирают какой сайзинг.",
     lessonAr: "فلوب يناسب نطاق الـ\u20663-bet\u2069 المليء بـAK وAA وKK: صاحب الـ\u20663-bet\u2069 هنا هو BB وإكويتيه \u206668.9%\u2069. يراهن BB بنطاقه كله في قراره الأول — \u206657.8%\u2069 بحجم \u206633%\u2069 من البوت و\u206642.2%\u2069 بحجم \u206666%\u2069 من البوت. قارن أي الأيدي تختار أي حجم.",
     lessonIt: "Un flop favorevole al range di 3-bet, ricco di AK, AA e KK: il BB, che ha fatto 3-bet, ha il 68,9% di equity. Alla prima decisione punta con tutto il range: il 57,8% usa il 33% del piatto, il 42,2% usa il 66%. Confronta le mani che scelgono ciascuna dimensione.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "A flop that suits the 3-bet range, loaded with AK, AA and KK: BB, the 3-bettor, has 68.9% equity. BB bets its entire range on its first action — 57.8% at 33% pot and 42.2% at 66% pot. Compare which hands pick which size.",
     titleJa: "3ベッター優位のAハイボード",
     lessonJa:
       "3ベットレンジ（AK・AA・KKが多い）に合うフロップです。3ベッターのBBのエクイティは68.9%。BBは最初のアクションでレンジ全体をベットします — ポット33%が57.8%、ポット66%が42.2%。どのハンドがどちらのサイズを選ぶか比べてみましょう。",
@@ -922,6 +987,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Динамичный двухмастный борд",
     titleAr: "بورد متغيّر بنقشين",
     titleIt: "Board dinamico two-tone",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Dynamic Two-Tone Board",
     board: "Qh Th 7s",
     // ⚠ 빈도는 «normalizer»로 잰다 — «weights»가 아니다.
     //   화면(ActionSummary.vue)의 freq = Σ strategy×normalizer / Σ normalizer 다.
@@ -940,6 +1007,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "3-бет-пот на борде, который подходит и коллеру, — и всё же 3-беттор не сбавляет темп: 98,4% диапазона ставит один и тот же сайзинг в две трети банка. Посмотри, какие руки составляют те 0,8%, что чекает.",
     lessonAr: "بوت \u20663-bet\u2069 على بورد يناسب المجاري أيضًا — ومع ذلك لا يُبطئ صاحب الـ\u20663-bet\u2069: يراهن \u206698.4%\u2069 من النطاق بالحجم نفسه، ثلثي البوت. انظر إلى الأيدي التي تشكّل نسبة التمرير البالغة \u20660.8%\u2069.",
     lessonIt: "Un piatto 3-bet su un board favorevole anche a chi ha chiamato. Eppure chi ha fatto 3-bet continua a puntare: il 98,4% del range usa la stessa dimensione, due terzi del piatto. Scopri quali mani compongono lo 0,8% che fa check.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "A 3-bet pot on a board that suits the caller as well — and yet the 3-bettor doesn't slow down: 98.4% of the range fires the same two-thirds size. See which hands make up the 0.8% that checks.",
     titleJa: "ダイナミックな2トーンボード",
     lessonJa:
       "3ベットポットなのにコーラーにも良いカードが多いボードです。それでも3ベッターは止まりません — 98.4%が同じ2/3サイズで打ちます。チェックに残る0.8%がどんなハンドか見てみましょう。",
@@ -978,6 +1047,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Низкий сухой борд",
     titleAr: "بورد منخفض جاف",
     titleIt: "Board basso dry",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Low Dry Board",
     board: "8d 5c 2s",
     lesson:
       "3벳 레인지가 대부분 빗나간 보드. 그래도 오버페어+A하이로 압박이 가능한 이유 — 에퀴티 vs 폴드에퀴티.",
@@ -989,6 +1060,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "Борд почти не попадает в диапазон 3-бета — но оверпары и руки туз-хай продолжают давить. Эквити против фолд-эквити.",
     lessonAr: "بورد لا يصيب نطاق صاحب الـ\u20663-bet\u2069 في الغالب — ومع ذلك تواصل الأزواج الأعلى من البورد وأيدي الآس العالي الضغط. الإكويتي مقابل إكويتي الطي (\u2066Fold Equity\u2069).",
     lessonIt: "Un board che aiuta poco il range di chi ha fatto 3-bet. Eppure overpair e mani A-high continuano a fare pressione. Equity contro fold equity.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "A board that largely misses the 3-bettor's range — yet overpairs and ace-high hands keep the pressure on. Equity vs fold equity.",
     titleJa: "ロー・ドライボード",
     lessonJa:
       "3ベットレンジがほぼ丸ごと外れるボードです。それでもオーバーペアとAハイで圧力をかけられる理由を学びます — エクイティ対フォールドエクイティです。",
@@ -1027,6 +1100,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Король-хай с десяткой",
     titleAr: "بورد بملك عالٍ وعشرة",
     titleIt: "Board K-high con un dieci",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "King-High with a Ten",
     board: "Kh Td 6s",
     // 블라인드전 와이드 레인지는 콤보 수가 최대 → 벳 2종이면 16비트로도
     // 4.18GB(한도 초과)라 플랍 벳 1종으로 다이어트 (sb-paired-ace는 보드가
@@ -1042,6 +1117,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "В игре блайнд vs блайнд диапазоны широкие, поэтому оба диапазона слабые. Сравни частоты со спотом BTN vs BB «Сухой борд король-хай».",
     lessonAr: "في بلايند ضد بلايند النطاقات واسعة، لذلك كلا النطاقين ضعيف. قارن التكرارات بموقف BTN ضد BB «بورد جاف بملك عالٍ».",
     lessonIt: "Nello scontro tra bui i range sono ampi, quindi entrambi contengono molte mani deboli. Confronta le frequenze con lo spot BTN vs BB «Board K-high dry».",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "Blind vs Blind ranges are wide, so both ranges are weak. Compare the frequencies to the BTN-vs-BB Dry King-High Board spot.",
     titleJa: "KTハイボード",
     lessonJa:
       "ブラインド戦はレンジが広く、お互いに弱いのが特徴です。同じKハイボードでも、BTN vs BBのときと頻度がどう違うか比較してみましょう。",
@@ -1080,6 +1157,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Связанный низкий борд, двухмастный",
     titleAr: "بورد منخفض متصل بنقشين",
     titleIt: "Board basso connesso, two-tone",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Connected Low Board, Two-Tone",
     board: "7d 6d 5c",
     betFlop: "33", // sb-king-mid와 동일한 메모리 사유
     lesson:
@@ -1092,6 +1171,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "Два широких диапазона сталкиваются на сверхсвязанном борде: две пары, стриты и дро повсюду. Здесь особенно полезны панели «Руки» и «Дро».",
     lessonAr: "نطاقان واسعان يتصادمان على بورد شديد الترابط: زوجان وستريت ودرو في كل مكان. هنا يبرز قسما «الأيدي» و«الدرو».",
     lessonIt: "Due range ampi si affrontano su un board molto connesso, pieno di doppie coppie, scale e progetti. Qui il pannello delle categorie di mani è particolarmente utile.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "Two wide ranges collide on an ultra-connected board: two-pair hands, straights, and draws everywhere. The hand-category panel shines here.",
     titleJa: "ローのコネクトボード（2トーン）",
     lessonJa:
       "ワイドレンジ同士がぶつかる非常にコネクトしたボードです。ツーペア・ストレート・ドローが続出します。分類パネルがにぎやかになるスポットです。",
@@ -1130,6 +1211,8 @@ export const PRESETS: Preset[] = [
     titleRu: "Борд со спаренными тузами",
     titleAr: "بورد بزوج آسات",
     titleIt: "Board con coppia di assi",
+    // pl-todo: English scaffold; translate in the next stage.
+    titlePl: "Ace-Paired Board",
     board: "As Ah 6d",
     // ⚠ 콤보 수 88/66은 «트립스»다 — «A를 든 콤보»(94/72)가 아니다.
     //   보드가 As Ah 6d라 A6는 트립스가 아니라 «에이스 풀하우스»다(AAA + 66).
@@ -1146,6 +1229,8 @@ export const PRESETS: Preset[] = [
     lessonRu: "На борде два туза. Трипсы не редкость — просто у SB их больше (88 комбо против 66 у BB), поэтому SB ставит 80,1%. Здесь всё решает то, у кого больше тузов.",
     lessonAr: "على البورد آسان. التريبس ليس نادرًا — كل ما في الأمر أن SB يملك منه أكثر (تركيبات SB: 88 · تركيبات BB: 66)، لذلك يراهن SB بنسبة \u206680.1%\u2069. من يملك آسات أكثر — هذه هي القصة كلها هنا.",
     lessonIt: "Due assi sul board. I tris non sono rari: lo SB ne ha semplicemente di più (88 combo contro le 66 del BB), quindi punta nell’80,1% dei casi. Qui tutto dipende da chi ha più assi.",
+    // pl-todo: English scaffold; translate in the next stage.
+    lessonPl: "Two aces on the board. Trips aren't rare — SB simply holds more of them (88 combos to BB's 66), so SB bets 80.1%. Who holds more aces is the whole story here.",
     titleJa: "Aペアボード",
     lessonJa:
       "Aが2枚落ちた特殊なボードです。トリップスは珍しくありません — SBが88コンボ、BBが66コンボで、Aを多く持つSBが80.1%打ちます。どちらがAを多く持つかがこのボードのすべてです。",

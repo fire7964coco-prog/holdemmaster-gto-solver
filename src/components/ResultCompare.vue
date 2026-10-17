@@ -193,6 +193,11 @@ const M = {
     combos: "Combo",
     equity: "Equity",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    combos: "Combos",
+    equity: "Equity",
+  },
 } as const;
 
 const EPS = 2e-6;

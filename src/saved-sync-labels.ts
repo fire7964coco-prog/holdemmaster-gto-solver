@@ -180,5 +180,16 @@ export type SavedSyncLabels = Record<keyof typeof ko, string>;
 const checkedLabels: LocaleDict<SavedSyncLabels> = {
   ko, en, ja, es, pt, de, zh, "zh-hant": zhHant,
   fr, id, ms, hi, tr, vi, ru, ar, it,
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+  invite: "Sign in to open your saved list on any phone or PC",
+  google: "Continue with Google",
+  kakao: "Continue with Kakao",
+  telegram: "Continue with Telegram",
+  syncing: "Syncing with your account…",
+  ok: "Kept in your account · last synced {time}",
+  pending: "Not uploaded yet — we'll retry next time you open this screen or save",
+  limit: "Account limit reached — still saving on this device",
+},
 };
 export const savedSyncLabels = (locale: Locale): SavedSyncLabels => checkedLabels[locale];

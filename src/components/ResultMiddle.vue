@@ -618,6 +618,31 @@ const M = {
     strategyCombos: "Strategia (combo)",
     equity: "Equity",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    modeLabels: {
+      basics: "Basics",
+      graphs: "Graphs",
+      compare: "Compare",
+      turn: "Turn",
+      river: "River",
+    } as Record<string, string>,
+    player: "Player:",
+    auto: (player: string) => `Auto (${player})`,
+    barHeight: "Bar Height:",
+    normalized: "Normalized",
+    absolute: "Absolute",
+    full: "Full",
+    suit: "Suit:",
+    grouped: "Grouped",
+    individual: "Individual",
+    display: "Display:",
+    strategy: "Strategy",
+    weight: "Weight",
+    chart: "Chart:",
+    strategyCombos: "Strategy (Combos)",
+    equity: "Equity",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

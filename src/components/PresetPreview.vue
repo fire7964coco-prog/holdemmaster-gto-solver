@@ -359,6 +359,19 @@ const M = {
     playerLabel: "Giocatore:",
     oopHint: "Questa è la strategia di chi agisce per primo (OOP). Per vedere l’avversario (IP), scegli IP nel campo «Giocatore:» qui sopra.",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    backToList: "← Back",
+    pot: "Pot",
+    stack: "Stack",
+    flopOnlyNote: "Flop strategy only. Want to click through turn and river? →",
+    solveThisSpot: "Solve this spot yourself",
+    readArticle: "Read the article",
+    loadError: (e: string) => `Couldn't load the precomputed results: ${e}`,
+    loading: "Loading results…",
+    playerLabel: "Player:",
+    oopHint: "This is the strategy of the player who acts first (OOP). To see the opponent (IP), set “Player” above to IP.",
+  },
 } as const;
 
 type PreviewData = {

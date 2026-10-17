@@ -2,7 +2,7 @@ import { PRESETS, presetTitleOf } from "./presets";
 import { SRP_SPOTS, THREE_BET_SPOTS, FOUR_BET_SPOTS, SPOT_UNIT_SCALE } from "./preflop-spots";
 import { Results, SpotPlayer } from "./result-types";
 import { cardText, formatAmount } from "./utils";
-import { i18n, localizeNumber, arLabelIso, ltrIso } from "./i18n";
+import { i18n, localizeNumber, arLabelIso, ltrIso, pctText } from "./i18n";
 import {
   classifyMade,
   classifyDraw,
@@ -157,6 +157,14 @@ const actionLabelsIt: Record<string, string> = {
 const actionButtonLabelsIt: Record<string, string> = {
   Fold: "Fold", Check: "Check", Call: "Chiama", Bet: "Punta", Raise: "Rilancia", Allin: "All-in", "All-in": "All-in",
 };
+// pl-todo: explicit history/legend slots copied from the English engine labels.
+const actionLabelsPl: Record<string, string> = {
+  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
+};
+// pl-todo: imperative buttons are separate from the history/legend nouns.
+const actionButtonLabelsPl: Record<string, string> = {
+  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
+};
 const actionName = (name: string, role: "label" | "button" = "label") =>
   i18n.locale === "ko"
     ? actionLabelsKo[name] ?? name
@@ -179,6 +187,8 @@ const actionName = (name: string, role: "label" | "button" = "label") =>
     ? actionLabelsAr[name] ?? name
     : i18n.locale === "it"
     ? (role === "button" ? actionButtonLabelsIt : actionLabelsIt)[name] ?? name
+    : i18n.locale === "pl"
+    ? (role === "button" ? actionButtonLabelsPl : actionLabelsPl)[name] ?? name
     : actionLabelsEn[name] ?? name;
 
 export const trainerCategory = (
@@ -191,7 +201,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar" | "it",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar" | "it" | "pl",
     Record<Exclude<TrainerCategory, "4bp">, string>
   > = {
     ko: {
@@ -300,6 +310,13 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "Piatto 3-bet",
       blind: "Scontro tra bui",
     },
+    // pl-todo: English scaffold; translate in the next stage.
+    pl: {
+      all: "All",
+      srp: "Single Raised",
+      "3bp": "3-Bet Pot",
+      blind: "Blind vs Blind",
+    },
   };
   // 4벳 팟 = 그 언어 3벳 팟 이름의 숫자만 바꾼다 — 칩 줄에서 «3벳팟»·«4벳 팟»처럼 표기가 갈리지 않게
   // (15언어 모두 «3»이 한 번만 들어 있다 · 3단계 검수장 판정 대상)
@@ -351,6 +368,8 @@ export const trainerActionLabel = (
       ? arLabelIso(`${label} ${ltrIso(amount)} (${ltrIso(`${pct}%`)} من البوت)`)
       : i18n.locale === "it"
       ? `${label} ${amount} (${pct}% del piatto)`
+      : i18n.locale === "pl"
+      ? `${label} ${amount} (${pctText(localizeNumber(String(pct)))} pot)` // pl-todo
       : `${label} ${amount} (${pct}% pot)`;
   }
   return i18n.locale === "ar" ? arLabelIso(label, amount) : `${label} ${amount}`;

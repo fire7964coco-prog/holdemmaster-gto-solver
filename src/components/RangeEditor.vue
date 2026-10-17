@@ -117,7 +117,7 @@
         </div>
 
         <span class="inline-block ml-auto">
-          <template v-if="isAr">{{ L.combos }}: {{ arCount(numCombos) }}</template><template v-else>{{ $n(numCombos.toFixed(1)) }} {{ L.combos }}</template> ({{
+          <template v-if="isAr">{{ L.combos }}: {{ arCount(numCombos) }}</template><template v-else>{{ i18n.locale === "pl" ? plNumberText(numCombos, 1) : $n(numCombos.toFixed(1)) }} {{ L.combos }}</template> ({{
             $pct($n(((numCombos * 100) / ((52 * 51) / 2)).toFixed(1)))
           }})
         </span>
@@ -141,7 +141,7 @@ import { computed, defineComponent, ref, watch } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { ranks, rankPat } from "../utils";
 import { RangeManager } from "../../pkg/range/range";
-import { i18n, ltrIso, arLabelIso, numberLocaleTag } from "../i18n";
+import { i18n, ltrIso, arLabelIso, numberLocaleTag, plNumberText } from "../i18n";
 
 import DbItemPicker from "./DbItemPicker.vue";
 
@@ -297,6 +297,16 @@ const M = {
     weight: "Peso:",
     combos: "combo",
     parseError: (range: string) => `Impossibile leggere il range: ${range || "(stringa vuota)"}`,
+  },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. Tapping a cell that already has that weight clears it. The hand name and weight you tapped appear in large text above.",
+    clear: "Clear",
+    errorPrefix: "Error:",
+    weight: "Weight:",
+    combos: "combos",
+    parseError: (range: string) =>
+      `Failed to parse range: ${range || "(empty string)"}`,
   },
 } as const;
 
@@ -490,6 +500,7 @@ export default defineComponent({
       rangeTextError,
       weight,
       numCombos,
+      i18n, plNumberText,
       arCount: (count: number) => count.toLocaleString(numberLocaleTag(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }),
       isAr: computed(() => i18n.locale === "ar"),
       weightLabel: computed(() => i18n.locale === "ar" ? arLabelIso(L.value.weight) : L.value.weight),

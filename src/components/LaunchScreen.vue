@@ -158,6 +158,13 @@ const M = {
     titleLine2: "GTO Trainer.",
     footer: "Solver GTO gratuito · Funziona offline",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    greeting: "Welcome to",
+    titleLine1: "HoldemMaster",
+    titleLine2: "GTO Trainer.",
+    footer: "Free GTO Solver · Works Offline",
+  },
 } as const;
 
 /* npokers 빌드는 첫 줄 상표만 바꾼다 — 「npokers GTO 솔버입니다.」처럼 읽힌다.

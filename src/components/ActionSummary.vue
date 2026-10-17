@@ -15,7 +15,7 @@
         </span>
         <span :dir="isAr ? 'rtl' : 'ltr'" class="text-[0.65rem] text-white/70 tabular-nums" :class="isAr ? 'whitespace-nowrap' : undefined">
           <template v-if="isAr">{{ L.combos }}: <bdi dir="ltr">{{ arCount(tile.combos) }}</bdi></template>
-          <template v-else>{{ $n(tile.combos.toFixed(1)) }}<br />{{ L.combos }}</template>
+          <template v-else>{{ i18n.locale === "pl" ? plNumberText(tile.combos, 1) : $n(tile.combos.toFixed(1)) }}<br />{{ L.combos }}</template>
         </span>
       </div>
     </div>
@@ -27,7 +27,7 @@ import { computed, defineComponent } from "vue";
 import { Results, Spot, SpotPlayer } from "../result-types";
 import { useStore } from "../store";
 import { formatAmount } from "../utils";
-import { i18n, pick, localizeNumber, numberLocaleTag } from "../i18n";
+import { i18n, pick, localizeNumber, numberLocaleTag, plNumberText } from "../i18n";
 
 const M = {
   ko: {
@@ -80,6 +80,10 @@ const M = {
   },
   it: {
     combos: "combo",
+  },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    combos: "combos",
   },
 } as const;
 
@@ -210,14 +214,22 @@ const actionLabel = (
       Allin: "أول إن",
       "All-in": "أول إن",
     },
-    { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" }
+    { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" }, /* pl-todo */ {
+      Fold: "Fold",
+      Check: "Check",
+      Call: "Call",
+      Bet: "Bet",
+      Raise: "Raise",
+      Allin: "All-in",
+      "All-in": "All-in",
+    }
   );
   const label = map[name] ?? name;
   if (!amount || amount === "0") return label;
   const value = Number(amount);
-  const shown = `${formatAmount(value, unitScale)}${unitScale === 10 ? "bb" : ""}`;
+  const shown = `${i18n.locale === "pl" ? localizeNumber(formatAmount(value, unitScale)) : formatAmount(value, unitScale)}${unitScale === 10 ? "bb" : ""}`;
   if (name === "Bet" && pot > 0) {
-    const pct = Math.round((value * 100) / pot);
+    const pct = i18n.locale === "pl" ? localizeNumber(String(Math.round((value * 100) / pot))) : Math.round((value * 100) / pot);
     // ⚠ 중국어는 «전각 괄호 + 底池的 N%» 어순이다 — ResultNav.betPot·trainer.ts·
     //   TreeEditor.potRate 셋과 «글자까지» 같아야 한다. 여기만 반각·역순이었다
     //   (2026-08-22 원어민 UX 검수에서 코드 대조로 발견)
@@ -240,7 +252,7 @@ const actionLabel = (
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
         "pot", "pot", "pot", "pot", "банка",
     "من البوت",
-        "del piatto" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
+        "del piatto", /* pl-todo */ "pot" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
       )})`
     );
   }
@@ -339,6 +351,7 @@ export default defineComponent({
     });
 
     return { tiles, L, isAr: computed(() => i18n.locale === "ar"),
+      i18n, plNumberText,
       arCount: (count: number) => count.toLocaleString(numberLocaleTag(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }),
     };
   },

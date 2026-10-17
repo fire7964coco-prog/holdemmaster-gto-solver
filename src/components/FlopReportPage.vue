@@ -367,7 +367,7 @@ export default defineComponent({
     const T = computed(() => flopReportLabels(i18n.locale));
     const S = computed(() => flopStudyLabels(i18n.locale));
     const R = computed(() => M[i18n.locale]);
-    const versus = computed(() => (i18n.locale === "ar" ? "ضد" : i18n.locale === "it" ? "contro" : "vs"));
+    const versus = computed(() => (i18n.locale === "ar" ? "ضد" : i18n.locale === "pl" ? "vs" /* pl-todo */ : i18n.locale === "it" ? "contro" : "vs"));
     const store = useStore();
 
     const potType = ref<"srp" | "3bet" | "4bet">("srp"),
@@ -541,8 +541,8 @@ export default defineComponent({
     const format = (template: string, values: Record<string, string>) =>
       template.replace(/\{(\w+)\}/g, (_, k) => values[k] ?? "");
     const num = (value: number, digits: number) => {
-      if (i18n.locale === "it") {
-        return Number(value.toFixed(digits)).toLocaleString("it-IT", {
+      if (i18n.locale === "it" || i18n.locale === "pl") {
+        return Number(value.toFixed(digits)).toLocaleString(i18n.locale === "pl" ? "pl-PL" : "it-IT", {
           useGrouping: true,
           minimumFractionDigits: digits,
           maximumFractionDigits: digits,

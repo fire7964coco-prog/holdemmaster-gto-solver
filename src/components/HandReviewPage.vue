@@ -221,7 +221,7 @@
                 }}
               </p>
               <progress /><small
-                >{{ progress?.iterations ?? 0
+                >{{ plCountText(progress?.iterations ?? 0)
                 }}<template
                   v-if="
                     progress?.achievedPct !== null &&
@@ -309,9 +309,9 @@
             >
           </div>
           <p v-if="totals.count" class="review-counts">
-            <span>{{ L.best }} {{ totals.best }}</span
-            ><span>{{ L.good }} {{ totals.good }}</span
-            ><span>{{ L.mistake }} {{ totals.bad }}</span>
+            <span>{{ L.best }} {{ plCountText(totals.best) }}</span
+            ><span>{{ L.good }} {{ plCountText(totals.good) }}</span
+            ><span>{{ L.mistake }} {{ plCountText(totals.bad) }}</span>
           </p>
           <p v-else class="review-muted">{{ records.some(row => row.verdict) ? (totals.reference ? L.referenceOnly : L.unanalysed) : L.noResults }}</p>
         </div>
@@ -459,8 +459,8 @@ import {
   shallowRef,
   watch,
 } from "vue";
-import { i18n, localizeNumber, arLabelIso, ltrIso } from "../i18n";
-import { M, IT_REVIEW_ACTION_BUTTONS } from "../hand-review-labels";
+import { i18n, localizeNumber, plCountText, arLabelIso, ltrIso } from "../i18n";
+import { M, IT_REVIEW_ACTION_BUTTONS, PL_REVIEW_ACTION_BUTTONS } from "../hand-review-labels";
 import {
   SRP_SPOTS,
   THREE_BET_SPOTS,
@@ -739,6 +739,9 @@ export default defineComponent({
       }
       if (i18n.locale === "it" && role === "button") {
         return IT_REVIEW_ACTION_BUTTONS[key[a.kind]] + (a.amount === undefined ? "" : " " + bb(a.amount));
+      }
+      if (i18n.locale === "pl" && role === "button") {
+        return PL_REVIEW_ACTION_BUTTONS[key[a.kind]] + (a.amount === undefined ? "" : " " + bb(a.amount));
       }
       return (
         L.value[key[a.kind]] +
@@ -1217,6 +1220,7 @@ export default defineComponent({
     });
     onBeforeUnmount(stopReturn);
     return {
+      plCountText,
       isAr: computed(() => i18n.locale === "ar"),
       reviewMeta,
       responseText,

@@ -185,6 +185,18 @@ export const RNG_M = {
       `Accettabile: il solver usa anche questa azione nella strategia mista, ma a questo numero corrisponde «${action}».`,
     noteOther: (action: string) => `A questo numero corrisponde l’azione «${action}».`,
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    mode: { off: "RNG: Off", high: "RNG: High", low: "RNG: Low" },
+    modeHelp:
+      "Random number (1–100) practice — each hand gets a number, and you pick the action that number points to. High: higher numbers mean more aggressive actions · Low: lower numbers mean more aggressive actions. Not used for the Daily Puzzle.",
+    bandsTitle: "RNG ranges",
+    yourNumber: "Your number",
+    noteBest: (action: string) => `You picked the action for this number (${action}).`,
+    noteMixed: (action: string) =>
+      `Acceptable — the solver mixes this action, but this number calls for ${action}.`,
+    noteOther: (action: string) => `This number calls for ${action}.`,
+  },
 } satisfies LocaleDict<{
   mode: Record<"off" | "high" | "low", string>;
   modeHelp: string;

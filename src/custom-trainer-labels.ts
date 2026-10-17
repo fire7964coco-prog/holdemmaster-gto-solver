@@ -1,5 +1,5 @@
 import type { LocaleDict } from "./i18n";
-import { ruPlural } from "./i18n";
+import { ruPlural, plPlural } from "./i18n";
 
 // B1 전표 정본. 두 화면이 함께 쓰며 @features 안에서만 가져온다.
 export const M = {
@@ -224,6 +224,20 @@ export const M = {
     prompt: "Come giochi?", next: "Prossima domanda", review: "Ripassa gli errori", practice: "Allenamento libero", attemptCount: "Tentativi in questo spot: {count}",
     verdictBest: "Scelta migliore", verdictGood: "Accettabile", verdictBad: "Da rivedere", evLoss: "EV loss", frequency: "Frequenza", actionEv: "EV dell’azione", chips: "fiches",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    entry: "Practice this spot", busy: "Saving practice questions…", tab: "My spots", presetTab: "Preset practice",
+    empty: "After solving a spot, choose [Practice this spot] on the results screen to save questions here.",
+    loading: "Loading your spots…", storageNote: "This device stores your 20 most recent spots and 500 latest attempts per spot. My spot results are counted separately. Saving the same spot again replaces its solve and clears its practice history.",
+    source: "Your approximate solve · Target error {target}% · Achieved {achieved}%", lockAssumption: "Assumes part of the strategy is fixed",
+    reviewSource: "Spot from your hand review · {method} · Target error {target}% · Achieved {achieved}%", backToReview: "Back to hand review",
+    chooseSpot: "Saved spots", deleteSpot: "Delete spot", deleteConfirm: "Delete this spot and its practice history from this device?",
+    loadError: "Could not load your saved spots. Please reopen this screen.", saveError: "Could not save. Please try again.",
+    captureError: "Could not create practice questions from these results. Check that the solve has finished.",
+    noQuestion: "There are no playable hands in this spot.", board: "Board", hand: "Your hand", pot: "Pot", stack: "Stack", line: "Line",
+    prompt: "What's your play?", next: "Next question", review: "Review mistakes", practice: "Regular practice", attemptCount: "Attempts in this spot: {count}",
+    verdictBest: "Best play", verdictGood: "Acceptable", verdictBad: "Review this spot", evLoss: "EV loss", frequency: "Frequency", actionEv: "Action EV", chips: "chips",
+  },
 } satisfies LocaleDict<Record<string, string>>;
 
 export type CustomTrainerLabelKey = keyof typeof M.ko;
@@ -232,3 +246,8 @@ export type CustomTrainerLabelKey = keyof typeof M.ko;
 // shownAsDecimal: 화면이 소수 자리로 보이는 값(«1,000 фишки»)은 ruPlural 계약(§7-1)대로 항상 few형 — 정수 그대로 넘기면 «1,000 фишка»가 나간다(10-08 검수).
 export const ruChipLabel = (n: number, shownAsDecimal = false): string =>
   shownAsDecimal ? "фишки" : ruPlural(n, M.ru.chips, "фишки", "фишек");
+
+// pl-todo: four forms include the displayed decimal precision (1.000 is other).
+export const plChipLabel = (n: number, fractionDigits = 0): string =>
+  plPlural(n, { one: "chip", few: "chips", many: "chips", other: "chips" },
+    { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });

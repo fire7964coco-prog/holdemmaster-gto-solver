@@ -462,6 +462,34 @@ export const M = {
     unanalysed: "Non analizzato", scopeTitle: "Ipotesi dell’analisi",
     practiceSpot: "Allenati su questo spot", practiceBusy: "Creazione delle domande…", practiceUnavailable: "Impossibile creare domande: nessuna mano del tuo range raggiunge questo spot, mancano gli EV delle azioni oppure c’è una sola azione tra cui scegliere.", practiceReferenceNote: "Questo spot viene raggiunto troppo raramente per avere valori affidabili. Usalo solo come riferimento: non verrà aggiunto al ripasso degli errori.", practiceError: "Impossibile salvare le domande. Riprova.",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    title: "Hand review", situation: "Situation", hero: "Your seat", opener: "Opening seat", caller: "Calling seat", threeBettor: "3-betting seat", preflop: "Preflop",
+    singleRaised: "Open · Call", threeBet: "3-bet pot", fourBet: "4-bet pot", multiway: "3+ players", notSupported: "Cannot be reviewed",
+    unavailableScenario: "Data for this situation is not ready yet.", fileMissing: "No result file is available for this flop.",
+    loadFailed: "Could not load the result file.", invalidData: "Could not read the result file.",
+    unsupportedAction: "This action cannot be analysed.", unsupportedSize: "This size cannot be analysed.",
+    evMissing: "EV unavailable", referenceOnly: "Reference only", mixedAction: "Used by the solver",
+    precomputed: "Precomputed result", onDevice: "Calculated on this device", flop: "Flop", turn: "Turn", river: "River",
+    chooseHand: "Your 2 cards", chooseFlop: "3 flop cards", chooseTurn: "Turn card", chooseRiver: "River card",
+    result: "Results", totalLoss: "Total loss",
+    best: "Best play", good: "Acceptable", mistake: "Review this play",
+    noResults: "Choose your cards and enter actions to see results.", chooseAction: "Choose the action that was played.",
+    opponentResponse: "Opponent response to your play", foldingHands: "Hands that fold",
+    handGrid: "Hand grid", matchedSize: "Size matched {actual} → {used}",
+    undo: "Undo", newHand: "New hand", loading: "Loading data…", solving: "Calculating…",
+    solveFailed: "Could not finish calculating this street.", retry: "Retry", complete: "Hand complete",
+    check: "Check", fold: "Fold", call: "Call", bet: "Bet", raise: "Raise", allin: "All-in",
+    scopeNote: "Free · Online 6-max cash, 100bb. Results may not suit pub games or tournaments. 3-bet and 4-bet pots can be reviewed for 11 seat combinations (not yet: SB 3-betting a UTG, HJ or CO open, or HJ 3-betting a UTG open). Multiway pots cannot be reviewed.",
+    referenceNote: "Spots with a reach-share product below {threshold} are excluded from mistake counts and total loss.",
+    evMissingNote: "EV is unavailable for judging loss. Only frequencies are shown.", reach: "Reach-share product",
+    pot: "Pot", heroOutsideRange: "This hand is outside the default range for the selected seat.",
+    hand: "Your hand",
+    navTitle: "Hand review", cancel: "Cancel",
+    noCompatibleHands: "No opponent hand in this spot is compatible with your cards.", otherSize: "Other size",
+    unanalysed: "Not analysed", scopeTitle: "Review assumptions",
+    practiceSpot: "Practice this spot", practiceBusy: "Creating practice questions…", practiceUnavailable: "Practice questions cannot be created: no hand in your range reaches this spot, action EVs are missing, or there is only one action to choose.", practiceReferenceNote: "This spot is reached too rarely for reliable values. Use it as a reference only; it is not added to your mistake review.", practiceError: "Could not save practice questions. Please try again.",
+  },
 } as const;
 
 export type HandReviewLabelKey = keyof typeof M.en;
@@ -479,3 +507,8 @@ export const IT_REVIEW_ACTION_BUTTONS = {
   raise: "Rilancia",
   allin: "All-in",
 };
+
+// pl-todo: English action buttons, kept separate from history/legend nouns.
+export const PL_REVIEW_ACTION_BUTTONS = {
+  fold: "Fold", check: "Check", call: "Call", bet: "Bet", raise: "Raise", allin: "All-in",
+} as const;

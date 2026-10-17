@@ -96,6 +96,7 @@
           <option value="ru">Русский</option>
           <option value="ar">العربية</option>
           <option value="it">Italiano</option>
+            <option value="pl">Polski</option>
         </select>
         </span>
         <a
@@ -265,6 +266,14 @@ const M = {
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Scegli la lingua",
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    resultsDisabledHint: "Opens when ⑤ Run Solver is finished",
+    solver: "Solver",
+    community: "HoldemMaster",
+    communitySuffix: " Community",
+    langSwitchLabel: "Select language",
+  },
 } as const;
 
 export default defineComponent({
@@ -300,7 +309,8 @@ export default defineComponent({
         value === "vi" ||
         value === "ru" ||
         value === "ar" ||
-        value === "it"
+        value === "it" ||
+        value === "pl"
       )
         setLocale(value);
     };

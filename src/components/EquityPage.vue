@@ -294,7 +294,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
-import { i18n, ruPlural, ltrIso } from "../i18n";
+import { i18n, ruPlural, ltrIso, pctText } from "../i18n";
 import { cardText } from "../utils";
 import { noteToolUsed } from "../pwa";
 import {
@@ -1291,6 +1291,61 @@ const M = {
       "empty-range": "Il range avversario è vuoto.",
       "no-combos": "Nessuna combo avversaria rimasta dopo l’esclusione delle carte note.",
       unknown: "Errore durante il calcolo. Premi [Calcola] per riprovare.",
+    } as Record<string, string>,
+  },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    intro:
+      "Your chance of winning against a specific hand or an entire range. Leave the board empty " +
+      "for preflop, or pick 3/4/5 cards for the flop, turn, or river.",
+    heroTitle: "① Your Hand",
+    heroHint: "Pick 2 cards below",
+    fill: "Fill from here",
+    villainTitle: "② Opponent",
+    modeHand: "vs Hand",
+    modeRange: "vs Range",
+    rangePlaceholder: "e.g., 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "Paste the output of [Copy range text] from the preflop charts. Weighted notation such as " +
+      "“K8s:0.75” is applied as-is.",
+    anyTwo: "Any two cards",
+    rangeError: (token: string) => `Cannot parse: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos.toLocaleString("pl-PL", { useGrouping: true })} combos · ${pctText(percent)} of all combos`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Empty = preflop (3/4/5 cards also allowed)",
+    boardHintBad: "The board must have 0, 3, 4 or 5 cards.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Calculate",
+    computing: "Calculating…",
+    stop: "Stop",
+    clear: "Clear all",
+    resultTitle: "Result",
+    resultEmpty: "Pick your two cards and an opponent hand or range, then press Calculate.",
+    vsSide: (value: string) => `Opponent ${pctText(value)}`,
+    win: "Win",
+    tie: "Tie",
+    lose: "Lose",
+    combos: "Opponent combos",
+    badgeExact: "Exact",
+    badgeApprox: "Approx. (±0.2 pp)",
+    exactNote: (n: number) => `Every one of ${n.toLocaleString("pl-PL", { useGrouping: true })} cases was counted`,
+    approxNote: (n: number) =>
+      `Too many cases to enumerate — sampled ${n.toLocaleString("pl-PL", { useGrouping: true })} random runouts`,
+    howTitle: "How to read this",
+    how1: "Equity = win% + half of the ties. It is your share of the pot if you were all in right now.",
+    how2: "Against a range, combos blocked by your cards or the board are removed automatically.",
+    how3: "The “Exact” badge means every case was counted; “Approx.” is a random sample.",
+    limitTitle: "What this calculator covers",
+    limitBody:
+      "This tool computes all-in equity between two players only. For range vs range and betting lines from the flop on (a board of 3+ cards), use the solver (Custom Spot). Multiway pots are not supported.",
+    errors: {
+      "need-hero": "Pick your two cards first.",
+      "bad-board": "The board must have 0, 3, 4 or 5 cards.",
+      "bad-card": "Invalid card value.",
+      duplicate: "The same card cannot be used twice.",
+      "empty-range": "The opponent range is empty.",
+      "no-combos": "No opponent combos remain after card removal.",
+      unknown: "Something went wrong during the calculation. Press Calculate to try again.",
     } as Record<string, string>,
   },
 } as const;

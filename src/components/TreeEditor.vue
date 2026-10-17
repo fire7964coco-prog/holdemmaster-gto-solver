@@ -260,10 +260,12 @@ import { TreeManager } from "../../pkg/tree/tree";
 
 import { CheckIcon } from "@heroicons/vue/20/solid";
 import { TrashIcon } from "@heroicons/vue/24/outline";
-import { i18n, ltrIso } from "../i18n";
+import { i18n, ltrIso, localizeNumber } from "../i18n";
 
 const actionNamesIt: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" };
-const displayActionName = (name: string) => i18n.locale === "it" ? actionNamesIt[name] ?? name : name;
+// pl-todo: English history/legend labels.
+const actionNamesPl: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" };
+const displayActionName = (name: string) => i18n.locale === "it" ? actionNamesIt[name] ?? name : i18n.locale === "pl" ? actionNamesPl[name] ?? name : name;
 
 const M = {
   ko: {
@@ -550,6 +552,23 @@ const M = {
     cancelEdits: "Annulla modifiche",
     addedLines: "Linee aggiunte:",
     removedLines: "Linee rimosse:",
+  },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    treeError: "Error: Failed to build the tree (loaded a broken tree?)",
+    pot: "Pot",
+    stack: "Stack",
+    noActions: "(No actions)",
+    wins: "wins",
+    invalidTerminals: "Invalid terminal nodes:",
+    addBetAction: "Add Bet Action",
+    removeNode: "Remove Selected Node",
+    betAmount: "Bet Amount:",
+    potRate: (pct: string) => `(${localizeNumber(pct)}% of the pot)`,
+    saveEdits: "Save Edits",
+    cancelEdits: "Cancel Edits",
+    addedLines: "Added lines:",
+    removedLines: "Removed lines:",
   },
 } as const;
 

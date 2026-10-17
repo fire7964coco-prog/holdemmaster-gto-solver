@@ -615,6 +615,50 @@ export const DRAW_LABELS_IT: Record<DrawKey, string> = {
   no_draw: "Nessun progetto",
 };
 
+// pl: confirmed rank names from the terminology table §3-2 (PL3 translation exception).
+// Royal flush remains a name, not a new engine classification.
+export const PL_HAND_RANK_NAMES = {
+  royal_flush: "Poker królewski",
+  straight_flush: "Poker",
+  quads: "Kareta",
+  full_house: "Full",
+  flush: "Kolor",
+  straight: "Strit",
+  trips: "Trójka",
+  two_pair: "Dwie pary",
+  one_pair: "Para",
+  high_card: "Najwyższa karta",
+} as const;
+
+export const MADE_LABELS_PL: Record<MadeKey, string> = {
+  straight_flush: "Poker",
+  quads: "Kareta",
+  full_house: "Full",
+  flush: "Kolor",
+  straight: "Strit",
+  trips: "Set / Trips",
+  two_pair: "Dwie pary",
+  // pl-todo: English scaffold for subcategories; translate in the next stage.
+  overpair: "Overpair",
+  top_pair: "Top Pair",
+  second_pair: "Second Pair",
+  weak_pair: "Weak Pair",
+  underpair: "Underpair",
+  ace_high: "Ace-High",
+  king_high: "King-High",
+  nothing: "No Made Hand",
+};
+
+// pl-todo: English scaffold; translate in the next stage.
+export const DRAW_LABELS_PL: Record<DrawKey, string> = {
+  combo_draw: "Combo Draw",
+  flush_draw: "Flush Draw",
+  oesd: "OESD",
+  gutshot: "Gutshot",
+  backdoor_fd: "Backdoor FD",
+  no_draw: "No Draw",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -649,6 +693,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_AR
     : i18n.locale === "it"
     ? MADE_LABELS_IT
+    : i18n.locale === "pl"
+    ? MADE_LABELS_PL
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -683,6 +729,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_AR
     : i18n.locale === "it"
     ? DRAW_LABELS_IT
+    : i18n.locale === "pl"
+    ? DRAW_LABELS_PL
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

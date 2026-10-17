@@ -81,7 +81,7 @@
 import { computed, defineComponent, nextTick, ref } from "vue";
 import { useStore, useConfigStore } from "../store";
 import { formatAmount } from "../utils";
-import { i18n, ltrIso } from "../i18n";
+import { i18n, ltrIso, localizeNumber } from "../i18n";
 import { Position } from "../preflop-charts";
 import {
   Caller,
@@ -295,6 +295,19 @@ const M = {
     applied: (oop: string, ip: string, pot: string, stack: string) => `Range compilati: ${oop} (OOP) · ${ip} (IP). Piatto ${pot}bb · Stack ${stack}bb`,
     betsFilled: (flop: string, later: string, raise: string) => `Le dimensioni di puntata erano vuote: sono stati inseriti anche i valori predefiniti — Flop ${flop} · Turn/River ${later} · Rilancio ${raise}`,
     next: "Prossimo passo: ③ Board",
+  },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    title: "Fill ranges by position",
+    note: "Pick who opened and who called, then press the button below — both ranges, the pot and the stack are filled in at once. The ranges are the same as in Preflop Charts (6-max cash, 100bb).",
+    opener: "Open",
+    caller: "Call",
+    apply: "Fill both ranges",
+    applied: (oop: string, ip: string, pot: string, stack: string) =>
+      `${oop} (OOP) · ${ip} (IP) ranges filled in. Pot ${localizeNumber(pot)}bb · Stack ${localizeNumber(stack)}bb`,
+    betsFilled: (flop: string, later: string, raise: string) =>
+      `Bet sizes were empty, so defaults were filled in too — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
+    next: "Next: ③ Board",
   },
 } as const;
 

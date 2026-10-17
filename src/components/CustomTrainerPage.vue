@@ -116,7 +116,7 @@ import type { CustomTrainerBank, CustomTrainerQuestion, CustomTrainerAttempt } f
 import { listCustomTrainerBanks, deleteCustomTrainerBank, getCustomTrainerAttempts, addCustomTrainerAttempt } from "../custom-trainer-db";
 import { evaluateTrainerAction, trainerActionLabel, trainerCardPair } from "../trainer";
 import type { TrainerEvaluation } from "../trainer";
-import { M, ruChipLabel } from "../custom-trainer-labels";
+import { M, ruChipLabel, plChipLabel } from "../custom-trainer-labels";
 import { classifyRngAnswer, nextRngMode, readRngMode, rngAction, rngBands, rollRng, trainerRngEnabled } from "../trainer-rng";
 import type { RngMode } from "../trainer-rng";
 import { RNG_M } from "../trainer-rng-labels";
@@ -148,12 +148,22 @@ export default defineComponent({
     const ruUnit = (n: number, scale: number) => scale === 10 ? "bb" : ` ${ruChipLabel(n, true)}`; // toFixed(3) 표시 → few형
     // ar: «N (رقائق)» avoids count-dependent chip nouns and a duplicate pot/stack label (§7-1).
     const arAmount = (value: string, scale: number) => scale === 10 ? ltrIso(`${number(value)}bb`) : `${ltrIso(number(value))} (${L.value.chips})`;
+    // Keep display precision for Polish grammar: 1.000 selects other, not one.
+    // The raw amount is still unchanged; formatting and noun selection happen only here.
+    const plAmount = (value: string, scale: number) => {
+      const fractionDigits = value.split(".")[1]?.length ?? 0;
+      const count = Number(value);
+      const display = count.toLocaleString("pl-PL", { useGrouping: true, minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
+      return `${display}${scale === 10 ? "bb" : ` ${plChipLabel(count, fractionDigits)}`}`;
+    };
     const displayValue = (value: number) => i18n.locale === "ar"
       ? arAmount(value.toFixed(3), bank.value?.unitScale ?? 1)
       : i18n.locale === "ru"
       ? `${number(value.toFixed(3))}${ruUnit(value, bank.value?.unitScale ?? 1)}`
       : i18n.locale === "it"
       ? `${number(value.toFixed(3))}${bank.value?.unitScale === 10 ? "bb" : ` ${L.value.chips}`}`
+      : i18n.locale === "pl"
+      ? plAmount(value.toFixed(3), bank.value?.unitScale ?? 1)
       : `${number(value.toFixed(3))} ${unit.value}`;
     const amount = (value: number) => i18n.locale === "ar"
       ? arAmount(formatAmount(value, bank.value?.unitScale ?? 1), bank.value?.unitScale ?? 1)
@@ -161,6 +171,8 @@ export default defineComponent({
       ? `${number(formatAmount(value, bank.value?.unitScale ?? 1))}${ruUnit(Number(formatAmount(value, bank.value?.unitScale ?? 1)), bank.value?.unitScale ?? 1)}`
       : i18n.locale === "it"
       ? `${number(formatAmount(value, bank.value?.unitScale ?? 1))}${bank.value?.unitScale === 10 ? "bb" : ` ${L.value.chips}`}`
+      : i18n.locale === "pl"
+      ? plAmount(formatAmount(value, bank.value?.unitScale ?? 1), bank.value?.unitScale ?? 1)
       : `${number(formatAmount(value, bank.value?.unitScale ?? 1))} ${unit.value}`;
     const percent = (value: number) =>
       i18n.locale === "fr" ? `${number(value.toFixed(1))} %` : pctText(number(value.toFixed(1)));
@@ -228,6 +240,9 @@ export default defineComponent({
       if (i18n.locale === "it") {
         const suffix = item.unitScale === 10 ? "bb" : ` ${L.value.chips}`;
         return `${board} · ${L.value.pot} ${number(formatAmount(item.startingPot, item.unitScale))}${suffix} · ${L.value.stack} ${number(formatAmount(item.effectiveStack, item.unitScale))}${suffix}`;
+      }
+      if (i18n.locale === "pl") {
+        return `${board} · ${L.value.pot} ${plAmount(formatAmount(item.startingPot, item.unitScale), item.unitScale)} · ${L.value.stack} ${plAmount(formatAmount(item.effectiveStack, item.unitScale), item.unitScale)}`;
       }
       const unitName = item.unitScale === 10 ? "bb" : L.value.chips;
       return `${board} · ${L.value.pot} ${number(formatAmount(item.startingPot, item.unitScale))} ${unitName} · ${L.value.stack} ${number(formatAmount(item.effectiveStack, item.unitScale))} ${unitName}`;

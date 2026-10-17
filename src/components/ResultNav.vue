@@ -243,7 +243,7 @@ import { decodeResults } from "../results-decode";
 import { computed, defineComponent, nextTick, toRefs, ref, watch } from "vue";
 import { useSavedConfigStore } from "../store";
 import { useStore } from "../store";
-import { i18n, ltrIso, arLabelIso } from "../i18n";
+import { i18n, ltrIso, arLabelIso, localizeNumber } from "../i18n";
 import { cardText, average, colorString, formatAmount } from "../utils";
 import { handler } from "../global-worker";
 import {
@@ -680,6 +680,26 @@ const M = {
     action: (name: string): string => ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) => `${label} ${formatted} (${percent}% del piatto)`,
   },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} wins`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "End",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${localizeNumber(String(percent))}% pot)`,
+  },
 } as const;
 
 export default defineComponent({
@@ -775,7 +795,7 @@ export default defineComponent({
     });
 
     const amountText = (value: number) => {
-      const amount = formatAmount(value, store.displayUnitScale);
+      const amount = i18n.locale === "pl" ? localizeNumber(formatAmount(value, store.displayUnitScale)) : formatAmount(value, store.displayUnitScale);
       return store.displayUnitScale === 10 ? `${amount}bb` : amount;
     };
 

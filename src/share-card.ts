@@ -10,7 +10,7 @@
  */
 import { cardText } from "./utils";
 import { C } from "./theme";
-import { i18n, localizeNumber, ruPlural } from "./i18n";
+import { i18n, localizeNumber, ruPlural, plPlural } from "./i18n";
 
 // 카드에 그려 넣는 고정 문구 — 카드 언어는 현재 화면 언어를 따른다
 const CARD_TEXT = {
@@ -212,6 +212,18 @@ const CARD_TEXT = {
     result: (verdict: string) => `Il mio risultato: ${verdict}`,
     evLine: (bb: string, streak: number) => `EV loss ${bb}bb${streak > 0 ? (streak === 1 ? ` · ${streak} giorno consecutivo` : ` · ${streak} giorni consecutivi`) : ""}`,
     invite: "Prova la sfida di oggi",
+  },
+  // pl-todo: English scaffold; translate in the next stage.
+  pl: {
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "One puzzle a day · same for everyone",
+    heading: "Daily GTO Puzzle",
+    board: "Board",
+    hand: "My Hand",
+    result: (verdict: string) => `My result: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `EV loss ${bb}bb${streak > 0 ? ` · ${localizeNumber(String(streak))}${plPlural(streak, { one: "-day streak", few: "-day streak", many: "-day streak", other: "-day streak" })}` : ""}`,
+    invite: "Try today's puzzle",
   },
 } as const;
 
