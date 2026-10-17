@@ -1148,7 +1148,7 @@ const M = {
     exploitTipDetailLabel: "Dettagli:",
     exploitTipDetail:
       "In un equilibrio di Nash, la strategia di ciascun giocatore è una MES contro quella dell’altro, cioè massimizza l’EV contro la strategia avversaria. Questa proprietà permette di definire così la distanza tra la strategia ottenuta e l’equilibrio di Nash:",
-    exploitTipFormula: "Distanza = (EV della MES avversaria) - (EV effettivo dell’avversario)",
+    exploitTipFormula: "Distanza = (EV della MES avversaria) − (EV effettivo dell’avversario)",
     exploitTipOutro:
       "Questa distanza non è mai negativa ed è zero solo se la strategia ottenuta fa parte di un equilibrio di Nash. L’exploitability è la media delle distanze dei due giocatori.",
     maxIterationsLabel: "Iterazioni massime:",

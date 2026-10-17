@@ -3513,7 +3513,7 @@ const M = {
       "Quando sai leggere i risultati, passa al",
     trainerBtn: "Trainer GTO",
     trainerIntroAfter:
-      `. Nei punti di decisione dei ${SPOT_COUNT} Esempi ricevi mani estratte dai range effettivi. Scegli un’azione e scopri la valutazione.`,
+      `. Nei punti di decisione dei ${SPOT_COUNT} esempi ricevi mani estratte dai range effettivi. Scegli un’azione e scopri la valutazione.`,
     gradTerm: "Come funziona la valutazione",
     gradBefore: "La valutazione misura la perdita di valore atteso, espressa come ",
     gradBold: "EV loss (bb)",
@@ -3547,7 +3547,7 @@ const M = {
     install2: " a destra della barra degli indirizzi; in Safari su iPhone, scegli ",
     installBold2: "Condividi → Aggiungi alla schermata Home",
     install3:
-      `. Dopo l’installazione, i ${SPOT_COUNT} Esempi e gli esercizi del Trainer GTO restano sul dispositivo, così puoi studiare `,
+      `. Dopo l’installazione, i ${SPOT_COUNT} esempi e gli esercizi del Trainer GTO restano sul dispositivo, così puoi studiare `,
     installBold3: "anche in metropolitana senza internet",
     install4: ".",
     samsung1:
@@ -3590,7 +3590,7 @@ const M = {
 
     studyTitle: "Percorso di studio consigliato",
     study1:
-      `Studia i ${SPOT_COUNT} Esempi nell’ordine proposto: ogni spot si basa su quelli precedenti`,
+      `Studia i ${SPOT_COUNT} esempi nell’ordine proposto: ogni spot si basa su quelli precedenti`,
     study2:
       "Se ti chiedi «Perché questa mano fa anche check?», confronta l’EV delle azioni nella tabella di dettaglio",
     study3:

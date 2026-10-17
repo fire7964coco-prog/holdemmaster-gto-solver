@@ -1255,7 +1255,7 @@ const M = {
     rangeNote:
       "Incolla il testo ottenuto con [Copia testo del range] in Range preflop. I pesi, per esempio «K8s:0.75», vengono applicati così come sono.",
     anyTwo: "Due carte qualsiasi",
-    rangeError: (token: string) => `Impossibile interpretare: ${token}`,
+    rangeError: (token: string) => `Impossibile leggere: ${token}`,
     rangeSummary: (combos: number, percent: string) => `${combos.toLocaleString("it-IT", { useGrouping: true })} combo · ${percent.replace(".", ",")}% di tutte le combo`,
     boardTitle: "③ Board",
     boardHintEmpty: "Vuoto = preflop (ammesse anche 3, 4 o 5 carte)",

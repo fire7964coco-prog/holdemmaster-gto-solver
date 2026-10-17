@@ -1826,7 +1826,7 @@ const M = {
     inputHelpIntro:
       "Puoi inserire più dimensioni di puntata, separate da virgole o spazi, nei formati indicati qui sotto. Se lasci il campo vuoto, non ci saranno né puntate né rilanci.",
     inputHelpPercent:
-      "Un numero che indica la percentuale del piatto (es. «50»). Per i rilanci, si calcola prima il call e poi si aggiunge la percentuale indicata del piatto risultante. Per esempio, se il piatto prima della puntata è 100 e l’avversario punta 75, un rilancio del 50% è 75 + (100 + 75 + 75) * 50% = 200.",
+      "Un numero che indica la percentuale del piatto (es. «50»). Per i rilanci, si calcola prima il call e poi si aggiunge la percentuale indicata del piatto risultante. Per esempio, se il piatto prima della puntata è 100 e l’avversario punta 75, un rilancio del 50% è 75 + (100 + 75 + 75) × 50% = 200.",
     inputHelpMultiple:
       "Un multiplo della puntata precedente (es. «2.5x»). Disponibile solo per i rilanci.",
     inputHelpAllin: "All-in (es. «a»).",
@@ -1851,7 +1851,7 @@ const M = {
       "Questa opzione è simile alla «all-in threshold» di PioSOLVER. PioSOLVER sostituisce una puntata con un all-in quando il rapporto tra l’importo messo nel piatto e lo stack iniziale supera la soglia.",
     forceAllInHelp3:
       "Senza considerare gli arrotondamenti, la formula di conversione è la seguente (s = SPR iniziale, r = soglia di PioSOLVER):",
-    forceAllInFormula: "Soglia = s * (1 - r) / (1 + 2 * s * r).",
+    forceAllInFormula: "Soglia = s × (1 − r) / (1 + 2 × s × r).",
     mergingLabel: "Soglia di unione:",
     mergingHelp1: "Unisce in una sola azione le puntate di dimensioni simili.",
     mergingHelp2:
