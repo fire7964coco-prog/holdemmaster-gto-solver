@@ -1306,7 +1306,7 @@ const M = {
     rangeNote:
       "Wklej tekst uzyskany przyciskiem [Skopiuj tekst zakresu] z sekcji „Tabele preflop”. Zapis wag, np. „K8s:0.75”, jest stosowany bez zmian.",
     anyTwo: "Dowolne dwie karty",
-    rangeError: (token: string) => `Nie można odczytać: ${token}`,
+    rangeError: (token: string) => `Nie udało się odczytać: ${token}`,
     rangeSummary: (combos: number, percent: string) => `Combo: ${combos.toLocaleString("pl-PL", { useGrouping: true })} · ${pctText(percent)} wszystkich kombinacji`,
     boardTitle: "③ Board",
     boardHintEmpty: "Pusty = preflop (można też wybrać 3/4/5 kart)",

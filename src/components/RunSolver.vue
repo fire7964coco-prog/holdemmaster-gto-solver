@@ -1197,7 +1197,7 @@ const M = {
     exploitTipDetailLabel: "Szczegóły:",
     exploitTipDetail:
       "W równowadze Nasha obaj gracze stosują wobec siebie strategie maksymalnie wykorzystujące błędy przeciwnika (MES). Na tej podstawie odległość uzyskanej strategii od równowagi Nasha definiujemy następująco:",
-    exploitTipFormula: "Odległość = (EV strategii MES przeciwnika) - (rzeczywiste EV przeciwnika)",
+    exploitTipFormula: "Odległość = (EV strategii MES przeciwnika) − (rzeczywiste EV przeciwnika)",
     exploitTipOutro:
       "Ta odległość jest zawsze nieujemna. Wynosi zero tylko wtedy, gdy uzyskana strategia jest częścią równowagi Nasha. Exploitability to średnia odległość dla obu graczy.",
     maxIterationsLabel: "Maks. liczba iteracji:",
@@ -1214,7 +1214,7 @@ const M = {
     iterations: (count: number) => `Iteracje: ${localizeNumber(String(count))}`,
     exploitabilityLine: (value: string, percent: string) =>
       `Exploitability: ${value} (${percent})`,
-    timeLine: (seconds: string) => `Czas: ${seconds}s`,
+    timeLine: (seconds: string) => `Czas: ${seconds}\u00a0s`,
   },
 } as const;
 

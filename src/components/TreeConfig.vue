@@ -1885,7 +1885,7 @@ const M = {
     inputHelpIntro:
       "Możesz wpisać kilka sizingów, oddzielając je przecinkami lub spacjami, w dowolnym z poniższych formatów. Puste pole oznacza brak zakładu lub przebicia.",
     inputHelpPercent:
-      "Liczba oznaczająca procent puli (np. „50”). Przy przebiciu najpierw dolicza się kwotę sprawdzenia, a następnie podany procent powstałej puli. Na przykład: pula przed zakładem wynosi 100, a przeciwnik stawia 75. Przebicie o 50% puli to 75 + (100 + 75 + 75) * 50% = 200.",
+      "Liczba oznaczająca procent puli (np. „50”). Przy przebiciu najpierw dolicza się kwotę sprawdzenia, a następnie podany procent powstałej puli. Na przykład: pula przed zakładem wynosi 100, a przeciwnik stawia 75. Przebicie o 50% puli to 75 + (100 + 75 + 75) × 50% = 200.",
     inputHelpMultiple:
       "Wielokrotność poprzedniego zakładu (np. „2.5x”). Tylko dla przebić.",
     inputHelpAllin: "All-in (np. „a”).",
@@ -1910,7 +1910,7 @@ const M = {
       "Ta opcja przypomina „all-in threshold” w PioSOLVER. PioSOLVER zastępuje zakład akcją all-in, gdy stosunek kwoty włożonej do puli do początkowego stacka przekracza próg.",
     forceAllInHelp3:
       "Pomijając zaokrąglenia, wzór przeliczenia wygląda tak (s = początkowy SPR, r = próg w PioSOLVER):",
-    forceAllInFormula: "Próg = s * (1 - r) / (1 + 2 * s * r).",
+    forceAllInFormula: "Próg = s × (1 − r) / (1 + 2 × s × r).",
     mergingLabel: "Próg łączenia sizingów:",
     mergingHelp1: "Łączy zakłady o zbliżonych sizingach w jedną akcję.",
     mergingHelp2:
