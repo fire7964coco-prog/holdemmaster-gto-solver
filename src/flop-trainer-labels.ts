@@ -265,7 +265,7 @@ const checkedLabels: LocaleDict<FlopTrainerLabels> = {
     offline: "Wymagane jest połączenie z internetem.",
     failed: "Nie udało się wczytać pytania.",
     retry: "Spróbuj ponownie",
-    useBasic: "Ćwicz podstawowe pytania",
+    useBasic: "Ćwicz na podstawowych pytaniach",
     again: "Powtórz tę rękę",
   },
 };
@@ -450,7 +450,7 @@ const boardLabels: LocaleDict<FlopBoardLabels> = {
   },
   pl: {
     boardAll: "Board: wszystkie",
-    boardChip: "Board: {value}",
+    boardChip: "Board ({value})",
     boardHelp: "Filtruj flopy według najwyższej karty, kolorów, parowania i połączenia kart albo ustaw jeden konkretny flop.",
     boardRule: "W obrębie wiersza wystarczy spełnić jeden warunek. Flop musi pasować do każdego ustawionego wiersza (pusty wiersz dopuszcza wszystkie opcje).",
     specificFlop: "Konkretny flop",

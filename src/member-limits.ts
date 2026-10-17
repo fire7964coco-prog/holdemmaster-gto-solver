@@ -146,7 +146,7 @@ const checkedLabels: LocaleDict<MemberLabels> = {
   pl: {
   saveFull: "Zaloguj się, aby zapisać więcej niż 10 pozycji i otwierać swoją listę na dowolnym telefonie lub komputerze",
   importOver: "Ten import przekroczy limit 10 pozycji zapisanych na tym urządzeniu — zaloguj się, aby zaimportować całość",
-  memberScenario: "Ta sytuacja jest dostępna tylko dla bezpłatnych kont — zaloguj się, aby od razu ją otworzyć",
+  memberScenario: "Ta sytuacja jest dostępna tylko po zalogowaniu (konto jest bezpłatne) — zaloguj się, aby od razu ją otworzyć",
 },
 };
 export const memberLabels = (locale: Locale): MemberLabels => checkedLabels[locale];

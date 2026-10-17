@@ -311,7 +311,7 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
     },
     pl: {
       all: "Wszystkie",
-      srp: "Pula po jednym podbiciu (SRP)",
+      srp: "Pula SRP",
       "3bp": "Pula 3-bet",
       blind: "Blind przeciw blind",
     },

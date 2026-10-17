@@ -464,7 +464,7 @@ export const M = {
   },
   pl: {
     title: "Analiza rozdania", situation: "Sytuacja", hero: "Twoja pozycja", opener: "Pozycja otwierającego", caller: "Pozycja sprawdzającego", threeBettor: "Pozycja 3-betującego", preflop: "Preflop",
-    singleRaised: "Otwarcie · Sprawdzenie", threeBet: "Pula 3-bet", fourBet: "Pula 4-bet", multiway: "Liczba graczy: 3+", notSupported: "Analiza niedostępna",
+    singleRaised: "Otwarcie · Sprawdzenie", threeBet: "Pula 3-bet", fourBet: "Pula 4-bet", multiway: "Pula multiway (3+ graczy)", notSupported: "Analiza niedostępna",
     unavailableScenario: "Dane dla tej sytuacji nie są jeszcze gotowe.", fileMissing: "Brak pliku wyników dla tego flopa.",
     loadFailed: "Nie udało się wczytać pliku wyników.", invalidData: "Nie udało się odczytać pliku wyników.",
     unsupportedAction: "Nie można przeanalizować tej akcji.", unsupportedSize: "Nie można przeanalizować tego sizingu.",
@@ -473,7 +473,7 @@ export const M = {
     chooseHand: "Twoje 2 karty", chooseFlop: "3 karty flopa", chooseTurn: "Karta turna", chooseRiver: "Karta rivera",
     result: "Wyniki", totalLoss: "Łączna strata EV",
     best: "Najlepsze zagranie", good: "Dopuszczalne", mistake: "Do analizy",
-    noResults: "Wybierz karty i wprowadź akcje, aby zobaczyć wyniki.", chooseAction: "Wybierz akcję rozegraną w rozdaniu.",
+    noResults: "Wybierz karty i wprowadź akcje, aby zobaczyć wyniki.", chooseAction: "Wybierz akcję zagraną w rozdaniu.",
     opponentResponse: "Odpowiedź przeciwnika na twoje zagranie", foldingHands: "Ręce, z którymi przeciwnik pasuje",
     handGrid: "Siatka rąk", matchedSize: "Dopasowany sizing: {actual} → {used}",
     undo: "Cofnij", newHand: "Nowe rozdanie", loading: "Wczytywanie danych…", solving: "Obliczanie…",

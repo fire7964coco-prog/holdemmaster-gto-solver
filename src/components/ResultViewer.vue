@@ -384,7 +384,7 @@ const M = {
   pl: {
     startRange: "① Wybierz zakresy",
     viewPresets: "Zobacz przykłady",
-    notRun: "Nie ma jeszcze wyników twoich własnych obliczeń.\nGotowe wyniki znajdziesz w menu „Przykłady”.\nAby obliczyć własny spot, przejdź kroki ①~⑤, a potem kliknij „Uruchom solver”.",
+    notRun: "Nie ma jeszcze wyników twoich własnych obliczeń.\nGotowe wyniki znajdziesz w menu „Przykłady”.\nAby obliczyć własny spot, wykonaj kroki ①–⑤, a potem kliknij „Uruchom solver”.",
     running: "Solver oblicza…",
     finalizing: "Kończenie obliczeń…",
     paused: "Obliczenia wstrzymane.",

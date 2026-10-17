@@ -188,7 +188,7 @@ export const RNG_M = {
   pl: {
     mode: { off: "RNG: wył.", high: "RNG: wysokie", low: "RNG: niskie" },
     modeHelp:
-      "Trening z liczbą losową (1–100): do każdej ręki losowana jest liczba, a ty wybierasz przypisaną jej akcję. „RNG: wysokie”: wyższe liczby oznaczają bardziej agresywne akcje. „RNG: niskie”: niższe liczby oznaczają bardziej agresywne akcje. Tryb nie działa w zadaniu dnia.",
+      "Trening z liczbą losową (1–100): dla każdej ręki losowana jest liczba, a ty wybierasz przypisaną jej akcję. „RNG: wysokie”: wyższe liczby oznaczają bardziej agresywne akcje. „RNG: niskie”: niższe liczby oznaczają bardziej agresywne akcje. Tryb nie działa w zadaniu dnia.",
     bandsTitle: "Przedziały RNG",
     yourNumber: "Twoja liczba",
     noteBest: (action: string) => `Wybrana akcja odpowiada tej liczbie (${action}).`,

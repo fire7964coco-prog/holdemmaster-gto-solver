@@ -1183,14 +1183,14 @@ const M = {
     precisionTipIntro:
       "Tryb precyzji wpływa głównie na zużycie pamięci. Są też inne różnice.",
     precisionTipFp:
-      "32-bitowa liczba zmiennoprzecinkowa (FP): zalecana, gdy zużycie pamięci mieści się w limicie (3,9GB). Zapewnia około 7 cyfr znaczących i większą wydajność.",
+      "32-bitowa liczba zmiennoprzecinkowa (FP): zalecana, gdy zużycie pamięci mieści się w limicie (3,9 GB). Zapewnia około 7 cyfr znaczących i większą wydajność.",
     precisionTipInt:
       "16-bitowa liczba całkowita: alternatywa, gdy tryb 32-bit FP przekracza limit pamięci. Zapewnia około 4 cyfr znaczących, więc nie nadaje się do obliczeń z docelową exploitability poniżej 0,1%. Działa wolniej niż 32-bit FP.",
     fp32Label: "32-bit FP:",
     int16Label: "16-bit int:",
     ramNeeded: (size: string) => `wymagana pamięć RAM: ${size}`,
     limitExceeded: "(przekroczono limit)",
-    ramLimit: "Limit RAM: 3,9GB (= limit Wasm 4GB − zapas 0,1GB)",
+    ramLimit: "Limit RAM: 3,9 GB (= limit Wasm 4 GB − zapas 0,1 GB)",
     targetLabel: "Docelowa exploitability:",
     exploitTipIntro:
       "Określa dopuszczalną odległość od równowagi Nasha. Mniejsza wartość daje dokładniejszy wynik, ale wydłuża obliczenia.",
@@ -1288,7 +1288,7 @@ const checkConfig = (
       `Le pot initial ne doit pas dépasser ${MAX_AMOUNT}`, `Pot awal tidak boleh melebihi ${MAX_AMOUNT}`,
       `Pot permulaan tidak boleh melebihi ${MAX_AMOUNT}`, `शुरुआती pot ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Başlangıç pot'u en fazla ${MAX_AMOUNT} olabilir`, `Pot ban đầu không được vượt quá ${MAX_AMOUNT}`, `Начальный банк не может превышать ${MAX_AMOUNT}`,
     `يجب ألا يتجاوز البوت الابتدائي ${MAX_AMOUNT}`,
-      `Il piatto iniziale non deve superare ${MAX_AMOUNT}`, `Pula początkowa nie może przekraczać ${MAX_AMOUNT}`);
+      `Il piatto iniziale non deve superare ${MAX_AMOUNT}`, `Pula początkowa nie może przekraczać ${localizeNumber(String(MAX_AMOUNT))}`);
   }
 
   if (config.startingPot % 1 !== 0) {
@@ -1326,7 +1326,7 @@ const checkConfig = (
       `Le stack effectif ne doit pas dépasser ${MAX_AMOUNT}`, `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`,
       `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`, `Effective stack ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Efektif stack en fazla ${MAX_AMOUNT} olabilir`, `Stack hiệu dụng không được vượt quá ${MAX_AMOUNT}`, `Эффективный стек не может превышать ${MAX_AMOUNT}`,
     `يجب ألا يتجاوز الستاك الفعلي ${MAX_AMOUNT}`,
-      `Lo stack effettivo non deve superare ${MAX_AMOUNT}`, `Efektywny stack nie może przekraczać ${MAX_AMOUNT}`);
+      `Lo stack effettivo non deve superare ${MAX_AMOUNT}`, `Efektywny stack nie może przekraczać ${localizeNumber(String(MAX_AMOUNT))}`);
   }
 
   if (config.effectiveStack % 1 !== 0) {
@@ -2074,7 +2074,7 @@ export default defineComponent({
         : i18n.locale === "ru" ? { gb: "\u00a0\u0413\u0411", mb: "\u00a0\u041c\u0411" } // \uc6a9\uc5b4\ud655\uc815\ud45c \u00a72-1
         : i18n.locale === "ar" ? { gb: " GB", mb: " MB" } // ar: 라틴 단위 · 사용처에서 ltrIso 격리(확정표 §2-1)
         : i18n.locale === "it" ? { gb: "\u00a0GB", mb: "\u00a0MB" }
-        : i18n.locale === "pl" ? { gb: " GB", mb: " MB" }
+        : i18n.locale === "pl" ? { gb: "\u00a0GB", mb: "\u00a0MB" }
         : { gb: " GB", mb: " MB" }
     );
 

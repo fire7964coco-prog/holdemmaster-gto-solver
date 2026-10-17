@@ -441,7 +441,7 @@ export default defineComponent({
         presets: "Przykłady — jednym kliknięciem",
         trainer: "Trener GTO — sprawdź EV każdej decyzji",
         preflop: "Tabele preflop — zakresy otwarcia i obrony",
-        equity: "Kalkulator equity — equity ręki i zakresu",
+        equity: "Kalkulator equity — ręka lub zakres przeciwnika",
         "oop-range": "Zakres OOP",
         "ip-range": "Zakres IP",
         board: "Board",

@@ -1,7 +1,7 @@
 {
   "name": "HoldemMaster GTO Trainer",
   "short_name": "GTO Trainer",
-  "description": "Bezpłatny solver i trener GTO. Wszystkie 13 przykładów otwiera się od razu, także offline.",
+  "description": "Bezpłatny solver i trener GTO. Wszystkie 13 przykładów otworzysz od razu, także offline.",
   "lang": "pl",
   "dir": "ltr",
   "start_url": "/?view=trainer&lang=pl",

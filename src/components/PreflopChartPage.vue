@@ -1661,8 +1661,8 @@ const M = {
   pl: {
     modeRfi: "Otwarcie (RFI)",
     modeDefend: "Obrona vs otwarcie",
-    mode3bet: "Vs 3-bet po otwarciu",
-    mode4bet: "Vs 4-bet po 3-becie",
+    mode3bet: "Przeciw 3-betowi po otwarciu",
+    mode4bet: "Przeciw 4-betowi po 3-becie",
     intro4bet:
       "Jak odpowiedzieć na 4-bet po swoim 3-becie? Czerwony oznacza 5-bet (all-in), zielony — sprawdzenie, reszta — pas. Częstotliwości odnoszą się do zakresu 3-betu, więc pola rąk, z którymi nigdy nie 3-betujesz, są puste. Gra gotówkowa 6-max, 100bb. Sizingi 4-betu: po 3-becie BB do 11bb → 24bb · po 3-becie SB do 10bb → 22bb · po 3-becie późnych pozycji (CO·BTN) do 7,5bb → 19bb · po 3-becie BB do 9bb przeciw otwarciu SB → 22bb.",
     legend5bet: "5-bet (all-in)",
@@ -1671,7 +1671,7 @@ const M = {
     statContinue4bet: "Kontynuacja % (z 3-betów)",
     copy5bet: "Skopiuj zakres 5-betu",
     note4bet:
-      "Statystyki pokazują procent zakresu 3-betu. Przy 100bb 5-bet ma w praktyce jeden sizing — all-in. Za value odpowiadają AA·KK (czasem sprawdzające, by zastawić pułapkę); QQ·AK włączają 5-bet tylko przeciw zakresom 4-betu BTN·SB z dużą liczbą blefów, a przeciw wąskim zakresom CO·HJ·UTG sprawdzają (przeciw 4-betowi UTG sprawdza nawet KK). O sprawdzeniu decyduje realizacja equity, a nie pot odds: na pozycji (3-bet z BTN·CO) zakres sprawdzenia rozszerza się o średnie ręce, takie jak TT·AJs (przeciw 4-betowi UTG tylko JJ·TT). BB przeciw SB, mierząc się z zakresem 4-betu SB bogatym w blefy, dodaje nawet 99-66·ATs·KQs·AJo-ATo. BB bez pozycji ogranicza sprawdzenia do QQ·JJ·AK przeciw wąskim 4-betom CO·HJ·UTG (przeciw 4-betowi BTN z licznymi blefami schodzi do TT-77·AJs-ATs·AQo). Nie oznacza to pasowania wszystkiego — zakres 4-betu zawiera też blefy, np. A5s-A4s.",
+      "Statystyki pokazują procent zakresu 3-betu. Przy 100bb 5-bet ma w praktyce jeden sizing — all-in. Dla value 5-betuje się z AA·KK (czasem tylko sprawdza się z nimi, by zastawić pułapkę); z QQ·AK czasem wykonuje się 5-bet, ale tylko przeciw zakresom 4-betu BTN·SB z dużą liczbą blefów, a przeciw wąskim zakresom CO·HJ·UTG sprawdza się (przeciw 4-betowi UTG sprawdza się nawet z KK). O sprawdzeniu decyduje realizacja equity, a nie pot odds: na pozycji (3-bet z BTN·CO) zakres sprawdzenia rozszerza się o średnie ręce, takie jak TT·AJs (przeciw 4-betowi UTG tylko JJ·TT). BB przeciw SB, mierząc się z zakresem 4-betu SB bogatym w blefy, dodaje nawet 99-66·ATs·KQs·AJo-ATo. BB bez pozycji ogranicza sprawdzenia do QQ·JJ·AK przeciw wąskim 4-betom CO·HJ·UTG (przeciw 4-betowi BTN z licznymi blefami sprawdza nawet z TT-77·AJs-ATs·AQo). Czy z resztą rąk zawsze pasujesz? Nie — zakres 4-betu zawiera też blefy, np. A5s-A4s.",
     how4bet2:
       "Jeśli czerwony i zielony nie wypełniają całego pola, pozostała część oznacza pas. Dwa kolory w jednym polu oznaczają mieszanie 5-betów i sprawdzeń. Ręce spoza zakresu 3-betu nie trafiają do tego spotu, więc ich pola są puste.",
     intro3bet:
@@ -1725,7 +1725,7 @@ const M = {
     sourceTitle: "Jak powstały te tabele?",
     sourceBody: "Porównano ręka po ręce kilka ogólnodostępnych materiałów GTO i na tej podstawie ustalono wspólny zakres. Przy rękach granicznych, co do których źródła się różnią, podano udział źródeł zalecających otwarcie (75/50/25%). Zakresy BTN i SB porównano też z zakresami sprawdzonymi solverem, używanymi w sekcji „Przykłady” tej aplikacji.",
     sourceList:
-      "Porównane źródła publiczne: nlh.poker · Preflop Wizard · HoldemPro · The Felt (about-poker.com) · BeyondGTO · ThinkGTO (obliczone częstotliwości BB vs SB) · GTO Gecko · RiverOdds (punkty odniesienia dla obrony) · blog GTO Wizard · FreeBetRange (zasady obrony IP i squeeze) · 888poker · Run It Once (częstotliwości przeciw 3-betom) + zakresy naszych przykładów (zebrane w 08.2026)",
+      "Porównane źródła publiczne: nlh.poker · Preflop Wizard · HoldemPro · The Felt (about-poker.com) · BeyondGTO · ThinkGTO (obliczone częstotliwości BB vs SB) · GTO Gecko · RiverOdds (punkty odniesienia dla obrony) · blog GTO Wizard · FreeBetRange (zasady obrony IP i squeeze) · 888poker · Run It Once (częstotliwości przeciw 3-betom) + zakresy naszych przykładów (zebrane w sierpniu 2026)",
     phase2: "Będziemy dodawać kolejne zestawienia pozycji i sytuacje.",
   },
 } as const;

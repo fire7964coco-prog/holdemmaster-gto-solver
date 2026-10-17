@@ -820,7 +820,7 @@ import DbItemPicker from "./DbItemPicker.vue";
 import TreeEditor from "./TreeEditor.vue";
 import { Tippy } from "vue-tippy";
 import { QuestionMarkCircleIcon } from "@heroicons/vue/20/solid";
-import { i18n, pick, ruPlural, plPlural } from "../i18n";
+import { i18n, pick, localizeNumber, ruPlural, plPlural } from "../i18n";
 
 const M = {
   ko: {
@@ -1885,7 +1885,7 @@ const M = {
     inputHelpIntro:
       "Możesz wpisać kilka sizingów, oddzielając je przecinkami lub spacjami, w dowolnym z poniższych formatów. Puste pole oznacza brak zakładu lub przebicia.",
     inputHelpPercent:
-      "Liczba oznaczająca procent puli (np. „50”). Przy przebiciu najpierw dolicza się kwotę sprawdzenia, a następnie podany procent powstałej puli. Na przykład: pula przed zakładem wynosi 100, a przeciwnik stawia 75. Przebicie o 50% to 75 + (100 + 75 + 75) * 50% = 200.",
+      "Liczba oznaczająca procent puli (np. „50”). Przy przebiciu najpierw dolicza się kwotę sprawdzenia, a następnie podany procent powstałej puli. Na przykład: pula przed zakładem wynosi 100, a przeciwnik stawia 75. Przebicie o 50% puli to 75 + (100 + 75 + 75) * 50% = 200.",
     inputHelpMultiple:
       "Wielokrotność poprzedniego zakładu (np. „2.5x”). Tylko dla przebić.",
     inputHelpAllin: "All-in (np. „a”).",
@@ -2117,7 +2117,7 @@ export default defineComponent({
             `Le pot initial ne doit pas dépasser ${MAX_AMOUNT}`, `Pot awal tidak boleh melebihi ${MAX_AMOUNT}`,
             `Pot permulaan tidak boleh melebihi ${MAX_AMOUNT}`, `शुरुआती pot ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Başlangıç pot'u en fazla ${MAX_AMOUNT} olabilir`, `Pot ban đầu không được vượt quá ${MAX_AMOUNT}`, `Начальный банк не может превышать ${MAX_AMOUNT}`,
     `يجب ألا يتجاوز البوت الابتدائي ${MAX_AMOUNT}`,
-            `Il piatto iniziale non deve superare ${MAX_AMOUNT}`, `Pula początkowa nie może przekraczać ${MAX_AMOUNT}`)
+            `Il piatto iniziale non deve superare ${MAX_AMOUNT}`, `Pula początkowa nie może przekraczać ${localizeNumber(String(MAX_AMOUNT))}`)
         );
       }
       if (config.startingPot % 1 !== 0) {
@@ -2158,7 +2158,7 @@ export default defineComponent({
             `Le stack effectif ne doit pas dépasser ${MAX_AMOUNT}`, `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`,
             `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`, `Effective stack ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Efektif stack en fazla ${MAX_AMOUNT} olabilir`, `Stack hiệu dụng không được vượt quá ${MAX_AMOUNT}`, `Эффективный стек не может превышать ${MAX_AMOUNT}`,
     `يجب ألا يتجاوز الستاك الفعلي ${MAX_AMOUNT}`,
-            `Lo stack effettivo non deve superare ${MAX_AMOUNT}`, `Efektywny stack nie może przekraczać ${MAX_AMOUNT}`)
+            `Lo stack effettivo non deve superare ${MAX_AMOUNT}`, `Efektywny stack nie może przekraczać ${localizeNumber(String(MAX_AMOUNT))}`)
         );
       }
       if (config.effectiveStack % 1 !== 0) {
@@ -2214,7 +2214,7 @@ export default defineComponent({
             `Rake cap tidak boleh melebihi ${3 * MAX_AMOUNT}`,
             `Rake cap tidak boleh melebihi ${3 * MAX_AMOUNT}`, `Rake की सीमा ${3 * MAX_AMOUNT} से अधिक नहीं हो सकती`, `Rake limiti en fazla ${3 * MAX_AMOUNT} olabilir`, `Rake cap không được vượt quá ${3 * MAX_AMOUNT}`, `Кэп рейка не может превышать ${3 * MAX_AMOUNT}`,
     `لا يمكن أن يتجاوز حد الريك ${3 * MAX_AMOUNT}`,
-            `Il limite del rake non deve superare ${3 * MAX_AMOUNT}`, `Limit rake’u nie może przekraczać ${3 * MAX_AMOUNT}`)
+            `Il limite del rake non deve superare ${3 * MAX_AMOUNT}`, `Limit rake’u nie może przekraczać ${localizeNumber(String(3 * MAX_AMOUNT))}`)
         );
       }
       return errors;

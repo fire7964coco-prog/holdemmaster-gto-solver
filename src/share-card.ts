@@ -260,6 +260,9 @@ const FONT =
 // 기존 15언어의 글꼴 선택은 그대로 두고 RTL 문서에서만 아랍 글꼴을 앞세운다.
 const RTL_FONT =
   "'Segoe UI', 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Geeza Pro', 'Tahoma', " + FONT;
+// PL6: use each platform's Latin font for Polish diacritics (no web font fetch).
+const PL_FONT =
+  "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Noto Sans', 'Helvetica Neue', 'Arial', sans-serif";
 
 // 아이콘·인사 화면과 같은 스페이드 도안 (원본 viewBox 0 0 180 180)
 const SPADE_PATH =
@@ -353,7 +356,7 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   const ctx = canvas.getContext("2d");
   if (!ctx) return canvas;
   const rtl = document.documentElement.dir === "rtl";
-  const font = rtl ? RTL_FONT : FONT;
+  const font = rtl ? RTL_FONT : i18n.locale === "pl" ? PL_FONT : FONT;
   const textX = (x: number) => rtl ? WIDTH - x : x;
   ctx.direction = rtl ? "rtl" : "ltr";
 

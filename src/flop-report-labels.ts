@@ -789,7 +789,7 @@ const M = {
     colEv: "EV (bb)",
     colVersus: "Względem średniej",
     evHelp: "EV = średnia wartość oczekiwana (bb) gracza podejmującego tutaj decyzję. Zieleń oznacza wynik powyżej średniej, czerwień — poniżej.",
-    rowHelp: "Kliknij wiersz, aby otworzyć tego flopa w widoku „Przegląd flopów”.",
+    rowHelp: "Kliknij wiersz, aby otworzyć ten flop w widoku „Przegląd flopów”.",
     showMore: "Pokaż więcej: {count}",
     summary: "{seat} · {when}: średnia częstotliwość zakładów wynosi {pct}. Wśród grup obejmujących co najmniej {minPct} flopów najwyższa częstotliwość zakładów: {most} ({mostPct}). Najniższa: {least} ({leastPct}).",
     whenFirst: "pierwsza decyzja",

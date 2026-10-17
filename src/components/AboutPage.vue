@@ -992,8 +992,8 @@ const M = {
     features: [
       { title: "Bezpłatnie", desc: "Wszystkie funkcje bez limitu użycia" },
       { title: "Nauka offline", desc: "Dodaj do ekranu głównego i ćwicz bez internetu" },
-      { title: "Szybkie obliczenia", desc: "Wiele wątków — szybkość solvera na komputer" },
-      { title: "Trener GTO", desc: "Rozgrywaj spoty i oceniaj stratę EV względem puli" },
+      { title: "Szybkie obliczenia", desc: "Wiele wątków — szybkość jak w solverze desktopowym" },
+      { title: "Trener GTO", desc: "Rozgrywaj spoty z oceną według straty EV względem puli" },
     ],
     featureLockTitle: "Node locking — blokowanie strategii",
     featureLockDesc: "Ustaw strategię przeciwnika i przelicz wynik — zobacz, jak zmienia się twoja strategia, gdy przeciwnik popełnia błędy",
@@ -1009,7 +1009,7 @@ const M = {
     landingBefore: "Chcesz najpierw przeczytać, czym jest solver GTO i jak odczytywać jego wyniki? Zobacz",
     landingLink: "poradnik HoldemMaster o solverze",
     landingAfter: ".",
-    notes: "Na iOS i w Safari ograniczenia przeglądarki wymuszają obliczenia na jednym wątku, co spowalnia solver — na macOS polecamy Chrome. Dostępna pamięć jest ograniczona do 4GB przez WebAssembly, dlatego duże spoty wygodniej obliczać na komputerze.",
+    notes: "Na iOS i w Safari ograniczenia przeglądarki wymuszają obliczenia na jednym wątku, co spowalnia solver — na macOS polecamy Chrome. Dostępna pamięć jest ograniczona do 4 GB przez WebAssembly, dlatego duże spoty wygodniej obliczać na komputerze.",
     creditBefore: "Aplikacja powstała na bazie projektu",
     creditMid1: " (autor: Wataru Inariba, licencja AGPL-3.0). Tłumaczenia i dodatkowe funkcje przygotował zespół",
     creditBrand: "HoldemMaster",
@@ -1344,7 +1344,7 @@ const N =
           features: [
             { title: "Bezpłatnie", desc: "Wszystkie funkcje bez limitu użycia" },
             { title: "Offline", desc: "Dodaj do ekranu głównego i korzystaj bez internetu" },
-            { title: "Szybkie obliczenia", desc: "Wiele wątków — szybkość solvera na komputer" },
+            { title: "Szybkie obliczenia", desc: "Wiele wątków — szybkość jak w solverze desktopowym" },
             { title: "Tabele i equity", desc: "Zakresy otwarcia i obrony oraz equity rąk i zakresów" },
           ],
           steps: [

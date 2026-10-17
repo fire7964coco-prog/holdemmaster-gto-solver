@@ -775,7 +775,7 @@ const M = {
     deleteLabel: "Usuń",
     importJsonLabel: "Importuj JSON",
     exportJsonLabel: "Eksportuj JSON",
-    importFailed: "Błąd: nie udało się zaimportować danych. Sprawdź przyczynę poniżej. Możesz importować tylko pliki zapisane przez „Eksportuj JSON” na tej liście.",
+    importFailed: "Błąd: nie udało się zaimportować danych. Sprawdź przyczynę poniżej. Możesz importować tylko pliki zapisane przyciskiem „Eksportuj JSON” na tej liście.",
   },
 } as const;
 

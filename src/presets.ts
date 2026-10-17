@@ -665,7 +665,7 @@ export const PRESETS: Preset[] = [
     lessonRu: "Кажется, что этот борд попадает в оба диапазона. Но здесь BB реализует эквити хуже, чем в любом из {n} спотов, — 77,9% против 119,4% у BTN — и чекает 99,9%. Почему так, видно на панели «Руки».",
     lessonAr: "بورد يبدو أنه يصيب النطاقين معًا. لكن تحقيق الإكويتي لدى BB هنا هو الأدنى بين كل المواقف (المواقف التدريبية: {n}) — \u206677.9%\u2069 مقابل \u2066119.4%\u2069 لدى BTN — ويمرّر بنسبة \u206699.9%\u2069. قسم «الأيدي» يبيّن السبب.",
     lessonIt: "Sembra un board favorevole a entrambi i range. Eppure qui la realizzazione dell’equity del BB è la più bassa dei {n} spot: 77,9%, contro il 119,4% del BTN. Il BB fa check nel 99,9% dei casi. Il pannello delle categorie di mani aiuta a capire perché.",
-    lessonPl: "Board, który pozornie dobrze trafia oba zakresy. Tymczasem BB realizuje tu mniej equity niż w jakimkolwiek innym spocie z całego zestawu (liczba spotów: {n}) — 77,9% wobec 119,4% u BTN — i czeka w 99,9% przypadków. Panel kategorii rąk pokazuje dlaczego.",
+    lessonPl: "Board, który pozornie dobrze trafia oba zakresy. Tymczasem BB realizuje tu mniej equity niż w jakimkolwiek innym z {n} spotów — EQR 77,9% wobec 119,4% u BTN — i czeka w 99,9% przypadków. Panel kategorii rąk pokazuje dlaczego.",
     titleJa: "ブロードウェイのコネクトボード（2トーン）",
     lessonJa:
       "両者に当たったように見えるボードです。ところがBBのエクイティ実現率は{n}スポット中で最も低く、77.9%（BTNは119.4%）。99.9%チェックになる理由を分類パネルで確かめましょう。",
@@ -767,7 +767,7 @@ export const PRESETS: Preset[] = [
     lessonRu: "Смотри, почему крупные ставки уступают место маленьким и чекам. Заметь, как часто даже готовые флеши просто чекают.",
     lessonAr: "لاحظ لماذا تُفسح الرهانات الكبيرة المجال للرهانات الصغيرة والتمرير. ولاحظ كم مرة يكتفي حتى الفلاش المكتمل بالتمرير.",
     lessonIt: "Osserva perché le puntate grandi lasciano spazio a puntate piccole e check. Nota quanto spesso anche le mani con colore già chiuso fanno solo check.",
-    lessonPl: "Zobacz, dlaczego duże zakłady ustępują małym zakładom i czekom. Zwróć uwagę, jak często nawet gotowy kolor rozgrywany jest przez czek.",
+    lessonPl: "Zobacz, dlaczego duże zakłady ustępują małym zakładom i czekom. Zwróć uwagę, jak często nawet z gotowym kolorem gracz po prostu czeka.",
     titleJa: "モノトーンボード（同スート3枚）",
     lessonJa:
       "大きなベットが減り、小さなベットとチェックが中心になる理由を学びます。完成したフラッシュでさえ頻繁にチェックすることを観察しましょう。",
@@ -818,7 +818,7 @@ export const PRESETS: Preset[] = [
     lessonRu: "В этот борд никто толком не попадает, поэтому частота блефа растёт. Найди в подробной таблице руки, которые ставят блефом.",
     lessonAr: "لا يصيب هذا البورد أحدًا تقريبًا، لذلك يرتفع تكرار البلف. ابحث في الجدول التفصيلي عن الأيدي التي تراهن بلفًا.",
     lessonIt: "Nessuno dei due range si lega bene a questo board, quindi aumenta la frequenza dei bluff. Nella tabella di dettaglio, cerca le mani che puntano in bluff.",
-    lessonPl: "Ten board słabo trafia oba zakresy, więc częstotliwość blefów rośnie. Sprawdź w tabeli szczegółowej, z którymi rękami gracz stawia, aby blefować.",
+    lessonPl: "Ten board słabo trafia oba zakresy, więc częstotliwość blefów rośnie. Sprawdź w tabeli szczegółowej, którymi rękami gracz blefuje.",
     titleJa: "ペアボード",
     lessonJa:
       "どちらのレンジもボードとほとんど噛み合いません → ブラフの比率が上がります。どのハンドがブラフベットをするのか、詳細表で探してみましょう。",
@@ -872,7 +872,7 @@ export const PRESETS: Preset[] = [
     lessonRu: "На низком 6-5-2 BB первым действием чекает в 96,8% случаев. В этом споте на флопе только один сайзинг — 33% банка, и BB выбирает его в 3,2% случаев. Посмотри, какие руки ставят.",
     lessonAr: "على البورد المنخفض \u20666-5-2\u2069 يمرّر BB في قراره الأول بنسبة \u206696.8%\u2069. في هذا الموقف حجم رهان واحد فقط على الفلوب، \u206633%\u2069 من البوت، ويستعمله BB بنسبة \u20663.2%\u2069. انظر أي الأيدي تراهن.",
     lessonIt: "Sul board basso 6-5-2, alla prima decisione il BB fa check nel 96,8% dei casi. Questo spot prevede una sola dimensione di puntata al flop, il 33% del piatto, che il BB usa nel 3,2% dei casi. Scopri quali mani puntano.",
-    lessonPl: "Na niskim boardzie 6-5-2 BB czeka w swojej pierwszej akcji w 96,8% przypadków. W tym spocie dostępny jest jeden sizing zakładu na flopie: 33% puli. BB korzysta z niego w 3,2% przypadków. Sprawdź, które ręce stawiają.",
+    lessonPl: "Na niskim boardzie 6-5-2 BB czeka w swojej pierwszej akcji w 96,8% przypadków. W tym spocie dostępny jest jeden sizing zakładu na flopie: 33% puli. BB korzysta z niego w 3,2% przypadków. Sprawdź, z którymi rękami BB stawia.",
     titleJa: "ロー・レインボーボード",
     lessonJa:
       "6-5-2のローボードで、BBは最初のアクションで96.8%チェックします。このスポットのフロップのベットサイズはポットの33%の1種類だけで、BBがそれを選ぶのは3.2%です。ベットするハンドを見てみましょう。",

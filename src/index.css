@@ -424,3 +424,14 @@ html[dir="rtl"] .result-toolbar .nodelock-popover { left: auto; right: 0; }
   }
 }
 /* End PL4 labels. */
+
+/* PL6: leave Polish words intact and give controls room around their text. */
+html:lang(pl) .grid.grid-cols-3:has(> .button-overrides) > .button-overrides {
+  padding-inline: 0.375rem;
+  overflow-wrap: normal;
+}
+html:lang(pl) .tree-config label[for="tree-addAllInThreshold"] + *,
+html:lang(pl) .tree-config label[for="tree-forceAllInThreshold"] + *,
+html:lang(pl) .tree-config label[for="tree-mergingThreshold"] + * {
+  margin-inline-start: 0.25rem;
+}

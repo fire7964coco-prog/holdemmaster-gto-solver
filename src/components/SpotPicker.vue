@@ -299,8 +299,8 @@ const M = {
   pl: {
     title: "Uzupełnij zakresy według pozycji",
     note: "Wybierz pozycję otwierającego i sprawdzającego, a następnie naciśnij przycisk poniżej. Oba zakresy, pula i stack zostaną uzupełnione jednocześnie. Zakresy są takie same jak w sekcji „Tabele preflop” (gra gotówkowa 6-max, 100bb).",
-    opener: "Otwarcie",
-    caller: "Sprawdzenie",
+    opener: "Otwierający",
+    caller: "Sprawdzający",
     apply: "Uzupełnij oba zakresy",
     applied: (oop: string, ip: string, pot: string, stack: string) =>
       `Uzupełniono zakresy: ${oop} (OOP) · ${ip} (IP). Pula ${localizeNumber(pot)}bb · Stack ${localizeNumber(stack)}bb`,
