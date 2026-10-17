@@ -158,12 +158,11 @@ const M = {
     titleLine2: "GTO Trainer.",
     footer: "Solver GTO gratuito · Funziona offline",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    greeting: "Welcome to",
+    greeting: "Witaj w",
     titleLine1: "HoldemMaster",
     titleLine2: "GTO Trainer.",
-    footer: "Free GTO Solver · Works Offline",
+    footer: "Bezpłatny solver GTO · Działa offline",
   },
 } as const;
 

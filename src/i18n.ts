@@ -233,11 +233,9 @@ const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Solver GTO gratuito nel browser, senza installazione. Calcola la strategia postflop del Texas Hold’em con range, board e dimensioni di puntata. Un progetto di HoldemMaster.",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em",
-    description:
-      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
+    title: "HoldemMaster GTO Trainer — bezpłatny solver i trener GTO do Texas Hold’em",
+    description: "Bezpłatny solver GTO w przeglądarce, bez instalacji. Oblicz strategię postflop w Texas Hold’em, wybierając zakresy, board i sizingi. Projekt HoldemMaster.",
   },
 };
 
@@ -332,11 +330,9 @@ const NPOKERS_DOC_META: Record<Locale, { title: string; description: string }> =
     description:
       "Solver GTO gratuito nel browser, senza installazione. Calcola la strategia postflop del Texas Hold’em con range, board e dimensioni di puntata.",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    title: "npokers — Free Online GTO Solver for Texas Hold'em",
-    description:
-      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size.",
+    title: "npokers — bezpłatny solver GTO online do Texas Hold’em",
+    description: "Bezpłatny solver GTO w przeglądarce, bez instalacji. Oblicz strategię postflop w Texas Hold’em, wybierając zakresy, board i sizingi.",
   },
 };
 
@@ -368,7 +364,6 @@ const DOC_LANG: Record<Locale, string> = {
   // 문서 언어 태그는 번역하지 않는다.
   ar: "ar",
   it: "it",
-  // pl-todo: English scaffold; translate in the next stage.
   pl: "pl",
 };
 

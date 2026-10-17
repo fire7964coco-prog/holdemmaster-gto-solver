@@ -155,8 +155,7 @@ import { Results, Spot } from "../result-types";
 import { useStore } from "../store";
 
 const actionNamesIt: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" };
-// pl-todo: English labels; preserve the raw amount in combined engine tokens.
-const actionNamesPl: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" };
+const actionNamesPl: Record<string, string> = { Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" };
 const displayActionName = (name: string) => {
   if (i18n.locale === "pl") {
     const separator = name.indexOf(":");

@@ -81,9 +81,8 @@ const M = {
   it: {
     combos: "combo",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    combos: "combos",
+    combos: "Combo",
   },
 } as const;
 
@@ -214,12 +213,12 @@ const actionLabel = (
       Allin: "أول إن",
       "All-in": "أول إن",
     },
-    { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" }, /* pl-todo */ {
-      Fold: "Fold",
-      Check: "Check",
-      Call: "Call",
-      Bet: "Bet",
-      Raise: "Raise",
+    { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" }, {
+      Fold: "Pas",
+      Check: "Czek",
+      Call: "Sprawdzenie",
+      Bet: "Zakład",
+      Raise: "Przebicie",
       Allin: "All-in",
       "All-in": "All-in",
     }
@@ -252,7 +251,7 @@ const actionLabel = (
         // ⚠ ResultNav.betPot ms·trainer.ts 기본 분기 «(N% pot)»와 글자까지 같아야 한다
         "pot", "pot", "pot", "pot", "банка",
     "من البوت",
-        "del piatto", /* pl-todo */ "pot" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
+        "del piatto", "puli" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
       )})`
     );
   }

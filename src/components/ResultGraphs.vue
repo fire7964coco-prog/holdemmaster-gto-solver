@@ -173,9 +173,8 @@ const M = {
     noGraph: "Nessun grafico disponibile",
     equity: "Equity",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    noGraph: "No graph available",
+    noGraph: "Wykres jest niedostępny",
     equity: "Equity",
   },
 } as const;

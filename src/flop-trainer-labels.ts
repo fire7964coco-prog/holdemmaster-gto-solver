@@ -254,20 +254,19 @@ const checkedLabels: LocaleDict<FlopTrainerLabels> = {
     useBasic: "Allenati sugli esempi",
     again: "Ripeti la stessa mano",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    sourceBasic: "Source: Basic",
-    sourceFlop: "Source: All flops",
+    sourceBasic: "Źródło: podstawowe",
+    sourceFlop: "Źródło: wszystkie flopy",
     sourceHelp:
-      "All flops: questions come from spots and flops pre-solved on our server (internet required). Basic: decision points from the study spots (works offline).",
-    closeOnly: "Close spots only",
-    closeHelp: "Only deals hands where the best and second-best actions are within the “Acceptable” EV margin.",
-    loading: "Loading flop…",
-    offline: "An internet connection is required.",
-    failed: "Couldn't load a question.",
-    retry: "Retry",
-    useBasic: "Practice basic questions",
-    again: "Same hand again",
+      "„Źródło: wszystkie flopy” — pytania pochodzą ze spotów i flopów obliczonych na naszym serwerze (wymagany internet). „Źródło: podstawowe” — decyzje z przykładów do nauki (działa offline).",
+    closeOnly: "Zbliżone decyzje",
+    closeHelp: "Losuje tylko ręce, dla których różnica EV między najlepszą a drugą najlepszą akcją mieści się w progu oceny „Dopuszczalne”.",
+    loading: "Wczytywanie flopa…",
+    offline: "Wymagane jest połączenie z internetem.",
+    failed: "Nie udało się wczytać pytania.",
+    retry: "Spróbuj ponownie",
+    useBasic: "Ćwicz podstawowe pytania",
+    again: "Powtórz tę rękę",
   },
 };
 
@@ -449,16 +448,15 @@ const boardLabels: LocaleDict<FlopBoardLabels> = {
     boardReset: "Mostra tutti",
     boardEmpty: "Nessun flop corrisponde a questa combinazione.",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    boardAll: "Board: All",
+    boardAll: "Board: wszystkie",
     boardChip: "Board: {value}",
-    boardHelp: "Filter the flops you get by high card, suits, pairing and connectedness, or fix one specific flop.",
-    boardRule: "Within a row any choice can match; a flop must match every row you've set (empty rows allow all).",
-    specificFlop: "Specific flop",
-    pickCards: "Pick cards",
-    boardReset: "Reset to all",
-    boardEmpty: "No flops match this combination.",
+    boardHelp: "Filtruj flopy według najwyższej karty, kolorów, parowania i połączenia kart albo ustaw jeden konkretny flop.",
+    boardRule: "W obrębie wiersza wystarczy spełnić jeden warunek. Flop musi pasować do każdego ustawionego wiersza (pusty wiersz dopuszcza wszystkie opcje).",
+    specificFlop: "Konkretny flop",
+    pickCards: "Wybierz karty",
+    boardReset: "Przywróć wszystkie",
+    boardEmpty: "Żaden flop nie spełnia tych warunków.",
   },
 };
 export const flopBoardLabels = (locale: Locale): FlopBoardLabels => boardLabels[locale];

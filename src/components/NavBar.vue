@@ -266,13 +266,12 @@ const M = {
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Scegli la lingua",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    resultsDisabledHint: "Opens when ⑤ Run Solver is finished",
+    resultsDisabledHint: "Dostępne po zakończeniu obliczeń w kroku ⑤ Uruchom solver",
     solver: "Solver",
-    community: "HoldemMaster",
-    communitySuffix: " Community",
-    langSwitchLabel: "Select language",
+    community: "Społeczność",
+    communitySuffix: " HoldemMaster",
+    langSwitchLabel: "Wybierz język",
   },
 } as const;
 

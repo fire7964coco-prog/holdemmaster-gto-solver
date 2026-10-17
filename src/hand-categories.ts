@@ -638,25 +638,23 @@ export const MADE_LABELS_PL: Record<MadeKey, string> = {
   straight: "Strit",
   trips: "Set / Trips",
   two_pair: "Dwie pary",
-  // pl-todo: English scaffold for subcategories; translate in the next stage.
   overpair: "Overpair",
-  top_pair: "Top Pair",
-  second_pair: "Second Pair",
-  weak_pair: "Weak Pair",
+  top_pair: "Top pair",
+  second_pair: "Druga para",
+  weak_pair: "Niższa para",
   underpair: "Underpair",
-  ace_high: "Ace-High",
-  king_high: "King-High",
-  nothing: "No Made Hand",
+  ace_high: "As jako najwyższa karta",
+  king_high: "Król jako najwyższa karta",
+  nothing: "Brak gotowego układu",
 };
 
-// pl-todo: English scaffold; translate in the next stage.
 export const DRAW_LABELS_PL: Record<DrawKey, string> = {
-  combo_draw: "Combo Draw",
-  flush_draw: "Flush Draw",
+  combo_draw: "Combo draw",
+  flush_draw: "Flush draw",
   oesd: "OESD",
   gutshot: "Gutshot",
-  backdoor_fd: "Backdoor FD",
-  no_draw: "No Draw",
+  backdoor_fd: "Backdoor flush draw",
+  no_draw: "Brak drawu",
 };
 
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */

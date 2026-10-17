@@ -281,13 +281,12 @@ const M = {
     equity: "Equity",
     action: (name: string): string => ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    strategyCombos: "Strategy (Combos)",
-    strategy: "Strategy",
+    strategyCombos: "Strategia (Combo)",
+    strategy: "Strategia",
     equity: "Equity",
     action: (name: string): string =>
-      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+      ({ Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
   },
 } as const;
 

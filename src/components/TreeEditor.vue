@@ -263,8 +263,7 @@ import { TrashIcon } from "@heroicons/vue/24/outline";
 import { i18n, ltrIso, localizeNumber } from "../i18n";
 
 const actionNamesIt: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" };
-// pl-todo: English history/legend labels.
-const actionNamesPl: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" };
+const actionNamesPl: Record<string, string> = { Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" };
 const displayActionName = (name: string) => i18n.locale === "it" ? actionNamesIt[name] ?? name : i18n.locale === "pl" ? actionNamesPl[name] ?? name : name;
 
 const M = {
@@ -553,22 +552,21 @@ const M = {
     addedLines: "Linee aggiunte:",
     removedLines: "Linee rimosse:",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    treeError: "Error: Failed to build the tree (loaded a broken tree?)",
-    pot: "Pot",
+    treeError: "Błąd: nie udało się zbudować drzewa (wczytane drzewo może być uszkodzone).",
+    pot: "Pula",
     stack: "Stack",
-    noActions: "(No actions)",
-    wins: "wins",
-    invalidTerminals: "Invalid terminal nodes:",
-    addBetAction: "Add Bet Action",
-    removeNode: "Remove Selected Node",
-    betAmount: "Bet Amount:",
-    potRate: (pct: string) => `(${localizeNumber(pct)}% of the pot)`,
-    saveEdits: "Save Edits",
-    cancelEdits: "Cancel Edits",
-    addedLines: "Added lines:",
-    removedLines: "Removed lines:",
+    noActions: "(Brak akcji)",
+    wins: "wygrywa",
+    invalidTerminals: "Nieprawidłowe węzły końcowe:",
+    addBetAction: "Dodaj zakład",
+    removeNode: "Usuń wybrany węzeł",
+    betAmount: "Zakład:",
+    potRate: (pct: string) => `(${localizeNumber(pct)}% puli)`,
+    saveEdits: "Zapisz zmiany",
+    cancelEdits: "Anuluj zmiany",
+    addedLines: "Dodane linie:",
+    removedLines: "Usunięte linie:",
   },
 } as const;
 

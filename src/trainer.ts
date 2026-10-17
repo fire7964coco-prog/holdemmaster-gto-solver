@@ -157,13 +157,12 @@ const actionLabelsIt: Record<string, string> = {
 const actionButtonLabelsIt: Record<string, string> = {
   Fold: "Fold", Check: "Check", Call: "Chiama", Bet: "Punta", Raise: "Rilancia", Allin: "All-in", "All-in": "All-in",
 };
-// pl-todo: explicit history/legend slots copied from the English engine labels.
+// Polish history and legends use nouns; buttons use imperatives.
 const actionLabelsPl: Record<string, string> = {
-  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
+  Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in",
 };
-// pl-todo: imperative buttons are separate from the history/legend nouns.
 const actionButtonLabelsPl: Record<string, string> = {
-  Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in",
+  Fold: "Spasuj", Check: "Czekaj", Call: "Sprawdź", Bet: "Postaw", Raise: "Przebij", Allin: "All-in", "All-in": "All-in",
 };
 const actionName = (name: string, role: "label" | "button" = "label") =>
   i18n.locale === "ko"
@@ -310,12 +309,11 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "Piatto 3-bet",
       blind: "Scontro tra bui",
     },
-    // pl-todo: English scaffold; translate in the next stage.
     pl: {
-      all: "All",
-      srp: "Single Raised",
-      "3bp": "3-Bet Pot",
-      blind: "Blind vs Blind",
+      all: "Wszystkie",
+      srp: "Pula po jednym podbiciu (SRP)",
+      "3bp": "Pula 3-bet",
+      blind: "Blind przeciw blind",
     },
   };
   // 4벳 팟 = 그 언어 3벳 팟 이름의 숫자만 바꾼다 — 칩 줄에서 «3벳팟»·«4벳 팟»처럼 표기가 갈리지 않게
@@ -369,7 +367,7 @@ export const trainerActionLabel = (
       : i18n.locale === "it"
       ? `${label} ${amount} (${pct}% del piatto)`
       : i18n.locale === "pl"
-      ? `${label} ${amount} (${pctText(localizeNumber(String(pct)))} pot)` // pl-todo
+      ? `${label} ${amount} (${pctText(localizeNumber(String(pct)))} puli)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return i18n.locale === "ar" ? arLabelIso(label, amount) : `${label} ${amount}`;

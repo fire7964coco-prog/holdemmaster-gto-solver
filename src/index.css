@@ -400,3 +400,27 @@ html[dir="rtl"] .result-toolbar .nodelock-popover { left: auto; right: 0; }
     font-weight: 400;
   }
 }
+
+/* PL4: keep the full Polish labels readable without shortening their wording. */
+@media (min-width: 768px) {
+  html:lang(pl) .tree-config .bet-grid label { width: 4.5rem; }
+  html:lang(pl) .tree-config .bet-grid { flex-wrap: wrap; }
+}
+@media (max-width: 767px) {
+  html:lang(pl) .guide-table .term { overflow-wrap: normal; }
+  html:lang(pl) .report-bar-name {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: normal;
+  }
+  html:lang(pl) .study-mobile-bar { flex-wrap: wrap; }
+  html:lang(pl) .study-mobile-pot {
+    flex: 0 0 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: normal;
+  }
+}
+/* End PL4 labels. */

@@ -176,12 +176,11 @@ const M = {
     draws: "Progetti",
     noDraws: "Nessuna informazione sui progetti",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    hands: "Hands",
-    noHands: "No hands to display",
-    draws: "Draws",
-    noDraws: "No draw information",
+    hands: "Układy",
+    noHands: "Brak rąk do wyświetlenia",
+    draws: "Drawy",
+    noDraws: "Brak informacji o drawach",
   },
 } as const;
 

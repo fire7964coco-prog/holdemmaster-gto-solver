@@ -298,15 +298,14 @@ const M = {
     combos: "combo",
     parseError: (range: string) => `Impossibile leggere il range: ${range || "(stringa vuota)"}`,
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    mobileHint: "Set the weight with the slider below the grid, then tap a cell to apply it. Tapping a cell that already has that weight clears it. The hand name and weight you tapped appear in large text above.",
-    clear: "Clear",
-    errorPrefix: "Error:",
-    weight: "Weight:",
-    combos: "combos",
+    mobileHint: "Ustaw wagę suwakiem pod siatką, a następnie dotknij pola, aby ją przypisać. Dotknięcie pola, które ma już tę wagę, wyczyści je. Nazwa wybranej ręki i jej waga pojawią się dużą czcionką u góry.",
+    clear: "Wyczyść",
+    errorPrefix: "Błąd:",
+    weight: "Waga:",
+    combos: "Combo",
     parseError: (range: string) =>
-      `Failed to parse range: ${range || "(empty string)"}`,
+      `Nie udało się odczytać zakresu: ${range || "(pusty tekst)"}`,
   },
 } as const;
 

@@ -296,18 +296,17 @@ const M = {
     betsFilled: (flop: string, later: string, raise: string) => `Le dimensioni di puntata erano vuote: sono stati inseriti anche i valori predefiniti — Flop ${flop} · Turn/River ${later} · Rilancio ${raise}`,
     next: "Prossimo passo: ③ Board",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    title: "Fill ranges by position",
-    note: "Pick who opened and who called, then press the button below — both ranges, the pot and the stack are filled in at once. The ranges are the same as in Preflop Charts (6-max cash, 100bb).",
-    opener: "Open",
-    caller: "Call",
-    apply: "Fill both ranges",
+    title: "Uzupełnij zakresy według pozycji",
+    note: "Wybierz pozycję otwierającego i sprawdzającego, a następnie naciśnij przycisk poniżej. Oba zakresy, pula i stack zostaną uzupełnione jednocześnie. Zakresy są takie same jak w sekcji „Tabele preflop” (gra gotówkowa 6-max, 100bb).",
+    opener: "Otwarcie",
+    caller: "Sprawdzenie",
+    apply: "Uzupełnij oba zakresy",
     applied: (oop: string, ip: string, pot: string, stack: string) =>
-      `${oop} (OOP) · ${ip} (IP) ranges filled in. Pot ${localizeNumber(pot)}bb · Stack ${localizeNumber(stack)}bb`,
+      `Uzupełniono zakresy: ${oop} (OOP) · ${ip} (IP). Pula ${localizeNumber(pot)}bb · Stack ${localizeNumber(stack)}bb`,
     betsFilled: (flop: string, later: string, raise: string) =>
-      `Bet sizes were empty, so defaults were filled in too — Flop ${flop} · Turn/River ${later} · Raise ${raise}`,
-    next: "Next: ③ Board",
+      `Pola sizingów były puste, więc wpisano też wartości domyślne — Flop ${flop} · Turn/River ${later} · Przebicie ${raise}`,
+    next: "Następny krok: ③ Board",
   },
 } as const;
 

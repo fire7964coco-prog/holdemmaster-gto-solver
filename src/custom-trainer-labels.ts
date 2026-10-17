@@ -224,19 +224,18 @@ export const M = {
     prompt: "Come giochi?", next: "Prossima domanda", review: "Ripassa gli errori", practice: "Allenamento libero", attemptCount: "Tentativi in questo spot: {count}",
     verdictBest: "Scelta migliore", verdictGood: "Accettabile", verdictBad: "Da rivedere", evLoss: "EV loss", frequency: "Frequenza", actionEv: "EV dell’azione", chips: "fiches",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    entry: "Practice this spot", busy: "Saving practice questions…", tab: "My spots", presetTab: "Preset practice",
-    empty: "After solving a spot, choose [Practice this spot] on the results screen to save questions here.",
-    loading: "Loading your spots…", storageNote: "This device stores your 20 most recent spots and 500 latest attempts per spot. My spot results are counted separately. Saving the same spot again replaces its solve and clears its practice history.",
-    source: "Your approximate solve · Target error {target}% · Achieved {achieved}%", lockAssumption: "Assumes part of the strategy is fixed",
-    reviewSource: "Spot from your hand review · {method} · Target error {target}% · Achieved {achieved}%", backToReview: "Back to hand review",
-    chooseSpot: "Saved spots", deleteSpot: "Delete spot", deleteConfirm: "Delete this spot and its practice history from this device?",
-    loadError: "Could not load your saved spots. Please reopen this screen.", saveError: "Could not save. Please try again.",
-    captureError: "Could not create practice questions from these results. Check that the solve has finished.",
-    noQuestion: "There are no playable hands in this spot.", board: "Board", hand: "Your hand", pot: "Pot", stack: "Stack", line: "Line",
-    prompt: "What's your play?", next: "Next question", review: "Review mistakes", practice: "Regular practice", attemptCount: "Attempts in this spot: {count}",
-    verdictBest: "Best play", verdictGood: "Acceptable", verdictBad: "Review this spot", evLoss: "EV loss", frequency: "Frequency", actionEv: "Action EV", chips: "chips",
+    entry: "Ćwicz ten spot", busy: "Zapisywanie pytań…", tab: "Moje spoty", presetTab: "Ćwiczenia z przykładami",
+    empty: "Po obliczeniu spotu wybierz [Ćwicz ten spot] na ekranie wyników, aby zapisać tutaj pytania.",
+    loading: "Wczytywanie twoich spotów…", storageNote: "Na tym urządzeniu zapisuje się 20 ostatnich spotów i 500 ostatnich prób w każdym z nich. Wyniki z zakładki „Moje spoty” są liczone osobno. Ponowne zapisanie tego samego spotu zastępuje jego rozwiązanie i usuwa historię ćwiczeń.",
+    source: "Twoje przybliżone rozwiązanie · Docelowy błąd {target}% · Osiągnięty błąd {achieved}%", lockAssumption: "Założenie: część strategii jest ustalona",
+    reviewSource: "Spot z analizy rozdania · {method} · Docelowy błąd {target}% · Osiągnięty błąd {achieved}%", backToReview: "Wróć do analizy rozdania",
+    chooseSpot: "Zapisane spoty", deleteSpot: "Usuń spot", deleteConfirm: "Usunąć ten spot i jego historię ćwiczeń z tego urządzenia?",
+    loadError: "Nie udało się wczytać zapisanych spotów. Otwórz ten ekran ponownie.", saveError: "Nie udało się zapisać. Spróbuj ponownie.",
+    captureError: "Nie udało się utworzyć pytań z tych wyników. Sprawdź, czy obliczenia się zakończyły.",
+    noQuestion: "W tym spocie nie ma rąk, z którymi można ćwiczyć.", board: "Board", hand: "Twoja ręka", pot: "Pula", stack: "Stack", line: "Linia gry",
+    prompt: "Jak zagrasz?", next: "Następne pytanie", review: "Powtórz błędy", practice: "Zwykły trening", attemptCount: "Liczba prób w tym spocie: {count}",
+    verdictBest: "Najlepsze zagranie", verdictGood: "Dopuszczalne", verdictBad: "Do analizy", evLoss: "Strata EV", frequency: "Częstotliwość", actionEv: "EV akcji", chips: "żetony",
   },
 } satisfies LocaleDict<Record<string, string>>;
 
@@ -247,7 +246,7 @@ export type CustomTrainerLabelKey = keyof typeof M.ko;
 export const ruChipLabel = (n: number, shownAsDecimal = false): string =>
   shownAsDecimal ? "фишки" : ruPlural(n, M.ru.chips, "фишки", "фишек");
 
-// pl-todo: four forms include the displayed decimal precision (1.000 is other).
+// Four forms include the displayed decimal precision (1.000 is other).
 export const plChipLabel = (n: number, fractionDigits = 0): string =>
-  plPlural(n, { one: "chip", few: "chips", many: "chips", other: "chips" },
+  plPlural(n, { one: "żeton", few: "żetony", many: "żetonów", other: "żetona" },
     { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });

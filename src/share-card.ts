@@ -213,17 +213,16 @@ const CARD_TEXT = {
     evLine: (bb: string, streak: number) => `EV loss ${bb}bb${streak > 0 ? (streak === 1 ? ` · ${streak} giorno consecutivo` : ` · ${streak} giorni consecutivi`) : ""}`,
     invite: "Prova la sfida di oggi",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
     brand: "HoldemMaster GTO Trainer",
-    tagline: "One puzzle a day · same for everyone",
-    heading: "Daily GTO Puzzle",
+    tagline: "Jedno zadanie dziennie · to samo dla wszystkich",
+    heading: "Zadanie GTO na dziś",
     board: "Board",
-    hand: "My Hand",
-    result: (verdict: string) => `My result: ${verdict}`,
+    hand: "Moja ręka",
+    result: (verdict: string) => `Mój wynik: ${verdict}`,
     evLine: (bb: string, streak: number) =>
-      `EV loss ${bb}bb${streak > 0 ? ` · ${localizeNumber(String(streak))}${plPlural(streak, { one: "-day streak", few: "-day streak", many: "-day streak", other: "-day streak" })}` : ""}`,
-    invite: "Try today's puzzle",
+      `Strata EV ${bb}bb${streak > 0 ? ` · ${localizeNumber(String(streak))}${plPlural(streak, { one: " dzień z rzędu", few: " dni z rzędu", many: " dni z rzędu", other: " dnia z rzędu" })}` : ""}`,
+    invite: "Rozwiąż dzisiejsze zadanie",
   },
 } as const;
 

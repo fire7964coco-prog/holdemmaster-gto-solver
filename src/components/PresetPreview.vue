@@ -359,18 +359,17 @@ const M = {
     playerLabel: "Giocatore:",
     oopHint: "Questa è la strategia di chi agisce per primo (OOP). Per vedere l’avversario (IP), scegli IP nel campo «Giocatore:» qui sopra.",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    backToList: "← Back",
-    pot: "Pot",
+    backToList: "← Wróć",
+    pot: "Pula",
     stack: "Stack",
-    flopOnlyNote: "Flop strategy only. Want to click through turn and river? →",
-    solveThisSpot: "Solve this spot yourself",
-    readArticle: "Read the article",
-    loadError: (e: string) => `Couldn't load the precomputed results: ${e}`,
-    loading: "Loading results…",
-    playerLabel: "Player:",
-    oopHint: "This is the strategy of the player who acts first (OOP). To see the opponent (IP), set “Player” above to IP.",
+    flopOnlyNote: "Tylko strategia na flopie. Chcesz przejść do turna i rivera? →",
+    solveThisSpot: "Oblicz ten spot",
+    readArticle: "Przeczytaj artykuł",
+    loadError: (e: string) => `Nie udało się wczytać wcześniej obliczonych wyników: ${e}`,
+    loading: "Wczytywanie wyników…",
+    playerLabel: "Gracz:",
+    oopHint: "To strategia gracza, który działa jako pierwszy (OOP). Aby zobaczyć strategię przeciwnika (IP), wybierz IP w polu „Gracz:” powyżej.",
   },
 } as const;
 

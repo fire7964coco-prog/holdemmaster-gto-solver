@@ -680,25 +680,24 @@ const M = {
     action: (name: string): string => ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) => `${label} ${formatted} (${percent}% del piatto)`,
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    pot: "Pot",
+    pot: "Pula",
     stack: "Stack",
     equity: "Equity",
-    win: (player: string) => `${player} wins`,
+    win: (player: string) => `Wygrywa ${player}`,
     spotPlayer: (player: string): string =>
       (
         {
           flop: "Flop",
           turn: "Turn",
           river: "River",
-          end: "End",
+          end: "Koniec",
         } as Record<string, string>
       )[player] ?? player.toUpperCase(),
     action: (name: string): string =>
-      ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Bet", Raise: "Raise", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+      ({ Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
-      `${label} ${formatted} (${localizeNumber(String(percent))}% pot)`,
+      `${label} ${formatted} (${localizeNumber(String(percent))}% puli)`,
   },
 } as const;
 

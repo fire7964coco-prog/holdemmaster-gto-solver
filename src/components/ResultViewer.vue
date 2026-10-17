@@ -381,14 +381,13 @@ const M = {
     finalizing: "Finalizzazione…",
     paused: "Solver in pausa.",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    startRange: "① Start with ranges",
-    viewPresets: "View Study Spots",
-    notRun: "You haven’t calculated your own results yet.\nYou can view example results directly in the “Study Spots” menu.\nTo calculate your own spot, complete ①~⑤, then press “Run Solver”.",
-    running: "Running the solver…",
-    finalizing: "Finalizing…",
-    paused: "Solver paused.",
+    startRange: "① Wybierz zakresy",
+    viewPresets: "Zobacz przykłady",
+    notRun: "Nie ma jeszcze wyników twoich własnych obliczeń.\nGotowe wyniki znajdziesz w menu „Przykłady”.\nAby obliczyć własny spot, przejdź kroki ①~⑤, a potem kliknij „Uruchom solver”.",
+    running: "Solver oblicza…",
+    finalizing: "Kończenie obliczeń…",
+    paused: "Obliczenia wstrzymane.",
   },
 } as const;
 

@@ -1658,94 +1658,75 @@ const M = {
       "Fonti pubbliche confrontate: nlh.poker · Preflop Wizard · HoldemPro · The Felt (about-poker.com) · BeyondGTO · ThinkGTO (frequenze calcolate per BB vs SB) · GTO Gecko · RiverOdds (riferimenti per la difesa) · blog di GTO Wizard · FreeBetRange (principi di difesa IP e squeeze) · 888poker · Run It Once (frequenze contro 3-bet) + i range dei nostri esempi (raccolta: 08/2026)",
     phase2: "Continueremo ad aggiungere abbinamenti e situazioni.",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    modeRfi: "Opening (RFI)",
-    modeDefend: "vs Open (Defense)",
-    mode3bet: "vs 3-bet (after opening)",
-    mode4bet: "vs 4-bet (after 3-betting)",
+    modeRfi: "Otwarcie (RFI)",
+    modeDefend: "Obrona vs otwarcie",
+    mode3bet: "Vs 3-bet po otwarciu",
+    mode4bet: "Vs 4-bet po 3-becie",
     intro4bet:
-      "How to respond when your 3-bet gets 4-bet — red is 5-bet (all-in), green is call, everything else is a fold. Frequencies are conditional on having 3-bet, so hands you never 3-bet are blank. 6-max cash, 100bb. 4-bet sizes: BB 3-bets 11bb → 24bb · SB 3-bets 10bb → 22bb · later positions (CO·BTN) 3-bet 7.5bb → 19bb · BB vs an SB open 3-bets 9bb → 22bb.",
+      "Jak odpowiedzieć na 4-bet po swoim 3-becie? Czerwony oznacza 5-bet (all-in), zielony — sprawdzenie, reszta — pas. Częstotliwości odnoszą się do zakresu 3-betu, więc pola rąk, z którymi nigdy nie 3-betujesz, są puste. Gra gotówkowa 6-max, 100bb. Sizingi 4-betu: po 3-becie BB do 11bb → 24bb · po 3-becie SB do 10bb → 22bb · po 3-becie późnych pozycji (CO·BTN) do 7,5bb → 19bb · po 3-becie BB do 9bb przeciw otwarciu SB → 22bb.",
     legend5bet: "5-bet (all-in)",
-    legendCond4bet: "Blank = never 3-bet in the first place",
+    legendCond4bet: "Puste pole = ręka spoza zakresu 3-betu",
     stat5bet: "5-bet %",
-    statContinue4bet: "Continue % (of 3-bets)",
-    copy5bet: "Copy 5-bet range",
+    statContinue4bet: "Kontynuacja % (z 3-betów)",
+    copy5bet: "Skopiuj zakres 5-betu",
     note4bet:
-      "Stats are % of your 3-bet range. At 100bb the 5-bet is effectively a single all-in size — value is AA·KK (occasionally trapping by calling); QQ·AK mix in 5-bets only against bluff-laden BTN·SB 4-bets and call against the narrow CO·HJ·UTG 4-bets (vs a UTG 4-bet even KK calls). Calling is about equity realization, not pot odds: with position (BTN·CO 3-bettor) calls widen to medium hands like TT·AJs (vs a UTG 4-bet only JJ·TT), and BB vs SB, facing a bluff-heavy SB 4-bet, widens further to 99-66·ATs·KQs·AJo-ATo; the out-of-position BB 3-bettor keeps it to QQ·JJ·AK against the narrow CO·HJ·UTG 4-bets (against the bluff-laden BTN 4-bet, down to TT-77·AJs-ATs·AQo). Fold everything? No — the 4-bet range contains bluffs like A5s-A4s.",
+      "Statystyki pokazują procent zakresu 3-betu. Przy 100bb 5-bet ma w praktyce jeden sizing — all-in. Za value odpowiadają AA·KK (czasem sprawdzające, by zastawić pułapkę); QQ·AK włączają 5-bet tylko przeciw zakresom 4-betu BTN·SB z dużą liczbą blefów, a przeciw wąskim zakresom CO·HJ·UTG sprawdzają (przeciw 4-betowi UTG sprawdza nawet KK). O sprawdzeniu decyduje realizacja equity, a nie pot odds: na pozycji (3-bet z BTN·CO) zakres sprawdzenia rozszerza się o średnie ręce, takie jak TT·AJs (przeciw 4-betowi UTG tylko JJ·TT). BB przeciw SB, mierząc się z zakresem 4-betu SB bogatym w blefy, dodaje nawet 99-66·ATs·KQs·AJo-ATo. BB bez pozycji ogranicza sprawdzenia do QQ·JJ·AK przeciw wąskim 4-betom CO·HJ·UTG (przeciw 4-betowi BTN z licznymi blefami schodzi do TT-77·AJs-ATs·AQo). Nie oznacza to pasowania wszystkiego — zakres 4-betu zawiera też blefy, np. A5s-A4s.",
     how4bet2:
-      "If red + green don't fill the cell, the rest is folded. Cells with both " +
-      "colors mix 5-bets and calls. Hands outside the 3-betting range never " +
-      "face this spot, so they are blank.",
+      "Jeśli czerwony i zielony nie wypełniają całego pola, pozostała część oznacza pas. Dwa kolory w jednym polu oznaczają mieszanie 5-betów i sprawdzeń. Ręce spoza zakresu 3-betu nie trafiają do tego spotu, więc ich pola są puste.",
     intro3bet:
-      "How to respond when your open-raise gets 3-bet — red is 4-bet, green is call, everything else is a fold. Frequencies are conditional on having opened, so hands you never open are blank. 6-max cash, 100bb, 2.5bb open (3bb for SB opens); 3-bets are 11bb from the BB and 10bb from the SB (9bb for BB vs an SB open), and 7.5bb from positions behind you.",
+      "Jak odpowiedzieć na 3-bet po swoim otwarciu? Czerwony oznacza 4-bet, zielony — sprawdzenie, reszta — pas. Częstotliwości odnoszą się do zakresu otwarcia, więc pola rąk, z którymi nigdy nie otwierasz, są puste. Gra gotówkowa 6-max, 100bb, otwarcie do 2,5bb (3bb z SB); 3-bet do 11bb z BB i 10bb z SB (9bb z BB przeciw otwarciu SB) oraz 7,5bb z pozycji za tobą.",
     legend4bet: "4-bet",
-    legendCond: "Blank = never opened in the first place",
+    legendCond: "Puste pole = ręka spoza zakresu otwarcia",
     stat4bet: "4-bet %",
-    statContinue: "Continue % (of opens)",
-    copy4bet: "Copy 4-bet range",
+    statContinue: "Kontynuacja % (z otwarć)",
+    copy4bet: "Skopiuj zakres 4-betu",
     note3bet:
-      "The stats are shares of your opening range, not of all hands. 4-bet value centers on QQ+/AK (AA-KK when UTG opens, with QQ mostly calling), with a few bluffs like A5s-A4s mixed in (more when the SB opens, including offsuit broadways like AJo and KQo). The calling range is built on pairs and suited broadways; out of position it is narrower than the same opener's in-position range. Connectors rarely call when UTG opens (some T9s, plus a little 98s against a BTN 3-bet); from the other seats, more of them are mixed into the calls.",
+      "Statystyki pokazują udział w zakresie otwarcia, a nie we wszystkich rękach. Podstawą 4-betów dla value jest QQ+/AK (AA-KK przy otwarciu UTG, a QQ głównie sprawdza), z domieszką blefów, np. A5s-A4s (więcej przy otwarciu SB, w tym broadwaye offsuit, takie jak AJo i KQo). Zakres sprawdzenia opiera się na parach i broadwayach suited; bez pozycji jest węższy niż zakres tego samego otwierającego na pozycji. Po otwarciu UTG connectory rzadko sprawdzają (część T9s i odrobina 98s przeciw 3-betowi BTN); z pozostałych pozycji częściej wchodzą do zakresu sprawdzenia.",
     squeezeNote:
-      "A squeeze is a 3-bet with both an opener and a caller in the pot (about " +
-      "11-12bb here). The caller makes total defense tighter than heads-up and " +
-      "pushes the 3-bet toward value. Overcalls favor suited, connected hands " +
-      "that can make the nuts multiway.",
+      "Squeeze to 3-bet, gdy w puli jest już otwierający i sprawdzający (tutaj do około 11–12bb). Obecność sprawdzającego zawęża łączny zakres obrony w porównaniu z heads-up i przesuwa 3-bet w stronę value. W overcallach przeważają połączone ręce suited, które mogą trafić nuts w puli multiway.",
     how3bet2:
-      "If red + green don't fill the cell, the rest is folded. Cells with both " +
-      "colors mix 4-bets and calls. Hands outside the opening range never face " +
-      "this spot, so they are blank.",
-    intro: "Opening ranges by position (RFI) — which hands should you raise when everyone folds to you? Based on 6-max cash, 100bb, 2.5bb open. Partially filled cells mark borderline hands where public sources disagree on opening (fill height = share of sources favoring an open).",
-    provenanceNote: "Public-source consensus + internal derivation — not solver output. See “How was this chart built?” below.",
+      "Jeśli czerwony i zielony nie wypełniają całego pola, pozostała część oznacza pas. Dwa kolory w jednym polu oznaczają mieszanie 4-betów i sprawdzeń. Ręce spoza zakresu otwarcia nie trafiają do tego spotu, więc ich pola są puste.",
+    intro: "Zakresy otwarcia według pozycji (RFI) — z którymi rękami otwierać, gdy wszyscy przed tobą spasowali? Gra gotówkowa 6-max, 100bb, otwarcie do 2,5bb. Częściowo wypełnione pola oznaczają ręce graniczne, co do których źródła publiczne nie są zgodne (wysokość wypełnienia = udział źródeł zalecających otwarcie).",
+    provenanceNote: "Zgodność źródeł publicznych i opracowanie własne — to nie są wyniki solvera. Zobacz poniżej „Jak powstały te tabele?”.",
     introDefend:
-      "How to respond when someone open-raises before you — the most " +
-      "common matchups. Red is 3-bet, green is call, and the stacked height is " +
-      "your total defend frequency. 6-max cash, 100bb, 2.5bb open (3bb for SB opens).",
-    legendOpen: "Open (100%)",
-    legendMixed: "Borderline hands (fill = share of sources favoring an open)",
-    legendFold: "Fold",
+      "Jak zagrać po czyimś otwarciu — najczęstsze zestawienia pozycji. Czerwony oznacza 3-bet, zielony — sprawdzenie, a łączna wysokość wypełnienia — częstotliwość obrony. Gra gotówkowa 6-max, 100bb, otwarcie do 2,5bb (3bb z SB).",
+    legendOpen: "Otwarcie (100%)",
+    legendMixed: "Ręce graniczne (wypełnienie = udział źródeł za otwarciem)",
+    legendFold: "Pas",
     legend3bet: "3-bet",
-    legendCall: "Call",
-    legendMixedDefend: "Fill height = frequency (split cells are mixed)",
+    legendCall: "Sprawdzenie",
+    legendMixedDefend: "Wysokość = częstotliwość (dwa kolory = strategia mieszana)",
     stat3bet: "3-bet %",
-    statCall: "Call %",
-    statTotal: "Total defend",
-    copy3bet: "Copy 3-bet range",
-    copyCall: "Copy call range",
+    statCall: "Sprawdzenie %",
+    statTotal: "Łączna obrona",
+    copy3bet: "Skopiuj zakres 3-betu",
+    copyCall: "Skopiuj zakres sprawdzenia",
     sbNote:
-      "In the SB you're essentially 3-bet-or-fold against a BTN open — you're " +
-      "out of position with BB still left to act, so calling saddles you with " +
-      "both disadvantages at once.",
+      "Na SB przeciw otwarciu BTN grasz zasadniczo 3-bet albo pas. Nie masz pozycji, a BB dopiero podejmie decyzję — sprawdzenie łączy obie te niedogodności.",
     ipNote:
-      "Even with position, an early-position opening range is strong, and " +
-      "calling risks a squeeze from the blinds still left to act. In-position " +
-      "defense is therefore a narrow, 3-bet-centric range, with calls mostly " +
-      "limited to pairs and premium suited hands.",
-    statPercent: "Open %",
-    statCombos: "Combos opened",
-    statHands: "Hands opened",
-    statMixed: "Borderline hands",
-    copy: "Copy range text",
-    copied: "✓ Copied",
-    sendOop: "① Send to OOP Range",
-    sendIp: "② Send to IP Range",
-    howTitle: "How to read this",
-    how1: "The top-left to bottom-right diagonal is pairs; above it (right) is suited, below it (left) is offsuit.",
-    how2: "Partially filled cells mark borderline hands where sources disagree on whether to open. Fill height represents the share of sources favoring an open, not a solver result.",
-    how3: "The [Send to Range] buttons load this range into the custom-spot range editor — try solving the postflop play yourself.",
+      "Nawet gdy masz pozycję, zakres otwarcia z wczesnej pozycji jest silny, a sprawdzenie naraża cię na squeeze ze strony blindów, które jeszcze nie zagrały. Obrona na pozycji jest więc wąska i oparta na 3-becie; sprawdzenia ograniczają się głównie do par i najlepszych rąk suited.",
+    statPercent: "Otwarcie %",
+    statCombos: "Combo otwarcia",
+    statHands: "Ręce otwarcia",
+    statMixed: "Ręce graniczne",
+    copy: "Skopiuj tekst zakresu",
+    copied: "✓ Skopiowano",
+    sendOop: "① Przenieś do zakresu OOP",
+    sendIp: "② Przenieś do zakresu IP",
+    howTitle: "Jak czytać tabele",
+    how1: "Na przekątnej od lewego górnego do prawego dolnego rogu są pary. Powyżej (po prawej) są ręce suited, a poniżej (po lewej) — offsuit.",
+    how2: "Częściowo wypełnione pola oznaczają ręce graniczne, co do których źródła nie są zgodne. Wysokość wypełnienia pokazuje udział źródeł zalecających otwarcie, a nie wynik solvera.",
+    how3: "Przyciski [① Przenieś do zakresu OOP] i [② Przenieś do zakresu IP] wczytują ten zakres do edytora w sekcji „Własny spot”. Spróbuj samodzielnie obliczyć grę postflop.",
     howDefend2:
-      "If red + green don't fill the whole cell, the rest is folded. Cells showing both colors mix 3-bets and calls at those ratios.",
+      "Jeśli czerwony i zielony nie wypełniają całego pola, pozostała część oznacza pas. Dwa kolory w jednym polu oznaczają mieszanie 3-betów i sprawdzeń w pokazanych proporcjach.",
     howDefend3:
-      "Paste a copied range into the custom-spot range inputs (① / ②) to solve the postflop play with this defense range yourself.",
-    sourceTitle: "How was this chart built?",
-    sourceBody: "We cross-checked several freely published GTO resources hand by hand to build a consensus range, marking borderline hands the sources disagree on with the share of sources favoring an open (75/50/25%). BTN and SB were also checked against the solver-verified ranges used by this app's Study Spots.",
+      "Wklej skopiowany zakres do pola ① lub ② w sekcji „Własny spot”, aby samodzielnie obliczyć grę postflop z tym zakresem obrony.",
+    sourceTitle: "Jak powstały te tabele?",
+    sourceBody: "Porównano ręka po ręce kilka ogólnodostępnych materiałów GTO i na tej podstawie ustalono wspólny zakres. Przy rękach granicznych, co do których źródła się różnią, podano udział źródeł zalecających otwarcie (75/50/25%). Zakresy BTN i SB porównano też z zakresami sprawdzonymi solverem, używanymi w sekcji „Przykłady” tej aplikacji.",
     sourceList:
-      "Public sources cross-checked: nlh.poker · Preflop Wizard · HoldemPro · " +
-      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (BB vs SB solved frequencies) · " +
-      "GTO Gecko · RiverOdds (defense anchors) · GTO Wizard blog · FreeBetRange " +
-      "(IP defense & squeeze principles) · 888poker · Run It Once (vs 3-bet " +
-      "frequencies) + our own study-spot ranges (collected 2026-08)",
-    phase2: "We'll keep adding more matchups and scenarios.",
+      "Porównane źródła publiczne: nlh.poker · Preflop Wizard · HoldemPro · The Felt (about-poker.com) · BeyondGTO · ThinkGTO (obliczone częstotliwości BB vs SB) · GTO Gecko · RiverOdds (punkty odniesienia dla obrony) · blog GTO Wizard · FreeBetRange (zasady obrony IP i squeeze) · 888poker · Run It Once (częstotliwości przeciw 3-betom) + zakresy naszych przykładów (zebrane w 08.2026)",
+    phase2: "Będziemy dodawać kolejne zestawienia pozycji i sytuacje.",
   },
 } as const;
 

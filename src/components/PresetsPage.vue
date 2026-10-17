@@ -380,21 +380,17 @@ const M = {
     footnote:
       "I range approssimano il gioco online standard a 100bb. Carica uno spot, modifica i range e confronta i risultati: è un ottimo modo per studiare.",
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    infoBtn1: "[⚡ View results]",
-    infoText1:
-      " shows the solved strategy instantly. Use ",
-    infoBtn2: "[Solve it yourself]",
-    infoText2:
-      " only when you want to tweak the ranges or explore turn and river play.",
-    pot: "Pot",
+    infoBtn1: "[⚡ Pokaż wyniki]",
+    infoText1: " pokazuje strategię od razu po kliknięciu. Wybierz ",
+    infoBtn2: "[Oblicz samodzielnie]",
+    infoText2: " tylko wtedy, gdy chcesz zmienić zakresy lub przeanalizować grę na turnie i riverze.",
+    pot: "Pula",
     stack: "Stack",
-    articleLink: "Read article",
-    viewResults: "View results",
-    solveYourself: "Solve it yourself",
-    footnote:
-      "Ranges are approximations of standard 100bb online play. Load a spot, tweak the ranges, and compare — a great way to study.",
+    articleLink: "Przeczytaj artykuł",
+    viewResults: "Pokaż wyniki",
+    solveYourself: "Oblicz samodzielnie",
+    footnote: "Zakresy przybliżają standardową grę online przy stackach 100bb. Wczytaj spot, zmień zakresy i porównaj wyniki — to dobry sposób na naukę.",
   },
 } as const;
 

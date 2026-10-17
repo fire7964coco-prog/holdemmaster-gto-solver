@@ -367,7 +367,7 @@ export default defineComponent({
     const T = computed(() => flopReportLabels(i18n.locale));
     const S = computed(() => flopStudyLabels(i18n.locale));
     const R = computed(() => M[i18n.locale]);
-    const versus = computed(() => (i18n.locale === "ar" ? "ضد" : i18n.locale === "pl" ? "vs" /* pl-todo */ : i18n.locale === "it" ? "contro" : "vs"));
+    const versus = computed(() => (i18n.locale === "ar" ? "ضد" : i18n.locale === "pl" ? "vs" : i18n.locale === "it" ? "contro" : "vs"));
     const store = useStore();
 
     const potType = ref<"srp" | "3bet" | "4bet">("srp"),

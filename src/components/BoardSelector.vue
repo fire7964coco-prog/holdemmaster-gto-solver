@@ -229,15 +229,14 @@ const M = {
     warnLabel: "Avviso:",
     warnBody: (n: number) => `L’albero modificato prevede un board di ${n} ${n === 1 ? "carta" : "carte"}.`,
   },
-  // pl-todo: English scaffold; translate in the next stage.
   pl: {
-    inputError: "Could not read the cards. Enter 3–5 cards, such as AsKd7c or As Kd 7c. Your previous board is kept.",
-    placeholder: "e.g., AsKd7c",
-    clear: "Clear",
-    randomFlop: "Random Flop",
-    warnLabel: "Warning:",
+    inputError: "Nie udało się odczytać kart. Wpisz od 3 do 5 kart, np. AsKd7c lub As Kd 7c. Poprzedni board pozostaje bez zmian.",
+    placeholder: "np. AsKd7c",
+    clear: "Wyczyść",
+    randomFlop: "Losowy flop",
+    warnLabel: "Ostrzeżenie:",
     warnBody: (n: number) =>
-      `The edited tree assumes a ${n}-card board.`,
+      `Wymagana liczba kart na boardzie dla edytowanego drzewa: ${n}.`,
   },
 } as const;
 
