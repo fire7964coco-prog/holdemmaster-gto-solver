@@ -1,0 +1,437 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * T39 색 토큰 (2026-08-19 도입) — 앱의 모든 색은 여기서 나온다.
+ * 값은 "R G B" 세 숫자(rgb(var(--c-…) / 알파) 형태로 쓰기 위함).
+ * Tailwind 클래스(bg-neutral-800 등)는 tailwind.config.js가 이 변수를 참조하고,
+ * chart.js·캔버스 쪽은 src/theme.ts가 같은 값을 상수로 든다 — 한쪽을 바꾸면 같이 바꿀 것.
+ * 도입 시점 값은 Tailwind 3.3.3 기본 팔레트와 정확히 같다 (값 무변경 증명: 도구/e2e/t39-token-diff.js).
+ */
+:root {
+  /* D1: chrome has its own surfaces; strategy/chart palette below stays intact. */
+  --c-bg-0: 18 19 21;
+  --c-bg-1: 24 25 27;
+  --c-bg-2: 31 32 35;
+  --c-bg-3: 40 41 44;
+  --c-bg-4: 53 54 58;
+  --c-text-primary: 241 241 239;
+  --c-text-secondary: 188 190 194;
+  --c-text-muted: 150 153 158;
+  --c-line: 61 63 67;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --c-white: 255 255 255;
+
+  /* 브랜드 앰버 (bg-brand·text-brand-ink 등으로 사용) */
+  --c-brand: 223 172 42; /* #DFAC2A */
+  --c-brand-hover: 232 187 74; /* #e8bb4a */
+  --c-brand-ink: 4 22 12; /* #04160C 앰버 위 글자·도안색 */
+
+  --c-neutral-50: 250 250 250;
+  --c-neutral-100: 245 245 245;
+  --c-neutral-200: 229 229 229;
+  --c-neutral-300: 212 212 212;
+  --c-neutral-400: 163 163 163;
+  --c-neutral-500: 115 115 115;
+  --c-neutral-600: 82 82 82;
+  --c-neutral-700: 64 64 64;
+  --c-neutral-800: 38 38 38;
+  --c-neutral-900: 23 23 23;
+  --c-neutral-950: 10 10 10;
+
+  --c-yellow-50: 254 252 232;
+  --c-yellow-100: 254 249 195;
+  --c-yellow-200: 254 240 138;
+  --c-yellow-300: 253 224 71;
+  --c-yellow-400: 250 204 21;
+  --c-yellow-500: 234 179 8;
+  --c-yellow-600: 202 138 4;
+  --c-yellow-700: 161 98 7;
+  --c-yellow-800: 133 77 14;
+  --c-yellow-900: 113 63 18;
+  --c-yellow-950: 66 32 6;
+
+  --c-blue-50: 239 246 255;
+  --c-blue-100: 219 234 254;
+  --c-blue-200: 191 219 254;
+  --c-blue-300: 147 197 253;
+  --c-blue-400: 96 165 250;
+  --c-blue-500: 59 130 246;
+  --c-blue-600: 37 99 235;
+  --c-blue-700: 29 78 216;
+  --c-blue-800: 30 64 175;
+  --c-blue-900: 30 58 138;
+  --c-blue-950: 23 37 84;
+
+  /* gray는 토큰화 제외 — tailwind.config.js의 주석 참조 */
+  /* 금속 느낌 글자 그라데이션 (NavBar·AboutPage 로고) — 밝은 순 1~5 */
+  --c-metal-1: 255 255 255;
+  --c-metal-2: 229 229 229;
+  --c-metal-3: 212 212 212;
+  --c-metal-4: 163 163 163;
+  --c-metal-5: 138 138 138; /* #8a8a8a */
+}
+
+* {
+  line-height: 1.6;
+}
+
+.snug * {
+  @apply leading-tight;
+}
+
+body {
+  background: rgb(var(--c-bg-0));
+  color: rgb(var(--c-text-primary));
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  color-scheme: dark;
+}
+
+html:lang(ja) { --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", Meiryo, sans-serif; }
+html:lang(zh-Hans) { --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+html:lang(zh-Hant) { --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif; }
+html:lang(hi) { --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Nirmala UI", "Mangal", sans-serif; }
+
+/* it: 좁은 폰에서 버튼·표 제목이 단어 중간에서 끊기지 않게 — 문구는 줄이지 않고 줄을 넘긴다 (10-16) */
+html:lang(it) .flex:has(> .tree-bet-amount) { flex-wrap: wrap; }
+html:lang(it) .flex:has(> .tree-bet-amount) > .button-base { overflow-wrap: normal; }
+html:lang(it) .guide-table .term { overflow-wrap: normal; }
+
+button, input, select, textarea { font: inherit; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid rgb(var(--c-brand));
+  outline-offset: 2px;
+}
+input[type="number"], table, .tabular-nums { font-variant-numeric: tabular-nums; }
+/* Numeric controls keep their physical scale inside mirrored application chrome. */
+input[type="number"], input[type="range"] { direction: ltr; unicode-bidi: isolate; }
+/* Tailwind forms places its caret on the physical right in either direction. */
+html[dir="rtl"] select:not([dir="ltr"]):not([dir="ltr"] *) {
+  background-position: left 0.5rem center;
+  padding-left: 2.5rem;
+  padding-right: 0.75rem;
+}
+* { scrollbar-width: thin; scrollbar-color: rgb(var(--c-bg-4)) rgb(var(--c-bg-1)); }
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  @apply bg-neutral-800 border border-neutral-600 text-neutral-100;
+  @apply placeholder-neutral-500;
+  background-color: rgb(var(--c-bg-1));
+  border-color: rgb(var(--c-line));
+  color: rgb(var(--c-text-primary));
+}
+
+input[type="radio"],
+input[type="checkbox"],
+input[type="range"] {
+  accent-color: rgb(var(--c-brand));
+}
+
+/* Tailwind forms paints custom check/radio controls with currentColor. */
+input[type="radio"], input[type="checkbox"] { color: rgb(var(--c-brand)); }
+
+option {
+  @apply bg-neutral-800 text-neutral-100;
+}
+
+/*
+ * 화면 공통 톤 (2026-08-14 트레이너에서 확정, 2026-08-15 전역 승격).
+ * 원칙 ① 통계는 큰 카드 대신 칩으로 압축해 본문이 화면 가운데 오게
+ *      ② 전부 같은 회색 카드를 피하고 위계를 만들 것
+ *      ③ 핵심 대상은 «안쪽 패널»로 한 번 더 감싸 시선을 모을 것
+ */
+.panel {
+  @apply rounded-lg border p-4;
+  border-color: rgb(var(--c-line));
+  background: rgb(var(--c-bg-2));
+}
+/** 패널 안에서 한 단계 더 들어간 영역 — 보드·핸드처럼 시선을 모을 대상 */
+.panel-inner {
+  @apply rounded-md border px-3 py-2.5;
+  border-color: rgb(var(--c-line));
+  background: rgb(var(--c-bg-1));
+}
+/** Section accents use the existing brand; data series keep their own colors. */
+.section-title {
+  @apply flex items-center gap-2 text-base font-bold text-neutral-100;
+  @apply border-s-2 border-brand ps-2.5;
+}
+.stat-chip {
+  @apply inline-flex items-baseline gap-1 rounded-lg border border-neutral-700 bg-neutral-800;
+  @apply px-2.5 py-1 text-xs text-neutral-500;
+  color: rgb(var(--c-text-muted));
+  background: rgb(var(--c-bg-1));
+  border-color: rgb(var(--c-line));
+}
+.stat-chip b {
+  @apply text-sm font-semibold tabular-nums text-neutral-200;
+}
+
+.button-base {
+  @apply rounded-lg px-3.5 py-1.5 text-white text-sm font-semibold;
+  @apply transition-colors disabled:opacity-40;
+  max-width: 100%;
+  line-height: 1.4;
+  min-height: 34px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.button-blue {
+  @apply bg-surface-2 text-ink-primary hover:bg-surface-3 active:bg-surface-4 disabled:bg-surface-2;
+  box-shadow: inset 0 0 0 1px rgb(var(--c-line));
+}
+
+.button-primary {
+  @apply bg-brand text-brand-ink hover:bg-brand-hover active:bg-brand disabled:bg-brand;
+  box-shadow: none;
+}
+
+.button-red {
+  @apply bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:bg-red-600;
+}
+
+/* 눌리지 않는 파괴 버튼은 색을 뺀다 (2026-09-12).
+   계산이 끝난 화면에서 비활성 «중지»가 유일한 채도 높은 색이었다 —
+   불투명도 40%만으로는 빨강이 죽지 않는다(옆의 «일시정지»는 회색으로 죽는다).
+   ⚠ .button-red의 disabled:bg-red-600과 같은 강도라 **순서로** 이긴다 — 이 줄을 위로 옮기지 말 것 */
+.button-red:disabled {
+  @apply bg-surface-2 text-ink-primary;
+  box-shadow: inset 0 0 0 1px rgb(var(--c-line));
+}
+
+.button-green {
+  @apply bg-green-600 hover:bg-green-700 active:bg-green-800 disabled:bg-green-600;
+}
+
+input.input-error {
+  @apply !ring-1 !ring-red-500 !border-red-500 !bg-red-950;
+}
+
+.text-shadow {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* D1 application chrome. Legacy utility hooks remain available to e2e callers. */
+.app-nav { background: rgb(var(--c-bg-1)); border-color: rgb(var(--c-line)); }
+.app-nav .app-nav-active { background: rgb(var(--c-bg-3)); box-shadow: inset 0 -2px rgb(var(--c-brand)); }
+.app-nav .text-lg { font-size: 1rem; }
+.app-nav button:disabled { opacity: 0.4; cursor: default; background: transparent; color: inherit; }
+button, a, input, select, textarea, [role="gridcell"] { touch-action: manipulation; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 2px solid rgb(var(--c-brand)); outline-offset: 2px; }
+.solver-content .text-xs.text-neutral-400, .solver-content .text-xs.text-neutral-500, .solver-content .text-xs.text-neutral-600 { font-size: 13px; }
+.app-section-heading.border-blue-600 { border-color: rgb(var(--c-brand)); color: rgb(var(--c-text-primary)); }
+.solver-content { font-size: 14px; }
+.solver-content > .flex:first-child { min-width: 0; }
+.app-section-heading { overflow-wrap: anywhere; }
+.result-workspace-content { height: 100%; }
+.result-viewer { font-size: 13px; }
+.result-nav { height: 124px; padding: 6px 8px; background: rgb(var(--c-bg-0)); gap: 6px; }
+.result-node { min-width: 112px; flex-shrink: 0; background: rgb(var(--c-bg-2)); border-radius: 6px; }
+.result-node.border-brand { box-shadow: inset 0 2px rgb(var(--c-brand)); }
+.result-node button { min-height: 22px; }
+.result-toolbar {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  flex-shrink: 0;
+  padding: 5px 8px;
+  background: rgb(var(--c-bg-1));
+  border-top: 1px solid rgb(var(--c-line));
+}
+.result-toolbar .nodelock { position: static; max-width: 100%; }
+html[dir="rtl"] .result-toolbar .nodelock-popover { left: auto; right: 0; }
+.result-toolbar .custom-trainer-entry { max-width: 100%; }
+.practice-button.button-blue {
+  color: rgb(var(--c-text-primary));
+  background: rgb(var(--c-bg-3));
+  border: 1px solid rgb(var(--c-line));
+  font-size: 13px;
+}
+.practice-button.button-blue:hover { background: rgb(var(--c-bg-4)); }
+.result-lock-banner { font-size: 12px; line-height: 1.4; }
+.result-lock-banner span { line-height: 1.4; }
+.result-middle {
+  flex-wrap: wrap;
+  align-items: stretch;
+  min-height: 44px;
+  overflow: visible;
+  background: rgb(var(--c-bg-1));
+  border-color: rgb(var(--c-line));
+}
+.result-mode { padding: 8px 16px; min-height: 42px; color: rgb(var(--c-text-secondary)); }
+.result-mode:disabled { display: none; }
+.result-mode-active { background: rgb(var(--c-bg-2)); color: rgb(var(--c-brand)); box-shadow: inset 0 -2px rgb(var(--c-brand)); }
+.result-options { padding: 3px 8px; max-width: 100%; flex-wrap: wrap; }
+.result-options > div { min-width: 0; height: auto; }
+.result-options .text-sm, .result-table-toolbar .text-sm { font-size: 11px; color: rgb(var(--c-text-muted)); }
+.result-options select, .result-table-toolbar select {
+  width: auto;
+  max-width: 100%;
+  padding: 1px 22px 1px 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 4px;
+  box-shadow: none;
+  background-color: rgb(var(--c-bg-3));
+}
+.result-body { gap: 8px; padding: 8px; }
+/* 2026-09-12 사장님: «결과창이 꽉 차서 잘린 느낌» → 데스크톱은 여백 + 얇은 프레임(굵은 테두리 대신 · 소개/트레이너 카드 문법과 동일). 모바일은 아래 @media에서 padding 0 유지 */
+@media (min-width: 768px) {
+  .result-body { gap: 12px; padding: 12px 14px 14px; }
+  .result-matrix { padding: 8px; border: 1px solid rgb(var(--c-line)); border-radius: 8px; background: rgb(var(--c-bg-1)); min-height: 0; }
+  .result-details { min-height: 0; }
+  .result-details > * { border-radius: 8px; }
+}
+.result-matrix { min-width: 0; }
+.result-basics table { font-variant-numeric: tabular-nums; }
+.result-details { margin: 0; }
+.hand-breakdown { background: rgb(var(--c-bg-2)); border-color: rgb(var(--c-line)); font-size: 12px; }
+.hand-breakdown .breakdown-row { margin-top: 5px; }
+.hand-breakdown .breakdown-row > .flex { gap: 6px; line-height: 1.3; }
+.hand-breakdown .breakdown-row > .flex > span { line-height: 1.3; }
+.hand-breakdown .breakdown-row > .flex > span:last-child { flex-shrink: 0; }
+.action-summary { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+.action-summary-label { overflow-wrap: anywhere; line-height: 1.3; }
+.action-summary .text-lg { font-size: 18px; line-height: 1.2; }
+.action-summary > div > .flex { gap: 6px; }
+.result-table { border: 1px solid rgb(var(--c-line)); border-radius: 6px; background: rgb(var(--c-bg-1)); }
+.result-table-toolbar { height: auto; min-height: 42px; flex-wrap: wrap; align-items: center; border-color: rgb(var(--c-line)); }
+.result-table-toolbar > div:first-child { padding: 4px 10px; font-size: 14px; }
+.result-table-toolbar > .snug { gap: 8px; padding: 3px 8px; min-width: 0; max-width: 100%; height: auto; flex-wrap: wrap; }
+.result-table-toolbar > .snug > div { height: auto; min-width: 0; }
+.result-table-scroll { min-height: 0; overflow: auto; }
+.result-table-scroll table { font-size: 12px; }
+.result-table-scroll td, .result-table-scroll th { font-variant-numeric: tabular-nums; }
+
+@media (min-width: 768px) {
+  /* Short windows still need room below the two sticky summary header rows. */
+  .result-details { overflow-y: auto; overscroll-behavior-y: contain; }
+  .result-details > .result-table { min-height: 13rem; }
+}
+
+@media (max-width: 767px) {
+  .result-workspace-content { height: auto; min-height: 100%; }
+  .result-nav { height: 112px; }
+  .result-node { min-width: 104px; }
+  .result-toolbar { padding: 6px; gap: 6px; }
+  .nodelock-trigger, .practice-button.button-blue { font-size: 12px; }
+  .result-middle { display: flex; }
+  .result-mode { flex: 1; padding: 6px 8px; min-height: 36px; }
+  .result-options { width: 100%; margin-inline-start: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; padding: 5px 8px; border-top: 1px solid rgb(var(--c-line)); }
+  .result-options > div { align-items: stretch; }
+  .result-options select { width: 100%; min-width: 0; min-height: 28px; }
+  .result-body { flex: none; overflow: visible; padding: 0; gap: 10px; }
+  .result-matrix { height: auto; aspect-ratio: 1; flex: none; }
+  .result-basics table { --pair-font-size: clamp(10px, 3.2vw, 14px) !important; --value-font-size: clamp(9px, 2.8vw, 12px) !important; }
+  .result-basics .text-shadow { text-shadow: 0 1px 1px rgb(0 0 0 / 60%); }
+  .result-basics td > div:nth-child(2) { left: 1px; }
+  .result-details { margin: 0 6px 10px; }
+  .action-summary { grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); }
+  .result-table { flex: none; height: 360px; min-height: 0; }
+  .result-table-scroll { overscroll-behavior-x: contain; }
+  .result-table-toolbar > .snug { gap: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; }
+}
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: linear-gradient(
+    to right,
+    rgb(var(--c-neutral-700)) 10%,
+    rgb(var(--c-neutral-700) / 0) 42%
+  );
+  position: relative;
+  animation: spinner-animation 0.8s infinite linear;
+  transform: translateZ(0);
+}
+
+.spinner::before {
+  width: 50%;
+  height: 50%;
+  background: rgb(var(--c-neutral-700));
+  border-radius: 100% 0 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+}
+
+.spinner::after {
+  @apply bg-neutral-900;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  content: "";
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@keyframes spinner-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* PL3: preserve the chosen step helper text when the selected item is bold. */
+@media (min-width: 768px) {
+  html:lang(pl) .app-sidebar .side-bar-item:has(> .step-status) > .text-neutral-500 {
+    font-weight: 400;
+  }
+}
+
+/* PL4: keep the full Polish labels readable without shortening their wording. */
+@media (min-width: 768px) {
+  html:lang(pl) .tree-config .bet-grid label { width: 4.5rem; }
+  html:lang(pl) .tree-config .bet-grid { flex-wrap: wrap; }
+}
+@media (max-width: 767px) {
+  html:lang(pl) .guide-table .term { overflow-wrap: normal; }
+  html:lang(pl) .report-bar-name {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: normal;
+  }
+  html:lang(pl) .study-mobile-bar { flex-wrap: wrap; }
+  html:lang(pl) .study-mobile-pot {
+    flex: 0 0 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: normal;
+  }
+}
+/* End PL4 labels. */
+
+/* PL6: leave Polish words intact and give controls room around their text. */
+html:lang(pl) .grid.grid-cols-3:has(> .button-overrides) > .button-overrides {
+  padding-inline: 0.375rem;
+  overflow-wrap: normal;
+}
+html:lang(pl) .tree-config label[for="tree-addAllInThreshold"] + *,
+html:lang(pl) .tree-config label[for="tree-forceAllInThreshold"] + *,
+html:lang(pl) .tree-config label[for="tree-mergingThreshold"] + * {
+  margin-inline-start: 0.25rem;
+}

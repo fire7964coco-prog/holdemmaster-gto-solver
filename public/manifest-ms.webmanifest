@@ -1,0 +1,64 @@
+{
+  "name": "HoldemMaster GTO Trainer",
+  "short_name": "GTO Trainer",
+  "description": "Solver & trainer GTO percuma. 13 spot belajar terus terbuka, walaupun luar talian.",
+  "lang": "ms",
+  "dir": "ltr",
+  "start_url": "/?view=trainer&lang=ms",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Trainer GTO",
+      "short_name": "Trainer",
+      "description": "Mainkan tangan daripada range sebenar dan dapatkan skor kerugian EV anda",
+      "url": "/?view=trainer&lang=ms",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "13 spot belajar",
+      "short_name": "Spot belajar",
+      "description": "Lihat strategi GTO 13 spot tanpa menunggu",
+      "url": "/?view=presets&lang=ms",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

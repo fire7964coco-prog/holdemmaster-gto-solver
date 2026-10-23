@@ -1,0 +1,424 @@
+/*
+ * 오늘의 문제 — 날짜를 씨앗으로 삼아 «모두가 같은 문제»를 받게 한다.
+ *
+ * 목적은 두 가지다.
+ *   ① 재방문 — 매일 하나뿐이라 «오늘 건 풀었나»가 돌아올 이유가 된다
+ *   ② 커뮤니티 글감 — 같은 문제를 풀었으니 서로 답을 비교할 수 있다
+ *      (각자 다른 문제였다면 대화가 안 된다)
+ *
+ * 데이터는 새로 만들지 않는다. 기존 문제 은행에 날짜 기반 난수를 넣을 뿐이다.
+ */
+import { reactive } from "vue";
+import { i18n, localizeNumber, ltrIso, ruPlural, plPlural } from "./i18n";
+import { makeTrainerQuestion, TrainerBank, TrainerQuestion } from "./trainer";
+import { accountScopedDbName, isLocalDataOpen } from "./db";
+
+/* 기록은 이 탭의 기기 DB와 같은 주인을 따른다(MB-388 후속 · 2026-10-19) — 공용 PC에서 앞 사람이 푼 결과가
+ * 다음에 로그인한 계정의 순위로 올라가지 않게. 기존 DB면 옛 키 이름 그대로(이관 없음), 계정 DB면 같은 꼬리표. */
+const KEY_LAST = accountScopedDbName("daily.lastDate");
+const KEY_STREAK = accountScopedDbName("daily.streak");
+const KEY_BEST = accountScopedDbName("daily.bestStreak");
+const KEY_RESULT = accountScopedDbName("daily.result");
+
+/** 한국 날짜(YYYY-MM-DD). 유저가 한국에 있으므로 UTC가 아니라 KST로 하루를 끊는다 */
+export const todayKey = (now: Date = new Date()) => {
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 10);
+};
+
+/** 문자열 → 32비트 씨앗 */
+const seedFrom = (text: string) => {
+  let hash = 2166136261;
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+};
+
+/** mulberry32 — 같은 씨앗이면 언제 어디서 돌려도 같은 순서가 나온다 */
+const seededRandom = (seed: number) => {
+  let state = seed;
+  return () => {
+    state |= 0;
+    state = (state + 0x6d2b79f5) | 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+/**
+ * 다음에 열리는 트레이너를 오늘의 문제로 시작하게 한다 — 소개의 «오늘의 문제» 버튼과
+ * 공유 문구의 링크(`daily=1`). 없으면 일반 문제가 떠서 다시 눌러야 했다(Q3-01).
+ * 한 번 쓰면 지운다 — 다른 메뉴에 갔다 돌아온 트레이너는 평소처럼 연다.
+ */
+let dailyStartRequested =
+  typeof location !== "undefined" &&
+  new URLSearchParams(location.search).get("daily") === "1";
+export const requestDailyStart = () => {
+  dailyStartRequested = true;
+};
+export const takeDailyStartRequest = () => {
+  const requested = dailyStartRequested;
+  dailyStartRequested = false;
+  return requested;
+};
+
+export const dailyState = reactive({
+  /** 오늘 문제를 풀었는가 */
+  done: false,
+  /** 오늘 기록한 EV 손실(bb) */
+  lossBb: 0,
+  /** 며칠 연속으로 풀었는가 */
+  streak: 0,
+  bestStreak: 0,
+});
+
+const readNumber = (key: string) => {
+  try {
+    return Number(localStorage.getItem(key) ?? 0) || 0;
+  } catch {
+    return 0;
+  }
+};
+
+const writeValue = (key: string, value: string) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* 저장이 막힌 환경이면 그냥 기록 없이 동작한다 */
+  }
+};
+
+/** 오늘의 문제 — 날짜가 같으면 누구에게나 같은 문제가 나온다 */
+export const makeDailyQuestion = (bank: TrainerBank): TrainerQuestion | null =>
+  makeTrainerQuestion(bank, "all", seededRandom(seedFrom(todayKey())));
+
+/** 이 탭의 기기 자료가 지금 계정 것으로 확인된 뒤에만 읽는다(관문이 닫히면 빈 기록 그대로) */
+export const loadDailyState = async () => {
+  if (!(await isLocalDataOpen())) return;
+  const today = todayKey();
+  let result: { date: string; lossBb: number } | null = null;
+  try {
+    const raw = localStorage.getItem(KEY_RESULT);
+    result = raw ? JSON.parse(raw) : null;
+  } catch {
+    result = null;
+  }
+  dailyState.done = result?.date === today;
+  dailyState.lossBb = dailyState.done ? result?.lossBb ?? 0 : 0;
+  dailyState.streak = readNumber(KEY_STREAK);
+  dailyState.bestStreak = readNumber(KEY_BEST);
+
+  // 하루를 건너뛰었으면 연속이 끊긴다 (어제까지 푼 경우만 이어진다)
+  const last = (() => {
+    try {
+      return localStorage.getItem(KEY_LAST) ?? "";
+    } catch {
+      return "";
+    }
+  })();
+  if (last && last !== today) {
+    const yesterday = todayKey(new Date(Date.now() - 24 * 60 * 60 * 1000));
+    if (last !== yesterday) {
+      dailyState.streak = 0;
+      writeValue(KEY_STREAK, "0");
+    }
+  }
+};
+
+/** 오늘의 문제를 풀었을 때 호출 */
+export const recordDaily = async (lossBb: number) => {
+  if (!(await isLocalDataOpen())) return;
+  const today = todayKey();
+  if (dailyState.done) return;
+
+  const last = (() => {
+    try {
+      return localStorage.getItem(KEY_LAST) ?? "";
+    } catch {
+      return "";
+    }
+  })();
+  const yesterday = todayKey(new Date(Date.now() - 24 * 60 * 60 * 1000));
+  const streak = last === yesterday ? dailyState.streak + 1 : 1;
+
+  dailyState.done = true;
+  dailyState.lossBb = lossBb;
+  dailyState.streak = streak;
+  dailyState.bestStreak = Math.max(dailyState.bestStreak, streak);
+
+  writeValue(KEY_LAST, today);
+  writeValue(KEY_STREAK, String(streak));
+  writeValue(KEY_BEST, String(dailyState.bestStreak));
+  writeValue(KEY_RESULT, JSON.stringify({ date: today, lossBb }));
+};
+
+/**
+ * 성적 카드에 찍는 날짜 — 언어마다 관습이 다르다.
+ * ⚠ 카드는 canvas라 화면 검사도 clipboard-shot.js도 못 본다. 공유 문구와 «같은 규칙»으로 맞춘다.
+ *  - 독일어: TT.MM.JJJJ (26.08.2026을 «2026년 8월 26일»로 읽는 것을 막는다)
+ *  - 중국어(간체·번체): YYYY-MM-DD (본체의 zh/zh-hant 포스팅이 전부 ISO다)
+ *  - 프랑스어: JJ/MM/AAAA (브리프 §표기 — 착수지시서도 DD/MM/YYYY로 못박았다)
+ *  - 인도네시아어: DD/MM/YYYY (인니 표준 — 리서치 §1-4)
+ *  - 말레이어: DD/MM/YYYY (말레이시아 표준 — 말레이어 리서치 §1-2)
+ *  - 튀르키예어: DD.MM.YYYY (확정표 §2-3 — 공용 yy.mm.dd는 터키 독자에게 거꾸로 읽힌다)
+ *  - 나머지: YYYY.MM.DD
+ */
+export const dailyCardDate = () => {
+  const key = todayKey();
+  if (i18n.locale === "de" || i18n.locale === "tr" || i18n.locale === "ru" || i18n.locale === "pl") return key.split("-").reverse().join(".");
+  // hi: DD/MM/YYYY with Latin digits, same in the image and copied text.
+  if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi" || i18n.locale === "vi" || i18n.locale === "ar" || i18n.locale === "it")
+    return key.split("-").reverse().join("/");
+  if (i18n.locale === "zh" || i18n.locale === "zh-hant") return key;
+  return key.replace(/-/g, ".");
+};
+
+/**
+ * 커뮤니티에 붙여넣을 결과 문구.
+ * 정답 자체는 넣지 않는다 — 아직 안 푼 사람의 재미를 없애면 글이 안 퍼진다.
+ */
+export const dailyShareText = (verdict: string) => {
+  const date = todayKey().replace(/-/g, ".").slice(2);
+  if (i18n.locale === "hi") {
+    const hiDate = todayKey().split("-").reverse().join("/");
+    return [
+      `[आज का GTO सवाल · ${hiDate}]`,
+      `मेरा परिणाम: ${verdict} (EV नुकसान ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `लगातार ${dailyState.streak} दिन अभ्यास` : "",
+      "",
+      "यही सवाल हल करें → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=hi",
+      "(HoldemMaster GTO Solver · हर दिन 1 सवाल)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "ja") {
+    return [
+      `[今日のGTO問題・${date}]`,
+      `結果: ${verdict}（EVロス ${dailyState.lossBb.toFixed(3)}bb）`,
+      dailyState.streak > 1 ? `${dailyState.streak}日連続チャレンジ中` : "",
+      "",
+      "同じ問題に挑戦 → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=ja",
+      "（HoldemMaster GTOソルバー・毎日1問）",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "es") {
+    return [
+      `[Reto GTO del día · ${date}]`,
+      `Mi resultado: ${verdict} (pérdida de EV ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `Racha de ${dailyState.streak} días` : "",
+      "",
+      "Resuelve el mismo reto → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=es",
+      "(HoldemMaster GTO Solver · un reto al día)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "pt") {
+    return [
+      `[Desafio GTO do dia · ${date}]`,
+      `Meu resultado: ${verdict} (perda de EV ${localizeNumber(
+        dailyState.lossBb.toFixed(3)
+      )}bb)`,
+      dailyState.streak > 1 ? `Sequência de ${dailyState.streak} dias` : "",
+      "",
+      "Resolva o mesmo desafio → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=pt",
+      "(HoldemMaster GTO Solver · um desafio por dia)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "de") {
+    // ⚠ 독일어 날짜는 TT.MM.JJJJ — 공용 「26.08.21」을 그대로 쓰면 «2021년 8월 26일»로 읽힌다
+    const deDate = todayKey().split("-").reverse().join(".");
+    return [
+      `[GTO-Tagesaufgabe · ${deDate}]`,
+      `Mein Ergebnis: ${verdict} (EV-Verlust ${localizeNumber(
+        dailyState.lossBb.toFixed(3)
+      )}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak} Tage in Folge` : "",
+      "",
+      "Dieselbe Aufgabe lösen → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=de",
+      "(HoldemMaster GTO Solver · eine Aufgabe pro Tag)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "zh") {
+    // ⚠ 날짜도 «언어»다 — 공용 「26.08.21」(yy.mm.dd)은 중국 독자에게 모호하다.
+    //   중국 국가표준(GB/T 7408)이자 실사용 관습인 YYYY-MM-DD를 그대로 쓴다.
+    //   ⚠ 소수점은 영어와 같은 «.»이므로 localizeNumber로 감싸지 «않는다» (pt·de와 다름)
+    return [
+      `[今日 GTO 题目 · ${todayKey()}]`,
+      `我的结果：${verdict}（EV 损失 ${dailyState.lossBb.toFixed(3)}bb）`,
+      dailyState.streak > 1 ? `已连续挑战 ${dailyState.streak} 天` : "",
+      "",
+      "来做同一道题 → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=zh",
+      "（HoldemMaster GTO 求解器 · 每天一题）",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "zh-hant") {
+    // ⚠ 날짜도 «언어»다. 번체권 관습은 YYYY/MM/DD도 흔하지만, 본체의 zh-hant 포스팅이
+    //   전부 「2026-07-23」(ISO)라 본체와 같은 표기로 맞춘다.
+    //   ⚠ 소수점은 영어와 같은 «.»이므로 localizeNumber로 감싸지 «않는다» (pt·de와 다름)
+    return [
+      `[今日 GTO 題目 · ${todayKey()}]`,
+      `我的結果：${verdict}（EV 損失 ${dailyState.lossBb.toFixed(3)}bb）`,
+      dailyState.streak > 1 ? `已連續挑戰 ${dailyState.streak} 天` : "",
+      "",
+      "來做同一道題 → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=zh-hant",
+      "（HoldemMaster GTO 解算器 · 每天一題）",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "fr") {
+    // ⚠ 프랑스 날짜는 JJ/MM/AAAA — 공용 «26.08.24»(yy.mm.dd)는 프랑스 독자에게 모호하다.
+    //   «résultat :»의 콜론 앞 공백은 프랑스 조판 관습이다 (평문 공유라 일반 공백으로 둔다).
+    const frDate = todayKey().split("-").reverse().join("/");
+    return [
+      `[Défi GTO du jour · ${frDate}]`,
+      `Mon résultat : ${verdict} (perte d'EV ${localizeNumber(
+        dailyState.lossBb.toFixed(3)
+      )}bb)`,
+      dailyState.streak > 1 ? `Série de ${dailyState.streak} jours` : "",
+      "",
+      "Relève le même défi → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=fr",
+      "(HoldemMaster GTO Solver · un défi par jour)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "id") {
+    // ⚠ 인니 날짜는 DD/MM/YYYY — 공용 «26.08.24»(yy.mm.dd)는 인니 독자에게 모호하다.
+    //   소수점은 «,»(localizeNumber가 바꾼다). % 앞 공백은 없다(fr과 다르다 — 리서치 §1-4).
+    const idDate = todayKey().split("-").reverse().join("/");
+    return [
+      `[Tantangan GTO Harian · ${idDate}]`,
+      `Hasil saya: ${verdict} (kerugian EV ${localizeNumber(
+        dailyState.lossBb.toFixed(3)
+      )}bb)`,
+      dailyState.streak > 1 ? `Streak ${dailyState.streak} hari` : "",
+      "",
+      "Coba tantangan yang sama → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=id",
+      "(HoldemMaster GTO Solver · satu tantangan per hari)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "ms") {
+    // ⚠ 말레이시아 날짜도 DD/MM/YYYY — 공용 «26.08.24»(yy.mm.dd)는 모호하다.
+    //   소수점은 영어와 같은 «.»이라 localizeNumber로 감싸지 «않는다» (id와 다르다 — 리서치 §1-2).
+    const msDate = todayKey().split("-").reverse().join("/");
+    return [
+      `[Cabaran GTO Harian · ${msDate}]`,
+      `Hasil saya: ${verdict} (kerugian EV ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `Streak ${dailyState.streak} hari` : "",
+      "",
+      "Cuba cabaran yang sama → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=ms",
+      "(HoldemMaster GTO Solver · satu cabaran sehari)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "tr") {
+    // 날짜 DD.MM.YYYY · 소수점 «,»(localizeNumber) — 확정표 §2. 변수 뒤 접미사 없음(§6)
+    const trDate = todayKey().split("-").reverse().join(".");
+    return [
+      `[Günün GTO sorusu · ${trDate}]`,
+      `Sonucum: ${verdict} (EV kaybı ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak} günlük seri` : "",
+      "",
+      "Aynı soruyu sen de çöz → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=tr",
+      "(HoldemMaster GTO Solver · her gün bir soru)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "vi") {
+    return [
+      `[Thử thách GTO hôm nay · ${dailyCardDate()}]`,
+      `Kết quả của tôi: ${verdict} (EV mất ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak} ngày liên tiếp` : "",
+      "",
+      "Giải cùng thử thách này → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=vi",
+      "(HoldemMaster GTO Solver · mỗi ngày một thử thách)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "ru") {
+    return [
+      `[Задача дня по GTO · ${dailyCardDate()}]`,
+      `Мой результат: ${verdict} (потеря EV ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak} ${ruPlural(dailyState.streak, "день", "дня", "дней")} подряд` : "",
+      "",
+      "Реши ту же задачу → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=ru",
+      "(HoldemMaster GTO-солвер · одна задача в день)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  // ar: 각 줄은 아랍 글자 또는 «[»로 시작 · URL은 콜론 뒤 LRI 격리(«→» 없음) — 확정표 §3-4
+  if (i18n.locale === "ar") {
+    return [
+      `[سؤال اليوم في GTO · ${dailyCardDate()}]`,
+      `نتيجتي: ${verdict} (خسارة EV ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `أيام متتالية: ${dailyState.streak}` : "",
+      "",
+      `حلّ السؤال نفسه: ${ltrIso("https://solver.holdemmaster.com/?view=trainer&daily=1&lang=ar")}`,
+      "(سولفر GTO من HoldemMaster · سؤال واحد كل يوم)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  if (i18n.locale === "it") {
+    return [
+      `[Sfida GTO del giorno · ${dailyCardDate()}]`,
+      `Il mio risultato: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 0 ? (dailyState.streak === 1 ? `${dailyState.streak} giorno consecutivo` : `${dailyState.streak} giorni consecutivi`) : "",
+      "",
+      "Prova la stessa sfida → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=it",
+      "(HoldemMaster GTO Trainer · una sfida al giorno)",
+    ].filter(Boolean).join("\n");
+  }
+  if (i18n.locale === "pl") {
+    return [
+      `[Zadanie GTO na dziś · ${dailyCardDate()}]`,
+      `Mój wynik: ${verdict} (strata EV ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 0 ? `${localizeNumber(String(dailyState.streak))}${plPlural(dailyState.streak, { one: " dzień z rzędu", few: " dni z rzędu", many: " dni z rzędu", other: " dnia z rzędu" })}` : "",
+      "",
+      "Rozwiąż to samo zadanie → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=pl",
+      "(HoldemMaster GTO Solver · jedno zadanie dziennie)",
+    ].filter(Boolean).join("\n");
+  }
+  if (i18n.locale === "en") {
+    return [
+      `[Daily GTO Puzzle · ${date}]`,
+      `My result: ${verdict} (EV loss ${dailyState.lossBb.toFixed(3)}bb)`,
+      dailyState.streak > 1 ? `${dailyState.streak}-day streak` : "",
+      "",
+      "Try the same puzzle → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=en",
+      "(HoldemMaster GTO Solver · one puzzle a day)",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  return [
+    `[${date} 오늘의 GTO 문제]`,
+    `내 결과: ${verdict} (EV 손실 ${dailyState.lossBb.toFixed(3)}bb)`,
+    dailyState.streak > 1 ? `${dailyState.streak}일 연속 풀이 중` : "",
+    "",
+    "같은 문제 풀어보기 → https://solver.holdemmaster.com/?view=trainer&daily=1",
+    "(홀덤마스터 GTO 솔버 · 매일 1문제)",
+  ]
+    .filter(Boolean)
+    .join("\n");
+};

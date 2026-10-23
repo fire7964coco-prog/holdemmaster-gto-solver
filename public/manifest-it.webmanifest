@@ -1,0 +1,64 @@
+{
+  "name": "HoldemMaster GTO Trainer",
+  "short_name": "GTO Trainer",
+  "description": "Solver e trainer GTO gratuiti. Tutti i 13 esempi si aprono subito, anche offline.",
+  "lang": "it",
+  "dir": "ltr",
+  "start_url": "/?view=trainer&lang=it",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Trainer GTO",
+      "short_name": "Trainer",
+      "description": "Gioca mani estratte da range reali e valuta le tue scelte in base all’EV loss",
+      "url": "/?view=trainer&lang=it",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "13 esempi",
+      "short_name": "Esempi",
+      "description": "Scopri subito la strategia GTO di 13 spot",
+      "url": "/?view=presets&lang=it",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

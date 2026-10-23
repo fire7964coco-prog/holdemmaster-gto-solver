@@ -1,0 +1,64 @@
+{
+  "name": "HoldemMaster GTO Trainer",
+  "short_name": "GTO Trainer",
+  "description": "Ücretsiz GTO solver ve trainer. 13 örnek spotun hepsi anında açılır, çevrimdışı bile.",
+  "lang": "tr",
+  "dir": "ltr",
+  "start_url": "/?view=trainer&lang=tr",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "GTO Trainer",
+      "short_name": "Trainer",
+      "description": "Gerçek range'lerden gelen ellerle oyna, EV kaybına göre puan al",
+      "url": "/?view=trainer&lang=tr",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "13 örnek spot",
+      "short_name": "Örnek spotlar",
+      "description": "13 spotun GTO stratejisini beklemeden gör",
+      "url": "/?view=presets&lang=tr",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

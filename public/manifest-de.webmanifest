@@ -1,0 +1,64 @@
+{
+  "name": "HoldemMaster GTO Trainer",
+  "short_name": "GTO Trainer",
+  "description": "Ein kostenloser GTO-Solver und Trainer. Alle 13 Lernspots öffnen sofort, auch offline.",
+  "lang": "de",
+  "dir": "ltr",
+  "start_url": "/?view=trainer&lang=de",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "GTO-Trainer",
+      "short_name": "Trainer",
+      "description": "Spiele Hände aus echten Ranges und lass dich am EV-Verlust messen",
+      "url": "/?view=trainer&lang=de",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "13 Lernspots",
+      "short_name": "Lernspots",
+      "description": "Sieh dir die GTO-Strategie für 13 Spots ohne Wartezeit an",
+      "url": "/?view=presets&lang=de",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1885 @@
+<template>
+  <div
+    class="db-item-list w-full px-1 border border-neutral-600 rounded-md shadow shadow-black/40 text-sm overflow-x-auto select-none"
+    :class="data.length === 0 ? 'py-2' : 'h-[22.5rem] overflow-y-scroll'"
+    @click="unselect"
+    @keydown.f2="renameItem()"
+    @keydown.delete="deleteItem(true)"
+  >
+    <!-- No saved items -->
+    <div v-if="data.length === 0" class="item-toplevel">
+      <span :data-testid="storeName === 'ranges' ? 'db-empty-ranges' : 'db-empty-configs'" class="inline-block px-1 whitespace-normal break-words">{{
+        storeName === "ranges" ? L.noSavedRanges : L.noSavedConfigs
+      }}</span>
+    </div>
+
+    <!-- Depth 0 -->
+    <div
+      v-for="item0 in data"
+      :key="item0.pathStr"
+      :class="{ 'item-toplevel': !item0.isGroup }"
+    >
+      <template v-if="item0.isGroup">
+        <!-- Open/Close button -->
+        <button
+          :class="item0.opened ? 'bottom-arrow' : 'right-arrow'"
+          :aria-label="item0.path[0]"
+          :aria-expanded="item0.opened"
+          @click="toggleGroup(item0)"
+        >
+          &nbsp;
+        </button>
+
+        <!-- Name edit -->
+        <input
+          v-if="item0.isEditing"
+          ref="nameInput"
+          v-model="editingName"
+          type="text"
+          :class="'px-1 py-0 text-sm ' + (!isNameValid ? 'input-error' : '')"
+          style="width: calc(100% - 1.25rem)"
+          @blur="tryRename(item0)"
+          @keydown.enter="tryRename(item0)"
+          @keydown.escape="cancelRename(item0)"
+          @keydown.delete.stop
+        />
+
+        <!-- Group name -->
+        <label
+          v-else
+          class="inline-block"
+          @dblclick="toggleGroup(item0)"
+          @keydown.enter="toggleGroup(item0)"
+        >
+          <input
+            v-model="selectedValue"
+            type="radio"
+            :name="`item-picker-${storeName}-${index}`"
+            class="sr-only peer"
+            :value="item0.pathStr"
+          />
+          <span
+            class="inline-block px-1 rounded-sm whitespace-nowrap peer-checked:bg-blue-600 peer-checked:text-white"
+          >
+            {{ item0.path[0] }}
+          </span>
+        </label>
+
+        <!-- Group items -->
+        <div
+          v-if="item0.opened"
+          class="group"
+          :style="{ '--guide-decrease': guideDecrease(item0) }"
+        >
+          <!-- Empty group -->
+          <div v-if="item0.items.length === 0" class="item-inside">
+            <span class="inline-block px-1">{{ L.emptyGroup }}</span>
+          </div>
+
+          <!-- Depth 1 -->
+          <div
+            v-for="item1 in item0.items"
+            :key="item1.pathStr"
+            :class="item1.isGroup ? 'group-inside' : 'item-inside'"
+          >
+            <template v-if="item1.isGroup">
+              <!-- Open/Close button -->
+              <button
+                :class="item1.opened ? 'bottom-arrow' : 'right-arrow'"
+                :aria-label="item1.path[1]"
+                :aria-expanded="item1.opened"
+                @click="toggleGroup(item1)"
+              >
+                &nbsp;
+              </button>
+
+              <!-- Name edit -->
+              <input
+                v-if="item1.isEditing"
+                ref="nameInput"
+                v-model="editingName"
+                type="text"
+                :class="
+                  'px-1 py-0 text-sm ' + (!isNameValid ? 'input-error' : '')
+                "
+                style="width: calc(100% - 1.25rem)"
+                @blur="tryRename(item1)"
+                @keydown.enter="tryRename(item1)"
+                @keydown.escape="cancelRename(item1)"
+                @keydown.delete.stop
+              />
+
+              <!-- Group name -->
+              <label
+                v-else
+                class="inline-block"
+                @dblclick="toggleGroup(item1)"
+                @keydown.enter="toggleGroup(item1)"
+              >
+                <input
+                  v-model="selectedValue"
+                  type="radio"
+                  :name="`item-picker-${storeName}-${index}`"
+                  class="sr-only peer"
+                  :value="item1.pathStr"
+                />
+                <span
+                  class="inline-block px-1 rounded-sm whitespace-nowrap peer-checked:bg-blue-600 peer-checked:text-white"
+                >
+                  {{ item1.path[1] }}
+                </span>
+              </label>
+
+              <!-- Group items -->
+              <div
+                v-if="item1.opened"
+                class="group"
+                :style="{
+                  '--guide-decrease': guideDecrease(item1),
+                }"
+              >
+                <!-- Empty group -->
+                <div v-if="item1.items.length === 0" class="item-inside">
+                  <span class="inline-block px-1">{{ L.emptyGroup }}</span>
+                </div>
+
+                <!-- Depth 2 -->
+                <div
+                  v-for="item2 in item1.items"
+                  :key="item2.pathStr"
+                  :class="item2.isGroup ? 'group-inside' : 'item-inside'"
+                >
+                  <template v-if="item2.isGroup">
+                    <!-- Open/Close button -->
+                    <button
+                      :class="item2.opened ? 'bottom-arrow' : 'right-arrow'"
+                      :aria-label="item2.path[2]"
+                      :aria-expanded="item2.opened"
+                      @click="toggleGroup(item2)"
+                    >
+                      &nbsp;
+                    </button>
+
+                    <!-- Name edit -->
+                    <input
+                      v-if="item2.isEditing"
+                      ref="nameInput"
+                      v-model="editingName"
+                      type="text"
+                      :class="
+                        'px-1 py-0 text-sm ' +
+                        (!isNameValid ? 'input-error' : '')
+                      "
+                      style="width: calc(100% - 1.25rem)"
+                      @blur="tryRename(item2)"
+                      @keydown.enter="tryRename(item2)"
+                      @keydown.escape="cancelRename(item2)"
+                      @keydown.delete.stop
+                    />
+
+                    <!-- Group name -->
+                    <label
+                      v-else
+                      class="inline-block"
+                      @dblclick="toggleGroup(item2)"
+                      @keydown.enter="toggleGroup(item2)"
+                    >
+                      <input
+                        v-model="selectedValue"
+                        type="radio"
+                        :name="`item-picker-${storeName}-${index}`"
+                        class="sr-only peer"
+                        :value="item2.pathStr"
+                      />
+                      <span
+                        class="inline-block px-1 rounded-sm whitespace-nowrap peer-checked:bg-blue-600 peer-checked:text-white"
+                      >
+                        {{ item2.path[2] }}
+                      </span>
+                    </label>
+
+                    <!-- Group items -->
+                    <div
+                      v-if="item2.opened"
+                      class="group"
+                      :style="{
+                        '--guide-decrease': guideDecrease(item2),
+                      }"
+                    >
+                      <!-- Empty group -->
+                      <div v-if="item2.items.length === 0" class="item-inside">
+                        <span class="inline-block px-1">{{ L.emptyGroup }}</span>
+                      </div>
+
+                      <!-- Depth 3 -->
+                      <div
+                        v-for="item3 in item2.items"
+                        :key="item3.pathStr"
+                        class="item-inside"
+                      >
+                        <!-- Name edit -->
+                        <input
+                          v-if="item3.isEditing"
+                          ref="nameInput"
+                          v-model="editingName"
+                          type="text"
+                          :class="
+                            'px-1 py-0 w-full text-sm ' +
+                            (!isNameValid ? 'input-error' : '')
+                          "
+                          @blur="tryRename(item3)"
+                          @keydown.enter="tryRename(item3)"
+                          @keydown.escape="cancelRename(item3)"
+                          @keydown.delete.stop
+                        />
+
+                        <!-- Item name -->
+                        <label
+                          v-else
+                          class="inline-block"
+                          @dblclick="loadItem()"
+                          @keydown.enter="loadItem()"
+                        >
+                          <input
+                            v-model="selectedValue"
+                            type="radio"
+                            :name="`item-picker-${storeName}-${index}`"
+                            class="sr-only peer"
+                            :value="item3.pathStr"
+                          />
+                          <span
+                            class="inline-block px-1 rounded-sm whitespace-nowrap peer-checked:bg-blue-600 peer-checked:text-white"
+                          >
+                            {{ item3.path[3] }}
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </template>
+
+                  <template v-else>
+                    <!-- Name edit -->
+                    <input
+                      v-if="item2.isEditing"
+                      ref="nameInput"
+                      v-model="editingName"
+                      type="text"
+                      :class="
+                        'px-1 py-0 w-full text-sm ' +
+                        (!isNameValid ? 'input-error' : '')
+                      "
+                      @blur="tryRename(item2)"
+                      @keydown.enter="tryRename(item2)"
+                      @keydown.escape="cancelRename(item2)"
+                      @keydown.delete.stop
+                    />
+
+                    <!-- Item name -->
+                    <label
+                      v-else
+                      class="inline-block"
+                      @dblclick="loadItem()"
+                      @keydown.enter="loadItem()"
+                    >
+                      <input
+                        v-model="selectedValue"
+                        type="radio"
+                        :name="`item-picker-${storeName}-${index}`"
+                        class="sr-only peer"
+                        :value="item2.pathStr"
+                      />
+                      <span
+                        class="inline-block px-1 rounded-sm whitespace-nowrap peer-checked:bg-blue-600 peer-checked:text-white"
+                      >
+                        {{ item2.path[2] }}
+                      </span>
+                    </label>
+                  </template>
+                </div>
+              </div>
+            </template>
+
+            <template v-else>
+              <!-- Name edit -->
+              <input
+                v-if="item1.isEditing"
+                ref="nameInput"
+                v-model="editingName"
+                type="text"
+                :class="
+                  'px-1 py-0 w-full text-sm ' +
+                  (!isNameValid ? 'input-error' : '')
+                "
+                @blur="tryRename(item1)"
+                @keydown.enter="tryRename(item1)"
+                @keydown.escape="cancelRename(item1)"
+                @keydown.delete.stop
+              />
+
+              <!-- Item name -->
+              <label
+                v-else
+                class="inline-block"
+                @dblclick="loadItem()"
+                @keydown.enter="loadItem()"
+              >
+                <input
+                  v-model="selectedValue"
+                  type="radio"
+                  :name="`item-picker-${storeName}-${index}`"
+                  class="sr-only peer"
+                  :value="item1.pathStr"
+                />
+                <span
+                  class="inline-block px-1 rounded-sm whitespace-nowrap peer-checked:bg-blue-600 peer-checked:text-white"
+                >
+                  {{ item1.path[1] }}
+                </span>
+              </label>
+            </template>
+          </div>
+        </div>
+      </template>
+
+      <template v-else>
+        <!-- Name edit -->
+        <input
+          v-if="item0.isEditing"
+          ref="nameInput"
+          v-model="editingName"
+          type="text"
+          :class="
+            'px-1 py-0 w-full text-sm ' + (!isNameValid ? 'input-error' : '')
+          "
+          @blur="tryRename(item0)"
+          @keydown.enter="tryRename(item0)"
+          @keydown.escape="cancelRename(item0)"
+          @keydown.delete.stop
+        />
+
+        <!-- Item name -->
+        <label
+          v-else
+          class="inline-block"
+          @dblclick="loadItem()"
+          @keydown.enter="loadItem()"
+        >
+          <input
+            v-model="selectedValue"
+            type="radio"
+            :name="`item-picker-${storeName}-${index}`"
+            class="sr-only peer"
+            :value="item0.pathStr"
+          />
+          <span
+            class="inline-block px-1 rounded-sm whitespace-nowrap peer-checked:bg-blue-600 peer-checked:text-white"
+          >
+            {{ item0.path[0] }}
+          </span>
+        </label>
+      </template>
+    </div>
+  </div>
+
+  <div v-if="errorOccured" class="mt-3 text-red-400 font-bold">
+    {{ L.errorReload }}
+  </div>
+
+  <div class="flex flex-col mt-4 gap-3">
+    <div class="grid grid-cols-3 w-full gap-3">
+      <button
+        class="button-base button-blue button-overrides"
+        :disabled="selectedItem?.item?.isGroup ?? true"
+        @click="loadItem()"
+      >
+        {{ L.load }}
+      </button>
+
+      <button
+        class="button-base button-blue button-overrides"
+        :disabled="errorOccured || !allowSave || isEditing"
+        @click="addOrOverwriteItem()"
+      >
+        {{ selectedItem?.item?.isGroup === false ? L.overwrite : L.save }}
+      </button>
+
+      <button
+        class="button-base button-blue button-overrides"
+        :disabled="errorOccured || selectedValue === false"
+        @click="renameItem()"
+      >
+        {{ L.rename }}
+      </button>
+    </div>
+
+    <div class="grid grid-cols-2 w-full gap-3">
+      <button
+        class="button-base button-blue button-overrides"
+        :disabled="
+          errorOccured ||
+          (selectedItem !== null &&
+            selectedItem.item.path.length +
+              (selectedItem.item.isGroup ? 1 : 0) >=
+              4)
+        "
+        @click="addGroup()"
+      >
+        {{ L.addGroup }}
+      </button>
+
+      <button
+        class="button-base button-red button-overrides"
+        :disabled="errorOccured || selectedValue === false"
+        @click="deleteItem(true)"
+      >
+        {{ L.deleteLabel }}
+      </button>
+
+      <input
+        ref="importJsonInput"
+        type="file"
+        class="hidden"
+        accept=".json"
+        @change="importJson"
+      />
+      <button
+        class="button-base button-green button-overrides button-json"
+        :disabled="errorOccured || isEditing"
+        @click="importJsonInput?.click()"
+      >
+        {{ L.importJsonLabel }}
+      </button>
+
+      <a
+        ref="exportJsonButton"
+        :class="
+          'button-base button-green button-overrides button-json text-center select-none ' +
+          (errorOccured || isEditing
+            ? 'cursor-default pointer-events-none opacity-40'
+            : 'cursor-pointer')
+        "
+        :download="storeName + '.json'"
+        @click="exportJson"
+      >
+        {{ L.exportJsonLabel }}
+      </a>
+    </div>
+
+    <SavedSyncLine
+      v-if="FEATURE_TRAINER"
+      :store-name="storeName"
+      :has-items="data.length > 0"
+      :revision="syncRevision"
+      :item-count="itemCount"
+      :nudge="limitNudge"
+      :nudge-kind="limitNudgeKind"
+      @replaced="onSyncReplaced"
+      @room="saveRoom = $event"
+    />
+  </div>
+
+  <div
+    v-if="importError !== ''"
+    class="flex flex-col mt-4 px-2 py-1 text-red-400 bg-red-950 border-2 border-red-600 rounded-md font-semibold"
+  >
+    <div class="flex">
+      {{ L.importFailed }}
+      <button
+        class="w-6 h-6 ms-auto text-neutral-200 opacity-70 hover:opacity-100"
+        @click="importError = ''"
+      >
+        <XMarkIcon class="w-full h-full" />
+      </button>
+    </div>
+    <div>- {{ importError }}</div>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, nextTick, ref } from "vue";
+import * as Db from "../db";
+import { i18n, pick, autoIso } from "../i18n";
+
+import { XMarkIcon } from "@heroicons/vue/20/solid";
+import { FEATURE_TRAINER, SavedSyncLine } from "@features";
+
+const M = {
+  ko: {
+    noSavedRanges: "저장한 레인지가 아직 없습니다. 「저장」을 누르고 이름을 적으면 지금 레인지가 여기 남고, 다음에 「불러오기」로 꺼내 쓸 수 있습니다.",
+    noSavedConfigs: "저장한 설정이 아직 없습니다. 「저장」을 누르고 이름을 적으면 지금 설정이 여기 남고, 다음에 「불러오기」로 꺼내 쓸 수 있습니다.",
+    emptyGroup: "(빈 그룹)",
+    errorReload: "문제가 발생했습니다. 페이지를 새로고침해 주세요.",
+    load: "불러오기",
+    overwrite: "덮어쓰기",
+    save: "저장",
+    rename: "이름 변경",
+    addGroup: "그룹 추가",
+    deleteLabel: "삭제",
+    importJsonLabel: "JSON 가져오기",
+    exportJsonLabel: "JSON 내보내기",
+    importFailed: "오류: 가져오기에 실패했습니다. 아래 이유를 확인해 주세요 — 이 목록의 «JSON 내보내기»로 저장한 파일만 가져올 수 있습니다.",
+  },
+  en: {
+    noSavedRanges: "You have no saved ranges yet. Click “Save” and enter a name to keep your current range here. Use “Load” to bring it back next time.",
+    noSavedConfigs: "You have no saved configurations yet. Click “Save” and enter a name to keep your current configuration here. Use “Load” to bring it back next time.",
+    emptyGroup: "(Empty group)",
+    errorReload: "An error occurred. Please reload the page.",
+    load: "Load",
+    overwrite: "Overwrite",
+    save: "Save",
+    rename: "Rename",
+    addGroup: "Add Group",
+    deleteLabel: "Delete",
+    importJsonLabel: "Import JSON",
+    exportJsonLabel: "Export JSON",
+    importFailed: "Error: Import failed. Check the reason below — only files saved with “Export JSON” in this list can be imported.",
+  },
+  ja: {
+    noSavedRanges: "保存したレンジはまだありません。「保存」を押して名前を付けると今のレンジがここに残り、次回は「読み込み」で使えます。",
+    noSavedConfigs: "保存した設定はまだありません。「保存」を押して名前を付けると今の設定がここに残り、次回は「読み込み」で使えます。",
+    emptyGroup: "(空のグループ)",
+    errorReload: "問題が発生しました。ページを再読み込みしてください。",
+    load: "読み込み",
+    overwrite: "上書き",
+    save: "保存",
+    rename: "名前を変更",
+    addGroup: "グループを追加",
+    deleteLabel: "削除",
+    importJsonLabel: "JSONをインポート",
+    exportJsonLabel: "JSONをエクスポート",
+    importFailed: "エラー: インポートに失敗しました。下の理由を確認してください — このリストの「JSONをエクスポート」で保存したファイルだけを読み込めます。",
+  },
+  es: {
+    noSavedRanges: "Aún no tienes rangos guardados. Pulsa “Guardar” y escribe un nombre para conservar aquí el rango actual. La próxima vez puedes recuperarlo con “Cargar”.",
+    noSavedConfigs: "Aún no tienes configuraciones guardadas. Pulsa “Guardar” y escribe un nombre para conservar aquí la configuración actual. La próxima vez puedes recuperarla con “Cargar”.",
+    emptyGroup: "(Grupo vacío)",
+    errorReload: "Ocurrió un error. Recarga la página.",
+    load: "Cargar",
+    overwrite: "Sobrescribir",
+    save: "Guardar",
+    rename: "Renombrar",
+    addGroup: "Agregar grupo",
+    deleteLabel: "Eliminar",
+    importJsonLabel: "Importar JSON",
+    exportJsonLabel: "Exportar JSON",
+    importFailed: "Error: la importación falló. Revisa el motivo de abajo: solo se pueden importar archivos guardados con “Exportar JSON” en esta lista.",
+  },
+  pt: {
+    noSavedRanges: "Você ainda não tem ranges salvos. Clique em “Salvar” e dê um nome para manter o range atual aqui. Da próxima vez, use “Carregar” para recuperá-lo.",
+    noSavedConfigs: "Você ainda não tem configurações salvas. Clique em “Salvar” e dê um nome para manter a configuração atual aqui. Da próxima vez, use “Carregar” para recuperá-la.",
+    emptyGroup: "(Grupo vazio)",
+    errorReload: "Ocorreu um erro. Recarregue a página.",
+    load: "Carregar",
+    overwrite: "Sobrescrever",
+    save: "Salvar",
+    rename: "Renomear",
+    addGroup: "Adicionar grupo",
+    deleteLabel: "Excluir",
+    importJsonLabel: "Importar JSON",
+    exportJsonLabel: "Exportar JSON",
+    importFailed: "Erro: a importação falhou. Veja o motivo abaixo: só é possível importar arquivos salvos com “Exportar JSON” nesta lista.",
+  },
+  de: {
+    noSavedRanges: "Du hast noch keine Ranges gespeichert. Klicke auf „Speichern“ und gib einen Namen ein, um die aktuelle Range hier abzulegen. Mit „Laden“ kannst du sie später wieder verwenden.",
+    noSavedConfigs: "Du hast noch keine Einstellungen gespeichert. Klicke auf „Speichern“ und gib einen Namen ein, um die aktuellen Einstellungen hier abzulegen. Mit „Laden“ kannst du sie später wieder verwenden.",
+    emptyGroup: "(Leere Gruppe)",
+    errorReload: "Es ist ein Fehler aufgetreten. Lade die Seite neu.",
+    load: "Laden",
+    overwrite: "Überschreiben",
+    save: "Speichern",
+    rename: "Umbenennen",
+    addGroup: "Gruppe hinzufügen",
+    deleteLabel: "Löschen",
+    importJsonLabel: "JSON importieren",
+    exportJsonLabel: "JSON exportieren",
+    importFailed: "Fehler: Der Import ist fehlgeschlagen. Sieh dir den Grund unten an – importieren lassen sich nur Dateien, die mit „JSON exportieren“ in dieser Liste gespeichert wurden.",
+  },
+  zh: {
+    noSavedRanges: "还没有保存的范围。点击“保存”并输入名称，当前范围就会保存在这里，下次可用“加载”再次使用。",
+    noSavedConfigs: "还没有保存的设置。点击“保存”并输入名称，当前设置就会保存在这里，下次可用“加载”再次使用。",
+    emptyGroup: "（空分组）",
+    errorReload: "出错了，请刷新页面。",
+    load: "加载",
+    overwrite: "覆盖",
+    save: "保存",
+    rename: "重命名",
+    addGroup: "添加分组",
+    deleteLabel: "删除",
+    importJsonLabel: "导入 JSON",
+    exportJsonLabel: "导出 JSON",
+    importFailed: "错误：导入失败。请查看下面的原因——只能导入用这个列表的“导出 JSON”保存的文件。",
+  },
+  // ⚠ 台灣 소프트웨어 표기는 대륙과 «단어 자체»가 다르다 (본체 번체 코퍼스·台灣 Windows 관용):
+  //   加载→載入 · 保存→儲存 · 设置→設定 · 分组→群組 · 添加→新增 · 导入/导出→匯入/匯出 ·
+  //   重命名→重新命名 · 刷新→重新整理. 글자만 번체로 바꾸면 «대륙 말투»가 그대로 남는다
+  "zh-hant": {
+    noSavedRanges: "還沒有儲存的範圍。按下「儲存」並輸入名稱，目前的範圍就會留在這裡，下次可用「載入」再次使用。",
+    noSavedConfigs: "還沒有儲存的設定。按下「儲存」並輸入名稱，目前的設定就會留在這裡，下次可用「載入」再次使用。",
+    emptyGroup: "（空群組）",
+    errorReload: "發生錯誤，請重新整理頁面。",
+    load: "載入",
+    overwrite: "覆蓋",
+    save: "儲存",
+    rename: "重新命名",
+    addGroup: "新增群組",
+    deleteLabel: "刪除",
+    importJsonLabel: "匯入 JSON",
+    exportJsonLabel: "匯出 JSON",
+    importFailed: "錯誤：匯入失敗。請查看下面的原因——只能匯入用這個列表的「匯出 JSON」儲存的檔案。",
+  },
+  fr: {
+    noSavedRanges: "Tu n'as pas encore de range enregistrée. Clique sur « Enregistrer » et saisis un nom pour garder ta range actuelle ici. Tu pourras la retrouver avec « Charger » la prochaine fois.",
+    noSavedConfigs: "Tu n'as pas encore de configuration enregistrée. Clique sur « Enregistrer » et saisis un nom pour garder ta configuration actuelle ici. Tu pourras la retrouver avec « Charger » la prochaine fois.",
+    emptyGroup: "(Groupe vide)",
+    errorReload: "Une erreur est survenue. Recharge la page.",
+    load: "Charger",
+    overwrite: "Écraser",
+    save: "Enregistrer",
+    rename: "Renommer",
+    addGroup: "Ajouter un groupe",
+    deleteLabel: "Supprimer",
+    importJsonLabel: "Importer JSON",
+    exportJsonLabel: "Exporter JSON",
+    importFailed: "Erreur : échec de l'import. Regarde la raison ci-dessous : seuls les fichiers enregistrés avec « Exporter JSON » dans cette liste peuvent être importés.",
+  },
+  id: {
+    noSavedRanges: "Anda belum menyimpan range. Tekan “Simpan” lalu beri nama untuk menyimpan range saat ini di sini. Gunakan “Muat” untuk memakainya lagi nanti.",
+    noSavedConfigs: "Anda belum menyimpan konfigurasi. Tekan “Simpan” lalu beri nama untuk menyimpan konfigurasi saat ini di sini. Gunakan “Muat” untuk memakainya lagi nanti.",
+    emptyGroup: "(Grup kosong)",
+    errorReload: "Terjadi kesalahan. Muat ulang halaman.",
+    load: "Muat",
+    overwrite: "Timpa",
+    save: "Simpan",
+    rename: "Ganti nama",
+    addGroup: "Tambah grup",
+    deleteLabel: "Hapus",
+    importJsonLabel: "Impor JSON",
+    exportJsonLabel: "Ekspor JSON",
+    importFailed: "Error: impor gagal. Lihat alasannya di bawah — hanya file yang disimpan dengan “Ekspor JSON” di daftar ini yang bisa diimpor.",
+  },
+  ms: {
+    noSavedRanges: "Anda belum menyimpan range. Tekan “Simpan” dan namakan untuk menyimpan range semasa di sini. Gunakan “Muat” untuk menggunakannya semula nanti.",
+    noSavedConfigs: "Anda belum menyimpan tetapan. Tekan “Simpan” dan namakan untuk menyimpan tetapan semasa di sini. Gunakan “Muat” untuk menggunakannya semula nanti.",
+    emptyGroup: "(Kumpulan kosong)",
+    errorReload: "Ralat berlaku. Sila muat semula halaman.",
+    load: "Muat",
+    overwrite: "Tulis ganti",
+    save: "Simpan",
+    rename: "Tukar nama",
+    addGroup: "Tambah kumpulan",
+    deleteLabel: "Padam",
+    importJsonLabel: "Import JSON",
+    exportJsonLabel: "Eksport JSON",
+    importFailed: "Ralat: import gagal. Lihat sebabnya di bawah — hanya fail yang disimpan dengan “Eksport JSON” dalam senarai ini boleh diimport.",
+  },
+  hi: {
+    noSavedRanges: "अभी कोई range सेव नहीं है। “सेव करें” दबाकर नाम लिखें, तो मौजूदा range यहाँ रहेगी और अगली बार आप “लोड करें” से उसे फिर इस्तेमाल कर सकते हैं।",
+    noSavedConfigs: "अभी कोई सेटिंग सेव नहीं है। “सेव करें” दबाकर नाम लिखें, तो मौजूदा सेटिंग यहाँ रहेगी और अगली बार आप “लोड करें” से उसे फिर इस्तेमाल कर सकते हैं।",
+    emptyGroup: "(खाली समूह)",
+    errorReload: "त्रुटि हुई। पेज फिर से लोड करें।",
+    load: "लोड करें",
+    overwrite: "पुराने की जगह सेव करें",
+    save: "सेव करें",
+    rename: "नाम बदलें",
+    addGroup: "समूह जोड़ें",
+    deleteLabel: "हटाएँ",
+    importJsonLabel: "JSON इंपोर्ट करें",
+    exportJsonLabel: "JSON एक्सपोर्ट करें",
+    importFailed: "त्रुटि: इंपोर्ट नहीं हो सका। नीचे कारण देखें — इसी सूची के “JSON एक्सपोर्ट करें” से सेव की गई फ़ाइल ही इंपोर्ट हो सकती है।",
+  },
+  tr: {
+    noSavedRanges: "Henüz kayıtlı range yok. Şu anki range'i burada tutmak için “Kaydet” düğmesine dokun ve bir ad gir. Sonraki sefer “Yükle” ile geri getirebilirsin.",
+    noSavedConfigs: "Henüz kayıtlı ayar yok. Şu anki ayarı burada tutmak için “Kaydet” düğmesine dokun ve bir ad gir. Sonraki sefer “Yükle” ile geri getirebilirsin.",
+    emptyGroup: "(Boş grup)",
+    errorReload: "Bir hata oluştu. Sayfayı yeniden yükle.",
+    load: "Yükle",
+    overwrite: "Üzerine yaz",
+    save: "Kaydet",
+    rename: "Yeniden adlandır",
+    addGroup: "Grup ekle",
+    deleteLabel: "Sil",
+    importJsonLabel: "JSON içe aktar",
+    exportJsonLabel: "JSON dışa aktar",
+    importFailed: "Hata: İçe aktarılamadı. Aşağıdaki nedene bak — yalnızca bu listede “JSON dışa aktar” ile kaydedilen dosyalar içe aktarılabilir.",
+  },
+  vi: {
+    noSavedRanges: "Bạn chưa lưu range nào. Nhấn “Lưu” rồi nhập tên để giữ range hiện tại ở đây. Lần sau dùng “Tải” để mở lại.",
+    noSavedConfigs: "Bạn chưa lưu cấu hình nào. Nhấn “Lưu” rồi nhập tên để giữ cấu hình hiện tại ở đây. Lần sau dùng “Tải” để mở lại.",
+    emptyGroup: "(Nhóm trống)",
+    errorReload: "Đã xảy ra lỗi. Hãy tải lại trang.",
+    load: "Tải",
+    overwrite: "Ghi đè",
+    save: "Lưu",
+    rename: "Đổi tên",
+    addGroup: "Thêm nhóm",
+    deleteLabel: "Xóa",
+    importJsonLabel: "Nhập JSON",
+    exportJsonLabel: "Xuất JSON",
+    importFailed: "Lỗi: Không nhập được. Hãy xem lý do bên dưới — chỉ nhập được tệp đã lưu bằng “Xuất JSON” trong danh sách này.",
+  },
+  ru: {
+    noSavedRanges: "Сохранённых диапазонов пока нет. Нажми «Сохранить» и введи название — текущий диапазон останется здесь. В следующий раз верни его кнопкой «Загрузить».",
+    noSavedConfigs: "Сохранённых конфигураций пока нет. Нажми «Сохранить» и введи название — текущая конфигурация останется здесь. В следующий раз верни её кнопкой «Загрузить».",
+    emptyGroup: "(Пустая группа)",
+    errorReload: "Произошла ошибка. Перезагрузи страницу.",
+    load: "Загрузить",
+    overwrite: "Заменить",
+    save: "Сохранить",
+    rename: "Переименовать",
+    addGroup: "Добавить группу",
+    deleteLabel: "Удалить",
+    importJsonLabel: "Импорт JSON",
+    exportJsonLabel: "Экспорт JSON",
+    importFailed: "Ошибка: импорт не удался. Причина указана ниже — импортировать можно только файлы, сохранённые через «Экспорт JSON» в этом списке.",
+  },
+  ar: {
+    noSavedRanges: "لا نطاقات محفوظة بعد. اضغط «حفظ» وأدخل اسمًا ليبقى النطاق الحالي هنا. في المرة القادمة اضغط «تحميل» لاستعادته.",
+    noSavedConfigs: "لا تكوينات محفوظة بعد. اضغط «حفظ» وأدخل اسمًا ليبقى التكوين الحالي هنا. في المرة القادمة اضغط «تحميل» لاستعادته.",
+    emptyGroup: "(مجموعة فارغة)",
+    errorReload: "حدث خطأ. أعد تحميل الصفحة.",
+    load: "تحميل",
+    overwrite: "استبدال",
+    save: "حفظ",
+    rename: "إعادة تسمية",
+    addGroup: "إضافة مجموعة",
+    deleteLabel: "حذف",
+    importJsonLabel: "استيراد JSON",
+    exportJsonLabel: "تصدير JSON",
+    importFailed: "خطأ: تعذّر الاستيراد. السبب مذكور أدناه — لا يمكن استيراد إلا الملفات المحفوظة عبر «تصدير JSON» في هذه القائمة.",
+  },
+  it: {
+    noSavedRanges: "Non hai ancora range salvati. Premi «Salva» e inserisci un nome per conservare qui il range attuale. La prossima volta, usa «Carica» per recuperarlo.",
+    noSavedConfigs: "Non hai ancora impostazioni salvate. Premi «Salva» e inserisci un nome per conservare qui le impostazioni attuali. La prossima volta, usa «Carica» per recuperarle.",
+    emptyGroup: "(Gruppo vuoto)",
+    errorReload: "Si è verificato un errore. Ricarica la pagina.",
+    load: "Carica",
+    overwrite: "Sostituisci",
+    save: "Salva",
+    rename: "Rinomina",
+    addGroup: "Nuovo gruppo",
+    deleteLabel: "Elimina",
+    importJsonLabel: "Importa JSON",
+    exportJsonLabel: "Esporta JSON",
+    importFailed: "Errore: importazione non riuscita. Controlla il motivo qui sotto: puoi importare solo file salvati con «Esporta JSON» da questa lista.",
+  },
+  pl: {
+    noSavedRanges: "Nie masz jeszcze zapisanych zakresów. Kliknij „Zapisz” i wpisz nazwę, aby zachować tu bieżący zakres. Następnym razem wybierz „Wczytaj”, aby do niego wrócić.",
+    noSavedConfigs: "Nie masz jeszcze zapisanych ustawień. Kliknij „Zapisz” i wpisz nazwę, aby zachować tu bieżące ustawienia. Następnym razem wybierz „Wczytaj”, aby do nich wrócić.",
+    emptyGroup: "(Pusta grupa)",
+    errorReload: "Wystąpił błąd. Odśwież stronę.",
+    load: "Wczytaj",
+    overwrite: "Nadpisz",
+    save: "Zapisz",
+    rename: "Zmień nazwę",
+    addGroup: "Dodaj grupę",
+    deleteLabel: "Usuń",
+    importJsonLabel: "Importuj JSON",
+    exportJsonLabel: "Eksportuj JSON",
+    importFailed: "Błąd: nie udało się zaimportować danych. Sprawdź przyczynę poniżej. Możesz importować tylko pliki zapisane przyciskiem „Eksportuj JSON” na tej liście.",
+  },
+} as const;
+
+type Item = {
+  isGroup: false;
+  path: string[];
+  pathStr: string;
+  value: unknown;
+  isEditing: boolean;
+};
+
+type Group = {
+  isGroup: true;
+  path: string[];
+  pathStr: string;
+  opened: boolean;
+  isEditing: boolean;
+  items: (Item | Group)[];
+};
+
+const isEqual = (lhs: unknown, rhs: unknown) => {
+  if (lhs === null || typeof lhs !== "object") return lhs === rhs;
+  if (Array.isArray(lhs)) {
+    if (!Array.isArray(rhs) || lhs.length !== rhs.length) return false;
+    for (let i = 0; i < lhs.length; ++i) {
+      if (!isEqual(lhs[i], rhs[i])) return false;
+    }
+  } else {
+    if (rhs === null || typeof rhs !== "object") return false;
+    const lhsEntries = Object.entries(lhs);
+    const rhsEntries = Object.entries(rhs);
+    if (lhsEntries.length !== rhsEntries.length) return false;
+    lhsEntries.sort((a, b) => a[0].localeCompare(b[0]));
+    rhsEntries.sort((a, b) => a[0].localeCompare(b[0]));
+    for (let i = 0; i < lhsEntries.length; ++i) {
+      if (lhsEntries[i][0] !== rhsEntries[i][0]) return false;
+      if (!isEqual(lhsEntries[i][1], rhsEntries[i][1])) return false;
+    }
+  }
+  return true;
+};
+
+const clone = (value: unknown) => {
+  if (value === null || typeof value !== "object") return value;
+  if (Array.isArray(value)) return [...value];
+  return { ...value };
+};
+
+const groupToDbGroup = (group: Group): Db.DbGroup => ({
+  name0: group.path[0],
+  name1: group.path[1] ?? "",
+  name2: group.path[2] ?? "",
+  name3: group.path[3] ?? "",
+  isGroup: 1,
+});
+
+const itemToDbItem = (item: Item): Db.DbItem => ({
+  name0: item.path[0],
+  name1: item.path[1] ?? "",
+  name2: item.path[2] ?? "",
+  name3: item.path[3] ?? "",
+  isGroup: 0,
+  value: clone(item.value),
+});
+
+const toDbItemOrGroup = (itemOrGroup: Item | Group): Db.DbItem | Db.DbGroup =>
+  itemOrGroup.isGroup ? groupToDbGroup(itemOrGroup) : itemToDbItem(itemOrGroup);
+
+type AddItemMessage = {
+  type: "addItem";
+  path: string[];
+  value: unknown;
+};
+
+type OverwriteItemMessage = {
+  type: "overwriteItem";
+  path: string[];
+  value: unknown;
+};
+
+type RenameItemMessage = {
+  type: "renameItem";
+  path: string[];
+  newName: string;
+};
+
+type AddGroupMessage = {
+  type: "addGroup";
+  path: string[];
+};
+
+type DeleteItemMessage = {
+  type: "deleteItem";
+  path: string[];
+};
+
+type ImportJsonMessage = {
+  type: "importJson";
+};
+
+type Message =
+  | AddItemMessage
+  | OverwriteItemMessage
+  | RenameItemMessage
+  | AddGroupMessage
+  | DeleteItemMessage
+  | ImportJsonMessage;
+
+export default defineComponent({
+  components: {
+    XMarkIcon,
+    SavedSyncLine,
+  },
+
+  props: {
+    storeName: {
+      type: String,
+      required: true,
+    },
+    index: {
+      type: Number,
+      default: 0,
+    },
+    value: {
+      type: null,
+      required: true,
+    },
+    allowSave: {
+      type: Boolean,
+      required: true,
+    },
+  },
+
+  emits: {
+    "load-item": (_value: unknown) => true,
+  },
+
+  setup(props, context) {
+    const L = computed(() => M[i18n.locale]);
+    const data = ref<(Item | Group)[]>([]);
+    const selectedValue = ref(false as false | string);
+
+    const selectedItem = computed(() => {
+      if (selectedValue.value === false) return null;
+      const path = JSON.parse(selectedValue.value);
+      let item: Item | Group | undefined;
+      let items = data.value;
+      for (let i = 0; i < path.length; ++i) {
+        item = items.find((item) => item.path[i] === path[i]);
+        if (item === undefined) return null;
+        if (i < path.length - 1) {
+          if (!item.isGroup) return null;
+          items = item.items;
+        }
+      }
+      return item ? { item, parentItems: items } : null;
+    });
+
+    const errorOccured = ref(false);
+
+    // load data from DB
+    const loadData = async () => {
+      const masterData = await Db.getArray(props.storeName);
+
+      masterData.sort(
+        (a, b) =>
+          Number(b.name1 === "") - Number(a.name1 === "") ||
+          Number(b.name2 === "") - Number(a.name2 === "") ||
+          Number(b.name3 === "") - Number(a.name3 === "") ||
+          b.isGroup - a.isGroup ||
+          a.name0.localeCompare(b.name0, undefined, { numeric: true }) ||
+          a.name1.localeCompare(b.name1, undefined, { numeric: true }) ||
+          a.name2.localeCompare(b.name2, undefined, { numeric: true }) ||
+          a.name3.localeCompare(b.name3, undefined, { numeric: true })
+      );
+
+      data.value = [];
+      selectedValue.value = false;
+
+      const dataMap = new Map<string, Item | Group>();
+      const dataItems = new Map<string, (Item | Group)[]>();
+      dataItems.set(JSON.stringify([]), data.value);
+
+      for (const masterItem of masterData) {
+        if (masterItem.isGroup) {
+          const path = [
+            masterItem.name0,
+            masterItem.name1,
+            masterItem.name2,
+            "",
+          ];
+          const depth = path.findIndex((name) => name === "");
+          path.length = depth;
+          const pathStr = JSON.stringify(path);
+          const parent = path.slice(0, -1);
+          const parentStr = JSON.stringify(parent);
+          const parentItems = dataItems.get(parentStr);
+          if (parentItems) {
+            const items: (Item | Group)[] = [];
+            const group: Group = {
+              isGroup: true,
+              path,
+              pathStr,
+              opened: depth === 1,
+              isEditing: false,
+              items,
+            };
+            parentItems.push(group);
+            dataMap.set(pathStr, group);
+            dataItems.set(pathStr, items);
+          } else {
+            errorOccured.value = true;
+            return;
+          }
+        } else {
+          const path = [
+            masterItem.name0,
+            masterItem.name1,
+            masterItem.name2,
+            masterItem.name3,
+            "",
+          ];
+          const depth = path.findIndex((name) => name === "");
+          path.splice(depth);
+          const pathStr = JSON.stringify(path);
+          const parent = path.slice(0, -1);
+          const parentStr = JSON.stringify(parent);
+          const parentItems = dataItems.get(parentStr);
+          if (parentItems) {
+            const item: Item = {
+              isGroup: false,
+              path,
+              pathStr,
+              value: masterItem.value,
+              isEditing: false,
+            };
+            parentItems.push(item);
+            dataMap.set(pathStr, item);
+          } else {
+            errorOccured.value = true;
+            return;
+          }
+        }
+      }
+    };
+
+    loadData();
+
+    // Broadcast channel
+    const channel = new BroadcastChannel(`item-picker-${Db.localDbName}-${props.storeName}`);
+    // 저장 목록 계정 동기화: 이 기기에서 바꾼 뒤마다 올라간다 (SavedSyncLine이 계정에 반영)
+    const syncRevision = ref(0);
+    // 회원 전용 ①: 더 저장할 수 있는 수(SavedSyncLine이 알려 준다 · null = 한도 없음 — 단독 빌드는 늘 null)
+    const saveRoom = ref<number | null>(null);
+    const limitNudge = ref(0);
+    const limitNudgeKind = ref<"save" | "import">("save");
+    // 이름 쓰는 중인 새 항목도 센다 — [저장]을 누른 순간 자리를 차지한다(그 사이 다른 탭이 더해도 한도를 넘지 않게)
+    const countItems = (items: (Item | Group)[]): number =>
+      items.reduce(
+        (n, item) => n + (item.isGroup ? countItems(item.items) : 1),
+        0
+      );
+    const itemCount = computed(() => countItems(data.value));
+    const notify = (message: Message) => {
+      channel.postMessage(message);
+      syncRevision.value++;
+    };
+    // 이름을 쓰는 중에 동기화가 끝나면 다시 읽지 않는다 — 입력칸·새 항목이 사라지고 버튼이 잠긴 채 남았다.
+    // 표시만 해 두고, 이름 쓰기가 끝나 기기에 쓴 뒤 다시 읽는다(아래 afterEdit)
+    let reloadAfterEdit = false;
+    const onSyncReplaced = () => {
+      if (isEditing.value) reloadAfterEdit = true;
+      else void loadData();
+    };
+    const afterEdit =
+      <A extends unknown[]>(fn: (...args: A) => Promise<void>) =>
+      async (...args: A) => {
+        await fn(...args);
+        if (reloadAfterEdit && !isEditing.value) {
+          reloadAfterEdit = false;
+          await loadData();
+        }
+      };
+
+    channel.onmessage = async (event: MessageEvent<Message>) => {
+      if (errorOccured.value) return;
+      // 기기 자료 관문이 닫힌 탭(다른 계정 확인 실패)은 목록 알림도 받지 않는다 (MB-388 ① · 6차 N2)
+      if (!(await Db.isLocalDataOpen())) return;
+
+      const message = event.data;
+      const pathStr =
+        message.type === "importJson" ? "" : JSON.stringify(message.path);
+
+      if (message.type === "addItem") {
+        // add item
+        if (message.path.length > 1) {
+          selectedValue.value = JSON.stringify(message.path.slice(0, -1));
+          if (selectedItem.value === null) {
+            errorOccured.value = true;
+            selectedValue.value = false;
+            return;
+          }
+        } else {
+          selectedValue.value = false;
+        }
+        await addOrOverwriteItem(
+          message.value,
+          message.path[message.path.length - 1]
+        );
+      } else if (message.type === "overwriteItem") {
+        // overwrite item
+        selectedValue.value = pathStr;
+        if (selectedItem.value === null) {
+          errorOccured.value = true;
+          selectedValue.value = false;
+          return;
+        }
+        await addOrOverwriteItem(message.value);
+      } else if (message.type === "renameItem") {
+        // rename item
+        selectedValue.value = pathStr;
+        if (selectedItem.value === null) {
+          errorOccured.value = true;
+          selectedValue.value = false;
+          return;
+        }
+        await tryRename(selectedItem.value.item, message.newName);
+      } else if (message.type === "addGroup") {
+        // add group
+        if (message.path.length > 1) {
+          selectedValue.value = JSON.stringify(message.path.slice(0, -1));
+          if (selectedItem.value === null) {
+            errorOccured.value = true;
+            selectedValue.value = false;
+            return;
+          }
+        } else {
+          selectedValue.value = false;
+        }
+        await addGroup(message.path[message.path.length - 1]);
+      } else if (message.type === "deleteItem") {
+        // delete item
+        selectedValue.value = pathStr;
+        if (selectedItem.value === null) {
+          errorOccured.value = true;
+          selectedValue.value = false;
+          return;
+        }
+        await deleteItem(false);
+      } else if (message.type === "importJson") {
+        // import JSON
+        await loadData();
+      }
+    };
+
+    const isEditing = ref(false);
+    const editingName = ref("");
+    const duplicateName = ref([] as string[]);
+    const nameInput = ref(null as HTMLInputElement[] | null);
+
+    const unselect = (ev: MouseEvent) => {
+      const target = ev.target as HTMLElement;
+      if (target.tagName === "DIV") {
+        selectedValue.value = false;
+      }
+    };
+
+    const closeGroup = (group: Group) => {
+      group.opened = false;
+      for (const child of group.items) {
+        if (child.isGroup) {
+          closeGroup(child);
+        }
+      }
+    };
+
+    const toggleGroup = (group: Group) => {
+      selectedValue.value = false;
+      if (group.opened) {
+        closeGroup(group);
+      } else {
+        group.opened = true;
+      }
+    };
+
+    const numDisplayedRows = (group: Group) => {
+      if (!group.opened) return 0;
+      let ret = group.items.length || 1;
+      for (const child of group.items) {
+        if (child.isGroup) {
+          ret += numDisplayedRows(child);
+        }
+      }
+      return ret;
+    };
+
+    const guideDecrease = (group: Group) => {
+      if (group.items.length > 0) {
+        const lastChild = group.items[group.items.length - 1];
+        if (lastChild.isGroup) {
+          return numDisplayedRows(lastChild);
+        }
+      }
+      return 0;
+    };
+
+    const loadItem = () => {
+      if (!selectedItem.value) return;
+      if (selectedItem.value.item.isGroup === false) {
+        context.emit("load-item", selectedItem.value.item.value);
+      }
+      selectedValue.value = false;
+    };
+
+    const addOrOverwriteItem = async (value?: unknown, name?: string) => {
+      if (errorOccured.value) return;
+
+      // 회원 전용 ①: 비회원 한도가 찼으면 새로 더하는 것만 막고 아래 한 줄을 강조한다(팝업 없음).
+      // 덮어쓰기·이름 바꾸기·삭제·불러오기는 언제나 · 다른 탭의 메시지(value가 있음)는 막지 않는다
+      if (
+        value === undefined &&
+        selectedItem.value?.item?.isGroup !== false &&
+        saveRoom.value !== null &&
+        saveRoom.value <= 0
+      ) {
+        limitNudgeKind.value = "save";
+        limitNudge.value++;
+        return;
+      }
+
+      if (selectedItem.value?.item?.isGroup === false) {
+        // overwrite
+        selectedItem.value.item.value = value ?? props.value;
+
+        if (value === undefined) {
+          // save and broadcast
+          errorOccured.value ||= !(await Db.overwriteItem(
+            props.storeName,
+            itemToDbItem(selectedItem.value.item)
+          ));
+          notify({
+            type: "overwriteItem",
+            path: [...selectedItem.value.item.path],
+            value: clone(props.value),
+          } as OverwriteItemMessage);
+        }
+
+        selectedValue.value = false;
+      } else {
+        // add
+        const path = selectedItem.value?.item
+          ? [...selectedItem.value.item.path, name ?? ""]
+          : [name ?? ""];
+        const pathStr = JSON.stringify(path);
+        const parentItems = selectedItem.value?.item?.items ?? data.value;
+        parentItems.push({
+          isGroup: false,
+          path,
+          pathStr,
+          value: value ?? props.value,
+          isEditing: false,
+        });
+
+        if (name === undefined) {
+          // user must enter a name
+          if (selectedItem.value) {
+            selectedItem.value.item.opened = true;
+          }
+          selectedValue.value = pathStr;
+          await renameItem();
+        } else {
+          // name is provided
+          selectedValue.value = false;
+          const depth = path.length - 1;
+          parentItems.sort(
+            (a, b) =>
+              Number(b.isGroup) - Number(a.isGroup) ||
+              a.path[depth].localeCompare(b.path[depth], undefined, {
+                numeric: true,
+              })
+          );
+        }
+      }
+    };
+
+    const isNameValid = computed(() => {
+      const name = editingName.value.trim();
+      return name !== "" && !duplicateName.value.includes(name);
+    });
+
+    const renameItem = async () => {
+      if (!selectedItem.value || errorOccured.value) return;
+      const item = selectedItem.value.item;
+      item.isEditing = true;
+      isEditing.value = true;
+      editingName.value = item.path[item.path.length - 1];
+      duplicateName.value = selectedItem.value.parentItems
+        .map((item) => item.path[item.path.length - 1])
+        .filter((name) => name !== editingName.value);
+      const defaultName = item.isGroup
+        ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo", "Neue Gruppe", "新建分组", "新增群組", "Nouveau groupe", "Grup baru", "Kumpulan baharu", "नया समूह", "Yeni grup", "Nhóm mới", "Новая группа",
+    "مجموعة جديدة",
+          "Nuovo gruppo", "Nowa grupa")
+        : props.storeName === "ranges"
+        ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range", "Neue Range", "新建范围", "新增範圍", "Nouvelle range", "Range baru", "Range baharu", "नई range", "Yeni range", "Range mới", "Новый диапазон",
+    "نطاق جديد",
+          "Nuovo range", "Nowy zakres")
+        : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração", "Neue Einstellung", "新建设置", "新增設定", "Nouvelle configuration", "Konfigurasi baru", "Tetapan baharu", "नई सेटिंग", "Yeni ayar", "Cấu hình mới", "Новая конфигурация",
+    "تكوين جديد",
+          "Nuove impostazioni", "Nowe ustawienia");
+      if (editingName.value === "") {
+        let i = 2;
+        let newName = defaultName;
+        while (duplicateName.value.includes(newName)) {
+          newName = `${defaultName} (${i++})`;
+        }
+        editingName.value = newName;
+      }
+      selectedValue.value = false;
+      await nextTick();
+      if (nameInput.value) {
+        nameInput.value[0].select();
+        nameInput.value[0].scrollIntoView({ block: "nearest" });
+      }
+    };
+
+    const tryRename = async (item: Item | Group, newName?: string) => {
+      // existence check (`tryRename()` might be called when an item is deleted)
+      selectedValue.value = item.pathStr;
+      if (selectedItem.value === null) {
+        selectedValue.value = false;
+        return;
+      }
+
+      const isUserAction = newName === undefined;
+
+      if (newName === undefined) {
+        // is user action
+        item.isEditing = false;
+        isEditing.value = false;
+
+        if (!isNameValid.value) {
+          editingName.value = "";
+          if (item.path[item.path.length - 1] === "") {
+            await deleteItem(false);
+          }
+          return;
+        }
+
+        // 회원 전용 ①: 이름을 쓰는 사이 다른 탭이 더해 한도를 넘었으면 이 새 항목은 저장하지 않는다
+        if (
+          !item.isGroup &&
+          item.path[item.path.length - 1] === "" &&
+          saveRoom.value !== null &&
+          saveRoom.value < 0
+        ) {
+          editingName.value = "";
+          await deleteItem(false);
+          limitNudgeKind.value = "save";
+          limitNudge.value++;
+          return;
+        }
+
+        newName = editingName.value.trim();
+        editingName.value = "";
+      }
+
+      if (errorOccured.value) return;
+
+      const depth = item.path.length - 1;
+      const isNewItem = item.path[depth] === "";
+      const prevPath = [...item.path];
+
+      if (item.path[depth] === newName) {
+        if (isUserAction) {
+          // give focus
+          await nextTick();
+          const name = `item-picker-${props.storeName}-${props.index}`;
+          const checked = document.querySelector(
+            `input[name="${name}"]:checked`
+          );
+          if (checked) {
+            (checked as HTMLInputElement).focus();
+          }
+        }
+
+        return;
+      }
+
+      item.path[depth] = newName;
+      item.pathStr = JSON.stringify(item.path);
+      if (item.isGroup) {
+        renameRecursive(item, newName, depth);
+      }
+
+      selectedValue.value = item.pathStr;
+      const parentItems = selectedItem.value?.parentItems;
+      if (parentItems) {
+        parentItems.sort(
+          (a, b) =>
+            Number(b.isGroup) - Number(a.isGroup) ||
+            a.path[depth].localeCompare(b.path[depth], undefined, {
+              numeric: true,
+            })
+        );
+      }
+
+      if (isUserAction) {
+        // save and broadcast
+        if (isNewItem) {
+          // add
+          if (!item.isGroup) {
+            // item
+            errorOccured.value ||= !(await Db.addItem(
+              props.storeName,
+              itemToDbItem(item)
+            ));
+            notify({
+              type: "addItem",
+              path: [...item.path],
+              value: clone(item.value),
+            } as AddItemMessage);
+          } else {
+            // group
+            errorOccured.value ||= !(await Db.addGroup(
+              props.storeName,
+              groupToDbGroup(item)
+            ));
+            notify({
+              type: "addGroup",
+              path: [...item.path],
+            } as AddGroupMessage);
+          }
+        } else {
+          // rename
+          errorOccured.value ||= !(await Db.renameItem(
+            props.storeName,
+            toDbItemOrGroup({ ...item, path: prevPath }),
+            newName
+          ));
+          notify({
+            type: "renameItem",
+            path: prevPath,
+            newName: newName,
+          } as RenameItemMessage);
+        }
+
+        // give focus
+        await nextTick();
+        const name = `item-picker-${props.storeName}-${props.index}`;
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        if (checked) {
+          (checked as HTMLInputElement).focus();
+        }
+      } else {
+        selectedValue.value = false;
+      }
+    };
+
+    const renameRecursive = (group: Group, newName: string, depth: number) => {
+      for (const item of group.items) {
+        item.path[depth] = newName;
+        item.pathStr = JSON.stringify(item.path);
+        if (item.isGroup) {
+          renameRecursive(item, newName, depth);
+        }
+      }
+    };
+
+    const cancelRename = async (item: Item | Group) => {
+      item.isEditing = false;
+      isEditing.value = false;
+      editingName.value = "";
+      if (item.path[item.path.length - 1] === "") {
+        selectedValue.value = item.pathStr;
+        await deleteItem(false);
+      }
+    };
+
+    const addGroup = async (name?: string) => {
+      if (errorOccured.value) return;
+
+      const path = selectedItem.value
+        ? selectedItem.value.item.isGroup
+          ? [...selectedItem.value.item.path, name ?? ""]
+          : [...selectedItem.value.item.path.slice(0, -1), name ?? ""]
+        : [name ?? ""];
+      if (path.length > 3) return;
+      const pathStr = JSON.stringify(path);
+      const parentItems = selectedItem.value
+        ? selectedItem.value.item.isGroup
+          ? selectedItem.value.item.items
+          : selectedItem.value.parentItems
+        : data.value;
+      parentItems.push({
+        isGroup: true,
+        path,
+        pathStr,
+        opened: false,
+        isEditing: false,
+        items: [],
+      });
+
+      if (name === undefined) {
+        // user must enter a name
+        if (selectedItem.value?.item?.isGroup) {
+          selectedItem.value.item.opened = true;
+        }
+        selectedValue.value = pathStr;
+        renameItem();
+      } else {
+        // name is provided
+        selectedValue.value = false;
+        const depth = path.length - 1;
+        parentItems.sort(
+          (a, b) =>
+            Number(b.isGroup) - Number(a.isGroup) ||
+            a.path[depth].localeCompare(b.path[depth], undefined, {
+              numeric: true,
+            })
+        );
+      }
+    };
+
+    const deleteItem = async (isUserAction: boolean) => {
+      if (!selectedItem.value || errorOccured.value) return;
+
+      const path = [...selectedItem.value.item.path];
+      const dbItem = toDbItemOrGroup(selectedItem.value.item);
+
+      const parentItems = selectedItem.value.parentItems;
+      parentItems.splice(parentItems.indexOf(selectedItem.value.item), 1);
+      selectedValue.value = false;
+
+      if (isUserAction) {
+        // save and broadcast
+        errorOccured.value ||= !(await Db.deleteItem(props.storeName, dbItem));
+        notify({
+          type: "deleteItem",
+          path,
+        } as DeleteItemMessage);
+      }
+    };
+
+    const importError = ref("");
+    const importJsonInput = ref<HTMLInputElement | null>(null);
+    const exportJsonButton = ref<HTMLAnchorElement | null>(null);
+
+    type JsonItem = {
+      path: string[];
+      isGroup: boolean;
+      value?: unknown;
+    };
+
+    const checkJson = (array: JsonItem[]) => {
+      if (!Array.isArray(array)) return false;
+
+      let valueType = "";
+      if (props.storeName === "ranges") valueType = "string";
+      if (props.storeName === "configurations") valueType = "object";
+      if (valueType === "") return false;
+
+      const map = new Map<string, boolean>();
+      map.set(JSON.stringify([]), true);
+
+      for (const item of array) {
+        if (
+          typeof item.isGroup !== "boolean" ||
+          !Array.isArray(item.path) ||
+          item.path.some((x) => typeof x !== "string") ||
+          item.path.length > (item.isGroup ? 3 : 4) ||
+          (!item.isGroup && typeof item.value !== valueType)
+        ) {
+          return false;
+        }
+
+        item.path = item.path.map((x) => x.trim());
+
+        if (
+          item.path.some((x) => x === "") ||
+          !map.get(JSON.stringify(item.path.slice(0, -1))) ||
+          map.has(JSON.stringify(item.path))
+        ) {
+          return false;
+        }
+
+        map.set(JSON.stringify(item.path), item.isGroup);
+      }
+
+      return true;
+    };
+
+    const getItemsToAdd = async (array: JsonItem[]) => {
+      const masterData = await Db.getArray(props.storeName);
+      const masterMap = new Map<string, Db.DbItem | Db.DbGroup>();
+      for (const item of masterData) {
+        const path = [item.name0, item.name1, item.name2, item.name3, ""];
+        path.length = path.findIndex((x) => x === "");
+        masterMap.set(JSON.stringify(path), item);
+      }
+
+      const ret: (Db.DbItem | Db.DbGroup)[] = [];
+
+      for (const item of array) {
+        const depth = item.path.length;
+        const name = item.path[depth - 1];
+        let pathStr = JSON.stringify(item.path);
+
+        if (item.isGroup) {
+          const master = masterMap.get(pathStr);
+          if (master && master.isGroup === 0) return name;
+          if (!master) {
+            ret.push({
+              name0: item.path[0],
+              name1: item.path[1] ?? "",
+              name2: item.path[2] ?? "",
+              name3: item.path[3] ?? "",
+              isGroup: 1,
+            });
+          }
+        } else {
+          let i = 2;
+          let master = masterMap.get(pathStr);
+          while (
+            master &&
+            (master.isGroup === 1 || !isEqual(master.value, item.value))
+          ) {
+            item.path[depth - 1] = `${name} (${i++})`;
+            pathStr = JSON.stringify(item.path);
+            master = masterMap.get(pathStr);
+          }
+          if (!master) {
+            ret.push({
+              name0: item.path[0],
+              name1: item.path[1] ?? "",
+              name2: item.path[2] ?? "",
+              name3: item.path[3] ?? "",
+              isGroup: 0,
+              value: item.value,
+            });
+          }
+        }
+      }
+
+      return ret;
+    };
+
+    const importJson = async () => {
+      if (errorOccured.value || isEditing.value || !importJsonInput.value) {
+        return;
+      }
+
+      const file = importJsonInput.value.files?.[0];
+      if (!file) return;
+
+      importError.value = "";
+      importJsonInput.value.value = "";
+
+      const text = await file.text();
+      let obj: { version: number; name: string; data: JsonItem[] };
+      try {
+        obj = JSON.parse(text);
+      } catch (e) {
+        importError.value = pick(
+          "파싱 오류 (잘못된 JSON 형식)",
+          "Parse error (invalid JSON format)",
+          "解析エラー(無効なJSON形式)",
+          "Error de análisis (formato JSON inválido)",
+          "Erro de análise (formato JSON inválido)",
+          "Lesefehler (ungültiges JSON-Format)"
+        ,
+          "解析出错（JSON 格式无效）", "解析錯誤（JSON 格式無效）",
+          "Erreur d'analyse (format JSON invalide)",
+          "Kesalahan pembacaan (format JSON tidak valid)",
+          "Ralat pembacaan (format JSON tidak sah)", "पार्स नहीं हो सका (JSON प्रारूप अमान्य है)", "Okuma hatası (geçersiz JSON biçimi)", "Lỗi đọc dữ liệu (định dạng JSON không hợp lệ)", "Ошибка чтения (неверный формат JSON)",
+    "خطأ في القراءة (صيغة JSON غير صالحة)",
+          "Errore di lettura (formato JSON non valido)", "Błąd odczytu (nieprawidłowy format JSON)");
+        return;
+      }
+
+      if (obj.name !== props.storeName) {
+        importError.value = pick(
+          "데이터 종류가 일치하지 않습니다",
+          "Data type mismatch",
+          "データの種類が一致しません",
+          "El tipo de datos no coincide",
+          "Os tipos de dados não coincidem",
+          "Die Datentypen passen nicht zusammen"
+        ,
+          "数据类型不一致", "資料類型不一致",
+          "Le type de données ne correspond pas",
+          "Tipe data tidak cocok",
+          "Jenis data tidak sepadan", "डेटा का प्रकार मेल नहीं खाता", "Veri türü uyuşmuyor", "Kiểu dữ liệu không khớp", "Тип данных не совпадает",
+    "نوع البيانات غير مطابق",
+          "Tipo di dati incompatibile", "Niezgodny typ danych");
+        return;
+      }
+
+      if (obj.version !== 2) {
+        importError.value = pick(
+          "버전이 일치하지 않습니다",
+          "Version mismatch",
+          "バージョンが一致しません",
+          "La versión no coincide",
+          "As versões não coincidem",
+          "Die Versionen passen nicht zusammen"
+        ,
+          "版本不一致", "版本不一致",
+          "La version ne correspond pas",
+          "Versi tidak cocok",
+          "Versi tidak sepadan", "वर्ज़न मेल नहीं खाता", "Sürüm uyuşmuyor", "Phiên bản không khớp", "Версия не совпадает",
+    "الإصدار غير مطابق",
+          "Versione incompatibile", "Niezgodna wersja");
+        return;
+      }
+
+      if (!checkJson(obj.data)) {
+        importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos", "Ungültige Daten", "无效的数据", "無效的資料", "Données invalides", "Data tidak valid", "Data tidak sah", "अमान्य डेटा", "Geçersiz veri", "Dữ liệu không hợp lệ", "Неверные данные",
+    "بيانات غير صالحة",
+          "Dati non validi", "Nieprawidłowe dane");
+        return;
+      }
+
+      const itemsToAdd = await getItemsToAdd(obj.data);
+      if (typeof itemsToAdd === "string") {
+        importError.value = pick(
+          `같은 이름의 항목이 이미 존재하여 "${itemsToAdd}" 그룹을 만들 수 없습니다`,
+          `Cannot create group "${itemsToAdd}" because an item with the same name already exists`,
+          `同じ名前の項目がすでに存在するため、グループ「${itemsToAdd}」を作成できません`,
+          `No se puede crear el grupo "${itemsToAdd}" porque ya existe un elemento con el mismo nombre`,
+          `Não é possível criar o grupo "${itemsToAdd}" porque já existe um item com o mesmo nome`,
+          `Die Gruppe „${itemsToAdd}“ kann nicht erstellt werden, weil es bereits einen Eintrag mit demselben Namen gibt`
+        ,
+          `已经有同名的项目，无法创建分组“${itemsToAdd}”`, `已經有同名的項目，無法建立群組「${itemsToAdd}」`,
+          `Impossible de créer le groupe « ${itemsToAdd} » : un élément du même nom existe déjà`,
+          `Tidak bisa membuat grup “${itemsToAdd}”: sudah ada item dengan nama yang sama`,
+          `Kumpulan “${itemsToAdd}” tidak dapat dibuat kerana sudah ada item dengan nama yang sama`, `"${itemsToAdd}" समूह नहीं बना सकते, क्योंकि इस नाम का आइटम पहले से मौजूद है`, `“${itemsToAdd}” grubu oluşturulamıyor: aynı adda bir öğe zaten var`, `Không thể tạo nhóm “${itemsToAdd}” vì đã có mục cùng tên`, `Нельзя создать группу «${itemsToAdd}»: элемент с таким названием уже есть`,
+    `تعذّر إنشاء المجموعة «${autoIso(itemsToAdd)}» لأن عنصرًا بالاسم نفسه موجود بالفعل`,
+          `Impossibile creare il gruppo «${itemsToAdd}»: esiste già un elemento con questo nome`, `Nie można utworzyć grupy „${itemsToAdd}”, ponieważ istnieje już element o tej nazwie`);
+        return;
+      }
+
+      // 회원 전용 ①: 비회원 한도를 넘기면 일부만 넣지 않고 전부 거절한다(폴더가 꼬인다) → 아래 한 줄로 로그인 안내
+      const newItems = itemsToAdd.filter((item) => item.isGroup === 0).length;
+      if (saveRoom.value !== null && newItems > saveRoom.value) {
+        limitNudgeKind.value = "import";
+        limitNudge.value++;
+        return;
+      }
+
+      errorOccured.value ||= !(await Db.bulkAdd(props.storeName, itemsToAdd));
+      notify({ type: "importJson" });
+      await loadData();
+    };
+
+    const appendRecursive = (item: Item | Group, array: JsonItem[]) => {
+      array.push({
+        path: item.path,
+        isGroup: item.isGroup,
+        value: item.isGroup ? undefined : item.value,
+      });
+      if (item.isGroup) {
+        for (const child of item.items) {
+          appendRecursive(child, array);
+        }
+      }
+    };
+
+    const exportJson = () => {
+      if (errorOccured.value || isEditing.value || !exportJsonButton.value) {
+        return;
+      }
+
+      const array: JsonItem[] = [];
+      for (const item of data.value) {
+        appendRecursive(item, array);
+      }
+
+      const obj = { version: 2, name: props.storeName, data: array };
+      const jsonStr = JSON.stringify(obj, undefined, 2);
+
+      const blob = new Blob([jsonStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      exportJsonButton.value.href = url;
+    };
+
+    return {
+      L,
+      data,
+      selectedValue,
+      selectedItem,
+      errorOccured,
+      isEditing,
+      editingName,
+      nameInput,
+      unselect,
+      toggleGroup,
+      guideDecrease,
+      loadItem,
+      addOrOverwriteItem,
+      isNameValid,
+      renameItem,
+      tryRename: afterEdit(tryRename),
+      cancelRename: afterEdit(cancelRename),
+      addGroup,
+      deleteItem,
+      importError,
+      importJsonInput,
+      exportJsonButton,
+      importJson,
+      exportJson,
+      FEATURE_TRAINER,
+      syncRevision,
+      onSyncReplaced,
+      saveRoom,
+      limitNudge,
+      limitNudgeKind,
+      itemCount,
+      loadData,
+    };
+  },
+});
+</script>
+
+<style scoped>
+/* Saved-item selection is chrome; the range and action colors stay unchanged. */
+input.peer:checked ~ .peer-checked\:bg-blue-600 {
+  background-color: rgb(var(--c-brand));
+  color: rgb(var(--c-brand-ink));
+}
+.button-json {
+  @apply bg-transparent text-neutral-400 border-transparent hover:text-neutral-100 hover:bg-neutral-800 active:bg-neutral-700 disabled:bg-transparent;
+  font-size: 13px;
+}
+input.input-error {
+  @apply ring-1 ring-red-600 border-red-600 bg-red-950;
+}
+
+.group {
+  @apply relative ps-5;
+}
+
+.group::before {
+  content: "";
+  height: calc(100% - 1.4rem * var(--guide-decrease) - 0.825rem);
+  @apply absolute top-0.5 start-2.5 border-s border-dotted border-neutral-600;
+}
+
+.group-inside {
+  @apply relative;
+}
+
+.group-inside::before {
+  content: "";
+  @apply absolute top-[0.7rem] -start-[0.5625rem] w-2.5 border-t border-dotted border-neutral-600;
+}
+
+.item-toplevel {
+  @apply relative ps-5;
+}
+
+.item-toplevel::before {
+  content: "";
+  @apply absolute top-1/2 start-[0.0625rem] w-2.5 border-t border-dotted border-neutral-600;
+}
+
+.item-inside {
+  @apply relative ps-5;
+}
+
+.item-inside::before {
+  content: "";
+  @apply absolute top-1/2 -start-[0.5625rem] w-5 border-t border-dotted border-neutral-600;
+}
+
+.right-arrow,
+.bottom-arrow {
+  @apply relative inline-block w-5 min-h-full;
+}
+
+.right-arrow::before {
+  content: "";
+  @apply absolute w-1.5 h-1.5 -mt-0.5 top-1/2 start-1.5 border-t-2 border-r-2 border-neutral-400 rotate-45;
+}
+
+.bottom-arrow::before {
+  content: "";
+  @apply absolute w-1.5 h-1.5 -mt-[0.1875rem] top-1/2 start-[0.4375rem] border-r-2 border-b-2 border-neutral-400 rotate-45;
+}
+
+.button-overrides {
+  @apply px-0;
+}
+
+/* «삭제»는 되돌릴 수 없는 하나뿐인데 채움 빨강이라 패널에서 «저장»보다 먼저 눈에 들어왔다
+   (2026-09-12 눈검수). 채움 → 테두리로 무게를 낮추되, 빨강 글자·테두리로 «위험한 동작»이라는
+   뜻은 남긴다. 이 파일의 삭제만 바꾼다 — TreeEditor·EquityPage의 button-red는 건드리지 않는다. */
+.button-red.button-overrides {
+  @apply bg-transparent text-red-400 hover:bg-red-950 active:bg-red-900;
+  box-shadow: inset 0 0 0 1px rgb(153 27 27);
+}
+.button-red.button-overrides:disabled {
+  @apply bg-transparent text-neutral-400;
+  box-shadow: inset 0 0 0 1px rgb(var(--c-line));
+}
+:global(html[dir="rtl"] .right-arrow::before){ @apply -rotate-[135deg]; }
+</style>

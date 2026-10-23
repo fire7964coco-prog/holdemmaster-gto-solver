@@ -1,0 +1,1714 @@
+<template>
+  <div data-rtl-island="numeric-table" dir="ltr" class="result-table flex flex-col w-full border-l border-neutral-600 overflow-x-auto">
+    <div class="result-table-toolbar flex shrink-0 h-12 border-b border-neutral-600">
+      <div class="flex h-full px-4 items-center text-lg font-semibold">
+        {{ L.summary }}
+      </div>
+
+      <div class="flex h-full ml-auto pr-4 items-center gap-4 snug">
+        <div class="flex flex-col items-start justify-center h-full">
+          <div :dir="isAr ? 'rtl' : undefined" class="text-sm">{{ L.barWidth }}</div>
+          <select
+            v-model="displayOptions.barWidth"
+            :aria-label="L.barWidth"
+            class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
+            @change="updateDisplayOptions"
+          >
+            <option value="normalized">{{ L.normalized }}</option>
+            <option v-if="tableMode !== 'chance'" value="absolute">
+              {{ L.absolute }}
+            </option>
+            <option value="full">{{ L.full }}</option>
+          </select>
+        </div>
+
+        <div
+          v-if="tableMode !== 'chance'"
+          class="flex flex-col items-start justify-center h-full"
+        >
+          <div :dir="isAr ? 'rtl' : undefined" class="text-sm">{{ L.display }}</div>
+          <select
+            v-model="(displayOptions as DisplayOptionsBasics).content"
+            :aria-label="L.display"
+            class="w-28 px-1 py-0.5 border-neutral-600 bg-neutral-700 rounded-lg shadow cursor-pointer bg-right"
+            @change="updateDisplayOptions"
+          >
+            <option value="percentage">{{ L.actionPct }}</option>
+            <option value="ev">{{ L.actionEv }}</option>
+          </select>
+        </div>
+
+        <Tippy :content="L.exportCsv">
+          <a
+            ref="exportSummaryButton"
+            :class="
+              'flex w-8 h-8 items-center justify-center border border-neutral-600 bg-neutral-700 ' +
+              'rounded-lg shadow cursor-pointer transition-colors active:bg-neutral-600'
+            "
+            download="summary.csv"
+            :aria-label="L.exportCsv"
+            @click="exportSummary"
+          >
+            <ArrowTopRightOnSquareIcon class="w-5 h-5" />
+          </a>
+        </Tippy>
+      </div>
+    </div>
+
+    <div
+      ref="tableDiv"
+      class="result-table-scroll flex-grow overflow-y-scroll will-change-scroll"
+      @scroll.passive="onTableScroll"
+    >
+      <table class="w-full h-full text-sm text-center align-middle">
+        <thead class="sticky top-0 z-30 bg-neutral-800 shadow">
+          <tr style="height: calc(1.9rem + 1px)">
+            <th
+              v-for="column in columns"
+              :key="column.label"
+              scope="col"
+              :aria-sort="column.type === 'bar' ? undefined : sortKey.key === columnIndex(column) ? (sortKey.order === 'asc' ? 'ascending' : 'descending') : 'none'"
+              :class="
+                'whitespace-nowrap select-none ' +
+                (column.type === 'card'
+                  ? 'sticky left-0 z-40 bg-neutral-800 '
+                  : '') +
+                (column.type !== 'bar' ? 'cursor-pointer ' : '') +
+                (tableMode === 'chance' ? 'header-divider' : '')
+              "
+              :style="{
+                'min-width':
+                  (column.type === 'card'
+                    ? '4'
+                    : column.type === 'bar'
+                    ? '6'
+                    : '3.5') + 'rem',
+              }"
+            >
+              <button
+                v-if="column.type !== 'bar'"
+                type="button"
+                class="result-sort-button"
+                @click="sortBy(columnIndex(column))"
+              >
+              <span
+                v-if="sortKey.key === columnIndex(column)"
+                class="inline-block text-xs pr-1"
+                aria-hidden="true"
+              >
+                {{ sortKey.order === "asc" ? "▲" : "▼" }}
+              </span>
+              <span>{{ column.label }}</span>
+              </button>
+              <span v-else>{{ column.label }}</span>
+            </th>
+          </tr>
+
+          <tr v-if="tableMode !== 'chance'" style="height: calc(1.9rem + 1px)">
+            <th
+              v-for="column in columns"
+              :key="column.label"
+              scope="col"
+              :class="
+                'header-divider ' +
+                (column.type === 'card'
+                  ? 'sticky left-0 z-40 underline bg-neutral-800 '
+                  : 'relative ') +
+                (column.type === 'bar'
+                  ? 'pt-[0.3125rem] pb-1 px-1'
+                  : 'cursor-pointer')
+              "
+              :style="{
+                height: column.type === 'bar' ? 'calc(1.9rem + 1px)' : 'auto',
+              }"
+            >
+              <component
+                :is="column.type === 'bar' ? 'div' : 'button'"
+                :type="column.type === 'bar' ? undefined : 'button'"
+                :class="column.type === 'bar' ? 'h-full' : 'result-sort-button'"
+                :aria-label="column.type === 'bar' ? undefined : column.label"
+                @click="column.type !== 'bar' && sortBy(columnIndex(column))"
+              >
+              <template v-if="column.type === 'card'">
+                <span>{{ hoverContent?.name ?? L.all }}</span>
+              </template>
+
+              <template v-else-if="column.type === 'bar'">
+                <div
+                  v-if="summary && column.label === L.strategy"
+                  class="w-full h-full bg-neutral-800 bg-left bg-no-repeat"
+                  :style="{
+                    'background-image': strategyBarBgImage(summary),
+                  }"
+                ></div>
+              </template>
+
+              <template
+                v-else-if="
+                  summary == null || isNaN(summary[columnIndex(column)])
+                "
+              >
+                <span>-</span>
+              </template>
+
+              <template v-else>
+                <span class="inline-block w-12 text-right">
+                  <span
+                    v-if="column.type === 'weight'"
+                    :data-set="
+                      (strTmp = $n(toFixedAdaptive(summary[columnIndex(column)])))
+                    "
+                  >
+                    <span>{{ strTmp.slice(0, strTmp.indexOf($d()) + 1) }}</span>
+                    <span class="text-xs">{{
+                      strTmp.slice(strTmp.indexOf($d()) + 1)
+                    }}</span>
+                  </span>
+                  <span
+                    v-else-if="
+                      column.type === 'percentage' || column.type === 'action'
+                    "
+                    :data-set="
+                      (strTmp = $n(toFixed1(summary[columnIndex(column)] * 100)))
+                    "
+                  >
+                    <span v-if="isTr" class="text-xs">%</span>
+                    <span>{{ strTmp.slice(0, -1) }}</span>
+                    <span class="text-xs">{{ isTr ? strTmp.slice(-1) : $pct(strTmp.slice(-1)) }}</span>
+                  </span>
+                  <span
+                    v-else-if="column.type === 'action-ev'"
+                    :data-set="
+                      (strTmp = $n(
+                        toFixed1(summary[columnIndex(column) - 1] * 100)
+                      ))
+                    "
+                  >
+                    <span v-if="isTr" class="text-xs">%</span>
+                    <span>{{ strTmp.slice(0, -1) }}</span>
+                    <span class="text-xs">{{ isTr ? strTmp.slice(-1) : $pct(strTmp.slice(-1)) }}</span>
+                  </span>
+                  <span
+                    v-else-if="column.type === 'ev'"
+                    :data-set="
+                      (strTmp = $n(
+                        toFixed[evDigits - 1](displayEv(summary[columnIndex(column)]))
+                      ))
+                    "
+                  >
+                    <span>{{ strTmp.slice(0, -evDigits) }}</span>
+                    <span class="text-xs">{{ strTmp.slice(-evDigits) }}</span>
+                  </span>
+                </span>
+              </template>
+
+              <span
+                v-if="
+                  summary &&
+                  (column.type === 'action' || column.type === 'action-ev')
+                "
+                class="absolute w-12 h-1 bottom-0 inset-x-0 mx-auto"
+                :style="{
+                  background: actionBarBg(column.index, summary),
+                }"
+              ></span>
+              </component>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- Top empty row -->
+          <tr
+            v-if="emptyBufferTop > 0"
+            :style="{
+              '--num-rows': emptyBufferTop,
+              height: 'calc(var(--num-rows) * (1.9rem + 1px))',
+            }"
+          >
+            <td :colspan="columns.length"></td>
+          </tr>
+
+          <!-- Body -->
+          <tr
+            v-for="item in resultsRendered"
+            :key="item[0]"
+            :class="
+              'relative ' +
+              (item[0] === scrollTarget ? 'bg-yellow-900' : 'bg-neutral-900')
+            "
+            style="height: calc(1.9rem + 1px)"
+          >
+            <td
+              v-for="column in columns"
+              :key="column.label"
+              :class="
+                'row-divider ' +
+                (column.type === 'card'
+                  ? 'sticky left-0 z-10 ' +
+                    (item[0] === scrollTarget
+                      ? 'bg-yellow-900 '
+                      : 'bg-neutral-900 ')
+                  : 'relative ') +
+                (column.type === 'bar' ? 'pt-[0.3125rem] pb-1 px-1' : 'pt-0.5')
+              "
+              :style="{
+                height: column.type === 'bar' ? 'calc(1.9rem + 1px)' : 'auto',
+              }"
+            >
+              <template v-if="column.type === 'card'">
+                <span
+                  v-for="card in pairText(item[columnIndex(column)])"
+                  :key="card.rank + card.suit"
+                  :class="card.colorClass"
+                >
+                  {{ card.rank + card.suit }}
+                </span>
+              </template>
+
+              <template v-else-if="column.type === 'bar'">
+                <div
+                  class="w-full h-full bg-neutral-800 bg-left bg-no-repeat"
+                  :style="{
+                    'background-image': strategyBarBgImage(item),
+                    'background-size': strategyBarBgSize(item),
+                  }"
+                ></div>
+              </template>
+
+              <template v-else-if="isNaN(item[columnIndex(column)])">
+                <span>-</span>
+              </template>
+
+              <template v-else>
+                <div class="inline-block w-12 text-right">
+                  <span
+                    v-if="tableMode === 'chance' && column.type === 'weight'"
+                    :data-set="
+                      (strTmp = $n(toFixedAdaptive(item[columnIndex(column)])))
+                    "
+                  >
+                    <span>{{ strTmp.slice(0, strTmp.indexOf($d()) + 1) }}</span>
+                    <span class="text-xs">{{
+                      strTmp.slice(strTmp.indexOf($d()) + 1)
+                    }}</span>
+                  </span>
+                  <span
+                    v-else-if="
+                      column.type === 'weight' ||
+                      column.type === 'percentage' ||
+                      column.type === 'action'
+                    "
+                    :data-set="
+                      (strTmp = $n(toFixed1(item[columnIndex(column)] * 100)))
+                    "
+                  >
+                    <span v-if="isTr" class="text-xs">%</span>
+                    <span>{{ strTmp.slice(0, -1) }}</span>
+                    <span class="text-xs">{{ isTr ? strTmp.slice(-1) : $pct(strTmp.slice(-1)) }}</span>
+                  </span>
+                  <span
+                    v-else-if="
+                      column.type === 'ev' || column.type === 'action-ev'
+                    "
+                    :data-set="
+                      (strTmp = $n(
+                        toFixed[evDigits - 1](displayEv(item[columnIndex(column)]))
+                      ))
+                    "
+                  >
+                    <span>{{ strTmp.slice(0, -evDigits) }}</span>
+                    <span class="text-xs">{{ strTmp.slice(-evDigits) }}</span>
+                  </span>
+                </div>
+              </template>
+
+              <div
+                v-if="column.type === 'action' || column.type === 'action-ev'"
+                class="absolute w-12 h-1 bottom-0 inset-x-0 mx-auto"
+                :style="{
+                  background: actionBarBg(column.index, item),
+                }"
+              ></div>
+            </td>
+          </tr>
+
+          <!-- No results -->
+          <tr v-if="resultsRendered.length === 0">
+            <td
+              class="relative bg-neutral-900 row-divider"
+              style="height: calc(1.9rem + 1px)"
+              :colspan="columns.length"
+            >
+              {{
+                tableMode === "chance" ? L.noReport(chanceType) : L.noResults
+              }}
+            </td>
+          </tr>
+
+          <!-- Bottom empty row -->
+          <tr
+            v-if="emptyBufferBottom > 0"
+            :style="{
+              '--num-rows': emptyBufferBottom,
+              height: 'calc(var(--num-rows) * (1.9rem + 1px))',
+            }"
+          >
+            <td :colspan="columns.length" class="relative row-divider"></td>
+          </tr>
+
+          <!-- Spacer -->
+          <tr>
+            <td :colspan="columns.length" class="relative row-divider"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, reactive, ref, toRefs, watch } from "vue";
+
+import {
+  ranks,
+  suitLetters,
+  cardText,
+  cardPairOrder,
+  toFixed1,
+  toFixed,
+  toFixedAdaptive,
+  capitalize,
+  formatAmount,
+} from "../utils";
+import { useStore } from "../store";
+import { i18n, localizeNumber } from "../i18n";
+
+import {
+  Results,
+  ChanceReports,
+  Spot,
+  SpotPlayer,
+  contentGraphsList,
+  HoverContent,
+  TableMode,
+} from "../result-types";
+
+import { Tippy } from "vue-tippy";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/solid";
+
+const barWidthListBasics = ["normalized", "absolute", "full"] as const;
+const contentListBasics = ["percentage", "ev"] as const;
+type DisplayOptionsBasics = {
+  barWidth: (typeof barWidthListBasics)[number];
+  content: (typeof contentListBasics)[number];
+};
+
+const barWidthListChance = ["normalized", "full"] as const;
+type DisplayOptionsChance = {
+  barWidth: (typeof barWidthListChance)[number];
+};
+
+type ColumnCard = {
+  label: string;
+  type: "card";
+};
+
+type ColumnBar = {
+  label: string;
+  type: "bar";
+};
+
+type ColumnWeight = {
+  label: string;
+  type: "weight";
+};
+
+type ColumnPercentage = {
+  label: string;
+  type: "percentage";
+  index: number;
+};
+
+type ColumnEv = {
+  label: string;
+  type: "ev";
+};
+
+type ColumnAction = {
+  label: string;
+  type: "action";
+  index: number;
+};
+
+type ColumnActionEV = {
+  label: string;
+  type: "action-ev";
+  index: number;
+};
+
+type Column =
+  | ColumnCard
+  | ColumnBar
+  | ColumnWeight
+  | ColumnPercentage
+  | ColumnEv
+  | ColumnAction
+  | ColumnActionEV;
+
+const INDEX_CARD_PAIR = 0;
+const INDEX_WEIGHT = 1;
+const INDEX_NORMALIZER = 2;
+const INDEX_EQUITY = 3;
+const INDEX_EV = 4;
+const INDEX_EQR = 5;
+const INDEX_STRATEGY_BASE = 6;
+
+const columnIndex = (column: Column) => {
+  switch (column.type) {
+    case "card":
+      return INDEX_CARD_PAIR;
+    case "bar":
+      return -1;
+    case "weight":
+      return INDEX_WEIGHT;
+    case "percentage":
+      return column.index;
+    case "ev":
+      return INDEX_EV;
+    case "action":
+      return INDEX_STRATEGY_BASE + column.index * 2;
+    case "action-ev":
+      return INDEX_STRATEGY_BASE + column.index * 2 + 1;
+  }
+};
+
+import { C } from "../theme";
+
+const yellow500 = C.accent;
+const neutral800 = C.panelBg;
+
+const cardStr = (card: number) => {
+  const rank = ranks[card >>> 2];
+  const suit = suitLetters[card & 3];
+  return rank + suit;
+};
+
+// display-only label maps (data values remain in English)
+const M = {
+  ko: {
+    summary: "요약",
+    barWidth: "바 너비:",
+    normalized: "정규화",
+    absolute: "절대값",
+    full: "전체",
+    display: "표시:",
+    actionPct: "액션 %",
+    actionEv: "액션 EV",
+    exportCsv: "요약을 CSV 파일로 내보내기",
+    all: "전체",
+    hand: "핸드",
+    strategy: "전략",
+    weightBar: "비중 (바)",
+    weight: "비중",
+    turn: "턴",
+    river: "리버",
+    comboBar: "콤보 (바)",
+    combos: "콤보",
+    noReport: (chanceType: string) =>
+      `${chanceType === "turn" ? "턴" : "리버"} 리포트가 없습니다`,
+    noResults: "결과 없음",
+    action: (name: string): string =>
+      (
+        {
+          Fold: "폴드",
+          Check: "체크",
+          Call: "콜",
+          Bet: "벳",
+          Raise: "레이즈",
+          "All-in": "올인",
+          Allin: "올인",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
+  en: {
+    summary: "Summary",
+    barWidth: "Bar Width:",
+    normalized: "Normalized",
+    absolute: "Absolute",
+    full: "Full",
+    display: "Display:",
+    actionPct: "Action %",
+    actionEv: "Action EV",
+    exportCsv: "Export summary as a CSV file",
+    all: "All",
+    hand: "Hand",
+    strategy: "Strategy",
+    weightBar: "Weight (Bar)",
+    weight: "Weight",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (Bar)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `No ${chanceType === "turn" ? "turn" : "river"} report available`,
+    noResults: "No results",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  ja: {
+    summary: "サマリー",
+    barWidth: "バーの幅:",
+    normalized: "正規化",
+    absolute: "絶対値",
+    full: "全体",
+    display: "表示:",
+    actionPct: "アクション %",
+    actionEv: "アクション EV",
+    exportCsv: "サマリーをCSVファイルにエクスポート",
+    all: "すべて",
+    hand: "ハンド",
+    strategy: "戦略",
+    weightBar: "ウェイト (バー)",
+    weight: "ウェイト",
+    turn: "ターン",
+    river: "リバー",
+    comboBar: "コンボ (バー)",
+    combos: "コンボ",
+    noReport: (chanceType: string) =>
+      `${chanceType === "turn" ? "ターン" : "リバー"}のレポートはありません`,
+    noResults: "結果がありません",
+    action: (name: string): string =>
+      (
+        {
+          Fold: "フォールド",
+          Check: "チェック",
+          Call: "コール",
+          Bet: "ベット",
+          Raise: "レイズ",
+          "All-in": "オールイン",
+          Allin: "オールイン",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
+  es: {
+    summary: "Resumen",
+    barWidth: "Ancho de barra:",
+    normalized: "Normalizado",
+    absolute: "Absoluto",
+    full: "Completo",
+    display: "Mostrar:",
+    actionPct: "% de acción",
+    actionEv: "EV de acción",
+    exportCsv: "Exportar resumen como CSV",
+    all: "Todo",
+    hand: "Mano",
+    strategy: "Estrategia",
+    weightBar: "Peso (barra)",
+    weight: "Peso",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (barra)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `No hay reporte de ${chanceType === "turn" ? "turn" : "river"}`,
+    noResults: "Sin resultados",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  pt: {
+    summary: "Resumo",
+    barWidth: "Largura da barra:",
+    normalized: "Normalizado",
+    absolute: "Absoluto",
+    full: "Completo",
+    display: "Mostrar:",
+    actionPct: "% da ação",
+    actionEv: "EV da ação",
+    exportCsv: "Exportar resumo em CSV",
+    all: "Tudo",
+    hand: "Mão",
+    strategy: "Estratégia",
+    weightBar: "Peso (barra)",
+    weight: "Peso",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (barra)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `Não há relatório de ${chanceType === "turn" ? "turn" : "river"}`,
+    noResults: "Sem resultados",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  de: {
+    summary: "Übersicht",
+    barWidth: "Balkenbreite:",
+    normalized: "Normalisiert",
+    absolute: "Absolut",
+    full: "Voll",
+    display: "Anzeige:",
+    actionPct: "Aktions-%",
+    actionEv: "Aktions-EV",
+    exportCsv: "Übersicht als CSV-Datei exportieren",
+    all: "Alle",
+    hand: "Hand",
+    strategy: "Strategie",
+    weightBar: "Gewicht (Balken)",
+    weight: "Gewicht",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (Balken)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `Kein ${chanceType === "turn" ? "Turn" : "River"}-Report vorhanden`,
+    noResults: "Keine Ergebnisse vorhanden",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  zh: {
+    summary: "汇总",
+    barWidth: "柱宽：",
+    normalized: "归一化",
+    absolute: "绝对值",
+    // ResultMiddle의 full과 같은 뜻 — 막대가 칸을 가득 채운다
+    full: "满格",
+    display: "显示：",
+    actionPct: "动作 %",
+    actionEv: "动作 EV",
+    // ⚠ CSV 자체는 언어와 무관하게 영어식 숫자로 나간다 — 중국어도 소수점이 «.»라
+    //   pt·de와 달리 여기서 충돌이 없다 (본체 브리프 §3)
+    exportCsv: "把汇总导出为 CSV 文件",
+    all: "全部",
+    hand: "手牌",
+    strategy: "策略",
+    weightBar: "权重（柱）",
+    weight: "权重",
+    turn: "转牌",
+    river: "河牌",
+    comboBar: "组合（柱）",
+    combos: "组合",
+    noReport: (chanceType: string) =>
+      `没有${chanceType === "turn" ? "转牌" : "河牌"}报告`,
+    noResults: "没有结果",
+    action: (name: string): string =>
+      (
+        {
+          Fold: "弃牌",
+          Check: "过牌",
+          Call: "跟注",
+          Bet: "下注",
+          Raise: "加注",
+          "All-in": "全下",
+          Allin: "全下",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
+  "zh-hant": {
+    summary: "彙總",
+    barWidth: "長條寬：",
+    // ⚠ 대륙 「归一化」 → 台灣 「正規化」 (ResultMiddle과 같은 이유)
+    normalized: "正規化",
+    absolute: "絕對值",
+    // ResultMiddle의 full과 같은 뜻 — 막대가 칸을 가득 채운다
+    full: "滿格",
+    display: "顯示：",
+    actionPct: "動作 %",
+    actionEv: "動作 EV",
+    // ⚠ CSV 자체는 언어와 무관하게 영어식 숫자로 나간다 — 중국어도 소수점이 «.»라
+    //   pt·de와 달리 여기서 충돌이 없다. 「匯出」= 台灣 표기(대륙 「导出」)
+    exportCsv: "把彙總匯出成 CSV 檔案",
+    all: "全部",
+    hand: "手牌",
+    strategy: "策略",
+    weightBar: "權重（長條）",
+    weight: "權重",
+    turn: "轉牌",
+    river: "河牌",
+    comboBar: "組合（長條）",
+    combos: "組合",
+    noReport: (chanceType: string) =>
+      `沒有${chanceType === "turn" ? "轉牌" : "河牌"}報告`,
+    noResults: "沒有結果",
+    // ⚠ ResultChance·ResultNav·ActionSummary·trainer.ts의 표와 «글자까지» 같아야 한다
+    action: (name: string): string =>
+      (
+        {
+          Fold: "蓋牌",
+          Check: "過牌",
+          Call: "跟注",
+          Bet: "下注",
+          Raise: "加注",
+          "All-in": "全下",
+          Allin: "全下",
+        } as Record<string, string>
+      )[name] ?? name,
+  },
+  fr: {
+    summary: "Résumé",
+    barWidth: "Largeur des barres :",
+    normalized: "Normalisé",
+    absolute: "Absolu",
+    full: "Plein",
+    display: "Affichage :",
+    actionPct: "% action",
+    actionEv: "EV action",
+    // ⚠ CSV 자체는 언어와 무관하게 영어식 숫자(소수점 «.»)로 나간다 — fr에서도 그대로다
+    exportCsv: "Exporter le résumé en fichier CSV",
+    all: "Tout",
+    hand: "Main",
+    strategy: "Stratégie",
+    weightBar: "Poids (barre)",
+    weight: "Poids",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (barre)",
+    combos: "Combos",
+    noReport: (chanceType: string) =>
+      `Aucun rapport ${chanceType === "turn" ? "turn" : "river"} disponible`,
+    noResults: "Aucun résultat",
+    // 액션명은 영어 유지 — trainer.ts actionName과 같은 결정 (리서치 §3)
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  id: {
+    summary: "Ringkasan",
+    barWidth: "Lebar batang:",
+    // «Ternormalisasi»(14자)는 토글 폭을 넘긴다 — 명사형 Normalisasi로
+    normalized: "Normalisasi",
+    absolute: "Absolut",
+    full: "Penuh",
+    display: "Tampilan:",
+    actionPct: "% aksi",
+    actionEv: "EV aksi",
+    // ⚠ CSV 자체는 언어와 무관하게 영어식 숫자(소수점 «.»)로 나간다 — id에서도 그대로다
+    exportCsv: "Ekspor ringkasan ke file CSV",
+    all: "Semua",
+    hand: "Hand",
+    strategy: "Strategi",
+    weightBar: "Bobot (batang)",
+    weight: "Bobot",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combo (batang)",
+    combos: "Combo",
+    noReport: (chanceType: string) =>
+      `Laporan ${chanceType === "turn" ? "turn" : "river"} tidak tersedia`,
+    noResults: "Tidak ada hasil",
+    // 액션명은 영어 유지 — 인니 코퍼스 check/call/raise/fold 영어 (인니어화_리서치 §2)
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  ms: {
+    summary: "Ringkasan",
+    barWidth: "Lebar bar:",
+    // 토글 폭 제한 — 11자 이내
+    normalized: "Dinormalkan",
+    absolute: "Mutlak",
+    full: "Penuh",
+    display: "Paparan:",
+    actionPct: "% aksi",
+    actionEv: "EV aksi",
+    // ⚠ CSV 자체는 언어와 무관하게 영어식 숫자(소수점 «.»)로 나간다 — ms도 영어식이라 충돌 없음
+    exportCsv: "Eksport ringkasan sebagai fail CSV",
+    all: "Semua",
+    // 말레이 표준은 tangan (코퍼스 tangan 203 · hand 52 — 리서치 §1-4). id의 «Hand»와 다르다
+    hand: "Tangan",
+    strategy: "Strategi",
+    weightBar: "Wajaran (bar)",
+    weight: "Wajaran",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combo (bar)",
+    combos: "Combo",
+    noReport: (chanceType: string) =>
+      `Tiada laporan ${chanceType === "turn" ? "turn" : "river"}`,
+    noResults: "Tiada hasil",
+    // 액션명은 영어 유지 — 말레이 코퍼스도 check/call/raise/fold 영어 (리서치 §2)
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  hi: {
+    summary: "सारांश",
+    barWidth: "बार की चौड़ाई:",
+    normalized: "सामान्यीकृत",
+    absolute: "मूल वज़न",
+    full: "पूरा",
+    display: "दिखाएँ:",
+    actionPct: "Action %",
+    actionEv: "Action EV",
+    exportCsv: "सारांश CSV फ़ाइल में एक्सपोर्ट करें",
+    all: "सभी",
+    hand: "हैंड",
+    strategy: "रणनीति",
+    weightBar: "वज़न (बार)",
+    weight: "वज़न",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combos (बार)",
+    combos: "Combos",
+    noReport: (chanceType: string) => `${chanceType === "turn" ? "Turn" : "River"} रिपोर्ट उपलब्ध नहीं है`,
+    noResults: "कोई परिणाम नहीं",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  tr: {
+    summary: "Özet",
+    barWidth: "Çubuk genişliği:",
+    normalized: "Normalize",
+    absolute: "Mutlak",
+    full: "Tam",
+    display: "Göster:",
+    actionPct: "Aksiyon %",
+    actionEv: "Aksiyon EV",
+    exportCsv: "Özeti CSV dosyası olarak dışa aktar",
+    all: "Tümü",
+    hand: "El",
+    strategy: "Strateji",
+    weightBar: "Ağırlık (çubuk)",
+    weight: "Ağırlık",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combo (çubuk)",
+    combos: "Combo",
+    noReport: (chanceType: string) =>
+      `${chanceType === "turn" ? "Turn raporu" : "River raporu"} yok`,
+    noResults: "Sonuç yok",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  vi: {
+    summary: "Tóm tắt",
+    barWidth: "Độ rộng thanh:",
+    normalized: "Chuẩn hóa",
+    absolute: "Tuyệt đối",
+    full: "Đầy đủ",
+    display: "Hiển thị:",
+    actionPct: "% hành động",
+    actionEv: "EV hành động",
+    exportCsv: "Xuất phần tóm tắt ra tệp CSV",
+    all: "Tất cả",
+    hand: "Tay bài",
+    strategy: "Chiến lược",
+    weightBar: "Trọng số (thanh)",
+    weight: "Trọng số",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combo (thanh)",
+    combos: "Combo",
+    noReport: (chanceType: string) =>
+      `Không có báo cáo ${chanceType === "turn" ? "turn" : "river"}`,
+    noResults: "Không có kết quả",
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  ru: {
+    summary: "Сводка",
+    barWidth: "Ширина полос:",
+    normalized: "Нормированная",
+    absolute: "Абсолютная",
+    full: "Полная",
+    display: "Показать:",
+    actionPct: "% действия",
+    actionEv: "EV действия",
+    exportCsv: "Экспорт сводки в CSV-файл",
+    all: "Все",
+    hand: "Рука",
+    strategy: "Стратегия",
+    weightBar: "Вес (полоса)",
+    weight: "Вес",
+    turn: "Тёрн",
+    river: "Ривер",
+    comboBar: "Комбо (полоса)",
+    combos: "Комбо",
+    noReport: (chanceType: string) =>
+      chanceType === "turn" ? "Отчёт по тёрну недоступен" : "Отчёт по риверу недоступен",
+    noResults: "Нет результатов",
+    action: (name: string): string =>
+      ({ Fold: "Фолд", Check: "Чек", Call: "Колл", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ин", "All-in": "Олл-ин" } as Record<string, string>)[name] ?? name,
+  },
+  ar: {
+    summary: "ملخص",
+    barWidth: "عرض الأشرطة:",
+    normalized: "نسبي",
+    absolute: "مطلق",
+    full: "كامل",
+    display: "عرض:",
+    actionPct: "% القرار",
+    actionEv: "EV القرار",
+    exportCsv: "تصدير الملخص إلى ملف CSV",
+    all: "الكل",
+    hand: "اليد",
+    strategy: "الاستراتيجية",
+    weightBar: "الوزن (شريط)",
+    weight: "الوزن",
+    turn: "التيرن",
+    river: "الريفر",
+    comboBar: "التركيبات (شريط)",
+    combos: "تركيبات",
+    noReport: (chanceType: string) => chanceType === "turn" ? "تقرير التيرن غير متاح" : "تقرير الريفر غير متاح",
+    noResults: "لا نتائج",
+    action: (name: string): string =>
+      ({ Fold: "فولد", Check: "تشيك", Call: "كول", Bet: "رهان", Raise: "رايز", Allin: "أول إن", "All-in": "أول إن" } as Record<string, string>)[name] ?? name,
+  },
+  it: {
+    summary: "Riepilogo",
+    barWidth: "Larghezza barre:",
+    normalized: "Normalizzato",
+    absolute: "Assoluto",
+    full: "Pieno",
+    display: "Mostra:",
+    actionPct: "Frequenza",
+    actionEv: "EV dell’azione",
+    exportCsv: "Esporta il riepilogo come file CSV",
+    all: "Tutte",
+    hand: "Mano",
+    strategy: "Strategia",
+    weightBar: "Peso (barra)",
+    weight: "Peso",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combo (barra)",
+    combos: "Combo",
+    noReport: (chanceType: string) => `Nessun report disponibile per il ${chanceType === "turn" ? "turn" : "river"}`,
+    noResults: "Nessun risultato",
+    action: (name: string): string => ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+  },
+  pl: {
+    summary: "Podsumowanie",
+    barWidth: "Szerokość słupków:",
+    normalized: "Znormalizowane",
+    absolute: "Bezwzględne",
+    full: "Pełne wypełnienie",
+    display: "Wyświetlanie:",
+    actionPct: "Częstotliwość",
+    actionEv: "EV akcji",
+    exportCsv: "Eksportuj podsumowanie do pliku CSV",
+    all: "Wszystkie",
+    hand: "Ręka",
+    strategy: "Strategia",
+    weightBar: "Waga (słupek)",
+    weight: "Waga",
+    turn: "Turn",
+    river: "River",
+    comboBar: "Combo (słupek)",
+    combos: "Combo",
+    noReport: (chanceType: string) =>
+      chanceType === "turn" ? "Raport dla turna jest niedostępny." : "Raport dla rivera jest niedostępny.",
+    noResults: "Brak wyników",
+    action: (name: string): string =>
+      ({ Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+  },
+} as const;
+
+export default defineComponent({
+  components: {
+    Tippy,
+    ArrowTopRightOnSquareIcon,
+  },
+
+  props: {
+    tableMode: {
+      type: String as () => TableMode,
+      required: true,
+    },
+    graphType: {
+      type: String as () => (typeof contentGraphsList)[number],
+      default: "eq",
+    },
+    chanceType: {
+      type: String as () => "turn" | "river",
+      default: "turn",
+    },
+    cards: {
+      type: Array as () => number[][] | null,
+      default: null,
+    },
+    selectedSpot: {
+      type: Object as () => Spot,
+      required: true,
+    },
+    results: {
+      type: Object as () => Results | null,
+      default: null,
+    },
+    chanceReports: {
+      type: Object as () => ChanceReports | null,
+      default: null,
+    },
+    displayPlayer: {
+      type: String as () => "oop" | "ip",
+      required: true,
+    },
+    hoverContent: {
+      type: Object as () => HoverContent | null,
+      default: null,
+    },
+    scrollTarget: {
+      type: Number as () => number | null,
+      default: null,
+    },
+    unitScale: {
+      type: Number,
+      default: 0,
+    },
+  },
+
+  setup(props) {
+    const store = useStore();
+    const L = computed(() => M[i18n.locale]);
+    // tr 격자 셀: 작은 «%»를 정수부 앞에 (확정표 §2-2)
+    const isTr = computed(() => i18n.locale === "tr");
+    const evScale = computed(() => props.unitScale || store.displayUnitScale);
+    const displayEv = (value: number) => value / evScale.value;
+    const displayOptions =
+      props.tableMode !== "chance"
+        ? reactive<DisplayOptionsBasics>({
+            barWidth: "normalized",
+            content: "percentage",
+          })
+        : reactive<DisplayOptionsChance>({
+            barWidth: "normalized",
+          });
+
+    const optionsStorageKey = `display-options-table-${props.tableMode}`;
+    const savedDisplayOptions = localStorage.getItem(optionsStorageKey);
+
+    if (savedDisplayOptions) {
+      if (props.tableMode !== "chance") {
+        const saved = JSON.parse(savedDisplayOptions) as DisplayOptionsBasics;
+        const options = displayOptions as DisplayOptionsBasics;
+        if (barWidthListBasics.includes(saved.barWidth)) {
+          options.barWidth = saved.barWidth;
+        }
+        if (contentListBasics.includes(saved.content)) {
+          options.content = saved.content;
+        }
+      } else {
+        const saved = JSON.parse(savedDisplayOptions) as DisplayOptionsChance;
+        const options = displayOptions as DisplayOptionsChance;
+        if (barWidthListChance.includes(saved.barWidth)) {
+          options.barWidth = saved.barWidth;
+        }
+      }
+    }
+
+    const updateDisplayOptions = () => {
+      localStorage.setItem(optionsStorageKey, JSON.stringify(displayOptions));
+    };
+
+    const tableDiv = ref<HTMLDivElement | null>(null);
+    const tableHeight = ref(0);
+
+    const assignTableHeight = () => {
+      if (tableDiv.value) {
+        tableHeight.value = tableDiv.value.clientHeight;
+      }
+    };
+
+    watch(tableDiv, assignTableHeight);
+    window.addEventListener("resize", assignTableHeight);
+
+    const pairText = (pair: number) => {
+      const card1 = pair & 0xff;
+      const card2 = pair >>> 8;
+      if (card2 !== 0xff) {
+        return [cardText(card2), cardText(card1)];
+      } else {
+        return [cardText(card1)];
+      }
+    };
+
+    const defaultSortKey = computed(() => {
+      if (props.tableMode !== "graphs") return INDEX_CARD_PAIR;
+      if (props.graphType === "eq") return INDEX_EQUITY;
+      if (props.graphType === "ev") return INDEX_EV;
+      return INDEX_EQR;
+    });
+
+    type Key = { key: number; order: "asc" | "desc" };
+    const sortKey = ref<Key>({ key: defaultSortKey.value, order: "desc" });
+
+    const sortStorageKey = `sort-key-table-${props.tableMode}`;
+    const savedSortKey = sessionStorage.getItem(sortStorageKey);
+
+    if (savedSortKey) {
+      const saved = JSON.parse(savedSortKey) as Key;
+      if (saved.key < INDEX_STRATEGY_BASE) {
+        sortKey.value = saved;
+      }
+    }
+
+    const sortBy = (key: number) => {
+      const order =
+        key === sortKey.value.key && sortKey.value.order === "desc"
+          ? "asc"
+          : "desc";
+      sortKey.value = { key, order };
+      sessionStorage.setItem(sortStorageKey, JSON.stringify(sortKey.value));
+    };
+
+    const resetSortKey = () => {
+      if (sortKey.value.key >= INDEX_STRATEGY_BASE) {
+        sortBy(defaultSortKey.value);
+      }
+    };
+
+    const { selectedSpot, displayPlayer } = toRefs(props);
+    watch([selectedSpot, displayPlayer], resetSortKey);
+
+    if (props.tableMode !== "chance") {
+      watch(
+        () => (displayOptions as DisplayOptionsBasics).content,
+        resetSortKey
+      );
+    }
+
+    if (props.tableMode === "graphs") {
+      watch(defaultSortKey, (newValue, oldValue) => {
+        if (sortKey.value.key === oldValue) {
+          const order = sortKey.value.order;
+          sortKey.value = { key: newValue, order };
+          sessionStorage.setItem(sortStorageKey, JSON.stringify(sortKey.value));
+        }
+      });
+    }
+
+    const maxEv = computed(() => {
+      const playerIndex = props.displayPlayer === "oop" ? 0 : 1;
+      if (props.tableMode !== "chance") {
+        const results = props.results;
+        if (!results || results.isEmpty) return 0;
+        return Math.max(
+          ...results.ev[playerIndex].map((v) => Math.abs(displayEv(v)))
+        );
+      } else {
+        const reports = props.chanceReports;
+        if (!reports || reports.status.every((s) => s <= 1)) return 0;
+        return Math.max(
+          ...reports.ev[playerIndex].map((v) => Math.abs(displayEv(v)))
+        );
+      }
+    });
+
+    const evDigits = computed(() => {
+      return maxEv.value < 9.9995 ? 3 : maxEv.value < 99.995 ? 2 : 1;
+    });
+
+    const numActions = computed(() => {
+      let data: Results | ChanceReports | null;
+      if (props.tableMode !== "chance") {
+        data = props.results;
+      } else {
+        data = props.chanceReports;
+      }
+
+      const spot = props.selectedSpot;
+      return (
+        (spot.type === "player" &&
+          spot.player === props.displayPlayer &&
+          data &&
+          data.numActions) ||
+        0
+      );
+    });
+
+    const columns = computed(() => {
+      const ret: Column[] = [];
+
+      if (props.tableMode !== "chance") {
+        ret.push({ label: L.value.hand, type: "card" });
+        ret.push({
+          label: numActions.value > 0 ? L.value.strategy : L.value.weightBar,
+          type: "bar",
+        });
+
+        ret.push({ label: L.value.weight, type: "weight" });
+        ret.push({ label: "EQ", type: "percentage", index: INDEX_EQUITY });
+        ret.push({ label: evScale.value === 10 ? "EV (bb)" : "EV", type: "ev" });
+        ret.push({ label: "EQR", type: "percentage", index: INDEX_EQR });
+
+        const options = displayOptions as DisplayOptionsBasics;
+
+        if (numActions.value > 0) {
+          const spot = props.selectedSpot as SpotPlayer;
+          for (let i = 0; i < numActions.value; ++i) {
+            const j = numActions.value - i - 1; // reverse order
+            const action = spot.actions[j];
+            const label =
+              action.amount === "0"
+                ? L.value.action(action.name)
+                : i18n.locale === "pl"
+                ? `${action.name[0]} ${localizeNumber(formatAmount(Number(action.amount), evScale.value))}${evScale.value === 10 ? "bb" : ""}`
+                : localizeNumber(
+                    `${action.name[0]} ${formatAmount(
+                      Number(action.amount),
+                      evScale.value
+                    )}${evScale.value === 10 ? "bb" : ""}`
+                  );
+            if (options.content === "percentage") {
+              ret.push({ label, type: "action", index: i });
+            } else {
+              ret.push({ label, type: "action-ev", index: i });
+            }
+          }
+        }
+      } else {
+        ret.push({
+          label: props.chanceType === "turn" ? L.value.turn : L.value.river,
+          type: "card",
+        });
+        ret.push({
+          label: numActions.value > 0 ? L.value.strategy : L.value.comboBar,
+          type: "bar",
+        });
+
+        ret.push({ label: L.value.combos, type: "weight" });
+        ret.push({ label: "EQ", type: "percentage", index: INDEX_EQUITY });
+        ret.push({ label: evScale.value === 10 ? "EV (bb)" : "EV", type: "ev" });
+        ret.push({ label: "EQR", type: "percentage", index: INDEX_EQR });
+
+        if (numActions.value > 0) {
+          const spot = props.selectedSpot as SpotPlayer;
+          for (let i = 0; i < numActions.value; ++i) {
+            const j = numActions.value - i - 1;
+            const action = spot.actions[j];
+            const label =
+              action.amount === "0"
+                ? L.value.action(action.name)
+                : i18n.locale === "pl"
+                ? `${action.name[0]} ${localizeNumber(formatAmount(Number(action.amount), evScale.value))}${evScale.value === 10 ? "bb" : ""}`
+                : localizeNumber(
+                    `${action.name[0]} ${formatAmount(
+                      Number(action.amount),
+                      evScale.value
+                    )}${evScale.value === 10 ? "bb" : ""}`
+                  );
+            ret.push({ label, type: "action", index: i });
+          }
+        }
+      }
+
+      return ret;
+    });
+
+    const resultsFiltered = computed(() => {
+      const ret: number[][] = [];
+
+      const playerIndex = props.displayPlayer === "oop" ? 0 : 1;
+
+      let cards: number[];
+      if (props.tableMode !== "chance" && props.cards) {
+        cards = props.cards[playerIndex];
+      } else {
+        cards = Array.from({ length: 52 }, (_, i) => 0xff00 + i);
+      }
+
+      let dataRow: (index: number) => number[] | null;
+
+      if (props.tableMode !== "chance") {
+        dataRow = (index: number) => {
+          const results = props.results;
+          if (!results) return null;
+
+          const weight = results.weights[playerIndex][index];
+          const normalizer = results.normalizer[playerIndex][index];
+          if (weight === 0 || normalizer === 0) return null;
+
+          const ret: number[] = [];
+
+          ret.push(cards[index]);
+          ret.push(results.weights[playerIndex][index]);
+          ret.push(results.normalizer[playerIndex][index]);
+          ret.push(results.equity[playerIndex][index] ?? Number.NaN);
+          ret.push(results.ev[playerIndex][index] ?? Number.NaN);
+
+          const eqr = results.eqr[playerIndex][index] ?? Number.NaN;
+          ret.push(isFinite(eqr) ? eqr : Number.NaN);
+
+          for (let i = numActions.value - 1; i >= 0; --i) {
+            const j = i * cards.length + index;
+            ret.push(results.strategy[j]);
+            ret.push(results.actionEv[j] ?? 0);
+          }
+
+          return ret;
+        };
+      } else {
+        dataRow = (index: number) => {
+          const reports = props.chanceReports;
+          if (!reports) return null;
+
+          const status = reports.status[index];
+          if (status === 0) return null;
+
+          const ret: number[] = [];
+
+          ret.push(cards[index]);
+          ret.push(reports.combos[playerIndex][index]);
+          ret.push(Number.NaN);
+
+          if (status === 1) {
+            ret.push(Number.NaN, Number.NaN, Number.NaN);
+          } else {
+            ret.push(reports.equity[playerIndex][index]);
+            ret.push(reports.ev[playerIndex][index]);
+            ret.push(reports.eqr[playerIndex][index]);
+          }
+
+          for (let i = numActions.value - 1; i >= 0; --i) {
+            const j = i * cards.length + index;
+            ret.push(reports.strategy[j]);
+            ret.push(Number.NaN);
+          }
+
+          return ret;
+        };
+      }
+
+      if (props.hoverContent) {
+        for (const index of props.hoverContent.indices) {
+          const data = dataRow(index);
+          if (data) ret.push(data);
+        }
+      } else {
+        for (let i = 0; i < cards.length; ++i) {
+          const data = dataRow(i);
+          if (data) ret.push(data);
+        }
+      }
+
+      return ret;
+    });
+
+    const resultsSorted = computed(() => {
+      const { key, order } = sortKey.value;
+      const ret = [...resultsFiltered.value];
+
+      if (key === 0) {
+        ret.sort((a, b) => {
+          return cardPairOrder(a[0]) - cardPairOrder(b[0]);
+        });
+      } else {
+        ret.sort((a, b) => {
+          if (!isNaN(a[key]) && !isNaN(b[key])) {
+            return a[key] - b[key] || cardPairOrder(a[0]) - cardPairOrder(b[0]);
+          } else if (!isNaN(a[key])) {
+            return -1;
+          } else if (!isNaN(b[key])) {
+            return 1;
+          } else {
+            return cardPairOrder(a[0]) - cardPairOrder(b[0]);
+          }
+        });
+      }
+
+      if (order === "desc") ret.reverse();
+      return ret;
+    });
+
+    const rem = Number(
+      getComputedStyle(document.documentElement).fontSize.slice(0, -2)
+    );
+    const rowHeight = 1.9 * rem + 1;
+
+    const bufferUnit = 10;
+    const numDisplayedRows = computed(() =>
+      Math.ceil(tableHeight.value / rowHeight)
+    );
+
+    const emptyBufferTop = ref(-2 * bufferUnit);
+    const emptyBufferBottom = computed(
+      () =>
+        resultsFiltered.value.length -
+        (emptyBufferTop.value + numDisplayedRows.value + 4 * bufferUnit)
+    );
+
+    watch(resultsSorted, () => {
+      if (!tableDiv.value) return;
+      tableDiv.value.scrollTop = 0;
+      emptyBufferTop.value = -2 * bufferUnit;
+    });
+
+    let ticking = false;
+
+    const onTableScroll = async () => {
+      if (ticking) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        ticking = false;
+        if (!tableDiv.value) return;
+
+        const { scrollTop } = tableDiv.value;
+        const topIndex = Math.max(scrollTop / rowHeight, 0);
+        if (topIndex < emptyBufferTop.value + bufferUnit) {
+          emptyBufferTop.value =
+            (Math.floor(topIndex / bufferUnit) - 1) * bufferUnit;
+        } else if (topIndex > emptyBufferTop.value + 3 * bufferUnit) {
+          emptyBufferTop.value =
+            (Math.floor(topIndex / bufferUnit) - 2) * bufferUnit;
+        }
+      });
+    };
+
+    const resultsRendered = computed(() => {
+      return resultsSorted.value.slice(
+        Math.max(emptyBufferTop.value, 0),
+        emptyBufferTop.value + numDisplayedRows.value + 4 * bufferUnit
+      );
+    });
+
+    const { scrollTarget } = toRefs(props);
+    watch(scrollTarget, () => {
+      if (!tableDiv.value || !scrollTarget.value) return;
+      const scrollIndex = resultsSorted.value.findIndex(
+        (row) => row[0] === scrollTarget.value
+      );
+      if (scrollIndex === -1) return;
+      const scrollTop =
+        scrollIndex * rowHeight - (tableHeight.value - 3 * rowHeight) / 2;
+      tableDiv.value.scrollTop = Math.max(scrollTop, 0);
+    });
+
+    const summary = computed(() => {
+      const results = resultsFiltered.value;
+      if (!props.results || results.length === 0) return null;
+
+      let normalizer = 0;
+      const ret = results[0].map(() => 0);
+
+      for (const row of results) {
+        const n = row[INDEX_NORMALIZER];
+        normalizer += n;
+        ret[INDEX_WEIGHT] += row[INDEX_WEIGHT];
+        for (let i = INDEX_EQUITY; i < row.length; ++i) {
+          ret[i] += row[i] * n;
+        }
+      }
+
+      for (let i = INDEX_EQUITY; i < ret.length; ++i) {
+        ret[i] /= normalizer;
+      }
+
+      // EQR is not the average
+      const playerIndex = props.displayPlayer === "oop" ? 0 : 1;
+      const eqrBase = props.results.eqrBase[playerIndex];
+      ret[INDEX_EQR] = ret[INDEX_EV] / (eqrBase * ret[INDEX_EQUITY]);
+      if (!isFinite(ret[INDEX_EQR])) ret[INDEX_EQR] = Number.NaN;
+
+      return ret;
+    });
+
+    const actionColors = computed(() => {
+      if (numActions.value === 0) return [];
+      const spot = props.selectedSpot as SpotPlayer;
+      return spot.actions.map((a) => a.color).reverse();
+    });
+
+    const maxWeight = computed(() => {
+      return Math.max(...resultsFiltered.value.map((r) => r[INDEX_WEIGHT]));
+    });
+
+    const strategyBarBgImage = (row: number[]) => {
+      if (!row || row.length === INDEX_STRATEGY_BASE) {
+        return `linear-gradient(${yellow500} 0% 100%)`;
+      }
+
+      let pos = 0;
+      let ret = "linear-gradient(to right";
+
+      for (let i = 0; i < numActions.value; ++i) {
+        const width = row[INDEX_STRATEGY_BASE + i * 2] * 100;
+        const color = actionColors.value[i];
+        ret += `, ${color} ${pos}% ${pos + width}%`;
+        pos += width;
+      }
+
+      ret += ")";
+      return ret;
+    };
+
+    const strategyBarBgSize = (row: number[]) => {
+      const weight = row[INDEX_WEIGHT];
+      if (weight === 0) {
+        return "0% 100%";
+      } else if (displayOptions.barWidth === "normalized") {
+        return `${(weight / maxWeight.value) * 100}% 100%`;
+      } else if (displayOptions.barWidth === "absolute") {
+        return `${weight * 100}% 100%`;
+      } else {
+        return "100% 100%";
+      }
+    };
+
+    const actionBarBg = (index: number, row: number[]) => {
+      const color = actionColors.value[index];
+      const value = row[INDEX_STRATEGY_BASE + index * 2];
+      return `linear-gradient(to right, ${color} 0% ${
+        value * 100
+      }%, ${neutral800} ${value * 100}% 100%)`;
+    };
+
+    const exportSummaryButton = ref<HTMLAnchorElement | null>(null);
+
+    const exportSummary = () => {
+      if (!exportSummaryButton.value) return;
+
+      const data: string[] = [];
+
+      if (props.tableMode !== "chance") {
+        if (!props.results) return;
+
+        const ary = ["Hand", "Weight", "Combos"];
+
+        if (!props.results.isEmpty) {
+          ary.push("Equity", "EV", "EQR");
+        }
+
+        if (numActions.value > 0) {
+          const actions = (props.selectedSpot as SpotPlayer).actions;
+          for (let i = actions.length - 1; i >= 0; --i) {
+            const action = actions[i];
+            const amount =
+              action.amount === "0"
+                ? ""
+                : ` ${formatAmount(Number(action.amount), evScale.value)}${
+                    evScale.value === 10 ? "bb" : ""
+                  }`;
+            ary.push(`${action.name}${amount} %`);
+            ary.push(`${action.name}${amount} EV`);
+          }
+        }
+
+        data.push(ary.join(","));
+
+        const startIndex = props.results.isEmpty
+          ? INDEX_STRATEGY_BASE
+          : INDEX_EQUITY;
+
+        for (const row of resultsSorted.value) {
+          const card1 = row[0] & 0xff;
+          const card2 = row[0] >>> 8;
+          const pairStr = cardStr(card2) + cardStr(card1);
+          const rowData = [...row.slice(startIndex)];
+          if (!props.results.isEmpty) {
+            rowData[INDEX_EV - startIndex] = displayEv(row[INDEX_EV]);
+            for (let i = 1; i < numActions.value * 2; i += 2) {
+              rowData[INDEX_STRATEGY_BASE + i - startIndex] = displayEv(
+                row[INDEX_STRATEGY_BASE + i]
+              );
+            }
+          }
+          const ary = [
+            pairStr,
+            row[INDEX_WEIGHT],
+            row[INDEX_NORMALIZER],
+            ...rowData,
+          ];
+          data.push(ary.join(","));
+        }
+      } else {
+        if (!props.chanceReports) return;
+
+        const ary = [columns.value[0].label, "Combos", "Equity", "EV", "EQR"];
+
+        if (numActions.value > 0) {
+          const actions = (props.selectedSpot as SpotPlayer).actions;
+          for (let i = actions.length - 1; i >= 0; --i) {
+            const action = actions[i];
+            const amount =
+              action.amount === "0"
+                ? ""
+                : ` ${formatAmount(Number(action.amount), evScale.value)}${
+                    evScale.value === 10 ? "bb" : ""
+                  }`;
+            ary.push(`${action.name}${amount} %`);
+          }
+        }
+
+        data.push(ary.join(","));
+
+        for (const row of resultsSorted.value) {
+          const ary = [
+            cardStr(row[0] & 0xff),
+            row[INDEX_WEIGHT],
+            isNaN(row[INDEX_EQUITY]) ? "-" : row[INDEX_EQUITY],
+            isNaN(row[INDEX_EV]) ? "-" : displayEv(row[INDEX_EV]),
+            isNaN(row[INDEX_EQR]) ? "-" : row[INDEX_EQR],
+            ...row.slice(INDEX_STRATEGY_BASE).filter((_, i) => i % 2 === 0),
+          ];
+          data.push(ary.join(","));
+        }
+      }
+
+      const blob = new Blob([data.join("\n")], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      exportSummaryButton.value.href = url;
+    };
+
+    return {
+      isTr,
+      isAr: computed(() => i18n.locale === "ar"),
+      toFixed1,
+      toFixed,
+      toFixedAdaptive,
+      capitalize,
+      L,
+      columnIndex,
+      displayOptions,
+      updateDisplayOptions,
+      tableDiv,
+      pairText,
+      sortKey,
+      sortBy,
+      evDigits,
+      displayEv,
+      columns,
+      onTableScroll,
+      resultsRendered,
+      emptyBufferTop,
+      emptyBufferBottom,
+      summary,
+      strategyBarBgImage,
+      strategyBarBgSize,
+      actionBarBg,
+      exportSummaryButton,
+      exportSummary,
+      strTmp: "",
+    };
+  },
+});
+</script>
+
+<style scoped>
+.result-sort-button {
+  display: flex;
+  width: 100%;
+  /* The existing table cells add 1px padding above and below the button. */
+  min-height: calc(1.9rem - 1px);
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.result-sort-button:hover { background: rgb(var(--c-bg-3)); }
+.result-sort-button:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid rgb(var(--c-brand));
+  outline-offset: -2px;
+}
+.header-divider::before {
+  content: "";
+  @apply absolute left-0 -bottom-px w-full border-b border-neutral-700;
+}
+
+.row-divider::before {
+  content: "";
+  @apply absolute left-0 top-0 w-full border-t border-neutral-700;
+}
+</style>

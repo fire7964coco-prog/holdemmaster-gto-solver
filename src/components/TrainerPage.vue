@@ -1,0 +1,3779 @@
+<template>
+  <CustomTrainerPage v-if="customTrainerState.active" />
+  <div
+    v-else
+    id="trainer-top"
+    :class="'trainer-page max-w-5xl min-w-0 flex flex-col ' + (evaluation ? 'pb-24 md:pb-10' : 'pb-10')"
+  >
+    <div
+      v-if="loadError"
+      class="rounded-lg border border-red-700 bg-red-950 px-4 py-3 text-red-300"
+    >
+      {{ L.loadFailed }} {{ autoText(loadError) }}
+    </div>
+    <div v-else-if="!bank" class="py-8">
+      <span class="spinner inline-block me-3"></span>{{ L.loading }}
+    </div>
+
+    <template v-else>
+      <!--
+        모바일에서 한 줄 고정: 버튼이 늘고 줄어도 아래 문제가 움직이지 않아야 한다.
+        (오답이 생기면 [복습 N개]가 나타나 두 줄이 되면서 문제를 30px 밀어냈다)
+      -->
+      <div
+        class="order-1 filter-row flex flex-nowrap md:flex-wrap items-center gap-1.5 md:gap-2 overflow-x-auto md:overflow-x-visible"
+      >
+        <button
+          v-for="item in categories"
+          :key="item"
+          :class="
+            'button-base filter-btn ' +
+            (category === item ? 'button-blue' : 'bg-neutral-700 hover:bg-neutral-600')
+          "
+          @click="changeCategory(item)"
+        >
+          {{ trainerCategoryLabel(item) }}
+        </button>
+        <button
+          type="button"
+          data-testid="custom-trainer-tab"
+          class="button-base filter-btn bg-neutral-700 hover:bg-neutral-600"
+          @click="customTrainerState.active = true"
+        >{{ customLabels.tab }}</button>
+        <button
+          v-if="reviewAttempts.length"
+          :class="
+            'button-base filter-btn ms-0 md:ms-2 ' +
+            (reviewMode ? 'button-green' : 'bg-neutral-700 hover:bg-neutral-600')
+          "
+          @click="toggleReview"
+        >
+          {{ L.review(reviewAttempts.length) }}
+        </button>
+        <!-- 오늘의 문제: 날짜가 씨앗이라 모두 같은 문제를 받는다 -->
+        <button
+          :class="
+            'button-base filter-btn ms-0 md:ms-2 flex items-center gap-1.5 ' +
+            (dailyMode
+              ? 'bg-brand text-brand-ink hover:bg-brand-hover'
+              : 'bg-neutral-700 hover:bg-neutral-600')
+          "
+          @click="toggleDaily"
+        >
+          {{ L.daily }}
+          <span v-if="dailyState.done" :aria-label="L.done">✓</span>
+        </button>
+        <!-- RNG 연습: 끔 → High → Low 순으로 돈다 (기기에 기억 · 오늘의 문제에선 숫자를 숨김) -->
+        <button
+          v-if="rngEnabled"
+          type="button"
+          data-testid="trainer-rng-mode"
+          :title="R.modeHelp"
+          :class="
+            'button-base filter-btn ms-0 md:ms-2 ' +
+            (rngMode === 'off' ? 'bg-neutral-700 hover:bg-neutral-600' : 'button-blue')
+          "
+          @click="cycleRngMode"
+        >
+          {{ R.mode[rngMode] }}
+        </button>
+        <!-- 출제: 기본(교육 예제 · 오프라인) / 모든 플랍(서버 자료) — 기기에 기억 · 기본값은 기본 -->
+        <button
+          type="button"
+          data-testid="trainer-source"
+          :title="F.sourceHelp"
+          :class="
+            'button-base filter-btn ms-0 md:ms-2 ' +
+            (source === 'flop' ? 'button-blue' : 'bg-neutral-700 hover:bg-neutral-600')
+          "
+          @click="setSource(source === 'flop' ? 'basic' : 'flop')"
+        >
+          {{ source === "flop" ? F.sourceFlop : F.sourceBasic }}
+        </button>
+        <!-- 복습·오늘의 문제는 이 거르기 없이 출제하므로 칩을 숨긴다(MA-512 통지) -->
+        <button
+          v-if="flopFiltersShown"
+          type="button"
+          data-testid="trainer-close-only"
+          :title="F.closeHelp"
+          :aria-pressed="closeOnly"
+          :class="
+            'button-base filter-btn ' +
+            (closeOnly ? 'button-blue' : 'bg-neutral-700 hover:bg-neutral-600')
+          "
+          @click="toggleCloseOnly"
+        >
+          {{ F.closeOnly }}
+        </button>
+        <button
+          v-if="flopFiltersShown"
+          type="button"
+          data-testid="trainer-board"
+          :title="BL.boardHelp"
+          :aria-expanded="flopBoardOpen"
+          :class="
+            'button-base filter-btn ' +
+            (flopBoardActive ? 'button-blue' : 'bg-neutral-700 hover:bg-neutral-600')
+          "
+          @click="flopBoardOpen = !flopBoardOpen"
+        >
+          {{ flopBoardChipText }} {{ flopBoardOpen ? "▴" : "▾" }}
+        </button>
+      </div>
+      <TrainerBoardFilter
+        v-if="flopFiltersShown && flopBoardOpen"
+        :filter="flopBoardFilter"
+        :count="flopBoardCount"
+        @update="setFlopBoardFilter"
+      />
+
+      <!-- 통계는 칩으로 압축 — 위쪽 공간을 덜 먹어야 문제가 화면 중앙에 온다 -->
+      <div id="trainer-stats" class="order-4 md:order-2 flex flex-wrap gap-1.5 mt-3">
+        <span class="stat-chip">{{ L.solved }} <b dir="ltr">{{ plCountText(attempts.length) }}</b></span>
+        <span v-if="dailyState.streak" class="stat-chip">
+          {{ L.dailyStreakLabel }} <span>{{ L.dayStreakPrefix ?? "" }}<b dir="ltr">{{ plCountText(dailyState.streak) }}</b>{{ dayStreakSuffix }}</span>
+          <span v-if="dailyState.bestStreak > dailyState.streak" class="text-neutral-600">
+            {{ L.bestPrefix }} {{ plCountText(dailyState.bestStreak) }}
+          </span>
+        </span>
+        <span class="stat-chip">
+          {{ L.streakLabel }}
+          <b :class="streak >= 3 ? 'text-emerald-300' : ''">{{ plCountText(streak) }}</b>
+          <span v-if="bestStreak > 0" class="text-neutral-600">{{ L.bestPrefix }} {{ plCountText(bestStreak) }}</span>
+        </span>
+        <span class="stat-chip">{{ L.totalLossLabel }} <span dir="ltr"><b dir="ltr">{{ $n(totalLoss.toFixed(3)) }}</b>bb</span></span>
+        <span class="stat-chip">{{ L.avgLossLabel }} <span dir="ltr"><b dir="ltr">{{ $n(averageLoss.toFixed(3)) }}</b>bb</span></span>
+        <span class="stat-chip">{{ L.goodRateLabel }} <b dir="ltr">{{ $pct(excellentRate.toFixed(0)) }}</b></span>
+      </div>
+
+      <!-- 약점 분석: 카테고리별 평균 EV 손실 -->
+      <div
+        v-if="weakness.rows.some((row) => row.count > 0)"
+        class="order-4 md:order-2 mt-3 rounded-lg border border-neutral-700 bg-neutral-900/50 px-3 py-2.5"
+      >
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+          <span class="font-semibold text-neutral-300">{{ L.weaknessTitle }}</span>
+          <span
+            v-for="row in weakness.rows"
+            :key="row.category"
+            :class="
+              weakness.weakest && weakness.weakest.category === row.category
+                ? 'text-orange-300 font-semibold'
+                : 'text-neutral-400'
+            "
+          >
+            {{ row.label }}
+            <template v-if="row.count">
+              {{ $n(L.avgOfPot(row.averageLossPct.toFixed(2))) }}
+              <span class="text-neutral-600">({{ $n(row.averageLossBb.toFixed(3)) }}bb)</span>
+              <!-- ⚠ Vue의 whitespace condense가 태그 사이 줄바꿈 공백을 지운다 →
+                   «(0,002bb)(1 Hand)»로 붙어 나왔다 (2026-08-21 de 눈검수에서 발견, 전 언어 공통) -->
+              <span class="text-neutral-600">&nbsp;{{ L.handCount(row.count) }}</span>
+            </template>
+            <span v-else class="text-neutral-600">{{ L.notSolved }}</span>
+          </span>
+        </div>
+        <div v-if="weakness.weakest" class="mt-1.5 text-xs text-neutral-400">
+          {{ L.weakestBefore }}<b class="text-orange-300">{{ weakness.weakest.label }}</b>{{ L.weakestAfter }}
+          <button class="link-like" @click="changeCategory(weakness.weakest.category)">
+            {{ L.practiceThis }}
+          </button>
+        </div>
+        <div v-else class="mt-1.5 text-xs text-neutral-500">
+          {{ L.weaknessHint }}
+        </div>
+      </div>
+
+      <!-- 계정 보관 (선택) -->
+      <div
+        v-if="accountEnabled"
+        class="order-4 md:order-2 mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-neutral-700 bg-neutral-900/50 px-3 py-2.5 text-xs"
+      >
+        <template v-if="account">
+          <span class="text-neutral-300">
+            {{ L.accountBefore }}<b class="text-emerald-300">{{ autoText(account.nickname) }}</b>{{ L.accountAfter }}
+          </span>
+          <span v-if="syncMessage" class="text-neutral-500">{{ syncMessage }}</span>
+          <span class="ms-auto flex items-center gap-3">
+            <button
+              class="link-like"
+              :disabled="syncing"
+              @click="runSync"
+            >
+              {{ syncing ? L.syncingNow : L.syncNow }}
+            </button>
+            <button class="text-neutral-500 hover:text-neutral-300" @click="doSignOut">
+              {{ L.signOutLabel }}
+            </button>
+          </span>
+        </template>
+        <template v-else>
+          <span class="text-neutral-400">
+            {{ L.localOnlyBefore }}<b class="text-neutral-200">{{ L.localOnlyBold }}</b>{{ L.localOnlyAfter }}
+          </span>
+          <span class="ms-auto flex items-center gap-2">
+            <button class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1" @click="doSignIn('google')">
+              <ProviderIcon provider="google" />{{ L.googleSignIn }}
+            </button>
+            <!-- 카카오는 한국어 화면에서만 — 다른 언어권에는 없는 서비스이고,
+                 일본어 「カカオ」는 초콜릿 원료로 읽힌다 (사용자 결정 2026-08-21) -->
+            <button
+              v-if="isKo"
+              class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1"
+              @click="doSignIn('kakao')"
+            >
+              <ProviderIcon provider="kakao" />{{ L.kakaoSignIn }}
+            </button>
+            <!-- 텔레그램은 전 언어(본체 MB-341 · 구글 없는 사람용) -->
+            <button
+              class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1"
+              @click="doSignIn('custom:telegram')"
+            >
+              <ProviderIcon provider="custom:telegram" />{{ L.telegramSignIn }}
+            </button>
+          </span>
+        </template>
+        <div v-if="accountError" class="w-full text-red-300">
+          {{ accountError }}
+        </div>
+      </div>
+
+      <p class="order-4 md:order-2 mt-2 text-end text-xs text-neutral-500">
+        <!-- «모든 플랍» 출제면 교육 예제 수 대신 미리 계산한 상황 수·실제 플랍 수 (유튜브 쪽 지적 10-13) · 소수 없는 줄이라 $n 안 씀(de 22.100이 22,100으로 뒤집힘) -->
+        {{ flopFiltersShown ? L.flopFooterLine(flopFooterSpots, flopFooterFlops) : $n(L.footerLine(decisionCount, bank.targetExploitabilityPct)) }}
+      </p>
+
+      <!--
+        모바일: 성적 한 줄 요약만 위에 남기고 자세한 통계·약점 분석·계정 안내는
+        문제 아래로 내렸다. 위쪽 군더더기가 250px를 먹어 액션 버튼이 첫 화면 밖으로
+        밀려 있었다(390x844에서 y=848).
+      -->
+      <div
+        class="order-2 md:hidden mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-400"
+      >
+        <span>{{ L.solved }} <b dir="ltr" class="text-neutral-200">{{ plCountText(attempts.length) }}</b></span>
+        <span>
+          {{ L.streakLabel }}
+          <b :class="streak >= 3 ? 'text-emerald-300' : 'text-neutral-200'">{{ plCountText(streak) }}</b>
+        </span>
+        <span v-if="attempts.length">
+          {{ L.goodRateLabel }} <template v-if="isTr">%</template><b dir="ltr" class="text-neutral-200">{{ isAr ? $pct(excellentRate.toFixed(0)) : excellentRate.toFixed(0) }}</b><template v-if="!isTr">{{ isAr ? "" : "%" }}</template>
+        </span>
+        <span v-if="dailyState.streak">
+          {{ L.dailyStreakLabel }} {{ L.dayStreakPrefix ?? "" }}<b dir="ltr" class="text-brand">{{ plCountText(dailyState.streak) }}</b>{{ dayStreakSuffix }}
+        </span>
+        <button class="ms-auto link-like" @click="scrollToStats">{{ L.details }}</button>
+      </div>
+
+      <!-- «모든 플랍»: 플랍 파일을 받는 동안 · 못 받았을 때 (오프라인이면 기본 문제로 돌린다) -->
+      <div
+        v-if="!question && (flopLoading || flopError)"
+        data-testid="trainer-flop-status"
+        class="order-3 md:order-4 mt-3 md:mt-4 rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm"
+      >
+        <template v-if="flopLoading">
+          <span class="spinner inline-block me-3"></span>{{ F.loading }}
+        </template>
+        <div v-else class="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <span class="text-neutral-300">{{
+            flopError === "offline" ? F.offline : flopError === "empty" ? BL.boardEmpty : F.failed
+          }}</span>
+          <button v-if="flopError === 'empty'" class="link-like" @click="setFlopBoardFilter({})">
+            {{ BL.boardReset }}
+          </button>
+          <button v-else-if="flopError !== 'offline'" class="link-like" @click="retryFlop">{{ F.retry }}</button>
+          <button class="link-like" data-testid="trainer-use-basic" @click="setSource('basic')">
+            {{ F.useBasic }}
+          </button>
+        </div>
+      </div>
+
+      <!-- 좌: 문제 / 우: 채점. 답을 봐도 문제가 화면에서 사라지지 않게 나란히 둔다 -->
+      <div
+        v-if="question"
+        class="order-3 md:order-4 mt-3 md:mt-4 grid gap-3 lg:grid-cols-[1.15fr_1fr] items-start"
+      >
+      <div class="trainer-card rounded-lg border border-neutral-700 bg-neutral-800 p-3 md:p-4">
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span class="text-sm font-semibold text-brand">
+            {{ presetTitle }}
+          </span>
+          <span class="text-xs text-neutral-500">
+            {{ playerText(positionLabel, question.node.selectedSpot.player.toUpperCase()) }}
+            {{ L.toAct }}
+          </span>
+          <span class="text-xs text-neutral-500" data-testid="trainer-opponent">
+            {{ versusText }} {{ playerText(opponentLabel, question.player === "oop" ? "IP" : "OOP") }}
+          </span>
+          <span class="ms-auto text-xs text-neutral-400">
+            {{ L.potLabel }} {{ amountBb(question.node.selectedSpot.pot ?? question.node.startingPot) }}
+            · {{ L.stackLabel }}
+            {{ amountBb(question.node.selectedSpot.stack ?? question.node.effectiveStack) }}
+          </span>
+        </div>
+        <!-- 림프 팟 = GTO 차트 밖 근사 레인지 — 복기·플랍 조회와 같은 안내 줄 -->
+        <p v-if="limpNote" class="mt-1 text-xs text-neutral-500" data-testid="trainer-limp-note">
+          {{ limpNote }}
+        </p>
+
+        <div data-rtl-island="action-path" dir="ltr" v-if="question.node.history.length" class="mt-3 text-sm text-neutral-400">
+          {{ rtlText(L.lineLabel) }}
+          <span
+            v-for="(action, index) in question.node.history"
+            :key="index"
+            class="ml-1"
+          >
+            {{ historyText(action) }}<span v-if="index + 1 < question.node.history.length"> →</span>
+          </span>
+        </div>
+
+        <div
+          class="mt-3 rounded-lg border border-neutral-700/70 bg-surface-1 py-3 flex flex-row items-start md:items-center justify-center gap-6 md:gap-8"
+        >
+          <div class="text-center">
+            <div class="text-xs text-neutral-500 mb-1">{{ L.boardLabel }}</div>
+            <div data-rtl-island="board-cards" dir="ltr" class="text-xl md:text-2xl font-bold tracking-wide">
+              <span
+                v-for="(card, index) in boardCards"
+                :key="index"
+                :class="'mr-1 ' + card.colorClass"
+              >
+                {{ card.rank }}{{ card.suit }}
+              </span>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="text-xs text-neutral-500 mb-1">{{ L.myHand }}</div>
+            <div data-rtl-island="hand-cards" dir="ltr" class="text-2xl md:text-3xl font-bold tracking-wide">
+              <span
+                v-for="(card, index) in handCards"
+                :key="index"
+                :class="'mr-1 ' + card.colorClass"
+              >
+                {{ card.rank }}{{ card.suit }}
+              </span>
+            </div>
+            <div class="mt-1.5 flex flex-wrap justify-center gap-1">
+              <span class="hand-tag bg-neutral-700 text-neutral-200">
+                {{ handLabels.made }}
+              </span>
+              <span
+                v-if="handLabels.draw"
+                class="hand-tag bg-blue-900/70 text-blue-200"
+              >
+                {{ handLabels.draw }}
+              </span>
+              <span dir="ltr"
+                v-if="rngActive"
+                data-testid="trainer-rng-roll"
+                class="hand-tag bg-brand/15 text-brand tabular-nums"
+              >
+                RNG {{ rngRoll }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 text-sm font-semibold">
+          {{ evaluation ? L.yourChoice : L.prompt }}
+        </div>
+        <!-- 채점 전에는 액션 이름만. 채점 후에는 버튼 자체가 결과표가 된다 -->
+        <div class="grid gap-2 mt-2 md:grid-cols-2">
+          <button
+            v-for="(action, index) in question.node.selectedSpot.actions"
+            :key="index"
+            :disabled="!!evaluation"
+            :class="
+              'flex min-w-0 items-center justify-between gap-2 rounded-md border px-3 py-2.5 text-sm font-semibold transition ' +
+              (evaluation && evaluation.selectedAction === index
+                ? 'border-brand bg-brand/10 text-brand'
+                : evaluation
+                ? 'border-neutral-700 bg-neutral-800 text-neutral-400'
+                : 'border-neutral-600 bg-neutral-700 hover:bg-neutral-600')
+            "
+            @click="choose(index)"
+          >
+            <span>
+              {{
+                trainerActionLabel(
+                  action,
+                  question.node.selectedSpot.pot ?? question.node.startingPot,
+                  question.node.unitScale,
+                  evaluation ? "label" : "button"
+                )
+              }}
+            </span>
+            <span dir="ltr"
+              v-if="evaluation"
+              class="text-xs font-semibold tabular-nums text-neutral-400"
+            >
+              {{ $pct($n((evaluation.actions[index].frequency * 100).toFixed(1))) + " " }}
+            </span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- 오른쪽: 채점 결과. 아직 안 골랐으면 자리만 잡아둔다(레이아웃이 튀지 않게) -->
+      <div
+        id="trainer-detail"
+        class="trainer-card rounded-lg border border-neutral-700 bg-neutral-800 p-3 md:p-4"
+      >
+        <template v-if="evaluation">
+          <!-- 모바일은 하단 고정 바가 같은 내용을 이고 있어 여기선 감춘다 -->
+          <div :class="'hidden md:block text-lg font-bold ' + verdict.className">
+            {{ verdict.text }}
+          </div>
+          <div class="hidden md:block mt-0.5 text-sm text-neutral-400">
+            {{ L.evLoss }}
+            <b dir="ltr" class="tabular-nums text-neutral-200">
+              {{ $n(evaluation.evLossBb.toFixed(3)) }}bb
+            </b>
+          </div>
+          <div class="md:hidden text-sm font-semibold text-neutral-300">
+            {{ L.mobileDetailTitle }}
+          </div>
+          <!-- 화면의 «팟»은 지금 결정 시점의 팟이고 판정은 상황 시작 팟 기준이라, 답한 뒤에도 기준을 보여 준다 (유튜브 쪽 지적 10-13) -->
+          <div v-if="!rngResult" data-testid="trainer-judge-basis" class="mt-0.5 text-xs text-neutral-500">
+            {{ $n(L.judgeBasis(limits.potBb.toFixed(1), limits.bestBb.toFixed(2), limits.goodBb.toFixed(2))) }}
+          </div>
+          <p class="mt-1 text-xs text-neutral-500">
+            {{ L.mixedNote }}
+          </p>
+
+          <!-- RNG 구간: 1~100을 솔버 빈도로 나눈 띠 + 내 숫자 위치 -->
+          <div v-if="rngResult" data-testid="trainer-rng-result" class="mt-3 panel-inner">
+            <div class="text-xs text-neutral-400">
+              {{ R.bandsTitle }} ·
+              <b dir="ltr" class="text-brand tabular-nums">{{ R.yourNumber }} {{ rngRoll }}</b>
+            </div>
+            <div data-rtl-island="rng" dir="ltr" class="relative mt-1.5 h-2 flex rounded bg-neutral-900">
+              <div
+                v-for="(band, b) in rngBandList"
+                :key="band.action"
+                :class="
+                  'h-full ' +
+                  (band.action === rngResult.rolledAction
+                    ? 'bg-brand/80'
+                    : b % 2
+                    ? 'bg-neutral-600'
+                    : 'bg-neutral-500')
+                "
+                :style="{ width: band.to - band.from + 1 + '%' }"
+              ></div>
+              <div
+                class="absolute -top-1 -bottom-1 w-0.5 rounded bg-white"
+                :style="{ left: 'calc(' + (rngRoll - 0.5) + '% - 1px)' }"
+              ></div>
+            </div>
+            <div :dir="isAr ? 'rtl' : 'ltr'" class="mt-1.5 text-xs text-neutral-400 tabular-nums">
+              <span v-for="(band, b) in rngBandList" :key="band.action">
+                <template v-if="b"> · </template>
+                <span :class="band.action === rngResult.rolledAction ? 'text-brand font-semibold' : ''">
+                  {{ bandText(evaluation.actions[band.action].label, band.from, band.to) }}
+                </span>
+              </span>
+            </div>
+            <div class="mt-1 text-xs text-neutral-300">{{ rngNote }}</div>
+          </div>
+
+          <div class="mt-4 space-y-2.5">
+            <div v-for="action in evaluation.actions" :key="action.index">
+              <div class="flex items-baseline gap-2 text-sm">
+                <span :class="action.isBest ? 'font-bold text-emerald-300' : ''">
+                  {{ action.label }}{{ action.isBest ? L.bestEvTag : "" }}
+                </span>
+                <span dir="ltr" class="ms-auto tabular-nums text-xs text-neutral-500">
+                  {{ $pct($n((action.frequency * 100).toFixed(1))) + " " }}
+                </span>
+                <span dir="ltr" class="w-16 text-end tabular-nums">
+                  {{ $n(action.evBb.toFixed(3)) }}
+                </span>
+              </div>
+              <!-- 숫자를 못 읽어도 차이가 보이게 -->
+              <div data-rtl-island="numeric-bar" dir="ltr" class="mt-1 h-1 rounded bg-neutral-900 overflow-hidden">
+                <div
+                  :class="
+                    'h-full rounded ' +
+                    (action.isBest ? 'bg-emerald-500' : 'bg-blue-600')
+                  "
+                  :style="{ width: evBarWidth(action.evBb) + '%' }"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!--
+            오늘의 문제를 푼 뒤: 결과를 커뮤니티에 올리기 쉽게 만든다.
+            같은 날 모두가 같은 문제를 받으므로 서로 답을 견줄 수 있고, 그게 글감이 된다.
+            정답 자체는 문구에 넣지 않는다 — 아직 안 푼 사람의 재미를 없애면 글이 안 퍼진다.
+          -->
+          <div
+            v-if="dailyMode && dailyState.done"
+            class="mt-4 panel-inner border-brand/40"
+          >
+            <div class="text-sm font-semibold text-brand">
+              {{ L.dailyDone }}
+              <span v-if="dailyState.streak > 1" class="text-neutral-300">
+                · {{ L.dayStreakPrefix ?? "" }}{{ plCountText(dailyState.streak) }}{{ dayStreakSuffix }}
+              </span>
+            </div>
+            <div class="mt-1 text-xs text-neutral-400 leading-relaxed">
+              {{ L.dailyDoneDesc }}
+            </div>
+            <div class="mt-2 flex flex-wrap items-center gap-2">
+              <!-- 커뮤니티보다 단톡방·SNS가 먼저다 — 회원이 적어도 작동하는 유입 장치 -->
+              <button
+                class="button-base !px-2.5 !py-1 text-xs bg-brand text-brand-ink hover:bg-brand-hover"
+                @click="openCard"
+              >
+                {{ L.makeCard }}
+              </button>
+              <button class="button-base button-blue !px-2.5 !py-1 text-xs" @click="copyDaily">
+                {{ dailyCopied ? L.copied : L.copyResult }}
+              </button>
+              <!-- 복사만 시키고 갈 곳을 안 주면 아무도 안 올린다 (EN은 갈 곳이 없어 숨김) -->
+              <a
+                v-if="communityUrl"
+                :href="communityUrl"
+                target="_blank"
+                rel="noopener"
+                class="button-base bg-neutral-700 hover:bg-neutral-600 !px-2.5 !py-1 text-xs"
+              >
+                {{ L.openCommunity }}
+              </a>
+            </div>
+            <div v-if="dailyCopied && communityUrl" class="mt-1.5 text-xs text-neutral-500 leading-relaxed">
+              {{ L.pasteHintBefore }}<b class="text-neutral-300">{{ L.pasteHintBold }}</b>{{ L.pasteHintAfter }}
+            </div>
+
+            <!-- 오늘의 순위 — 구경은 로그인 없이, 이름 올리기만 로그인 (허들 최소화, 2026-08-17) -->
+            <div v-if="accountEnabled" class="mt-3 border-t border-neutral-700/60 pt-2">
+              <div class="flex items-center gap-2">
+                <button class="link-like text-xs" @click="toggleBoard">
+                  {{ boardOpen ? L.boardHide : L.boardShow }}
+                </button>
+                <span v-if="boardLoading" class="text-xs text-neutral-500">
+                  {{ L.boardLoading }}
+                </span>
+              </div>
+              <template v-if="boardOpen && board">
+                <div class="mt-1.5 text-xs text-neutral-400">
+                  {{ L.boardCount(board.total) }}
+                  <template v-if="board.myRank"> · {{ L.boardMyRank(board.myRank) }}</template>
+                </div>
+                <ol class="mt-1 space-y-0.5 text-xs">
+                  <li
+                    v-for="(row, index) in board.rows"
+                    :key="index"
+                    :class="row.isMine ? 'text-brand font-semibold' : 'text-neutral-300'"
+                  >
+                    <span dir="ltr" class="inline-block w-6 text-end tabular-nums text-neutral-500">
+                      {{ plCountText(row.rank) }}
+                    </span>
+                    <span class="ms-2">{{ autoText(row.nickname) }}</span>
+                    <span dir="ltr" class="ms-2 tabular-nums text-neutral-500">
+                      {{ $n(row.lossBb.toFixed(3)) }}bb
+                    </span>
+                  </li>
+                </ol>
+                <div v-if="!account" class="mt-1.5 text-xs text-neutral-500">
+                  {{ L.boardLoginHint }}
+                </div>
+              </template>
+              <div
+                v-else-if="boardOpen && !boardLoading"
+                class="mt-1.5 text-xs text-neutral-500"
+              >
+                {{ L.boardUnavailable }}
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 flex flex-wrap items-center gap-3">
+            <button class="button-base button-green px-6" @click="goNext">
+              {{ dailyMode && dailyState.done ? L.keepPracticing : L.nextHand }}
+            </button>
+            <!-- 다시 풀기 — 오늘의 문제는 첫 기록만 세므로 숨긴다 -->
+            <button
+              v-if="!dailyMode"
+              data-testid="trainer-again"
+              class="text-sm text-neutral-300 hover:text-neutral-100"
+              @click="retrySame"
+            >
+              {{ F.again }}
+            </button>
+            <a
+              v-if="articleUrl"
+              :href="articleUrl"
+              target="_blank"
+              class="text-sm text-brand hover:underline"
+            >
+              {{ L.readArticle }}
+            </a>
+            <button
+              class="text-sm text-neutral-400 hover:text-neutral-200"
+              @click="openSpot"
+            >
+              {{ L.viewFull }}
+            </button>
+          </div>
+        </template>
+
+        <template v-else>
+          <div class="text-sm font-semibold text-neutral-300">{{ L.resultTitle }}</div>
+          <p class="mt-2 text-sm leading-relaxed text-neutral-500">
+            {{ L.resultHintBefore }}<b class="text-neutral-400">{{ L.resultHintBold }}</b>{{ L.resultHintAfter }}
+          </p>
+          <p class="mt-3 text-xs leading-relaxed text-neutral-600">
+            <!-- ⚠ 두 문장 사이의 «이음새»다. 줄바꿈을 그대로 두면 Vue가 공백 하나를 넣는데,
+                 CJK(일본어·중국어)는 「。」가 이미 여백을 품고 있어 «국면입니다。 이…»처럼 벌어진다
+                 (2026-08-22 joint-shot.js 실측으로 발견 — ja·zh 라이브에도 있던 결함).
+                 그래서 공백을 HTML이 아니라 «코드»가 정한다. -->
+            {{ L.gtoNoteBefore }}<b class="text-neutral-400">{{ L.gtoNoteBold }}</b>{{ L.gtoNoteAfter
+            }}<template v-if="question">{{ sentenceGap
+            }}{{ $n(L.spotLimits(limits.potBb.toFixed(1), limits.bestBb.toFixed(2), limits.goodBb.toFixed(2))) }}</template>
+          </p>
+        </template>
+      </div>
+      </div>
+
+      <div class="order-5 mt-4 flex justify-end">
+        <button
+          v-if="attempts.length"
+          class="text-xs text-neutral-500 hover:text-red-300"
+          @click="resetHistory"
+        >
+          {{ L.resetHistoryLabel }}
+        </button>
+      </div>
+
+      <!--
+        모바일 채점 바: 판정·EV 손실·[다음 문제]를 화면 하단에 붙여 둔다.
+        이게 없으면 답을 고른 뒤 판정(y=1156)과 다음 문제(y=1391)를 보려고
+        두 번 더 내렸다가 새 문제를 보려고 다시 올려야 했다.
+      -->
+      <div
+        v-if="evaluation"
+        class="md:hidden fixed inset-x-0 bottom-0 z-20 flex items-center gap-3 border-t border-neutral-700 bg-neutral-900/95 px-3 py-2 backdrop-blur"
+      >
+        <div class="min-w-0">
+          <div :class="'text-sm font-bold ' + verdict.className">{{ verdict.text }}</div>
+          <div class="text-xs text-neutral-400">
+            {{ L.evLoss }}
+            <b dir="ltr" class="tabular-nums text-neutral-200">
+              {{ $n(evaluation.evLossBb.toFixed(3)) }}bb
+            </b>
+            <button class="link-like ms-2" @click="scrollToDetail">{{ L.details }}</button>
+          </div>
+        </div>
+        <button class="button-base button-green ms-auto shrink-0 px-5" @click="goNext">
+          {{ dailyMode && dailyState.done ? L.keepPracticing : L.nextHand }}
+        </button>
+      </div>
+
+      <!-- 성적 카드 미리보기 — 기기 안에서 그린 이미지를 공유/저장한다 -->
+      <div
+        v-if="cardUrl"
+        class="fixed inset-0 z-40 flex items-center justify-center bg-black/75 p-4"
+        @click.self="closeCard"
+      >
+        <div class="w-full max-w-sm rounded-xl border border-neutral-700 bg-neutral-900 p-4">
+          <img
+            :src="cardUrl"
+            :alt="L.cardAlt"
+            class="w-full max-h-[62vh] object-contain rounded-lg border border-neutral-700"
+          />
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <button
+              v-if="cardShareable"
+              class="button-base bg-brand text-brand-ink hover:bg-brand-hover !px-3 !py-1.5 text-sm"
+              @click="shareCardNow"
+            >
+              {{ L.shareApps }}
+            </button>
+            <button class="button-base button-blue !px-3 !py-1.5 text-sm" @click="saveCardNow">
+              {{ L.saveImage }}
+            </button>
+            <button
+              class="ms-auto text-sm text-neutral-400 hover:text-neutral-200"
+              @click="closeCard"
+            >
+              {{ L.close }}
+            </button>
+          </div>
+          <p class="mt-2 text-xs text-neutral-500 leading-relaxed">
+            {{ L.cardHintBefore }}<b class="text-neutral-300">{{ L.cardHintBold }}</b>{{ L.cardHintAfter }}
+          </p>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
+
+<script lang="ts">
+// 교육 예제 개수 — 문구에 숫자를 박지 않는다(검수장 권고)
+const SPOT_COUNT = PRESETS.length; // PRESETS import below is hoisted
+import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
+import CustomTrainerPage from "./CustomTrainerPage.vue";
+import { MAIN_SITE_CONFIG } from "../main-site";
+import TrainerBoardFilter from "./TrainerBoardFilter.vue";
+import { customTrainerState } from "../custom-trainer";
+import { M as customTrainerLabels } from "../custom-trainer-labels";
+import { noteTrainerSolved } from "../pwa";
+import {
+  dailyState,
+  dailyCardDate,
+  dailyShareText,
+  loadDailyState,
+  makeDailyQuestion,
+  recordDaily,
+  takeDailyStartRequest,
+  todayKey,
+} from "../daily";
+import { canShareCard, drawDailyCard, saveCard, shareCard } from "../share-card";
+import { fetchLeaderboard, submitDailyResult, Leaderboard } from "../leaderboard";
+import {
+  claimLocalData,
+  clearTrainerAttempts,
+  addTrainerAttempt,
+  getTrainerAttempts,
+  isLocalDataOpen,
+  mergeTrainerAttempts,
+  newClientId,
+  TrainerAttempt,
+} from "../db";
+import {
+  AccountChangedError,
+  AccountUser,
+  getCurrentUser,
+  isAccountEnabled,
+  onAuthChange,
+  signIn,
+  type LoginProvider,
+  signOut,
+  syncAttempts,
+  hasStoredSession,
+  isReturningFromAuth,
+  isClientLoaded,
+} from "../account";
+import {
+  ARTICLE_URLS,
+  PRESETS,
+  ipLabelOf,
+  oopLabelOf,
+  presetTitleById,
+} from "../presets";
+import { i18n, localizeNumber, plCountText, ruPlural, plPlural, numberLocaleTag, autoIso, ltrIso, arLabelIso } from "../i18n";
+import { trackOutbound, mainSiteUrl } from "../outbound";
+import { useStore } from "../store";
+import {
+  RngMode,
+  classifyRngAnswer,
+  nextRngMode,
+  readRngMode,
+  rngAction,
+  rngBands,
+  rollRng,
+  trainerRngEnabled,
+} from "../trainer-rng";
+import { RNG_M } from "../trainer-rng-labels";
+import { cardText, formatBb } from "../utils";
+import { HAND_REVIEW_DATA, loadReviewFlop } from "../hand-review-data";
+import { isMemberScenario } from "../member-limits";
+import { flopBoardLabels, flopTrainerLabels } from "../flop-trainer-labels";
+import { flopStudyEntry, REAL_FLOP_COUNT } from "../flop-study-model";
+import { GROUP_AXES, GROUP_KEYS } from "../flop-report-model";
+import { flopReportLabels } from "../flop-report-labels";
+import ProviderIcon from "./ProviderIcon.vue";
+import {
+  FlopBoardFilter,
+  FlopTrainerCategory,
+  FlopTrainerQuestion,
+  dealFlopTrainer,
+  dealFromFlop,
+  filteredFlops,
+  isBoardFilterActive,
+  flopTrainerScenarios,
+  flopTrainerSpot,
+  makeFlopTrainerQuestion,
+  parseFlopQuestionId,
+  restoreFlopTrainerQuestion,
+} from "../flop-trainer";
+import { M as REVIEW_LABELS } from "../hand-review-labels";
+import {
+  evaluateTrainerAction,
+  makeTrainerQuestion,
+  isAcceptable,
+  lossLimits,
+  lossPercentOfPot,
+  TrainerBank,
+  TrainerCategory,
+  TrainerEvaluation,
+  TrainerQuestion,
+  trainerActionLabel,
+  trainerCardPair,
+  trainerCategory,
+  trainerCategoryLabel,
+  trainerHandLabels,
+  trainerStreak,
+  trainerWeakness,
+  validateTrainerBank,
+} from "../trainer";
+
+const M = {
+  ko: {
+    loadFailed: "트레이너 데이터를 불러오지 못했습니다:",
+    loading: "트레이너 준비 중...",
+    review: (n: number) => `복습 ${n}개`,
+    daily: "오늘의 문제",
+    dailyStreakLabel: "오늘의 문제",
+    done: "완료",
+    solved: "풀이",
+    dayStreakSuffix: "일 연속",
+    bestPrefix: "/ 최고",
+    // ⚠ trainerStreak()는 «정답»이 아니라 «EV 손실이 허용선 이내인 연속»을 센다.
+    //   앱 자신이 「정답/오답이 아니라 EV 손실로 평가」한다고 말하므로 «정답»은 모순이었다
+    //   (2026-08-22 번체 UX 검수가 덤으로 발견 — zh·zh-hant는 「連續達標」)
+    streakLabel: "연속 통과",
+    totalLossLabel: "누적 EV 손실",
+    avgLossLabel: "평균 EV 손실",
+    goodRateLabel: "좋은 선택",
+    weaknessTitle: "약점 분석",
+    avgOfPot: (pct: string) => `평균 팟의 ${pct}%`,
+    handCount: (n: number) => `(${n}문제)`,
+    notSolved: "미풀이",
+    weakestBefore: "",
+    weakestAfter: " 에서 손실이 가장 큽니다 —",
+    practiceThis: "이 상황만 연습하기",
+    weaknessHint: "상황별로 3문제 이상 풀면 어디가 약한지 알려드립니다.",
+    accountBefore: "",
+    accountAfter: " 님의 계정에 보관 중",
+    syncingNow: "동기화 중...",
+    syncNow: "지금 동기화",
+    signOutLabel: "로그아웃",
+    localOnlyBefore: "학습 기록이 ",
+    localOnlyBold: "이 기기에만",
+    localOnlyAfter:
+      " 저장됩니다. 홀덤마스터 계정에 보관하면 다른 기기에서도 이어서 풀 수 있어요.",
+    googleSignIn: "구글로 계속하기",
+    kakaoSignIn: "카카오",
+    telegramSignIn: "텔레그램",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT}개 교육 프리셋 · ${nodes}개 결정 노드 · 계산 목표 오차 ${pct}%`,
+    details: "자세히 ↓",
+    toAct: "차례",
+    potLabel: "팟",
+    stackLabel: "스택",
+    lineLabel: "진행:",
+    boardLabel: "보드",
+    myHand: "내 핸드",
+    yourChoice: "내 선택",
+    prompt: "어떤 액션을 선택하시겠습니까?",
+    bestEvTag: " · 최고 EV",
+    evLoss: "EV 손실",
+    mobileDetailTitle: "액션별 빈도와 EV",
+    mixedNote: "혼합 전략은 단순 오답 처리하지 않고 액션 EV 차이로 평가합니다.",
+    dailyDone: "오늘의 문제 완료",
+    dailyDoneDesc:
+      "오늘은 모두 같은 문제를 풉니다. 결과를 올리면 다른 사람 선택과 비교할 수 있습니다.",
+    makeCard: "성적 카드 만들기",
+    boardShow: "오늘의 순위 보기",
+    boardHide: "순위 접기",
+    boardLoading: "불러오는 중...",
+    boardCount: (n: number) => `오늘 ${n}명 참여`,
+    boardMyRank: (r: number) => `내 순위 ${r}위`,
+    boardLoginHint:
+      "로그인하면 내 닉네임도 순위에 올라갑니다. 구경은 로그인 없이 가능합니다.",
+    boardUnavailable: "순위표를 아직 열 수 없습니다.",
+    copied: "복사 완료",
+    copyResult: "결과 문구 복사",
+    openCommunity: "커뮤니티 열기 →",
+    pasteHintBefore: "커뮤니티에서 ",
+    pasteHintBold: "[✏️ 글 쓰기]",
+    pasteHintAfter: "를 누르고 붙여넣으면 됩니다.",
+    keepPracticing: "계속 연습하기",
+    nextHand: "다음 문제",
+    readArticle: "이 스팟 해설 읽기 →",
+    viewFull: "결과 전체 보기",
+    resultTitle: "채점 결과",
+    resultHintBefore: "액션을 고르면 여기에 ",
+    resultHintBold: "각 액션의 빈도와 EV",
+    resultHintAfter: ", 그리고 내 선택이 몇 bb 손해였는지가 표시됩니다.",
+    gtoNoteBefore:
+      "GTO는 같은 핸드도 액션을 섞습니다. 빈도가 낮은 선택이 곧 오답은 아니며, 기준은 EV 손실입니다 — ",
+    gtoNoteBold: "팟 대비",
+    gtoNoteAfter: " 0.35% 이하 최적 · 1% 이하 허용 · 그 이상 다시 볼 스팟.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `이 스팟(팟 ${pot}bb)에서는 ${best}bb · ${good}bb입니다.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `판정 기준은 이 상황의 시작 팟 ${pot}bb입니다 — 최적 ≤${best}bb · 허용 ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `미리 계산한 ${spots}개 상황 · 실제 플랍 ${flops}개에서 고르게 출제`,
+    resetHistoryLabel: "학습 기록 초기화",
+    cardAlt: "오늘의 문제 성적 카드",
+    shareApps: "카카오톡·SNS로 공유",
+    saveImage: "이미지 저장",
+    close: "닫기",
+    cardHintBefore: "저장한 카드를 단톡방이나 SNS에 올려보세요. 받은 사람도 오늘은 ",
+    cardHintBold: "같은 문제",
+    cardHintAfter: "를 풉니다. 카드에 정답은 담기지 않습니다.",
+    verdictBest: "최적 선택",
+    verdictGood: "허용 가능한 선택",
+    verdictMiss: "다시 볼 스팟",
+    promptCopy: "아래 내용을 복사해 주세요",
+    shareText:
+      "오늘의 GTO 문제 — 나도 풀어보기: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "이 기기의 트레이너 학습 기록을 모두 지울까요?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded}개 보관 · 다른 기기 기록 ${merged}개 가져옴`,
+    syncSaved: (uploaded: number) => `${uploaded}개 보관됨`,
+    syncFailed: (msg: string) => `동기화 실패: ${msg} — 기록은 이 기기에 그대로 있습니다. «지금 동기화»를 눌러 다시 시도하세요.`,
+    signInFailed: (msg: string) => `로그인 실패: ${msg} — 로그인 버튼을 다시 눌러 주세요.`,
+  },
+  en: {
+    loadFailed: "Failed to load trainer data:",
+    loading: "Loading trainer…",
+    review: (n: number) => `Review (${n})`,
+    daily: "Daily Puzzle",
+    dailyStreakLabel: "Daily Puzzle",
+    done: "Done",
+    solved: "Solved",
+    dayStreakSuffix: "-day streak",
+    bestPrefix: "/ best",
+    streakLabel: "Streak",
+    totalLossLabel: "Total EV loss",
+    avgLossLabel: "Avg EV loss",
+    goodRateLabel: "Good-play rate",
+    weaknessTitle: "Leak Finder",
+    avgOfPot: (pct: string) => `avg ${pct}% of the pot`,
+    handCount: (n: number) => `(${n} hand${n === 1 ? "" : "s"})`,
+    notSolved: "Not tried",
+    weakestBefore: "Biggest losses in ",
+    weakestAfter: " —",
+    practiceThis: "Drill this spot type",
+    weaknessHint: "Solve 3+ hands in each category to see where you're leaking.",
+    accountBefore: "Saved to ",
+    accountAfter: "'s account",
+    syncingNow: "Syncing…",
+    syncNow: "Sync now",
+    signOutLabel: "Sign out",
+    localOnlyBefore: "Your progress is saved ",
+    localOnlyBold: "on this device only",
+    localOnlyAfter:
+      ". Link a HoldemMaster account to pick up where you left off on any device.",
+    googleSignIn: "Continue with Google",
+    kakaoSignIn: "Continue with Kakao",
+    telegramSignIn: "Continue with Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} Study Spots · ${nodes} decision nodes · target exploitability ${pct}%`,
+    details: "Details ↓",
+    toAct: "to act",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Line:",
+    boardLabel: "Board",
+    myHand: "Your hand",
+    yourChoice: "Your choice",
+    prompt: "What's your play?",
+    bestEvTag: " · Highest EV",
+    evLoss: "EV loss",
+    mobileDetailTitle: "Frequency & EV by action",
+    mixedNote:
+      "Mixed strategies aren't marked wrong — grading is based on the EV difference between actions.",
+    dailyDone: "Daily Puzzle complete",
+    dailyDoneDesc:
+      "Everyone gets the same puzzle today. Post your result to compare with other players.",
+    makeCard: "Create a result card",
+    boardShow: "View today's leaderboard",
+    boardHide: "Hide leaderboard",
+    boardLoading: "Loading…",
+    boardCount: (n: number) => `${n} player${n === 1 ? "" : "s"} today`,
+    boardMyRank: (r: number) => `My rank #${r}`,
+    boardLoginHint:
+      "Sign in to put your name on the board — viewing is open to everyone.",
+    boardUnavailable: "The leaderboard isn't available yet.",
+    copied: "Copied",
+    copyResult: "Copy result text",
+    openCommunity: "Open community →",
+    pasteHintBefore: "In the community, hit ",
+    pasteHintBold: "[✏️ Write Post]",
+    pasteHintAfter: " and paste.",
+    keepPracticing: "Keep practicing",
+    nextHand: "Next hand",
+    readArticle: "Read the spot breakdown →",
+    viewFull: "View full solution",
+    resultTitle: "Results",
+    resultHintBefore: "Pick an action and you'll see ",
+    resultHintBold: "each action's frequency and EV",
+    resultHintAfter: ", plus how many bb your choice cost.",
+    gtoNoteBefore:
+      "GTO mixes actions with the same hand — a low-frequency choice isn't automatically a mistake. The measure is EV loss ",
+    gtoNoteBold: "relative to the pot",
+    gtoNoteAfter: ": ≤0.35% Best play · ≤1% Acceptable · above that, Review this spot.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `For this spot (${pot}bb pot) that's Best play ≤${best}bb · Acceptable ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Judged against this spot's starting pot (${pot}bb): Best play ≤${best}bb · Acceptable ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} precomputed spots · dealt evenly from all ${flops} real flops`,
+    resetHistoryLabel: "Reset history",
+    cardAlt: "Daily Puzzle result card",
+    shareApps: "Share",
+    saveImage: "Save image",
+    close: "Close",
+    cardHintBefore:
+      "Post your card to a group chat or social media — anyone who sees it plays the ",
+    cardHintBold: "same puzzle",
+    cardHintAfter: " today. The card never spoils the answer.",
+    verdictBest: "Best play",
+    verdictGood: "Acceptable",
+    verdictMiss: "Review this spot",
+    promptCopy: "Copy the text below",
+    shareText:
+      "Today's GTO puzzle — try it yourself: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "Clear all trainer history on this device?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} saved · ${merged} pulled from other devices`,
+    syncSaved: (uploaded: number) => `${uploaded} saved`,
+    syncFailed: (msg: string) => `Sync failed: ${msg} — your results are still saved on this device. Press “Sync now” to try again.`,
+    signInFailed: (msg: string) => `Sign-in failed: ${msg} — press the sign-in button again to retry.`,
+  },
+  ja: {
+    loadFailed: "トレーナーデータを読み込めませんでした:",
+    loading: "トレーナーを準備中…",
+    review: (n: number) => `復習 ${n}問`,
+    daily: "今日のGTO問題",
+    dailyStreakLabel: "今日のGTO問題",
+    done: "完了",
+    solved: "解答数",
+    dayStreakSuffix: "日連続",
+    bestPrefix: "/ 最高",
+    // ⚠ 「ベスト」는 «最適»(ポット比 0.35%)으로 읽히는데 실제 기준은 «許容»(1%)이라
+    //   사용자가 자기 기록을 과대평가하게 된다 (ko와 같은 자리, 2026-08-22 발견)
+    streakLabel: "連続クリア",
+    totalLossLabel: "累計EVロス",
+    avgLossLabel: "平均EVロス",
+    goodRateLabel: "良い選択",
+    weaknessTitle: "弱点分析",
+    avgOfPot: (pct: string) => `平均でポットの${pct}%`,
+    handCount: (n: number) => `(${n}問)`,
+    notSolved: "未挑戦",
+    weakestBefore: "",
+    weakestAfter: " での損失が最も大きいです —",
+    practiceThis: "このスポットだけ練習する",
+    weaknessHint: "カテゴリごとに3問以上解くと、どこが弱いかをお知らせします。",
+    accountBefore: "",
+    accountAfter: " さんのアカウントに保存中",
+    syncingNow: "同期中…",
+    syncNow: "今すぐ同期",
+    signOutLabel: "ログアウト",
+    localOnlyBefore: "学習記録は",
+    localOnlyBold: "この端末にのみ",
+    localOnlyAfter:
+      "保存されます。HoldemMasterアカウントに保存すると、他の端末でも続きから解けます。",
+    googleSignIn: "Googleで続ける",
+    kakaoSignIn: "カカオトークで続ける",
+    telegramSignIn: "Telegramで続ける",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT}個の学習スポット・${nodes}個の決定ノード・計算目標誤差 ${pct}%`,
+    details: "詳細 ↓",
+    toAct: "の番",
+    potLabel: "ポット",
+    stackLabel: "スタック",
+    lineLabel: "ライン:",
+    boardLabel: "ボード",
+    myHand: "自分のハンド",
+    yourChoice: "あなたの選択",
+    prompt: "どのアクションを選びますか？",
+    bestEvTag: "・最高EV",
+    evLoss: "EVロス",
+    mobileDetailTitle: "アクション別の頻度とEV",
+    mixedNote:
+      "混合戦略は単純に不正解とせず、アクション間のEV差で評価します。",
+    dailyDone: "今日のGTO問題 完了",
+    dailyDoneDesc:
+      "今日は全員が同じ問題を解きます。結果を投稿すると、他の人の選択と比較できます。",
+    makeCard: "リザルトカードを作る",
+    boardShow: "今日のランキングを見る",
+    boardHide: "ランキングを閉じる",
+    boardLoading: "読み込み中…",
+    boardCount: (n: number) => `今日 ${n}人参加`,
+    boardMyRank: (r: number) => `自分の順位 ${r}位`,
+    boardLoginHint:
+      "ログインすると自分のニックネームもランキングに載ります。閲覧はログインなしでも可能です。",
+    boardUnavailable: "ランキングはまだ利用できません。",
+    copied: "コピーしました",
+    copyResult: "結果テキストをコピー",
+    openCommunity: "コミュニティを開く →",
+    pasteHintBefore: "コミュニティで",
+    pasteHintBold: "[✏️ 投稿する]",
+    pasteHintAfter: "を押して貼り付けてください。",
+    keepPracticing: "練習を続ける",
+    nextHand: "次の問題",
+    readArticle: "このスポットの解説を読む →",
+    viewFull: "結果全体を見る",
+    resultTitle: "採点結果",
+    resultHintBefore: "アクションを選ぶと、ここに",
+    resultHintBold: "各アクションの頻度とEV",
+    resultHintAfter: "、そして自分の選択が何bbの損だったかが表示されます。",
+    gtoNoteBefore:
+      "GTOは同じハンドでもアクションをミックスします。頻度が低い選択が即不正解ではなく、基準はEVロスです — ",
+    gtoNoteBold: "ポット比",
+    gtoNoteAfter: " 0.35%以下は最適な選択・1%以下は許容できる選択・それ以上は復習すべきスポット。",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `このスポット（ポット${pot}bb）では ${best}bb・${good}bb が境界です。`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `判定はこのスポットの開始ポット（${pot}bb）が基準です：最適 ≤${best}bb・許容 ≤${good}bb。`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `事前計算した${spots}スポット · 実際の${flops}種類のフロップから均等に出題`,
+    resetHistoryLabel: "学習記録をリセット",
+    cardAlt: "今日のGTO問題のリザルトカード",
+    shareApps: "アプリでシェア",
+    saveImage: "画像を保存",
+    close: "閉じる",
+    cardHintBefore:
+      "保存したカードをグループチャットやSNSに投稿してみましょう。受け取った人も今日は",
+    cardHintBold: "同じ問題",
+    cardHintAfter: "を解きます。カードに正解は含まれません。",
+    verdictBest: "最適な選択",
+    verdictGood: "許容できる選択",
+    verdictMiss: "要復習",
+    promptCopy: "以下の内容をコピーしてください",
+    shareText:
+      "今日のGTO問題 — あなたも挑戦: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "この端末のトレーナー学習記録をすべて削除しますか？",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded}件保存・他端末の記録${merged}件を取得`,
+    syncSaved: (uploaded: number) => `${uploaded}件保存済み`,
+    syncFailed: (msg: string) => `同期失敗: ${msg} — 記録はこの端末に残っています。「今すぐ同期」を押してもう一度お試しください。`,
+    signInFailed: (msg: string) => `ログイン失敗: ${msg} — もう一度ログインボタンを押してください。`,
+  },
+  es: {
+    loadFailed: "No se pudieron cargar los datos del entrenador:",
+    loading: "Cargando el entrenador…",
+    review: (n: number) => `Repasar ${n}`,
+    daily: "Reto del día",
+    dailyStreakLabel: "Reto diario",
+    done: "Hecho",
+    solved: "Resueltas",
+    dayStreakSuffix: " días seguidos",
+    bestPrefix: "/ mejor",
+    streakLabel: "Racha",
+    totalLossLabel: "Pérdida de EV total",
+    avgLossLabel: "Pérdida de EV media",
+    goodRateLabel: "Buenas decisiones",
+    weaknessTitle: "Detector de leaks",
+    avgOfPot: (pct: string) => `media ${pct}% del bote`,
+    handCount: (n: number) => `(${n} ${n === 1 ? "mano" : "manos"})`,
+    notSolved: "sin intentar",
+    weakestBefore: "Mayores pérdidas en ",
+    weakestAfter: " —",
+    practiceThis: "Solo este tipo de spot",
+    weaknessHint: "Resuelve 3+ manos en cada categoría para ver dónde pierdes EV.",
+    accountBefore: "Guardado en la cuenta de ",
+    accountAfter: "",
+    syncingNow: "Sincronizando…",
+    syncNow: "Sincronizar ahora",
+    signOutLabel: "Cerrar sesión",
+    localOnlyBefore: "Tu progreso se guarda ",
+    localOnlyBold: "solo en este dispositivo",
+    localOnlyAfter:
+      ". Vincula una cuenta de HoldemMaster para continuar donde te quedaste en cualquier dispositivo.",
+    googleSignIn: "Continuar con Google",
+    kakaoSignIn: "Kakao",
+    telegramSignIn: "Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} presets de estudio · ${nodes} nodos de decisión · error objetivo ${pct}%`,
+    details: "Detalles ↓",
+    toAct: "por actuar",
+    potLabel: "Bote",
+    stackLabel: "Stack",
+    lineLabel: "Línea:",
+    boardLabel: "Board",
+    myHand: "Tu mano",
+    yourChoice: "Tu elección",
+    prompt: "¿Cuál es tu jugada?",
+    bestEvTag: " · Mayor EV",
+    evLoss: "Pérdida de EV",
+    mobileDetailTitle: "Frecuencia y EV por acción",
+    mixedNote:
+      "Las estrategias mixtas no se marcan como error — la nota se basa en la diferencia de EV entre acciones.",
+    dailyDone: "Reto del día completado",
+    dailyDoneDesc:
+      "Hoy todos reciben el mismo reto. Publica tu resultado para compararlo con otros jugadores.",
+    makeCard: "Crear tarjeta de resultado",
+    boardShow: "Ver el ranking de hoy",
+    boardHide: "Ocultar ranking",
+    boardLoading: "Cargando…",
+    boardCount: (n: number) => `${n} jugador${n === 1 ? "" : "es"} hoy`,
+    boardMyRank: (r: number) => `mi puesto #${r}`,
+    boardLoginHint:
+      "Inicia sesión para poner tu nombre en el ranking — cualquiera puede verlo.",
+    boardUnavailable: "El ranking aún no está disponible.",
+    copied: "Copiado",
+    copyResult: "Copiar texto del resultado",
+    openCommunity: "Abrir comunidad →",
+    pasteHintBefore: "En la comunidad, toca ",
+    pasteHintBold: "[✏️ Escribir]",
+    pasteHintAfter: " y pega.",
+    keepPracticing: "Seguir practicando",
+    nextHand: "Siguiente mano",
+    readArticle: "Leer el análisis del spot →",
+    viewFull: "Ver la solución completa",
+    resultTitle: "Resultados",
+    resultHintBefore: "Elige una acción y verás ",
+    resultHintBold: "la frecuencia y el EV de cada acción",
+    resultHintAfter: ", además de cuántos bb te costó tu elección.",
+    gtoNoteBefore:
+      "El GTO mezcla acciones con la misma mano — una elección de baja frecuencia no es automáticamente un error. La medida es la pérdida de EV ",
+    gtoNoteBold: "relativa al bote",
+    gtoNoteAfter: ": ≤0.35% mejor jugada · ≤1% aceptable · más que eso, repasa el spot.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `En este spot (bote de ${pot}bb) eso es ${best}bb · ${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Se juzga con el bote inicial de este spot (${pot}bb): Mejor jugada ≤${best}bb · Aceptable ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spots precalculados · repartidos por igual entre los ${flops} flops reales`,
+    resetHistoryLabel: "Borrar historial",
+    cardAlt: "Tarjeta de resultado del reto del día",
+    shareApps: "Compartir en apps",
+    saveImage: "Guardar imagen",
+    close: "Cerrar",
+    cardHintBefore:
+      "Publica tu tarjeta en un chat de grupo o en redes — quien la vea juega el ",
+    cardHintBold: "mismo reto",
+    cardHintAfter: " hoy. La tarjeta nunca revela la respuesta.",
+    verdictBest: "Mejor jugada",
+    verdictGood: "Aceptable",
+    verdictMiss: "Repasa este spot",
+    promptCopy: "Copia el texto de abajo",
+    shareText:
+      "Reto GTO del día — inténtalo tú también: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "¿Borrar todo el historial del entrenador en este dispositivo?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} guardadas · ${merged} traídas de otros dispositivos`,
+    syncSaved: (uploaded: number) => `${uploaded} guardadas`,
+    syncFailed: (msg: string) => `Error de sincronización: ${msg} — tus resultados siguen guardados en este dispositivo. Pulsa “Sincronizar ahora” para reintentar.`,
+    signInFailed: (msg: string) => `Error al iniciar sesión: ${msg} — pulsa de nuevo el botón para iniciar sesión.`,
+  },
+  pt: {
+    loadFailed: "Não foi possível carregar os dados do Treinador:",
+    loading: "Carregando o treinador…",
+    review: (n: number) => `Revisar (${n})`,
+    daily: "Desafio do dia",
+    dailyStreakLabel: "Desafio do dia",
+    done: "Feito",
+    solved: "Resolvidas",
+    dayStreakSuffix: " em sequência",
+    bestPrefix: "/ melhor",
+    streakLabel: "Sequência",
+    totalLossLabel: "Perda de EV total",
+    avgLossLabel: "Perda de EV média",
+    goodRateLabel: "Boas decisões",
+    weaknessTitle: "Detector de leaks",
+    avgOfPot: (pct: string) => `média ${pct}% do pote`,
+    handCount: (n: number) => `(${n} ${n === 1 ? "mão" : "mãos"})`,
+    notSolved: "sem tentativas",
+    weakestBefore: "Maiores perdas em ",
+    weakestAfter: " —",
+    practiceThis: "Só este tipo de spot",
+    weaknessHint: "Resolva 3+ mãos em cada categoria para ver onde você perde EV.",
+    accountBefore: "Salvo na conta de ",
+    accountAfter: "",
+    syncingNow: "Sincronizando…",
+    syncNow: "Sincronizar agora",
+    signOutLabel: "Sair",
+    localOnlyBefore: "O seu progresso é salvo ",
+    localOnlyBold: "somente neste dispositivo",
+    localOnlyAfter:
+      ". Vincule uma conta HoldemMaster para continuar de onde parou em qualquer dispositivo.",
+    googleSignIn: "Continuar com o Google",
+    kakaoSignIn: "Continuar com o Kakao",
+    telegramSignIn: "Continuar com o Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} Spots de estudo · ${nodes} nós de decisão · erro objetivo ${pct}%`,
+    details: "Detalhes ↓",
+    toAct: "para agir",
+    potLabel: "Pote",
+    stackLabel: "Stack",
+    lineLabel: "Linha:",
+    boardLabel: "Board",
+    myHand: "Sua mão",
+    yourChoice: "Sua escolha",
+    prompt: "Qual é a sua jogada?",
+    bestEvTag: " · Maior EV",
+    evLoss: "Perda de EV",
+    mobileDetailTitle: "Frequência e EV por ação",
+    mixedNote:
+      "As estratégias mistas não são marcadas como erro — a nota se baseia na diferença de EV entre as ações.",
+    dailyDone: "Desafio do dia concluído",
+    dailyDoneDesc:
+      "Hoje todo mundo recebe o mesmo desafio. Publique o seu resultado para comparar com outros jogadores.",
+    makeCard: "Criar card de resultado",
+    boardShow: "Ver o ranking de hoje",
+    boardHide: "Ocultar ranking",
+    boardLoading: "Carregando…",
+    boardCount: (n: number) => `${n} jogador${n === 1 ? "" : "es"} hoje`,
+    boardMyRank: (r: number) => `Minha posição #${r}`,
+    boardLoginHint:
+      "Faça login para colocar o seu nome no ranking — qualquer pessoa pode ver.",
+    boardUnavailable: "O ranking ainda não está disponível.",
+    copied: "Copiado",
+    copyResult: "Copiar texto do resultado",
+    openCommunity: "Abrir comunidade →",
+    pasteHintBefore: "Na comunidade, toque em ",
+    pasteHintBold: "[✏️ Escrever]",
+    pasteHintAfter: " e cole.",
+    keepPracticing: "Continuar praticando",
+    nextHand: "Próxima mão",
+    readArticle: "Ler a análise do spot →",
+    viewFull: "Ver a solução completa",
+    resultTitle: "Resultados",
+    resultHintBefore: "Escolha uma ação e você verá ",
+    resultHintBold: "a frequência e o EV de cada ação",
+    resultHintAfter: ", além de quantos bb a sua escolha custou.",
+    gtoNoteBefore:
+      "O GTO mistura ações com a mesma mão — uma escolha de baixa frequência não é automaticamente um erro. A medida é a perda de EV ",
+    gtoNoteBold: "em relação ao pote",
+    gtoNoteAfter:
+      ": ≤0,35% Melhor jogada · ≤1% Aceitável · acima disso, Revise este spot.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Neste spot (pote de ${pot}bb): Melhor jogada ≤${best}bb · Aceitável ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Avaliado pelo pote inicial deste spot (${pot}bb): Melhor jogada ≤${best}bb · Aceitável ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spots pré-calculados · sorteados por igual entre os ${flops} flops reais`,
+    resetHistoryLabel: "Apagar histórico",
+    cardAlt: "Card de resultado do desafio do dia",
+    shareApps: "Compartilhar em apps",
+    saveImage: "Salvar imagem",
+    close: "Fechar",
+    cardHintBefore:
+      "Publique o seu card em um grupo de conversa ou nas redes — quem vir joga o ",
+    cardHintBold: "mesmo desafio",
+    cardHintAfter: " hoje. O card nunca revela a resposta.",
+    verdictBest: "Melhor jogada",
+    verdictGood: "Aceitável",
+    verdictMiss: "Revise este spot",
+    promptCopy: "Copie o texto abaixo",
+    shareText:
+      "Desafio GTO do dia — tente você também: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "Apagar todo o histórico do treinador neste dispositivo?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} salva${uploaded === 1 ? "" : "s"} · ${merged} trazida${
+        merged === 1 ? "" : "s"
+      } de outros dispositivos`,
+    syncSaved: (uploaded: number) =>
+      `${uploaded} salva${uploaded === 1 ? "" : "s"}`,
+    syncFailed: (msg: string) => `Erro de sincronização: ${msg} — seus resultados continuam salvos neste dispositivo. Toque em “Sincronizar agora” para tentar de novo.`,
+    signInFailed: (msg: string) => `Erro ao fazer login: ${msg} — toque de novo no botão de login.`,
+  },
+  de: {
+    loadFailed: "Die Trainer-Daten konnten nicht geladen werden:",
+    loading: "Trainer wird geladen…",
+    review: (n: number) => `Wiederholen (${n})`,
+    daily: "Tagesaufgabe",
+    dailyStreakLabel: "Tagesaufgabe",
+    done: "Erledigt",
+    solved: "Gelöst",
+    // «3 in Folge»는 명사가 없어 비문 → 수와 무관하게 맞는 «-mal in Folge»로 (1-mal / 3-mal)
+    dayStreakSuffix: "-mal in Folge",
+    bestPrefix: "/ Bestwert",
+    streakLabel: "Serie",
+    totalLossLabel: "EV-Verlust gesamt",
+    avgLossLabel: "EV-Verlust im Schnitt",
+    goodRateLabel: "Gute Entscheidungen",
+    weaknessTitle: "Leak-Analyse",
+    avgOfPot: (pct: string) => `im Schnitt ${pct}% vom Pot`,
+    // 독일어 복수: 1 Hand / 2 Hände
+    handCount: (n: number) => `(${n} ${n === 1 ? "Hand" : "Hände"})`,
+    notSolved: "Keine Versuche",
+    weakestBefore: "Größte Verluste bei ",
+    weakestAfter: " –",
+    practiceThis: "Nur diesen Spot-Typ üben",
+    weaknessHint: "Löse 3+ Hände je Kategorie, um zu sehen, wo du EV verlierst.",
+    accountBefore: "Gespeichert im Konto von ",
+    accountAfter: "",
+    syncingNow: "Wird synchronisiert…",
+    syncNow: "Jetzt synchronisieren",
+    signOutLabel: "Abmelden",
+    localOnlyBefore: "Dein Fortschritt wird ",
+    localOnlyBold: "nur auf diesem Gerät",
+    localOnlyAfter:
+      " gespeichert. Verknüpf ein HoldemMaster-Konto, um auf jedem Gerät dort weiterzumachen, wo du aufgehört hast.",
+    googleSignIn: "Weiter mit Google",
+    kakaoSignIn: "Weiter mit Kakao",
+    telegramSignIn: "Weiter mit Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} Lernspots · ${nodes} Entscheidungsknoten · Zielabweichung ${pct}%`,
+    details: "Details ↓",
+    toAct: "am Zug",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Line:",
+    boardLabel: "Board",
+    myHand: "Deine Hand",
+    yourChoice: "Deine Wahl",
+    prompt: "Was spielst du?",
+    bestEvTag: " · Höchster EV",
+    evLoss: "EV-Verlust",
+    mobileDetailTitle: "Frequenz und EV je Aktion",
+    mixedNote:
+      "Gemischte Strategien zählen nicht als Fehler – benotet wird nach der EV-Differenz zwischen den Aktionen.",
+    dailyDone: "Tagesaufgabe geschafft",
+    dailyDoneDesc:
+      "Heute bekommen alle dieselbe Aufgabe. Poste dein Ergebnis und vergleiche dich mit anderen.",
+    makeCard: "Ergebniskarte erstellen",
+    boardShow: "Rangliste von heute ansehen",
+    boardHide: "Rangliste ausblenden",
+    boardLoading: "Wird geladen…",
+    // Spieler ist im Deutschen Singular wie Plural
+    boardCount: (n: number) => `${n} Spieler heute`,
+    boardMyRank: (r: number) => `Mein Platz #${r}`,
+    boardLoginHint:
+      "Melde dich an, damit dein Name in der Rangliste steht – ansehen kann sie jeder, auch ohne Anmeldung.",
+    boardUnavailable: "Die Rangliste ist noch nicht verfügbar.",
+    copied: "Kopiert",
+    copyResult: "Ergebnistext kopieren",
+    openCommunity: "Community öffnen →",
+    pasteHintBefore: "Tippe in der Community auf ",
+    pasteHintBold: "[✏️ Schreiben]",
+    pasteHintAfter: " und füge es ein.",
+    keepPracticing: "Weiterüben",
+    nextHand: "Nächste Hand",
+    readArticle: "Analyse zum Spot lesen →",
+    viewFull: "Komplette Lösung ansehen",
+    resultTitle: "Bewertung",
+    resultHintBefore: "Wähle eine Aktion und du siehst ",
+    resultHintBold: "Frequenz und EV jeder Aktion",
+    resultHintAfter: " – dazu, wie viele bb deine Wahl gekostet hat.",
+    gtoNoteBefore:
+      "GTO mischt mit derselben Hand mehrere Aktionen – eine seltene Wahl ist nicht automatisch ein Fehler. Gemessen wird der EV-Verlust ",
+    gtoNoteBold: "im Verhältnis zum Pot",
+    gtoNoteAfter:
+      ": ≤0,35% Beste Wahl · ≤1% Vertretbar · darüber Nochmal ansehen.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `In diesem Spot (Pot ${pot}bb): Beste Wahl ≤${best}bb · Vertretbar ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Bewertet am Start-Pot dieses Spots (${pot}bb): Beste Wahl ≤${best}bb · Vertretbar ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} vorberechnete Spots · gleichmäßig aus allen ${flops} echten Flops`,
+    resetHistoryLabel: "Trainer-Verlauf löschen",
+    cardAlt: "Ergebniskarte der Tagesaufgabe",
+    shareApps: "In Apps teilen",
+    saveImage: "Bild speichern",
+    close: "Schließen",
+    cardHintBefore:
+      "Poste deine Karte in einen Chat oder in die sozialen Netzwerke – wer sie sieht, spielt heute ",
+    cardHintBold: "dieselbe Aufgabe",
+    cardHintAfter: ". Die Karte verrät nie die Lösung.",
+    verdictBest: "Beste Wahl",
+    verdictGood: "Vertretbar",
+    verdictMiss: "Nochmal ansehen",
+    promptCopy: "Kopiere den Text unten",
+    shareText:
+      "GTO-Tagesaufgabe – probiere sie auch: https://solver.holdemmaster.com/?view=trainer",
+    confirmReset: "Den gesamten Trainer-Verlauf auf diesem Gerät löschen?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} gespeichert · ${merged} von anderen Geräten geholt`,
+    syncSaved: (uploaded: number) => `${uploaded} gespeichert`,
+    syncFailed: (msg: string) => `Fehler bei der Synchronisierung: ${msg} – deine Ergebnisse bleiben auf diesem Gerät. Tippe auf „Jetzt synchronisieren“, um es erneut zu versuchen.`,
+    signInFailed: (msg: string) => `Fehler beim Anmelden: ${msg} – tippe erneut auf die Anmelde-Schaltfläche.`,
+  },
+  zh: {
+    loadFailed: "训练器数据加载失败：",
+    loading: "训练器准备中…",
+    review: (n: number) => `复习 ${n} 题`,
+    daily: "今日题目",
+    // ⚠ 이 칩만 daily와 다른 말을 쓴다 — 템플릿이 「{라벨} <b>3</b>{접미}」 꼴이라
+    //   숫자가 가운데 온다. 중국어는 「连续3天」처럼 连续가 숫자 «앞»이라 접미로는 못 넣는다.
+    //   그래서 라벨 쪽이 «연속»을 맡고 접미는 단위(天)만 붙인다
+    dailyStreakLabel: "连续答题",
+    done: "已完成",
+    solved: "已做",
+    // ⚠ 이 자리는 「{today} <b>3</b>{suffix}」 꼴이라 숫자가 «가운데»에 온다.
+    //   중국어는 「连续3天」처럼 连续를 숫자 «앞»에 두므로 이 틀에 连续를 넣으면 어순이 뒤집힌다.
+    //   그래서 단위만 붙이고(签到3天 꼴), 연속의 뜻은 바로 옆 「/ 最佳 N」이 받는다
+    dayStreakSuffix: "天",
+    bestPrefix: "/ 最佳",
+    // ⚠ 「连续答对」로 쓰면 안 된다 — trainer.ts의 trainerStreak()는 연속으로 몇 문제가
+    //   isAcceptable(EV 손실 ≤ 허용선)이었나를 센다. «정답/오답»이 아니다.
+    //   앱 자신이 mixedNote·gradAfter에서 «판대로 채점하지 않는다»고 말하므로 모순이었다
+    //   (원어민 검토자 4명이 전원 지적, 코드로도 확인 — 2026-08-22)
+    streakLabel: "连续达标",
+    totalLossLabel: "累计 EV 损失",
+    avgLossLabel: "平均 EV 损失",
+    // 이 칸은 백분율이다(excellentRate) — en「Good-play rate」처럼 «率»이 있어야 한다
+    goodRateLabel: "好选择率",
+    weaknessTitle: "弱点分析",
+    avgOfPot: (pct: string) => `平均占底池 ${pct}%`,
+    // 중국어는 명사에 복수 변화가 없다 (de의 Hand/Hände 분기가 필요 없다)
+    handCount: (n: number) => `（${n} 题）`,
+    notSolved: "还没做过",
+    // 「你在 <분류명> 上的损失最大——」 꼴로 이어진다 (분류명이 가운데 굵게 들어간다)
+    weakestBefore: "你在",
+    weakestAfter: "上的损失最大——",
+    // 코드 대조: changeCategory(weakness.weakest.category) — 한 판이 아니라 «부류»를 고른다
+    // (en도 "Drill this spot type"). 프로젝트 규칙상 牌局=구체적 한 판 / 局面=부류다
+    practiceThis: "只练这类局面",
+    weaknessHint: "每类局面至少做 3 题，就能看出你在哪儿漏 EV。",
+    // 「已保存在 <닉네임> 的账号里」 꼴. 라틴·한글 닉네임이 올 수 있어 앞뒤에 공백을 둔다
+    accountBefore: "已保存在 ",
+    accountAfter: " 的账号里",
+    syncingNow: "同步中…",
+    syncNow: "立即同步",
+    signOutLabel: "退出登录",
+    localOnlyBefore: "你的学习记录",
+    localOnlyBold: "只保存在这台设备上",
+    localOnlyAfter:
+      "。绑定 HoldemMaster 账号，换台设备也能接着做。",
+    googleSignIn: "用 Google 继续",
+    kakaoSignIn: "用 Kakao 继续",
+    telegramSignIn: "用 Telegram 继续",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} 个教学案例 · ${nodes} 个决策节点 · 目标可剥削度 ${pct}%`,
+    details: "详情 ↓",
+    toAct: "该行动",
+    potLabel: "底池",
+    stackLabel: "筹码量",
+    // TreeEditor의 addedLines/removedLines와 같은 말(线路)로 통일했다
+    lineLabel: "线路：",
+    boardLabel: "公共牌",
+    myHand: "我的手牌",
+    yourChoice: "我的选择",
+    prompt: "你打算怎么打？",
+    bestEvTag: " · EV 最高",
+    evLoss: "EV 损失",
+    mobileDetailTitle: "各动作的频率和 EV",
+    mixedNote: "遇到混合策略时，不会简单判对错，而是按动作之间的 EV 差来评价。",
+    dailyDone: "今日题目已完成",
+    dailyDoneDesc:
+      "今天所有人做的都是同一道题。把结果发出去，就能和别人的选择比一比。",
+    makeCard: "生成成绩卡",
+    boardShow: "看今天的排名",
+    boardHide: "收起排名",
+    boardLoading: "加载中…",
+    boardCount: (n: number) => `今天有 ${n} 人参与`,
+    boardMyRank: (r: number) => `我排第 ${r} 名`,
+    // ⚠ 원문의 뜻: «로그인하면 순위에 오른다 / 구경은 로그인 없이도 된다».
+    //   독일어에서 이 문장의 뜻이 뒤집혀 있었다 — 두 절의 주어를 반드시 확인할 것
+    boardLoginHint:
+      "登录之后，你的昵称也会出现在排名里。只是想看看的话，不登录也行。",
+    boardUnavailable: "排行榜还没开放。",
+    copied: "已复制",
+    copyResult: "复制结果文字",
+    openCommunity: "打开社区 →",
+    pasteHintBefore: "在社区里点",
+    pasteHintBold: "[✏️ 发帖]",
+    pasteHintAfter: "，粘贴进去就行。",
+    keepPracticing: "接着练",
+    nextHand: "下一题",
+    // ⚠ 해설 링크 자체는 지금 한국어에서만 뜬다 (본체에 GTO 시리즈 중국어판이 없다)
+    readArticle: "阅读这个牌局的解说 →",
+    viewFull: "查看完整结果",
+    resultTitle: "评分结果",
+    resultHintBefore: "选好动作之后，这里会显示",
+    resultHintBold: "每个动作的频率和 EV",
+    resultHintAfter: "，还有你的选择亏了多少 bb。",
+    gtoNoteBefore:
+      "GTO 对同一手牌也会混着打。频率低的选择不等于做错，判断标准是 EV 损失——",
+    gtoNoteBold: "占底池",
+    gtoNoteAfter: " 0.35% 以内是最优 · 1% 以内可以接受 · 再多就是该回头复盘的局面。",
+    // ⚠ 코드 대조: 이 ${pot}은 lossLimits() → presetPotBb(), 즉 «프리셋의 시작 팟»이다.
+    //   화면 위쪽에 뜨는 «현재 노드의 팟»과 다른 수라, 둘 다 「底池」라고만 쓰면 안 된다.
+    //   두 경계값이 각각 어느 판정인지도 밝힌다 (en은 Best/Acceptable 라벨이 붙어 있다)
+    spotLimits: (pot: string, best: string, good: string) =>
+      `按这个牌局的起始底池（${pot}bb）算，就是最优 ≤${best}bb、可以接受 ≤${good}bb。`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `按这个牌局的起始底池（${pot}bb）判定：最优 ≤${best}bb、可以接受 ≤${good}bb。`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `预先计算的${spots}个牌局 · 从全部${flops}种实际翻牌中平均出题`,
+    resetHistoryLabel: "清空学习记录",
+    cardAlt: "今日题目成绩卡",
+    // ko는 「카카오톡·SNS」지만 중국어권에 카카오톡은 없다. 실제 동작은 브라우저의
+    // 공유 시트를 여는 것이라, 특정 앱 이름을 대지 않고 «어디로든 공유»로 적었다
+    shareApps: "分享到社交平台",
+    saveImage: "保存图片",
+    close: "关闭",
+    cardHintBefore: "把存好的卡片发到群里或社交平台吧。收到的人今天做的也是",
+    cardHintBold: "同一道题",
+    cardHintAfter: "。卡片里不会带上答案。",
+    verdictBest: "最优选择",
+    verdictGood: "可以接受的选择",
+    verdictMiss: "该回头复盘",
+    promptCopy: "请复制下面的内容",
+    shareText:
+      // ⚠ 이 문장은 사용자가 «커뮤니티에 붙여넣는» 글이다 — 읽는 사람은 남이다.
+      //   en「try it yourself」·de「probiere sie auch」와 같이 상대에게 말해야 한다.
+      //   daily.ts의 zh 분기처럼 &lang=zh를 붙여, 영문 시스템을 쓰는 중국어 사용자도
+      //   중국어 화면으로 들어오게 한다
+      "今日 GTO 题目，你也来试试：https://solver.holdemmaster.com/?view=trainer&lang=zh",
+    confirmReset: "要清空这台设备上的学习记录吗？",
+    syncMerged: (uploaded: number, merged: number) =>
+      `已保存 ${uploaded} 条 · 从其他设备取回 ${merged} 条`,
+    syncSaved: (uploaded: number) => `已保存 ${uploaded} 条`,
+    syncFailed: (msg: string) => `同步失败：${msg}——记录仍保存在这台设备上。请点“立即同步”再试一次。`,
+    signInFailed: (msg: string) => `登录失败：${msg}——请再点一次登录按钮。`,
+  },
+  // ⚠ 台灣 표기: 账号→帳號 · 登录→登入 · 退出登录→登出 · 昵称→暱稱 · 设备→裝置 ·
+  //   保存→儲存 · 记录(명사)→紀錄 · 社区→社群 · 加载→載入 · 复盘→複盤 · 图片→圖片
+  "zh-hant": {
+    loadFailed: "訓練器資料載入失敗：",
+    loading: "訓練器準備中…",
+    review: (n: number) => `複習 ${n} 題`,
+    daily: "今日題目",
+    // ⚠ 이 칩만 daily와 다른 말을 쓴다 — 템플릿이 「{라벨} <b>3</b>{접미}」 꼴이라
+    //   숫자가 가운데 온다. 중국어는 「連續3天」처럼 連續가 숫자 «앞»이라 접미로는 못 넣는다
+    dailyStreakLabel: "連續挑戰",
+    done: "已完成",
+    solved: "已做",
+    dayStreakSuffix: "天",
+    bestPrefix: "/ 最佳",
+    // ⚠ 「連續答對」로 쓰면 안 된다 — trainer.ts의 trainerStreak()는 연속으로 몇 문제가
+    //   isAcceptable(EV 손실 ≤ 허용선)이었나를 센다. «정답/오답»이 아니다
+    //   (간체 세션에서 원어민 4명 전원이 지적한 자리 — 2026-08-22)
+    streakLabel: "連續達標",
+    totalLossLabel: "累計 EV 損失",
+    avgLossLabel: "平均 EV 損失",
+    // 이 칸은 백분율이다(excellentRate) — en「Good-play rate」처럼 «率»이 있어야 한다
+    goodRateLabel: "達標率",
+    weaknessTitle: "弱點分析",
+    avgOfPot: (pct: string) => `平均佔底池 ${pct}%`,
+    // 중국어는 명사에 복수 변화가 없다 (de의 Hand/Hände 분기가 필요 없다)
+    handCount: (n: number) => `（${n} 題）`,
+    notSolved: "還沒做過",
+    // 「你在 <분류명> 上的損失最大——」 꼴로 이어진다 (분류명이 가운데 굵게 들어간다)
+    weakestBefore: "你在",
+    weakestAfter: "的損失最大——",
+    // 코드 대조: changeCategory(weakness.weakest.category) — 한 판이 아니라 «부류»를 고른다
+    practiceThis: "只練這類局面",
+    weaknessHint: "每類局面至少做 3 題，就能看出你在哪裡漏 EV。",
+    // 「已儲存在 <닉네임> 的帳號裡」 꼴. 라틴·한글 닉네임이 올 수 있어 앞뒤에 공백을 둔다
+    accountBefore: "已儲存在 ",
+    accountAfter: " 的帳號裡",
+    syncingNow: "同步中…",
+    syncNow: "立刻同步",
+    signOutLabel: "登出",
+    localOnlyBefore: "你的學習紀錄",
+    // ⚠ ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
+    localOnlyBold: "只儲存在這台裝置上",
+    localOnlyAfter:
+      "。綁定 HoldemMaster 帳號，換台裝置也能接著做。",
+    googleSignIn: "用 Google 繼續",
+    kakaoSignIn: "用 Kakao 繼續",
+    telegramSignIn: "用 Telegram 繼續",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} 個教學案例 · ${nodes} 個決策節點 · 目標可剝削度 ${pct}%`,
+    details: "詳情 ↓",
+    toAct: "該行動",
+    potLabel: "底池",
+    stackLabel: "籌碼量",
+    // TreeEditor의 addedLines/removedLines와 같은 말(線路)로 통일했다
+    lineLabel: "線路：",
+    boardLabel: "公共牌",
+    myHand: "我的手牌",
+    yourChoice: "我的選擇",
+    prompt: "你打算怎麼打？",
+    bestEvTag: " · EV 最高",
+    evLoss: "EV 損失",
+    mobileDetailTitle: "各動作的頻率和 EV",
+    mixedNote: "遇到混合策略時，不會簡單判對錯，而是按動作之間的 EV 差來評價。",
+    dailyDone: "今日題目已完成",
+    dailyDoneDesc:
+      "今天所有人做的都是同一道題。把結果發出去，就能和別人的選擇比一比。",
+    makeCard: "產生成績卡",
+    boardShow: "看今天的排名",
+    boardHide: "收起排名",
+    boardLoading: "載入中…",
+    boardCount: (n: number) => `今天有 ${n} 人參與`,
+    boardMyRank: (r: number) => `我排第 ${r} 名`,
+    // ⚠ 원문의 뜻: «로그인하면 순위에 오른다 / 구경은 로그인 없이도 된다».
+    //   독일어에서 이 문장의 뜻이 뒤집혀 있었다 — 두 절의 주어를 반드시 확인할 것
+    boardLoginHint:
+      "登入之後，你的暱稱也會出現在排名裡。只是想看看的話，不登入也行。",
+    boardUnavailable: "排名還沒開放。",
+    copied: "已複製",
+    copyResult: "複製結果文字",
+    openCommunity: "開啟社群 →",
+    // ✅ 본체가 2026-08-22에 LABELS에 zh-hant를 넣었다(회신 reply-to-solver-2026-08-22.md §1).
+    //   확정값 「✏️ 發文」을 라이브 /zh-hant에서 직접 확인하고 임시 영어 이름에서 바꿨다
+    pasteHintBefore: "在社群裡按下",
+    pasteHintBold: "[✏️ 發文]",
+    pasteHintAfter: "，貼上去就行。",
+    keepPracticing: "接著練",
+    nextHand: "下一題",
+    // ⚠ 해설 링크 자체는 지금 한국어에서만 뜬다 (본체에 GTO 시리즈 번체판이 없다 — 실측 404)
+    readArticle: "閱讀這個牌局的解說 →",
+    viewFull: "打開這個牌局",
+    resultTitle: "評分結果",
+    resultHintBefore: "選好動作之後，這裡會顯示",
+    resultHintBold: "每個動作的頻率和 EV",
+    resultHintAfter: "，還有你的選擇虧了多少 bb。",
+    gtoNoteBefore:
+      "GTO 對同一手牌也會混著打。頻率低的選擇不等於做錯，判斷標準是 EV 損失——",
+    gtoNoteBold: "佔底池",
+    gtoNoteAfter: " 0.35% 以內是最佳 · 1% 以內可以接受 · 再多就是該回頭檢討的局面。",
+    // ⚠ 코드 대조: 이 ${pot}은 lossLimits() → presetPotBb(), 즉 «프리셋의 시작 팟»이다.
+    //   화면 위쪽에 뜨는 «현재 노드의 팟»과 다른 수라, 둘 다 「底池」라고만 쓰면 안 된다
+    spotLimits: (pot: string, best: string, good: string) =>
+      `按這個牌局的起始底池（${pot}bb）算，就是最佳 ≤${best}bb、可以接受 ≤${good}bb。`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `按這個牌局的起始底池（${pot}bb）判定：最佳 ≤${best}bb、可以接受 ≤${good}bb。`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `預先計算的${spots}個牌局 · 從全部${flops}種實際翻牌中平均出題`,
+    resetHistoryLabel: "清空學習紀錄",
+    cardAlt: "今日題目成績卡",
+    // ko는 「카카오톡·SNS」지만 중화권에 카카오톡은 없다. 실제 동작은 브라우저의
+    // 공유 시트를 여는 것이라, 특정 앱 이름을 대지 않고 «어디로든 공유»로 적었다
+    shareApps: "分享到社群平台",
+    saveImage: "儲存圖片",
+    close: "關閉",
+    cardHintBefore: "把存好的卡片發到群組裡或社群平台吧。收到的人今天做的也是",
+    cardHintBold: "同一道題",
+    cardHintAfter: "。卡片裡不會帶上答案。",
+    verdictBest: "最佳選擇",
+    verdictGood: "可以接受的選擇",
+    verdictMiss: "該回頭檢討",
+    promptCopy: "請複製下面的內容",
+    shareText:
+      // ⚠ 이 문장은 사용자가 «커뮤니티에 붙여넣는» 글이다 — 읽는 사람은 남이다.
+      //   en「try it yourself」·de「probiere sie auch」와 같이 상대에게 말해야 한다
+      "今日 GTO 題目，你也來試試：https://solver.holdemmaster.com/?view=trainer&lang=zh-hant",
+    confirmReset: "要清空這台裝置上的學習紀錄嗎？",
+    syncMerged: (uploaded: number, merged: number) =>
+      `已儲存 ${uploaded} 筆 · 從其他裝置取回 ${merged} 筆`,
+    syncSaved: (uploaded: number) => `已儲存 ${uploaded} 筆`,
+    syncFailed: (msg: string) => `同步失敗：${msg}——紀錄仍保存在這台裝置上。請按「立刻同步」再試一次。`,
+    signInFailed: (msg: string) => `登入失敗：${msg}——請再按一次登入按鈕。`,
+  },
+  fr: {
+    loadFailed: "Impossible de charger les données du trainer :",
+    loading: "Chargement du trainer…",
+    review: (n: number) => `Révision (${n})`,
+    daily: "Défi du jour",
+    dailyStreakLabel: "Défi du jour",
+    done: "Terminé",
+    solved: "Résolues",
+    dayStreakSuffix: " fois d'affilée",
+    bestPrefix: "/ record",
+    streakLabel: "Série",
+    totalLossLabel: "Perte d'EV totale",
+    avgLossLabel: "Perte d'EV moyenne",
+    goodRateLabel: "Taux de bons choix",
+    // «leak» = 프랑스 포커 실사용어 (un leak)
+    weaknessTitle: "Détecteur de leaks",
+    avgOfPot: (pct: string) => `en moyenne ${pct} % du pot`,
+    handCount: (n: number) => `(${n} main${n === 1 ? "" : "s"})`,
+    notSolved: "Pas encore tenté",
+    weakestBefore: "Plus grosses pertes sur ",
+    weakestAfter: " —",
+    // «bosser» = 프랑스 포커 구어의 «연습하다» (bosser ses ranges)
+    practiceThis: "Travailler ce type de spot",
+    weaknessHint: "Résous au moins 3 mains par catégorie pour voir où tu perds de l'EV.",
+    accountBefore: "Progression enregistrée sur le compte de ",
+    accountAfter: "",
+    syncingNow: "Synchronisation…",
+    syncNow: "Synchroniser",
+    signOutLabel: "Se déconnecter",
+    localOnlyBefore: "Ta progression est enregistrée ",
+    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
+    localOnlyBold: "uniquement sur cet appareil",
+    localOnlyAfter:
+      ". Associe un compte HoldemMaster pour reprendre où tu en étais sur n'importe quel appareil.",
+    googleSignIn: "Continuer avec Google",
+    kakaoSignIn: "Continuer avec Kakao",
+    telegramSignIn: "Continuer avec Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} Spots d'étude · ${nodes} nœuds de décision · exploitabilité cible ${pct} %`,
+    details: "Détails ↓",
+    toAct: "doit parler",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Ligne :",
+    boardLabel: "Board",
+    myHand: "Ta main",
+    yourChoice: "Ton choix",
+    prompt: "Tu joues quoi ?",
+    bestEvTag: " · EV max",
+    evLoss: "Perte d'EV",
+    mobileDetailTitle: "Fréquence et EV par action",
+    mixedNote:
+      "Les stratégies mixtes ne sont pas comptées comme des erreurs — la note se base sur l'écart d'EV entre les actions.",
+    dailyDone: "Défi du jour terminé",
+    dailyDoneDesc:
+      "Tout le monde a le même défi aujourd'hui. Poste ton résultat pour te comparer aux autres joueurs.",
+    makeCard: "Créer une carte de résultat",
+    boardShow: "Voir le classement du jour",
+    boardHide: "Masquer le classement",
+    boardLoading: "Chargement…",
+    boardCount: (n: number) => `${n} joueur${n === 1 ? "" : "s"} aujourd'hui`,
+    boardMyRank: (r: number) => `Mon rang n°${r}`,
+    boardLoginHint:
+      "Connecte-toi pour mettre ton nom au classement — la consultation est ouverte à tous.",
+    boardUnavailable: "Le classement n'est pas encore disponible.",
+    copied: "Copié",
+    copyResult: "Copier le texte du résultat",
+    openCommunity: "Ouvrir la communauté →",
+    pasteHintBefore: "Dans la communauté, appuie sur ",
+    // ⚠ 본체 community-client.tsx의 LABELS에 fr가 없어 /fr 화면의 버튼은 «영어 폴백»으로
+    //   나온다 (2026-08-24 본체 소스 실측: LABELS[lang] ?? en). 그래서 사용자가 «실제로
+    //   보게 될» 영어 이름을 적는다 — 본체가 fr LABELS를 넣으면 여기도 같이 바꿀 것
+    pasteHintBold: "[✏️ Write Post]",
+    pasteHintAfter: " et colle ton résultat.",
+    keepPracticing: "Continuer à s'entraîner",
+    nextHand: "Main suivante",
+    readArticle: "Lire l'analyse du spot →",
+    viewFull: "Voir la solution complète",
+    resultTitle: "Résultats",
+    resultHintBefore: "Choisis une action et tu verras ",
+    resultHintBold: "la fréquence et l'EV de chaque action",
+    resultHintAfter: ", plus ce que ton choix a coûté en bb.",
+    gtoNoteBefore:
+      "La GTO mixe les actions avec la même main — un choix à basse fréquence n'est pas automatiquement une erreur. La mesure, c'est la perte d'EV ",
+    gtoNoteBold: "par rapport au pot",
+    // ⚠ 아래 세 판정명은 verdictBest·verdictGood·verdictMiss와 «글자까지» 같아야 한다
+    gtoNoteAfter: " : ≤0,35 % Meilleur choix · ≤1 % Acceptable · au-delà, Spot à revoir.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Pour ce spot (pot de ${pot}bb), ça donne Meilleur choix ≤${best}bb · Acceptable ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Jugé sur le pot de départ de ce spot (${pot}bb) : Meilleur choix ≤${best}bb · Acceptable ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spots précalculés · tirés uniformément parmi les ${flops} flops réels`,
+    resetHistoryLabel: "Réinitialiser l'historique",
+    cardAlt: "Carte de résultat du défi du jour",
+    shareApps: "Partager",
+    saveImage: "Enregistrer l'image",
+    close: "Fermer",
+    cardHintBefore:
+      "Poste ta carte dans un groupe ou sur les réseaux — tous ceux qui la voient jouent le ",
+    cardHintBold: "même défi",
+    cardHintAfter: " aujourd'hui. La carte ne divulgue jamais la réponse.",
+    verdictBest: "Meilleur choix",
+    verdictGood: "Acceptable",
+    verdictMiss: "Spot à revoir",
+    promptCopy: "Copie le texte ci-dessous",
+    shareText:
+      // ⚠ 이 문장은 사용자가 «커뮤니티에 붙여넣는» 글이다 — 읽는 사람(남)에게 말한다
+      "Le défi GTO du jour — essaie-le toi aussi : https://solver.holdemmaster.com/?view=trainer&lang=fr",
+    confirmReset: "Effacer tout l'historique du trainer sur cet appareil ?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} enregistrées · ${merged} récupérées depuis d'autres appareils`,
+    syncSaved: (uploaded: number) => `${uploaded} enregistrées`,
+    syncFailed: (msg: string) => `Échec de la synchronisation : ${msg} — tes résultats restent sur cet appareil. Appuie de nouveau sur Synchroniser.`,
+    signInFailed: (msg: string) => `Échec de la connexion : ${msg} — appuie de nouveau sur le bouton de connexion.`,
+  },
+  // 인도네시아어 — Anda체(본체 브리프 확정, kamu 금지). 도구명 trainer·leak·streak·hand·range·pot은
+  // 본체 id 코퍼스가 영어 그대로 쓴다(리서치 §2). 액션명은 영어(trainer.ts와 동일).
+  id: {
+    loadFailed: "Gagal memuat data trainer (coba muat ulang halaman):",
+    loading: "Memuat trainer…",
+    review: (n: number) => `Tinjau ulang (${n})`,
+    daily: "Tantangan Harian",
+    dailyStreakLabel: "Tantangan Harian",
+    done: "Selesai",
+    solved: "Terjawab",
+    dayStreakSuffix: " hari beruntun",
+    bestPrefix: "/ terbaik",
+    streakLabel: "Hari beruntun",
+    totalLossLabel: "Total kerugian EV",
+    avgLossLabel: "Rerata kerugian EV",
+    goodRateLabel: "% keputusan baik",
+    // «leak» = 인니 코퍼스 다수파 표기 (kebocoran ✗ — 정본 §5)
+    weaknessTitle: "Pendeteksi Leak",
+    avgOfPot: (pct: string) => `rata-rata ${pct}% dari pot`,
+    handCount: (n: number) => `(${n} hand)`,
+    notSolved: "Belum dicoba",
+    weakestBefore: "Kerugian terbesar di ",
+    weakestAfter: " —",
+    practiceThis: "Latih tipe spot ini",
+    weaknessHint: "Selesaikan minimal 3 hand di setiap kategori untuk melihat di mana Anda kehilangan EV.",
+    accountBefore: "Tersimpan di akun ",
+    accountAfter: "",
+    syncingNow: "Menyinkronkan…",
+    syncNow: "Sinkronkan",
+    signOutLabel: "Logout",
+    localOnlyBefore: "Progres Anda tersimpan ",
+    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
+    localOnlyBold: "hanya di perangkat ini",
+    localOnlyAfter:
+      ". Tautkan akun HoldemMaster untuk melanjutkan dari perangkat mana pun.",
+    googleSignIn: "Lanjutkan dengan Google",
+    kakaoSignIn: "Lanjutkan dengan Kakao",
+    telegramSignIn: "Lanjutkan dengan Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} Spot belajar · ${nodes} node keputusan · target exploitability ${pct}%`,
+    details: "Detail ↓",
+    toAct: "yang bertindak",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Line:",
+    boardLabel: "Board",
+    myHand: "Hand Anda",
+    yourChoice: "Pilihan Anda",
+    prompt: "Apa keputusan Anda?",
+    bestEvTag: " · EV tertinggi",
+    evLoss: "Kerugian EV",
+    mobileDetailTitle: "Frekuensi & EV per aksi",
+    mixedNote:
+      "Strategi campuran tidak dianggap salah — penilaian didasarkan pada selisih EV antaraksi.",
+    dailyDone: "Tantangan Harian selesai",
+    dailyDoneDesc:
+      "Semua orang mendapat tantangan yang sama hari ini. Posting hasil Anda untuk membandingkannya dengan pemain lain.",
+    makeCard: "Buat kartu hasil",
+    boardShow: "Lihat papan peringkat hari ini",
+    boardHide: "Sembunyikan papan peringkat",
+    boardLoading: "Memuat…",
+    boardCount: (n: number) => `${n} pemain hari ini`,
+    boardMyRank: (r: number) => `Peringkat saya #${r}`,
+    boardLoginHint:
+      "Login untuk menampilkan nama Anda di papan peringkat — tanpa login pun Anda tetap bisa melihatnya.",
+    boardUnavailable: "Papan peringkat belum tersedia.",
+    copied: "Tersalin",
+    copyResult: "Salin teks hasil",
+    openCommunity: "Buka komunitas →",
+    pasteHintBefore: "Di komunitas, tekan ",
+    // 본체 community-client.tsx LABELS.id.writePost = «✏️ Tulis» (2026-09-02 본체 소스 실측)
+    pasteHintBold: "[✏️ Tulis]",
+    pasteHintAfter: " lalu tempel hasil Anda.",
+    keepPracticing: "Lanjut berlatih",
+    nextHand: "Hand berikutnya",
+    readArticle: "Baca pembahasan spot ini →",
+    viewFull: "Lihat solusi lengkap",
+    resultTitle: "Hasil",
+    resultHintBefore: "Pilih satu aksi dan Anda akan melihat ",
+    resultHintBold: "frekuensi dan EV setiap aksi",
+    resultHintAfter: ", plus berapa bb yang hilang dari pilihan Anda.",
+    gtoNoteBefore:
+      "GTO mencampur aksi dengan hand yang sama — pilihan berfrekuensi rendah tidak otomatis salah. Ukurannya adalah kerugian EV ",
+    gtoNoteBold: "relatif terhadap pot",
+    // ⚠ 아래 세 판정명은 verdictBest·verdictGood·verdictMiss와 «글자까지» 같아야 한다
+    gtoNoteAfter: ": ≤0,35% Pilihan terbaik · ≤1% Cukup baik · di atas itu, Perlu ditinjau.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Untuk spot ini (pot ${pot}bb), artinya Pilihan terbaik ≤${best}bb · Cukup baik ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Dinilai dari pot awal spot ini (${pot}bb): Pilihan terbaik ≤${best}bb · Cukup baik ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spot yang dihitung sebelumnya · diundi merata dari ${flops} flop nyata`,
+    resetHistoryLabel: "Hapus riwayat",
+    cardAlt: "Kartu hasil Tantangan Harian",
+    shareApps: "Bagikan",
+    saveImage: "Simpan gambar",
+    close: "Tutup",
+    cardHintBefore:
+      "Posting kartu Anda ke grup chat atau media sosial — siapa pun yang melihatnya memainkan ",
+    cardHintBold: "tantangan yang sama",
+    cardHintAfter: " hari ini. Kartu ini tidak pernah membocorkan jawabannya.",
+    verdictBest: "Pilihan terbaik",
+    verdictGood: "Cukup baik",
+    verdictMiss: "Perlu ditinjau",
+    promptCopy: "Salin teks di bawah ini",
+    shareText:
+      // ⚠ 이 문장은 사용자가 «커뮤니티에 붙여넣는» 글이다 — 읽는 사람(남)에게 말한다
+      "Tantangan GTO hari ini — coba juga: https://solver.holdemmaster.com/?view=trainer&lang=id",
+    confirmReset: "Hapus semua riwayat trainer di perangkat ini?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} tersimpan · ${merged} ditarik dari perangkat lain`,
+    syncSaved: (uploaded: number) => `${uploaded} tersimpan`,
+    syncFailed: (msg: string) => `Sinkronisasi gagal: ${msg} — hasil tetap tersimpan di perangkat ini. Tekan “Sinkronkan” untuk mencoba lagi.`,
+    signInFailed: (msg: string) => `Login gagal: ${msg} — tekan tombol login sekali lagi.`,
+  },
+  // 말레이어 — anda(소문자)체(문두만 Anda, kamu·awak 금지). 도구명 trainer·leak·streak·hand·range·pot은
+  // 영어 그대로(리서치 §2). 액션명은 영어(trainer.ts와 동일). 🔴 인니어 낱말 금지(리서치 §6).
+  hi: {
+    loadFailed: "ट्रेनर का डेटा लोड नहीं हो सका:",
+    loading: "ट्रेनर लोड हो रहा है…",
+    review: (n: number) => `दोबारा देखें (${n})`,
+    daily: "आज की चुनौती",
+    dailyStreakLabel: "आज की चुनौती",
+    done: "पूरा हुआ",
+    solved: "हल किए",
+    dayStreakSuffix: " दिन लगातार",
+    bestPrefix: "/ सबसे अधिक",
+    streakLabel: "लगातार अच्छे फ़ैसले",
+    totalLossLabel: "कुल EV नुकसान",
+    avgLossLabel: "औसत EV नुकसान",
+    goodRateLabel: "अच्छे फ़ैसलों का अनुपात",
+    weaknessTitle: "कमज़ोरियाँ पहचानें",
+    avgOfPot: (pct: string) => `pot का औसतन ${pct}%`,
+    handCount: (n: number) => `(${n} हैंड)`,
+    notSolved: "अभी नहीं आज़माया",
+    weakestBefore: "सबसे अधिक नुकसान: ",
+    weakestAfter: " —",
+    practiceThis: "इस तरह के स्पॉट का अभ्यास करें",
+    weaknessHint: "कमज़ोरियाँ पहचानने के लिए हर श्रेणी में कम से कम 3 हैंड हल करें।",
+    accountBefore: "",
+    accountAfter: " के खाते में सेव है",
+    syncingNow: "सिंक हो रहा है…",
+    syncNow: "अभी सिंक करें",
+    signOutLabel: "लॉग आउट करें",
+    localOnlyBefore: "आपकी प्रगति ",
+    localOnlyBold: "सिर्फ़ इस डिवाइस पर",
+    localOnlyAfter: " सेव होती है। HoldemMaster खाते से जुड़कर किसी भी डिवाइस पर यहीं से आगे बढ़ सकते हैं।",
+    googleSignIn: "Google से जारी रखें",
+    kakaoSignIn: "Kakao से जारी रखें",
+    telegramSignIn: "Telegram से जारी रखें",
+    footerLine: (nodes: number, pct: number) => `${SPOT_COUNT} अभ्यास स्पॉट · ${nodes} निर्णय बिंदु · लक्ष्य exploitability ${pct}%`,
+    details: "विवरण ↓",
+    toAct: "की बारी",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "एक्शन क्रम:",
+    boardLabel: "Board",
+    myHand: "आपका हैंड",
+    yourChoice: "आपकी पसंद",
+    prompt: "आप क्या करेंगे?",
+    bestEvTag: " · सबसे अधिक EV",
+    evLoss: "EV नुकसान",
+    mobileDetailTitle: "हर एक्शन की आवृत्ति और EV",
+    mixedNote: "Mixed strategy को ग़लत नहीं माना जाता — मूल्यांकन एक्शन के बीच EV के अंतर पर होता है।",
+    dailyDone: "आज की चुनौती पूरी हुई",
+    dailyDoneDesc: "आज सभी को एक ही चुनौती मिलती है। अपना परिणाम पोस्ट करके दूसरे खिलाड़ियों से तुलना करें।",
+    makeCard: "परिणाम कार्ड बनाएँ",
+    boardShow: "आज की रैंकिंग देखें",
+    boardHide: "रैंकिंग छिपाएँ",
+    boardLoading: "लोड हो रहा है…",
+    boardCount: (n: number) => `आज ${n} खिलाड़ी`,
+    boardMyRank: (r: number) => `मेरी रैंक #${r}`,
+    boardLoginHint: "रैंकिंग में अपना नाम जोड़ने के लिए लॉग इन करें। इसे सभी देख सकते हैं।",
+    boardUnavailable: "रैंकिंग अभी उपलब्ध नहीं है।",
+    copied: "कॉपी हो गया",
+    copyResult: "परिणाम का टेक्स्ट कॉपी करें",
+    openCommunity: "कम्युनिटी खोलें →",
+    pasteHintBefore: "कम्युनिटी में ",
+    pasteHintBold: "[✏️ Write Post]",
+    pasteHintAfter: " दबाकर पेस्ट करें।",
+    keepPracticing: "अभ्यास जारी रखें",
+    nextHand: "अगला हैंड",
+    readArticle: "स्पॉट की व्याख्या पढ़ें →",
+    viewFull: "इस स्पॉट का परिणाम देखें",
+    resultTitle: "परिणाम",
+    resultHintBefore: "एक एक्शन चुनें। आपको ",
+    resultHintBold: "हर एक्शन की आवृत्ति और EV",
+    resultHintAfter: " दिखेंगे। आपकी पसंद से हुआ EV नुकसान भी bb में दिखेगा।",
+    gtoNoteBefore: "GTO एक ही हैंड के साथ अलग-अलग एक्शन मिला सकता है। कम आवृत्ति वाला एक्शन हमेशा गलती नहीं होता। EV नुकसान को ",
+    gtoNoteBold: "pot के अनुपात में",
+    gtoNoteAfter: " मापा जाता है: आम तौर पर ≤0.35% सर्वोत्तम और ≤1% स्वीकार्य। गणना की सूक्ष्म त्रुटि को ध्यान में रखते हुए सीमाएँ कम से कम 0.02bb और 0.05bb रखी जाती हैं। इस स्पॉट की लागू सीमाएँ नीचे देखें।",
+    spotLimits: (pot: string, best: string, good: string) => `इस स्पॉट में (${pot}bb pot): सर्वोत्तम ≤${best}bb · स्वीकार्य ≤${good}bb।`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `इस स्पॉट के शुरुआती pot (${pot}bb) से आँका जाता है: सर्वोत्तम ≤${best}bb · स्वीकार्य ≤${good}bb।`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `पहले से गणना किए गए ${spots} स्पॉट · सभी ${flops} असली Flops में से बराबर संभावना से`,
+    resetHistoryLabel: "इतिहास रीसेट करें",
+    cardAlt: "आज की चुनौती का परिणाम कार्ड",
+    shareApps: "शेयर करें",
+    saveImage: "तस्वीर सेव करें",
+    close: "बंद करें",
+    cardHintBefore: "अपना कार्ड ग्रुप चैट या सोशल मीडिया पर पोस्ट करें। आज इसे देखने वाले सभी ",
+    cardHintBold: "यही चुनौती",
+    cardHintAfter: " खेल सकते हैं। कार्ड में जवाब नहीं दिखता।",
+    verdictBest: "सर्वोत्तम",
+    verdictGood: "स्वीकार्य",
+    verdictMiss: "नुकसान वाला चुनाव",
+    promptCopy: "नीचे दिया गया टेक्स्ट कॉपी करें",
+    shareText: "आज की GTO चुनौती — खुद आज़माएँ: https://solver.holdemmaster.com/?view=trainer&lang=hi",
+    confirmReset: "इस डिवाइस का पूरा ट्रेनर इतिहास हटाएँ?",
+    syncMerged: (uploaded: number, merged: number) => `${uploaded} सेव हुए · ${merged} दूसरे डिवाइस से आए`,
+    syncSaved: (uploaded: number) => `${uploaded} सेव हुए`,
+    syncFailed: (msg: string) => `सिंक नहीं हो सका: ${msg} — आपके नतीजे इसी डिवाइस पर सेव हैं। दोबारा कोशिश के लिए “अभी सिंक करें” दबाएँ।`,
+    signInFailed: (msg: string) => `लॉग इन नहीं हो सका: ${msg} — लॉग इन बटन फिर से दबाएँ।`,
+  },
+  ms: {
+    loadFailed: "Gagal memuatkan data trainer (cuba muat semula halaman):",
+    loading: "Sedang memuatkan trainer…",
+    review: (n: number) => `Semak semula (${n})`,
+    daily: "Cabaran Harian",
+    dailyStreakLabel: "Cabaran Harian",
+    done: "Selesai",
+    solved: "Dijawab",
+    dayStreakSuffix: " hari",
+    bestPrefix: "/ terbaik",
+    streakLabel: "Streak",
+    totalLossLabel: "Jumlah kerugian EV",
+    avgLossLabel: "Purata kerugian EV",
+    goodRateLabel: "% keputusan baik",
+    // «leak» = 말레이시아 포커 독자도 영어 그대로 쓴다 (kebocoran ✗)
+    weaknessTitle: "Pengesan Leak",
+    avgOfPot: (pct: string) => `purata ${pct}% daripada pot`,
+    handCount: (n: number) => `(${n} tangan)`,
+    notSolved: "Belum dicuba",
+    weakestBefore: "Kerugian terbesar dalam ",
+    weakestAfter: " —",
+    practiceThis: "Latih jenis spot ini",
+    weaknessHint: "Main sekurang-kurangnya 3 tangan dalam setiap kategori untuk melihat di mana anda kehilangan EV.",
+    accountBefore: "Disimpan dalam akaun ",
+    accountAfter: "",
+    syncingNow: "Sedang menyegerakkan…",
+    syncNow: "Segerakkan",
+    signOutLabel: "Log keluar",
+    localOnlyBefore: "Kemajuan anda disimpan ",
+    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
+    localOnlyBold: "hanya pada peranti ini",
+    localOnlyAfter:
+      ". Pautkan akaun HoldemMaster untuk menyambung semula pada mana-mana peranti.",
+    googleSignIn: "Teruskan dengan Google",
+    kakaoSignIn: "Teruskan dengan Kakao",
+    telegramSignIn: "Teruskan dengan Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} Spot belajar · ${nodes} node keputusan · sasaran exploitability ${pct}%`,
+    details: "Butiran ↓",
+    toAct: "untuk bertindak",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Line:",
+    boardLabel: "Board",
+    myHand: "Tangan anda",
+    yourChoice: "Pilihan anda",
+    prompt: "Apa keputusan anda?",
+    bestEvTag: " · EV tertinggi",
+    evLoss: "Kerugian EV",
+    mobileDetailTitle: "Frekuensi & EV setiap aksi",
+    mixedNote:
+      "Strategi campuran tidak dikira salah — penilaian berdasarkan perbezaan EV antara aksi.",
+    dailyDone: "Cabaran Harian selesai",
+    dailyDoneDesc:
+      "Semua orang mendapat cabaran yang sama hari ini. Kongsi hasil anda untuk membandingkannya dengan pemain lain.",
+    makeCard: "Buat kad hasil",
+    boardShow: "Papan pendahulu hari ini",
+    boardHide: "Sembunyikan papan pendahulu",
+    boardLoading: "Sedang memuatkan…",
+    boardCount: (n: number) => `${n} pemain hari ini`,
+    boardMyRank: (r: number) => `Kedudukan saya #${r}`,
+    boardLoginHint:
+      "Log masuk untuk memaparkan nama anda pada papan pendahulu — tanpa log masuk pun anda masih boleh melihatnya.",
+    boardUnavailable: "Papan pendahulu belum tersedia.",
+    copied: "Disalin",
+    copyResult: "Salin teks hasil",
+    openCommunity: "Buka komuniti →",
+    pasteHintBefore: "Dalam komuniti, tekan ",
+    // 본체 community-client.tsx LABELS.ms.writePost = «✏️ Tulis» (2026-09-03 본체 소스 실측)
+    pasteHintBold: "[✏️ Tulis]",
+    pasteHintAfter: " lalu tampal hasil anda.",
+    keepPracticing: "Terus berlatih",
+    nextHand: "Tangan seterusnya",
+    readArticle: "Baca analisis spot ini →",
+    viewFull: "Lihat penyelesaian penuh",
+    resultTitle: "Hasil",
+    resultHintBefore: "Pilih satu aksi dan anda akan melihat ",
+    resultHintBold: "frekuensi dan EV setiap aksi",
+    resultHintAfter: ", serta berapa bb yang hilang daripada pilihan anda.",
+    gtoNoteBefore:
+      "GTO mencampurkan aksi dengan tangan yang sama — pilihan berfrekuensi rendah tidak semestinya salah. Ukurannya ialah kerugian EV ",
+    gtoNoteBold: "berbanding pot",
+    // ⚠ 아래 세 판정명은 verdictBest·verdictGood·verdictMiss와 «글자까지» 같아야 한다.
+    //   숫자는 영어식 — 소수점은 «.»다(리서치 §1-2. id의 «0,35%»와 «일부러» 다르다)
+    gtoNoteAfter: ": ≤0.35% Pilihan terbaik · ≤1% Boleh diterima · lebih daripada itu, Perlu disemak.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Untuk spot ini (pot ${pot}bb), ertinya Pilihan terbaik ≤${best}bb · Boleh diterima ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Dinilai berdasarkan pot permulaan spot ini (${pot}bb): Pilihan terbaik ≤${best}bb · Boleh diterima ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spot yang dikira awal · dicabut sama rata daripada ${flops} flop sebenar`,
+    resetHistoryLabel: "Set semula rekod",
+    cardAlt: "Kad hasil Cabaran Harian",
+    shareApps: "Kongsi",
+    saveImage: "Simpan imej",
+    close: "Tutup",
+    cardHintBefore:
+      "Hantar kad anda ke kumpulan sembang atau media sosial — sesiapa yang melihatnya memainkan ",
+    cardHintBold: "cabaran yang sama",
+    cardHintAfter: " hari ini. Kad ini tidak pernah membocorkan jawapannya.",
+    verdictBest: "Pilihan terbaik",
+    verdictGood: "Boleh diterima",
+    verdictMiss: "Perlu disemak",
+    promptCopy: "Salin teks di bawah",
+    shareText:
+      // ⚠ 이 문장은 사용자가 «커뮤니티에 붙여넣는» 글이다 — 읽는 사람(남)에게 말한다
+      "Cabaran GTO Harian hari ini — cuba anda pula: https://solver.holdemmaster.com/?view=trainer&lang=ms",
+    confirmReset: "Padam semua rekod trainer pada peranti ini?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} disimpan · ${merged} diambil daripada peranti lain`,
+    syncSaved: (uploaded: number) => `${uploaded} disimpan`,
+    syncFailed: (msg: string) => `Penyegerakan gagal: ${msg} — keputusan masih disimpan pada peranti ini. Tekan “Segerakkan” untuk cuba lagi.`,
+    signInFailed: (msg: string) => `Log masuk gagal: ${msg} — tekan butang log masuk sekali lagi.`,
+  },
+  tr: {
+    loadFailed: "GTO Trainer verileri yüklenemedi:",
+    loading: "GTO Trainer yükleniyor…",
+    review: (n: number) => `Tekrar (${n})`,
+    daily: "Günün sorusu",
+    dailyStreakLabel: "Günün sorusu",
+    done: "Tamam",
+    solved: "Çözülen",
+    // 확정표 §5-4 — «7 günlük seri» (접미사가 변수 아닌 günlük에 붙는다)
+    dayStreakSuffix: " günlük seri",
+    bestPrefix: "/ en iyi",
+    streakLabel: "Seri",
+    totalLossLabel: "Toplam EV kaybı",
+    avgLossLabel: "Ortalama EV kaybı",
+    goodRateLabel: "İyi karar oranı",
+    weaknessTitle: "Zayıf nokta bulucu",
+    // 확정표 §6 — 변수 뒤 접미사 금지 → «ortalama %{pct} pot»
+    avgOfPot: (pct: string) => `ortalama %${pct} pot`,
+    handCount: (n: number) => `(${n} el)`,
+    notSolved: "Denenmedi",
+    weakestBefore: "En büyük kayıp: ",
+    weakestAfter: " —",
+    practiceThis: "Bu spot türünü çalış",
+    weaknessHint: "Zayıf noktalarını görmek için her kategoride en az 3 el çöz.",
+    // 확정표 §6 — «{name}'ın hesabına» 대신 «라벨: 값» 꼴
+    accountBefore: "Kaydedildi — hesap: ",
+    accountAfter: "",
+    syncingNow: "Eşitleniyor…",
+    syncNow: "Şimdi eşitle",
+    signOutLabel: "Çıkış yap",
+    localOnlyBefore: "İlerlemen ",
+    localOnlyBold: "yalnızca bu cihazda",
+    localOnlyAfter:
+      " kayıtlı. Bir HoldemMaster hesabı bağlarsan her cihazda kaldığın yerden devam edebilirsin.",
+    googleSignIn: "Google ile devam et",
+    kakaoSignIn: "Kakao ile devam et",
+    telegramSignIn: "Telegram ile devam et",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} örnek spot · ${nodes} karar node'u · hedef exploitability %${pct}`,
+    details: "Ayrıntılar ↓",
+    toAct: "oynayacak",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Aksiyon sırası:",
+    boardLabel: "Board",
+    myHand: "Elin",
+    yourChoice: "Seçimin",
+    prompt: "Ne oynarsın?",
+    bestEvTag: " · En yüksek EV",
+    evLoss: "EV kaybı",
+    mobileDetailTitle: "Aksiyona göre sıklık ve EV",
+    mixedNote:
+      "Karma stratejiler yanlış sayılmaz — puanlama, aksiyonlar arasındaki EV farkına göre yapılır.",
+    dailyDone: "Günün sorusu tamam",
+    dailyDoneDesc:
+      "Bugün herkes aynı soruyu çözüyor. Sonucunu paylaş, diğer oyuncularla karşılaştır.",
+    makeCard: "Sonuç kartı oluştur",
+    boardShow: "Bugünün skor tablosunu gör",
+    boardHide: "Skor tablosunu gizle",
+    boardLoading: "Yükleniyor…",
+    boardCount: (n: number) => `Bugün ${n} oyuncu`,
+    boardMyRank: (r: number) => `Sıram #${r}`,
+    boardLoginHint:
+      "Adının skor tablosunda görünmesi için giriş yap — tabloyu herkes görebilir.",
+    boardUnavailable: "Skor tablosu henüz kullanılamıyor.",
+    copied: "Kopyalandı",
+    copyResult: "Sonuç metnini kopyala",
+    openCommunity: "Topluluğu aç →",
+    pasteHintBefore: "Toplulukta ",
+    pasteHintBold: "[✏️ Yaz]",
+    pasteHintAfter: " düğmesine bas ve yapıştır.",
+    keepPracticing: "Pratiğe devam",
+    nextHand: "Sonraki el",
+    readArticle: "Spot analizini oku →",
+    viewFull: "Tam çözümü gör",
+    resultTitle: "Sonuçlar",
+    resultHintBefore: "Bir aksiyon seçtiğinde burada ",
+    resultHintBold: "her aksiyonun sıklığı ve EV'si",
+    resultHintAfter: " ile seçiminin sana kaç bb'ye mal olduğu görünür.",
+    gtoNoteBefore:
+      "GTO aynı eli karma oynar — düşük sıklıklı bir seçim otomatik olarak hata değildir. Ölçü, ",
+    gtoNoteBold: "pot'a oranla",
+    gtoNoteAfter: " EV kaybıdır: ≤%0,35 En iyi oyun · ≤%1 Kabul edilebilir · daha fazlası Bu spotu tekrar et.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Bu spot için (pot: ${pot}bb): En iyi oyun ≤${best}bb · Kabul edilebilir ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Bu spotun başlangıç potuna (${pot}bb) göre değerlendirilir: En iyi oyun ≤${best}bb · Kabul edilebilir ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `Önceden hesaplanmış ${spots} spot · ${flops} gerçek floptan eşit olasılıkla`,
+    resetHistoryLabel: "Geçmişi sıfırla",
+    cardAlt: "Günün sorusu sonuç kartı",
+    shareApps: "Paylaş",
+    saveImage: "Görseli kaydet",
+    close: "Kapat",
+    cardHintBefore:
+      "Kartını bir grup sohbetinde ya da sosyal medyada paylaş — gören herkes bugün ",
+    cardHintBold: "aynı soruyu",
+    cardHintAfter: " çözer. Kartta cevap asla görünmez.",
+    verdictBest: "En iyi oyun",
+    verdictGood: "Kabul edilebilir",
+    verdictMiss: "Bu spotu tekrar et",
+    promptCopy: "Aşağıdaki metni kopyala",
+    shareText:
+      // 커뮤니티에 붙여넣는 글 — 읽는 사람에게 말한다 (&lang=tr로 받은 사람도 터키어로 연다)
+      "Günün GTO sorusu — sen de dene: https://solver.holdemmaster.com/?view=trainer&lang=tr",
+    confirmReset: "Bu cihazdaki tüm GTO Trainer geçmişi silinsin mi?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `${uploaded} kaydedildi · diğer cihazlardan ${merged} alındı`,
+    syncSaved: (uploaded: number) => `${uploaded} kaydedildi`,
+    syncFailed: (msg: string) => `Eşitleme başarısız: ${msg} — sonuçların bu cihazda duruyor. Tekrar denemek için “Şimdi eşitle” düğmesine bas.`,
+    signInFailed: (msg: string) => `Giriş başarısız: ${msg} — giriş düğmesine tekrar bas.`,
+  },
+  vi: {
+    loadFailed: "Không tải được dữ liệu trainer:",
+    loading: "Đang tải trainer…",
+    review: (n: number) => `Xem lại (${n})`,
+    daily: "Thử thách hôm nay",
+    dailyStreakLabel: "Thử thách",
+    done: "Xong",
+    solved: "Đã giải",
+    dayStreakSuffix: " ngày liên tiếp",
+    bestPrefix: "/ kỷ lục",
+    streakLabel: "Chuỗi",
+    totalLossLabel: "Tổng EV mất",
+    avgLossLabel: "EV mất trung bình",
+    goodRateLabel: "Tỷ lệ chơi tốt",
+    weaknessTitle: "Tìm điểm yếu",
+    avgOfPot: (pct: string) => `trung bình ${pct}% pot`,
+    handCount: (n: number) => `(${n} ván)`,
+    notSolved: "Chưa thử",
+    weakestBefore: "Mất nhiều nhất ở ",
+    weakestAfter: " —",
+    practiceThis: "Chỉ luyện dạng này",
+    weaknessHint: "Chơi từ 3 ván trở lên ở mỗi nhóm để thấy bạn đang mất EV ở đâu.",
+    accountBefore: "Đã lưu vào tài khoản ",
+    accountAfter: "",
+    syncingNow: "Đang đồng bộ…",
+    syncNow: "Đồng bộ ngay",
+    signOutLabel: "Đăng xuất",
+    localOnlyBefore: "Tiến độ của bạn chỉ được lưu ",
+    localOnlyBold: "trên thiết bị này",
+    localOnlyAfter:
+      ". Liên kết tài khoản HoldemMaster để tiếp tục từ chỗ đang dở trên mọi thiết bị.",
+    googleSignIn: "Tiếp tục với Google",
+    kakaoSignIn: "Tiếp tục với Kakao",
+    telegramSignIn: "Tiếp tục với Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} spot mẫu · ${nodes} node quyết định · exploitability mục tiêu ${pct}%`,
+    details: "Chi tiết ↓",
+    toAct: "hành động",
+    potLabel: "Pot",
+    stackLabel: "Stack",
+    lineLabel: "Diễn biến:",
+    boardLabel: "Board",
+    myHand: "Tay bài của bạn",
+    yourChoice: "Lựa chọn của bạn",
+    prompt: "Bạn sẽ làm gì?",
+    bestEvTag: " · EV cao nhất",
+    evLoss: "EV mất",
+    mobileDetailTitle: "Tần suất & EV theo hành động",
+    mixedNote:
+      "Chiến lược hỗn hợp không bị tính là sai — điểm được chấm theo chênh lệch EV giữa các hành động.",
+    dailyDone: "Đã xong thử thách hôm nay",
+    dailyDoneDesc:
+      "Hôm nay ai cũng nhận cùng một thử thách. Đăng kết quả để so với người chơi khác.",
+    makeCard: "Tạo thẻ kết quả",
+    boardShow: "Xem bảng xếp hạng hôm nay",
+    boardHide: "Ẩn bảng xếp hạng",
+    boardLoading: "Đang tải…",
+    boardCount: (n: number) => `${n} người chơi hôm nay`,
+    boardMyRank: (r: number) => `Hạng của tôi #${r}`,
+    boardLoginHint:
+      "Đăng nhập để có tên trên bảng xếp hạng — ai cũng xem được.",
+    boardUnavailable: "Bảng xếp hạng chưa sẵn sàng.",
+    copied: "Đã sao chép",
+    copyResult: "Sao chép kết quả",
+    openCommunity: "Mở cộng đồng →",
+    pasteHintBefore: "Trong cộng đồng, nhấn ",
+    pasteHintBold: "[✏️ Viết bài]",
+    pasteHintAfter: " rồi dán vào.",
+    keepPracticing: "Tiếp tục luyện tập",
+    nextHand: "Ván tiếp theo",
+    readArticle: "Đọc phân tích spot →",
+    viewFull: "Xem toàn bộ lời giải",
+    resultTitle: "Kết quả",
+    resultHintBefore: "Chọn một hành động để xem ",
+    resultHintBold: "tần suất và EV của từng hành động",
+    resultHintAfter: ", cùng số bb bạn mất do lựa chọn đó.",
+    gtoNoteBefore:
+      "GTO dùng nhiều hành động với cùng một tay bài — chọn hành động tần suất thấp không có nghĩa là sai. Thước đo là EV mất ",
+    gtoNoteBold: "so với pot",
+    gtoNoteAfter: ": ≤0,35% Nước đi tốt nhất · ≤1% Chấp nhận được · cao hơn thì Xem lại spot này.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Với spot này (pot ${pot}bb): Nước đi tốt nhất ≤${best}bb · Chấp nhận được ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Chấm theo pot ban đầu của spot này (${pot}bb): Nước đi tốt nhất ≤${best}bb · Chấp nhận được ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `${spots} spot tính sẵn · ra đề đều từ ${flops} flop thực tế`,
+    resetHistoryLabel: "Xóa lịch sử",
+    cardAlt: "Thẻ kết quả thử thách hôm nay",
+    shareApps: "Chia sẻ",
+    saveImage: "Lưu ảnh",
+    close: "Đóng",
+    cardHintBefore:
+      "Đăng thẻ lên nhóm chat hoặc mạng xã hội — ai thấy cũng chơi được ",
+    cardHintBold: "cùng một thử thách",
+    cardHintAfter: " hôm nay. Thẻ không bao giờ lộ đáp án.",
+    verdictBest: "Nước đi tốt nhất",
+    verdictGood: "Chấp nhận được",
+    verdictMiss: "Xem lại spot này",
+    promptCopy: "Sao chép đoạn văn bản bên dưới",
+    shareText:
+      "Thử thách GTO hôm nay — bạn thử xem: https://solver.holdemmaster.com/?view=trainer&lang=vi",
+    confirmReset: "Xóa toàn bộ lịch sử trainer trên thiết bị này?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `Đã lưu ${uploaded} · nhận ${merged} từ thiết bị khác`,
+    syncSaved: (uploaded: number) => `Đã lưu ${uploaded}`,
+    syncFailed: (msg: string) => `Đồng bộ thất bại: ${msg} — kết quả của bạn vẫn được lưu trên thiết bị này. Hãy nhấn “Đồng bộ ngay” để thử lại.`,
+    signInFailed: (msg: string) => `Đăng nhập thất bại: ${msg} — hãy nhấn lại nút đăng nhập.`,
+  },
+  ru: {
+    loadFailed: "Не удалось загрузить данные тренажёра:",
+    loading: "Загрузка тренажёра…",
+    review: (n: number) => `Разбор (${n})`,
+    daily: "Задача дня",
+    dailyStreakLabel: "Задача дня",
+    done: "Готово",
+    solved: "Решено",
+    // 확정표 §7-1: 불변 약어 «дн.» — 앞 공백은 U+00A0
+    dayStreakSuffix: " дн. подряд",
+    bestPrefix: "/ рекорд",
+    streakLabel: "Серия",
+    totalLossLabel: "Общая потеря EV",
+    avgLossLabel: "Средняя потеря EV",
+    goodRateLabel: "Хороших решений",
+    weaknessTitle: "Поиск ликов",
+    avgOfPot: (pct: string) => `в среднем ${pct}% банка`,
+    handCount: (n: number) => `(${n} ${ruPlural(n, "раздача", "раздачи", "раздач")})`,
+    notSolved: "Нет попыток",
+    // 확정표 §7-2 high 1: 콜론형 + 라벨 주격 + 빈 꼬리
+    weakestBefore: "Больше всего потерь: ",
+    weakestAfter: "",
+    practiceThis: "Отработать этот тип спота",
+    weaknessHint: "Реши 3+ раздачи в каждой категории, чтобы увидеть, где ты теряешь EV.",
+    // 확정표 §7-2 medium: 닉네임은 주격 동격 · 꼬리 없음
+    accountBefore: "Сохранено в аккаунте ",
+    accountAfter: "",
+    syncingNow: "Синхронизация…",
+    syncNow: "Синхронизировать",
+    signOutLabel: "Выйти",
+    localOnlyBefore: "Прогресс сохраняется ",
+    localOnlyBold: "только на этом устройстве",
+    localOnlyAfter:
+      ". Войди в аккаунт HoldemMaster, чтобы продолжать с того же места на любом устройстве.",
+    googleSignIn: "Войти через Google",
+    kakaoSignIn: "Войти через Kakao",
+    telegramSignIn: "Войти через Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} ${ruPlural(SPOT_COUNT, "учебный спот", "учебных спота", "учебных спотов")} · узлы решений: ${nodes} · целевая exploitability ${pct}%`,
+    details: "Подробнее ↓",
+    toAct: "ходит",
+    potLabel: "Банк",
+    stackLabel: "Стек",
+    lineLabel: "Линия:",
+    boardLabel: "Борд",
+    myHand: "Твоя рука",
+    yourChoice: "Твой выбор",
+    prompt: "Как сыграешь?",
+    bestEvTag: " · Макс. EV",
+    evLoss: "Потеря EV",
+    mobileDetailTitle: "Частота и EV по действиям",
+    mixedNote:
+      "Смешанная стратегия не считается ошибкой — оценка идёт по разнице EV между действиями.",
+    dailyDone: "Задача дня решена",
+    dailyDoneDesc:
+      "Сегодня у всех одна задача. Опубликуй результат и сравни его с результатами других игроков.",
+    makeCard: "Создать карточку результата",
+    boardShow: "Показать таблицу лидеров",
+    boardHide: "Скрыть таблицу лидеров",
+    boardLoading: "Загрузка…",
+    boardCount: (n: number) => `${n} ${ruPlural(n, "игрок", "игрока", "игроков")} сегодня`,
+    boardMyRank: (r: number) => `Моё место: #${r}`,
+    boardLoginHint:
+      "Войди, чтобы попасть в таблицу под своим именем — смотреть её могут все.",
+    boardUnavailable: "Таблица лидеров пока недоступна.",
+    copied: "Скопировано!",
+    copyResult: "Копировать текст результата",
+    openCommunity: "Открыть сообщество →",
+    pasteHintBefore: "В сообществе нажми ",
+    pasteHintBold: "[✏️ Написать пост]",
+    pasteHintAfter: " и вставь текст.",
+    keepPracticing: "Продолжить тренировку",
+    nextHand: "Следующая раздача",
+    readArticle: "Читать статью о споте →",
+    viewFull: "Открыть полное решение",
+    resultTitle: "Результаты",
+    resultHintBefore: "Выбери действие — и увидишь ",
+    resultHintBold: "частоту и EV каждого действия",
+    resultHintAfter: ", а также сколько bb стоил твой выбор.",
+    gtoNoteBefore:
+      "GTO смешивает действия с одной и той же рукой — редкое действие не обязательно ошибка. Критерий — потеря EV ",
+    gtoNoteBold: "относительно банка",
+    gtoNoteAfter: ": ≤0,35% Лучший ход · ≤1% Допустимо · больше — Нужен разбор.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Для этого спота (банк ${pot}bb): Лучший ход ≤${best}bb · Допустимо ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Оценка по стартовому банку этого спота (${pot}bb): Лучший ход ≤${best}bb · Допустимо ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `Заранее рассчитанных спотов: ${spots} · равномерно из всех ${flops} реальных флопов`,
+    resetHistoryLabel: "Сбросить историю тренировок",
+    cardAlt: "Карточка результата задачи дня",
+    shareApps: "Поделиться",
+    saveImage: "Сохранить картинку",
+    close: "Закрыть",
+    cardHintBefore:
+      "Отправь карточку в групповой чат или соцсети — каждый, кто её увидит, получит ",
+    cardHintBold: "ту же задачу",
+    cardHintAfter: " на сегодня. Карточка не раскрывает ответ.",
+    verdictBest: "Лучший ход",
+    verdictGood: "Допустимо",
+    verdictMiss: "Нужен разбор",
+    promptCopy: "Скопируй текст ниже",
+    shareText:
+      "Задача дня по GTO — попробуй решить: https://solver.holdemmaster.com/?view=trainer&lang=ru",
+    confirmReset: "Удалить всю историю тренажёра на этом устройстве?",
+    // 확정표 §7-1: 콜론형
+    syncMerged: (uploaded: number, merged: number) =>
+      `Сохранено: ${uploaded} · получено с других устройств: ${merged}`,
+    syncSaved: (uploaded: number) => `Сохранено: ${uploaded}`,
+    syncFailed: (msg: string) => `Ошибка синхронизации: ${msg} — результаты по-прежнему сохранены на этом устройстве. Нажми «Синхронизировать», чтобы повторить.`,
+    signInFailed: (msg: string) => `Не удалось войти: ${msg} — нажми кнопку входа ещё раз.`,
+  },
+  // 확정표 §3-4 · §7-1(dayStreakPrefix 콜론형 · handCount/boardCount 콜론형) · §7-2(weakest 콜론형 + 빈 꼬리 · 닉네임 FSI)
+  ar: {
+    loadFailed: "تعذّر تحميل بيانات المدرّب:",
+    loading: "جارٍ تحميل المدرّب…",
+    review: (n: number) => `مراجعة (${n})`,
+    daily: "سؤال اليوم",
+    dailyStreakLabel: "سؤال اليوم",
+    done: "تم",
+    solved: "تم الحل",
+    dayStreakPrefix: "أيام متتالية: ",
+    dayStreakSuffix: "",
+    bestPrefix: "/ الأفضل",
+    streakLabel: "السلسلة",
+    totalLossLabel: "إجمالي خسارة EV",
+    avgLossLabel: "متوسط خسارة EV",
+    goodRateLabel: "قرارات جيدة",
+    weaknessTitle: "نقاط ضعفك",
+    avgOfPot: (pct: string) => `بمعدل \u2066${pct}%\u2069 من البوت`,
+    handCount: (n: number) => `(الأيدي: ${n})`,
+    notSolved: "لا محاولات",
+    weakestBefore: "أكبر خسارة: ",
+    weakestAfter: "",
+    practiceThis: "تدريب على هذا النوع من المواقف",
+    weaknessHint: "حلّ 3 أيدٍ أو أكثر في كل فئة لترى أين تخسر EV.",
+    accountBefore: "محفوظ في حساب ",
+    accountAfter: "",
+    syncingNow: "تجري المزامنة…",
+    syncNow: "مزامنة الآن",
+    signOutLabel: "تسجيل الخروج",
+    localOnlyBefore: "يُحفظ تقدّمك ",
+    localOnlyBold: "على هذا الجهاز فقط",
+    localOnlyAfter:
+      ". سجّل الدخول بحساب HoldemMaster لتتابع من النقطة نفسها على أي جهاز.",
+    googleSignIn: "تسجيل الدخول عبر Google",
+    kakaoSignIn: "تسجيل الدخول عبر Kakao",
+    telegramSignIn: "تسجيل الدخول عبر Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `المواقف التدريبية: ${SPOT_COUNT} · نقاط القرار: ${nodes} · Exploitability المستهدفة \u2066${pct}%\u2069`,
+    details: "التفاصيل ↓",
+    toAct: "يلعب",
+    potLabel: "البوت",
+    stackLabel: "الستاك",
+    lineLabel: "المسار:",
+    boardLabel: "البورد",
+    myHand: "يدك",
+    yourChoice: "اختيارك",
+    prompt: "كيف تلعب؟",
+    bestEvTag: " · أعلى EV",
+    evLoss: "خسارة EV",
+    mobileDetailTitle: "التكرار وEV لكل قرار",
+    mixedNote:
+      "الاستراتيجية المختلطة ليست خطأ — التقييم يعتمد على فرق EV بين القرارات.",
+    dailyDone: "تم حل سؤال اليوم",
+    dailyDoneDesc:
+      "السؤال نفسه للجميع اليوم. انشر نتيجتك وقارنها بنتائج اللاعبين الآخرين.",
+    makeCard: "إنشاء بطاقة النتيجة",
+    boardShow: "عرض لوحة الصدارة",
+    boardHide: "إخفاء لوحة الصدارة",
+    boardLoading: "جارٍ التحميل…",
+    boardCount: (n: number) => `لاعبو اليوم: ${n}`,
+    boardMyRank: (r: number) => `مركزي: #${r}`,
+    boardLoginHint:
+      "سجّل الدخول ليظهر اسمك في لوحة الصدارة — يمكن للجميع رؤيتها.",
+    boardUnavailable: "لوحة الصدارة غير متاحة الآن.",
+    copied: "تم النسخ!",
+    copyResult: "نسخ نص النتيجة",
+    openCommunity: "افتح المجتمع ←",
+    pasteHintBefore: "في المجتمع اضغط ",
+    pasteHintBold: "[✏️ كتابة منشور]",
+    pasteHintAfter: " ثم الصق النص.",
+    keepPracticing: "متابعة التدريب",
+    nextHand: "اليد التالية",
+    readArticle: "اقرأ مقالة الموقف ←",
+    viewFull: "عرض الحل الكامل",
+    resultTitle: "النتائج",
+    resultHintBefore: "اختر قرارًا لترى ",
+    resultHintBold: "التكرار وEV لكل قرار",
+    resultHintAfter: "، وكم bb كلّفك اختيارك.",
+    gtoNoteBefore:
+      "يمزج GTO القرارات باليد نفسها — القرار النادر ليس خطأ بالضرورة. المعيار هو خسارة EV ",
+    gtoNoteBold: "نسبةً إلى البوت",
+    gtoNoteAfter: ": \u2066≤0.35%\u2069 أفضل قرار · \u2066≤1%\u2069 مقبول · أكثر من ذلك — يحتاج مراجعة.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `لهذا الموقف (البوت ${pot}bb): أفضل قرار ≤${best}bb · مقبول ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `التقييم حسب البوت الابتدائي لهذا الموقف (${pot}bb): أفضل قرار ≤${best}bb · مقبول ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `المواقف المحسوبة مسبقًا: ${spots} · موزّعة بالتساوي على كل الفلوبات الحقيقية (${flops})`,
+    resetHistoryLabel: "إعادة تعيين سجل التدريب",
+    cardAlt: "بطاقة نتيجة سؤال اليوم",
+    shareApps: "مشاركة",
+    saveImage: "حفظ الصورة",
+    close: "إغلاق",
+    cardHintBefore:
+      "أرسل البطاقة إلى مجموعة أو شبكة اجتماعية — كل من يراها يحصل على ",
+    cardHintBold: "السؤال نفسه",
+    cardHintAfter: " لهذا اليوم. البطاقة لا تكشف الإجابة.",
+    verdictBest: "أفضل قرار",
+    verdictGood: "مقبول",
+    verdictMiss: "يحتاج مراجعة",
+    promptCopy: "انسخ النص أدناه",
+    versus: "ضد",
+    shareText:
+      `سؤال اليوم في GTO — جرّب حلّه: ${ltrIso("https://solver.holdemmaster.com/?view=trainer&lang=ar")}`,
+    confirmReset: "حذف كل سجل المدرّب على هذا الجهاز؟",
+    syncMerged: (uploaded: number, merged: number) =>
+      `محفوظ: ${uploaded} · مستلَم من أجهزة أخرى: ${merged}`,
+    syncSaved: (uploaded: number) => `محفوظ: ${uploaded}`,
+    syncFailed: (msg: string) => `خطأ في المزامنة: ${autoIso(msg)} — النتائج ما زالت محفوظة على هذا الجهاز. اضغط «مزامنة الآن» للمحاولة مجددًا.`,
+    signInFailed: (msg: string) => `تعذّر تسجيل الدخول: ${autoIso(msg)} — اضغط زر الدخول مرة أخرى.`,
+  },
+  it: {
+    versus: "contro",
+    loadFailed: "Impossibile caricare i dati del trainer:",
+    loading: "Caricamento del trainer…",
+    review: (n: number) => `Ripasso (${n})`,
+    daily: "Sfida del giorno",
+    dailyStreakLabel: "Sfida del giorno:",
+    done: "Fatto",
+    solved: "Tentativi:",
+    dayStreakSuffix: (n: number) => n === 1 ? " giorno consecutivo" : " giorni consecutivi",
+    bestPrefix: "/ record",
+    streakLabel: "Serie",
+    totalLossLabel: "EV loss totale",
+    avgLossLabel: "EV loss media",
+    goodRateLabel: "Scelte accettabili",
+    weaknessTitle: "Punti da migliorare",
+    avgOfPot: (pct: string) => `media: ${pct}% del piatto`,
+    handCount: (n: number) => `(${n} ${n === 1 ? "mano" : "mani"})`,
+    notSolved: "Non provato",
+    weakestBefore: "EV loss maggiore in: ",
+    weakestAfter: "",
+    practiceThis: "Allenati su questo tipo di spot",
+    weaknessHint: "Prova almeno 3 mani per categoria per scoprire dove perdi più EV.",
+    accountBefore: "Salvato nell’account di ",
+    accountAfter: "",
+    syncingNow: "Sincronizzazione…",
+    syncNow: "Sincronizza ora",
+    signOutLabel: "Esci",
+    localOnlyBefore: "I tuoi progressi vengono salvati ",
+    localOnlyBold: "solo su questo dispositivo",
+    localOnlyAfter:
+      ". Collega un account HoldemMaster per riprendere da dove hai lasciato su qualsiasi dispositivo.",
+    googleSignIn: "Continua con Google",
+    kakaoSignIn: "Continua con Kakao",
+    telegramSignIn: "Continua con Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${SPOT_COUNT} esempi · nodi di decisione: ${nodes} · exploitability obiettivo ${pct}%`,
+    details: "Dettagli ↓",
+    toAct: "deve agire",
+    potLabel: "Piatto",
+    stackLabel: "Stack",
+    lineLabel: "Linea:",
+    boardLabel: "Board",
+    myHand: "La tua mano",
+    yourChoice: "La tua scelta",
+    prompt: "Come giochi?",
+    bestEvTag: " · EV più alto",
+    evLoss: "EV loss",
+    mobileDetailTitle: "Frequenza ed EV per azione",
+    mixedNote:
+      "Le strategie miste non sono considerate errori: la valutazione si basa sulla differenza di EV tra le azioni.",
+    dailyDone: "Sfida del giorno completata",
+    dailyDoneDesc:
+      "Oggi la domanda è uguale per tutti. Condividi il risultato nella comunità per confrontarti con gli altri giocatori.",
+    makeCard: "Crea l’immagine del risultato",
+    boardShow: "Mostra la classifica di oggi",
+    boardHide: "Nascondi la classifica",
+    boardLoading: "Caricamento…",
+    boardCount: (n: number) => `${n} ${n === 1 ? "giocatore" : "giocatori"} oggi`,
+    boardMyRank: (r: number) => `La mia posizione: #${r}`,
+    boardLoginHint:
+      "Accedi per inserire il tuo nome in classifica. Tutti possono consultarla.",
+    boardUnavailable: "La classifica non è ancora disponibile.",
+    copied: "Copiato",
+    copyResult: "Copia il risultato",
+    openCommunity: "Apri la comunità →",
+    pasteHintBefore: "Nella comunità, premi ",
+    pasteHintBold: "[✏️ Write Post]",
+    pasteHintAfter: " e incolla il risultato.",
+    keepPracticing: "Continua ad allenarti",
+    nextHand: "Prossima mano",
+    readArticle: "Leggi l’analisi dello spot →",
+    viewFull: "Mostra la soluzione completa",
+    resultTitle: "Risultati",
+    resultHintBefore: "Scegli un’azione per vedere ",
+    resultHintBold: "frequenza ed EV di ciascuna azione",
+    resultHintAfter: " e quanti bb ti è costata la tua scelta.",
+    gtoNoteBefore:
+      "Il GTO alterna più azioni con la stessa mano: una scelta poco frequente non è per forza un errore. Si misura l’EV loss ",
+    gtoNoteBold: "in rapporto al piatto",
+    gtoNoteAfter: ": ≤0,35% Scelta migliore · ≤1% Accettabile · oltre, Da rivedere.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `In questo spot (piatto ${pot}bb): Scelta migliore ≤${best}bb · Accettabile ≤${good}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Valutazione rispetto al piatto iniziale dello spot (${pot}bb): Scelta migliore ≤${best}bb · Accettabile ≤${good}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `Spot precalcolati: ${spots} · estrazione uniforme dai flop reali (${flops})`,
+    resetHistoryLabel: "Elimina cronologia",
+    cardAlt: "Immagine del risultato della Sfida del giorno",
+    shareApps: "Condividi",
+    saveImage: "Salva immagine",
+    close: "Chiudi",
+    cardHintBefore:
+      "Condividi l’immagine in una chat di gruppo o sui social: chi la vede può affrontare la ",
+    cardHintBold: "stessa domanda",
+    cardHintAfter: " di oggi. L’immagine non svela la risposta.",
+    verdictBest: "Scelta migliore",
+    verdictGood: "Accettabile",
+    verdictMiss: "Da rivedere",
+    promptCopy: "Copia il testo qui sotto",
+    shareText:
+      "Sfida GTO del giorno — mettiti alla prova: https://solver.holdemmaster.com/?view=trainer&lang=it",
+    confirmReset: "Vuoi eliminare tutta la cronologia del trainer su questo dispositivo?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `Risultati salvati: ${uploaded} · recuperati da altri dispositivi: ${merged}`,
+    syncSaved: (uploaded: number) => `Risultati salvati: ${uploaded}`,
+    syncFailed: (msg: string) => `Sincronizzazione non riuscita: ${msg}. I risultati restano salvati su questo dispositivo. Premi «Sincronizza ora» per riprovare.`,
+    signInFailed: (msg: string) => `Accesso non riuscito: ${msg}. Premi di nuovo il pulsante di accesso per riprovare.`,
+  },
+  pl: {
+    loadFailed: "Nie udało się wczytać danych trenera:",
+    loading: "Wczytywanie trenera…",
+    review: (n: number) => `Powtórz błędy (${localizeNumber(String(n))})`,
+    daily: "Zadanie dnia",
+    dailyStreakLabel: "Zadanie dnia:",
+    done: "Gotowe",
+    solved: "Rozwiązano:",
+    dayStreakSuffix: (n: number) => plPlural(n, { one: " dzień z rzędu", few: " dni z rzędu", many: " dni z rzędu", other: " dnia z rzędu" }),
+    bestPrefix: "/ rekord",
+    streakLabel: "Seria dobrych zagrań",
+    totalLossLabel: "Łączna strata EV",
+    avgLossLabel: "Średnia strata EV",
+    goodRateLabel: "Odsetek dobrych zagrań",
+    weaknessTitle: "Analiza słabych punktów",
+    avgOfPot: (pct: string) => `średnio ${localizeNumber(String(pct))}% puli`,
+    handCount: (n: number) => `(liczba rozdań: ${localizeNumber(String(n))})`,
+    notSolved: "Bez prób",
+    weakestBefore: "Największe straty: ",
+    weakestAfter: "",
+    practiceThis: "Ćwicz ten typ spotu",
+    weaknessHint: "Rozegraj co najmniej 3 rozdania z każdej kategorii, aby zobaczyć, gdzie tracisz najwięcej EV.",
+    accountBefore: "Konto: ",
+    accountAfter: "",
+    syncingNow: "Synchronizacja…",
+    syncNow: "Synchronizuj teraz",
+    signOutLabel: "Wyloguj się",
+    localOnlyBefore: "Twoje postępy są zapisywane ",
+    localOnlyBold: "tylko na tym urządzeniu",
+    localOnlyAfter:
+      ". Zaloguj się na konto HoldemMaster, aby kontynuować naukę na dowolnym urządzeniu.",
+    googleSignIn: "Kontynuuj przez Google",
+    kakaoSignIn: "Kontynuuj przez Kakao",
+    telegramSignIn: "Kontynuuj przez Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `Przykłady: ${localizeNumber(String(SPOT_COUNT))} · węzły decyzyjne: ${localizeNumber(String(nodes))} · docelowa exploitability: ${localizeNumber(String(pct))}%`,
+    details: "Szczegóły ↓",
+    toAct: "na ruchu",
+    potLabel: "Pula",
+    stackLabel: "Stack",
+    lineLabel: "Linia gry:",
+    boardLabel: "Board",
+    myHand: "Twoja ręka",
+    yourChoice: "Twój wybór",
+    prompt: "Jak zagrasz?",
+    bestEvTag: " · Najwyższe EV",
+    evLoss: "Strata EV",
+    mobileDetailTitle: "Częstotliwość i EV akcji",
+    mixedNote:
+      "Strategie mieszane nie są uznawane za błąd. Ocena zależy od różnicy EV między akcjami.",
+    dailyDone: "Zadanie dnia ukończone",
+    dailyDoneDesc:
+      "Dzisiaj wszyscy otrzymują to samo zadanie. Udostępnij wynik i porównaj go z wynikami innych graczy.",
+    makeCard: "Utwórz obraz wyniku",
+    boardShow: "Pokaż dzisiejszy ranking",
+    boardHide: "Ukryj ranking",
+    boardLoading: "Wczytywanie…",
+    boardCount: (n: number) => `Liczba graczy dzisiaj: ${localizeNumber(String(n))}`,
+    boardMyRank: (r: number) => `Moje miejsce: #${localizeNumber(String(r))}`,
+    boardLoginHint:
+      "Zaloguj się, aby dodać swój nick do rankingu. Każdy może przeglądać wyniki.",
+    boardUnavailable: "Ranking nie jest jeszcze dostępny.",
+    copied: "Skopiowano",
+    copyResult: "Skopiuj tekst wyniku",
+    openCommunity: "Otwórz społeczność →",
+    pasteHintBefore: "W społeczności wybierz ",
+    pasteHintBold: "[✏️ Write Post]",
+    pasteHintAfter: " i wklej tekst.",
+    keepPracticing: "Ćwicz dalej",
+    nextHand: "Następne rozdanie",
+    readArticle: "Przeczytaj omówienie spotu →",
+    viewFull: "Pokaż pełne rozwiązanie",
+    resultTitle: "Wyniki",
+    resultHintBefore: "Wybierz akcję, a zobaczysz ",
+    resultHintBold: "częstotliwość i EV każdej akcji",
+    resultHintAfter: " oraz stratę w bb wynikającą z twojego wyboru.",
+    gtoNoteBefore:
+      "Strategia GTO może mieszać akcje z tą samą ręką. Rzadko wybierana akcja nie musi być błędem. Miarą jest strata EV ",
+    gtoNoteBold: "względem puli",
+    gtoNoteAfter: ": ≤0,35% — Najlepsze zagranie · ≤1% — Dopuszczalne · powyżej — Do analizy.",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `W tym spocie (pula ${localizeNumber(pot)}bb): Najlepsze zagranie ≤${localizeNumber(best)}bb · Dopuszczalne ≤${localizeNumber(good)}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Ocena względem puli początkowej tego spotu (${localizeNumber(pot)}bb): Najlepsze zagranie ≤${localizeNumber(best)}bb · Dopuszczalne ≤${localizeNumber(good)}bb.`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `Wcześniej obliczone spoty: ${localizeNumber(String(spots))} · równomierne losowanie ze wszystkich rzeczywistych flopów: ${flops}`,
+    resetHistoryLabel: "Wyczyść historię",
+    cardAlt: "Obraz wyniku zadania dnia",
+    shareApps: "Udostępnij",
+    saveImage: "Zapisz obraz",
+    close: "Zamknij",
+    cardHintBefore:
+      "Udostępnij obraz na czacie grupowym lub w mediach społecznościowych. Dzisiaj każdy, kto go zobaczy, może rozwiązać ",
+    cardHintBold: "to samo zadanie",
+    cardHintAfter: ". Obraz nie zdradza odpowiedzi.",
+    verdictBest: "Najlepsze zagranie",
+    verdictGood: "Dopuszczalne",
+    verdictMiss: "Do analizy",
+    promptCopy: "Skopiuj poniższy tekst",
+    shareText:
+      "Dzisiejsze zadanie GTO — spróbuj je rozwiązać: https://solver.holdemmaster.com/?view=trainer&lang=pl",
+    confirmReset: "Usunąć całą historię trenera z tego urządzenia?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `Zapisano: ${localizeNumber(String(uploaded))} · pobrano z innych urządzeń: ${localizeNumber(String(merged))}`,
+    syncSaved: (uploaded: number) => `Zapisano: ${localizeNumber(String(uploaded))}`,
+    syncFailed: (msg: string) => `Nie udało się zsynchronizować: ${msg}. Wyniki nadal są zapisane na tym urządzeniu. Naciśnij „Synchronizuj teraz”, aby spróbować ponownie.`,
+    signInFailed: (msg: string) => `Nie udało się zalogować: ${msg}. Naciśnij ponownie przycisk logowania, aby spróbować jeszcze raz.`,
+  },
+} as const;
+
+// «출제» 칩 · «가까운 결정만» — 기기에 기억 (RNG 칩과 같은 방식)
+type TrainerSource = "basic" | "flop";
+const SOURCE_KEY = "trainer-source";
+const CLOSE_ONLY_KEY = "trainer-close-only";
+const BOARD_KEY = "trainer-board";
+const readStored = (key: string) => {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+const writeStored = (key: string, value: string) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* 저장이 막힌 환경이면 이번 방문에만 적용 */
+  }
+};
+// 보드 고르기 — 기억해 둔 값은 칸 이름·카드를 다시 확인해 쓴다(틀리면 전체)
+const readBoardFilter = (): FlopBoardFilter => {
+  try {
+    const raw = JSON.parse(readStored(BOARD_KEY) ?? "{}");
+    const board = raw?.board;
+    if (
+      Array.isArray(board) &&
+      board.length === 3 &&
+      new Set(board).size === 3 &&
+      board.every((c) => Number.isInteger(c) && c >= 0 && c < 52)
+    )
+      return { board: [...board].sort((a, b) => b - a) };
+    const filter: FlopBoardFilter = {};
+    for (const axis of GROUP_AXES) {
+      const keys = Array.isArray(raw?.[axis]) ? GROUP_KEYS[axis].filter((k) => raw[axis].includes(k)) : [];
+      if (keys.length) filter[axis] = keys;
+    }
+    return filter;
+  } catch {
+    return {};
+  }
+};
+const asFlopQuestion = (q: TrainerQuestion | null) =>
+  q && (q as Partial<FlopTrainerQuestion>).source === "flop" ? (q as FlopTrainerQuestion) : null;
+
+export default defineComponent({
+  components: { ProviderIcon, CustomTrainerPage, TrainerBoardFilter },
+  setup() {
+    const store = useStore();
+    const L = computed(() => M[i18n.locale] as (typeof M)[keyof typeof M] & { dayStreakPrefix?: string });
+    const dayStreakSuffix = computed(() => i18n.locale === "it"
+      ? M.it.dayStreakSuffix(dailyState.streak)
+      : i18n.locale === "pl"
+      ? M.pl.dayStreakSuffix(dailyState.streak)
+      : M[i18n.locale].dayStreakSuffix);
+    const versusText = computed(() => "versus" in L.value ? L.value.versus : "vs");
+    const autoText = (text: string | null) => i18n.locale === "ar" ? autoIso(text ?? "") : text;
+    const ltrText = (text: string) => i18n.locale === "ar" ? ltrIso(text) : text;
+    const rtlText = (text: string) => i18n.locale === "ar" ? arLabelIso(text) : text;
+    const playerText = (label: string, side: string) => i18n.locale === "ar"
+      ? arLabelIso(`${label} (${ltrIso(side)})`)
+      : `${label} (${side})`;
+    const bandText = (label: string, from: number, to: number) => i18n.locale === "ar"
+      ? arLabelIso(label, `${from}–${to}`)
+      : `${label} ${from}–${to}`;
+    // 결과 요약 줄(좋은 판단 비율): 굵은 숫자 뒤 «%»는 tr에서만 숫자 앞으로(%35) — 굵기 범위를 바꾸지 않으려고 $pct 대신 자리만 옮긴다. 통계 칩은 $pct로 숫자·%를 함께 굵게(10-09)
+    const isTr = computed(() => i18n.locale === "tr");
+    /* 두 문장을 잇는 공백 — 서양어는 필요하고, CJK는 「。」가 이미 여백을 품고 있어
+     * 넣으면 오히려 벌어진다. 템플릿의 줄바꿈에 맡기면 전 언어가 공백을 받는다 */
+    const sentenceGap = computed(() =>
+      i18n.locale === "ja" || i18n.locale === "zh" || i18n.locale === "zh-hant" ? "" : " "
+    );
+    // 카카오 로그인은 한국어 화면에서만 (사용자 결정 2026-08-21)
+    const isKo = computed(() => i18n.locale === "ko");
+    const F = computed(() => flopTrainerLabels(i18n.locale));
+    // 첫 화면이 오프라인이면 기억해 둔 «모든 플랍»이어도 기본으로 연다(지금과 같게 · 설계안 §2)
+    const source = ref<TrainerSource>(
+      readStored(SOURCE_KEY) === "flop" && navigator.onLine !== false ? "flop" : "basic"
+    );
+    const closeOnly = ref(readStored(CLOSE_ONLY_KEY) === "1");
+    const BL = computed(() => flopBoardLabels(i18n.locale));
+    const flopBoardFilter = ref<FlopBoardFilter>(readBoardFilter());
+    const flopBoardOpen = ref(false);
+    const flopBoardActive = computed(() => isBoardFilterActive(flopBoardFilter.value));
+    // «가까운 결정만»·«보드» 칩 — 복습·오늘의 문제는 이 조건 없이 출제하므로 그때는 숨긴다
+    const flopFiltersShown = computed(() => source.value === "flop" && !dailyMode.value && !reviewMode.value);
+    const flopBoardCount = computed(() => filteredFlops(flopBoardFilter.value).length);
+    const flopBoardChipText = computed(() => {
+      const f = flopBoardFilter.value;
+      if (!flopBoardActive.value) return BL.value.boardAll;
+      const value = f.board
+        ? ltrText(f.board.map((c) => "23456789TJQKA"[c >> 2] + "♣♦♥♠"[c & 3]).join(""))
+        : flopReportLabels(i18n.locale).flopCount.replace("{count}", flopBoardCount.value.toLocaleString(numberLocaleTag(), (i18n.locale === "it" || i18n.locale === "pl") ? { useGrouping: true } : undefined));
+      return BL.value.boardChip.replace("{value}", value);
+    });
+    const categories = computed<TrainerCategory[]>(() =>
+      source.value === "flop" ? ["all", "srp", "3bp", "4bp", "blind"] : ["all", "srp", "3bp", "blind"]
+    );
+    let unsubscribeAuth: () => void = () => undefined;
+    const category = ref<TrainerCategory>("all");
+    const bank = ref<TrainerBank | null>(null);
+    const question = ref<TrainerQuestion | null>(null);
+    const evaluation = ref<TrainerEvaluation | null>(null);
+    const attempts = ref<TrainerAttempt[]>([]);
+    const loadError = ref("");
+    const reviewMode = ref(false);
+    const dailyMode = ref(false);
+    const dailyCopied = ref(false);
+    loadDailyState();
+    let reviewIndex = 0;
+
+    // «모든 플랍» 하단 줄: 지금 실제로 출제하는 풀 — 범주·회원 반영 상황 수 · 보드 고르기 반영 플랍 수(MA-531)
+    const flopFooterSpots = computed(() => flopScenarioList().length);
+    const flopFooterFlops = computed(() =>
+      (flopBoardActive.value ? flopBoardCount.value : REAL_FLOP_COUNT).toLocaleString(numberLocaleTag(), (i18n.locale === "it" || i18n.locale === "pl") ? { useGrouping: true } : undefined)
+    );
+    const decisionCount = computed(
+      () => bank.value?.presets.reduce((sum, item) => sum + item.nodes.length, 0) ?? 0
+    );
+    const averageLoss = computed(() =>
+      attempts.value.length
+        ? attempts.value.reduce((sum, item) => sum + item.evLossBb, 0) /
+          attempts.value.length
+        : 0
+    );
+    const totalLoss = computed(() =>
+      attempts.value.reduce((sum, item) => sum + item.evLossBb, 0)
+    );
+    const excellentRate = computed(() =>
+      attempts.value.length
+        ? (attempts.value.filter(isAcceptable).length * 100) /
+          attempts.value.length
+        : 0
+    );
+    // 판정 경계는 스팟마다 다르다 (팟이 크면 허용 폭도 커진다)
+    const limits = computed(() =>
+      lossLimits(question.value?.presetId ?? "srp-dry-ace")
+    );
+
+    // attempts는 최신순 — 앞에서부터 세면 현재 연속 기록이 된다
+    const streak = computed(() => trainerStreak(attempts.value));
+    const bestStreak = computed(() => {
+      let best = 0;
+      let current = 0;
+      for (const attempt of attempts.value) {
+        if (isAcceptable(attempt)) {
+          current++;
+          best = Math.max(best, current);
+        } else {
+          current = 0;
+        }
+      }
+      return best;
+    });
+    const weakness = computed(() => trainerWeakness(attempts.value));
+    const reviewAttempts = computed(() => {
+      const seen = new Set<string>();
+      return attempts.value.filter((item) => {
+        if (seen.has(item.questionId)) return false;
+        seen.add(item.questionId);
+        return (
+          // 판정과 같은 기준: «허용» 경계(팟 대비)를 넘은 문제만 — 예전 절대 0.05bb는 «최적»도 담았다 (유튜브 쪽 지적 10-13)
+          !isAcceptable(item) &&
+          (category.value === "all" || item.category === category.value)
+        );
+      });
+    });
+
+    const restoreQuestion = (attempt: TrainerAttempt) => {
+      if (!bank.value) return null;
+      const [presetId, nodeId] = attempt.questionId.split(":");
+      const presetData = bank.value.presets.find((item) => item.presetId === presetId);
+      const node = presetData?.nodes.find((item) => item.nodeId === nodeId);
+      if (!node) return null;
+      const player = node.selectedSpot.player;
+      const playerIndex = player === "oop" ? 0 : 1;
+      const handIndex = node.cards[playerIndex].indexOf(attempt.handPair);
+      if (handIndex < 0) return null;
+      return {
+        id: `${presetId}:${nodeId}:${attempt.handPair}`,
+        presetId,
+        presetTitle: PRESETS.find((item) => item.id === presetId)?.title ?? presetId,
+        category: trainerCategory(presetId),
+        node,
+        handIndex,
+        handPair: attempt.handPair,
+        player,
+      } as TrainerQuestion;
+    };
+
+    /* «모든 플랍» — 문제마다 서버 플랍 파일 1개 · 답을 고르는 동안 다음 문제를 미리 받는다 */
+    const flopLoading = ref(false);
+    const flopError = ref<"" | "offline" | "failed" | "empty">("");
+    let flopEpoch = 0;
+    let lastFlopLoad: (() => Promise<FlopTrainerQuestion | null>) | null = null;
+    let prefetched: Promise<FlopTrainerQuestion | null> | null = null;
+    let prefetchKey = "";
+    // 회원 전용 상황(림프 팟)은 로그인했을 때만 낸다 — 자료 Worker가 어차피 막는다
+    const flopScenarioList = () =>
+      flopTrainerScenarios(
+        category.value as FlopTrainerCategory,
+        HAND_REVIEW_DATA.readyScenarios,
+        (id) => !isMemberScenario(id) || !!account.value
+      );
+    const flopKey = () =>
+      `${category.value}|${closeOnly.value}|${!!account.value}|${JSON.stringify(flopBoardFilter.value)}`;
+    const fetchFlopQuestion = async () => {
+      const scenarios = flopScenarioList();
+      // 물을 핸드가 없는 플랍(«가까운 결정만»에서 드묾)은 다음 플랍으로
+      for (let tries = 0; tries < 5; tries++) {
+        const deal = dealFlopTrainer(scenarios, Math.random, flopBoardFilter.value);
+        const spot = deal && flopTrainerSpot(deal.scenario);
+        if (!deal || !spot) return null;
+        const file = await loadReviewFlop(spot, deal.canonical.fileName);
+        const made = makeFlopTrainerQuestion(
+          file,
+          deal,
+          closeOnly.value ? { closeWithinBb: lossLimits(deal.scenario).goodBb } : {}
+        );
+        if (made) return made;
+      }
+      return null;
+    };
+    const takeFlopQuestion = () => {
+      const ready = prefetched && prefetchKey === flopKey() ? prefetched : null;
+      prefetched = null;
+      return ready ?? fetchFlopQuestion();
+    };
+    const prefetchFlop = () => {
+      if (source.value !== "flop" || dailyMode.value || reviewMode.value) return;
+      prefetchKey = flopKey();
+      prefetched = fetchFlopQuestion();
+      prefetched.catch(() => undefined); // 실패는 그 문제를 꺼낼 때 다룬다
+    };
+    const restoreFlopQuestion = async (id: string) => {
+      const parsed = parseFlopQuestionId(id);
+      const spot = parsed && flopTrainerSpot(parsed.scenario);
+      if (!parsed || !spot) return null;
+      const file = await loadReviewFlop(spot, dealFromFlop(parsed.scenario, parsed.flop).canonical.fileName);
+      return restoreFlopTrainerQuestion(file, id);
+    };
+    const showFlop = async (load: () => Promise<FlopTrainerQuestion | null>) => {
+      const token = ++flopEpoch;
+      lastFlopLoad = load;
+      question.value = null;
+      flopError.value = "";
+      flopLoading.value = true;
+      try {
+        const made = await load();
+        if (token !== flopEpoch) return;
+        question.value = made;
+        if (made) prefetchFlop();
+        else flopError.value = "failed";
+      } catch {
+        if (token === flopEpoch) flopError.value = navigator.onLine === false ? "offline" : "failed";
+      } finally {
+        if (token === flopEpoch) flopLoading.value = false;
+      }
+    };
+    const retryFlop = () => {
+      if (lastFlopLoad) void showFlop(lastFlopLoad);
+    };
+
+    /* RNG 연습 — 숫자는 문제마다 새로 뽑고, 오늘의 문제에선 쓰지 않는다 */
+    const R = computed(() => RNG_M[i18n.locale as keyof typeof RNG_M] ?? RNG_M.en);
+    const rngEnabled = trainerRngEnabled();
+    const rngMode = ref<RngMode>(rngEnabled ? readRngMode() : "off");
+    const rngRoll = ref(rollRng());
+    const cycleRngMode = () => {
+      rngMode.value = nextRngMode(rngMode.value);
+    };
+    const rngActive = computed(
+      () => rngMode.value !== "off" && !dailyMode.value && !!question.value
+    );
+    const rngBandList = computed(() => {
+      const mode = rngMode.value;
+      if (!rngActive.value || !question.value || mode === "off") return [];
+      const frequencies = evaluateTrainerAction(question.value, 0).actions.map((a) => a.frequency);
+      return rngBands(question.value.node.selectedSpot.actions, frequencies, mode);
+    });
+    const rngResult = computed(() => {
+      const result = evaluation.value;
+      if (!result || !rngBandList.value.length) return null;
+      return classifyRngAnswer({
+        selectedAction: result.selectedAction,
+        frequencies: result.actions.map((a) => a.frequency),
+        evLossBb: result.evLossBb,
+        goodBb: limits.value.goodBb,
+        bands: rngBandList.value,
+        roll: rngRoll.value,
+      });
+    });
+    const rngNote = computed(() => {
+      const r = rngResult.value;
+      const result = evaluation.value;
+      if (!r || !result) return "";
+      const action = result.actions[rngAction(rngBandList.value, rngRoll.value)]?.label ?? "";
+      return r.verdict === "best"
+        ? R.value.noteBest(action)
+        : r.mixed
+        ? R.value.noteMixed(action)
+        : R.value.noteOther(action);
+    });
+
+    // 판정 문구·색은 세 곳(데스크톱 패널·모바일 바·공유 문구)에서 쓴다
+    const verdict = computed(() => {
+      const result = evaluation.value;
+      if (!result) return { text: "", className: "" };
+      // RNG가 켜졌으면 숫자 구간으로 채점 (기록되는 EV 손실·통계는 그대로)
+      const rng = rngResult.value;
+      if (rng) {
+        if (rng.verdict === "best") return { text: L.value.verdictBest, className: "text-emerald-300" };
+        if (rng.verdict === "good") return { text: L.value.verdictGood, className: "text-blue-300" };
+        return { text: L.value.verdictMiss, className: "text-orange-300" };
+      }
+      if (result.evLossBb <= limits.value.bestBb)
+        return { text: L.value.verdictBest, className: "text-emerald-300" };
+      if (result.evLossBb <= limits.value.goodBb)
+        return { text: L.value.verdictGood, className: "text-blue-300" };
+      return { text: L.value.verdictMiss, className: "text-orange-300" };
+    });
+
+    // 모바일에서 아래를 읽고 있었더라도 다음 문제는 «위»에서 시작해야 한다
+    const scrollToId = (id: string) => {
+      document.getElementById(id)?.scrollIntoView({ block: "start", behavior: "smooth" });
+    };
+    const scrollToStats = () => scrollToId("trainer-stats");
+    const scrollToDetail = () => scrollToId("trainer-detail");
+
+    const nextQuestion = () => {
+      evaluation.value = null;
+      rngRoll.value = rollRng();
+      // 받는 중이던 플랍은 버린다(늦게 와도 화면을 덮지 않게)
+      flopEpoch++;
+      flopLoading.value = false;
+      flopError.value = "";
+      if (!bank.value) return;
+      if (dailyMode.value) {
+        question.value = makeDailyQuestion(bank.value);
+      } else if (reviewMode.value && reviewAttempts.value.length) {
+        const attempt = reviewAttempts.value[reviewIndex % reviewAttempts.value.length];
+        reviewIndex++;
+        // «모든 플랍» 문제는 그 플랍 파일을 다시 받아 되살린다
+        if (parseFlopQuestionId(attempt.questionId))
+          void showFlop(() => restoreFlopQuestion(attempt.questionId));
+        else question.value = restoreQuestion(attempt);
+      } else if (source.value === "flop") {
+        if (flopBoardActive.value && !flopBoardCount.value) {
+          question.value = null;
+          flopError.value = "empty";
+        } else void showFlop(takeFlopQuestion);
+      } else {
+        question.value = makeTrainerQuestion(bank.value, category.value);
+      }
+    };
+    // 같은 핸드 다시 — 문제는 그대로, 채점·RNG 숫자만 새로
+    const retrySame = () => {
+      if (!question.value) return;
+      evaluation.value = null;
+      rngRoll.value = rollRng();
+      scrollToId("trainer-top");
+    };
+
+    const choose = async (actionIndex: number) => {
+      if (!question.value || evaluation.value) return;
+      evaluation.value = evaluateTrainerAction(question.value, actionIndex);
+      const result = evaluation.value;
+      // 답을 고른 순간의 모드로 기록한다 — 저장을 기다리는 사이 오늘의 문제로 넘어가면
+      // 일반 문제 답이 오늘의 첫 기록으로 남았다(Q2-03)
+      const answeredDaily = dailyMode.value;
+      await addTrainerAttempt({
+        clientId: newClientId(),
+        timestamp: Date.now(),
+        questionId: question.value.id,
+        presetId: question.value.presetId,
+        category: question.value.category,
+        handPair: question.value.handPair,
+        selectedAction: actionIndex,
+        bestAction: result.bestAction,
+        evLossBb: result.evLossBb,
+      });
+      attempts.value = await getTrainerAttempts();
+      if (answeredDaily) {
+        await recordDaily(result.evLossBb);
+        // 로그인 상태면 오늘의 순위에도 올린다 (첫 기록만 유효 — 서버가 중복 무시)
+        if (account.value) void submitToBoard();
+      }
+      noteTrainerSolved();
+      // 로그인 상태면 조용히 올린다 (실패해도 풀이 흐름을 막지 않음)
+      if (account.value) void runSync(true);
+    };
+
+    /* 오늘의 순위 (리더보드) — 구경은 비로그인 허용, 등록만 로그인 */
+    const board = ref<Leaderboard | null>(null);
+    const boardOpen = ref(false);
+    const boardLoading = ref(false);
+    const submitToBoard = async () => {
+      if (!dailyState.done || !bank.value) return;
+      // 화면의 기록이 지금 세션 계정 것일 때만 올린다 — 공용 PC에서 앞 사람이 푼 결과가 다음 계정 순위로
+      // 올라가지 않게. 다른 계정 것이면 claim이 그 계정의 기기 자료로 새로 연다(돌아오지 않음 · 실패면 올리지 않음)
+      let user: Awaited<ReturnType<typeof getCurrentUser>> = null;
+      try {
+        user = await getCurrentUser();
+        if (!user) return;
+        await claimLocalData(user.id);
+      } catch {
+        return;
+      }
+      if (!(await isLocalDataOpen())) return;
+      // 오늘의 문제 스팟은 날짜로 정해지므로 여기서 되찾는다 (팟 대비 % 계산용)
+      const dailyQuestion = makeDailyQuestion(bank.value);
+      if (!dailyQuestion) return;
+      const ok = await submitDailyResult(
+        todayKey(),
+        dailyState.lossBb,
+        lossPercentOfPot({
+          presetId: dailyQuestion.presetId,
+          evLossBb: dailyState.lossBb,
+        }),
+        user.id
+      );
+      if (ok) board.value = null; // 다음 열람 때 새로 읽는다
+    };
+    const loadBoard = async () => {
+      boardLoading.value = true;
+      board.value = await fetchLeaderboard(todayKey());
+      boardLoading.value = false;
+    };
+    const toggleBoard = () => {
+      boardOpen.value = !boardOpen.value;
+      if (boardOpen.value && !board.value) void loadBoard();
+    };
+
+    // 하단 바와 데스크톱 버튼이 같이 쓴다. 오늘의 문제를 끝냈으면 일반 연습으로 돌아간다.
+    const goNext = () => {
+      if (dailyMode.value && dailyState.done) toggleDaily();
+      else nextQuestion();
+      scrollToId("trainer-top");
+    };
+
+    const changeCategory = (value: TrainerCategory) => {
+      // 약점 표의 «4벳 팟 연습»은 «모든 플랍»에서만 낼 수 있다
+      if (value === "4bp" && source.value !== "flop") {
+        source.value = "flop";
+        writeStored(SOURCE_KEY, "flop");
+      }
+      category.value = value;
+      reviewMode.value = false;
+      dailyMode.value = false;
+      nextQuestion();
+    };
+    const setSource = (value: TrainerSource) => {
+      source.value = value;
+      writeStored(SOURCE_KEY, value);
+      prefetched = null;
+      if (value === "basic" && category.value === "4bp") category.value = "all";
+      reviewMode.value = false;
+      dailyMode.value = false;
+      nextQuestion();
+    };
+    const toggleCloseOnly = () => {
+      closeOnly.value = !closeOnly.value;
+      writeStored(CLOSE_ONLY_KEY, closeOnly.value ? "1" : "0");
+      prefetched = null;
+      reviewMode.value = false;
+      dailyMode.value = false;
+      nextQuestion();
+    };
+    const setFlopBoardFilter = (filter: FlopBoardFilter) => {
+      flopBoardFilter.value = filter;
+      writeStored(BOARD_KEY, JSON.stringify(filter));
+      prefetched = null;
+      reviewMode.value = false;
+      dailyMode.value = false;
+      nextQuestion();
+    };
+    const toggleReview = () => {
+      reviewMode.value = !reviewMode.value;
+      dailyMode.value = false;
+      reviewIndex = 0;
+      nextQuestion();
+    };
+    const toggleDaily = () => {
+      dailyMode.value = !dailyMode.value;
+      reviewMode.value = false;
+      dailyCopied.value = false;
+      nextQuestion();
+    };
+    // 판정은 오늘 «기록된» 결과(dailyState.lossBb)로 — 같은 문제를 나중에 다시
+    // 풀어 다른 결과가 나와도 공유 문구·성적 카드는 처음 기록을 따른다.
+    // 공유 문구가 지금 화면의 판정을 쓰면 손실은 첫 기록인데 판정만 새 답이 됐다(Q3-02)
+    const recordedDailyTone = (): "best" | "good" | "miss" => {
+      const loss = dailyState.lossBb;
+      return loss <= limits.value.bestBb
+        ? "best"
+        : loss <= limits.value.goodBb
+        ? "good"
+        : "miss";
+    };
+    const toneLabel = (tone: "best" | "good" | "miss") =>
+      tone === "best"
+        ? L.value.verdictBest
+        : tone === "good"
+        ? L.value.verdictGood
+        : L.value.verdictMiss;
+
+    const copyDaily = async () => {
+      const text = dailyShareText(toneLabel(recordedDailyTone()));
+      try {
+        await navigator.clipboard.writeText(text);
+        dailyCopied.value = true;
+      } catch {
+        window.prompt(L.value.promptCopy, text);
+      }
+    };
+
+    /* 성적 카드 — 오늘의 문제 결과를 이미지로 (단톡방·SNS 공유용) */
+    const cardUrl = ref("");
+    const cardShareable = ref(false);
+    let cardCanvas: HTMLCanvasElement | null = null;
+    const cardFileName = () => `gto-daily-${todayKey()}.png`;
+    const openCard = () => {
+      if (!question.value) return;
+      const loss = dailyState.lossBb;
+      const tone = recordedDailyTone();
+      const toneText = toneLabel(tone);
+      const node = question.value.node;
+      cardCanvas = drawDailyCard({
+        dateLabel: dailyCardDate(),
+        spotTitle: presetTitleById(question.value.presetId),
+        positionLabel: `${playerText(positionLabel.value, node.selectedSpot.player.toUpperCase())} ${L.value.toAct}`,
+        potLabel: `${L.value.potLabel} ${amountBb(node.selectedSpot.pot ?? node.startingPot)}`,
+        board: node.currentBoard,
+        hand: [question.value.handPair >>> 8, question.value.handPair & 0xff],
+        verdictText: toneText,
+        verdictTone: tone,
+        evLossBb: loss,
+        streak: dailyState.streak,
+      });
+      cardShareable.value = canShareCard();
+      cardUrl.value = cardCanvas.toDataURL("image/png");
+    };
+    const shareCardNow = async () => {
+      if (!cardCanvas) return;
+      await shareCard(cardCanvas, cardFileName(), L.value.shareText);
+    };
+    const saveCardNow = async () => {
+      if (cardCanvas) await saveCard(cardCanvas, cardFileName());
+    };
+    const closeCard = () => {
+      cardUrl.value = "";
+      cardCanvas = null;
+    };
+    const resetHistory = async () => {
+      if (!confirm(L.value.confirmReset)) return;
+      await clearTrainerAttempts();
+      attempts.value = [];
+      reviewMode.value = false;
+    };
+
+    /* 계정 보관 (선택 기능) */
+
+    const account = ref<AccountUser | null>(null);
+    const syncing = ref(false);
+    const syncMessage = ref("");
+    const accountError = ref("");
+
+    const runSync = async (silent = false) => {
+      if (syncing.value || !account.value) return;
+      syncing.value = true;
+      accountError.value = "";
+      try {
+        // 화면의 계정이 아니라 지금 세션의 계정으로 맞춘다 — 본체에서 다른 계정으로 로그인했을 수 있다.
+        // 이 탭의 기기 DB가 다른 계정 것이면 올리지 않고 이 계정의 DB로 새로 연다(MB-388 ①)
+        const user = await getCurrentUser();
+        if (!user) {
+          account.value = null;
+          return;
+        }
+        if (user.id !== account.value.id) account.value = user;
+        await claimLocalData(user.id);
+        const local = await getTrainerAttempts();
+        const { result, missingLocally } = await syncAttempts(local, user.id);
+        const merged = await mergeTrainerAttempts(missingLocally, user.id);
+        if (merged) attempts.value = await getTrainerAttempts();
+        if (!silent) {
+          syncMessage.value =
+            merged > 0
+              ? L.value.syncMerged(result.uploaded, merged)
+              : L.value.syncSaved(result.uploaded);
+        }
+      } catch (error) {
+        // 도중에 계정이 바뀐 것은 실패가 아니다 — 다음 동기화가 새 계정으로 맞춘다
+        if (error instanceof AccountChangedError) return;
+        accountError.value = L.value.syncFailed(
+          error instanceof Error ? error.message : String(error)
+        );
+      } finally {
+        syncing.value = false;
+      }
+    };
+
+    const doSignIn = async (provider: LoginProvider) => {
+      accountError.value = "";
+      try {
+        await signIn(provider);
+      } catch (error) {
+        accountError.value = L.value.signInFailed(
+          error instanceof Error ? error.message : String(error)
+        );
+      }
+    };
+
+    const doSignOut = async () => {
+      await signOut();
+      account.value = null;
+      syncMessage.value = "";
+      // 기기 기록은 남긴다 — 계정에서 뺐다고 지금까지 푼 게 사라지면 곤란
+    };
+
+    onMounted(async () => {
+      // 자료를 못 받아도 요청은 여기서 쓴다 — 남아 있으면 나중에 평소대로 연 트레이너가 오늘의 문제로 떴다
+      const startDaily = takeDailyStartRequest();
+      try {
+        const response = await fetch("trainer-decisions.json");
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const loaded = (await response.json()) as TrainerBank;
+        const errors = validateTrainerBank(loaded);
+        if (errors.length) throw new Error(errors.slice(0, 3).join(", "));
+        bank.value = loaded;
+        attempts.value = await getTrainerAttempts();
+        if (startDaily) dailyMode.value = true;
+        nextQuestion();
+      } catch (error) {
+        loadError.value = error instanceof Error ? error.message : String(error);
+      }
+
+      if (!isAccountEnabled) return;
+      // 로그인 이력이 없으면 supabase 라이브러리를 아예 내려받지 않는다.
+      // (App.vue가 이미 띄웠다면 그대로 이어 쓴다 — 인증 코드 처리는 거기서 끝냄)
+      if (!hasStoredSession() && !isReturningFromAuth() && !isClientLoaded()) {
+        return;
+      }
+      account.value = await getCurrentUser();
+      // 화면에 들어온 시점엔 결과를 보여준다(몇 개 보관됐는지). 문제를 풀 때마다
+      // 도는 동기화만 조용히 처리한다.
+      if (account.value) void runSync();
+      unsubscribeAuth = onAuthChange((user) => {
+        const wasLoggedOut = !account.value;
+        // 로그아웃을 거쳐 온 경우도 — 마지막 계정과 다를 수 있다(5차 F4 잔여)
+        const changed = !!user && (!account.value || account.value.id !== user.id);
+        account.value = user;
+        // 본체에서 다른 계정으로 바뀌었으면 동기화를 기다리지 않고 바로 그 계정의 기기 DB로 새로 연다(MB-388 ①)
+        if (changed) void claimLocalData(user!.id).catch(() => undefined);
+        // 로그인한 순간, 기기에 쌓여 있던 기록을 계정으로 올린다.
+        // 오늘의 문제를 이미 풀었다면 순위에도 뒤늦게 올린다.
+        if (user && wasLoggedOut) {
+          void runSync();
+          void submitToBoard();
+        }
+      });
+    });
+
+    onUnmounted(() => unsubscribeAuth());
+
+    const boardCards = computed(
+      () => question.value?.node.currentBoard.map(cardText) ?? []
+    );
+    const handCards = computed(() =>
+      question.value ? trainerCardPair(question.value.handPair) : []
+    );
+    /**
+     * EV 막대 길이. 액션 간 EV 차이가 0.03bb처럼 작아도 눈에 보이도록
+     * 최저~최고를 35~100% 구간에 펼친다(비율 그대로 그리면 전부 같아 보임).
+     */
+    const evBarWidth = (evBb: number) => {
+      const values = (evaluation.value?.actions ?? [])
+        .map((item) => item.evBb)
+        .filter((value) => Number.isFinite(value));
+      if (!values.length || !Number.isFinite(evBb)) return 0;
+      const max = Math.max(...values);
+      const min = Math.min(...values);
+      if (max === min) return 100;
+      return 35 + ((evBb - min) / (max - min)) * 65;
+    };
+
+    const handLabels = computed(() =>
+      question.value
+        ? trainerHandLabels(
+            question.value.handPair,
+            question.value.node.currentBoard
+          )
+        : { made: "", draw: "" }
+    );
+    const articleUrl = computed(() => {
+      // 해설 포스팅은 한국어 블로그뿐이라 EN에서는 링크를 숨긴다 (EN posts don't exist yet)
+      if (i18n.locale !== "ko") return "";
+      return question.value
+        ? trackOutbound(
+            ARTICLE_URLS[question.value.presetId] ?? "",
+            "trainer-feedback"
+          )
+        : "";
+    });
+    const openSpot = () => {
+      if (!question.value) return;
+      // «모든 플랍» 문제 = 플랍 조회의 그 상황·플랍·라인으로
+      const flopQuestion = asFlopQuestion(question.value);
+      if (flopQuestion) {
+        flopStudyEntry.link = {
+          spot: flopQuestion.presetId,
+          flop: [...flopQuestion.flop],
+          line: [...flopQuestion.path],
+        };
+        store.sideView = "flop-study";
+        return;
+      }
+      store.pendingPresetPreview = question.value.presetId;
+      store.sideView = "presets";
+    };
+    // presetTitle은 문제 생성 시점에 고정되므로 표시용은 locale 반응형으로 다시 계산
+    // «모든 플랍» 상황 이름 = 칩 줄의 팟 이름 + 플랍 조회와 같은 자리 표기(«3벳팟 · CO → BTN»)
+    const flopSpot = computed(() => {
+      const flopQuestion = asFlopQuestion(question.value);
+      return flopQuestion ? flopTrainerSpot(flopQuestion.presetId) : null;
+    });
+    const presetTitle = computed(() => {
+      if (!question.value) return "";
+      const spot = flopSpot.value;
+      if (!spot) return presetTitleById(question.value.presetId);
+      // 림프 팟은 칩 줄에 따로 없다(부류는 «블라인드전») — 이름은 복기의 «림프 팟» 표기를 쓴다
+      const pot = spot.id.startsWith("limp-")
+        ? REVIEW_LABELS[i18n.locale].limp
+        : trainerCategoryLabel(
+            spot.id.startsWith("4bp-") ? "4bp" : spot.id.startsWith("3bp-") ? "3bp" : "srp"
+          );
+      return `${pot} · ${spot.opener} → ${spot.caller}`;
+    });
+    const limpNote = computed(() =>
+      flopSpot.value?.id.startsWith("limp-") ? REVIEW_LABELS[i18n.locale].limpNote : ""
+    );
+    const seatLabel = (player: "oop" | "ip"): string => {
+      const spot = flopSpot.value;
+      if (spot) return player === "oop" ? spot.oop : spot.ip;
+      const preset = PRESETS.find((item) => item.id === question.value?.presetId);
+      return player === "oop"
+        ? (preset && oopLabelOf(preset)) || "OOP"
+        : (preset && ipLabelOf(preset)) || "IP";
+    };
+    const positionLabel = computed(() => (question.value ? seatLabel(question.value.player) : ""));
+    // 상대 자리 — 첫 결정 문제엔 «Line:» 줄이 없어 상대가 안 보였다(후기 10-11). «vs»는 15언어 프리셋 분류명과 같은 표기
+    const opponentLabel = computed(() =>
+      question.value ? seatLabel(question.value.player === "oop" ? "ip" : "oop") : ""
+    );
+    const amountBb = (value: number) =>
+      localizeNumber(formatBb(value, question.value?.node.unitScale || 10));
+    const historyLabel = (action: { name: string; amount: string }) =>
+      trainerActionLabel(
+        action,
+        question.value?.node.startingPot || 0,
+        question.value?.node.unitScale || 10
+      );
+    const historyPlayerLabel = seatLabel;
+    const historyText = (action: { player: "oop" | "ip"; name: string; amount: string }) => {
+      const text = `${historyPlayerLabel(action.player)} ${historyLabel(action)}`;
+      return i18n.locale === "ar" ? arLabelIso(text) : text;
+    };
+
+    return {
+      plCountText,
+      isAr: computed(() => i18n.locale === "ar"),
+      rtlText,
+      playerText,
+      bandText,
+      R,
+      F,
+      source,
+      closeOnly,
+      setSource,
+      toggleCloseOnly,
+      BL,
+      flopBoardFilter,
+      flopBoardOpen,
+      flopBoardActive,
+      flopFiltersShown,
+      flopBoardCount,
+      flopBoardChipText,
+      setFlopBoardFilter,
+      flopLoading,
+      flopError,
+      retryFlop,
+      retrySame,
+      rngEnabled,
+      rngMode,
+      rngRoll,
+      cycleRngMode,
+      rngActive,
+      rngBandList,
+      rngResult,
+      rngNote,
+      customTrainerState,
+      customLabels: computed(() => customTrainerLabels[i18n.locale]),
+      categories,
+      category,
+      bank,
+      question,
+      evaluation,
+      attempts,
+      loadError,
+      reviewMode,
+      decisionCount,
+      flopFooterSpots,
+      flopFooterFlops,
+      averageLoss,
+      totalLoss,
+      excellentRate,
+      reviewAttempts,
+      limits,
+      sentenceGap,
+      dailyState,
+      dayStreakSuffix,
+      // 한국어는 /community, 그 밖의 언어는 «언어별 홈 자체가 그 언어 커뮤니티»다.
+      // 본체 app/{en,ja,es,pt,de,zh}/page.tsx가 전부 <CommunityClient pageLocale="…"/>를
+      // 렌더한다(2026-08-22 본체 소스 확인). 예전에는 «/en/community가 404»인 것만 보고
+      // ko 외 전부를 숨겨 뒀는데, 그 바람에 «커뮤니티에서 [글쓰기]를 누르라»고 안내하면서
+      // 정작 갈 곳을 안 주고 있었다 — 5개 언어에서 라이브 결함이었다.
+      // mainSiteUrl("")은 LOCALE_PATHS에 등재된 언어만 주소를 돌려주므로 안전하다.
+      // 커뮤니티가 없는 사이트면 버튼·붙여넣기 안내 숨김
+      communityUrl: computed(() =>
+        !MAIN_SITE_CONFIG.community
+          ? ""
+          : i18n.locale === "ko"
+          ? mainSiteUrl("/community", "daily-share")
+          : mainSiteUrl("", "daily-share")
+      ),
+      dailyMode,
+      dailyCopied,
+      toggleDaily,
+      copyDaily,
+      board,
+      boardOpen,
+      boardLoading,
+      toggleBoard,
+      cardUrl,
+      cardShareable,
+      openCard,
+      shareCardNow,
+      saveCardNow,
+      closeCard,
+      verdict,
+      goNext,
+      scrollToStats,
+      scrollToDetail,
+      streak,
+      bestStreak,
+      weakness,
+      boardCards,
+      handCards,
+      handLabels,
+      evBarWidth,
+      articleUrl,
+      openSpot,
+      presetTitle,
+      limpNote,
+      positionLabel,
+      opponentLabel,
+      L,
+      autoText, ltrText, versusText,
+      isTr,
+      isKo,
+      trainerCategoryLabel,
+      trainerActionLabel,
+      amountBb,
+      historyLabel,
+      historyPlayerLabel,
+      historyText,
+      accountEnabled: isAccountEnabled,
+      account,
+      syncing,
+      syncMessage,
+      accountError,
+      runSync,
+      doSignIn,
+      doSignOut,
+      choose,
+      nextQuestion,
+      changeCategory,
+      toggleReview,
+      resetHistory,
+    };
+  },
+});
+</script>
+
+<style scoped>
+/* LTR numeric values keep their glyph order while their frame spacing follows the parent. */
+:global(html[dir="rtl"] .trainer-page span[dir="ltr"].ms-auto) { margin-left: 0; margin-right: auto; }
+:global(html[dir="rtl"] .trainer-page span[dir="ltr"].ms-2) { margin-left: 0; margin-right: 0.5rem; }
+/* .stat-chip은 index.css로 옮겼다 — 다른 화면도 같은 칩을 쓴다 */
+.hand-tag {
+  @apply rounded px-2 py-0.5 text-xs font-semibold;
+}
+.link-like {
+  @apply text-brand underline underline-offset-2 font-semibold;
+}
+/* 모바일에서 필터가 두 줄로 76px를 먹어 문제를 아래로 밀었다 */
+.filter-btn {
+  @apply shrink-0 px-2 py-1 text-xs md:px-3.5 md:py-1.5 md:text-sm;
+}
+/* 가로 스크롤 막대가 줄 높이를 바꾸지 않게 */
+.filter-row {
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar {
+  display: none;
+}
+.trainer-card {
+  @apply bg-surface-2;
+}
+
+.button-green {
+  @apply bg-brand text-brand-ink hover:bg-brand-hover active:bg-brand-hover disabled:bg-brand;
+}
+</style>

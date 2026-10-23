@@ -1,0 +1,353 @@
+<template>
+  <div data-rtl-island="numeric-comparison" dir="ltr" class="flex flex-col w-full h-full px-2 py-1 gap-2.5">
+    <div class="flex text-lg font-semibold">
+      <div class="flex items-center">
+        <span>OOP</span>
+        <StarIcon
+          v-if="player === 'oop'"
+          class="inline-block ml-0.5 w-5 h-5 text-yellow-500"
+        />
+      </div>
+      <div class="flex-grow"></div>
+      <div class="flex items-center">
+        <StarIcon
+          v-if="player === 'ip'"
+          class="inline-block mr-0.5 w-5 h-5 text-yellow-500"
+        />
+        <span>IP</span>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-0.5">
+      <div class="flex">
+        <Adaptive
+          :value="combos[0]"
+          :class="{
+            'w-14': true,
+            'font-semibold': combos[0] && combos[0] >= (1 - EPS) * combos[1],
+          }"
+        />
+        <div class="flex-grow text-center underline">{{ L.combos }}</div>
+        <Adaptive
+          :value="combos[1]"
+          :class="{
+            'w-14': true,
+            'text-right': true,
+            'font-semibold': combos[1] && (1 - EPS) * combos[0] <= combos[1],
+          }"
+        />
+      </div>
+      <BarChart :values="combos" />
+    </div>
+
+    <div class="flex flex-col gap-0.5">
+      <div class="flex">
+        <Percentage
+          :value="equity[0]"
+          :class="{
+            'w-14': true,
+            'font-semibold':
+              !isNaN(equity[0]) && equity[0] >= (1 - EPS) * equity[1],
+          }"
+        />
+        <div class="flex-grow text-center underline">{{ L.equity }}</div>
+        <Percentage
+          :value="equity[1]"
+          :class="{
+            'w-14': true,
+            'text-right': true,
+            'font-semibold':
+              !isNaN(equity[1]) && (1 - EPS) * equity[0] <= equity[1],
+          }"
+        />
+      </div>
+      <BarChart :values="equity" />
+    </div>
+
+    <div class="flex flex-col gap-0.5">
+      <div class="flex">
+        <Ev
+          :value="evDisplay[0]"
+          :digits="evDigits"
+          :class="{
+            'w-14': true,
+            'font-semibold': !isNaN(ev[0]) && ev[0] >= (1 - EPS) * ev[1],
+          }"
+        />
+        <div class="flex-grow text-center underline">
+          {{ store.displayUnitScale === 10 ? "EV (bb)" : "EV" }}
+        </div>
+        <Ev
+          :value="evDisplay[1]"
+          :digits="evDigits"
+          :class="{
+            'w-14': true,
+            'text-right': true,
+            'font-semibold': !isNaN(ev[1]) && (1 - EPS) * ev[0] <= ev[1],
+          }"
+        />
+      </div>
+      <BarChart :values="evDisplay" />
+    </div>
+
+    <div class="flex flex-col gap-0.5">
+      <div class="flex">
+        <Percentage
+          :value="eqr[0]"
+          :class="{
+            'w-14': true,
+            'font-semibold': !isNaN(eqr[0]) && eqr[0] >= (1 - EPS) * eqr[1],
+          }"
+        />
+        <div class="flex-grow text-center underline">EQR</div>
+        <Percentage
+          :value="eqr[1]"
+          :class="{
+            'w-14': true,
+            'text-right': true,
+            'font-semibold': !isNaN(eqr[1]) && (1 - EPS) * eqr[0] <= eqr[1],
+          }"
+        />
+      </div>
+      <BarChart :values="eqr" />
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, h } from "vue";
+import { average, toFixed1, toFixed, toFixedAdaptive } from "../utils";
+import { localizeNumber, decimalMark } from "../i18n";
+import { Results, Spot, SpotChance } from "../result-types";
+import { useStore } from "../store";
+import { i18n } from "../i18n";
+
+import { StarIcon } from "@heroicons/vue/24/solid";
+
+const M = {
+  ko: {
+    combos: "콤보",
+    equity: "에퀴티",
+  },
+  en: {
+    combos: "Combos",
+    equity: "Equity",
+  },
+  ja: {
+    combos: "コンボ",
+    equity: "エクイティ",
+  },
+  es: {
+    combos: "Combos",
+    equity: "Equity",
+  },
+  pt: {
+    combos: "Combos",
+    equity: "Equity",
+  },
+  de: {
+    combos: "Combos",
+    equity: "Equity",
+  },
+  zh: {
+    combos: "组合",
+    equity: "胜率",
+  },
+  fr: {
+    combos: "Combos",
+    equity: "Equity",
+  },
+  id: {
+    combos: "Combo",
+    equity: "Equity",
+  },
+  ms: {
+    combos: "Combo",
+    equity: "Equity",
+  },
+  hi: {
+    combos: "Combos",
+    equity: "Equity",
+  },
+  tr: {
+    combos: "Combo",
+    equity: "Equity",
+  },
+  vi: {
+    combos: "Combo",
+    equity: "Equity",
+  },
+  ru: {
+    combos: "Комбо",
+    equity: "Эквити",
+  },
+  "zh-hant": {
+    combos: "組合",
+    equity: "勝率",
+  },
+  ar: {
+    combos: "تركيبات",
+    equity: "الإكويتي",
+  },
+  it: {
+    combos: "Combo",
+    equity: "Equity",
+  },
+  pl: {
+    combos: "Combo",
+    equity: "Equity",
+  },
+} as const;
+
+const EPS = 2e-6;
+const sky500 = "#0ea5e9";
+const lime500 = "#84cc16";
+
+const Adaptive = (props: { value: number; class: object }) => {
+  const split = computed(() =>
+    localizeNumber(toFixedAdaptive(props.value)).split(decimalMark())
+  );
+  if (isNaN(props.value)) return h("div", { class: "px-1" }, "-");
+  return h("div", { class: props.class }, [
+    h("span", {}, split.value[0] + decimalMark()),
+    h("span", { class: "text-sm" }, split.value[1]),
+  ]);
+};
+
+const Percentage = (props: { value: number; class: object }) => {
+  const str = computed(() => localizeNumber(toFixed1(props.value * 100)));
+  if (isNaN(props.value)) return h("div", { class: "px-1" }, "-");
+  // tr: 작은 «%»를 정수부 «앞»에 둔다(확정표 §2-2 · ResultTable 격자와 같은 처리)
+  if (i18n.locale === "tr")
+    return h("div", { class: props.class }, [
+      h("span", { class: "text-sm" }, "%"),
+      h("span", {}, str.value.slice(0, -1)),
+      h("span", { class: "text-sm" }, str.value.slice(-1)),
+    ]);
+  return h("div", { class: props.class }, [
+    h("span", {}, str.value.slice(0, -1)),
+    h("span", { class: "text-sm" }, str.value.slice(-1) + "%"),
+  ]);
+};
+
+const Ev = (props: { value: number; digits: number; class: object }) => {
+  const str = computed(() =>
+    localizeNumber(toFixed[props.digits - 1](props.value))
+  );
+  if (isNaN(props.value)) return h("div", { class: "px-1" }, "-");
+  return h("span", { class: props.class }, [
+    h("span", {}, str.value.slice(0, -props.digits)),
+    h("span", { class: "text-xs" }, str.value.slice(-props.digits)),
+  ]);
+};
+
+const BarChart = (props: { values: number[] }) => {
+  if (
+    (props.values[0] === 0 && props.values[1] === 0) ||
+    isNaN(props.values[0]) ||
+    isNaN(props.values[1])
+  ) {
+    return h("div", { class: "h-4 rounded-lg bg-neutral-600" });
+  }
+  const total = props.values[0] + props.values[1];
+  const sep = `${(props.values[0] * 100) / total}%`;
+  const bg = `linear-gradient(to right, ${sky500} ${sep}, ${lime500} ${sep})`;
+  return h("div", { class: "h-4 rounded-lg", style: `background: ${bg}` });
+};
+
+export default defineComponent({
+  components: {
+    Adaptive,
+    Percentage,
+    Ev,
+    BarChart,
+    StarIcon,
+  },
+
+  props: {
+    selectedSpot: { type: Object as () => Spot, required: true },
+    selectedChance: { type: Object as () => SpotChance | null, required: true },
+    results: { type: Object as () => Results, required: true },
+  },
+
+  setup(props) {
+    const store = useStore();
+    const L = computed(() => M[i18n.locale]);
+    const player = computed(() => {
+      if (props.selectedChance) return "chance";
+      return props.selectedSpot.player;
+    });
+
+    const combos = computed(() => {
+      const results = props.results;
+
+      const ret: number[] = [];
+      for (let i = 0; i < 2; ++i) {
+        let sum = 0;
+        const n = results.weights[i].length;
+        for (let j = 0; j < n; ++j) {
+          const weight = results.weights[i][j];
+          const normalizer = results.normalizer[i][j];
+          sum += normalizer && weight;
+        }
+        ret.push(sum);
+      }
+
+      return ret;
+    });
+
+    const equity = computed(() => {
+      const results = props.results;
+      if (results.isEmpty) return [Number.NaN, Number.NaN];
+      return [
+        average(results.equity[0], results.normalizer[0]),
+        average(results.equity[1], results.normalizer[1]),
+      ];
+    });
+
+    const ev = computed(() => {
+      const results = props.results;
+      if (results.isEmpty) return [Number.NaN, Number.NaN];
+      return [
+        average(results.ev[0], results.normalizer[0]),
+        average(results.ev[1], results.normalizer[1]),
+      ];
+    });
+    const evDisplay = computed(() =>
+      ev.value.map((value) => value / store.displayUnitScale)
+    );
+
+    const eqr = computed(() => {
+      const results = props.results;
+      if (results.isEmpty) return [Number.NaN, Number.NaN];
+      const ret = [
+        ev.value[0] / (results.eqrBase[0] * equity.value[0]),
+        ev.value[1] / (results.eqrBase[1] * equity.value[1]),
+      ];
+      if (!isFinite(ret[0])) ret[0] = Number.NaN;
+      if (!isFinite(ret[1])) ret[1] = Number.NaN;
+      return ret;
+    });
+
+    const evDigits = computed(() => {
+      const results = props.results;
+      if (results.isEmpty) return 3;
+      const maxEv = Math.max(...evDisplay.value.map((x) => Math.abs(x)));
+      return maxEv < 9.9995 ? 3 : maxEv < 99.995 ? 2 : 1;
+    });
+
+    return {
+      EPS,
+      L,
+      player,
+      combos,
+      equity,
+      ev,
+      evDisplay,
+      store,
+      eqr,
+      evDigits,
+    };
+  },
+});
+</script>

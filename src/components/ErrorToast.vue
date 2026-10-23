@@ -1,0 +1,338 @@
+<template>
+  <!--
+    오류가 났을 때만 잠깐 뜨는 안내.
+    목적은 «불편을 사과»가 아니라 «신고를 한 번에 끝내게 하는 것»이다.
+    지금은 유저 화면에서 무슨 오류가 나는지 알 방법이 이것뿐이라, 신고 문턱을 최대한 낮춘다.
+  -->
+  <div
+    v-if="errorState.toast"
+    :class="
+      'fixed z-50 bottom-0 inset-x-0 md:bottom-4 md:start-4 md:end-auto md:w-[24rem] ' +
+      'border-t md:border md:rounded-lg border-orange-700/60 bg-neutral-800 shadow-2xl ' +
+      'px-4 py-3 text-sm'
+    "
+  >
+    <div class="flex items-start gap-3">
+      <span class="text-orange-300 text-lg leading-none mt-0.5" aria-hidden="true">!</span>
+      <div class="flex-grow min-w-0">
+        <div class="font-semibold text-neutral-100">{{ L.title }}</div>
+        <p class="mt-1 text-neutral-400 leading-relaxed">
+          {{ L.body1 }}<b class="text-neutral-200">{{ L.bodyB1 }}</b
+          >{{ L.body2 }}
+        </p>
+        <div class="mt-2.5 flex gap-2 flex-wrap">
+          <button
+            v-if="errorState.solverRetry"
+            type="button"
+            class="button-base button-blue max-w-full whitespace-normal break-words px-3 py-1"
+            @click="retrySolverSingleThread"
+          >
+            {{ retrySingleThreadLabel }}
+          </button>
+          <button class="button-blue px-3 py-1" @click="copy">
+            {{ copied ? L.copied : L.copyButton }}
+          </button>
+          <button class="button-base px-3 py-1" @click="dismissErrorToast">
+            {{ L.close }}
+          </button>
+        </div>
+        <p v-if="copied" class="mt-1.5 text-xs text-neutral-500 leading-relaxed">
+          {{ L.copiedHint }}
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, ref } from "vue";
+import {
+  errorState,
+  errorReportText,
+  dismissErrorToast,
+  retrySolverSingleThread,
+} from "../errors";
+import { i18n, pick } from "../i18n";
+
+const M = {
+  ko: {
+    title: "문제가 하나 기록됐습니다",
+    body1: "화면이 이상하게 보였다면 알려주세요. 내용은 ",
+    bodyB1: "이 기기에만",
+    body2: " 저장되고, 보낼지는 직접 정하시면 됩니다.",
+    copied: "복사됨",
+    copyButton: "오류 내용 복사",
+    close: "닫기",
+    copiedHint:
+      "커뮤니티 문의글에 붙여넣어 주시면 고치는 데 씁니다. 보내기 전에 내용을 한 번 확인해 주세요.",
+    promptCopy: "아래 내용을 복사해 주세요",
+  },
+  en: {
+    title: "An error was logged",
+    body1: "If something looked wrong, please let us know. The details are stored ",
+    bodyB1: "only on this device",
+    body2: " — sharing them is entirely up to you.",
+    copied: "Copied",
+    copyButton: "Copy error details",
+    close: "Close",
+    copiedHint:
+      "Paste it into a community post and we'll use it to fix the issue. Check the contents before you share it.",
+    promptCopy: "Copy the text below",
+  },
+  ja: {
+    title: "問題が1件記録されました",
+    body1: "画面の表示がおかしかった場合はお知らせください。内容は",
+    bodyB1: "この端末にのみ",
+    body2: "保存され、送るかどうかはご自身で決められます。",
+    copied: "コピーしました",
+    copyButton: "エラー内容をコピー",
+    close: "閉じる",
+    copiedHint:
+      "コミュニティの投稿に貼り付けていただければ、修正に役立てます。共有する前に内容をご確認ください。",
+    promptCopy: "以下の内容をコピーしてください",
+  },
+  es: {
+    title: "Se registró un problema",
+    body1: "Si algo se veía mal, cuéntanos. Los detalles se guardan ",
+    bodyB1: "solo en este dispositivo",
+    body2: " — compartirlos depende totalmente de ti.",
+    copied: "Copiado",
+    copyButton: "Copiar detalles del error",
+    close: "Cerrar",
+    copiedHint:
+      "Pégalo en una publicación de la comunidad y lo usaremos para corregir el problema. Revisa el contenido antes de compartirlo.",
+    promptCopy: "Copia el texto de abajo",
+  },
+  pt: {
+    title: "Um erro foi registrado",
+    body1: "Se algo pareceu errado, conte para a gente. Os detalhes ficam salvos ",
+    bodyB1: "somente neste dispositivo",
+    body2: " — compartilhar ou não é decisão sua.",
+    copied: "Copiado",
+    copyButton: "Copiar detalhes do erro",
+    close: "Fechar",
+    copiedHint:
+      "Cole em uma publicação da comunidade e vamos usar isso para corrigir o problema. Confira o conteúdo antes de compartilhar.",
+    promptCopy: "Copie o texto abaixo",
+  },
+  de: {
+    title: "Ein Fehler wurde protokolliert",
+    body1: "Wenn etwas komisch aussah, sag uns Bescheid. Die Details bleiben ",
+    bodyB1: "nur auf diesem Gerät",
+    body2: " – ob du sie teilst, entscheidest du selbst.",
+    copied: "Kopiert",
+    copyButton: "Fehlerdetails kopieren",
+    close: "Schließen",
+    copiedHint:
+      "Füge sie in einen Community-Beitrag ein, dann nutzen wir sie für die Behebung. Prüfe den Inhalt, bevor du ihn teilst.",
+    promptCopy: "Kopiere den Text unten",
+  },
+  zh: {
+    title: "已记录一条错误",
+    // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백·문장부호 위치 주의.
+    // 중국어는 단어 사이를 띄우지 않으므로 ko와 같이 끝 공백을 두지 않는다
+    body1: "如果画面看起来不对，欢迎告诉我们。这些内容",
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
+    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다 (검수에서 4가지로 갈려 있었다)
+    bodyB1: "只保存在这台设备上",
+    body2: "，要不要发送完全由你决定。",
+    copied: "已复制",
+    copyButton: "复制错误内容",
+    close: "关闭",
+    copiedHint:
+      "把它贴到社区的提问帖里，我们会用它来修复问题。分享前请先检查一下内容。",
+    promptCopy: "请复制下面的内容",
+  },
+  "zh-hant": {
+    title: "已記錄一筆錯誤",
+    // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백·문장부호 위치 주의.
+    // 중국어는 단어 사이를 띄우지 않으므로 ko와 같이 끝 공백을 두지 않는다
+    body1: "如果畫面看起來不對，歡迎告訴我們。這些內容",
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
+    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다.
+    //   「裝置」= 台灣 표기(대륙 「设备」)
+    bodyB1: "只儲存在這台裝置上",
+    body2: "，要不要傳送完全由你決定。",
+    copied: "已複製",
+    copyButton: "複製錯誤內容",
+    close: "關閉",
+    copiedHint:
+      "把它貼到社群的提問貼文裡，我們會用它來修正問題。分享前請先檢查一下內容。",
+    promptCopy: "請複製下面的內容",
+  },
+  fr: {
+    title: "Une erreur a été enregistrée",
+    // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백 주의
+    body1: "Si quelque chose semblait anormal, dis-le-nous. Les détails sont stockés ",
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
+    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    bodyB1: "uniquement sur cet appareil",
+    body2: " — les partager ne dépend que de toi.",
+    copied: "Copié",
+    copyButton: "Copier les détails de l'erreur",
+    close: "Fermer",
+    copiedHint:
+      "Colle-les dans un post de la communauté et on s'en servira pour corriger le problème. Vérifie le contenu avant de le partager.",
+    promptCopy: "Copie le texte ci-dessous",
+  },
+  id: {
+    title: "Ada error yang tercatat",
+    // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백 주의
+    body1: "Jika ada yang terasa tidak beres, beri tahu kami. Detailnya tersimpan ",
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
+    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    bodyB1: "hanya di perangkat ini",
+    body2: " — membagikannya sepenuhnya keputusan Anda.",
+    copied: "Tersalin",
+    copyButton: "Salin detail error",
+    close: "Tutup",
+    copiedHint:
+      "Tempelkan ke postingan pertanyaan di komunitas, dan kami akan memakainya untuk memperbaiki masalahnya. Periksa isinya sebelum membagikannya.",
+    promptCopy: "Salin teks di bawah ini",
+  },
+  ms: {
+    title: "Ralat telah direkodkan",
+    // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백 주의
+    body1: "Jika ada yang kelihatan tidak kena, beritahu kami. Butirannya disimpan ",
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
+    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    bodyB1: "hanya pada peranti ini",
+    body2: " — mahu berkongsi atau tidak, terpulang kepada anda.",
+    copied: "Disalin",
+    copyButton: "Salin butiran ralat",
+    close: "Tutup",
+    copiedHint:
+      "Tampalkan dalam siaran soalan di komuniti, dan kami akan menggunakannya untuk membaiki masalah itu. Semak kandungannya sebelum berkongsi.",
+    promptCopy: "Salin teks di bawah",
+  },
+  hi: {
+    title: "त्रुटि दर्ज हुई",
+    body1: "अगर कुछ ग़लत दिखाई दिया हो, तो हमें बताएँ। विवरण ",
+    bodyB1: "सिर्फ़ इस डिवाइस पर",
+    body2: " सेव है — इसे शेयर करना पूरी तरह आपकी इच्छा पर है।",
+    copied: "कॉपी हो गया",
+    copyButton: "त्रुटि का विवरण कॉपी करें",
+    close: "बंद करें",
+    copiedHint:
+      "इसे कम्युनिटी पोस्ट में पेस्ट करें। इससे हमें समस्या समझने में मदद मिलेगी। शेयर करने से पहले कॉपी किया गया विवरण देख लें।",
+    promptCopy: "नीचे दिया टेक्स्ट कॉपी करें",
+  },
+  tr: {
+    title: "Bir hata kaydedildi",
+    body1: "Bir sorun gördüysen bize bildir. Ayrıntılar ",
+    bodyB1: "yalnızca bu cihazda",
+    body2: " saklanır — paylaşıp paylaşmamak tamamen sana kalmış.",
+    copied: "Kopyalandı",
+    copyButton: "Hata ayrıntılarını kopyala",
+    close: "Kapat",
+    copiedHint:
+      "Bir topluluk gönderisine yapıştır, sorunu düzeltmek için kullanalım. Paylaşmadan önce içeriği kontrol et.",
+    promptCopy: "Aşağıdaki metni kopyala",
+  },
+  vi: {
+    title: "Đã ghi lại một lỗi",
+    body1: "Nếu thấy có gì không ổn, hãy báo cho chúng tôi. Chi tiết được lưu ",
+    bodyB1: "chỉ trên thiết bị này",
+    body2: " — có chia sẻ hay không là hoàn toàn do bạn quyết định.",
+    copied: "Đã sao chép",
+    copyButton: "Sao chép chi tiết lỗi",
+    close: "Đóng",
+    copiedHint:
+      "Dán vào một bài viết trong cộng đồng, chúng tôi sẽ dùng để sửa lỗi. Hãy xem lại nội dung trước khi chia sẻ.",
+    promptCopy: "Sao chép đoạn văn bản bên dưới",
+  },
+  ru: {
+    title: "Ошибка записана в журнал",
+    body1: "Если что-то выглядело не так, сообщи нам. Подробности хранятся ",
+    bodyB1: "только на этом устройстве",
+    body2: " — отправлять их или нет, решаешь ты.",
+    copied: "Скопировано",
+    copyButton: "Копировать текст ошибки",
+    close: "Закрыть",
+    copiedHint:
+      "Вставь это в пост в сообществе — так мы быстрее исправим ошибку. Перед тем как делиться, проверь содержимое.",
+    promptCopy: "Скопируй текст ниже",
+  },
+  ar: {
+    title: "تم تسجيل خطأ",
+    body1: "إذا ظهر لك شيء غير صحيح فأخبرنا. تُحفظ التفاصيل ",
+    bodyB1: "على هذا الجهاز فقط",
+    body2: " — ومشاركتها قرارك وحدك.",
+    copied: "تم النسخ!",
+    copyButton: "نسخ تفاصيل الخطأ",
+    close: "إغلاق",
+    copiedHint:
+      "الصق النص في منشور في المجتمع لنستعمله في إصلاح المشكلة. راجع المحتوى قبل مشاركته.",
+    promptCopy: "انسخ النص أدناه",
+  },
+  it: {
+    title: "Errore registrato",
+    body1: "Se hai notato un problema, segnalacelo. I dettagli restano ",
+    bodyB1: "solo su questo dispositivo",
+    body2: ": scegli tu se condividerli.",
+    copied: "Copiato",
+    copyButton: "Copia i dettagli dell’errore",
+    close: "Chiudi",
+    copiedHint:
+      "Incolla il testo in un post della comunità: ci aiuterà a risolvere il problema. Controlla il contenuto prima di condividerlo.",
+    promptCopy: "Copia il testo qui sotto",
+  },
+  pl: {
+    title: "Zapisano błąd",
+    body1: "Jeśli coś działało nieprawidłowo, daj nam znać. Szczegóły są zapisane ",
+    bodyB1: "tylko na tym urządzeniu",
+    body2: " — ty decydujesz, czy je udostępnić.",
+    copied: "Skopiowano",
+    copyButton: "Skopiuj szczegóły błędu",
+    close: "Zamknij",
+    copiedHint: "Wklej je do wpisu w społeczności — pomogą nam naprawić problem. Przed udostępnieniem sprawdź treść.",
+    promptCopy: "Skopiuj poniższy tekst",
+  },
+} as const;
+
+export default defineComponent({
+  setup() {
+    const L = computed(() => M[i18n.locale]);
+    const retrySingleThreadLabel = computed(() =>
+      // i18n.ts pick() 순서: ko, en, ja, es, pt, de, zh, zh-hant, fr, id, ms, hi, tr, vi, ru, ar, it.
+      pick(
+        "단일 스레드로 다시 시도",
+        "Retry with a single thread",
+        "シングルスレッドで再試行",
+        "Reintentar con un solo hilo",
+        "Tentar novamente com uma thread",
+        "Mit einem Thread erneut versuchen",
+        "使用单线程重试",
+        "使用單執行緒重試",
+        "Réessayer avec un seul thread",
+        "Coba lagi dengan satu thread",
+        "Cuba semula dengan satu thread",
+        "एक थ्रेड से फिर कोशिश करें", "Tek thread ile tekrar dene", "Thử lại với một thread", "Повторить в одном потоке",
+    "إعادة المحاولة بخيط واحد",
+        "Riprova con un solo thread", "Spróbuj ponownie z jednym wątkiem"
+      )
+    );
+    const copied = ref(false);
+
+    const copy = async () => {
+      try {
+        await navigator.clipboard.writeText(errorReportText());
+        copied.value = true;
+      } catch {
+        // 클립보드가 막힌 환경 — 선택 가능한 형태로 대신 보여준다
+        window.prompt(L.value.promptCopy, errorReportText());
+      }
+    };
+
+    return {
+      errorState,
+      copied,
+      copy,
+      dismissErrorToast,
+      retrySolverSingleThread,
+      retrySingleThreadLabel,
+      L,
+    };
+  },
+});
+</script>

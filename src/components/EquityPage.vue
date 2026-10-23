@@ -1,0 +1,1696 @@
+<template>
+  <div class="equity-page pb-6 max-w-5xl min-w-0">
+    <p class="text-sm text-ink-secondary mb-3">{{ L.intro }}</p>
+
+    <div class="flex flex-col lg:flex-row gap-4">
+      <!-- 좌: 입력 (① 내 핸드 → ② 상대 → ③ 보드 → 카드판 → ④ 계산) -->
+      <div class="shrink-0 w-full lg:w-[27rem]">
+        <!-- ① 내 핸드 -->
+        <div class="panel mb-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <div class="section-title">{{ L.heroTitle }}</div>
+            <button
+              :class="targetChip('hero')"
+              data-testid="equity-target-hero"
+              :aria-pressed="target === 'hero'"
+              @click="selectTarget('hero')"
+            >
+              {{ L.fill }}
+            </button>
+          </div>
+          <div data-rtl-island="board-cards" dir="ltr" class="panel-inner flex flex-wrap items-center gap-2">
+            <CardSlot
+              v-for="i in 2"
+              :key="i"
+              :card="hero[i - 1]"
+              :active="target === 'hero' && hero.length === i - 1"
+              :aria-label="slotLabel('hero', hero[i - 1])"
+              @click="onSlotClick('hero', i - 1)"
+            />
+            <span class="text-xs text-neutral-500 ml-1">{{ L.heroHint }}</span>
+          </div>
+        </div>
+
+        <!-- ② 상대 -->
+        <div class="panel mb-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <div class="section-title">{{ L.villainTitle }}</div>
+            <div class="flex flex-wrap gap-1.5">
+              <button
+                :class="modeChip('hand')"
+                :aria-pressed="villainMode === 'hand'"
+                @click="setVillainMode('hand')"
+              >
+                {{ L.modeHand }}
+              </button>
+              <button
+                :class="modeChip('range')"
+                :aria-pressed="villainMode === 'range'"
+                @click="setVillainMode('range')"
+              >
+                {{ L.modeRange }}
+              </button>
+            </div>
+          </div>
+
+          <div v-if="villainMode === 'hand'" data-rtl-island="board-cards" dir="ltr" class="panel-inner flex flex-wrap items-center gap-2">
+            <CardSlot
+              v-for="i in 2"
+              :key="i"
+              :card="villainHand[i - 1]"
+              :active="target === 'villain' && villainHand.length === i - 1"
+              :aria-label="slotLabel('villain', villainHand[i - 1])"
+              @click="onSlotClick('villain', i - 1)"
+            />
+            <button
+              :class="targetChip('villain') + ' ml-1'"
+              data-testid="equity-target-villain"
+              :aria-pressed="target === 'villain'"
+              @click="selectTarget('villain')"
+            >
+              {{ L.fill }}
+            </button>
+          </div>
+
+          <div v-else>
+            <textarea data-rtl-island="range-input" dir="ltr"
+              ref="rangeInput"
+              v-model="rangeText"
+              rows="3"
+              name="equity-range"
+              autocomplete="off"
+              :spellcheck="false"
+              :aria-label="L.villainTitle + ' · ' + L.modeRange"
+              data-testid="equity-range-input"
+              class="w-full px-2 py-1.5 rounded-lg text-sm font-mono"
+              :placeholder="L.rangePlaceholder"
+            ></textarea>
+            <div class="flex flex-wrap items-center gap-2 mt-2">
+              <button class="button-base bg-neutral-700 hover:bg-neutral-600" @click="fillAllHands">
+                {{ L.anyTwo }}
+              </button>
+              <span v-if="rangeError" class="text-xs text-red-400">
+                {{ L.rangeError(rangeError) }}
+              </span>
+              <span v-else-if="rangeCombos > 0" class="text-xs text-neutral-500">
+                {{ L.rangeSummary(rangeCombos, rangePercent) }}
+              </span>
+            </div>
+            <p class="text-xs text-neutral-500 mt-2">{{ L.rangeNote }}</p>
+          </div>
+        </div>
+
+        <!-- ③ 보드 -->
+        <div class="panel mb-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <div class="section-title">{{ L.boardTitle }}</div>
+            <button
+              :class="targetChip('board')"
+              data-testid="equity-target-board"
+              :aria-pressed="target === 'board'"
+              @click="selectTarget('board')"
+            >
+              {{ L.fill }}
+            </button>
+          </div>
+          <div data-rtl-island="board-cards" dir="ltr" class="panel-inner flex flex-wrap items-center gap-2">
+            <CardSlot
+              v-for="i in 5"
+              :key="i"
+              :card="board[i - 1]"
+              :active="target === 'board' && board.length === i - 1"
+              :aria-label="slotLabel('board', board[i - 1])"
+              @click="onSlotClick('board', i - 1)"
+            />
+            <span class="text-xs text-neutral-500 ml-1">{{ boardHint }}</span>
+          </div>
+        </div>
+
+        <!-- 모바일에서는 선택 맥락을 카드판에 붙이고 각 무늬를 7+6장으로 펼친다. -->
+        <div data-rtl-island="card-picker" ref="cardPicker" dir="ltr" class="equity-card-picker max-w-full mb-3">
+          <div :dir="isAr ? 'rtl' : undefined" class="equity-selection-summary" data-testid="equity-selection-summary">
+            <button
+              v-for="selection in selectionSummary"
+              :key="selection.target"
+              type="button"
+              class="equity-selection-target"
+              :style="isAr ? { textAlign: 'right' } : undefined"
+              :class="{ 'equity-selection-active': target === selection.target }"
+              :aria-pressed="target === selection.target"
+              :aria-label="selection.label + ' · ' + selection.cards.map(cardSymbol).join(' ')"
+              :title="selection.label"
+              @click="selectTarget(selection.target)"
+            >
+              <span class="equity-selection-label">{{ selection.label }}</span>
+              <span :dir="isAr ? 'ltr' : undefined" class="equity-selection-cards" aria-live="polite">
+                <template v-if="selection.target === 'villain' && villainMode === 'range'">
+                  {{ L.modeRange }}
+                </template>
+                <template v-else-if="selection.cards.length">
+                  <span
+                    v-for="card in selection.cards"
+                    :key="card"
+                    :class="cardText(card).colorClass"
+                  >
+                    {{ cardSymbol(card) }}
+                  </span>
+                </template>
+                <template v-else>—</template>
+              </span>
+            </button>
+          </div>
+          <div v-for="suit in 4" :key="suit" class="equity-card-row flex">
+            <BoardSelectorCard
+              v-for="rank in 13"
+              :key="rank"
+              class="m-0.5"
+              :width="cardWidth"
+              :font-size="cardFontSize"
+              :ratio="cardRatio"
+              :card-id="56 - 4 * rank - suit"
+              :is-selected="isUsed(56 - 4 * rank - suit)"
+              :aria-pressed="isUsed(56 - 4 * rank - suit)"
+              :aria-label="cardSymbol(56 - 4 * rank - suit)"
+              :data-card="56 - 4 * rank - suit"
+              @click="place(56 - 4 * rank - suit)"
+            />
+          </div>
+        </div>
+
+        <!-- ④ 계산 -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            class="button-base button-blue button-primary"
+            data-testid="equity-run"
+            :disabled="!canCompute || running"
+            @click="run"
+          >
+            {{ running ? L.computing : L.compute }}
+          </button>
+          <button
+            v-if="running"
+            class="button-base button-red"
+            data-testid="equity-stop"
+            @click="stop"
+          >
+            {{ L.stop }}
+          </button>
+          <button
+            class="button-base bg-neutral-700 hover:bg-neutral-600"
+            data-testid="equity-clear"
+            @click="clearAll"
+          >
+            {{ L.clear }}
+          </button>
+          <span dir="ltr" v-if="running" class="text-sm text-neutral-400 tabular-nums">
+            {{ $pct(Math.round(progress * 100)) + " " }}
+          </span>
+        </div>
+      </div>
+
+      <!-- 우: 결과 -->
+      <div class="flex-grow min-w-0">
+        <div class="panel mb-4" data-testid="equity-panel">
+          <div class="section-title mb-3">{{ L.resultTitle }}</div>
+
+          <div v-if="errorCode" class="text-sm text-red-400">
+            {{ L.errors[errorCode] || L.errors.unknown }}
+          </div>
+
+          <div v-else-if="!result" class="text-sm text-neutral-400 leading-relaxed">
+            {{ L.resultEmpty }}
+          </div>
+
+          <div v-else>
+            <div class="flex flex-wrap items-end gap-3 mb-1">
+              <div dir="ltr" class="text-4xl font-bold text-yellow-400 tabular-nums">
+                <span data-testid="equity-result">{{ $n(result.equity.toFixed(1)) }}</span
+                >%
+              </div>
+              <div class="pb-1.5 text-sm text-neutral-400">
+                {{ $n(L.vsSide((100 - result.equity).toFixed(1))) }}
+              </div>
+            </div>
+
+            <!-- 에퀴티 막대: 노랑(내 쪽) / 회색(상대) -->
+            <div data-rtl-island="numeric-bar" dir="ltr" class="h-3 w-full rounded-full overflow-hidden bg-neutral-700 my-3">
+              <div
+                class="h-full bg-yellow-400"
+                :style="{ width: result.equity.toFixed(2) + '%' }"
+              ></div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-3">
+              <div class="stat-chip">
+                {{ L.win }} <b dir="ltr" data-testid="equity-win">{{ $pct($n(result.win.toFixed(1))) }}</b>
+              </div>
+              <div class="stat-chip">{{ L.tie }} <b dir="ltr">{{ $pct($n(result.tie.toFixed(1))) }}</b></div>
+              <div class="stat-chip">{{ L.lose }} <b dir="ltr">{{ $pct($n(result.lose.toFixed(1))) }}</b></div>
+              <div class="stat-chip">
+                {{ L.combos }} <b dir="ltr">{{ result.villainCombos }}</b>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <span
+                :class="
+                  'rounded-lg px-2.5 py-1 text-xs font-semibold ' +
+                  (result.method === 'exact'
+                    ? 'bg-emerald-900 text-emerald-300'
+                    : 'bg-neutral-700 text-neutral-300')
+                "
+                data-testid="equity-mode-badge"
+              >
+                {{ result.method === "exact" ? L.badgeExact : L.badgeApprox }}
+              </span>
+              <span class="text-xs text-neutral-500">
+                {{
+                  result.method === "exact"
+                    ? L.exactNote(result.evaluations)
+                    : L.approxNote(result.evaluations)
+                }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel mb-4">
+          <div class="section-title">{{ L.howTitle }}</div>
+          <ul class="list-disc ps-5 text-sm text-neutral-300 space-y-1.5 mt-2">
+            <li>{{ L.how1 }}</li>
+            <li>{{ L.how2 }}</li>
+            <li>{{ L.how3 }}</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">{{ L.limitTitle }}</div>
+          <p class="text-sm text-neutral-400 leading-relaxed mt-2">{{ L.limitBody }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
+import { i18n, ruPlural, ltrIso, pctText } from "../i18n";
+import { cardText } from "../utils";
+import { noteToolUsed } from "../pwa";
+import {
+  ALL_HANDS_RANGE,
+  comboOfCards,
+  parseRangeText,
+  Combo,
+  EquityResult,
+} from "../equity";
+import type { EquityResponse } from "../equity-worker";
+
+import BoardSelectorCard from "./BoardSelectorCard.vue";
+import CardSlot from "./CardSlot.vue";
+
+type Target = "hero" | "villain" | "board";
+
+const M = {
+  ko: {
+    intro:
+      "내 핸드가 상대의 핸드(또는 레인지)를 상대로 이길 확률입니다. 보드를 비워 두면 프리플랍, " +
+      "3·4·5장을 고르면 플랍·턴·리버 시점의 승률을 계산합니다.",
+    heroTitle: "① 내 핸드",
+    heroHint: "카드판에서 2장을 고르세요",
+    fill: "여기 채우기",
+    villainTitle: "② 상대",
+    modeHand: "핸드",
+    modeRange: "레인지",
+    rangePlaceholder: "예: 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "프리플랍 차트의 [레인지 복사]를 그대로 붙여넣을 수 있습니다. " +
+      "«K8s:0.75»처럼 가중치가 붙은 표기도 그대로 반영됩니다.",
+    anyTwo: "전체(랜덤 핸드)",
+    rangeError: (token: string) => `해석할 수 없는 표기: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos}콤보 · 전체의 ${percent}%`,
+    boardTitle: "③ 보드",
+    boardHintEmpty: "비우면 프리플랍 (3·4·5장도 가능)",
+    boardHintBad: "보드는 0·3·4·5장만 가능합니다",
+    boardHintOk: (n: number) => ["", "", "", "플랍", "턴", "리버"][n],
+    compute: "계산",
+    computing: "계산 중…",
+    stop: "중단",
+    clear: "전부 지우기",
+    resultTitle: "결과",
+    resultEmpty:
+      "내 핸드 2장과 상대(핸드 2장 또는 레인지)를 고른 뒤 [계산]을 누르세요.",
+    vsSide: (value: string) => `상대 ${value}%`,
+    win: "승",
+    tie: "무",
+    lose: "패",
+    combos: "상대 콤보",
+    badgeExact: "전수 계산",
+    badgeApprox: "근사 (±0.2%p)",
+    exactNote: (n: number) => `가능한 경우 ${n.toLocaleString()}가지를 모두 세었습니다`,
+    approxNote: (n: number) =>
+      `경우의 수가 너무 많아 무작위 ${n.toLocaleString()}회를 표본으로 썼습니다`,
+    howTitle: "읽는 법",
+    how1: "에퀴티 = 승률 + 무승부의 절반. 지금 올인했을 때 팟에서 가져갈 기대 지분입니다.",
+    how2: "상대를 레인지로 두면 내 카드·보드와 겹치는 콤보는 자동으로 빠집니다(카드 제거).",
+    how3: "«전수 계산» 배지는 모든 경우를 다 세었다는 뜻이고, «근사»는 무작위 표본 결과입니다.",
+    limitTitle: "이 계산기의 범위",
+    limitBody:
+      "2인 올인 승률만 계산합니다. 플랍 이후(보드 3장 이상)의 레인지 대 레인지나 벳·폴드가 이어지는 상황은 솔버(커스텀 스팟)로 계산하세요. 3인 이상 팟은 지원하지 않습니다.",
+    errors: {
+      "need-hero": "내 핸드 2장을 골라 주세요.",
+      "bad-board": "보드는 0·3·4·5장만 가능합니다.",
+      "bad-card": "카드 값이 잘못되었습니다.",
+      duplicate: "같은 카드를 두 번 쓸 수 없습니다.",
+      "empty-range": "상대 레인지가 비어 있습니다.",
+      "no-combos": "카드 제거 후 상대에게 남는 콤보가 없습니다.",
+      unknown: "계산 중 오류가 발생했습니다. «계산»을 다시 눌러 주세요.",
+    } as Record<string, string>,
+  },
+  hi: {
+
+    intro: "किसी हैंड या पूरी range के सामने अपनी all-in equity देखें। Preflop के लिए board खाली रखें। Flop, turn या river के लिए 3/4/5 कार्ड चुनें।",
+    heroTitle: "① आपका हैंड",
+    heroHint: "नीचे से 2 कार्ड चुनें",
+    fill: "यहाँ कार्ड डालें",
+    villainTitle: "② विरोधी",
+    modeHand: "हैंड के सामने",
+    modeRange: "Range के सामने",
+    rangePlaceholder: "जैसे: 22+,AQs+,K8s:0.75",
+    rangeNote: "Preflop चार्ट के [Range टेक्स्ट कॉपी करें] से कॉपी किया गया टेक्स्ट यहाँ पेस्ट करें। “K8s:0.75” जैसे वज़न भी ज्यों के त्यों लागू होते हैं।",
+    anyTwo: "कोई भी 2 कार्ड",
+    rangeError: (token: string) => `यह लिखावट समझ नहीं आई: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos} combos · सभी combos का ${percent}%`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "खाली = preflop (3/4/5 कार्ड भी चुन सकते हैं)",
+    boardHintBad: "Board पर 0, 3, 4 या 5 कार्ड होने चाहिए।",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "गणना करें",
+    computing: "गणना हो रही है…",
+    stop: "रोकें",
+    clear: "सब साफ़ करें",
+    resultTitle: "परिणाम",
+    resultEmpty: "अपने 2 कार्ड और विरोधी का हैंड या range चुनें, फिर [गणना करें] दबाएँ।",
+    vsSide: (value: string) => `विरोधी ${value}%`,
+    win: "जीत",
+    tie: "बराबरी",
+    lose: "हार",
+    combos: "विरोधी के combos",
+    badgeExact: "सटीक",
+    badgeApprox: "अनुमान",
+    exactNote: (n: number) => `सभी ${n.toLocaleString("en-US")} संभावनाएँ गिनी गईं`,
+    approxNote: (n: number) => `संभावनाएँ बहुत ज़्यादा हैं — ${n.toLocaleString("en-US")} random runouts का नमूना लिया गया`,
+    howTitle: "इसे कैसे पढ़ें",
+    how1: "Equity = जीत का % + बराबरी के % का आधा। अभी all-in होने पर यह pot में आपका अपेक्षित हिस्सा है।",
+    how2: "Range के सामने गणना करते समय आपके कार्ड या board से blocked combos अपने-आप हट जाते हैं।",
+    how3: "“सटीक” का मतलब है कि सभी संभावनाएँ गिनी गईं। “अनुमान” random नमूने पर आधारित है।",
+    limitTitle: "इस कैलकुलेटर का दायरा",
+    // hi: the solver also supports only heads-up; do not repeat the English multiway claim.
+    limitBody:
+      "यह टूल केवल 2 खिलाड़ियों की all-in equity निकालता है। फ्लॉप के बाद (बोर्ड पर 3 या ज़्यादा कार्ड) range vs range और आगे की betting lines के लिए [अपना स्पॉट] में सॉल्वर इस्तेमाल करें। Multiway pots समर्थित नहीं हैं।",
+    errors: {
+      "need-hero": "पहले अपने 2 कार्ड चुनें।",
+      "bad-board": "Board पर 0, 3, 4 या 5 कार्ड होने चाहिए।",
+      "bad-card": "यह कार्ड मान्य नहीं है।",
+      duplicate: "एक ही कार्ड 2 बार इस्तेमाल नहीं कर सकते।",
+      "empty-range": "विरोधी की range खाली है।",
+      "no-combos": "कार्ड हटाने के बाद विरोधी का कोई combo नहीं बचा।",
+      unknown: "गणना के दौरान कुछ गड़बड़ हो गई। दोबारा कोशिश के लिए “गणना करें” दबाएँ।",
+    } as Record<string, string>,
+  },
+  en: {
+    intro:
+      "Your chance of winning against a specific hand or an entire range. Leave the board empty " +
+      "for preflop, or pick 3/4/5 cards for the flop, turn, or river.",
+    heroTitle: "① Your Hand",
+    heroHint: "Pick 2 cards below",
+    fill: "Fill from here",
+    villainTitle: "② Opponent",
+    modeHand: "vs Hand",
+    modeRange: "vs Range",
+    rangePlaceholder: "e.g., 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "Paste the output of [Copy range text] from the preflop charts. Weighted notation such as " +
+      "“K8s:0.75” is applied as-is.",
+    anyTwo: "Any two cards",
+    rangeError: (token: string) => `Cannot parse: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos} combos · ${percent}% of all combos`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Empty = preflop (3/4/5 cards also allowed)",
+    boardHintBad: "The board must have 0, 3, 4 or 5 cards.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Calculate",
+    computing: "Calculating…",
+    stop: "Stop",
+    clear: "Clear all",
+    resultTitle: "Result",
+    resultEmpty: "Pick your two cards and an opponent hand or range, then press Calculate.",
+    vsSide: (value: string) => `Opponent ${value}%`,
+    win: "Win",
+    tie: "Tie",
+    lose: "Lose",
+    combos: "Opponent combos",
+    badgeExact: "Exact",
+    badgeApprox: "Approx. (±0.2 pp)",
+    exactNote: (n: number) => `Every one of ${n.toLocaleString()} cases was counted`,
+    approxNote: (n: number) =>
+      `Too many cases to enumerate — sampled ${n.toLocaleString()} random runouts`,
+    howTitle: "How to read this",
+    how1: "Equity = win% + half of the ties. It is your share of the pot if you were all in right now.",
+    how2: "Against a range, combos blocked by your cards or the board are removed automatically.",
+    how3: "The “Exact” badge means every case was counted; “Approx.” is a random sample.",
+    limitTitle: "What this calculator covers",
+    limitBody:
+      "This tool computes all-in equity between two players only. For range vs range and betting lines from the flop on (a board of 3+ cards), use the solver (Custom Spot). Multiway pots are not supported.",
+    errors: {
+      "need-hero": "Pick your two cards first.",
+      "bad-board": "The board must have 0, 3, 4 or 5 cards.",
+      "bad-card": "Invalid card value.",
+      duplicate: "The same card cannot be used twice.",
+      "empty-range": "The opponent range is empty.",
+      "no-combos": "No opponent combos remain after card removal.",
+      unknown: "Something went wrong during the calculation. Press Calculate to try again.",
+    } as Record<string, string>,
+  },
+  ja: {
+    intro:
+      "自分のハンドが相手のハンド（またはレンジ）に勝つ確率です。ボードを空のままにするとプリフロップ、" +
+      "3・4・5枚を選ぶとフロップ・ターン・リバー時点の勝率を計算します。",
+    heroTitle: "① 自分のハンド",
+    heroHint: "下のカード一覧から2枚選んでください",
+    fill: "ここに入力",
+    villainTitle: "② 相手",
+    modeHand: "ハンド",
+    modeRange: "レンジ",
+    rangePlaceholder: "例: 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "プリフロップレンジ表の[レンジテキストをコピー]をそのまま貼り付けられます。" +
+      "「K8s:0.75」のようなウェイト付きの表記もそのまま反映されます。",
+    anyTwo: "すべて（ランダムハンド）",
+    rangeError: (token: string) => `解釈できない表記: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos}コンボ・全体の${percent}%`,
+    boardTitle: "③ ボード",
+    boardHintEmpty: "空のままならプリフロップ（3・4・5枚も可）",
+    boardHintBad: "ボードは0・3・4・5枚のみ有効です",
+    boardHintOk: (n: number) => ["", "", "", "フロップ", "ターン", "リバー"][n],
+    compute: "計算",
+    computing: "計算中…",
+    stop: "停止",
+    clear: "すべてクリア",
+    resultTitle: "結果",
+    resultEmpty:
+      "自分のカード2枚と相手（ハンド2枚またはレンジ）を選んで[計算]を押してください。",
+    vsSide: (value: string) => `相手 ${value}%`,
+    win: "勝ち",
+    tie: "引き分け",
+    lose: "負け",
+    combos: "相手コンボ",
+    badgeExact: "完全計算",
+    badgeApprox: "近似 (±0.2%ポイント)",
+    exactNote: (n: number) => `あり得る${n.toLocaleString()}通りをすべて数えました`,
+    approxNote: (n: number) =>
+      `場合の数が多すぎるため、ランダムな${n.toLocaleString()}回をサンプルにしました`,
+    howTitle: "読み方",
+    how1: "エクイティ（勝率）= 勝ち% + 引き分けの半分。今オールインした場合にポットから得られる期待シェアです。",
+    how2: "相手をレンジにすると、自分のカードやボードと重なるコンボは自動的に除外されます（カードリムーバル）。",
+    how3: "「完全計算」バッジはすべての場合を数えたという意味で、「近似」はランダムサンプルの結果です。",
+    limitTitle: "この計算機の範囲",
+    limitBody:
+      "2人のオールイン勝率のみを計算します。フロップ以降（ボード3枚以上）のレンジ対レンジやベット・フォールドが続く状況はソルバー（カスタムスポット）で計算してください。3人以上のポットには対応していません。",
+    errors: {
+      "need-hero": "自分のハンド2枚を選んでください。",
+      "bad-board": "ボードは0・3・4・5枚のみ有効です。",
+      "bad-card": "カードの値が正しくありません。",
+      duplicate: "同じカードを2回使うことはできません。",
+      "empty-range": "相手のレンジが空です。",
+      "no-combos": "カードリムーバル後、相手に残るコンボがありません。",
+      unknown: "計算中にエラーが発生しました。もう一度「計算」を押してください。",
+    } as Record<string, string>,
+  },
+  es: {
+    intro:
+      "Tu probabilidad de ganar contra una mano específica o contra un rango completo. Deja el board vacío " +
+      "para preflop, o elige 3/4/5 cartas para flop, turn y river.",
+    heroTitle: "① Tu mano",
+    heroHint: "Elige 2 cartas abajo",
+    fill: "Llenar aquí",
+    villainTitle: "② Rival",
+    modeHand: "Mano",
+    modeRange: "vs Rango",
+    rangePlaceholder: "ej. 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "Puedes pegar el resultado de [Copiar rango] de las tablas preflop. La notación con peso como " +
+      "«K8s:0.75» se aplica tal cual.",
+    anyTwo: "Cualquier par de cartas",
+    rangeError: (token: string) => `No se pudo interpretar: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos} combos · ${percent}% del total`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Vacío = preflop (también acepta 3/4/5 cartas)",
+    boardHintBad: "El board debe tener 0, 3, 4 o 5 cartas",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Calcular",
+    computing: "Calculando…",
+    stop: "Detener",
+    clear: "Borrar todo",
+    resultTitle: "Resultado",
+    resultEmpty:
+      "Elige tus dos cartas y un rival (mano de 2 cartas o rango) y presiona [Calcular].",
+    vsSide: (value: string) => `Rival ${value}%`,
+    win: "Victoria",
+    tie: "Empate",
+    lose: "Derrota",
+    combos: "Combos del rival",
+    badgeExact: "Cálculo exacto",
+    badgeApprox: "Aprox. (±0.2 pp)",
+    exactNote: (n: number) => `Se contaron los ${n.toLocaleString()} casos posibles`,
+    approxNote: (n: number) =>
+      `Demasiados casos para enumerar — se muestrearon ${n.toLocaleString()} repartos al azar`,
+    howTitle: "Cómo leerlo",
+    how1: "Equity = % de victorias + la mitad de los empates. Es tu parte del bote si fueras all-in ahora mismo.",
+    how2: "Contra un rango, los combos bloqueados por tus cartas o el board se eliminan automáticamente (card removal).",
+    how3: "La insignia «Cálculo exacto» significa que se contaron todos los casos; «Aprox.» es una muestra aleatoria.",
+    limitTitle: "Alcance",
+    limitBody:
+      "Esta herramienta solo calcula equity de all-in entre dos jugadores. Para rango contra rango y líneas de apuesta desde el flop (board de 3 cartas o más), usa el solver (Spot personalizado). Los botes multiway no son compatibles.",
+    errors: {
+      "need-hero": "Primero elige tus dos cartas.",
+      "bad-board": "El board debe tener 0, 3, 4 o 5 cartas.",
+      "bad-card": "Valor de carta inválido.",
+      duplicate: "No puedes usar la misma carta dos veces.",
+      "empty-range": "El rango del rival está vacío.",
+      "no-combos": "No quedan combos para el rival después del card removal.",
+      unknown: "Ocurrió un error durante el cálculo. Pulsa Calcular para intentarlo de nuevo.",
+    } as Record<string, string>,
+  },
+  pt: {
+    intro:
+      "Sua probabilidade de vencer contra uma mão específica ou contra um range inteiro. Deixe o board vazio " +
+      "para o pré-flop, ou escolha 3/4/5 cartas para flop, turn e river.",
+    heroTitle: "① Sua mão",
+    heroHint: "Escolha 2 cartas abaixo",
+    fill: "Preencher a partir daqui",
+    villainTitle: "② Vilão",
+    modeHand: "vs Mão",
+    modeRange: "vs Range",
+    rangePlaceholder: "ex.: 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "Você pode colar o resultado de [Copiar texto do range] das tabelas pré-flop. A notação com peso como " +
+      "“K8s:0.75” é aplicada do jeito que está.",
+    anyTwo: "Duas cartas quaisquer",
+    rangeError: (token: string) => `Não foi possível interpretar: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos} combos · ${percent}% do total`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Vazio = pré-flop (também aceita 3/4/5 cartas)",
+    boardHintBad: "O board precisa ter 0, 3, 4 ou 5 cartas",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Calcular",
+    computing: "Calculando…",
+    stop: "Parar",
+    clear: "Limpar tudo",
+    resultTitle: "Resultado",
+    resultEmpty:
+      "Escolha as suas duas cartas e um vilão (mão de 2 cartas ou range) e pressione [Calcular].",
+    vsSide: (value: string) => `Vilão ${value}%`,
+    win: "Vitória",
+    tie: "Empate",
+    lose: "Derrota",
+    combos: "Combos do vilão",
+    badgeExact: "Cálculo exato",
+    badgeApprox: "Aprox. (±0,2 pp)",
+    exactNote: (n: number) =>
+      `Foram contados os ${n.toLocaleString("pt-BR")} casos possíveis`,
+    approxNote: (n: number) =>
+      `Casos demais para enumerar — foram amostrados ${n.toLocaleString(
+        "pt-BR"
+      )} runouts aleatórios`,
+    howTitle: "Como ler",
+    how1: "Equity = % de vitórias + metade dos empates. É a sua parte do pote se vocês estivessem all-in agora mesmo.",
+    how2: "Contra um range, os combos bloqueados pelas suas cartas ou pelo board são removidos automaticamente (card removal).",
+    how3: "O selo “Cálculo exato” significa que todos os casos foram contados; “Aprox.” é uma amostra aleatória.",
+    limitTitle: "O que esta calculadora cobre",
+    limitBody:
+      "Esta ferramenta só calcula equity de all-in entre dois jogadores. Para range contra range e linhas de aposta a partir do flop (board com 3 cartas ou mais), use o solver (Spot personalizado). Potes multiway não são suportados.",
+    errors: {
+      "need-hero": "Escolha primeiro as suas duas cartas.",
+      "bad-board": "O board precisa ter 0, 3, 4 ou 5 cartas.",
+      "bad-card": "Valor de carta inválido.",
+      duplicate: "Você não pode usar a mesma carta duas vezes.",
+      "empty-range": "O range do vilão está vazio.",
+      "no-combos": "Não sobrou nenhum combo para o vilão depois do card removal.",
+      unknown: "Ocorreu um erro durante o cálculo. Toque em Calcular para tentar de novo.",
+    } as Record<string, string>,
+  },
+  de: {
+    intro:
+      "Deine Gewinnchance gegen eine bestimmte Hand oder gegen eine ganze Range. Lass das Board " +
+      "für Preflop leer, oder wähle 3/4/5 Karten für Flop, Turn und River.",
+    heroTitle: "① Deine Hand",
+    heroHint: "Wähle unten 2 Karten",
+    fill: "Von hier befüllen",
+    villainTitle: "② Gegner",
+    modeHand: "vs Hand",
+    modeRange: "vs Range",
+    rangePlaceholder: "z. B. 22+,AQs+,K8s:0.75",
+    // ⚠ 「Range-Text kopieren」는 PreflopChartPage의 실제 버튼 이름과 같아야 한다
+    rangeNote:
+      "Du kannst die Ausgabe von [Range-Text kopieren] aus den Preflop-Charts direkt einfügen. " +
+      "Gewichtete Notation wie „K8s:0.75“ wird genau so übernommen.",
+    anyTwo: "Beliebige zwei Karten",
+    rangeError: (token: string) =>
+      `„${token}“ ist keine gültige Notation – schreib z. B. 22+, AQs+ oder K8s:0.75`,
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} Combos · ${percent}% aller Combos`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Leer = Preflop (3/4/5 Karten sind auch möglich)",
+    boardHintBad: "Das Board darf nur 0, 3, 4 oder 5 Karten haben",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Berechnen",
+    computing: "Wird berechnet…",
+    stop: "Stopp",
+    clear: "Karten & Board leeren",
+    resultTitle: "Ergebnis",
+    resultEmpty:
+      "Wähle deine zwei Karten und einen Gegner (2 Karten oder Range) und drücke auf [Berechnen].",
+    vsSide: (value: string) => `Gegner ${value}%`,
+    win: "Sieg",
+    tie: "Split",
+    lose: "Niederlage",
+    combos: "Gegner-Combos",
+    badgeExact: "Exakt",
+    badgeApprox: "Näherung (±0,2%-Punkte)",
+    // 천단위 구분은 독일식 마침표 — 본체 브리프 §3 (pt판의 toLocaleString("pt-BR")과 같은 처리)
+    exactNote: (n: number) =>
+      `Alle ${n.toLocaleString("de-DE")} möglichen Fälle wurden gezählt`,
+    approxNote: (n: number) =>
+      `Zu viele Fälle zum Auszählen – ${n.toLocaleString("de-DE")} zufällige Runouts als Stichprobe`,
+    howTitle: "So liest du das",
+    how1:
+      "Equity = Gewinn-% + die Hälfte der Splits. Das ist dein Anteil am Pot, wenn ihr jetzt sofort all-in wärt.",
+    how2:
+      "Gegen eine Range fallen Combos, die durch deine Karten oder das Board blockiert sind, automatisch weg (Card Removal).",
+    how3:
+      "Das Abzeichen „Exakt“ heißt, dass jeder Fall gezählt wurde; „Näherung“ ist eine Zufallsstichprobe.",
+    limitTitle: "Was dieser Rechner abdeckt",
+    limitBody:
+      "Dieses Werkzeug berechnet nur die All-in-Equity zwischen zwei Spielern. Für Range gegen Range und Bet-Lines ab dem Flop (Board mit mindestens 3 Karten) nutze den Solver (Eigener Spot). Multiway-Pots werden nicht unterstützt.",
+    errors: {
+      "need-hero": "Wähle zuerst deine zwei Karten.",
+      "bad-board": "Das Board darf nur 0, 3, 4 oder 5 Karten haben.",
+      "bad-card": "Ungültiger Kartenwert.",
+      duplicate: "Dieselbe Karte kann nicht zweimal vorkommen.",
+      "empty-range": "Die Gegner-Range ist leer.",
+      "no-combos":
+        "Nach dem Card Removal bleiben dem Gegner keine Combos übrig – wähle andere Karten oder mach die Gegner-Range weiter.",
+      unknown: "Bei der Berechnung ist ein Fehler aufgetreten. Tippe erneut auf „Berechnen“.",
+    } as Record<string, string>,
+  },
+  zh: {
+    intro:
+      "这里算的是你的手牌对上对手某手牌（或者整个范围）时的胜率。公共牌留空就是翻前，" +
+      "选 3/4/5 张就分别算翻牌圈、转牌圈、河牌圈的胜率。",
+    heroTitle: "① 我的手牌",
+    heroHint: "在下面的选牌区里选 2 张",
+    fill: "填到这里",
+    villainTitle: "② 对手",
+    modeHand: "vs 手牌",
+    modeRange: "vs 范围",
+    rangePlaceholder: "例：22+,AQs+,K8s:0.75",
+    // ⚠ [复制范围文本]는 PreflopChartPage의 «실제» 버튼 이름과 글자까지 같아야 한다
+    rangeNote:
+      "在翻前范围表里点[复制范围文本]，再直接粘到这里就行。" +
+      "像“K8s:0.75”这样带权重的写法也会原样生效。",
+    anyTwo: "任意两张（随机手牌）",
+    rangeError: (token: string) =>
+      `“${token}”不是有效的写法——请写成 22+、AQs+ 或 K8s:0.75 这样的形式`,
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} 个组合 · 占全部的 ${percent}%`,
+    boardTitle: "③ 公共牌",
+    boardHintEmpty: "留空 = 翻前（3/4/5 张也可以）",
+    boardHintBad: "公共牌只能是 0、3、4 或 5 张。",
+    boardHintOk: (n: number) => ["", "", "", "翻牌", "转牌", "河牌"][n],
+    compute: "计算",
+    computing: "计算中…",
+    stop: "停止",
+    // ⚠ clearAll()은 손패·상대 핸드·공공패·결과만 지우고 «레인지 입력칸은 그대로» 둔다.
+    //   그래서 「全部清空」이라고 쓰면 거짓말이 된다 (독일어 UX 검수에서 잡은 그 결함)
+    clear: "清空手牌和公共牌",
+    resultTitle: "结果",
+    resultEmpty: "先选好自己的两张牌和对手（两张牌或一个范围），再点[计算]。",
+    vsSide: (value: string) => `对手 ${value}%`,
+    win: "胜",
+    tie: "平",
+    lose: "负",
+    combos: "对手组合数",
+    badgeExact: "精确",
+    // 「个百分点」= percentage point. 「%」와 뒤섞이지 않게 반드시 «点»을 붙인다
+    badgeApprox: "近似（±0.2 个百分点）",
+    // ⚠ 큰 수를 「万/亿」으로 바꾸지 «않는다» — 브리프 §3의 万/亿은 어림수(3万筹码)에 쓰는 말이고,
+    //   여기 1,712,304는 «정확히 센 개수»다. 정확한 개수는 중국어도 천단위 콤마로 적는다.
+    //   로케일을 명시해 브라우저 언어에 따라 표기가 흔들리지 않게 했다 (de판과 같은 처리)
+    exactNote: (n: number) =>
+      `${n.toLocaleString("zh-CN")} 种可能的情况全部数过了`,
+    approxNote: (n: number) =>
+      `情况太多，数不完——随机抽取了 ${n.toLocaleString("zh-CN")} 次发牌作为样本`,
+    howTitle: "怎么看",
+    how1:
+      "胜率（equity）= 获胜% + 平局的一半。也就是如果现在就全下，你能从底池里拿走的份额。",
+    how2:
+      "对手是一个范围时，被你的牌或公共牌挡住的组合会自动去掉——这叫牌张移除（card removal）。",
+    how3: "“精确”这个标记表示所有情况都数过了；“近似”则是随机抽样的结果。",
+    limitTitle: "这个计算器管到哪儿",
+    limitBody:
+      "它只算两人全下的胜率。翻牌之后（公共牌 3 张以上）范围对范围、夹着下注和弃牌的局面，请用求解器（自定义牌局）来算。不支持 3 人以上的底池。",
+    errors: {
+      "need-hero": "请先选好自己的两张牌。",
+      "bad-board": "公共牌只能是 0、3、4 或 5 张。",
+      "bad-card": "牌的数值不对。",
+      duplicate: "同一张牌不能用两次。",
+      "empty-range": "对手范围是空的。",
+      "no-combos":
+        "去掉被挡住的组合后，对手一个组合都不剩了——换几张牌，或者把对手范围放宽一些。",
+      unknown: "计算过程中出错了。请再点一次“计算”。",
+    } as Record<string, string>,
+  },
+  "zh-hant": {
+    intro:
+      "這裡算的是你的手牌對上對手某手牌（或者整個範圍）時的勝率。公共牌留空就是翻牌前，" +
+      "選 3/4/5 張就分別算翻牌圈、轉牌圈、河牌圈的勝率。",
+    heroTitle: "① 我的手牌",
+    heroHint: "在下面的選牌區裡選 2 張",
+    fill: "填到這裡",
+    villainTitle: "② 對手",
+    modeHand: "vs 手牌",
+    modeRange: "vs 範圍",
+    rangePlaceholder: "例：22+,AQs+,K8s:0.75",
+    // ⚠ [複製範圍文字]는 PreflopChartPage의 «실제» 버튼 이름과 글자까지 같아야 한다
+    rangeNote:
+      "在翻前範圍表裡按下[複製範圍文字]，再直接貼到這裡就行。" +
+      "像「K8s:0.75」這樣帶權重的寫法也會原樣生效。",
+    anyTwo: "任意兩張（隨機手牌）",
+    rangeError: (token: string) =>
+      `「${token}」不是有效的寫法——請寫成 22+、AQs+ 或 K8s:0.75 這樣的形式`,
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} 個組合 · 佔全部的 ${percent}%`,
+    boardTitle: "③ 公共牌",
+    boardHintEmpty: "留空 = 翻牌前（3/4/5 張也可以）",
+    boardHintBad: "公共牌只能是 0、3、4 或 5 張。",
+    boardHintOk: (n: number) => ["", "", "", "翻牌", "轉牌", "河牌"][n],
+    compute: "計算",
+    computing: "計算中…",
+    stop: "停止",
+    // ⚠ clearAll()은 손패·상대 핸드·공공패·결과만 지우고 «레인지 입력칸은 그대로» 둔다.
+    //   그래서 「全部清空」이라고 쓰면 거짓말이 된다 (독일어 UX 검수에서 잡은 그 결함)
+    clear: "清空手牌和公共牌",
+    resultTitle: "結果",
+    resultEmpty: "先選好自己的兩張牌和對手（兩張牌或一個範圍），再按下[計算]。",
+    vsSide: (value: string) => `對手 ${value}%`,
+    win: "勝",
+    tie: "平",
+    lose: "負",
+    combos: "對手組合數",
+    badgeExact: "精確",
+    // 「個百分點」= percentage point. 「%」와 뒤섞이지 않게 반드시 «點»을 붙인다
+    badgeApprox: "近似（±0.2 個百分點）",
+    // ⚠ 큰 수를 「萬/億」으로 바꾸지 «않는다» — 어림수(3萬籌碼)에 쓰는 말이고
+    //   여기 1,712,304는 «정확히 센 개수»다. 로케일은 zh-TW로 명시해 표기가 흔들리지 않게 했다
+    exactNote: (n: number) =>
+      `${n.toLocaleString("zh-TW")} 種可能的情況全部數過了`,
+    approxNote: (n: number) =>
+      `情況太多，數不完——隨機抽取了 ${n.toLocaleString("zh-TW")} 次發牌作為樣本`,
+    howTitle: "怎麼看",
+    // ⚠ equity의 «정의»를 잃지 말 것 — 간체 세션에서 검토자 3명이 이 자리를 🔴로 올렸다.
+    //   en「win% plus half of the ties」와 같은 뜻이어야 한다
+    how1:
+      "勝率（equity）= 獲勝% + 平手的一半。也就是如果現在就全下，你能從底池裡拿走的份額。",
+    how2:
+      "對手是一個範圍時，被你的牌或公共牌擋住的組合會自動去掉——這叫牌張移除（card removal）。",
+    how3: "「精確」這個標記表示所有情況都數過了；「近似」則是隨機抽樣的結果。",
+    limitTitle: "這個計算器算得到什麼",
+    limitBody:
+      "它只算兩人全下的勝率。翻牌之後（公共牌 3 張以上）範圍對範圍、夾著下注和蓋牌的局面，請用解算器（自訂牌局）來算。不支援 3 人以上的底池。",
+    errors: {
+      "need-hero": "請先選好自己的兩張牌。",
+      "bad-board": "公共牌只能是 0、3、4 或 5 張。",
+      "bad-card": "牌的數值不對。",
+      duplicate: "同一張牌不能用兩次。",
+      "empty-range": "對手範圍是空的。",
+      "no-combos":
+        "去掉被擋住的組合後，對手一個組合都不剩了——換幾張牌，或者把對手範圍放寬一些。",
+      unknown: "計算過程中出錯了。請再按一次「計算」。",
+    } as Record<string, string>,
+  },
+  fr: {
+    intro:
+      "Tes chances de gagner contre une main précise ou une range entière. Laisse le board vide " +
+      "pour le préflop, ou choisis 3/4/5 cartes pour le flop, le turn ou la river.",
+    heroTitle: "① Ta main",
+    heroHint: "Choisis 2 cartes ci-dessous",
+    fill: "Remplir à partir d'ici",
+    villainTitle: "② Adversaire",
+    modeHand: "vs main",
+    modeRange: "vs range",
+    // ⚠ «0.75»의 소수점은 입력 문법이다 — 쉼표로 바꾸면 파서가 못 읽는다 (localizeNumber 금지 구역)
+    rangePlaceholder: "ex. 22+,AQs+,K8s:0.75",
+    // 버튼 이름은 PreflopChartPage의 복사 버튼과 «글자까지» 같아야 한다
+    rangeNote:
+      "Colle la sortie de [Copier la range en texte] depuis les charts préflop. La notation pondérée comme " +
+      "« K8s:0.75 » est appliquée telle quelle.",
+    anyTwo: "N'importe quelle main (any two)",
+    rangeError: (token: string) => `Analyse impossible : ${token}`,
+    // % 앞은 U+202F (프랑스 조판 — 리서치 §1-3)
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} combos · ${percent} % de tous les combos`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Vide = préflop (3/4/5 cartes aussi possibles)",
+    boardHintBad: "Le board doit avoir 0, 3, 4 ou 5 cartes.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Calculer",
+    computing: "Calcul en cours…",
+    stop: "Arrêter",
+    clear: "Tout effacer",
+    resultTitle: "Résultat",
+    resultEmpty: "Choisis tes deux cartes et une main ou une range adverse, puis appuie sur Calculer.",
+    vsSide: (value: string) => `Adversaire ${value} %`,
+    win: "Victoire",
+    tie: "Égalité",
+    lose: "Défaite",
+    combos: "Combos adverses",
+    badgeExact: "Exact",
+    badgeApprox: "Approx. (±0,2 pt)",
+    // 천단위는 fr-FR — 구분자가 U+202F(좁은 공백)로 나온다 (브리프 §표기 1 326 · de의 «5자리 이상» 정책과 같은 자리)
+    exactNote: (n: number) =>
+      `Les ${n.toLocaleString("fr-FR")} cas possibles ont tous été comptés`,
+    approxNote: (n: number) =>
+      `Trop de cas à énumérer — échantillon de ${n.toLocaleString("fr-FR")} simulations aléatoires`,
+    howTitle: "Comment lire ce résultat",
+    // ⚠ equity의 «정의»를 잃지 말 것 — en «win% plus half of the ties»와 같은 뜻이어야 한다
+    how1: "Equity = % de victoires + la moitié des égalités. C'est ta part du pot si tout partait à tapis maintenant.",
+    how2: "Contre une range, les combos bloqués par tes cartes ou par le board sont retirés automatiquement.",
+    how3: "Le badge « Exact » veut dire que chaque cas a été compté ; « Approx. » est un échantillon aléatoire.",
+    limitTitle: "Ce que couvre ce calculateur",
+    // «Spot personnalisé» = 사이드바 customLabel과 같은 글자
+    limitBody:
+      "Cet outil calcule uniquement l'equity à tapis entre deux joueurs. Pour range contre range et les lignes de bet à partir du flop (board d'au moins 3 cartes), utilise le solver (Spot personnalisé). Les pots multiway ne sont pas pris en charge.",
+    errors: {
+      "need-hero": "Choisis d'abord tes deux cartes.",
+      "bad-board": "Le board doit avoir 0, 3, 4 ou 5 cartes.",
+      "bad-card": "Carte invalide.",
+      duplicate: "La même carte ne peut pas être utilisée deux fois.",
+      "empty-range": "La range adverse est vide.",
+      "no-combos": "Aucun combo adverse ne reste après le retrait des cartes bloquées.",
+      unknown: "Une erreur est survenue pendant le calcul. Appuie de nouveau sur Calculer.",
+    } as Record<string, string>,
+  },
+  id: {
+    intro:
+      "Peluang menang Anda melawan satu hand tertentu atau seluruh range. Kosongkan board " +
+      "untuk preflop, atau pilih 3/4/5 kartu untuk flop, turn, atau river.",
+    heroTitle: "① Hand Anda",
+    heroHint: "Pilih 2 kartu di bawah",
+    fill: "Isi mulai dari sini",
+    villainTitle: "② Lawan",
+    modeHand: "vs hand",
+    modeRange: "vs range",
+    // ⚠ «0.75»의 소수점은 입력 문법이다 — 쉼표로 바꾸면 파서가 못 읽는다 (localizeNumber 금지 구역)
+    rangePlaceholder: "mis. 22+,AQs+,K8s:0.75",
+    // 버튼 이름은 PreflopChartPage의 복사 버튼과 «글자까지» 같아야 한다
+    rangeNote:
+      "Tempel hasil [Salin teks range] dari chart preflop. Notasi berbobot seperti “K8s:0.75” dipakai apa adanya.",
+    anyTwo: "Hand apa saja",
+    rangeError: (token: string) => `Tidak bisa dibaca: ${token}`,
+    // % 앞 공백 없음 — 인니 표기 «35,4%» (fr의 U+202F 규칙은 id에 없다)
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} combo · ${percent}% dari semua combo`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Kosong = preflop (3/4/5 kartu juga bisa)",
+    boardHintBad: "Board harus berisi 0, 3, 4, atau 5 kartu.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Hitung",
+    computing: "Menghitung…",
+    stop: "Hentikan",
+    clear: "Bersihkan semua",
+    resultTitle: "Hasil",
+    resultEmpty: "Pilih dua kartu Anda dan satu hand atau range lawan, lalu tekan Hitung.",
+    vsSide: (value: string) => `Lawan ${value}%`,
+    win: "Menang",
+    tie: "Seri",
+    lose: "Kalah",
+    combos: "Combo lawan",
+    badgeExact: "Eksak",
+    badgeApprox: "Perkiraan (±0,2 poin persen)",
+    // 천단위는 id-ID — 마침표(1.326)로 나온다 (브리프 §표기 · de의 «5자리 이상» 정책과 같은 자리)
+    exactNote: (n: number) =>
+      `Semua ${n.toLocaleString("id-ID")} kemungkinan sudah dihitung`,
+    approxNote: (n: number) =>
+      `Terlalu banyak kemungkinan untuk dihitung satu per satu — sampel ${n.toLocaleString("id-ID")} simulasi acak`,
+    howTitle: "Cara membaca hasil ini",
+    // ⚠ equity의 «정의»를 잃지 말 것 — en «win% plus half of the ties»와 같은 뜻이어야 한다
+    how1: "Equity = % menang + setengah dari seri. Itulah bagian Anda dari pot jika semua chip masuk (all-in) sekarang.",
+    how2: "Melawan range, combo yang terblokir oleh kartu Anda atau board otomatis dikeluarkan.",
+    how3: "Label “Eksak” berarti setiap kemungkinan dihitung; “Perkiraan” adalah sampel acak.",
+    limitTitle: "Cakupan kalkulator ini",
+    // «Spot kustom» = 사이드바 customLabel과 같은 글자
+    limitBody:
+      "Alat ini hanya menghitung equity all-in antara dua pemain. Untuk range vs range dan line bet mulai dari flop (board 3 kartu atau lebih), gunakan solver (Spot kustom). Pot multiway tidak didukung.",
+    errors: {
+      "need-hero": "Pilih dua kartu Anda dulu.",
+      "bad-board": "Board harus berisi 0, 3, 4, atau 5 kartu.",
+      "bad-card": "Kartu tidak valid.",
+      duplicate: "Kartu yang sama tidak bisa dipakai dua kali.",
+      "empty-range": "Range lawan kosong.",
+      "no-combos": "Tidak ada combo lawan yang tersisa setelah kartu terblokir dikeluarkan.",
+      unknown: "Terjadi kesalahan saat menghitung. Coba tekan Hitung sekali lagi.",
+    } as Record<string, string>,
+  },
+  ms: {
+    intro:
+      "Peluang anda menang melawan satu tangan tertentu atau keseluruhan range. Kosongkan board " +
+      "untuk preflop, atau pilih 3/4/5 kad untuk flop, turn, atau river.",
+    heroTitle: "① Tangan anda",
+    heroHint: "Pilih 2 kad di bawah",
+    fill: "Isi dari sini",
+    villainTitle: "② Lawan",
+    modeHand: "vs tangan",
+    modeRange: "vs range",
+    // ⚠ «0.75»의 소수점은 입력 문법이다 — 쉼표로 바꾸면 파서가 못 읽는다 (localizeNumber 금지 구역)
+    rangePlaceholder: "cth. 22+,AQs+,K8s:0.75",
+    // 버튼 이름은 PreflopChartPage의 복사 버튼과 «글자까지» 같아야 한다
+    rangeNote:
+      "Tampal hasil [Salin teks range] daripada carta preflop. Notasi berwajaran seperti “K8s:0.75” digunakan seadanya.",
+    anyTwo: "Mana-mana dua kad",
+    rangeError: (token: string) => `Tidak dapat dibaca: ${token}`,
+    // % 앞 공백 없음 — 말레이시아 표기 «35.4%» (숫자는 영어식, 리서치 §1-2)
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos} combo · ${percent}% daripada semua combo`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Kosong = preflop (3/4/5 kad juga boleh)",
+    boardHintBad: "Board mesti ada 0, 3, 4 atau 5 kad.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Kira",
+    computing: "Sedang mengira…",
+    stop: "Hentikan",
+    clear: "Kosongkan semua",
+    resultTitle: "Hasil",
+    resultEmpty: "Pilih dua kad anda dan satu tangan atau range lawan, kemudian tekan Kira.",
+    vsSide: (value: string) => `Lawan ${value}%`,
+    win: "Menang",
+    tie: "Seri",
+    lose: "Kalah",
+    combos: "Combo lawan",
+    badgeExact: "Tepat",
+    badgeApprox: "Anggaran (±0.2%)",
+    // 천단위는 영어식 쉼표 — 말레이시아 표기 «1,326» (리서치 §1-2, en-US 강제)
+    exactNote: (n: number) =>
+      `Kesemua ${n.toLocaleString("en-US")} kemungkinan telah dikira`,
+    approxNote: (n: number) =>
+      `Terlalu banyak kemungkinan untuk dikira satu per satu — sampel ${n.toLocaleString("en-US")} simulasi rawak`,
+    howTitle: "Cara membaca hasil ini",
+    // ⚠ equity의 «정의»를 잃지 말 것 — en «win% plus half of the ties»와 같은 뜻이어야 한다
+    how1: "Equity = % menang + separuh daripada seri. Itulah bahagian anda dalam pot jika semua pemain all-in sekarang.",
+    how2: "Melawan satu range, combo yang terhalang oleh kad anda atau board dikeluarkan secara automatik.",
+    how3: "Label “Tepat” bermakna setiap kemungkinan dikira; “Anggaran” pula ialah sampel rawak.",
+    limitTitle: "Skop kalkulator ini",
+    // «Spot tersuai» = 사이드바 customLabel과 같은 글자
+    limitBody:
+      "Alat ini hanya mengira equity all-in antara dua pemain. Untuk range lawan range dan line pertaruhan bermula dari flop (board 3 kad atau lebih), gunakan solver (Spot tersuai). Pot multiway tidak disokong.",
+    errors: {
+      "need-hero": "Sila pilih dua kad anda dahulu.",
+      "bad-board": "Board mesti ada 0, 3, 4 atau 5 kad.",
+      "bad-card": "Nilai kad tidak sah.",
+      duplicate: "Kad yang sama tidak boleh digunakan dua kali.",
+      "empty-range": "Range lawan kosong.",
+      "no-combos": "Tiada combo lawan yang tinggal selepas kad terhalang dikeluarkan.",
+      unknown: "Ralat berlaku semasa mengira. Cuba tekan Kira sekali lagi.",
+    } as Record<string, string>,
+  },
+  tr: {
+    intro:
+      "Belirli bir ele ya da bütün bir range'e karşı kazanma şansın. Preflop için board'u boş bırak; " +
+      "flop, turn veya river için 3/4/5 kart seç.",
+    heroTitle: "① Senin elin",
+    heroHint: "Aşağıdan 2 kart seç",
+    fill: "Buradan doldur",
+    villainTitle: "② Rakip",
+    modeHand: "Ele karşı",
+    modeRange: "Range'e karşı",
+    // ⚠ «0.75»의 소수점은 입력 문법이다 — 쉼표로 바꾸면 파서가 못 읽는다 (localizeNumber 금지 구역)
+    rangePlaceholder: "ör. 22+,AQs+,K8s:0.75",
+    // 버튼 이름은 PreflopChartPage의 복사 버튼과 «글자까지» 같아야 한다
+    rangeNote:
+      "Preflop tablolarındaki [Range metnini kopyala] çıktısını yapıştır. “K8s:0.75” gibi ağırlıklı yazımlar olduğu gibi uygulanır.",
+    anyTwo: "Herhangi iki kart",
+    rangeError: (token: string) => `Okunamadı: ${token}`,
+    // tr: % 앞붙임 «%12,3» · 천단위 «1.326» (확정표 §2) — 변수 뒤 접미사 없음(§6)
+    rangeSummary: (combos: number, percent: string) =>
+      `${combos.toLocaleString("tr-TR")} combo · tüm combo'lar içinde %${percent.replace(".", ",")}`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Boş = preflop (3/4/5 kart da olur)",
+    boardHintBad: "Board'da 0, 3, 4 veya 5 kart olmalı.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Hesapla",
+    computing: "Hesaplanıyor…",
+    stop: "Durdur",
+    clear: "Hepsini temizle",
+    resultTitle: "Sonuç",
+    resultEmpty: "İki kartını ve rakibin elini ya da range'ini seç, sonra “Hesapla” düğmesine bas.",
+    vsSide: (value: string) => `Rakip %${value}`,
+    win: "Kazanma",
+    tie: "Beraberlik",
+    lose: "Kaybetme",
+    combos: "Rakip combo'ları",
+    badgeExact: "Kesin",
+    badgeApprox: "Yaklaşık (±0,2 puan)",
+    exactNote: (n: number) => `${n.toLocaleString("tr-TR")} olasılığın tamamı sayıldı`,
+    approxNote: (n: number) =>
+      `Tek tek saymak için çok fazla olasılık var — ${n.toLocaleString("tr-TR")} rastgele runout örneklendi`,
+    howTitle: "Nasıl okunur",
+    how1: "Equity = kazanma % + beraberliklerin yarısı. Şu an all-in olsaydın pot'tan alacağın pay budur.",
+    how2: "Bir range'e karşı, senin kartların veya board tarafından bloklanan combo'lar otomatik olarak çıkarılır.",
+    how3: "“Kesin” rozeti her olasılığın sayıldığı anlamına gelir; “Yaklaşık” ise rastgele bir örneklemdir.",
+    limitTitle: "Bu hesaplayıcının kapsamı",
+    // tr: solver도 2인만 지원 — en의 «multiway는 솔버가 담당» 서술을 옮기지 않는다(hi와 같은 처리). «Özel spot» = 사이드바 customLabel
+    limitBody:
+      "Bu araç yalnızca iki oyuncu arasındaki all-in equity'yi hesaplar. Flop'tan itibaren (board'da en az 3 kart) range vs range ve sonraki line'lar için Özel spot bölümündeki solver'ı kullan. Multiway pot'lar desteklenmiyor.",
+    errors: {
+      "need-hero": "Önce iki kartını seç.",
+      "bad-board": "Board'da 0, 3, 4 veya 5 kart olmalı.",
+      "bad-card": "Geçersiz kart değeri.",
+      duplicate: "Aynı kart iki kez kullanılamaz.",
+      "empty-range": "Rakip range'i boş.",
+      "no-combos": "Kartlar çıkarıldıktan sonra rakibe hiç combo kalmadı.",
+      unknown: "Hesaplama sırasında bir şeyler ters gitti. Tekrar denemek için Hesapla düğmesine bas.",
+    } as Record<string, string>,
+  },
+  vi: {
+    intro:
+      "Cơ hội thắng của bạn trước một tay bài cụ thể hoặc cả một range. Để trống board cho preflop, " +
+      "hoặc chọn 3/4/5 lá cho flop, turn hay river.",
+    heroTitle: "① Tay bài của bạn",
+    heroHint: "Chọn 2 lá bên dưới",
+    fill: "Điền từ đây",
+    villainTitle: "② Đối thủ",
+    modeHand: "vs Tay bài",
+    modeRange: "vs Range",
+    rangePlaceholder: "vd. 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "Dán kết quả của [Sao chép range] từ Bảng preflop. Cách ghi có trọng số như " +
+      "“K8s:0.75” được áp dụng nguyên dạng.",
+    anyTwo: "Bất kỳ 2 lá",
+    rangeError: (token: string) => `Không đọc được: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos.toLocaleString("vi-VN")} combo · ${percent.replace(".", ",")}% tổng combo`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Trống = preflop (cũng có thể chọn 3/4/5 lá)",
+    boardHintBad: "Board phải có 0, 3, 4 hoặc 5 lá.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Tính",
+    computing: "Đang tính…",
+    stop: "Dừng",
+    clear: "Xóa hết",
+    resultTitle: "Kết quả",
+    resultEmpty: "Chọn 2 lá của bạn và tay bài hoặc range của đối thủ, rồi nhấn “Tính”.",
+    vsSide: (value: string) => `Đối thủ ${value}%`,
+    win: "Thắng",
+    tie: "Hòa",
+    lose: "Thua",
+    combos: "Combo đối thủ",
+    badgeExact: "Chính xác",
+    badgeApprox: "Xấp xỉ (±0,2 điểm %)",
+    exactNote: (n: number) => `Đã đếm toàn bộ ${n.toLocaleString("vi-VN")} trường hợp`,
+    approxNote: (n: number) =>
+      `Quá nhiều trường hợp để đếm hết — đã lấy mẫu ${n.toLocaleString("vi-VN")} runout ngẫu nhiên`,
+    howTitle: "Cách đọc",
+    how1: "Equity = % thắng + một nửa % hòa. Đó là phần pot bạn nhận được nếu all-in ngay bây giờ.",
+    how2: "Khi đấu với range, các combo trùng lá với bạn hoặc với board sẽ tự động bị loại.",
+    how3: "Nhãn “Chính xác” nghĩa là đã đếm mọi trường hợp; “Xấp xỉ” là mẫu ngẫu nhiên.",
+    limitTitle: "Công cụ này tính gì",
+    limitBody:
+      "Công cụ này chỉ tính equity all-in giữa hai người chơi. Với range vs range và các line tiếp theo từ flop trở đi (board từ 3 lá trở lên), hãy dùng solver ở mục Spot tùy chỉnh. Không hỗ trợ pot nhiều người (multiway).",
+    errors: {
+      "need-hero": "Chọn 2 lá của bạn trước.",
+      "bad-board": "Board phải có 0, 3, 4 hoặc 5 lá.",
+      "bad-card": "Giá trị lá bài không hợp lệ.",
+      duplicate: "Không thể dùng một lá hai lần.",
+      "empty-range": "Range của đối thủ đang trống.",
+      "no-combos": "Đối thủ không còn combo nào sau khi loại các lá trùng.",
+      unknown: "Đã xảy ra lỗi trong lúc tính. Hãy nhấn Tính để thử lại.",
+    } as Record<string, string>,
+  },
+  ru: {
+    intro:
+      "Твои шансы на победу против конкретной руки или целого диапазона. Оставь борд пустым " +
+      "для префлопа или выбери 3/4/5 карт для флопа, тёрна или ривера.",
+    heroTitle: "① Твоя рука",
+    heroHint: "Выбери 2 карты ниже",
+    fill: "Заполнить отсюда",
+    villainTitle: "② Соперник",
+    modeHand: "vs рука",
+    modeRange: "vs диапазон",
+    rangePlaceholder: "напр. 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "Вставь сюда диапазон, скопированный кнопкой [Копировать диапазон] в разделе «Префлоп-чарты». Запись с весами вроде " +
+      "«K8s:0.75» применяется как есть.",
+    anyTwo: "Любые две карты",
+    rangeError: (token: string) => `Не удалось разобрать: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos.toLocaleString("ru-RU")} комбо · ${percent.replace(".", ",")}% всех комбо`,
+    boardTitle: "③ Борд",
+    boardHintEmpty: "Пусто = префлоп (можно 3/4/5 карт)",
+    boardHintBad: "На борде должно быть 0, 3, 4 или 5 карт.",
+    boardHintOk: (n: number) => ["", "", "", "Флоп", "Тёрн", "Ривер"][n],
+    compute: "Рассчитать",
+    computing: "Расчёт…",
+    stop: "Стоп",
+    clear: "Очистить всё",
+    resultTitle: "Результат",
+    resultEmpty: "Выбери две свои карты и руку или диапазон соперника, затем нажми «Рассчитать».",
+    vsSide: (value: string) => `Соперник ${value}%`,
+    win: "Выигрыш",
+    tie: "Ничья",
+    lose: "Проигрыш",
+    combos: "Комбо соперника",
+    badgeExact: "Точно",
+    badgeApprox: "Примерно (±0,2 п. п.)",
+    exactNote: (n: number) => `Перебраны все варианты: ${n.toLocaleString("ru-RU")}`,
+    approxNote: (n: number) =>
+      `Слишком много вариантов — случайных раздач: ${n.toLocaleString("ru-RU")}`,
+    howTitle: "Как это читать",
+    how1: "Эквити = % побед + половина ничьих. Это твоя доля банка при олл-ине прямо сейчас.",
+    how2: "При расчёте против диапазона из него автоматически убираются комбо, невозможные из-за твоих карт или борда.",
+    how3: "Значок «Точно» — посчитаны все варианты; «Примерно» — случайная выборка.",
+    limitTitle: "Что считает этот калькулятор",
+    limitBody:
+      "Этот инструмент считает эквити олл-ина только между двумя игроками. Для диапазона против диапазона и линий ставок начиная с флопа (на борде от 3 карт) используй солвер («Свой спот»). Мультивей-поты не поддерживаются.",
+    errors: {
+      "need-hero": "Сначала выбери две свои карты.",
+      "bad-board": "На борде должно быть 0, 3, 4 или 5 карт.",
+      "bad-card": "Недопустимая карта.",
+      duplicate: "Одну карту нельзя использовать дважды.",
+      "empty-range": "Диапазон соперника пуст.",
+      "no-combos": "После удаления карт у соперника не осталось комбо.",
+      unknown: "Во время расчёта что-то пошло не так. Нажми «Рассчитать», чтобы попробовать снова.",
+    } as Record<string, string>,
+  },
+  ar: {
+    intro:
+      "فرصك في الفوز ضد يد محددة أو نطاق كامل. اترك البورد فارغًا للبريفلوب " +
+      "أو اختر 3/4/5 أوراق للفلوب أو التيرن أو الريفر.",
+    heroTitle: "① يدك",
+    heroHint: "اختر ورقتين أدناه",
+    fill: "املأ من هنا",
+    villainTitle: "② الخصم",
+    modeHand: "ضد يد",
+    modeRange: "ضد نطاق",
+    rangePlaceholder: "مثلًا \u206622+,AQs+,K8s:0.75\u2069",
+    rangeNote:
+      "الصق هنا النطاق المنسوخ بزر [نسخ النطاق] من «مخططات بريفلوب». الصيغة ذات الأوزان مثل " +
+      "«\u2066K8s:0.75\u2069» تُطبَّق كما هي.",
+    anyTwo: "أي ورقتين",
+    rangeError: (token: string) => `تعذّرت قراءة: ${ltrIso(token)}`,
+    rangeSummary: (combos: number, percent: string) => `التركيبات: ${combos.toLocaleString("en-US")} · \u2066${percent}%\u2069 من كل التركيبات`,
+    boardTitle: "③ البورد",
+    boardHintEmpty: "فارغ = بريفلوب (يمكن 3/4/5 أوراق)",
+    boardHintBad: "يجب أن يحوي البورد 0 أو 3 أو 4 أو 5 أوراق.",
+    boardHintOk: (n: number) => ["", "", "", "الفلوب", "التيرن", "الريفر"][n],
+    compute: "احسب",
+    computing: "جارٍ الحساب…",
+    stop: "إيقاف",
+    clear: "مسح الكل",
+    resultTitle: "النتيجة",
+    resultEmpty: "اختر ورقتيك ويد الخصم أو نطاقه، ثم اضغط «احسب».",
+    vsSide: (value: string) => `الخصم \u2066${value}%\u2069`,
+    win: "فوز",
+    tie: "تعادل",
+    lose: "خسارة",
+    combos: "تركيبات الخصم",
+    badgeExact: "دقيق",
+    badgeApprox: "تقريبي (±0.2 نقطة مئوية)",
+    exactNote: (n: number) => `الحالات المحسوبة كلها: ${n.toLocaleString("en-US")}`,
+    approxNote: (n: number) => `الحالات كثيرة جدًا — الأيدي العشوائية: ${n.toLocaleString("en-US")}`,
+    howTitle: "كيف تقرأ النتيجة",
+    how1: "الإكويتي = نسبة الفوز + نصف التعادلات. هذه حصتك من البوت لو حدث أول إن الآن.",
+    how2: "عند الحساب ضد نطاق تُستبعد تلقائيًا التركيبات التي تحجبها أوراقك أو البورد.",
+    how3: "شارة «دقيق» = حُسبت كل الحالات؛ «تقريبي» = عيّنة عشوائية.",
+    limitTitle: "ماذا تحسب هذه الحاسبة",
+    limitBody:
+      "تحسب هذه الأداة إكويتي الأول إن بين لاعبين اثنين فقط. لحساب نطاق ضد نطاق وخطوط الرهان من الفلوب فصاعدًا (بورد من 3 أوراق أو أكثر)، استعمل السولفر («موقف مخصّص»). البوتات متعددة اللاعبين غير مدعومة.",
+    errors: {
+      "need-hero": "اختر ورقتيك أولًا.",
+      "bad-board": "يجب أن يحوي البورد 0 أو 3 أو 4 أو 5 أوراق.",
+      "bad-card": "قيمة ورقة غير صالحة.",
+      duplicate: "لا يمكن استعمال الورقة نفسها مرتين.",
+      "empty-range": "نطاق الخصم فارغ.",
+      "no-combos": "لم تبقَ للخصم أي تركيبة بعد استبعاد الأوراق المكشوفة.",
+      unknown: "حدث خطأ أثناء الحساب. اضغط «احسب» للمحاولة مرة أخرى.",
+    } as Record<string, string>,
+  },
+  it: {
+    intro:
+      "Calcola la tua equity contro una mano specifica o un intero range. Lascia vuoto il board per il preflop, oppure scegli 3, 4 o 5 carte per flop, turn o river.",
+    heroTitle: "① La tua mano",
+    heroHint: "Scegli 2 carte qui sotto",
+    fill: "Inserisci qui",
+    villainTitle: "② Avversario",
+    modeHand: "vs mano",
+    modeRange: "vs range",
+    rangePlaceholder: "Es. 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "Incolla il testo ottenuto con [Copia testo del range] in Range preflop. I pesi, per esempio «K8s:0.75», vengono applicati così come sono.",
+    anyTwo: "Due carte qualsiasi",
+    rangeError: (token: string) => `Impossibile leggere: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `${combos.toLocaleString("it-IT", { useGrouping: true })} combo · ${percent.replace(".", ",")}% di tutte le combo`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Vuoto = preflop (ammesse anche 3, 4 o 5 carte)",
+    boardHintBad: "Il board deve avere 0, 3, 4 o 5 carte.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Calcola",
+    computing: "Calcolo in corso…",
+    stop: "Interrompi",
+    clear: "Svuota tutto",
+    resultTitle: "Risultato",
+    resultEmpty: "Scegli le tue due carte e una mano o un range avversario, poi premi [Calcola].",
+    vsSide: (value: string) => `Avversario ${value}%`,
+    win: "Vittoria",
+    tie: "Pareggio",
+    lose: "Sconfitta",
+    combos: "Combo avversarie",
+    badgeExact: "Esatto",
+    badgeApprox: "Appross. (±0,2 pp)",
+    exactNote: (n: number) => `Enumerazione completa: ${n.toLocaleString("it-IT", { useGrouping: true })} ${n === 1 ? "caso" : "casi"}`,
+    approxNote: (n: number) => `Troppi casi per enumerarli tutti: campione di ${n.toLocaleString("it-IT", { useGrouping: true })} runout casuali`,
+    howTitle: "Come leggere i risultati",
+    how1: "Equity = probabilità di vittoria + metà della probabilità di pareggio. È la tua quota del piatto se andassi all-in ora.",
+    how2: "Contro un range, le combo incompatibili con le tue carte o con il board vengono escluse automaticamente.",
+    how3: "Il badge «Esatto» indica che tutti i casi sono stati contati; «Appross.» indica un campione casuale.",
+    limitTitle: "Ambito del calcolatore",
+    limitBody:
+      "Questo strumento calcola l’equity all-in solo tra due giocatori. Per confrontare due range e analizzare le linee di puntata dal flop in poi (board di almeno 3 carte), usa il solver in [Spot personalizzato]. I piatti multiway non sono supportati.",
+    errors: {
+      "need-hero": "Scegli prima le tue due carte.",
+      "bad-board": "Il board deve avere 0, 3, 4 o 5 carte.",
+      "bad-card": "Valore della carta non valido.",
+      duplicate: "Non puoi usare la stessa carta due volte.",
+      "empty-range": "Il range avversario è vuoto.",
+      "no-combos": "Nessuna combo avversaria rimasta dopo l’esclusione delle carte note.",
+      unknown: "Errore durante il calcolo. Premi [Calcola] per riprovare.",
+    } as Record<string, string>,
+  },
+  pl: {
+    intro:
+      "Sprawdź swoje szanse przeciw konkretnej ręce lub całemu zakresowi. Zostaw board pusty dla preflopu albo wybierz 3/4/5 kart dla flopa, turna lub rivera.",
+    heroTitle: "① Twoja ręka",
+    heroHint: "Wybierz 2 karty poniżej",
+    fill: "Wybieraj tutaj",
+    villainTitle: "② Przeciwnik",
+    modeHand: "Ręka",
+    modeRange: "Zakres",
+    rangePlaceholder: "np. 22+,AQs+,K8s:0.75",
+    rangeNote:
+      "Wklej tekst uzyskany przyciskiem [Skopiuj tekst zakresu] z sekcji „Tabele preflop”. Zapis wag, np. „K8s:0.75”, jest stosowany bez zmian.",
+    anyTwo: "Dowolne dwie karty",
+    rangeError: (token: string) => `Nie udało się odczytać: ${token}`,
+    rangeSummary: (combos: number, percent: string) => `Combo: ${combos.toLocaleString("pl-PL", { useGrouping: true })} · ${pctText(percent)} wszystkich kombinacji`,
+    boardTitle: "③ Board",
+    boardHintEmpty: "Pusty = preflop (można też wybrać 3/4/5 kart)",
+    boardHintBad: "Board musi zawierać 0, 3, 4 lub 5 kart.",
+    boardHintOk: (n: number) => ["", "", "", "Flop", "Turn", "River"][n],
+    compute: "Oblicz",
+    computing: "Obliczanie…",
+    stop: "Zatrzymaj",
+    clear: "Wyczyść wszystko",
+    resultTitle: "Wynik",
+    resultEmpty: "Wybierz swoje dwie karty oraz rękę lub zakres przeciwnika, a następnie naciśnij [Oblicz].",
+    vsSide: (value: string) => `Przeciwnik ${pctText(value)}`,
+    win: "Wygrana",
+    tie: "Remis",
+    lose: "Przegrana",
+    combos: "Combo przeciwnika",
+    badgeExact: "Dokładny",
+    badgeApprox: "Przybliżony (±0,2 pp)",
+    exactNote: (n: number) => `Uwzględniono wszystkie warianty. Liczba wariantów: ${n.toLocaleString("pl-PL", { useGrouping: true })}`,
+    approxNote: (n: number) => `Za dużo wariantów na pełne wyliczenie. Liczba losowo wybranych runoutów: ${n.toLocaleString("pl-PL", { useGrouping: true })}`,
+    howTitle: "Jak czytać wynik",
+    how1: "Equity = procent wygranych + połowa procentu remisów. To twój udział w puli, gdyby teraz doszło do all-inu.",
+    how2: "Przy grze przeciw zakresowi kombinacje zablokowane przez twoje karty lub board są automatycznie wykluczane.",
+    how3: "Etykieta „Dokładny” oznacza, że policzono każdy wariant; „Przybliżony (±0,2 pp)” — że wynik opiera się na próbie losowej.",
+    limitTitle: "Zakres działania kalkulatora",
+    limitBody:
+      "To narzędzie oblicza equity przy all-inie tylko dla dwóch graczy. Do porównania zakresów i analizy linii gry od flopa (board z co najmniej 3 kartami) użyj solvera w sekcji „Własny spot”. Pule multiway nie są obsługiwane.",
+    errors: {
+      "need-hero": "Najpierw wybierz swoje dwie karty.",
+      "bad-board": "Board musi zawierać 0, 3, 4 lub 5 kart.",
+      "bad-card": "Nieprawidłowa wartość karty.",
+      duplicate: "Ta sama karta nie może wystąpić dwa razy.",
+      "empty-range": "Zakres przeciwnika jest pusty.",
+      "no-combos": "Po uwzględnieniu twoich kart i boardu nie zostało żadnych kombinacji przeciwnika.",
+      unknown: "Wystąpił błąd podczas obliczeń. Naciśnij [Oblicz], aby spróbować ponownie.",
+    } as Record<string, string>,
+  },
+} as const;
+
+const CAPACITY: Record<Target, number> = { hero: 2, villain: 2, board: 5 };
+
+export default defineComponent({
+  components: { BoardSelectorCard, CardSlot },
+
+  setup() {
+    const L = computed(() => M[i18n.locale]);
+
+    // 단독 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
+    noteToolUsed();
+
+    const hero = ref<number[]>([]);
+    const villainHand = ref<number[]>([]);
+    const board = ref<number[]>([]);
+    const villainMode = ref<"hand" | "range">("hand");
+    const rangeText = ref("");
+    const target = ref<Target>("hero");
+    const cardPicker = ref<HTMLElement | null>(null);
+    const rangeInput = ref<HTMLTextAreaElement | null>(null);
+
+    const running = ref(false);
+    const progress = ref(0);
+    const result = ref<EquityResult | null>(null);
+    const errorCode = ref("");
+
+    let worker: Worker | null = null;
+
+    /* ── 카드 선택 ─────────────────────────────────────────── */
+
+    const slotsOf = (t: Target) =>
+      t === "hero" ? hero : t === "villain" ? villainHand : board;
+
+    const selectionSummary = computed(() => [
+      { target: "hero" as Target, label: L.value.heroTitle, cards: hero.value },
+      { target: "villain" as Target, label: L.value.villainTitle, cards: villainHand.value },
+      { target: "board" as Target, label: L.value.boardTitle, cards: board.value },
+    ]);
+
+    const cardSymbol = (card: number) => {
+      const text = cardText(card);
+      return text.rank + text.suit;
+    };
+
+    const slotLabel = (t: Target, card?: number) =>
+      selectionSummary.value.find((item) => item.target === t)?.label +
+      (card === undefined ? " · " + L.value.fill : " · " + cardSymbol(card));
+
+    const scrollToPicker = () => {
+      if (isNarrow.value) cardPicker.value?.scrollIntoView({ block: "start" });
+    };
+
+    const selectTarget = (t: Target) => {
+      if (t === "villain" && villainMode.value === "range") {
+        rangeInput.value?.scrollIntoView({ block: "center" });
+        rangeInput.value?.focus({ preventScroll: true });
+        return;
+      }
+      target.value = t;
+      scrollToPicker();
+    };
+
+    const fillOrder = computed<Target[]>(() =>
+      villainMode.value === "hand" ? ["hero", "villain", "board"] : ["hero", "board"]
+    );
+
+    const isUsed = (card: number) =>
+      hero.value.includes(card) ||
+      (villainMode.value === "hand" && villainHand.value.includes(card)) ||
+      board.value.includes(card);
+
+    const removeCard = (card: number) => {
+      for (const t of ["hero", "villain", "board"] as Target[]) {
+        const slots = slotsOf(t);
+        const index = slots.value.indexOf(card);
+        if (index >= 0) {
+          slots.value = slots.value.filter((c) => c !== card);
+          if (fillOrder.value.includes(t)) target.value = t;
+          return true;
+        }
+      }
+      return false;
+    };
+
+    /** 카드판 클릭: 이미 쓰인 카드면 빼고, 아니면 지금 채우는 칸에 넣는다(다 차면 다음 칸으로) */
+    const place = (card: number) => {
+      if (removeCard(card)) return;
+
+      const order = fillOrder.value;
+      let t = target.value;
+      if (!order.includes(t) || slotsOf(t).value.length >= CAPACITY[t]) {
+        const next = order.find((x) => slotsOf(x).value.length < CAPACITY[x]);
+        if (!next) return;
+        t = next;
+      }
+
+      const slots = slotsOf(t);
+      slots.value = [...slots.value, card];
+      // 플랍 3장은 BoardSelector와 같이 내림차순으로 정돈한다
+      if (t === "board" && slots.value.length <= 3) {
+        slots.value = [...slots.value].sort((a, b) => b - a);
+      }
+      target.value = t;
+
+      if (slots.value.length >= CAPACITY[t]) {
+        const next = order.find((x) => slotsOf(x).value.length < CAPACITY[x]);
+        if (next) target.value = next;
+      }
+    };
+
+    /** 칸을 직접 누르면: 카드가 있으면 빼고, 비었으면 그 칸을 «채우는 칸»으로 */
+    const onSlotClick = (t: Target, index: number) => {
+      const card = slotsOf(t).value[index];
+      if (card === undefined) target.value = t;
+      else removeCard(card);
+      scrollToPicker();
+    };
+
+    const clearAll = () => {
+      hero.value = [];
+      villainHand.value = [];
+      board.value = [];
+      target.value = "hero";
+      result.value = null;
+      errorCode.value = "";
+    };
+
+    const setVillainMode = (mode: "hand" | "range") => {
+      villainMode.value = mode;
+      result.value = null;
+      errorCode.value = "";
+      if (mode === "range" && target.value === "villain") target.value = "board";
+    };
+
+    const fillAllHands = () => {
+      rangeText.value = ALL_HANDS_RANGE;
+    };
+
+    /* ── 입력 상태 ─────────────────────────────────────────── */
+
+    const parsed = computed(() =>
+      villainMode.value === "range" ? parseRangeText(rangeText.value) : null
+    );
+    const rangeError = computed(() => parsed.value?.error ?? "");
+    const rangeCombos = computed(() => parsed.value?.combos.length ?? 0);
+    const rangePercent = computed(() =>
+      (((parsed.value?.weighted ?? 0) / 1326) * 100).toFixed(1)
+    );
+
+    const boardValid = computed(() => [0, 3, 4, 5].includes(board.value.length));
+    const boardHint = computed(() => {
+      if (board.value.length === 0) return L.value.boardHintEmpty;
+      if (!boardValid.value) return L.value.boardHintBad;
+      return L.value.boardHintOk(board.value.length);
+    });
+
+    const canCompute = computed(() => {
+      if (hero.value.length !== 2 || !boardValid.value) return false;
+      if (villainMode.value === "hand") return villainHand.value.length === 2;
+      return !rangeError.value && rangeCombos.value > 0;
+    });
+
+    // 입력을 고치면 옛 결과는 지운다 (바뀐 입력 옆에 옛 숫자가 남으면 오해한다).
+    // 계산 중이면 그 계산도 멈춘다 — 끝난 뒤 바뀐 입력 옆에 옛 입력의 결과가 뜨던 것(Q2-04)
+    watch([hero, villainHand, board, rangeText, villainMode], () => {
+      if (running.value) stop();
+      result.value = null;
+      errorCode.value = "";
+    });
+
+    /* ── 계산 ─────────────────────────────────────────────── */
+
+    const stop = () => {
+      worker?.terminate();
+      worker = null;
+      running.value = false;
+      progress.value = 0;
+    };
+
+    const run = () => {
+      if (!canCompute.value || running.value) return;
+      const villain: Combo[] =
+        villainMode.value === "hand"
+          ? comboOfCards(villainHand.value)
+          : parsed.value?.combos ?? [];
+
+      result.value = null;
+      errorCode.value = "";
+      progress.value = 0;
+      running.value = true;
+
+      worker?.terminate();
+      worker = new Worker(new URL("../equity-worker.ts", import.meta.url), {
+        type: "module",
+      });
+      worker.onmessage = (event: MessageEvent) => {
+        const message = event.data as EquityResponse;
+        if (message.type === "progress") {
+          progress.value = message.value;
+        } else if (message.type === "done") {
+          result.value = message.result;
+          running.value = false;
+          progress.value = 1;
+          worker?.terminate();
+          worker = null;
+        } else {
+          errorCode.value = message.code;
+          running.value = false;
+          worker?.terminate();
+          worker = null;
+        }
+      };
+      worker.onerror = () => {
+        errorCode.value = "unknown";
+        running.value = false;
+      };
+      worker.postMessage({
+        hero: [...hero.value],
+        villain,
+        board: [...board.value],
+      });
+    };
+
+    onUnmounted(stop);
+
+    /* ── 카드판 크기: 데스크톱 13열, 모바일 7+6열 ─────────── */
+
+    const isNarrow = ref(false);
+    const updateNarrow = () => {
+      isNarrow.value = window.innerWidth < 768;
+    };
+    updateNarrow();
+    window.addEventListener("resize", updateNarrow);
+    onUnmounted(() => window.removeEventListener("resize", updateNarrow));
+
+    const cardWidth = computed(() =>
+      isNarrow.value ? "calc((100vw - 2rem) / 7 - 0.25rem)" : "30px"
+    );
+    const cardFontSize = computed(() => (isNarrow.value ? "0.85rem" : "0.8rem"));
+    const cardRatio = computed(() => (isNarrow.value ? 1.15 : 1.4));
+
+    const chipBase =
+      "rounded-lg px-2 py-0.5 text-xs font-semibold transition-colors shrink-0 ";
+
+    return {
+      L,
+      isAr: computed(() => i18n.locale === "ar"),
+      hero,
+      villainHand,
+      board,
+      villainMode,
+      rangeText,
+      target,
+      cardPicker,
+      rangeInput,
+      selectionSummary,
+      cardText,
+      cardSymbol,
+      slotLabel,
+      selectTarget,
+      running,
+      progress,
+      result,
+      errorCode,
+      rangeError,
+      rangeCombos,
+      rangePercent,
+      boardHint,
+      canCompute,
+      cardWidth,
+      cardFontSize,
+      cardRatio,
+      isUsed,
+      place,
+      onSlotClick,
+      clearAll,
+      setVillainMode,
+      fillAllHands,
+      run,
+      stop,
+      targetChip: (t: Target) =>
+        chipBase +
+        (t === target.value
+          ? "bg-yellow-500 text-neutral-900"
+          : "bg-neutral-700 text-neutral-300 hover:bg-neutral-600"),
+      modeChip: (mode: "hand" | "range") =>
+        chipBase +
+        (mode === villainMode.value
+          ? "bg-yellow-500 text-neutral-900"
+          : "bg-neutral-700 text-neutral-300 hover:bg-neutral-600"),
+    };
+  },
+});
+</script>
+
+<style scoped>
+.equity-page {
+  font-variant-numeric: tabular-nums;
+}
+.equity-page button.bg-yellow-500 {
+  @apply bg-brand text-brand-ink;
+}
+.equity-page .text-xs {
+  font-size: 13px;
+}
+.equity-selection-summary {
+  display: none;
+}
+@media (max-width: 767px) {
+  .equity-selection-summary {
+    @apply sticky top-0 z-10 grid gap-1 rounded-lg border border-neutral-700 bg-neutral-900;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+    height: 56px;
+    padding: 3px;
+    margin-bottom: 6px;
+  }
+  .equity-selection-target {
+    @apply min-w-0 rounded-md border border-transparent px-1 text-left text-neutral-400 hover:bg-neutral-800;
+    touch-action: manipulation;
+  }
+  .equity-selection-active {
+    @apply border-brand bg-neutral-800 text-brand;
+  }
+  .equity-selection-label {
+    @apply block truncate text-xs font-semibold;
+    line-height: 18px;
+  }
+  .equity-selection-cards {
+    @apply flex items-center gap-0.5 overflow-hidden whitespace-nowrap text-xs font-semibold text-neutral-200;
+    min-height: 20px;
+  }
+  .equity-card-row {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    margin-bottom: 4px;
+  }
+  .equity-card-row :deep(button) {
+    scroll-margin-top: 62px;
+    touch-action: manipulation;
+  }
+  .equity-page :deep([data-testid^="card-slot"]) {
+    min-width: 40px;
+  }
+  .equity-page button.rounded-lg {
+    min-height: 40px;
+    touch-action: manipulation;
+  }
+}
+</style>

@@ -1,0 +1,64 @@
+{
+  "name": "HoldemMaster GTOトレーナー",
+  "short_name": "GTOトレーナー",
+  "description": "無料のGTOソルバーとトレーナー。学習スポット13種はオフラインでもすぐ見られます。",
+  "lang": "ja",
+  "dir": "ltr",
+  "start_url": "/?view=trainer&lang=ja",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "GTOトレーナー",
+      "short_name": "トレーナー",
+      "description": "実際のレンジから配られたハンドを解き、EVロスで採点します",
+      "url": "/?view=trainer&lang=ja",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "学習スポット13種",
+      "short_name": "学習スポット",
+      "description": "13スポットのGTO戦略を待たずに確認できます",
+      "url": "/?view=presets&lang=ja",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

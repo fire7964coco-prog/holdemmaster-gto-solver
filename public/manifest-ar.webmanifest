@@ -1,0 +1,64 @@
+{
+  "name": "HoldemMaster GTO Trainer",
+  "short_name": "GTO Trainer",
+  "description": "سولفر ومدرّب GTO مجاني. المواقف التدريبية: 13 — كلها تُفتح فورًا، حتى دون اتصال.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/?view=trainer&lang=ar",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "مدرّب GTO",
+      "short_name": "المدرّب",
+      "description": "تدرّب على أيدٍ موزّعة من نطاقات حقيقية واحصل على تقييم حسب خسارة EV",
+      "url": "/?view=trainer&lang=ar",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "مواقف تدريبية",
+      "short_name": "المواقف",
+      "description": "شاهد استراتيجية GTO لكل المواقف التدريبية دون انتظار",
+      "url": "/?view=presets&lang=ar",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

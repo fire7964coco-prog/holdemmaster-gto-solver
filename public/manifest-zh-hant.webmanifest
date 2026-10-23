@@ -1,0 +1,64 @@
+{
+  "name": "HoldemMaster GTO 訓練器",
+  "short_name": "GTO 訓練器",
+  "description": "免費的 GTO 解算器和訓練器。13 個教學案例打開就能看，沒網路也一樣。",
+  "lang": "zh-Hant",
+  "dir": "ltr",
+  "start_url": "/?view=trainer&lang=zh-hant",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "GTO 訓練器",
+      "short_name": "訓練器",
+      "description": "從真實範圍裡抽一手牌做題，按 EV 損失評分",
+      "url": "/?view=trainer&lang=zh-hant",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "13 個教學案例",
+      "short_name": "教學案例",
+      "description": "13 個牌局的 GTO 策略，不用等就能看",
+      "url": "/?view=presets&lang=zh-hant",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

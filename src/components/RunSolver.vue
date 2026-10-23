@@ -1,0 +1,2169 @@
+<template>
+  <div
+    v-if="store.sharedSpotLoaded"
+    class="flex items-center gap-2 mb-3 ps-2.5 pe-3 py-1.5 text-emerald-300 bg-emerald-950 border border-emerald-700 rounded-md text-sm"
+  >
+    {{ L.sharedSpotBanner }}
+    <button
+      class="ms-auto px-1 text-emerald-500 hover:text-emerald-300"
+      @click="store.sharedSpotLoaded = false"
+    >
+      ✕
+    </button>
+  </div>
+
+  <div class="solver-run-toolbar flex flex-wrap my-1 items-center gap-y-2 text-sm">
+    {{ L.numThreadsLabel }}
+    <input
+      v-model="numThreads"
+      type="number" dir="ltr"
+      :class="
+        'w-20 ms-2 px-2 py-1 rounded-lg text-sm text-center ' +
+        (numThreads < 1 ||
+        numThreads > (isSingleThread ? 1 : 64) ||
+        numThreads % 1 !== 0
+          ? 'input-error'
+          : '')
+      "
+      min="1"
+      :max="isSingleThread ? 1 : 64"
+      :disabled="isSingleThread || isTreeBuilding || store.isSolverRunning || store.isFinalizing"
+    />
+    <button
+      class="ms-3 button-base button-blue"
+      :class="{ 'button-primary': !isTreeBuilt }"
+      :disabled="
+        isTreeBuilding || lockStore.busy ||
+        store.isSolverRunning ||
+        store.isFinalizing ||
+        numThreads < 1 ||
+        numThreads > (isSingleThread ? 1 : 64) ||
+        numThreads % 1 !== 0
+      "
+      @click="buildTree()"
+    >
+      {{ L.buildTree }}
+    </button>
+
+    <button
+      class="ms-2 button-base button-green"
+      @click="copySpotUrl"
+    >
+      {{ shareCopied ? L.copied : L.shareSpot }}
+    </button>
+  </div>
+
+  <div v-if="shareError" class="my-1 text-sm text-orange-400">
+    {{ shareError }}
+  </div>
+
+  <div class="my-2 text-sm text-ink-secondary">{{ L.statusLabel }} {{ treeStatus }}</div>
+
+  <div v-if="isTreeBuilt" class="solver-run-settings mt-3 max-w-3xl text-sm tabular-nums">
+    <div>
+      {{ L.precisionMode }}
+      <Tippy
+        class="inline-block cursor-help"
+        max-width="500px"
+        placement="bottom"
+        trigger="mouseenter click"
+        :delay="[200, 0]"
+        :interactive="true"
+      >
+        <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
+        <template #content>
+          <div class="px-1 py-0.5 text-justify">
+            {{ L.precisionTipIntro }}
+            <ul class="ps-6 list-disc">
+              <li class="mt-1">
+                {{ L.precisionTipFp }}
+              </li>
+              <li class="mt-1">
+                {{ L.precisionTipInt }}
+              </li>
+            </ul>
+          </div>
+        </template>
+      </Tippy>
+    </div>
+    <div class="mt-1 ms-2">
+      <label :class="{ 'cursor-pointer': !store.hasSolverRun }">
+        <input
+          v-model="isCompressionEnabled"
+          class="me-2 cursor-pointer disabled:cursor-default"
+          type="radio"
+          name="compression"
+          :value="false"
+          :disabled="store.hasSolverRun"
+        />
+        <span class="inline-block w-[6.75rem] ms-1">{{ L.fp32Label }}</span>
+        {{
+          L.ramNeeded(formatMemory(memoryUsage))
+        }}
+        {{ memoryUsage > maxMemoryUsage ? L.limitExceeded : "" }}
+      </label>
+    </div>
+    <div class="ms-2">
+      <label :class="{ 'cursor-pointer': !store.hasSolverRun }">
+        <input
+          v-model="isCompressionEnabled"
+          class="me-2 cursor-pointer disabled:cursor-default"
+          type="radio"
+          name="compression"
+          :value="true"
+          :disabled="store.hasSolverRun"
+        />
+        <span class="inline-block w-[6.75rem] ms-1">{{ L.int16Label }}</span>
+        {{
+          L.ramNeeded(formatMemory(memoryUsageCompressed))
+        }}
+        {{ memoryUsageCompressed > maxMemoryUsage ? L.limitExceeded : "" }}
+      </label>
+    </div>
+    <div v-if="memoryUsage > maxMemoryUsage" class="mt-1.5">
+      {{ L.ramLimit }}
+    </div>
+
+    <div class="mt-4" :class="{ 'ar-target-row': isAr }">
+      {{ L.targetLabel }}
+      <Tippy
+        class="inline-block cursor-help"
+        max-width="500px"
+        placement="bottom"
+        trigger="mouseenter click"
+        :delay="[200, 0]"
+        :interactive="true"
+      >
+        <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
+        <template #content>
+          <div class="px-1 py-0.5 text-justify">
+            <div>
+              {{ L.exploitTipIntro }}
+            </div>
+            <div class="mt-3">
+              <span class="underline">{{ L.exploitTipDetailLabel }}</span>
+              {{ L.exploitTipDetail }}
+            </div>
+            <div class="my-1 text-center">
+              {{ L.exploitTipFormula }}
+            </div>
+            <div>
+              {{ L.exploitTipOutro }}
+            </div>
+          </div>
+        </template>
+      </Tippy>
+      <input
+        v-model="targetExploitability"
+        type="number" dir="ltr"
+        :style="isAr ? { order: 1, marginLeft: '0', marginRight: '0' } : undefined"
+        :class="
+          'w-20 ms-3 px-2 py-1 rounded-lg text-sm text-center ' +
+          (targetExploitability <= 0 ? 'input-error' : '')
+        "
+        :disabled="store.hasSolverRun && !store.isSolverPaused"
+        min="0"
+        step="0.05"
+      />
+      %
+    </div>
+
+    <div class="mt-1">
+      {{ L.maxIterationsLabel }}
+      <input
+        v-model="maxIterations"
+        type="number" dir="ltr"
+        :class="
+          'w-[5.5rem] ms-2 px-2 py-1 rounded-lg text-sm text-center ' +
+          (maxIterations < 0 ||
+          maxIterations % 1 !== 0 ||
+          maxIterations > 100000
+            ? 'input-error'
+            : '')
+        "
+        :disabled="store.hasSolverRun && !store.isSolverPaused"
+        min="0"
+        max="100000"
+      />
+    </div>
+
+    <div class="flex flex-wrap mt-5 gap-2">
+      <button
+        class="button-base button-blue button-primary"
+        :disabled="!canRun"
+        @click="runSolver()"
+      >
+        {{ L.runSolver }}
+      </button>
+      <button
+        class="button-base button-red"
+        :disabled="!store.isSolverRunning"
+        @click="() => (terminateFlag = true)"
+      >
+        {{ L.stop }}
+      </button>
+      <button
+        v-if="!store.isSolverPaused"
+        class="button-base button-green"
+        :disabled="!store.isSolverRunning"
+        @click="() => (pauseFlag = true)"
+      >
+        {{ L.pause }}
+      </button>
+      <button
+        v-else
+        class="button-base button-green"
+        :disabled="
+          targetExploitability <= 0 ||
+          maxIterations < 0 ||
+          maxIterations % 1 !== 0 ||
+          maxIterations > 100000
+        "
+        @click="resumeSolver"
+      >
+        {{ L.resume }}
+      </button>
+    </div>
+
+    <div v-if="store.hasSolverRun" class="mt-5">
+      <div class="flex items-center">
+        <span
+          v-if="store.isSolverRunning || store.isFinalizing"
+          class="spinner inline-block me-3"
+        ></span>
+        {{
+          store.isSolverRunning
+            ? L.solving
+            : store.isFinalizing
+            ? L.finalizing
+            : store.isSolverPaused
+            ? L.pausedStatus
+            : stoppedEarly
+            ? L.stoppedEarly
+            : L.finished
+        }}
+      </div>
+      {{ iterationText }}
+      <br />
+      {{ exploitabilityText }}
+      <span v-if="lockStore.resultLockCount > 0 && exploitabilityText" data-testid="nodelock-run-qualifier">
+        · {{ lockLabels.assumption }}
+      </span>
+      <br />
+      {{ timeText }}
+
+      <!-- 계산이 끝나도 결과로 가는 길이 상단 탭밖에 없었다 — 처음 쓰는 사람은 여기서 멈춘다.
+           글자는 상단 탭과 **같은 문자열**을 쓴다(nav-labels.ts) — 어디로 가는 버튼인지 바로 알게.
+           표시 조건은 상단 «결과» 탭의 활성 조건과 같다(store.isSolverFinished). -->
+      <div v-if="store.isSolverFinished" class="mt-4">
+        <button
+          class="button-base button-blue button-primary"
+          data-testid="goto-results"
+          @click="store.navView = 'results'"
+        >
+          {{ navResultsLabel }} →
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
+import { init, handler, onWorkerFailure, terminate } from "../global-worker";
+import { clearSolverRetry, reportSolverError } from "../errors";
+import { encodeSpotUrl, InvalidSpotLinesError } from "../spot-share";
+import { beginFeedbackSolve, recordFeedbackSolve } from "../solver-feedback"; // F1_FEEDBACK_ONLY
+import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
+import { shareSpotThroughMain } from "../solver-feedback-share"; // F1_FEEDBACK_ONLY
+import { i18n, pick, localizeNumber, ruPlural, plPlural, ltrIso, autoIso } from "../i18n";
+import { betErrorText } from "../bet-error-labels";
+import { navResults } from "../nav-labels";
+import { captureSnapshot, NodeLockError, sameHistory, useNodeLockStore } from "../node-lock";
+import type { NodeLock } from "../node-lock";
+import { nodeLockLabels } from "../node-lock-labels";
+import {
+  useStore,
+  useConfigStore,
+  useTmpConfigStore,
+  useSavedConfigStore,
+  saveConfig,
+  saveConfigTmp,
+} from "../store";
+import {
+  MAX_AMOUNT,
+  convertBetString,
+  ROOT_LINE_STRING,
+  INVALID_LINE_STRING,
+  readableLineString,
+} from "../utils";
+import { detect } from "detect-browser";
+
+import { Tippy } from "vue-tippy";
+import { QuestionMarkCircleIcon } from "@heroicons/vue/20/solid";
+
+const M = {
+  ko: {
+    sharedSpotBanner:
+      "공유된 스팟을 불러왔습니다 — [새 트리 만들기] → [솔버 실행]을 누르면 계산됩니다.",
+    numThreadsLabel: "스레드 수:",
+    buildTree: "새 트리 만들기",
+    copied: "복사됨!",
+    shareSpot: "🔗 스팟 공유",
+    statusLabel: "상태:",
+    statusNotLoaded: "모듈이 아직 로드되지 않았습니다",
+    statusBuilding: "트리 생성 중...",
+    statusError: (message: string) => `오류: ${message}`,
+    statusBuilt: (threads: number) => `트리 생성 완료 (스레드 ${threads}개)`,
+    precisionMode: "정밀도 모드:",
+    precisionTipIntro:
+      "정밀도 모드는 주로 메모리 사용량에 영향을 주며, 그 외 몇 가지 차이가 있습니다.",
+    precisionTipFp:
+      "32비트 부동소수점(FP): 메모리 사용량이 한도(3.9GB) 이하라면 이 모드를 권장합니다. 유효숫자 약 7자리에 성능도 더 좋습니다.",
+    precisionTipInt:
+      "16비트 정수: 32비트 FP 모드로는 메모리 한도를 넘는 경우의 대안입니다. 유효숫자가 약 4자리라 목표 오차 0.1% 미만에는 적합하지 않고, 성능도 32비트 FP보다 떨어집니다.",
+    fp32Label: "32비트 FP:",
+    int16Label: "16비트 정수:",
+    ramNeeded: (size: string) => `RAM ${size} 필요`,
+    limitExceeded: "(한도 초과)",
+    ramLimit: "RAM 한도: 3.9GB (= Wasm 한계 4GB - 여유분 0.1GB)",
+    targetLabel: "목표 오차(exploitability):",
+    exploitTipIntro:
+      "내시 균형까지 허용할 오차를 지정합니다. 값이 낮을수록 더 정확한 결과가 나오지만 계산 시간이 길어집니다.",
+    exploitTipDetailLabel: "자세한 설명:",
+    exploitTipDetail:
+      "내시 균형 해에서는 양쪽 플레이어의 전략이 서로에 대한 MES(최대 익스플로잇 전략)가 됩니다. 이 성질을 이용해, 구한 전략과 내시 균형 사이의 거리를 다음과 같이 정의합니다:",
+    exploitTipFormula: "거리 = (상대의 MES EV) - (상대의 실제 EV)",
+    exploitTipOutro:
+      "이 거리는 항상 0 이상이며, 구한 전략이 내시 균형의 일부일 때만 0이 됩니다. 익스플로잇 가능성(exploitability)은 양쪽 플레이어의 평균 거리로 정의됩니다.",
+    maxIterationsLabel: "최대 반복 횟수:",
+    runSolver: "솔버 실행",
+    stop: "중지",
+    pause: "일시정지",
+    resume: "재개",
+    solving: "솔버 계산 중...",
+    finalizing: "마무리 중...",
+    pausedStatus: "일시정지됨.",
+    finished: "계산 완료!",
+    stoppedEarly: "계산을 멈췄습니다 — 목표 오차에 닿기 전의 결과입니다.",
+    allocatingMemory: "메모리 할당 중...",
+    iterations: (count: number) => `반복: ${count}회`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `오차(exploitability): ${value} (${percent})`,
+    timeLine: (seconds: string) => `소요 시간: ${seconds}초`,
+  },
+  en: {
+    sharedSpotBanner:
+      "Shared spot loaded — press [Build Tree] → [Run Solver] to start solving.",
+    numThreadsLabel: "Number of threads:",
+    buildTree: "Build Tree",
+    copied: "Copied!",
+    shareSpot: "🔗 Share Spot",
+    statusLabel: "Status:",
+    statusNotLoaded: "Module not loaded",
+    statusBuilding: "Building tree…",
+    statusError: (message: string) => `Error: ${message}`,
+    statusBuilt: (threads: number) =>
+      `Tree built successfully (${threads} thread${threads === 1 ? "" : "s"})`,
+    precisionMode: "Precision mode:",
+    precisionTipIntro:
+      "The precision mode mainly affects memory usage. There are also a few other differences.",
+    precisionTipFp:
+      "32-bit floating point (FP): recommended when memory usage is below the limit (3.9GB). About 7 significant digits and better performance.",
+    precisionTipInt:
+      "16-bit integer: an alternative when the 32-bit FP mode exceeds the memory limit. About 4 significant digits, so it is not suitable for a target exploitability below 0.1%, and it performs worse than 32-bit FP.",
+    fp32Label: "32-bit FP:",
+    int16Label: "16-bit integer:",
+    ramNeeded: (size: string) => `needs ${size} of RAM`,
+    limitExceeded: "(limit exceeded)",
+    ramLimit: "RAM limit: 3.9GB (= 4GB Wasm limit − 0.1GB margin)",
+    targetLabel: "Target exploitability:",
+    exploitTipIntro:
+      "Specifies the acceptable distance from the Nash equilibrium. A lower value gives a more accurate result, but the computation takes longer.",
+    exploitTipDetailLabel: "Details:",
+    exploitTipDetail:
+      "In a Nash equilibrium, both players' strategies are MES (Maximally Exploitative Strategies) against each other. Using this property, we define the distance between an obtained strategy and the Nash equilibrium as follows:",
+    exploitTipFormula: "Distance = (Opponent's MES EV) - (Opponent's actual EV)",
+    exploitTipOutro:
+      "This distance is always non-negative and is zero only if the obtained strategy is a part of a Nash equilibrium. Exploitability is defined as the average distance of both players.",
+    maxIterationsLabel: "Max iterations:",
+    runSolver: "Run Solver",
+    stop: "Stop",
+    pause: "Pause",
+    resume: "Resume",
+    solving: "Solving…",
+    finalizing: "Finalizing…",
+    pausedStatus: "Paused.",
+    finished: "Solver finished!",
+    stoppedEarly: "Stopped before reaching the target exploitability.",
+    allocatingMemory: "Allocating memory…",
+    iterations: (count: number) => `Iterations: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Time elapsed: ${seconds}s`,
+  },
+  ja: {
+    sharedSpotBanner:
+      "共有されたスポットを読み込みました — [ツリーを作成] → [ソルバーを実行] を押すと計算が始まります。",
+    numThreadsLabel: "スレッド数:",
+    buildTree: "ツリーを作成",
+    copied: "コピーしました",
+    shareSpot: "🔗 スポットを共有",
+    statusLabel: "ステータス:",
+    statusNotLoaded: "モジュールがまだ読み込まれていません",
+    statusBuilding: "ツリーを作成中…",
+    statusError: (message: string) => `エラー: ${message}`,
+    statusBuilt: (threads: number) =>
+      `ツリーの作成が完了しました(${threads}スレッド)`,
+    precisionMode: "精度モード:",
+    precisionTipIntro:
+      "精度モードは主にメモリ使用量に影響します。ほかにもいくつかの違いがあります。",
+    precisionTipFp:
+      "32ビット浮動小数点(FP): メモリ使用量が上限(3.9GB)以下であればこのモードを推奨します。有効数字は約7桁で、パフォーマンスも優れています。",
+    precisionTipInt:
+      "16ビット整数: 32ビットFPモードでメモリ上限を超える場合の代替手段です。有効数字が約4桁のため、目標誤差0.1%未満には適さず、パフォーマンスも32ビットFPより劣ります。",
+    fp32Label: "32ビットFP:",
+    int16Label: "16ビット整数:",
+    ramNeeded: (size: string) => `RAM ${size} が必要`,
+    limitExceeded: "(上限超過)",
+    ramLimit: "RAM上限: 3.9GB (= Wasmの上限4GB - 余裕分0.1GB)",
+    targetLabel: "目標誤差(exploitability):",
+    exploitTipIntro:
+      "ナッシュ均衡までの許容誤差を指定します。値が低いほど正確な結果になりますが、計算時間は長くなります。",
+    exploitTipDetailLabel: "詳細:",
+    exploitTipDetail:
+      "ナッシュ均衡の解では、両プレイヤーの戦略が互いに対するMES(最大限にエクスプロイトする戦略)になります。この性質を利用して、得られた戦略とナッシュ均衡との距離を次のように定義します:",
+    exploitTipFormula: "距離 = (相手のMESのEV) - (相手の実際のEV)",
+    exploitTipOutro:
+      "この距離は常に0以上で、得られた戦略がナッシュ均衡の一部である場合にのみ0になります。エクスプロイタビリティ(exploitability)は両プレイヤーの距離の平均として定義されます。",
+    maxIterationsLabel: "最大イテレーション数:",
+    runSolver: "ソルバーを実行",
+    stop: "停止",
+    pause: "一時停止",
+    resume: "再開",
+    solving: "計算中…",
+    finalizing: "仕上げ処理中…",
+    pausedStatus: "一時停止中。",
+    finished: "計算が完了しました！",
+    stoppedEarly: "目標誤差に届く前に計算を止めました。",
+    allocatingMemory: "メモリを割り当て中…",
+    iterations: (count: number) => `イテレーション: ${count}回`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `誤差(exploitability): ${value} (${percent})`,
+    timeLine: (seconds: string) => `所要時間: ${seconds}秒`,
+  },
+  es: {
+    sharedSpotBanner:
+      "Spot compartido cargado — presiona [Crear árbol] → [Ejecutar solver] para calcular.",
+    numThreadsLabel: "Número de hilos:",
+    buildTree: "Crear árbol",
+    copied: "¡Copiado!",
+    shareSpot: "🔗 Compartir spot",
+    statusLabel: "Estado:",
+    statusNotLoaded: "El módulo aún no está cargado",
+    statusBuilding: "Creando el árbol…",
+    statusError: (message: string) => `Error: ${message}`,
+    statusBuilt: (threads: number) =>
+      `Árbol creado con éxito (${threads} hilo${threads === 1 ? "" : "s"})`,
+    precisionMode: "Modo de precisión:",
+    precisionTipIntro:
+      "El modo de precisión afecta principalmente el uso de memoria. También hay otras diferencias menores.",
+    precisionTipFp:
+      "Punto flotante de 32 bits (FP): recomendado cuando el uso de memoria queda por debajo del límite (3.9GB). Unos 7 dígitos significativos y mejor rendimiento.",
+    precisionTipInt:
+      "Entero de 16 bits: una alternativa cuando el modo FP de 32 bits supera el límite de memoria. Con unos 4 dígitos significativos no es adecuado para un error objetivo menor a 0.1%, y rinde peor que el FP de 32 bits.",
+    fp32Label: "FP de 32 bits:",
+    int16Label: "Entero de 16 bits:",
+    ramNeeded: (size: string) => `necesita ${size} de RAM`,
+    limitExceeded: "(límite superado)",
+    ramLimit: "Límite de RAM: 3.9GB (= límite Wasm de 4GB - margen de 0.1GB)",
+    targetLabel: "Error objetivo (explotabilidad):",
+    exploitTipIntro:
+      "Define la distancia aceptable al equilibrio de Nash. Un valor más bajo da un resultado más preciso, pero el cálculo tarda más.",
+    exploitTipDetailLabel: "Detalles:",
+    exploitTipDetail:
+      "En un equilibrio de Nash, las estrategias de ambos jugadores son MES (estrategias de máxima explotación) una contra la otra. Usando esta propiedad, definimos la distancia entre una estrategia obtenida y el equilibrio de Nash así:",
+    exploitTipFormula: "Distancia = (EV del MES del rival) - (EV real del rival)",
+    exploitTipOutro:
+      "Esta distancia nunca es negativa y solo es cero si la estrategia obtenida forma parte de un equilibrio de Nash. La explotabilidad se define como la distancia promedio de ambos jugadores.",
+    maxIterationsLabel: "Iteraciones máximas:",
+    runSolver: "Ejecutar solver",
+    stop: "Detener",
+    pause: "Pausar",
+    resume: "Reanudar",
+    solving: "Calculando…",
+    finalizing: "Finalizando…",
+    pausedStatus: "En pausa.",
+    finished: "¡Cálculo terminado!",
+    stoppedEarly: "Cálculo detenido antes de alcanzar el error objetivo.",
+    allocatingMemory: "Asignando memoria…",
+    iterations: (count: number) => `Iteraciones: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Tiempo transcurrido: ${seconds} s`,
+  },
+  pt: {
+    sharedSpotBanner:
+      "Spot compartilhado carregado — pressione [Criar árvore] → [Executar solver] para calcular.",
+    numThreadsLabel: "Número de threads:",
+    buildTree: "Criar árvore",
+    copied: "Copiado!",
+    shareSpot: "🔗 Compartilhar spot",
+    statusLabel: "Status:",
+    statusNotLoaded: "O módulo ainda não foi carregado",
+    statusBuilding: "Criando a árvore…",
+    statusError: (message: string) => `Erro: ${message}`,
+    statusBuilt: (threads: number) =>
+      `Árvore criada com sucesso (${threads} thread${threads === 1 ? "" : "s"})`,
+    precisionMode: "Modo de precisão:",
+    precisionTipIntro:
+      "O modo de precisão afeta principalmente o uso de memória. Há também outras diferenças menores.",
+    precisionTipFp:
+      "Ponto flutuante de 32 bits (FP): recomendado quando o uso de memória fica abaixo do limite (3,9 GB). Cerca de 7 dígitos significativos e melhor desempenho.",
+    precisionTipInt:
+      "Inteiro de 16 bits: uma alternativa para quando o modo FP de 32 bits ultrapassa o limite de memória. Com cerca de 4 dígitos significativos, não serve para um erro objetivo menor que 0,1%, e tem desempenho pior que o FP de 32 bits.",
+    fp32Label: "FP de 32 bits:",
+    int16Label: "Inteiro de 16 bits:",
+    ramNeeded: (size: string) => `precisa de ${size} de RAM`,
+    limitExceeded: "(limite ultrapassado)",
+    ramLimit: "Limite de RAM: 3,9 GB (= limite de 4 GB do Wasm - margem de 0,1 GB)",
+    targetLabel: "Erro objetivo (exploitability):",
+    exploitTipIntro:
+      "Define a distância aceitável até o equilíbrio de Nash. Um valor mais baixo dá um resultado mais preciso, mas o cálculo demora mais.",
+    exploitTipDetailLabel: "Detalhes:",
+    exploitTipDetail:
+      "Em um equilíbrio de Nash, as estratégias dos dois jogadores são MES (estratégias de exploração máxima) uma contra a outra. Usando essa propriedade, definimos assim a distância entre uma estratégia obtida e o equilíbrio de Nash:",
+    exploitTipFormula: "Distância = (EV do MES do vilão) - (EV real do vilão)",
+    exploitTipOutro:
+      "Essa distância nunca é negativa e só é zero quando a estratégia obtida faz parte de um equilíbrio de Nash. A exploitability é definida como a distância média dos dois jogadores.",
+    maxIterationsLabel: "Iterações máximas:",
+    runSolver: "Executar solver",
+    stop: "Parar",
+    pause: "Pausar",
+    resume: "Retomar",
+    solving: "Calculando…",
+    finalizing: "Finalizando…",
+    pausedStatus: "Pausado.",
+    finished: "Cálculo concluído!",
+    stoppedEarly: "Cálculo interrompido antes de atingir o erro objetivo.",
+    allocatingMemory: "Alocando memória…",
+    iterations: (count: number) => `Iterações: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Tempo decorrido: ${seconds} s`,
+  },
+  de: {
+    sharedSpotBanner:
+      "Geteilter Spot geladen – drücke [Spielbaum erstellen] → [Solver starten], um zu rechnen.",
+    numThreadsLabel: "Anzahl der Threads:",
+    buildTree: "Spielbaum erstellen",
+    copied: "Kopiert!",
+    shareSpot: "🔗 Spot teilen",
+    statusLabel: "Status:",
+    statusNotLoaded: "Das Modul ist noch nicht geladen",
+    statusBuilding: "Spielbaum wird erstellt…",
+    statusError: (message: string) => `Fehler: ${message}`,
+    statusBuilt: (threads: number) =>
+      `Spielbaum erstellt (${threads} Thread${threads === 1 ? "" : "s"})`,
+    precisionMode: "Genauigkeitsmodus:",
+    precisionTipIntro:
+      "Der Genauigkeitsmodus wirkt sich vor allem auf den Speicherbedarf aus. Daneben gibt es ein paar kleinere Unterschiede.",
+    precisionTipFp:
+      "32-Bit-Gleitkomma (FP): empfohlen, solange der Speicherbedarf unter dem Limit (3,9 GB) bleibt. Rund 7 signifikante Stellen und bessere Performance.",
+    precisionTipInt:
+      "16-Bit-Ganzzahl: die Alternative, wenn der 32-Bit-FP-Modus das Speicherlimit sprengt. Mit rund 4 signifikanten Stellen taugt sie nicht für eine Zielabweichung unter 0,1% und ist langsamer als 32-Bit-FP.",
+    fp32Label: "32-Bit-FP:",
+    int16Label: "16-Bit-Ganzzahl:",
+    ramNeeded: (size: string) => `braucht ${size} RAM`,
+    limitExceeded: "(Limit überschritten)",
+    ramLimit: "RAM-Limit: 3,9 GB (= 4 GB Wasm-Limit − 0,1 GB Reserve)",
+    targetLabel: "Zielabweichung (Exploitability):",
+    exploitTipIntro:
+      "Legt fest, wie weit das Ergebnis vom Nash-Gleichgewicht entfernt sein darf. Ein kleinerer Wert liefert ein genaueres Ergebnis, die Berechnung dauert dann aber länger.",
+    exploitTipDetailLabel: "Details:",
+    // ⚠ exploit는 「Ausbeutung」으로 옮기지 않는다 (본체 §7-7 기계번역 지문) — exploitativ/Exploit
+    exploitTipDetail:
+      "Im Nash-Gleichgewicht sind die Strategien beider Spieler jeweils die MES (maximal exploitative Strategie) gegen die andere. Über diese Eigenschaft definieren wir den Abstand zwischen einer gefundenen Strategie und dem Nash-Gleichgewicht so:",
+    exploitTipFormula:
+      "Abstand = (MES-EV des Gegners) - (tatsächlicher EV des Gegners)",
+    exploitTipOutro:
+      "Dieser Abstand ist nie negativ und wird nur dann null, wenn die gefundene Strategie Teil eines Nash-Gleichgewichts ist. Die Exploitability ist der durchschnittliche Abstand beider Spieler.",
+    maxIterationsLabel: "Maximale Iterationen:",
+    runSolver: "Solver starten",
+    stop: "Stopp",
+    pause: "Pause",
+    resume: "Fortsetzen",
+    solving: "Der Solver rechnet…",
+    finalizing: "Wird abgeschlossen…",
+    pausedStatus: "Pausiert.",
+    finished: "Berechnung abgeschlossen!",
+    stoppedEarly: "Berechnung vor Erreichen der Zielabweichung gestoppt.",
+    allocatingMemory: "Speicher wird zugewiesen…",
+    iterations: (count: number) => `Iterationen: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Verstrichene Zeit: ${seconds} s`,
+  },
+  zh: {
+    sharedSpotBanner:
+      "已加载分享过来的牌局——点[生成决策树] → [运行求解器]就开始算。",
+    numThreadsLabel: "线程数：",
+    buildTree: "生成决策树",
+    copied: "已复制！",
+    shareSpot: "🔗 分享牌局",
+    statusLabel: "状态：",
+    statusNotLoaded: "模块还没加载",
+    statusBuilding: "正在生成决策树…",
+    statusError: (message: string) => `错误：${message}`,
+    // 중국어는 명사에 복수 변화가 없다 — en·de의 thread/threads 분기가 필요 없다
+    statusBuilt: (threads: number) => `决策树生成完毕（${threads} 个线程）`,
+    precisionMode: "精度模式：",
+    precisionTipIntro: "精度模式主要影响内存占用，另外还有几处细小差别。",
+    // ⚠ 숫자는 영어와 같은 표기다 — 3.9GB·0.1%의 «.»를 «,»로 바꾸지 말 것 (브리프 §3)
+    precisionTipFp:
+      "32 位浮点（FP）：只要内存占用没超过上限（3.9GB），就推荐用这个模式。有效数字约 7 位，性能也更好。",
+    precisionTipInt:
+      "16 位整数：32 位 FP 模式撑爆内存上限时的替代方案。有效数字只有约 4 位，所以不适合把目标可剥削度设在 0.1% 以下；性能也不如 32 位 FP。",
+    fp32Label: "32 位 FP：",
+    int16Label: "16 位整数：",
+    ramNeeded: (size: string) => `需要 ${size} 内存`,
+    limitExceeded: "（超出上限）",
+    ramLimit: "内存上限：3.9GB（= Wasm 上限 4GB − 预留 0.1GB）",
+    // exploitability = 「可剥削度」. 剥削(exploit)은 중국 德扑 매체의 정착역이다(dpskill — 리서치 §2).
+    // 첫 등장 자리라 영어 원词를 괄호로 병기했다 (본체 브리프 §0.5-1)
+    targetLabel: "目标可剥削度（exploitability）：",
+    exploitTipIntro:
+      "指定结果离纳什均衡可以有多远。数值越小，结果越准，但计算时间也越长。",
+    exploitTipDetailLabel: "详细说明：",
+    exploitTipDetail:
+      "在纳什均衡里，双方的策略互为 MES（最大剥削策略）。利用这个性质，我们把求得的策略与纳什均衡之间的距离定义为：",
+    // 수식은 반각 괄호가 맞다 — 중국어 조판에서도 수식·코드는 반각을 쓴다
+    exploitTipFormula: "距离 = (对手的 MES EV) - (对手的实际 EV)",
+    exploitTipOutro:
+      "这个距离永远不小于零，只有当求得的策略本身就是纳什均衡的一部分时才等于零。可剥削度（exploitability）就定义为双方距离的平均值。",
+    maxIterationsLabel: "最大迭代次数：",
+    runSolver: "运行求解器",
+    stop: "停止",
+    pause: "暂停",
+    resume: "继续",
+    solving: "求解器计算中…",
+    finalizing: "即将完成…",
+    pausedStatus: "已暂停。",
+    finished: "计算完成！",
+    stoppedEarly: "计算已在达到目标可剥削度之前停止。",
+    allocatingMemory: "正在分配内存…",
+    iterations: (count: number) => `迭代：${count} 次`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `可剥削度：${value}（${percent}）`,
+    timeLine: (seconds: string) => `用时：${seconds} 秒`,
+  },
+  // ⚠ 台灣 전산 용어는 대륙과 다르다: 线程→執行緒 · 模块→模組 · 内存→記憶體 ·
+  //   位→位元(bit) · 迭代→疊代 · 运行→執行 · 加载→載入 · 纳什→納許(본체 브리프 §7-E)
+  "zh-hant": {
+    sharedSpotBanner:
+      "已載入分享過來的牌局——按下[建立決策樹] → [執行解算器]就開始算。",
+    numThreadsLabel: "執行緒數：",
+    buildTree: "建立決策樹",
+    copied: "已複製！",
+    shareSpot: "🔗 分享牌局",
+    statusLabel: "狀態：",
+    statusNotLoaded: "模組還沒載入",
+    statusBuilding: "正在建立決策樹…",
+    statusError: (message: string) => `錯誤：${message}`,
+    // 중국어는 명사에 복수 변화가 없다 — en·de의 thread/threads 분기가 필요 없다
+    statusBuilt: (threads: number) => `決策樹建立完畢（${threads} 個執行緒）`,
+    precisionMode: "精度模式：",
+    precisionTipIntro: "精度模式主要影響記憶體佔用，另外還有幾處細小差別。",
+    // ⚠ 숫자는 영어와 같은 표기다 — 3.9GB·0.1%의 «.»를 «,»로 바꾸지 말 것 (브리프 §3)
+    precisionTipFp:
+      "32 位元浮點（FP）：只要記憶體佔用沒超過上限（3.9GB），就建議用這個模式。有效數字約 7 位，效能也更好。",
+    precisionTipInt:
+      "16 位元整數：32 位元 FP 模式超過記憶體上限時的替代方案。有效數字只有約 4 位，所以不適合把目標可剝削度設在 0.1% 以下；效能也不如 32 位元 FP。",
+    fp32Label: "32 位元 FP：",
+    int16Label: "16 位元整數：",
+    ramNeeded: (size: string) => `需要 ${size} 記憶體`,
+    limitExceeded: "（超出上限）",
+    ramLimit: "記憶體上限：3.9GB（= Wasm 上限 4GB − 預留 0.1GB）",
+    // exploitability = 「可剝削度」. 剝削(exploit)은 대만 매체도 쓰는 말이다
+    // (본체 브리프 §7-F 「剝削」 monsterstack 전용글 · 번체 포스팅 24회).
+    // 첫 등장 자리라 영어 원어를 괄호로 병기했다
+    targetLabel: "目標可剝削度（exploitability）：",
+    exploitTipIntro:
+      "指定結果與納許均衡之間可接受的距離。數值越小，結果越準，但計算時間也越長。",
+    exploitTipDetailLabel: "詳細說明：",
+    exploitTipDetail:
+      "在納許均衡裡，雙方的策略互為 MES（最大剝削策略）。利用這個性質，我們把求得的策略與納許均衡之間的距離定義為：",
+    // 수식은 반각 괄호가 맞다 — 중국어 조판에서도 수식·코드는 반각을 쓴다
+    exploitTipFormula: "距離 = (對手的 MES EV) - (對手的實際 EV)",
+    exploitTipOutro:
+      "這個距離永遠不小於零，只有當求得的策略本身就是納許均衡的一部分時才等於零。可剝削度（exploitability）就定義為雙方距離的平均值。",
+    maxIterationsLabel: "最大疊代次數：",
+    runSolver: "執行解算器",
+    stop: "停止",
+    pause: "暫停",
+    resume: "繼續",
+    solving: "解算器計算中…",
+    finalizing: "即將完成…",
+    pausedStatus: "已暫停。",
+    finished: "計算完成！",
+    stoppedEarly: "計算已在達到目標可剝削度之前停止。",
+    allocatingMemory: "正在配置記憶體…",
+    iterations: (count: number) => `疊代：${count} 次`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `可剝削度：${value}（${percent}）`,
+    timeLine: (seconds: string) => `耗時：${seconds} 秒`,
+  },
+  fr: {
+    // 버튼 이름은 아래 buildTree·runSolver와 «글자까지» 같아야 한다
+    sharedSpotBanner:
+      "Spot partagé chargé — appuie sur [Construire l'arbre] → [Lancer le solver] pour démarrer le calcul.",
+    numThreadsLabel: "Nombre de threads :",
+    buildTree: "Construire l'arbre",
+    copied: "Copié !",
+    shareSpot: "🔗 Partager le spot",
+    statusLabel: "État :",
+    statusNotLoaded: "Module non chargé",
+    statusBuilding: "Construction de l'arbre…",
+    statusError: (message: string) => `Erreur : ${message}`,
+    statusBuilt: (threads: number) =>
+      `Arbre construit (${threads} thread${threads === 1 ? "" : "s"})`,
+    precisionMode: "Mode de précision :",
+    precisionTipIntro:
+      "Le mode de précision joue surtout sur la mémoire utilisée. Il y a aussi quelques autres petites différences.",
+    // ⚠ 산문의 소수는 프랑스식 쉼표(3,9) — 코드가 찍는 동적 크기($n)도 쉼표로 나온다.
+    //   용량 단위는 Go/Mo (원어민 검수 3인 일치 — 프랑스어권 OS 표준. 동적 표시도
+    //   아래 템플릿의 UNITS가 fr일 때 Go/Mo를 붙인다)
+    precisionTipFp:
+      "Virgule flottante 32 bits (FP) : recommandé tant que la mémoire reste sous la limite (3,9 Go). Environ 7 chiffres significatifs et de meilleures performances.",
+    precisionTipInt:
+      "Entier 16 bits : l'alternative quand le mode FP 32 bits dépasse la limite mémoire. Environ 4 chiffres significatifs, donc inadapté à une exploitabilité cible sous 0,1 %, et moins performant que le FP 32 bits.",
+    fp32Label: "FP 32 bits :",
+    int16Label: "Entier 16 bits :",
+    ramNeeded: (size: string) => `demande ${size} de RAM`,
+    limitExceeded: "(limite dépassée)",
+    ramLimit: "Limite de RAM : 3,9 Go (= limite Wasm de 4 Go − marge de 0,1 Go)",
+    // «exploitabilité» = 프랑스 포커 매체 실사용어 (kill-tilt 등)
+    targetLabel: "Exploitabilité cible :",
+    exploitTipIntro:
+      "Fixe la distance acceptable à l'équilibre de Nash. Une valeur plus basse donne un résultat plus précis, mais le calcul prend plus de temps.",
+    exploitTipDetailLabel: "Détails :",
+    exploitTipDetail:
+      "À l'équilibre de Nash, la stratégie de chaque joueur est la meilleure réponse possible (MES, stratégie d'exploitation maximale) à celle de l'autre. En utilisant cette propriété, on définit ainsi la distance entre une stratégie obtenue et l'équilibre de Nash :",
+    exploitTipFormula: "Distance = (EV de la MES adverse) − (EV réelle de l'adversaire)",
+    exploitTipOutro:
+      "Cette distance n'est jamais négative et ne vaut zéro que si la stratégie obtenue fait partie d'un équilibre de Nash. L'exploitabilité est la moyenne des distances des deux joueurs.",
+    maxIterationsLabel: "Itérations max :",
+    runSolver: "Lancer le solver",
+    stop: "Arrêter",
+    pause: "Pause",
+    resume: "Reprendre",
+    solving: "Calcul en cours…",
+    finalizing: "Finalisation…",
+    pausedStatus: "En pause.",
+    finished: "Calcul terminé !",
+    stoppedEarly: "Calcul arrêté avant d'atteindre l'exploitabilité cible.",
+    allocatingMemory: "Allocation de la mémoire…",
+    iterations: (count: number) => `Itérations : ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitabilité : ${value} (${percent})`,
+    timeLine: (seconds: string) => `Temps écoulé : ${seconds}s`,
+  },
+  // 인도네시아어 — 용어는 본체 id 코퍼스대로 영어(solver·thread·pot·stack·exploitability). Anda체.
+  // 산문 소수는 인니식 쉼표(3,9) · 단위는 GB/MB 그대로(인니 OS 표준 — fr Go/Mo 분기 불필요) · % 앞 공백 없음
+  id: {
+    // 버튼 이름은 아래 buildTree·runSolver와 «글자까지» 같아야 한다
+    sharedSpotBanner:
+      "Spot yang dibagikan sudah dimuat — tekan [Buat Tree] → [Jalankan Solver] untuk mulai menghitung.",
+    numThreadsLabel: "Jumlah thread:",
+    buildTree: "Buat Tree",
+    copied: "Tersalin!",
+    shareSpot: "🔗 Bagikan Spot",
+    statusLabel: "Status:",
+    statusNotLoaded: "Modul belum dimuat",
+    statusBuilding: "Membuat tree…",
+    statusError: (message: string) => `Error: ${message}`,
+    statusBuilt: (threads: number) => `Tree selesai dibuat (${threads} thread)`,
+    precisionMode: "Mode presisi:",
+    precisionTipIntro:
+      "Mode presisi terutama memengaruhi pemakaian memori. Ada juga beberapa perbedaan kecil lainnya.",
+    precisionTipFp:
+      "Floating point 32-bit (FP): disarankan selama pemakaian memori masih di bawah batas (3,9 GB). Sekitar 7 digit signifikan dan performa lebih baik.",
+    precisionTipInt:
+      "Integer 16-bit: alternatif saat mode FP 32-bit melebihi batas memori. Sekitar 4 digit signifikan, jadi tidak cocok untuk target exploitability di bawah 0,1%, dan performanya di bawah FP 32-bit.",
+    fp32Label: "FP 32-bit:",
+    int16Label: "Integer 16-bit:",
+    ramNeeded: (size: string) => `butuh RAM ${size}`,
+    limitExceeded: "(melebihi batas)",
+    ramLimit: "Batas RAM: 3,9 GB (= batas Wasm 4 GB − margin 0,1 GB)",
+    targetLabel: "Target exploitability:",
+    exploitTipIntro:
+      "Menentukan seberapa jauh hasil boleh menyimpang dari ekuilibrium Nash. Nilai yang lebih kecil memberi hasil lebih akurat, tetapi perhitungannya lebih lama.",
+    exploitTipDetailLabel: "Detail:",
+    exploitTipDetail:
+      "Dalam ekuilibrium Nash, strategi kedua pemain adalah MES (Maximally Exploitative Strategy) terhadap satu sama lain. Dari sifat ini, jarak antara strategi yang diperoleh dan ekuilibrium Nash didefinisikan sebagai berikut:",
+    exploitTipFormula: "Jarak = (EV MES lawan) − (EV aktual lawan)",
+    exploitTipOutro:
+      "Jarak ini tidak pernah negatif dan bernilai nol hanya jika strategi yang diperoleh merupakan bagian dari ekuilibrium Nash. Exploitability didefinisikan sebagai rata-rata jarak kedua pemain.",
+    maxIterationsLabel: "Iterasi maks:",
+    runSolver: "Jalankan Solver",
+    stop: "Hentikan",
+    pause: "Jeda",
+    resume: "Lanjutkan",
+    solving: "Menghitung…",
+    finalizing: "Menyelesaikan…",
+    pausedStatus: "Dijeda.",
+    finished: "Perhitungan selesai!",
+    stoppedEarly: "Perhitungan dihentikan sebelum mencapai target exploitability.",
+    allocatingMemory: "Mengalokasikan memori…",
+    iterations: (count: number) => `Iterasi: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    // 초 단위 약어는 인니 표준 «dtk» (s는 SI 표기라 화면에선 낯설다)
+    timeLine: (seconds: string) => `Waktu berjalan: ${seconds} dtk`,
+  },
+  // 말레이어 — 숫자는 영어식(3.9 GB · 0.1%)이라 id의 «3,9 GB»와 반대다 (리서치 §1-2)
+  ms: {
+    // 버튼 이름은 아래 buildTree·runSolver와 «글자까지» 같아야 한다
+    sharedSpotBanner:
+      "Spot yang dikongsi sudah dimuatkan — tekan [Bina Tree] → [Jalankan Solver] untuk mula mengira.",
+    numThreadsLabel: "Bilangan thread:",
+    buildTree: "Bina Tree",
+    copied: "Disalin!",
+    shareSpot: "🔗 Kongsi Spot",
+    statusLabel: "Status:",
+    statusNotLoaded: "Modul belum dimuatkan",
+    statusBuilding: "Membina tree…",
+    statusError: (message: string) => `Ralat: ${message}`,
+    statusBuilt: (threads: number) => `Tree siap dibina (${threads} thread)`,
+    precisionMode: "Mod ketepatan:",
+    precisionTipIntro:
+      "Mod ketepatan terutamanya mempengaruhi penggunaan memori. Ada juga beberapa perbezaan kecil yang lain.",
+    precisionTipFp:
+      "Floating point 32-bit (FP): disyorkan selagi penggunaan memori masih di bawah had (3.9 GB). Kira-kira 7 angka bererti dan prestasi lebih baik.",
+    precisionTipInt:
+      "Integer 16-bit: alternatif apabila mod FP 32-bit melebihi had memori. Kira-kira 4 angka bererti, jadi tidak sesuai untuk sasaran exploitability di bawah 0.1%, dan prestasinya lebih rendah daripada FP 32-bit.",
+    fp32Label: "FP 32-bit:",
+    int16Label: "Integer 16-bit:",
+    ramNeeded: (size: string) => `perlukan ${size} RAM`,
+    limitExceeded: "(melebihi had)",
+    ramLimit: "Had RAM: 3.9 GB (= had Wasm 4 GB − margin 0.1 GB)",
+    targetLabel: "Sasaran exploitability:",
+    exploitTipIntro:
+      "Menentukan sejauh mana hasil boleh menyimpang daripada keseimbangan Nash. Nilai yang lebih kecil memberi hasil yang lebih tepat, tetapi pengiraannya lebih lama.",
+    exploitTipDetailLabel: "Perincian:",
+    exploitTipDetail:
+      "Dalam keseimbangan Nash, strategi kedua-dua pemain ialah MES (Maximally Exploitative Strategy) terhadap satu sama lain. Daripada sifat ini, jarak antara strategi yang diperoleh dengan keseimbangan Nash ditakrifkan seperti berikut:",
+    exploitTipFormula: "Jarak = (EV MES lawan) − (EV sebenar lawan)",
+    exploitTipOutro:
+      "Jarak ini tidak pernah negatif dan bernilai sifar hanya jika strategi yang diperoleh merupakan sebahagian daripada keseimbangan Nash. Exploitability ditakrifkan sebagai purata jarak kedua-dua pemain.",
+    maxIterationsLabel: "Iterasi maks:",
+    runSolver: "Jalankan Solver",
+    stop: "Hentikan",
+    pause: "Jeda",
+    resume: "Teruskan",
+    solving: "Sedang mengira…",
+    finalizing: "Sedang menyelesaikan…",
+    pausedStatus: "Dijeda.",
+    finished: "Pengiraan selesai!",
+    stoppedEarly: "Pengiraan dihentikan sebelum mencapai sasaran exploitability.",
+    allocatingMemory: "Memperuntukkan memori…",
+    iterations: (count: number) => `Iterasi: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    // 초 단위는 말레이 표준 «saat» (id의 dtk는 인니 약어)
+    timeLine: (seconds: string) => `Masa berlalu: ${seconds} saat`,
+  },
+  hi: {
+    sharedSpotBanner:
+      "शेयर किया गया स्पॉट लोड हो गया — गणना शुरू करने के लिए [Tree बनाएँ] → [Solver चलाएँ] दबाएँ।",
+    numThreadsLabel: "थ्रेड की संख्या:",
+    buildTree: "Tree बनाएँ",
+    copied: "कॉपी हो गया!",
+    shareSpot: "🔗 स्पॉट शेयर करें",
+    statusLabel: "स्थिति:",
+    statusNotLoaded: "मॉड्यूल लोड नहीं हुआ",
+    statusBuilding: "Tree बन रहा है…",
+    statusError: (message: string) => `त्रुटि: ${message}`,
+    statusBuilt: (threads: number) => `Tree बन गया (${threads} थ्रेड)`,
+    precisionMode: "सटीकता मोड:",
+    precisionTipIntro:
+      "सटीकता मोड का मुख्य असर मेमोरी के इस्तेमाल पर पड़ता है। कुछ दूसरे अंतर भी हैं।",
+    precisionTipFp:
+      "32-bit floating point (FP): मेमोरी का इस्तेमाल सीमा (3.9GB) से कम हो तो यह मोड चुनें। लगभग 7 सार्थक अंकों की सटीकता और बेहतर गति मिलती है।",
+    precisionTipInt:
+      "16-bit integer: 32-bit FP मोड में मेमोरी सीमा पार होने पर यह विकल्प चुन सकते हैं। इसमें लगभग 4 सार्थक अंकों की सटीकता मिलती है, इसलिए 0.1% से कम exploitability लक्ष्य के लिए यह उपयुक्त नहीं है। इसकी गति भी 32-bit FP से कम है।",
+    fp32Label: "32-bit FP:",
+    int16Label: "16-bit integer:",
+    ramNeeded: (size: string) => `${size} RAM चाहिए`,
+    limitExceeded: "(सीमा पार)",
+    ramLimit: "RAM की सीमा: 3.9GB (= Wasm की 4GB सीमा − 0.1GB गुंजाइश)",
+    targetLabel: "Exploitability का लक्ष्य:",
+    exploitTipIntro:
+      "Nash equilibrium से स्वीकार्य दूरी तय करें। मान कम रखने पर परिणाम अधिक सटीक मिलता है, लेकिन गणना में अधिक समय लगता है।",
+    exploitTipDetailLabel: "विवरण:",
+    exploitTipDetail:
+      "Nash equilibrium में दोनों खिलाड़ियों की रणनीतियाँ एक-दूसरे के विरुद्ध MES (Maximally Exploitative Strategies) होती हैं। इसी गुण के आधार पर, मिली हुई रणनीति और Nash equilibrium के बीच की दूरी इस तरह परिभाषित होती है:",
+    exploitTipFormula: "दूरी = (प्रतिद्वंद्वी की MES का EV) - (प्रतिद्वंद्वी की वास्तविक रणनीति का EV)",
+    exploitTipOutro:
+      "यह दूरी कभी ऋणात्मक नहीं होती। यह शून्य तभी होती है जब मिली हुई रणनीति किसी Nash equilibrium का हिस्सा हो। दोनों खिलाड़ियों की इन दूरियों के औसत को exploitability कहते हैं।",
+    maxIterationsLabel: "अधिकतम iterations:",
+    runSolver: "Solver चलाएँ",
+    stop: "रोकें",
+    pause: "विराम दें",
+    resume: "जारी रखें",
+    solving: "गणना चल रही है…",
+    finalizing: "अंतिम चरण पूरा हो रहा है…",
+    pausedStatus: "गणना पर विराम है।",
+    finished: "गणना पूरी हुई!",
+    stoppedEarly: "Exploitability के लक्ष्य तक पहुँचने से पहले गणना रोक दी गई।",
+    allocatingMemory: "मेमोरी आवंटित हो रही है…",
+    iterations: (count: number) => `Iterations: ${count}`,
+    exploitabilityLine: (value: string, percent: string) => `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `बीता समय: ${seconds}s`,
+  },
+  tr: {
+    sharedSpotBanner:
+      "Paylaşılan spot yüklendi — hesaplamayı başlatmak için [Ağacı oluştur] → [Solver'ı çalıştır] düğmelerine bas.",
+    numThreadsLabel: "Thread sayısı:",
+    buildTree: "Ağacı oluştur",
+    copied: "Kopyalandı!",
+    shareSpot: "🔗 Spotu paylaş",
+    statusLabel: "Durum:",
+    statusNotLoaded: "Modül yüklenmedi",
+    statusBuilding: "Ağaç oluşturuluyor…",
+    statusError: (message: string) => `Hata: ${message}`,
+    statusBuilt: (threads: number) => `Ağaç oluşturuldu (${threads} thread)`,
+    precisionMode: "Hassasiyet modu:",
+    precisionTipIntro:
+      "Hassasiyet modu esas olarak bellek kullanımını etkiler. Bunun dışında birkaç küçük fark daha var.",
+    precisionTipFp:
+      "32-bit kayan nokta (FP): bellek kullanımı sınırın (3,9 GB) altındaysa önerilir. Yaklaşık 7 anlamlı basamak ve daha iyi performans sunar.",
+    precisionTipInt:
+      "16-bit tam sayı: 32-bit FP modu bellek sınırını aşarsa kullanılacak alternatif. Yaklaşık 4 anlamlı basamak verir; bu yüzden %0,1'in altındaki bir hedef exploitability için uygun değildir ve 32-bit FP'den daha yavaştır.",
+    fp32Label: "32-bit FP:",
+    int16Label: "16-bit tam sayı:",
+    ramNeeded: (size: string) => `${size} RAM gerekir`,
+    limitExceeded: "(sınır aşıldı)",
+    ramLimit: "RAM sınırı: 3,9 GB (= 4 GB Wasm sınırı − 0,1 GB pay)",
+    targetLabel: "Hedef exploitability:",
+    exploitTipIntro:
+      "Nash dengesinden kabul edilebilir uzaklığı belirler. Değer ne kadar düşükse sonuç o kadar doğru olur, ama hesaplama daha uzun sürer.",
+    exploitTipDetailLabel: "Ayrıntı:",
+    exploitTipDetail:
+      "Nash dengesinde iki oyuncunun stratejisi de birbirine karşı MES (Maximally Exploitative Strategies) niteliği taşır. Bu özellikten yola çıkarak, elde edilen strateji ile Nash dengesi arasındaki uzaklığı şöyle tanımlarız:",
+    exploitTipFormula: "Uzaklık = (Rakibin MES EV'si) − (Rakibin gerçek EV'si)",
+    exploitTipOutro:
+      "Bu uzaklık hiçbir zaman negatif olmaz ve yalnızca elde edilen strateji bir Nash dengesinin parçasıysa sıfırdır. Exploitability, iki oyuncunun uzaklıklarının ortalamasıdır.",
+    maxIterationsLabel: "Maksimum iterasyon:",
+    runSolver: "Solver'ı çalıştır",
+    stop: "Durdur",
+    pause: "Duraklat",
+    resume: "Devam et",
+    solving: "Hesaplanıyor…",
+    finalizing: "Tamamlanıyor…",
+    pausedStatus: "Duraklatıldı.",
+    finished: "Hesaplama bitti!",
+    stoppedEarly: "Hesaplama, hedef exploitability'ye ulaşmadan durduruldu.",
+    allocatingMemory: "Bellek ayrılıyor…",
+    iterations: (count: number) => `İterasyon: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Geçen süre: ${seconds} sn`,
+  },
+  vi: {
+    sharedSpotBanner:
+      "Đã tải spot được chia sẻ — nhấn [Tạo cây] → [Chạy solver] để bắt đầu.",
+    numThreadsLabel: "Số thread:",
+    buildTree: "Tạo cây",
+    copied: "Đã sao chép!",
+    shareSpot: "🔗 Chia sẻ spot",
+    statusLabel: "Trạng thái:",
+    statusNotLoaded: "Chưa tải module",
+    statusBuilding: "Đang tạo cây…",
+    statusError: (message: string) => `Lỗi: ${message}`,
+    statusBuilt: (threads: number) =>
+      `Đã tạo cây thành công (${threads} thread)`,
+    precisionMode: "Độ chính xác:",
+    precisionTipIntro:
+      "Độ chính xác chủ yếu ảnh hưởng đến lượng bộ nhớ cần dùng. Ngoài ra còn vài khác biệt khác.",
+    precisionTipFp:
+      "Số thực 32-bit (FP): nên dùng khi bộ nhớ cần dùng dưới giới hạn (3,9 GB). Khoảng 7 chữ số có nghĩa và chạy nhanh hơn.",
+    precisionTipInt:
+      "Số nguyên 16-bit: phương án thay thế khi chế độ FP 32-bit vượt giới hạn bộ nhớ. Chỉ khoảng 4 chữ số có nghĩa nên không hợp với exploitability mục tiêu dưới 0,1%, và chạy chậm hơn FP 32-bit.",
+    fp32Label: "FP 32-bit:",
+    int16Label: "Int 16-bit:",
+    ramNeeded: (size: string) => `cần ${size} RAM`,
+    limitExceeded: "(vượt giới hạn)",
+    ramLimit: "Giới hạn RAM: 3,9 GB (= giới hạn Wasm 4 GB − dự phòng 0,1 GB)",
+    targetLabel: "Exploitability mục tiêu:",
+    exploitTipIntro:
+      "Khoảng cách chấp nhận được so với cân bằng Nash. Giá trị càng thấp thì kết quả càng chính xác, nhưng tính càng lâu.",
+    exploitTipDetailLabel: "Chi tiết:",
+    exploitTipDetail:
+      "Ở cân bằng Nash, chiến lược của hai người chơi là MES (Maximally Exploitative Strategies) đối với nhau. Dựa vào tính chất này, ta định nghĩa khoảng cách giữa chiến lược thu được và cân bằng Nash như sau:",
+    exploitTipFormula: "Khoảng cách = (EV MES của đối thủ) − (EV thực tế của đối thủ)",
+    exploitTipOutro:
+      "Khoảng cách này luôn không âm và chỉ bằng 0 khi chiến lược thu được là một phần của cân bằng Nash. Exploitability là trung bình khoảng cách của hai người chơi.",
+    maxIterationsLabel: "Số vòng lặp tối đa:",
+    runSolver: "Chạy solver",
+    stop: "Dừng",
+    pause: "Tạm dừng",
+    resume: "Tiếp tục",
+    solving: "Đang giải…",
+    finalizing: "Đang hoàn tất…",
+    pausedStatus: "Đã tạm dừng.",
+    finished: "Solver đã xong!",
+    stoppedEarly: "Đã dừng trước khi đạt exploitability mục tiêu.",
+    allocatingMemory: "Đang cấp phát bộ nhớ…",
+    iterations: (count: number) => `Vòng lặp: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Thời gian: ${seconds}s`,
+  },
+  ru: {
+    sharedSpotBanner:
+      "Спот загружен — нажми [Построить дерево] → [Запустить солвер], чтобы начать расчёт.",
+    numThreadsLabel: "Число потоков:",
+    buildTree: "Построить дерево",
+    copied: "Скопировано!",
+    shareSpot: "🔗 Поделиться спотом",
+    statusLabel: "Статус:",
+    statusNotLoaded: "Движок не загружен",
+    statusBuilding: "Построение дерева…",
+    statusError: (message: string) => `Ошибка: ${message}`,
+    statusBuilt: (threads: number) =>
+      `Дерево построено (${threads} ${ruPlural(threads, "поток", "потока", "потоков")})`,
+    precisionMode: "Режим точности:",
+    precisionTipIntro:
+      "Этот режим в основном влияет на расход памяти. Есть и несколько других отличий.",
+    precisionTipFp:
+      "32-битное с плавающей точкой (FP): рекомендуется, если расход памяти ниже лимита (3,9 ГБ). Около 7 значащих цифр и более высокая производительность.",
+    precisionTipInt:
+      "16-битное целое: запасной вариант, когда режим 32-бит FP превышает лимит памяти. Около 4 значащих цифр, поэтому не подходит для целевой exploitability ниже 0,1%. Кроме того, работает медленнее, чем 32-бит FP.",
+    fp32Label: "32-бит FP:",
+    int16Label: "16-бит целое:",
+    ramNeeded: (size: string) => `нужно ${size} ОЗУ`,
+    limitExceeded: "(превышен лимит)",
+    ramLimit: "Лимит ОЗУ: 3,9 ГБ (= лимит Wasm 4 ГБ − запас 0,1 ГБ)",
+    targetLabel: "Целевая exploitability:",
+    exploitTipIntro:
+      "Задаёт допустимое расстояние до равновесия Нэша. Чем меньше значение, тем точнее результат, но тем дольше идёт расчёт.",
+    exploitTipDetailLabel: "Подробнее:",
+    exploitTipDetail:
+      "В равновесии Нэша стратегия каждого игрока — это MES (максимально эксплуатирующая стратегия) против стратегии другого. Исходя из этого, расстояние между полученной стратегией и равновесием Нэша определяется так:",
+    exploitTipFormula: "Расстояние = (EV MES соперника) − (фактический EV соперника)",
+    exploitTipOutro:
+      "Это расстояние всегда неотрицательно и равно нулю, только если полученная стратегия входит в равновесие Нэша. Exploitability — среднее этого расстояния для обоих игроков.",
+    maxIterationsLabel: "Макс. итераций:",
+    runSolver: "Запустить солвер",
+    stop: "Стоп",
+    pause: "Пауза",
+    resume: "Продолжить",
+    solving: "Идёт расчёт…",
+    finalizing: "Завершение…",
+    pausedStatus: "Пауза.",
+    finished: "Расчёт завершён!",
+    stoppedEarly: "Расчёт остановлен до достижения целевой exploitability.",
+    allocatingMemory: "Выделение памяти…",
+    iterations: (count: number) => `Итераций: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Время: ${seconds} с`,
+  },
+  ar: {
+    sharedSpotBanner:
+      "تم تحميل الموقف — اضغط [بناء الشجرة] ثم [تشغيل السولفر] لبدء الحساب.",
+    numThreadsLabel: "عدد الخيوط:",
+    buildTree: "بناء الشجرة",
+    copied: "تم النسخ!",
+    shareSpot: "🔗 مشاركة الموقف",
+    statusLabel: "الحالة:",
+    statusNotLoaded: "المحرّك غير محمّل",
+    statusBuilding: "جارٍ بناء الشجرة…",
+    statusError: (message: string) => `خطأ: ${autoIso(message)}`,
+    statusBuilt: (threads: number) => `تم بناء الشجرة (الخيوط: ${threads})`,
+    precisionMode: "وضع الدقة:",
+    precisionTipIntro:
+      "يؤثّر وضع الدقة أساسًا في استهلاك الذاكرة، وهناك أيضًا بعض الفروق الأخرى.",
+    precisionTipFp:
+      "عدد عشري 32 بت (FP): يُنصح به عندما يكون استهلاك الذاكرة دون الحد (\u20663.9 GB\u2069). نحو 7 أرقام معنوية وأداء أفضل.",
+    precisionTipInt:
+      "عدد صحيح 16 بت: بديل عندما يتجاوز وضع \u206632-bit FP\u2069 حد الذاكرة. نحو 4 أرقام معنوية، لذا لا يناسب Exploitability مستهدفة أقل من \u20660.1%\u2069، كما أنه أبطأ من \u206632-bit FP\u2069.",
+    fp32Label: `${ltrIso("32-bit FP")}:`,
+    int16Label: `${ltrIso("16-bit")} صحيح:`,
+    ramNeeded: (size: string) => `يحتاج ${ltrIso(size)} من الذاكرة`,
+    limitExceeded: "(تجاوز الحد)",
+    ramLimit: `حد الذاكرة: ${ltrIso("3.9 GB")} (= حد Wasm ${ltrIso("4 GB")} − احتياطي ${ltrIso("0.1 GB")})`,
+    targetLabel: "Exploitability المستهدفة:",
+    exploitTipIntro:
+      "تحدّد المسافة المقبولة عن توازن ناش. كلما صغرت القيمة كانت النتيجة أدق، لكن الحساب يستغرق وقتًا أطول.",
+    exploitTipDetailLabel: "التفاصيل:",
+    exploitTipDetail:
+      "في توازن ناش تكون استراتيجية كل لاعب هي MES (استراتيجية الاستغلال الأقصى) ضد استراتيجية الآخر. وبناءً على ذلك نعرّف المسافة بين الاستراتيجية الناتجة وتوازن ناش هكذا:",
+    exploitTipFormula: "المسافة = (EV لـMES الخصم) − (EV الفعلي للخصم)",
+    exploitTipOutro:
+      "هذه المسافة ليست سالبة أبدًا، وتساوي صفرًا فقط إذا كانت الاستراتيجية الناتجة جزءًا من توازن ناش. Exploitability هي متوسط هذه المسافة لكلا اللاعبين.",
+    maxIterationsLabel: "أقصى عدد للدورات:",
+    runSolver: "تشغيل السولفر",
+    stop: "إيقاف",
+    pause: "إيقاف مؤقت",
+    resume: "متابعة",
+    solving: "جارٍ الحساب…",
+    finalizing: "جارٍ الإنهاء…",
+    pausedStatus: "متوقف مؤقتًا.",
+    finished: "انتهى الحساب!",
+    stoppedEarly: "توقف الحساب قبل الوصول إلى Exploitability المستهدفة.",
+    allocatingMemory: "جارٍ تخصيص الذاكرة…",
+    iterations: (count: number) => `الدورات: ${count}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `الوقت: ${seconds} ث`,
+  },
+  it: {
+    sharedSpotBanner:
+      "Spot condiviso caricato: premi [Crea albero] → [Avvia solver] per iniziare il calcolo.",
+    numThreadsLabel: "Numero di thread:",
+    buildTree: "Crea albero",
+    copied: "Copiato!",
+    shareSpot: "🔗 Condividi spot",
+    statusLabel: "Stato:",
+    statusNotLoaded: "Modulo non caricato",
+    statusBuilding: "Creazione dell’albero…",
+    statusError: (message: string) => `Errore: ${message}`,
+    statusBuilt: (threads: number) => `Albero creato (${threads} thread)`,
+    precisionMode: "Modalità di precisione:",
+    precisionTipIntro:
+      "La modalità di precisione influisce soprattutto sull’uso della memoria. Ci sono anche alcune altre differenze.",
+    precisionTipFp:
+      "Virgola mobile a 32 bit (FP): consigliata quando l’uso della memoria resta sotto il limite di 3,9 GB. Offre circa 7 cifre significative e prestazioni migliori.",
+    precisionTipInt:
+      "Interi a 16 bit: un’alternativa quando la modalità FP a 32 bit supera il limite di memoria. Offre circa 4 cifre significative, quindi non è adatta a un’exploitability obiettivo inferiore allo 0,1%, ed è più lenta della modalità FP a 32 bit.",
+    fp32Label: "FP a 32 bit:",
+    int16Label: "Interi a 16 bit:",
+    ramNeeded: (size: string) => `richiede ${size} di RAM`,
+    limitExceeded: "(limite superato)",
+    ramLimit: "Limite RAM: 3,9 GB (= limite Wasm di 4 GB − margine di 0,1 GB)",
+    targetLabel: "Exploitability obiettivo:",
+    exploitTipIntro:
+      "Indica la distanza accettabile dall’equilibrio di Nash. Un valore più basso dà un risultato più preciso, ma richiede più tempo di calcolo.",
+    exploitTipDetailLabel: "Dettagli:",
+    exploitTipDetail:
+      "In un equilibrio di Nash, la strategia di ciascun giocatore è una MES contro quella dell’altro, cioè massimizza l’EV contro la strategia avversaria. Questa proprietà permette di definire così la distanza tra la strategia ottenuta e l’equilibrio di Nash:",
+    exploitTipFormula: "Distanza = (EV della MES avversaria) − (EV effettivo dell’avversario)",
+    exploitTipOutro:
+      "Questa distanza non è mai negativa ed è zero solo se la strategia ottenuta fa parte di un equilibrio di Nash. L’exploitability è la media delle distanze dei due giocatori.",
+    maxIterationsLabel: "Iterazioni massime:",
+    runSolver: "Avvia solver",
+    stop: "Interrompi",
+    pause: "Pausa",
+    resume: "Riprendi",
+    solving: "Calcolo in corso…",
+    finalizing: "Finalizzazione…",
+    pausedStatus: "In pausa.",
+    finished: "Calcolo completato!",
+    stoppedEarly: "Calcolo interrotto prima di raggiungere l’exploitability obiettivo.",
+    allocatingMemory: "Allocazione della memoria…",
+    iterations: (count: number) => `Iterazioni: ${count}`,
+    exploitabilityLine: (value: string, percent: string) => `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Tempo trascorso: ${seconds} s`,
+  },
+  pl: {
+    sharedSpotBanner:
+      "Wczytano udostępniony spot. Kliknij [Zbuduj drzewo] → [Uruchom solver], aby rozpocząć obliczenia.",
+    numThreadsLabel: "Liczba wątków:",
+    buildTree: "Zbuduj drzewo",
+    copied: "Skopiowano!",
+    shareSpot: "🔗 Udostępnij spot",
+    statusLabel: "Stan:",
+    statusNotLoaded: "Moduł nie został wczytany",
+    statusBuilding: "Budowanie drzewa…",
+    statusError: (message: string) => `Błąd: ${message}`,
+    statusBuilt: (threads: number) =>
+      `Drzewo gotowe (${localizeNumber(String(threads))} ${plPlural(threads, { one: "wątek", few: "wątki", many: "wątków", other: "wątku" })})`,
+    precisionMode: "Precyzja:",
+    precisionTipIntro:
+      "Tryb precyzji wpływa głównie na zużycie pamięci. Są też inne różnice.",
+    precisionTipFp:
+      "32-bitowa liczba zmiennoprzecinkowa (FP): zalecana, gdy zużycie pamięci mieści się w limicie (3,9 GB). Zapewnia około 7 cyfr znaczących i większą wydajność.",
+    precisionTipInt:
+      "16-bitowa liczba całkowita: alternatywa, gdy tryb 32-bit FP przekracza limit pamięci. Zapewnia około 4 cyfr znaczących, więc nie nadaje się do obliczeń z docelową exploitability poniżej 0,1%. Działa wolniej niż 32-bit FP.",
+    fp32Label: "32-bit FP:",
+    int16Label: "16-bit int:",
+    ramNeeded: (size: string) => `wymagana pamięć RAM: ${size}`,
+    limitExceeded: "(przekroczono limit)",
+    ramLimit: "Limit RAM: 3,9 GB (= limit Wasm 4 GB − zapas 0,1 GB)",
+    targetLabel: "Docelowa exploitability:",
+    exploitTipIntro:
+      "Określa dopuszczalną odległość od równowagi Nasha. Mniejsza wartość daje dokładniejszy wynik, ale wydłuża obliczenia.",
+    exploitTipDetailLabel: "Szczegóły:",
+    exploitTipDetail:
+      "W równowadze Nasha obaj gracze stosują wobec siebie strategie maksymalnie wykorzystujące błędy przeciwnika (MES). Na tej podstawie odległość uzyskanej strategii od równowagi Nasha definiujemy następująco:",
+    exploitTipFormula: "Odległość = (EV strategii MES przeciwnika) − (rzeczywiste EV przeciwnika)",
+    exploitTipOutro:
+      "Ta odległość jest zawsze nieujemna. Wynosi zero tylko wtedy, gdy uzyskana strategia jest częścią równowagi Nasha. Exploitability to średnia odległość dla obu graczy.",
+    maxIterationsLabel: "Maks. liczba iteracji:",
+    runSolver: "Uruchom solver",
+    stop: "Zatrzymaj",
+    pause: "Wstrzymaj",
+    resume: "Wznów",
+    solving: "Obliczanie…",
+    finalizing: "Kończenie obliczeń…",
+    pausedStatus: "Obliczenia wstrzymane.",
+    finished: "Obliczenia zakończone!",
+    stoppedEarly: "Obliczenia zatrzymano przed osiągnięciem docelowej exploitability.",
+    allocatingMemory: "Przydzielanie pamięci…",
+    iterations: (count: number) => `Iteracje: ${localizeNumber(String(count))}`,
+    exploitabilityLine: (value: string, percent: string) =>
+      `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Czas: ${seconds}\u00a0s`,
+  },
+} as const;
+
+const maxMemoryUsage = 3.9 * 1024 * 1024 * 1024; // 3.9 GB
+const browser = detect();
+const isSafari = browser && (browser.name === "safari" || browser.os === "iOS");
+
+// 계산 전 검사와 공유 거부가 같은 기존 12언어 문구를 사용한다.
+const invalidLineMessage = () => pick(
+  "잘못된 라인이 있습니다 (손상된 설정을 불러왔나요?)",
+  "Invalid line found (loaded broken configurations?)",
+  "無効なラインが見つかりました(破損した設定を読み込みましたか?)",
+  "Se encontró una línea inválida (¿cargaste una configuración dañada?)",
+  "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)",
+  "Ungültige Line gefunden (beschädigte Einstellungen geladen?)",
+  "发现了无效的线路（是不是加载了损坏的设置？）",
+  "發現了無效的線路（是不是載入了損壞的設定？）",
+  "Ligne invalide trouvée (configuration corrompue chargée ?)",
+  "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
+  "Line tidak sah ditemui (memuatkan tetapan yang rosak?)",
+  "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (cấu hình đã tải bị hỏng?)", "Найдена недопустимая линия (загружена повреждённая конфигурация?)",
+    "خط غير صالح (هل التكوين المحمَّل تالف؟)",
+  "Trovata una linea non valida (hai caricato impostazioni danneggiate?)", "Znaleziono nieprawidłową linię (wczytane ustawienia mogą być uszkodzone)."
+);
+
+const checkConfig = (
+  config: ReturnType<typeof useConfigStore>
+): string | null => {
+  if (config.board.length < 3) {
+    return pick(
+      "보드에는 최소 3장의 카드가 필요합니다",
+      "The board must contain at least 3 cards",
+      "ボードには少なくとも3枚のカードが必要です",
+      "El board debe tener al menos 3 cartas",
+      "O board precisa ter pelo menos 3 cartas",
+      "Das Board braucht mindestens 3 Karten"
+    ,
+      "公共牌至少需要 3 张", "公共牌至少需要 3 張",
+      "Le board doit contenir au moins 3 cartes", "Board harus berisi minimal 3 kartu",
+      "Board mesti mengandungi sekurang-kurangnya 3 kad", "Board में कम से कम 3 कार्ड होने चाहिए", "Board'da en az 3 kart olmalı", "Board phải có ít nhất 3 lá", "На борде должно быть не меньше 3 карт",
+    "يجب أن يحوي البورد 3 أوراق على الأقل",
+      "Il board deve contenere almeno 3 carte", "Na boardzie muszą być co najmniej 3 karty");
+  }
+
+  if (config.startingPot <= 0) {
+    return pick(
+      "시작 팟은 0보다 커야 합니다",
+      "Starting pot must be positive",
+      "スターティングポットには正の数を入力してください",
+      "El bote inicial debe ser positivo",
+      "O pote inicial deve ser positivo",
+      "Der Start-Pot muss größer als 0 sein"
+    ,
+      "起始底池必须大于 0", "起始底池必須大於 0",
+      "Le pot initial doit être positif", "Pot awal harus lebih dari 0",
+      "Pot permulaan mesti lebih daripada 0", "शुरुआती pot शून्य से अधिक होना चाहिए", "Başlangıç pot'u 0'dan büyük olmalı", "Pot ban đầu phải lớn hơn 0", "Начальный банк должен быть больше 0",
+    "يجب أن يكون البوت الابتدائي أكبر من 0",
+      "Il piatto iniziale deve essere positivo", "Pula początkowa musi być większa od zera");
+  }
+
+  if (config.startingPot > MAX_AMOUNT) {
+    return pick(
+      `시작 팟은 ${MAX_AMOUNT} 이하여야 합니다`,
+      `Starting pot must not exceed ${MAX_AMOUNT}`,
+      `スターティングポットは${MAX_AMOUNT}以下にしてください`,
+      `El bote inicial no debe exceder ${MAX_AMOUNT}`,
+      `O pote inicial não pode passar de ${MAX_AMOUNT}`,
+      `Der Start-Pot darf höchstens ${MAX_AMOUNT} sein`
+    ,
+      `起始底池不能超过 ${MAX_AMOUNT}`, `起始底池不能超過 ${MAX_AMOUNT}`,
+      `Le pot initial ne doit pas dépasser ${MAX_AMOUNT}`, `Pot awal tidak boleh melebihi ${MAX_AMOUNT}`,
+      `Pot permulaan tidak boleh melebihi ${MAX_AMOUNT}`, `शुरुआती pot ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Başlangıç pot'u en fazla ${MAX_AMOUNT} olabilir`, `Pot ban đầu không được vượt quá ${MAX_AMOUNT}`, `Начальный банк не может превышать ${MAX_AMOUNT}`,
+    `يجب ألا يتجاوز البوت الابتدائي ${MAX_AMOUNT}`,
+      `Il piatto iniziale non deve superare ${MAX_AMOUNT}`, `Pula początkowa nie może przekraczać ${localizeNumber(String(MAX_AMOUNT))}`);
+  }
+
+  if (config.startingPot % 1 !== 0) {
+    return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier", "Pot awal harus bilangan bulat", "Pot permulaan mesti nombor bulat", "शुरुआती pot का मान पूर्णांक होना चाहिए", "Başlangıç pot'u tam sayı olmalı", "Pot ban đầu phải là số nguyên", "Начальный банк должен быть целым числом",
+    "يجب أن يكون البوت الابتدائي عددًا صحيحًا",
+      "Il piatto iniziale deve essere un numero intero", "Pula początkowa musi być liczbą całkowitą");
+  }
+
+  if (config.effectiveStack <= 0) {
+    return pick(
+      "유효 스택은 0보다 커야 합니다",
+      "Effective stack must be positive",
+      "有効スタックには正の数を入力してください",
+      "El stack efectivo debe ser positivo",
+      "O stack efetivo deve ser positivo",
+      "Der effektive Stack muss größer als 0 sein"
+    ,
+      "有效筹码必须大于 0", "有效籌碼必須大於 0",
+      "Le stack effectif doit être positif", "Stack efektif harus lebih dari 0",
+      "Stack efektif mesti lebih daripada 0", "Effective stack शून्य से अधिक होना चाहिए", "Efektif stack 0'dan büyük olmalı", "Stack hiệu dụng phải lớn hơn 0", "Эффективный стек должен быть больше 0",
+    "يجب أن يكون الستاك الفعلي أكبر من 0",
+      "Lo stack effettivo deve essere positivo", "Efektywny stack musi być większy od zera");
+  }
+
+  if (config.effectiveStack > MAX_AMOUNT) {
+    return pick(
+      `유효 스택은 ${MAX_AMOUNT} 이하여야 합니다`,
+      `Effective stack must not exceed ${MAX_AMOUNT}`,
+      `有効スタックは${MAX_AMOUNT}以下にしてください`,
+      `El stack efectivo no debe exceder ${MAX_AMOUNT}`,
+      `O stack efetivo não pode passar de ${MAX_AMOUNT}`,
+      `Der effektive Stack darf höchstens ${MAX_AMOUNT} sein`
+    ,
+      `有效筹码不能超过 ${MAX_AMOUNT}`, `有效籌碼不能超過 ${MAX_AMOUNT}`,
+      `Le stack effectif ne doit pas dépasser ${MAX_AMOUNT}`, `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`,
+      `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`, `Effective stack ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Efektif stack en fazla ${MAX_AMOUNT} olabilir`, `Stack hiệu dụng không được vượt quá ${MAX_AMOUNT}`, `Эффективный стек не может превышать ${MAX_AMOUNT}`,
+    `يجب ألا يتجاوز الستاك الفعلي ${MAX_AMOUNT}`,
+      `Lo stack effettivo non deve superare ${MAX_AMOUNT}`, `Efektywny stack nie może przekraczać ${localizeNumber(String(MAX_AMOUNT))}`);
+  }
+
+  if (config.effectiveStack % 1 !== 0) {
+    return pick(
+      "유효 스택은 정수여야 합니다",
+      "Effective stack must be an integer",
+      "有効スタックは整数で入力してください",
+      "El stack efectivo debe ser un entero",
+      "O stack efetivo deve ser um número inteiro",
+      "Der effektive Stack muss eine ganze Zahl sein"
+    ,
+      "有效筹码必须是整数", "有效籌碼必須是整數",
+      "Le stack effectif doit être un nombre entier", "Stack efektif harus bilangan bulat",
+      "Stack efektif mesti nombor bulat", "Effective stack का मान पूर्णांक होना चाहिए", "Efektif stack tam sayı olmalı", "Stack hiệu dụng phải là số nguyên", "Эффективный стек должен быть целым числом",
+    "يجب أن يكون الستاك الفعلي عددًا صحيحًا",
+      "Lo stack effettivo deve essere un numero intero", "Efektywny stack musi być liczbą całkowitą");
+  }
+
+  // 레이크 — 엔진이 범위 밖 값을 Err로 돌려주면 lib.rs가 unwrap에서 panic한다(가져오기·공유 링크로 들어올 수 있음 · MB-413 ③)
+  // 문구는 TreeConfig.vue의 같은 검사와 같다
+  if (config.rakePercent < 0) {
+    return pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo", "O rake não pode ser negativo", "Der Rake darf nicht negativ sein", "抽水不能是负数", "抽水不能是負數", "Le rake ne peut pas être négatif", "Rake tidak boleh negatif", "Rake tidak boleh negatif", "Rake ऋणात्मक नहीं हो सकता", "Rake negatif olamaz", "Rake không được âm", "Рейк не может быть отрицательным",
+    "لا يمكن أن يكون الريك سالبًا",
+      "Il rake non deve essere negativo", "Rake nie może być ujemny");
+  }
+
+  if (config.rakePercent > 100) {
+    return pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%", "Der Rake darf 100% nicht überschreiten", "抽水不能超过 100%", "抽水不能超過 100%", "Le rake ne peut pas dépasser 100 %", "Rake tidak boleh melebihi 100%", "Rake tidak boleh melebihi 100%", "Rake 100% से अधिक नहीं हो सकता", "Rake %100'ü aşamaz", "Rake không được vượt quá 100%", "Рейк не может превышать 100%",
+    "لا يمكن أن يتجاوز الريك ⁦100%⁩",
+      "Il rake non deve superare il 100%", "Rake nie może przekraczać 100%");
+  }
+
+  if (config.rakeCap < 0) {
+    return pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo", "O teto do rake não pode ser negativo", "Das Rake-Cap darf nicht negativ sein", "抽水上限不能是负数", "抽水上限不能是負數", "Le cap de rake ne peut pas être négatif", "Rake cap tidak boleh negatif", "Rake cap tidak boleh negatif", "Rake की सीमा ऋणात्मक नहीं हो सकती", "Rake limiti negatif olamaz", "Rake cap không được âm", "Кэп рейка не может быть отрицательным",
+    "لا يمكن أن يكون حد الريك سالبًا",
+      "Il limite del rake non deve essere negativo", "Limit rake’u nie może być ujemny");
+  }
+
+  const betConfig = [
+    {
+      s: config.oopFlopBetSanitized,
+      kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP", "Bet flop OOP", "OOP flop bet", "OOP flop bet", "Bet flop OOP", "Бет OOP на флопе",
+    "رهان OOP على الفلوب",
+        "Puntata OOP al flop", "Zakład OOP na flopie"),
+    },
+    {
+      s: config.oopFlopRaiseSanitized,
+      kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP", "Raise flop OOP", "OOP flop raise", "OOP flop raise", "Raise flop OOP", "Рейз OOP на флопе",
+    "رايز OOP على الفلوب",
+        "Rilancio OOP al flop", "Przebicie OOP na flopie"),
+    },
+    {
+      s: config.oopTurnBetSanitized,
+      kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP", "Bet turn OOP", "OOP turn bet", "OOP turn bet", "Bet turn OOP", "Бет OOP на тёрне",
+    "رهان OOP على التيرن",
+        "Puntata OOP al turn", "Zakład OOP na turnie"),
+    },
+    {
+      s: config.oopTurnRaiseSanitized,
+      kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP", "Raise turn OOP", "OOP turn raise", "OOP turn raise", "Raise turn OOP", "Рейз OOP на тёрне",
+    "رايز OOP على التيرن",
+        "Rilancio OOP al turn", "Przebicie OOP na turnie"),
+    },
+    {
+      s: config.oopRiverBetSanitized,
+      kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP", "Bet river OOP", "OOP river bet", "OOP river bet", "Bet river OOP", "Бет OOP на ривере",
+    "رهان OOP على الريفر",
+        "Puntata OOP al river", "Zakład OOP na riverze"),
+    },
+    {
+      s: config.oopRiverRaiseSanitized,
+      kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP", "Raise river OOP", "OOP river raise", "OOP river raise", "Raise river OOP", "Рейз OOP на ривере",
+    "رايز OOP على الريفر",
+        "Rilancio OOP al river", "Przebicie OOP na riverze"),
+    },
+    {
+      s: config.ipFlopBetSanitized,
+      kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP", "Bet flop IP", "IP flop bet", "IP flop bet", "Bet flop IP", "Бет IP на флопе",
+    "رهان IP على الفلوب",
+        "Puntata IP al flop", "Zakład IP na flopie"),
+    },
+    {
+      s: config.ipFlopRaiseSanitized,
+      kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP", "Raise flop IP", "IP flop raise", "IP flop raise", "Raise flop IP", "Рейз IP на флопе",
+    "رايز IP على الفلوب",
+        "Rilancio IP al flop", "Przebicie IP na flopie"),
+    },
+    {
+      s: config.ipTurnBetSanitized,
+      kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP", "Bet turn IP", "IP turn bet", "IP turn bet", "Bet turn IP", "Бет IP на тёрне",
+    "رهان IP على التيرن",
+        "Puntata IP al turn", "Zakład IP na turnie"),
+    },
+    {
+      s: config.ipTurnRaiseSanitized,
+      kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP", "Raise turn IP", "IP turn raise", "IP turn raise", "Raise turn IP", "Рейз IP на тёрне",
+    "رايز IP على التيرن",
+        "Rilancio IP al turn", "Przebicie IP na turnie"),
+    },
+    {
+      s: config.ipRiverBetSanitized,
+      kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP", "Bet river IP", "IP river bet", "IP river bet", "Bet river IP", "Бет IP на ривере",
+    "رهان IP على الريفر",
+        "Puntata IP al river", "Zakład IP na riverze"),
+    },
+    {
+      s: config.ipRiverRaiseSanitized,
+      kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP", "Raise river IP", "IP river raise", "IP river raise", "Raise river IP", "Рейз IP на ривере",
+    "رايز IP على الريفر",
+        "Rilancio IP al river", "Przebicie IP na riverze"),
+    },
+  ];
+
+  for (const { s, kind } of betConfig) {
+    if (!s.valid) {
+      return `${kind}: ${i18n.locale === "ar" ? autoIso(betErrorText(s)) : betErrorText(s)}`;
+    }
+  }
+
+  if (config.donkOption) {
+    if (!config.oopTurnDonkSanitized.valid) {
+      return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP", "Donk turn OOP", "OOP turn donk", "OOP turn donk", "Donk turn OOP", "Донк OOP на тёрне",
+    "دونك OOP على التيرن",
+        "Donk bet OOP al turn", "Donk bet OOP na turnie")}: ${
+        i18n.locale === "ar" ? autoIso(betErrorText(config.oopTurnDonkSanitized)) : betErrorText(config.oopTurnDonkSanitized)
+      }`;
+    }
+    if (!config.oopRiverDonkSanitized.valid) {
+      return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP", "Donk river OOP", "OOP river donk", "OOP river donk", "Donk river OOP", "Донк OOP на ривере",
+    "دونك OOP على الريفر",
+        "Donk bet OOP al river", "Donk bet OOP na riverze")}: ${
+        i18n.locale === "ar" ? autoIso(betErrorText(config.oopRiverDonkSanitized)) : betErrorText(config.oopRiverDonkSanitized)
+      }`;
+    }
+  }
+
+  if (config.addAllInThreshold < 0) {
+    return pick(
+      "올인 추가 임계값이 잘못되었습니다",
+      "Invalid add all-in threshold",
+      "オールイン追加のしきい値が無効です",
+      "Umbral para agregar all-in inválido",
+      "Limiar para adicionar all-in inválido",
+      "Ungültige Schwelle für zusätzliches All-in"
+    ,
+      "追加全下的阈值不正确", "追加全下的門檻不正確",
+      "Seuil d'ajout du all-in invalide", "Ambang tambah all-in tidak valid",
+      "Ambang tambah all-in tidak sah", "All-in जोड़ने की सीमा अमान्य है", "Geçersiz all-in ekleme eşiği", "Ngưỡng thêm all-in không hợp lệ", "Недопустимый порог добавления олл-ина",
+    "حد إضافة الأول إن غير صالح",
+      "Soglia per aggiungere un all-in non valida", "Nieprawidłowy próg dodawania all-in");
+  }
+
+  if (config.forceAllInThreshold < 0) {
+    return pick(
+      "강제 올인 임계값이 잘못되었습니다",
+      "Invalid force all-in threshold",
+      "強制オールインのしきい値が無効です",
+      "Umbral de all-in forzado inválido",
+      "Limiar de all-in forçado inválido",
+      "Ungültige Schwelle für erzwungenes All-in"
+    ,
+      "强制全下的阈值不正确", "強制全下的門檻不正確",
+      "Seuil de all-in forcé invalide", "Ambang all-in paksa tidak valid",
+      "Ambang all-in paksa tidak sah", "Bet को all-in बनाने की सीमा अमान्य है", "Geçersiz zorunlu all-in eşiği", "Ngưỡng buộc all-in không hợp lệ", "Недопустимый порог принудительного олл-ина",
+    "حد الأول إن الإجباري غير صالح",
+      "Soglia per forzare l’all-in non valida", "Nieprawidłowy próg wymuszania all-in");
+  }
+
+  if (config.mergingThreshold < 0) {
+    return pick(
+      "병합 임계값이 잘못되었습니다",
+      "Invalid merging threshold",
+      "マージのしきい値が無効です",
+      "Umbral de fusión inválido",
+      "Limiar de fusão inválido",
+      "Ungültige Schwelle zum Zusammenfassen"
+    ,
+      "合并阈值不正确", "合併門檻不正確",
+      "Seuil de fusion invalide", "Ambang penggabungan tidak valid",
+      "Ambang penggabungan tidak sah", "Bet मिलाने की सीमा अमान्य है", "Geçersiz birleştirme eşiği", "Ngưỡng gộp không hợp lệ", "Недопустимый порог слияния",
+    "حد الدمج غير صالح",
+      "Soglia di unione non valida", "Nieprawidłowy próg łączenia sizingów");
+  }
+
+  if (
+    config.expectedBoardLength > 0 &&
+    config.board.length !== config.expectedBoardLength
+  ) {
+    return pick(
+      `보드가 잘못되었습니다 (${config.expectedBoardLength}장이 필요합니다)`,
+      `Invalid board (${config.expectedBoardLength} cards required)`,
+      `ボードが無効です(${config.expectedBoardLength}枚必要です)`,
+      `Board inválido (se requieren ${config.expectedBoardLength} cartas)`,
+      `Board inválido (são necessárias ${config.expectedBoardLength} cartas)`,
+      `Ungültiges Board (${config.expectedBoardLength} Karten nötig)`
+    ,
+      `公共牌不正确（需要 ${config.expectedBoardLength} 张）`, `公共牌不正確（需要 ${config.expectedBoardLength} 張）`,
+      `Board invalide (${config.expectedBoardLength} cartes requises)`, `Board tidak valid (butuh ${config.expectedBoardLength} kartu)`,
+      `Board tidak sah (perlu ${config.expectedBoardLength} kad)`, `अमान्य Board (${config.expectedBoardLength} कार्ड चाहिए)`, `Geçersiz board (${config.expectedBoardLength} kart gerekli)`, `Board không hợp lệ (cần ${config.expectedBoardLength} lá)`, `Недопустимый борд (нужно ${config.expectedBoardLength} ${ruPlural(config.expectedBoardLength, "карта", "карты", "карт")})`,
+    `البورد غير صالح (عدد الأوراق المطلوب: ${config.expectedBoardLength})`,
+      `Board non valido (carte richieste: ${config.expectedBoardLength})`, `Nieprawidłowy board (wymagana liczba kart: ${config.expectedBoardLength})`);
+  }
+
+  const addedLinesArray =
+    config.addedLines === ""
+      ? []
+      : config.addedLines.split(",").map(readableLineString);
+
+  const removedLinesArray =
+    config.removedLines === ""
+      ? []
+      : config.removedLines.split(",").map(readableLineString);
+
+  if (
+    addedLinesArray.includes(ROOT_LINE_STRING) ||
+    addedLinesArray.includes(INVALID_LINE_STRING) ||
+    removedLinesArray.includes(ROOT_LINE_STRING) ||
+    removedLinesArray.includes(INVALID_LINE_STRING)
+  ) {
+    return invalidLineMessage();
+  }
+
+  if (
+    ![0, 3, 4, 5].includes(config.expectedBoardLength) ||
+    (config.expectedBoardLength === 0 &&
+      (addedLinesArray.length > 0 || removedLinesArray.length > 0)) ||
+    (config.expectedBoardLength > 0 &&
+      addedLinesArray.length === 0 &&
+      removedLinesArray.length === 0)
+  ) {
+    return pick(
+      "설정이 잘못되었습니다 (손상된 설정을 불러왔나요?)",
+      "Invalid configurations (loaded broken configurations?)",
+      "設定が無効です(破損した設定を読み込みましたか?)",
+      "Configuración inválida (¿cargaste una configuración dañada?)",
+      "Configuração inválida (você carregou uma configuração corrompida?)",
+      "Ungültige Einstellungen (beschädigte Einstellungen geladen?)"
+    ,
+      "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
+      "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
+      "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)", "Cấu hình không hợp lệ (cấu hình đã tải bị hỏng?)", "Недопустимая конфигурация (загружена повреждённая конфигурация?)",
+    "تكوين غير صالح (هل التكوين المحمَّل تالف؟)",
+      "Impostazioni non valide (hai caricato impostazioni danneggiate?)", "Nieprawidłowe ustawienia (wczytane ustawienia mogą być uszkodzone).");
+  }
+
+  return null;
+};
+
+type TreeStatusState =
+  | { type: "notLoaded" }
+  | { type: "building" }
+  | { type: "failed" }
+  | { type: "error"; message: string }
+  | { type: "built"; threads: number };
+
+export default defineComponent({
+  emits: ["board-required"],
+  components: {
+    Tippy,
+    QuestionMarkCircleIcon,
+  },
+
+  setup(_, { emit }) {
+    const store = useStore();
+    const config = useConfigStore();
+    const tmpConfig = useTmpConfigStore();
+    const savedConfig = useSavedConfigStore();
+    const lockStore = useNodeLockStore();
+    const lockLabels = computed(nodeLockLabels);
+    const L = computed(() => M[i18n.locale]);
+
+    const isSingleThread = ref(Boolean(isSafari) ||
+      typeof SharedArrayBuffer === "undefined" || !globalThis.crossOriginIsolated);
+    const numThreads = ref(isSingleThread.value ? 1 : Math.min(navigator.hardwareConcurrency || 1, 64));
+    const targetExploitability = ref(0.3);
+    const maxIterations = ref(1000);
+
+    const isTreeBuilding = ref(false);
+    const isTreeBuilt = ref(false);
+    const treeStatusState = ref<TreeStatusState>({ type: "notLoaded" });
+    const memoryUsage = ref(0);
+    const memoryUsageCompressed = ref(0);
+    const isCompressionEnabled = ref(false);
+    const terminateFlag = ref(false);
+    const pauseFlag = ref(false);
+    const currentIteration = ref(-1);
+    const exploitability = ref(Number.POSITIVE_INFINITY);
+    const elapsedTimeMs = ref(-1);
+
+    let startTime = 0;
+    let exploitabilityUpdated = false;
+    let solveEpoch = lockStore.epoch;
+    let comparisonTargets: NodeLock[] | null = null;
+
+    const treeStatus = computed(() => {
+      const state = treeStatusState.value;
+      const l = L.value;
+      if (state.type === "notLoaded") return l.statusNotLoaded;
+      if (state.type === "building") return l.statusBuilding;
+      if (state.type === "failed") return l.statusError(l.statusNotLoaded);
+      if (state.type === "error") return l.statusError(state.message);
+      return l.statusBuilt(state.threads);
+    });
+
+    const memoryUsageSelected = computed(() => {
+      if (isCompressionEnabled.value) {
+        return memoryUsageCompressed.value;
+      } else {
+        return memoryUsage.value;
+      }
+    });
+
+    // The toast retry calls runSolver directly, so it must share the button gate.
+    const canRun = computed(() => isTreeBuilt.value && !isTreeBuilding.value &&
+      !store.hasSolverRun && !lockStore.busy && memoryUsageSelected.value <= maxMemoryUsage &&
+      targetExploitability.value > 0 && maxIterations.value >= 0 &&
+      maxIterations.value % 1 === 0 && maxIterations.value <= 100000);
+
+    // 목표 오차에 닿기 전에 끝난 계산(중지·반복 한도)을 «계산 완료!»로 부르지 않는다
+    const stoppedEarly = computed(() => {
+      const meta = store.solverResultMeta;
+      return !!meta && meta.achievedExploitabilityPct > meta.targetExploitabilityPct * (1 + 1e-9);
+    });
+
+    const iterationText = computed(() => {
+      if (currentIteration.value === -1) {
+        return L.value.allocatingMemory;
+      } else {
+        return L.value.iterations(currentIteration.value);
+      }
+    });
+
+    const exploitabilityText = computed(() => {
+      if (!Number.isFinite(exploitability.value)) {
+        return "";
+      } else {
+        const valueText = localizeNumber(exploitability.value.toFixed(2));
+        const percent = (exploitability.value * 100) / savedConfig.startingPot;
+        // 목표 전 멈춤인데 반올림하면 목표와 같아 보이면(0.3002% → «0.30%») 자릿수를 늘린다 (MA-493 통지 ①)
+        let digits = 2;
+        const target = store.solverResultMeta?.targetExploitabilityPct;
+        if (stoppedEarly.value && target !== undefined) {
+          while (digits < 4 && Number(percent.toFixed(digits)) <= target) digits++;
+        }
+        const percentText = localizeNumber(`${percent.toFixed(digits)}%`);
+        return L.value.exploitabilityLine(valueText, percentText);
+      }
+    });
+
+    const timeText = computed(() => {
+      if (elapsedTimeMs.value === -1 || !store.isSolverFinished) {
+        return "";
+      } else {
+        return L.value.timeLine(localizeNumber((elapsedTimeMs.value / 1000).toFixed(2)));
+      }
+    });
+
+    const recoverFromFailure = (error: unknown) => {
+      terminate();
+      lockStore.reset();
+      comparisonTargets = null;
+      isTreeBuilt.value = false;
+      store.isSolverPaused = false;
+      store.isSolverFinished = false;
+      store.isSolverRunning = false;
+      store.isFinalizing = false;
+      terminateFlag.value = false;
+      pauseFlag.value = false;
+      startTime = 0;
+      treeStatusState.value = { type: "failed" };
+      // The editor stores are untouched. A failed/terminated engine must be rebuilt.
+      reportSolverError(error, async () => {
+        isSingleThread.value = true;
+        numThreads.value = 1;
+        store.navView = "solver";
+        store.sideView = "run-solver";
+        if (await buildTree(true)) await runSolver();
+      });
+    };
+
+    const stopListening = onWorkerFailure((error) => {
+      // Active calls reject through their guard and reach the catch/finally below.
+      if (!isTreeBuilding.value && !store.isSolverRunning && !store.isFinalizing) {
+        recoverFromFailure(error);
+      }
+    });
+    onUnmounted(() => {
+      stopListening();
+      clearSolverRetry();
+      terminate();
+      lockStore.reset();
+    });
+
+    // Preset/shared/preflop range loads all publish through pendingRangeText.
+    // Observe synchronously, before RangeEditor consumes the pending strings.
+    watch(() => store.pendingRangeText.slice(), (ranges) => {
+      if (!ranges.some(Boolean)) return;
+      const hadLocks = lockStore.locks.length > 0 || lockStore.appliedLocks.length > 0 ||
+        lockStore.resultLockCount > 0 || lockStore.busy;
+      if (hadLocks) {
+        lockStore.reset();
+        comparisonTargets = null;
+        terminate();
+        isTreeBuilt.value = false;
+        store.isSolverFinished = false;
+        store.isSolverPaused = false;
+        store.isSolverRunning = false;
+        store.isFinalizing = false;
+        treeStatusState.value = { type: "notLoaded" };
+        startTime = 0;
+      } else {
+        // Preserve an ordinary solve's epoch and existing navigation behavior.
+        lockStore.before = null;
+        lockStore.after = null;
+        lockStore.error = "";
+        comparisonTargets = null;
+      }
+    }, { flush: "sync" });
+
+    const buildTree = async (forceSingleThread = false) => {
+      if (isTreeBuilding.value || store.isSolverRunning || store.isFinalizing || lockStore.busy) return false;
+      clearSolverRetry();
+      isTreeBuilt.value = false;
+      lockStore.reset();
+      comparisonTargets = null;
+      store.isSolverFinished = false;
+      store.isSolverPaused = false;
+
+      const configError = checkConfig(config);
+      if (configError !== null) {
+        treeStatusState.value = { type: "error", message: configError };
+        if (config.board.length < 3) emit("board-required", configError);
+        return false;
+      }
+
+      saveConfigTmp();
+      isTreeBuilding.value = true;
+      store.isSolverPaused = false;
+      store.isSolverFinished = false;
+      treeStatusState.value = { type: "building" };
+
+      try {
+        const mode = await init(numThreads.value, forceSingleThread || isSingleThread.value);
+        isSingleThread.value = mode === "st";
+        if (isSingleThread.value) numThreads.value = 1;
+        if (!handler) throw new Error("SOLVER_WORKER_UNAVAILABLE");
+
+        const errorString = await handler.init(
+          tmpConfig.rangeRaw[0],
+          tmpConfig.rangeRaw[1],
+          new Uint8Array(tmpConfig.board),
+          tmpConfig.startingPot,
+          tmpConfig.effectiveStack,
+          tmpConfig.rakePercent / 100,
+          tmpConfig.rakeCap,
+          tmpConfig.donkOption,
+          convertBetString(tmpConfig.oopFlopBet),
+          convertBetString(tmpConfig.oopFlopRaise),
+          convertBetString(tmpConfig.oopTurnBet),
+          convertBetString(tmpConfig.oopTurnRaise),
+          tmpConfig.donkOption ? convertBetString(tmpConfig.oopTurnDonk) : "",
+          convertBetString(tmpConfig.oopRiverBet),
+          convertBetString(tmpConfig.oopRiverRaise),
+          tmpConfig.donkOption ? convertBetString(tmpConfig.oopRiverDonk) : "",
+          convertBetString(tmpConfig.ipFlopBet),
+          convertBetString(tmpConfig.ipFlopRaise),
+          convertBetString(tmpConfig.ipTurnBet),
+          convertBetString(tmpConfig.ipTurnRaise),
+          convertBetString(tmpConfig.ipRiverBet),
+          convertBetString(tmpConfig.ipRiverRaise),
+          tmpConfig.addAllInThreshold / 100,
+          tmpConfig.forceAllInThreshold / 100,
+          tmpConfig.mergingThreshold / 100,
+          tmpConfig.addedLines,
+          tmpConfig.removedLines
+        );
+
+        if (errorString) {
+          treeStatusState.value = { type: "error", message: errorString };
+          terminate();
+          return false;
+        }
+
+        saveConfig();
+
+        memoryUsage.value = await handler.memoryUsage(false);
+        memoryUsageCompressed.value = await handler.memoryUsage(true);
+
+        if (
+          memoryUsage.value > maxMemoryUsage &&
+          memoryUsageCompressed.value <= maxMemoryUsage
+        ) {
+          isCompressionEnabled.value = true;
+        }
+
+        isTreeBuilt.value = true;
+        treeStatusState.value = { type: "built", threads: numThreads.value };
+        return true;
+      } catch (error) {
+        recoverFromFailure(error);
+        return false;
+      } finally {
+        isTreeBuilding.value = false;
+        store.isSolverRunning = false;
+        store.isFinalizing = false;
+      }
+    };
+
+    let solutionUnitScale = store.displayUnitScale;
+    const runSolver = async (withLocks = false) => {
+      if (withLocks) {
+        if (!isTreeBuilt.value || isTreeBuilding.value || store.isSolverRunning ||
+          store.isFinalizing || store.isSolverPaused || memoryUsageSelected.value > maxMemoryUsage ||
+          targetExploitability.value <= 0 || !Number.isInteger(maxIterations.value) ||
+          maxIterations.value < 0 || maxIterations.value > 100000) {
+          lockStore.error = "LOCK_INVALID_STATE";
+          lockStore.busy = false;
+          return;
+        }
+      } else if (!canRun.value) return;
+      beginFeedbackSolve(); // F1_FEEDBACK_ONLY
+      clearSolverRetry();
+      const epoch = lockStore.epoch;
+      solveEpoch = epoch;
+      try {
+        if (!handler) throw new Error("SOLVER_WORKER_UNAVAILABLE");
+        const remote = handler;
+        const requested = lockStore.locks.map(lock => ({ ...lock,
+          history: [...lock.history], strategy: [...lock.strategy] }));
+        if (withLocks) {
+          comparisonTargets = [...lockStore.appliedLocks, ...requested];
+          // Capture while the preceding finalized solution still exists.
+          const before = store.isSolverFinished
+            ? await captureSnapshot(remote, comparisonTargets, exploitability.value, lockStore.resultLockCount)
+            : null;
+          if (epoch !== lockStore.epoch) return;
+          lockStore.before = before;
+          lockStore.after = null;
+        } else {
+          comparisonTargets = null;
+        }
+        if (epoch !== lockStore.epoch) return;
+        terminateFlag.value = false;
+        pauseFlag.value = false;
+        currentIteration.value = -1;
+        exploitability.value = Number.POSITIVE_INFINITY;
+        elapsedTimeMs.value = -1;
+        solutionUnitScale = withLocks
+          ? store.solverResultMeta?.unitScale ?? store.displayUnitScale
+          : store.displayUnitScale;
+        store.solverResultMeta = null;
+        store.isSolverFinished = false;
+        store.isSolverRunning = true;
+        startTime = performance.now();
+        await remote.allocateMemory(isCompressionEnabled.value);
+        if (epoch !== lockStore.epoch) return;
+        // Allocation resets regrets, but retains the engine's locking map.
+        // Record each successful change, including when a later lock fails.
+        for (const previous of [...lockStore.appliedLocks]) {
+          const code = await remote.unlockStrategy(Uint32Array.from(previous.history));
+          if (epoch !== lockStore.epoch) return;
+          if (code) throw new NodeLockError(code);
+          lockStore.appliedLocks = lockStore.appliedLocks.filter(lock => !sameHistory(lock.history, previous.history));
+        }
+        for (const lock of requested) {
+          if (lock.history.some(index => !Number.isInteger(index) || index < 0 || index > 0xffffffff)) {
+            throw new NodeLockError("LOCK_INVALID_HISTORY");
+          }
+          const code = await remote.lockStrategy(Uint32Array.from(lock.history), Float32Array.from(lock.strategy));
+          if (epoch !== lockStore.epoch) return;
+          if (code) throw new NodeLockError(code);
+          lockStore.appliedLocks.push(lock);
+        }
+        if (epoch !== lockStore.epoch) return;
+        lockStore.resultLockCount = lockStore.appliedLocks.length;
+
+        currentIteration.value = 0;
+        const initialExploitability = await remote.exploitability();
+        if (epoch !== lockStore.epoch) return;
+        exploitability.value = Math.max(initialExploitability, 0);
+        exploitabilityUpdated = true;
+
+        await resumeSolver();
+      } catch (error) {
+        if (epoch !== lockStore.epoch) return;
+        if (error instanceof NodeLockError) {
+          lockStore.error = error.code;
+          lockStore.resultLockCount = lockStore.appliedLocks.length;
+          startTime = 0;
+        } else recoverFromFailure(error);
+      } finally {
+        if (epoch === lockStore.epoch) {
+          store.isSolverRunning = false;
+          store.isFinalizing = false;
+          if (!store.isSolverPaused) lockStore.busy = false;
+        }
+      }
+    };
+
+    const resumeSolver = async () => {
+      const epoch = solveEpoch;
+      if (epoch !== lockStore.epoch || store.isFinalizing || isTreeBuilding.value) return;
+      store.isSolverRunning = true;
+      store.isSolverPaused = false;
+
+      try {
+        if (!handler) throw new Error("SOLVER_WORKER_UNAVAILABLE");
+        const remote = handler;
+        if (startTime === 0) {
+          startTime = performance.now();
+        }
+
+        const target = (savedConfig.startingPot * targetExploitability.value) / 100;
+
+        while (
+          !terminateFlag.value &&
+          currentIteration.value < maxIterations.value &&
+          exploitability.value > target
+        ) {
+          if (pauseFlag.value) {
+            const end = performance.now();
+            elapsedTimeMs.value += end - startTime;
+            startTime = 0;
+            pauseFlag.value = false;
+            store.isSolverRunning = false;
+            store.isSolverPaused = true;
+            return;
+          }
+
+          await remote.iterate(currentIteration.value);
+          if (epoch !== lockStore.epoch) return;
+          ++currentIteration.value;
+          exploitabilityUpdated = false;
+
+          if (currentIteration.value % 10 === 0) {
+            const currentExploitability = await remote.exploitability();
+            if (epoch !== lockStore.epoch) return;
+            exploitability.value = Math.max(currentExploitability, 0);
+            exploitabilityUpdated = true;
+          }
+        }
+
+        if (!exploitabilityUpdated) {
+          const finalExploitability = await remote.exploitability();
+          if (epoch !== lockStore.epoch) return;
+          exploitability.value = Math.max(finalExploitability, 0);
+        }
+
+        store.isSolverRunning = false;
+        store.isFinalizing = true;
+
+        await remote.finalize();
+        if (epoch !== lockStore.epoch) return;
+
+        lockStore.currentExploitability = exploitability.value;
+        store.solverResultMeta = {
+          // Round-trip through chips leaves float noise (pot 3: 0.10000000000000002).
+          targetExploitabilityPct: Number(((target * 100) / savedConfig.startingPot).toPrecision(12)),
+          achievedExploitabilityPct: (exploitability.value * 100) / savedConfig.startingPot,
+          unitScale: solutionUnitScale,
+        };
+        if (comparisonTargets) {
+          const after = await captureSnapshot(remote, comparisonTargets, exploitability.value, lockStore.resultLockCount);
+          if (epoch !== lockStore.epoch) return;
+          lockStore.after = after;
+        }
+
+        store.isFinalizing = false;
+        store.isSolverFinished = true;
+        recordFeedbackSolve(); // F1_FEEDBACK_ONLY
+
+        const end = performance.now();
+        elapsedTimeMs.value += end - startTime;
+        startTime = 0;
+      } catch (error) {
+        if (epoch !== lockStore.epoch) return;
+        if (error instanceof NodeLockError) {
+          // finalize succeeded; only the optional comparison snapshot failed.
+          lockStore.error = error.code;
+          store.isSolverFinished = true;
+          recordFeedbackSolve(); // F1_FEEDBACK_ONLY
+        } else recoverFromFailure(error);
+      } finally {
+        if (epoch === lockStore.epoch) {
+          store.isSolverRunning = false;
+          store.isFinalizing = false;
+          if (!store.isSolverPaused) lockStore.busy = false;
+        }
+      }
+    };
+
+    watch(() => lockStore.solveRequest, (request) => {
+      if (request > 0 && lockStore.busy) void runSolver(true);
+    });
+
+    /* 스팟 공유 링크 */
+    const shareCopied = ref(false);
+    const shareError = ref("");
+
+    const copySpotUrl = async () => {
+      shareError.value = "";
+      shareCopied.value = false;
+      let url: string | null;
+      try {
+        url = encodeSpotUrl();
+      } catch (error) {
+        if (!(error instanceof InvalidSpotLinesError)) throw error;
+        shareError.value = invalidLineMessage();
+        return;
+      }
+      if (!url) {
+        shareError.value = pick(
+          "공유하려면 OOP·IP 레인지와 보드 3장을 먼저 입력하세요.",
+          "To share a spot, enter the OOP and IP ranges and at least 3 board cards first.",
+          "スポットを共有するには、OOPとIPのレンジ、そしてボードのカード3枚以上を先に入力してください。",
+          "Para compartir un spot, ingresa primero los rangos OOP e IP y al menos 3 cartas del board.",
+          "Para compartilhar um spot, informe primeiro os ranges OOP e IP e pelo menos 3 cartas do board.",
+          "Zum Teilen eines Spots brauchst du zuerst die OOP- und die IP-Range und mindestens 3 Board-Karten."
+        ,
+          "想分享牌局的话，请先填好 OOP 和 IP 范围，并选好至少 3 张公共牌。", "想分享牌局的話，請先填好 OOP 和 IP 範圍，並選好至少 3 張公共牌。",
+          "Pour partager un spot, renseigne d'abord les ranges OOP et IP et au moins 3 cartes de board.", "Untuk membagikan spot, isi dulu range OOP dan IP serta minimal 3 kartu board.",
+          "Untuk berkongsi spot, isi dahulu range OOP dan IP serta sekurang-kurangnya 3 kad board.", "स्पॉट शेयर करने से पहले OOP और IP की range तथा Board के कम से कम 3 कार्ड दर्ज करें।", "Spot paylaşmak için önce OOP ve IP range'lerini ve en az 3 board kartını gir.", "Để chia sẻ spot, trước hết hãy nhập range OOP, range IP và ít nhất 3 lá board.", "Чтобы поделиться спотом, сначала введи диапазоны OOP и IP и не меньше 3 карт борда.",
+    "لمشاركة موقف، أدخل أولًا نطاقي OOP وIP و3 أوراق على الأقل في البورد.",
+          "Per condividere uno spot, inserisci prima i range OOP e IP e almeno 3 carte del board.", "Aby udostępnić spot, najpierw wpisz zakresy OOP i IP oraz co najmniej 3 karty boardu.");
+        return;
+      }
+      if (url.length > 8192) {
+        shareError.value = pick(
+          "공유 링크가 너무 깁니다 — 트리 설정을 줄이거나 설정 파일로 내보내 주세요",
+          "The share link is too long — simplify the tree settings or export them as a configuration file.",
+          "共有リンクが長すぎます。ツリー設定を減らすか、設定ファイルとしてエクスポートしてください。",
+          "El enlace para compartir es demasiado largo — simplifica la configuración del árbol o expórtala como archivo de configuración.",
+          "O link de compartilhamento é muito longo — simplifique as configurações da árvore ou exporte-as como arquivo de configuração.",
+          "Der Freigabelink ist zu lang — vereinfache die Baumeinstellungen oder exportiere sie als Konfigurationsdatei.",
+          "分享链接太长，请精简树设置或导出为配置文件。",
+          "分享連結太長，請精簡樹設定或匯出為設定檔。",
+          "Le lien de partage est trop long — simplifie les paramètres de l'arbre ou exporte-les dans un fichier de configuration.",
+          "Tautan berbagi terlalu panjang — sederhanakan pengaturan tree atau ekspor sebagai file konfigurasi.",
+          "Pautan perkongsian terlalu panjang — ringkaskan tetapan tree atau eksport sebagai fail konfigurasi.",
+          "शेयर लिंक बहुत लंबा है — ट्री की सेटिंग कम करें या उन्हें कॉन्फ़िगरेशन फ़ाइल के रूप में एक्सपोर्ट करें।", "Paylaşım bağlantısı çok uzun — ağaç ayarlarını sadeleştir ya da yapılandırma dosyası olarak dışa aktar.", "Liên kết chia sẻ quá dài — hãy đơn giản hóa cài đặt cây hoặc xuất ra tệp cấu hình.", "Ссылка для отправки слишком длинная — упрости настройки дерева или экспортируй их в файл конфигурации.",
+    "رابط المشاركة طويل جدًا — بسّط إعدادات الشجرة أو صدّرها كملف تكوين.",
+          "Il collegamento di condivisione è troppo lungo: semplifica le impostazioni dell’albero oppure esportale in un file.", "Link do udostępnienia jest za długi. Uprość ustawienia drzewa lub wyeksportuj je do pliku."
+        );
+        return;
+      }
+      try {
+        if (feedbackFeatures.share) url = await shareSpotThroughMain(url); // F1_FEEDBACK_ONLY
+        await navigator.clipboard.writeText(url);
+      } catch {
+        const ta = document.createElement("textarea");
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      shareCopied.value = true;
+      setTimeout(() => (shareCopied.value = false), 1500);
+    };
+
+    // 용량 단위 — 프랑스어권은 Go/Mo가 표준 표기 (원어민 검수 3인 일치, 2026-08-24).
+    // 다른 언어는 기존 GB/MB 그대로. 언어 전환에 따라와야 하므로 computed.
+    const UNITS = computed(() =>
+      i18n.locale === "fr" ? { gb: "\u00a0Go", mb: "\u00a0Mo" }
+        : i18n.locale === "ru" ? { gb: "\u00a0\u0413\u0411", mb: "\u00a0\u041c\u0411" } // \uc6a9\uc5b4\ud655\uc815\ud45c \u00a72-1
+        : i18n.locale === "ar" ? { gb: " GB", mb: " MB" } // ar: 라틴 단위 · 사용처에서 ltrIso 격리(확정표 §2-1)
+        : i18n.locale === "it" ? { gb: "\u00a0GB", mb: "\u00a0MB" }
+        : i18n.locale === "pl" ? { gb: "\u00a0GB", mb: "\u00a0MB" }
+        : { gb: " GB", mb: " MB" }
+    );
+
+    // 1 MB 미만을 toFixed(0)으로 자르면 «RAM 0 MB 필요»가 된다 — 리버 단일 노드 같은
+    // 작은 트리에서 실제로 그랬다(2026-09-12 실측: 두 정밀도 모드 다 0 MB).
+    // «고장»으로 읽히므로 작을수록 자릿수를 늘린다. 소수점은 언어별 구분자를 따른다.
+    const formatMemory = (bytes: number) => {
+      if (bytes >= 1023.5 * 1024 * 1024) {
+        return localizeNumber((bytes / (1024 * 1024 * 1024)).toFixed(2)) + UNITS.value.gb;
+      }
+      const mb = bytes / (1024 * 1024);
+      const digits = mb >= 10 ? 0 : mb >= 1 ? 1 : 2;
+      return localizeNumber(mb.toFixed(digits)) + UNITS.value.mb;
+    };
+
+    const navResultsLabel = computed(() => navResults[i18n.locale]);
+    return {
+      store,
+      lockStore,
+      lockLabels,
+      L,
+      isAr: computed(() => i18n.locale === "ar"),
+      UNITS,
+      formatMemory,
+      navResultsLabel,
+      numThreads,
+      isSingleThread,
+      targetExploitability,
+      shareCopied,
+      shareError,
+      copySpotUrl,
+      maxIterations,
+      isTreeBuilding,
+      isTreeBuilt,
+      treeStatus,
+      maxMemoryUsage,
+      memoryUsage,
+      memoryUsageCompressed,
+      isCompressionEnabled,
+      terminateFlag,
+      pauseFlag,
+      memoryUsageSelected,
+      canRun,
+      iterationText,
+      stoppedEarly,
+      exploitabilityText,
+      timeText,
+      buildTree,
+      runSolver,
+      resumeSolver,
+    };
+  },
+});
+</script>
+
+<style scoped>
+.ar-target-row { display: flex; align-items: center; gap: 0.25rem; }
+/* The input's text is LTR; its spacing belongs to the surrounding RTL row. */
+:global(html[dir="rtl"] .solver-run-toolbar > input){ margin-left: 0; margin-right: 0.5rem; }
+:global(html[dir="rtl"] .solver-run-settings input.ms-3){ margin-left: 0; margin-right: 0.75rem; }
+:global(html[dir="rtl"] .solver-run-settings input.ms-2){ margin-left: 0; margin-right: 0.5rem; }
+.solver-run-toolbar {
+  @apply rounded-lg border border-neutral-700 bg-surface-2 p-3;
+}
+.solver-run-settings {
+  @apply rounded-lg border border-neutral-700 bg-surface-1 p-3 md:p-4;
+}
+.button-green {
+  @apply bg-surface-3 text-ink-primary hover:bg-surface-4 active:bg-surface-4 disabled:bg-surface-3;
+}
+</style>

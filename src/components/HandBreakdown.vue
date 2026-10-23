@@ -1,0 +1,245 @@
+<template>
+  <div
+    class="hand-breakdown w-full px-3 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-sm"
+  >
+    <div class="grid grid-cols-2 gap-x-4">
+      <div>
+        <div class="font-semibold text-neutral-300">{{ L.hands }}</div>
+        <div v-if="breakdown.made.length === 0" class="mt-1 text-neutral-500">
+          {{ L.noHands }}
+        </div>
+        <div
+          v-for="(row, i) in breakdown.made"
+          :key="row.key"
+          class="breakdown-row mt-1.5 leading-tight"
+        >
+          <div class="flex justify-between">
+            <span class="text-neutral-200">{{ row.label }}</span>
+            <span dir="ltr" class="text-neutral-300 tabular-nums">
+              {{ $pct($n(row.pct.toFixed(1))) + " " }}
+            </span>
+          </div>
+          <div data-rtl-island="numeric-bar" dir="ltr" class="mt-0.5 h-1.5 w-full rounded-sm bg-neutral-700">
+            <div
+              class="h-full rounded-sm"
+              :style="{
+                width: Math.max(row.pct, 1.5) + '%',
+                'background-color': madeColor(i),
+              }"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="font-semibold text-neutral-300">{{ L.draws }}</div>
+        <div v-if="breakdown.draws.length === 0" class="mt-1 text-neutral-500">
+          {{ L.noDraws }}
+        </div>
+        <div
+          v-for="(row, i) in breakdown.draws"
+          :key="row.key"
+          class="breakdown-row mt-1.5 leading-tight"
+        >
+          <div class="flex justify-between">
+            <span class="text-neutral-200">{{ row.label }}</span>
+            <span dir="ltr" class="text-neutral-300 tabular-nums">
+              {{ $pct($n(row.pct.toFixed(1))) + " " }}
+            </span>
+          </div>
+          <div data-rtl-island="numeric-bar" dir="ltr" class="mt-0.5 h-1.5 w-full rounded-sm bg-neutral-700">
+            <div
+              class="h-full rounded-sm"
+              :style="{
+                width: Math.max(row.pct, 1.5) + '%',
+                'background-color': drawColor(i),
+              }"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent } from "vue";
+import { aggregateBreakdown } from "../hand-categories";
+import { i18n } from "../i18n";
+
+const M = {
+  ko: {
+    hands: "핸드",
+    noHands: "표시할 핸드가 없습니다",
+    draws: "드로우",
+    noDraws: "드로우 정보 없음",
+  },
+  en: {
+    hands: "Hands",
+    noHands: "No hands to display",
+    draws: "Draws",
+    noDraws: "No draw information",
+  },
+  ja: {
+    hands: "ハンド",
+    noHands: "表示するハンドがありません",
+    draws: "ドロー",
+    noDraws: "ドロー情報なし",
+  },
+  es: {
+    hands: "Manos",
+    noHands: "No hay manos para mostrar",
+    draws: "Proyectos",
+    noDraws: "Sin información de proyectos",
+  },
+  pt: {
+    hands: "Mãos",
+    noHands: "Nenhuma mão para mostrar",
+    draws: "Draws",
+    noDraws: "Sem informações de draws",
+  },
+  de: {
+    hands: "Hände",
+    noHands: "Keine Hände vorhanden",
+    draws: "Draws",
+    noDraws: "Keine Draw-Informationen",
+  },
+  zh: {
+    hands: "手牌",
+    noHands: "没有可显示的手牌",
+    // draw = 「听牌」(同花听牌·顺子听牌). 중국 德扑 매체 실사용어 — 리서치 §2 출처
+    draws: "听牌",
+    noDraws: "没有听牌信息",
+  },
+  "zh-hant": {
+    hands: "手牌",
+    noHands: "沒有可顯示的手牌",
+    // draw = 「聽牌」 (본체 브리프 §7-B. 번체 포스팅 339회 — 간체와 글자만 다르다)
+    draws: "聽牌",
+    // 「資訊」= 台灣 표기 (간체의 「信息」에 해당)
+    noDraws: "沒有聽牌資訊",
+  },
+  fr: {
+    // 프리셋 lessonFr가 인용하는 패널 이름(« Mains / Tirages »)과 글자가 맞아야 한다
+    hands: "Mains",
+    noHands: "Aucune main à afficher",
+    draws: "Tirages",
+    noDraws: "Aucune info de tirage",
+  },
+  id: {
+    // 프리셋 lessonId가 인용하는 패널 이름(«Hand / Draw»)과 글자가 맞아야 한다
+    hands: "Hand",
+    noHands: "Tidak ada hand untuk ditampilkan",
+    draws: "Draw",
+    noDraws: "Tidak ada info draw",
+  },
+  ms: {
+    // 말레이 표준은 tangan (리서치 §1-4) — id의 «Hand»와 다르다. draw는 영어 유지
+    hands: "Tangan",
+    noHands: "Tiada tangan untuk dipaparkan",
+    draws: "Draw",
+    noDraws: "Tiada maklumat draw",
+  },
+  hi: {
+    hands: "हैंड",
+    noHands: "दिखाने के लिए कोई हैंड नहीं",
+    draws: "Draws",
+    noDraws: "Draw की जानकारी नहीं है",
+  },
+  tr: {
+    hands: "Eller",
+    noHands: "Gösterilecek el yok",
+    draws: "Draw'lar",
+    noDraws: "Draw bilgisi yok",
+  },
+  vi: {
+    hands: "Tay bài",
+    noHands: "Không có tay bài để hiển thị",
+    draws: "Draw",
+    noDraws: "Không có thông tin draw",
+  },
+  ru: {
+    hands: "Руки",
+    noHands: "Нет рук для показа",
+    draws: "Дро",
+    noDraws: "Нет данных о дро",
+  },
+  ar: {
+    hands: "الأيدي",
+    noHands: "لا أيدي للعرض",
+    draws: "الدرو",
+    noDraws: "لا معلومات عن الدرو",
+  },
+  it: {
+    hands: "Mani fatte",
+    noHands: "Nessuna mano da mostrare",
+    draws: "Progetti",
+    noDraws: "Nessuna informazione sui progetti",
+  },
+  pl: {
+    hands: "Układy",
+    noHands: "Brak rąk do wyświetlenia",
+    draws: "Drawy",
+    noDraws: "Brak informacji o drawach",
+  },
+} as const;
+
+// GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)
+const MADE_PALETTE = [
+  "#14b8a6", // teal-500
+  "#06b6d4", // cyan-500
+  "#0ea5e9", // sky-500
+  "#3b82f6", // blue-500
+  "#6366f1", // indigo-500
+  "#8b5cf6", // violet-500
+  "#a855f7", // purple-500
+  "#d946ef", // fuchsia-500
+  "#ec4899", // pink-500
+  "#f43f5e", // rose-500
+  "#ef4444", // red-500
+  "#f97316", // orange-500
+  "#f59e0b", // amber-500
+  "#eab308", // yellow-500
+  "#737373", // neutral-500 (미완성)
+];
+
+const DRAW_PALETTE = [
+  "#f97316", // 콤보
+  "#f59e0b", // 플러시 드로우
+  "#eab308", // OESD
+  "#84cc16", // 거트샷
+  "#22d3ee", // 백도어
+  "#737373", // 없음
+];
+
+export default defineComponent({
+  props: {
+    cards: {
+      type: Array as () => number[],
+      required: true,
+    },
+    weights: {
+      type: Array as () => number[],
+      required: true,
+    },
+    board: {
+      type: Array as () => number[],
+      required: true,
+    },
+  },
+
+  setup(props) {
+    const L = computed(() => M[i18n.locale]);
+    const breakdown = computed(() =>
+      aggregateBreakdown(props.cards, props.weights, props.board)
+    );
+
+    return {
+      L,
+      breakdown,
+      madeColor: (i: number) => MADE_PALETTE[i % MADE_PALETTE.length],
+      drawColor: (i: number) => DRAW_PALETTE[i % DRAW_PALETTE.length],
+    };
+  },
+});
+</script>

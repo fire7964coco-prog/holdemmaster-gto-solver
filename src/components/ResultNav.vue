@@ -1,0 +1,1468 @@
+<template>
+  <div
+    data-rtl-island="action-path" ref="navDiv" dir="ltr"
+    class="result-nav flex shrink-0 gap-1 p-1 overflow-x-auto whitespace-nowrap snug"
+  >
+    <div
+      v-for="spot in spots"
+      :key="spot.index"
+      :class="
+        'result-node flex flex-col relative h-full px-1 py-0.5 justify-start ' +
+        'rounded-lg bg-neutral-800 border transition group ' +
+        (spot.type === 'chance'
+          ? isSelectedChanceSkipped && spot.index > selectedChanceIndex
+            ? ''
+            : 'hover:border-red-600 '
+          : 'hover:border-brand ') +
+        (spot.index === selectedChanceIndex
+          ? 'border-red-600 cursor-default'
+          : spot.index === selectedSpotIndex
+          ? 'border-brand cursor-default'
+          : spot.type === 'chance' &&
+            isSelectedChanceSkipped &&
+            spot.index > selectedChanceIndex
+          ? 'border-neutral-600 cursor-default'
+          : 'border-neutral-600 cursor-pointer')
+      "
+      @click="selectSpot(spot.index, false)"
+    >
+      <!-- Root or Chance -->
+      <template v-if="spot.type === 'root' || spot.type === 'chance'">
+        <div
+          :class="
+            'px-1.5 pt-1 pb-0.5 font-semibold ' +
+            (spot.index === selectedChanceIndex
+              ? ''
+              : isSelectedChanceSkipped && spot.index > selectedChanceIndex
+              ? 'opacity-70'
+              : 'group-hover:opacity-100 opacity-70')
+          "
+        >
+          {{ spotPlayerLabel(spot.player) }}
+        </div>
+        <div
+          class="flex flex-col flex-grow px-3 items-center justify-evenly font-semibold"
+        >
+          <div class="relative">
+            <span
+              v-for="card of spotCards(spot)"
+              :key="card.rank + card.suit"
+              :class="
+                (spot.type === 'root'
+                  ? 'mx-px '
+                  : 'inline-block w-8 text-center ') + card.colorClass
+              "
+            >
+              {{ card.rank + card.suit }}
+            </span>
+            <template
+              v-if="spot.type === 'chance' && spot.selectedIndex !== -1"
+            >
+              <button
+                :class="
+                  'absolute -top-[1.375rem] left-1/2 -ml-3 w-6 h-6 ' +
+                  (isCardAvailable(spot, 0, 1)
+                    ? 'opacity-70 hover:opacity-100 text-neutral-200'
+                    : 'text-red-300')
+                "
+                @click.stop="
+                  isCardAvailable(spot, 0, 1) && dealArrow(spot, 0, 1)
+                "
+              >
+                <ChevronUpIcon class="w-full h-full" />
+              </button>
+              <button
+                :class="
+                  'absolute -left-[1.375rem] top-1/2 -mt-3 w-6 h-6 ' +
+                  (isCardAvailable(spot, 1, 0)
+                    ? 'opacity-70 hover:opacity-100 text-neutral-200'
+                    : 'text-red-300')
+                "
+                @click.stop="
+                  isCardAvailable(spot, 1, 0) && dealArrow(spot, 1, 0)
+                "
+              >
+                <ChevronLeftIcon class="w-full h-full" />
+              </button>
+              <button
+                :class="
+                  'absolute -right-[1.375rem] top-1/2 -mt-3 w-6 h-6 ' +
+                  (isCardAvailable(spot, -1, 0)
+                    ? 'opacity-70 hover:opacity-100 text-neutral-200'
+                    : 'text-red-300')
+                "
+                @click.stop="
+                  isCardAvailable(spot, -1, 0) && dealArrow(spot, -1, 0)
+                "
+              >
+                <ChevronRightIcon class="w-full h-full" />
+              </button>
+              <button
+                :class="
+                  'absolute -bottom-[1.375rem] left-1/2 -ml-3 w-6 h-6 ' +
+                  (isCardAvailable(spot, 0, -1)
+                    ? 'opacity-70 hover:opacity-100 text-neutral-200'
+                    : 'text-red-300')
+                "
+                @click.stop="
+                  isCardAvailable(spot, 0, -1) && dealArrow(spot, 0, -1)
+                "
+              >
+                <ChevronDownIcon class="w-full h-full" />
+              </button>
+            </template>
+          </div>
+          <div
+            :class="
+              spot.index === selectedChanceIndex
+                ? ''
+                : isSelectedChanceSkipped && spot.index > selectedChanceIndex
+                ? 'opacity-70'
+                : 'group-hover:opacity-100 opacity-70'
+            "
+          >
+            <div :dir="isAr ? 'rtl' : undefined">{{ L.pot }} {{ isAr ? ltrIso(amountText(spot.pot)) : amountText(spot.pot) }}</div>
+            <div :dir="isAr ? 'rtl' : undefined">{{ L.stack }} {{ isAr ? ltrIso(amountText(spot.stack)) : amountText(spot.stack) }}</div>
+          </div>
+        </div>
+
+        <button
+          v-if="
+            spot.index === selectedChanceIndex &&
+            spot.selectedIndex !== -1 &&
+            !isDealing
+          "
+          class="absolute top-1.5 right-1.5 opacity-70 hover:opacity-100 text-neutral-200"
+          @click="deal(spot.selectedIndex)"
+        >
+          <XMarkIcon class="w-6 h-6" />
+        </button>
+      </template>
+
+      <!-- Player -->
+      <template v-if="spot.type === 'player'">
+        <div
+          :class="
+            'px-1.5 py-1 font-semibold group-hover:opacity-100 ' +
+            (spot.index === selectedSpotIndex ? '' : 'opacity-70')
+          "
+        >
+          {{ spotPlayerLabel(spot.player) }}
+        </div>
+        <div class="flex-grow overflow-y-auto">
+          <button
+            v-for="action of spot.actions"
+            :key="action.index"
+            :class="
+              'flex w-full px-1.5 rounded-md transition-colors hover:bg-neutral-700 ' +
+              (action.isSelected ? 'bg-neutral-700 ' : '')
+            "
+            @click.stop="play(spot.index, action.index)"
+          >
+            <span class="inline-block relative w-4 mr-0.5">
+              <span
+                v-if="
+                  spot.index === selectedSpotIndex &&
+                  !(selectedChanceIndex !== -1 && !canChanceReports)
+                "
+                class="absolute top-[0.3125rem] left-0 w-3 h-3 rounded-sm"
+                :style="{ backgroundColor: action.color }"
+              ></span>
+              <span v-if="action.isSelected">
+                <CheckIcon class="absolute top-[0.1875rem] -left-0.5 w-4 h-4" />
+              </span>
+            </span>
+            <span
+              :class="
+                'pr-0.5 font-semibold group-hover:opacity-100 ' +
+                (action.isSelected || spot.index === selectedSpotIndex
+                  ? ''
+                  : 'opacity-70')
+              "
+            >
+              {{ actionText(spot, action.name, action.amount) }}
+            </span>
+            <span
+              v-if="spot.index === selectedSpotIndex && rates != null"
+              :class="
+                'ml-auto pl-1.5 group-hover:opacity-100 ' +
+                (action.isSelected || spot.index === selectedSpotIndex
+                  ? ''
+                  : 'opacity-70')
+              "
+            >
+              [{{ $pct($n((rates[action.index] * 100).toFixed(1))) }}]
+            </span>
+          </button>
+        </div>
+      </template>
+
+      <!-- Terminal -->
+      <template v-else-if="spot.type === 'terminal'">
+        <div
+          :class="
+            'px-1.5 pt-1 pb-0.5 font-semibold group-hover:opacity-100 ' +
+            (spot.index === selectedSpotIndex ? '' : 'opacity-70')
+          "
+        >
+          {{ spotPlayerLabel(spot.player) }}
+        </div>
+        <div
+          :class="
+            'flex flex-col flex-grow items-center justify-evenly font-semibold group-hover:opacity-100 ' +
+            (spot.index === selectedSpotIndex ? '' : 'opacity-70')
+          "
+        >
+          <div v-if="spot.equityOop === 0 || spot.equityOop === 1" class="px-3">
+            {{ L.win(["IP", "OOP"][spot.equityOop]) }}
+          </div>
+          <div v-else-if="spot.equityOop !== -1" class="px-1.5">
+            <div class="mb-0.5">{{ L.equity }}</div>
+            <div class="flex w-full px-1.5">
+              <span>OOP</span>
+              <span class="ml-auto pl-2">
+                {{ $pct($n((spot.equityOop * 100).toFixed(1))) + " " }}
+              </span>
+            </div>
+            <div class="flex w-full px-1.5">
+              <span>IP</span>
+              <span class="ml-auto pl-2">
+                {{ $pct($n(((1 - spot.equityOop) * 100).toFixed(1))) + " " }}
+              </span>
+            </div>
+          </div>
+          <div class="px-3" :dir="isAr ? 'rtl' : undefined">{{ L.pot }} {{ isAr ? ltrIso(amountText(spot.pot)) : amountText(spot.pot) }}</div>
+        </div>
+      </template>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { decodeResults } from "../results-decode";
+import { computed, defineComponent, nextTick, toRefs, ref, watch } from "vue";
+import { useSavedConfigStore } from "../store";
+import { useStore } from "../store";
+import { i18n, ltrIso, arLabelIso, localizeNumber } from "../i18n";
+import { cardText, average, colorString, formatAmount } from "../utils";
+import { handler } from "../global-worker";
+import {
+  Results,
+  ChanceReports,
+  Spot,
+  SpotRoot,
+  SpotChance,
+  SpotPlayer,
+} from "../result-types";
+
+import {
+  CheckIcon,
+  XMarkIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+} from "@heroicons/vue/20/solid";
+
+const foldColor = { red: 0x3b, green: 0x82, blue: 0xf6 }; // blue-500
+const checkColor = { red: 0x22, green: 0xc5, blue: 0x5e }; // green-500
+const callColor = { red: 0x22, green: 0xc5, blue: 0x5e }; // green-500
+const betColorGradient = [
+  { red: 0xf5, green: 0x9e, blue: 0x0b }, // amber-500
+  { red: 0xf9, green: 0x73, blue: 0x16 }, // orange-500
+  { red: 0xef, green: 0x44, blue: 0x44 }, // red-500
+  { red: 0xec, green: 0x48, blue: 0x99 }, // pink-500
+  { red: 0xd9, green: 0x46, blue: 0xef }, // fuchsia-500
+  { red: 0xa8, green: 0x55, blue: 0xf7 }, // purple-500
+  { red: 0x8b, green: 0x5c, blue: 0xf6 }, // violet-500
+];
+
+const actionColor = (
+  name: string,
+  index: number,
+  numActions: number,
+  numBetActions: number
+) => {
+  if (name === "Fold") return colorString(foldColor);
+  if (name === "Check") return colorString(checkColor);
+  if (name === "Call") return colorString(callColor);
+
+  if (numBetActions === 1) return colorString(betColorGradient[0]);
+  if (index === numActions - 1) {
+    const denom = numBetActions === 2 ? 2 : 1;
+    return colorString(betColorGradient[(betColorGradient.length - 1) / denom]);
+  }
+
+  const betIndex = index - (numActions - numBetActions);
+  const colorRate = betIndex / (numBetActions - 1);
+
+  const gradientRate = colorRate * (betColorGradient.length - 1);
+  const gradientIndex = Math.floor(gradientRate);
+  const r = gradientRate - gradientIndex;
+
+  const color1 = betColorGradient[gradientIndex];
+  const color2 = betColorGradient[gradientIndex + 1];
+
+  const retColor = { red: 0, green: 0, blue: 0 };
+  for (const primary of ["red", "green", "blue"] as const) {
+    const primary1 = color1[primary];
+    const primary2 = color2[primary];
+    retColor[primary] = Math.round(primary1 * (1 - r) + primary2 * r);
+  }
+
+  return colorString(retColor);
+};
+
+// display-only label maps (data values remain in English)
+const M = {
+  ko: {
+    pot: "팟",
+    stack: "스택",
+    equity: "에퀴티",
+    win: (player: string) => `${player} 승리`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "플랍",
+          turn: "턴",
+          river: "리버",
+          end: "종료",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      (
+        {
+          Fold: "폴드",
+          Check: "체크",
+          Call: "콜",
+          Bet: "벳",
+          Raise: "레이즈",
+          "All-in": "올인",
+          Allin: "올인",
+        } as Record<string, string>
+      )[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% 팟)`,
+  },
+  en: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} wins`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "End",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% pot)`,
+  },
+  ja: {
+    pot: "ポット",
+    stack: "スタック",
+    equity: "エクイティ",
+    win: (player: string) => `${player}の勝ち`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "フロップ",
+          turn: "ターン",
+          river: "リバー",
+          end: "終了",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      (
+        {
+          Fold: "フォールド",
+          Check: "チェック",
+          Call: "コール",
+          Bet: "ベット",
+          Raise: "レイズ",
+          "All-in": "オールイン",
+          Allin: "オールイン",
+        } as Record<string, string>
+      )[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (ポットの${percent}%)`,
+  },
+  es: {
+    pot: "Bote",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `Gana ${player}`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Fin",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% del bote)`,
+  },
+  pt: {
+    pot: "Pote",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} ganha`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Fim",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% do pote)`,
+  },
+  de: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} gewinnt`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Ende",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% vom Pot)`,
+  },
+  zh: {
+    pot: "底池",
+    // stack = 「筹码量」(브리프 §1C 首选). 구어 「码量」이 더 地道하지만 이 자리는
+    // 팟과 나란히 놓이는 지표 라벨이라 오해가 없는 쪽을 골랐다
+    stack: "筹码量",
+    equity: "胜率",
+    win: (player: string) => `${player} 获胜`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "翻牌",
+          turn: "转牌",
+          river: "河牌",
+          end: "结束",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    // ResultChance와 같은 표 — 액션명은 중국어 (본체 브리프 §1B)
+    action: (name: string): string =>
+      (
+        {
+          Fold: "弃牌",
+          Check: "过牌",
+          Call: "跟注",
+          Bet: "下注",
+          Raise: "加注",
+          "All-in": "全下",
+          Allin: "全下",
+        } as Record<string, string>
+      )[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted}（底池的 ${percent}%）`,
+  },
+  "zh-hant": {
+    pot: "底池",
+    // stack = 「籌碼量」 (본체 브리프 §7-E 「籌碼量(Stack)」)
+    stack: "籌碼量",
+    equity: "勝率",
+    win: (player: string) => `${player} 獲勝`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "翻牌",
+          turn: "轉牌",
+          river: "河牌",
+          end: "結束",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    // ⚠ ResultChance·ResultTable·ActionSummary·trainer.ts의 표와 «글자까지» 같아야 한다
+    action: (name: string): string =>
+      (
+        {
+          Fold: "蓋牌",
+          Check: "過牌",
+          Call: "跟注",
+          Bet: "下注",
+          Raise: "加注",
+          "All-in": "全下",
+          Allin: "全下",
+        } as Record<string, string>
+      )[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted}（底池的 ${percent}%）`,
+  },
+  fr: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} gagne`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Fin",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    // 액션명은 영어 유지 — trainer.ts actionName과 같은 결정 (리서치 §3)
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    // ⚠ % 앞 공백은 U+202F — trainer.ts trainerActionLabel의 «(N % du pot)»와 글자까지 같다
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent} % du pot)`,
+  },
+  id: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} menang`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Selesai",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    // 액션명은 영어 유지 — 인니 코퍼스 check/call/raise/fold 영어 (인니어화_리서치 §2)
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    // ⚠ trainer.ts trainerActionLabel의 기본 분기 «(N% pot)»와 글자까지 같다 (id 전용 분기 없음)
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% pot)`,
+  },
+  ms: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} menang`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Tamat",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    // 액션명은 영어 유지 — 말레이 코퍼스도 check/call/raise/fold 영어 (리서치 §2)
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    // ⚠ trainer.ts trainerActionLabel의 기본 분기 «(N% pot)»와 글자까지 같다 (ms 전용 분기 없음)
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% pot)`,
+  },
+  hi: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} जीता`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "समाप्त",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) => `${label} ${formatted} (${percent}% pot)`,
+  },
+  tr: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    // 변수는 주어 자리 — 접미사 없음 (확정표 §6)
+    win: (player: string) => `${player} kazanır`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Son",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    // tr «(%35 pot)» — 확정표 §2-2·§6, ActionSummary·trainer.ts와 같은 꼴
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (%${percent} pot)`,
+  },
+  vi: {
+    pot: "Pot",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} thắng`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "End",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Allin: "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% pot)`,
+  },
+  ru: {
+    pot: "Банк",
+    stack: "Стек",
+    equity: "Эквити",
+    win: (player: string) => `Выигрывает ${player}`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Флоп",
+          turn: "Тёрн",
+          river: "Ривер",
+          end: "Конец",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Fold: "Фолд", Check: "Чек", Call: "Колл", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ин", "All-in": "Олл-ин" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${percent}% банка)`,
+  },
+  ar: {
+    pot: "البوت",
+    stack: "الستاك",
+    equity: "الإكويتي",
+    win: (player: string) => arLabelIso("يفوز", player),
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "الفلوب",
+          turn: "التيرن",
+          river: "الريفر",
+          end: "النهاية",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Fold: "فولد", Check: "تشيك", Call: "كول", Bet: "رهان", Raise: "رايز", Allin: "أول إن", "All-in": "أول إن" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      arLabelIso(`${label} ${ltrIso(formatted)} (\u2066${percent}%\u2069 من البوت)`),
+  },
+  it: {
+    pot: "Piatto",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} vince`,
+    spotPlayer: (player: string): string => ({ flop: "Flop", turn: "Turn", river: "River", end: "Fine" } as Record<string, string>)[player] ?? player.toUpperCase(),
+    action: (name: string): string => ({ Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) => `${label} ${formatted} (${percent}% del piatto)`,
+  },
+  pl: {
+    pot: "Pula",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `Wygrywa ${player}`,
+    spotPlayer: (player: string): string =>
+      (
+        {
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          end: "Koniec",
+        } as Record<string, string>
+      )[player] ?? player.toUpperCase(),
+    action: (name: string): string =>
+      ({ Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) =>
+      `${label} ${formatted} (${localizeNumber(String(percent))}% puli)`,
+  },
+} as const;
+
+export default defineComponent({
+  components: {
+    CheckIcon,
+    XMarkIcon,
+    ChevronDownIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    ChevronUpIcon,
+  },
+
+  props: {
+    isHandlerUpdated: {
+      type: Boolean,
+      required: true,
+    },
+    isLocked: {
+      type: Boolean,
+      required: true,
+    },
+    cards: {
+      type: Array as () => number[][],
+      required: true,
+    },
+    dealtCard: {
+      type: Number,
+      required: true,
+    },
+  },
+
+  emits: {
+    "update:is-handler-updated": (_value: boolean) => true,
+    "update:is-locked": (_value: boolean) => true,
+    "trigger-update": (
+      _selectedSpot: Spot | null,
+      _selectedChance: SpotChance | null,
+      _currentBoard: number[],
+      _results: Results,
+      _chanceReports: ChanceReports | null,
+      _totalBetAmount: number[],
+      _history: number[],
+      _pathLabel: string
+    ) => true,
+  },
+
+  setup(props, context) {
+    const store = useStore();
+    const L = computed(() => M[i18n.locale]);
+    const navDiv = ref<HTMLDivElement | null>(null);
+
+    const config = useSavedConfigStore();
+    const { isHandlerUpdated, dealtCard } = toRefs(props);
+
+    const spots = ref<Spot[]>([]);
+    const rates = ref<number[] | null>(null);
+    const selectedSpotIndex = ref(-1);
+    const selectedChanceIndex = ref(-1);
+    const isDealing = ref(false);
+    const canChanceReports = ref(false);
+
+    const selectedSpot = computed(() =>
+      selectedSpotIndex.value === -1 ||
+      selectedSpotIndex.value >= spots.value.length
+        ? null
+        : spots.value[selectedSpotIndex.value]
+    );
+
+    const selectedChance = computed(() =>
+      selectedChanceIndex.value === -1
+        ? null
+        : (spots.value[selectedChanceIndex.value] as SpotChance)
+    );
+
+    const isSelectedChanceSkipped = computed(() => {
+      return selectedChance.value?.selectedIndex === -1;
+    });
+
+    const currentBoard = computed(() => {
+      const board = [...config.board];
+      const endIndex = selectedChance.value
+        ? selectedChanceIndex.value
+        : selectedSpotIndex.value;
+      for (let i = 3; i < endIndex; ++i) {
+        const spot = spots.value[i];
+        if (spot.type === "chance") {
+          const card = spot.selectedIndex;
+          if (card !== -1) board.push(card);
+          else return board;
+        }
+      }
+      return board;
+    });
+
+    const amountText = (value: number) => {
+      const amount = i18n.locale === "pl" ? localizeNumber(formatAmount(value, store.displayUnitScale)) : formatAmount(value, store.displayUnitScale);
+      return store.displayUnitScale === 10 ? `${amount}bb` : amount;
+    };
+
+    const spotPlayerLabel = (player: string) => L.value.spotPlayer(player);
+
+    const actionText = (spot: SpotPlayer, name: string, amount: string) => {
+      const label = L.value.action(name);
+      if (amount === "0") return label;
+      const value = Number(amount);
+      const formatted = amountText(value);
+      if (name === "Bet" && spot.pot) {
+        const percent = Math.round((value * 100) / spot.pot);
+        return L.value.betPot(label, formatted, percent);
+      }
+      return i18n.locale === "ar" ? arLabelIso(label, formatted) : `${label} ${formatted}`;
+    };
+
+    // Display-only path: keep the lock/export history and its label unchanged.
+    const navigationPath = computed(() => {
+      const index = selectedChanceIndex.value !== -1
+        ? selectedChanceIndex.value
+        : selectedSpotIndex.value;
+      if (index < 0 || index >= spots.value.length) return [];
+      const path = spots.value.slice(1, index).map((spot) => {
+        if (spot.type === "player") {
+          const action = spot.actions[spot.selectedIndex];
+          return `${spotPlayerLabel(spot.player)} ${action ? actionText(spot, action.name, action.amount) : "?"}`;
+        }
+        if (spot.type === "chance") {
+          const card = spot.selectedIndex < 0 ? null : cardText(spot.selectedIndex);
+          return i18n.locale === "ar" ? arLabelIso(spotPlayerLabel(spot.player), card ? card.rank + card.suit : "?") : `${spotPlayerLabel(spot.player)} ${card ? card.rank + card.suit : "?"}`;
+        }
+        return spotPlayerLabel(spot.player);
+      });
+      path.push(spotPlayerLabel(spots.value[index].player));
+      return path;
+    });
+
+    const revealSpot = (index: number) => {
+      const nav = navDiv.value;
+      const child = nav?.children[index] as HTMLElement | undefined;
+      if (!nav || !child) return;
+      const viewport = nav.getBoundingClientRect();
+      const card = child.getBoundingClientRect();
+      const inset = 8;
+      const delta = card.right > viewport.right - inset
+        ? card.right - viewport.right + inset
+        : card.left < viewport.left + inset
+        ? card.left - viewport.left - inset
+        : 0;
+      // Only move this horizontal strip. Ancestor scrollIntoView can also move
+      // the page, while smooth scrolling leaves the new action clipped briefly.
+      if (delta) nav.scrollTo({ left: nav.scrollLeft + delta, behavior: "auto" });
+    };
+
+    let selectedSpotIndexTmp = -1;
+    let selectedChanceIndexTmp = -1;
+
+    let results: Results | null = null;
+    let chanceReports: ChanceReports | null = null;
+    let totalBetAmount = [0, 0];
+    let totalBetAmountAppended = [0, 0];
+
+    watch(isHandlerUpdated, async () => {
+      if (!isHandlerUpdated.value) return;
+
+      const l = config.board.length;
+      const spot: SpotRoot = {
+        type: "root",
+        index: 0,
+        player: l === 3 ? "flop" : l === 4 ? "turn" : "river",
+        selectedIndex: -1,
+        board: config.board,
+        pot: config.startingPot,
+        stack: config.effectiveStack,
+      };
+      spots.value = [spot];
+
+      await selectSpot(1, true);
+      context.emit("update:is-handler-updated", false);
+    });
+
+    const selectSpot = async (
+      spotIndex: number,
+      needSplice: boolean,
+      fromDeal = false
+    ) => {
+      if (!handler) throw new Error("null handler");
+
+      if (
+        props.isLocked ||
+        (!needSplice &&
+          ((spotIndex === selectedSpotIndex.value && !fromDeal) ||
+            spotIndex === selectedChanceIndex.value ||
+            (spots.value[spotIndex].type === "chance" &&
+              isSelectedChanceSkipped.value &&
+              spotIndex > selectedChanceIndex.value)))
+      ) {
+        return;
+      }
+
+      if (spotIndex === 0) {
+        await selectSpot(1, true);
+        return;
+      }
+
+      // start processing
+      context.emit("update:is-locked", true);
+
+      // avoid unnecessary update of refs
+      selectedSpotIndexTmp = selectedSpotIndex.value;
+      selectedChanceIndexTmp = selectedChanceIndex.value;
+
+      // when from deal, update river dead cards and terminal equity
+      if (fromDeal) {
+        const findRiverIndex = spots.value
+          .slice(selectedChanceIndexTmp + 3)
+          .findIndex((spot) => spot.type === "chance");
+        let riverIndex = -1;
+        if (findRiverIndex !== -1) {
+          riverIndex = findRiverIndex + selectedChanceIndexTmp + 3;
+        }
+        const riverSpot =
+          riverIndex === -1 ? null : (spots.value[riverIndex] as SpotChance);
+        selectedChanceIndexTmp = -1;
+
+        if (riverSpot) {
+          const history = new Uint32Array(
+            spots.value.slice(1, riverIndex).map((spot) => spot.selectedIndex)
+          );
+          await handler.applyHistory(history);
+          const possibleCards = await handler.possibleCards();
+          for (let i = 0; i < 52; ++i) {
+            const isDead = !(possibleCards & (1n << BigInt(i)));
+            riverSpot.cards[i].isDead = isDead;
+            if (riverSpot.selectedIndex === i && isDead) {
+              riverSpot.cards[i].isSelected = false;
+              riverSpot.selectedIndex = -1;
+            }
+          }
+        }
+
+        const riverSkipped = riverSpot?.selectedIndex === -1;
+        const lastSpot = spots.value[spots.value.length - 1];
+
+        if (
+          !riverSkipped &&
+          lastSpot.type === "terminal" &&
+          lastSpot.equityOop !== 0 &&
+          lastSpot.equityOop !== 1
+        ) {
+          const history = new Uint32Array(
+            spots.value.slice(1, -1).map((spot) => spot.selectedIndex)
+          );
+          await handler.applyHistory(history);
+          const results = await getResults("terminal", 0);
+          if (!results.isEmpty) {
+            lastSpot.equityOop = average(
+              results.equity[0],
+              results.normalizer[0]
+            );
+          } else {
+            lastSpot.equityOop = -1;
+          }
+        }
+      }
+
+      // update indices of selected spot and selected chance
+      if (!needSplice && spots.value[spotIndex].type === "chance") {
+        selectedChanceIndexTmp = spotIndex;
+        if (selectedSpotIndexTmp < spotIndex + 1) {
+          selectedSpotIndexTmp = spotIndex + 1;
+        }
+      } else {
+        selectedSpotIndexTmp = spotIndex;
+        if (spotIndex <= selectedChanceIndexTmp) {
+          selectedChanceIndexTmp = -1;
+        } else if (selectedChanceIndexTmp === -1) {
+          selectedChanceIndexTmp = spots.value
+            .slice(0, spotIndex)
+            .findIndex(
+              (spot) => spot.type === "chance" && spot.selectedIndex === -1
+            );
+        }
+      }
+
+      let endIndex: number;
+      if (selectedChanceIndexTmp === -1) {
+        endIndex = selectedSpotIndexTmp;
+      } else {
+        endIndex = selectedChanceIndexTmp;
+      }
+
+      const history = new Uint32Array(
+        spots.value.slice(1, endIndex).map((spot) => spot.selectedIndex)
+      );
+
+      // apply history
+      await handler.applyHistory(history);
+
+      const currentPlayer = await handler.currentPlayer();
+      let numActions: number;
+      if (["terminal", "chance"].includes(currentPlayer)) {
+        numActions = 0;
+      } else {
+        numActions = await handler.numActions();
+      }
+
+      // obtain results
+      results = await getResults(currentPlayer, numActions);
+
+      let appendArray: number[] = [];
+      let append = new Uint32Array();
+
+      if (selectedChanceIndexTmp !== -1) {
+        appendArray = spots.value
+          .slice(selectedChanceIndexTmp, selectedSpotIndexTmp)
+          .map((spot) => spot.selectedIndex);
+        append = new Uint32Array(appendArray);
+      }
+
+      // obtain actions after skipped chances
+      const nextActionsStr = await handler.actionsAfter(append);
+
+      canChanceReports.value =
+        selectedChanceIndexTmp !== -1 &&
+        spots.value
+          .slice(selectedChanceIndexTmp + 3, selectedSpotIndexTmp)
+          .every((spot) => spot.type !== "chance") &&
+        nextActionsStr !== "chance";
+
+      // if possible, obtain chance reports
+      if (canChanceReports.value) {
+        let player: "oop" | "ip" | "terminal";
+        let numActions: number;
+
+        if (nextActionsStr === "terminal") {
+          player = "terminal";
+          numActions = 0;
+        } else {
+          player = append.length % 2 === 1 ? "oop" : "ip";
+          numActions = nextActionsStr.split("/").length;
+        }
+
+        chanceReports = await getChanceReports(append, player, numActions);
+      } else {
+        chanceReports = null;
+      }
+
+      // update total bet amounts
+      const emptyAppend = new Uint32Array();
+      totalBetAmount = Array.from(await handler.totalBetAmount(emptyAppend));
+      totalBetAmountAppended = Array.from(await handler.totalBetAmount(append));
+
+      // if need to splice, splice spots
+      if (needSplice) {
+        if (nextActionsStr === "terminal") {
+          spliceSpotsTerminal(spotIndex);
+        } else if (nextActionsStr === "chance") {
+          await spliceSpotsChance(spotIndex);
+        } else {
+          spliceSpotsPlayer(spotIndex, nextActionsStr);
+        }
+      }
+
+      // update action rates if necessary
+      const spot = spots.value[selectedSpotIndexTmp];
+      if (spot.type === "player" && selectedChanceIndexTmp === -1) {
+        const playerIndex = spot.player === "oop" ? 0 : 1;
+        if (results.isEmpty & (1 << playerIndex)) {
+          rates.value = null;
+        } else {
+          const n = props.cards[playerIndex].length;
+          rates.value = Array.from({ length: spot.actions.length }, (_, i) => {
+            if (!results) throw new Error("null results");
+            const rates = results.strategy.slice(i * n, (i + 1) * n);
+            return average(rates, results.normalizer[playerIndex]);
+          });
+        }
+      } else {
+        rates.value = null;
+      }
+
+      // update refs
+      selectedSpotIndex.value = selectedSpotIndexTmp;
+      selectedChanceIndex.value = selectedChanceIndexTmp;
+      isDealing.value = false;
+
+      // emit event
+      // Keep skipped chance cards (-1): they cannot identify one lockable node.
+      const pathSpots = spots.value.slice(1, selectedSpotIndex.value);
+      const selectedHistory = pathSpots.map((spot) => spot.selectedIndex);
+      const pathLabel = ["ROOT", ...pathSpots.map((spot) => {
+        if (spot.type === "player") {
+          const action = spot.actions[spot.selectedIndex];
+          return `${spot.player.toUpperCase()} ${action?.name ?? "?"}${action?.amount ? ` ${action.amount}` : ""}`;
+        }
+        if (spot.type === "chance") {
+          const card = spot.selectedIndex < 0 ? null : cardText(spot.selectedIndex);
+          return `${spot.player} ${card ? card.rank + card.suit : "?"}`;
+        }
+        return spot.type;
+      })].join(" → ");
+      context.emit(
+        "trigger-update",
+        selectedSpot.value,
+        selectedChance.value,
+        currentBoard.value,
+        results,
+        chanceReports,
+        totalBetAmount,
+        selectedHistory,
+        pathLabel
+      );
+
+      // scroll to selected spot
+      await nextTick();
+      revealSpot(spots.value[spotIndex]?.type === "chance"
+        ? spotIndex : selectedSpotIndex.value);
+    };
+
+    const getResults = async (
+      currentPlayer: "oop" | "ip" | "chance" | "terminal",
+      numActions: number
+    ): Promise<Results> => {
+      if (!handler) throw new Error("null handler");
+
+      const buffer = await handler.getResults();
+      const length = [props.cards[0].length, props.cards[1].length];
+      return decodeResults(buffer, length, currentPlayer, numActions);
+    };
+
+    const getChanceReports = async (
+      append: Uint32Array,
+      currentPlayer: "oop" | "ip" | "terminal",
+      numActions: number
+    ): Promise<ChanceReports> => {
+      if (!handler) throw new Error("null handler");
+
+      const buffer = await handler.getChanceReports(append, numActions);
+      let offset = 0;
+
+      const status = Array.from(buffer.subarray(offset, offset + 52));
+      offset += 52;
+
+      const combosOop = Array.from(buffer.subarray(offset, offset + 52));
+      offset += 52;
+      const combosIp = Array.from(buffer.subarray(offset, offset + 52));
+      offset += 52;
+
+      const equityOop = Array.from(buffer.subarray(offset, offset + 52));
+      offset += 52;
+      const equityIp = Array.from(buffer.subarray(offset, offset + 52));
+      offset += 52;
+
+      const evOop = Array.from(buffer.subarray(offset, offset + 52));
+      offset += 52;
+      const evIp = Array.from(buffer.subarray(offset, offset + 52));
+      offset += 52;
+
+      const eqrOop = Array.from(buffer.subarray(offset, offset + 52));
+      offset += 52;
+      const eqrIp = Array.from(buffer.subarray(offset, offset + 52));
+      offset += 52;
+
+      let strategy: number[] = [];
+      if (currentPlayer !== "terminal") {
+        strategy = Array.from(
+          buffer.subarray(offset, offset + 52 * numActions)
+        );
+        offset += 52 * numActions;
+      }
+
+      return {
+        currentPlayer,
+        numActions,
+        status,
+        combos: [combosOop, combosIp],
+        equity: [equityOop, equityIp],
+        ev: [evOop, evIp],
+        eqr: [eqrOop, eqrIp],
+        strategy,
+      };
+    };
+
+    const spliceSpotsTerminal = (spotIndex: number) => {
+      if (!results) throw new Error("null results");
+
+      const prevSpot = spots.value[spotIndex - 1] as SpotPlayer;
+      const prevAction = prevSpot.actions[prevSpot.selectedIndex];
+
+      const chanceIndex = selectedChanceIndexTmp;
+      const chanceSkipped =
+        chanceIndex !== -1 &&
+        (spots.value[chanceIndex] as SpotChance).selectedIndex === -1;
+
+      let equityOop;
+      if (prevAction.name === "Fold") {
+        equityOop = prevSpot.player === "oop" ? 0 : 1;
+      } else if (chanceSkipped || results.isEmpty) {
+        equityOop = -1;
+      } else {
+        equityOop = average(results.equity[0], results.normalizer[0]);
+      }
+
+      const betSum = totalBetAmountAppended[0] + totalBetAmountAppended[1];
+      spots.value.splice(spotIndex, spots.value.length, {
+        type: "terminal",
+        index: spotIndex,
+        player: "end",
+        selectedIndex: -1,
+        prevPlayer: prevSpot.player,
+        equityOop,
+        pot: config.startingPot + betSum,
+      });
+    };
+
+    const spliceSpotsChance = async (spotIndex: number) => {
+      if (!handler) throw new Error("null handler");
+
+      type SpotTurn = SpotRoot | SpotChance;
+      const prevSpot = spots.value[spotIndex - 1] as SpotPlayer;
+      const turnSpot = spots.value
+        .slice(0, spotIndex)
+        .find((spot) => spot.player === "turn") as SpotTurn | undefined;
+
+      let appendArray: number[] = [];
+      if (selectedChanceIndexTmp !== -1) {
+        appendArray = spots.value
+          .slice(selectedChanceIndexTmp, spotIndex)
+          .map((spot) => spot.selectedIndex);
+      }
+
+      let possibleCards = 0n;
+      if (!(turnSpot?.type === "chance" && turnSpot.selectedIndex === -1)) {
+        possibleCards = await handler.possibleCards();
+      }
+
+      appendArray.push(-1);
+      const append = new Uint32Array(appendArray);
+      const nextActionsStr = await handler.actionsAfter(append);
+      const nextActions = nextActionsStr.split("/");
+
+      let numBetActions = nextActions.length;
+      while (
+        numBetActions > 0 &&
+        nextActions[nextActions.length - numBetActions].split(":")[1] === "0"
+      ) {
+        --numBetActions;
+      }
+
+      if (selectedChanceIndexTmp === -1) {
+        canChanceReports.value = true;
+        const numActions = nextActions.length;
+        chanceReports = await getChanceReports(append, "oop", numActions);
+      }
+
+      spots.value.splice(
+        spotIndex,
+        spots.value.length,
+        {
+          type: "chance",
+          index: spotIndex,
+          player: turnSpot ? "river" : "turn",
+          selectedIndex: -1,
+          prevPlayer: prevSpot.player,
+          cards: Array.from({ length: 52 }, (_, i) => ({
+            card: i,
+            isSelected: false,
+            isDead: !(possibleCards & (1n << BigInt(i))),
+          })),
+          pot: config.startingPot + 2 * totalBetAmountAppended[0],
+          stack: config.effectiveStack - totalBetAmountAppended[0],
+        },
+        {
+          type: "player",
+          index: spotIndex + 1,
+          player: "oop",
+          selectedIndex: -1,
+          actions: nextActions.map((action, i) => {
+            const [name, amount] = action.split(":");
+            return {
+              index: i,
+              name,
+              amount,
+              rate: -1,
+              isSelected: false,
+              color: actionColor(name, i, nextActions.length, numBetActions),
+            };
+          }),
+        }
+      );
+
+      ++selectedSpotIndexTmp;
+
+      if (selectedChanceIndexTmp === -1) {
+        selectedChanceIndexTmp = spotIndex;
+      }
+    };
+
+    const spliceSpotsPlayer = (spotIndex: number, actionsStr: string) => {
+      const prevSpot = spots.value[spotIndex - 1];
+      const player = prevSpot.player === "oop" ? "ip" : "oop";
+
+      const actions = actionsStr.split("/");
+      let numBetActions = actions.length;
+      if (actions[0].split(":")[1] === "0") --numBetActions;
+      if (actions[1]?.split(":")[1] === "0") --numBetActions;
+
+      spots.value.splice(spotIndex, spots.value.length, {
+        type: "player",
+        index: spotIndex,
+        player,
+        selectedIndex: -1,
+        pot: config.startingPot + totalBetAmountAppended[0] + totalBetAmountAppended[1],
+        stack:
+          config.effectiveStack -
+          totalBetAmountAppended[player === "oop" ? 0 : 1],
+        actions: actions.map((action, i) => {
+          const [name, amount] = action.split(":");
+          return {
+            index: i,
+            name,
+            amount,
+            isSelected: false,
+            color: actionColor(name, i, actions.length, numBetActions),
+          };
+        }),
+      });
+    };
+
+    const play = async (spotIndex: number, actionIndex: number) => {
+      // 계산 중에는 선택 표시도 바꾸지 않는다 — 표시만 바뀌고 결과는 이전 요청 것이 남는다(Q2-02)
+      if (props.isLocked) return;
+      const spot = spots.value[spotIndex] as SpotPlayer;
+
+      if (spot.selectedIndex !== -1) {
+        spot.actions[spot.selectedIndex].isSelected = false;
+      }
+      spot.actions[actionIndex].isSelected = true;
+      spot.selectedIndex = actionIndex;
+
+      await selectSpot(spotIndex + 1, true);
+    };
+
+    // 프리셋 트레이너 데이터 추출용: 루트부터 지정한 액션 경로를 재생한다.
+    const playPath = async (actionIndices: number[]) => {
+      await selectSpot(1, true);
+      for (const actionIndex of actionIndices) {
+        const spot = spots.value[selectedSpotIndex.value];
+        if (spot?.type !== "player" || !spot.actions[actionIndex]) return false;
+        await play(selectedSpotIndex.value, actionIndex);
+      }
+      return spots.value[selectedSpotIndex.value]?.type === "player";
+    };
+
+    const deal = async (card: number) => {
+      if (props.isLocked) return; // play와 같은 이유(Q2-02)
+      const spot = selectedChance.value;
+      if (!spot) throw new Error("null spot");
+
+      isDealing.value = true;
+
+      if (spot.selectedIndex !== -1) {
+        spot.cards[spot.selectedIndex].isSelected = false;
+      }
+      spot.cards[card].isSelected = true;
+      spot.selectedIndex = card;
+
+      await selectSpot(selectedSpotIndex.value, false, true);
+    };
+
+    const dealArrow = async (
+      spot: SpotChance,
+      rankDir: number,
+      suitDir: number
+    ) => {
+      if (props.isLocked) return; // play와 같은 이유(Q2-02)
+      const offset = rankDir ? 4 * rankDir : suitDir;
+      let card = spot.selectedIndex + offset;
+
+      for (; 0 <= card && card < 52; card += offset) {
+        if (!spot.cards[card].isDead) break;
+      }
+
+      if (card < 0 || 52 <= card) {
+        throw new Error("invalid card");
+      }
+
+      isDealing.value = true;
+
+      spot.cards[spot.selectedIndex].isSelected = false;
+      spot.cards[card].isSelected = true;
+      spot.selectedIndex = card;
+
+      const selectedChanceIndexBak = selectedChanceIndex.value;
+      selectedChanceIndex.value = spot.index;
+
+      await selectSpot(selectedSpotIndex.value, false, true);
+
+      if (
+        selectedChanceIndex.value === -1 &&
+        selectedChanceIndexBak !== spot.index
+      ) {
+        selectedChanceIndex.value = selectedChanceIndexBak;
+      }
+    };
+
+    const isCardAvailable = (
+      spot: SpotChance,
+      rankDir: number,
+      suitDir: number
+    ) => {
+      let card = spot.selectedIndex;
+
+      if (rankDir) {
+        card += 4 * rankDir;
+        for (; 0 <= card && card < 52; card += 4 * rankDir) {
+          if (!spot.cards[card].isDead) return true;
+        }
+      } else {
+        const rank = card >>> 2;
+        card += suitDir;
+        for (; card >>> 2 === rank; card += suitDir) {
+          if (!spot.cards[card].isDead) return true;
+        }
+      }
+
+      return false;
+    };
+
+    watch(dealtCard, async (card) => {
+      if (card === -1) return;
+      await deal(card);
+    });
+
+    context.expose({ playPath, navigationPath });
+
+    const spotCards = (spot: SpotRoot | SpotChance) => {
+      if (spot.type === "root") {
+        return spot.board.map((card) => cardText(card));
+      } else if (spot.selectedIndex === -1) {
+        return [{ rank: "?", suit: "", colorClass: "text-neutral-200" }];
+      } else {
+        return [cardText(spot.selectedIndex)];
+      }
+    };
+
+    return {
+      isAr: computed(() => i18n.locale === "ar"), ltrIso, navDiv,
+      spots,
+      rates,
+      selectedSpotIndex,
+      selectedChanceIndex,
+      isDealing,
+      canChanceReports,
+      isSelectedChanceSkipped,
+      selectSpot,
+      play,
+      deal,
+      dealArrow,
+      isCardAvailable,
+      spotCards,
+      spotPlayerLabel,
+      L,
+      amountText,
+      actionText,
+    };
+  },
+});
+</script>

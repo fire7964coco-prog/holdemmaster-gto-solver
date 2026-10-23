@@ -1,0 +1,200 @@
+/*
+ * 오류 수집 — 기기 안에만 모은다.
+ *
+ * 왜 자동 전송하지 않는가:
+ *   설치 안전성 설명이 «비행기 모드에서도 돌아간다 = 계산이 기기 안에서 끝난다»를
+ *   근거로 삼고 있어, 동의 없는 전송은 그 신뢰를 깎는다.
+ *   → 기록은 localStorage에만 남기고, 보낼지는 사용자가 버튼을 눌러 결정한다.
+ *   (「로그인 전엔 아무것도 전송 안 함」이라는 화면 문구는 2026-08-17 사용자 지시로
+ *    뺐다 — 앞으로 동의 기반 자동 수집을 열 수 있게. 다만 몰래 보내지 않는 원칙은 유지)
+ *
+ * 무엇이 담기나: 시각·오류 메시지·스택 앞부분·화면 주소·화면 크기·브라우저 종류·빌드 번호.
+ *   내용 필터는 없다 — 화면 주소나 메시지에 사용자 입력이 섞일 수 있으니 «안 담는다»고 장담하지 않는다(MA-651).
+ */
+import { reactive } from "vue";
+import { i18n, pick, ltrIso, autoIso } from "./i18n";
+import { VARIANT_TEXT } from "./variant";
+
+/** 빌드 시각 (webpack DefinePlugin이 채운다) — 어느 버전에서 난 오류인지 구분용 */
+declare const __BUILD_ID__: string;
+declare const __APP_TARGET__: "trainer" | "solo";
+
+const KEY = "solver.errors";
+const MAX_RECORDS = 20;
+/** 같은 오류가 연달아 쏟아질 때 기록을 낭비하지 않도록 */
+const DEDUPE_MS = 10_000;
+
+export type ErrorRecord = {
+  t: number;
+  msg: string;
+  stack: string;
+  where: string;
+};
+
+type SolverRetry = () => Promise<void>;
+
+export const errorState = reactive({
+  /** 이 기기에 쌓인 오류 개수 */
+  count: 0,
+  /** 이번 방문에서 오류가 났는가 — 신고 안내를 띄울지 판단 */
+  toast: false,
+  /** 현재 계산 실패만 재시도한다. 입력·콜백은 오류 기록에 저장하지 않는다. */
+  solverRetry: null as SolverRetry | null,
+});
+
+const read = (): ErrorRecord[] => {
+  try {
+    const raw = localStorage.getItem(KEY);
+    return raw ? (JSON.parse(raw) as ErrorRecord[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+const write = (records: ErrorRecord[]) => {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(records.slice(-MAX_RECORDS)));
+  } catch {
+    /* 저장이 막힌 환경이면 조용히 포기한다 */
+  }
+};
+
+const shortBrowser = () => {
+  const ua = navigator.userAgent;
+  if (/SamsungBrowser\/([\d.]+)/.test(ua))
+    // Samsung Internet의 중국어 정식 명칭은 「三星浏览器」다 (Edge·Chrome·Firefox·Safari는
+    // 중국에서도 영문명 그대로 쓰이므로 그 다섯 줄은 en 폴백을 그대로 둔다)
+    return (
+      pick(
+        "삼성 인터넷 ",
+        "Samsung Internet ",
+        "Samsung Internet ",
+        "Samsung Internet ",
+        "Samsung Internet ",
+        "Samsung Internet ",
+        "三星浏览器 "
+      , "三星瀏覽器 ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ") + RegExp.$1
+    );
+  if (/Edg\/([\d.]+)/.test(ua)) return pick("엣지 ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ") + RegExp.$1;
+  if (/Chrome\/([\d.]+)/.test(ua)) return pick("크롬 ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ") + RegExp.$1;
+  if (/Firefox\/([\d.]+)/.test(ua)) return pick("파이어폭스 ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ") + RegExp.$1;
+  if (/Version\/([\d.]+).*Safari/.test(ua)) return pick("사파리 ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ") + RegExp.$1;
+  return pick("기타 브라우저", "Other browser", "その他のブラウザ", "Otro navegador", "Outro navegador", "Anderer Browser", "其他浏览器", "其他瀏覽器", "Autre navigateur", "Browser lain", "Pelayar lain", "अन्य ब्राउज़र", "Diğer tarayıcı", "Trình duyệt khác", "Другой браузер", "متصفح آخر", "Altro browser", "Inna przeglądarka");
+};
+
+const record = (msg: string, stack: string) => {
+  const records = read();
+  const last = records[records.length - 1];
+  if (last && last.msg === msg && Date.now() - last.t < DEDUPE_MS) return;
+
+  records.push({
+    t: Date.now(),
+    msg: msg.slice(0, 300),
+    stack: stack.split("\n").slice(0, 6).join("\n").slice(0, 600),
+    where: location.pathname + location.search,
+  });
+  write(records);
+  errorState.count = Math.min(records.length, MAX_RECORDS);
+  errorState.toast = true;
+};
+
+/** 잡아서 복구한 계산 오류도 기존 기기 내 오류 기록에 남긴다. */
+export const reportSolverError = (error: unknown, retry: SolverRetry) => {
+  const reason = error as { message?: unknown; stack?: unknown } | null;
+  record(String(reason?.message ?? error), String(reason?.stack ?? ""));
+  errorState.solverRetry = retry;
+  // 같은 오류가 10초 안에 재발해 기록이 생략돼도 재시도 안내는 다시 보여준다.
+  errorState.toast = true;
+};
+
+export const clearSolverRetry = () => {
+  errorState.solverRetry = null;
+};
+
+export const retrySolverSingleThread = async () => {
+  const retry = errorState.solverRetry;
+  if (!retry) return;
+  // 첫 await 전에 제거해야 같은 버튼을 빠르게 두 번 눌러도 한 번만 실행된다.
+  clearSolverRetry();
+  errorState.toast = false;
+  await retry();
+};
+
+/** 신고용 본문 — 사용자가 복사해서 커뮤니티나 문의로 보낼 수 있게 */
+export const errorReportText = () => {
+  const records = read();
+  if (!records.length) return "";
+  const standalone = window.matchMedia?.("(display-mode: standalone)").matches;
+  const diagnosticValue = (value: string) => i18n.locale === "ar" ? ltrIso(value) : value;
+  const head = [
+    // 다른 빌드는 상표만 바꾼 제목을 쓴다(src/variant.ts)
+    __APP_TARGET__ === "solo"
+      ? pick(...VARIANT_TEXT!.errorLogTitle)
+      : pick("홀덤마스터 트레이너 오류 기록", "HoldemMaster GTO Trainer error log", "HoldemMaster GTOトレーナー エラーログ", "Registro de errores de HoldemMaster GTO Trainer", "Registro de erros do HoldemMaster GTO Trainer", "Fehlerprotokoll des HoldemMaster GTO Trainers", "HoldemMaster GTO 训练器错误日志", "HoldemMaster GTO 訓練器錯誤紀錄", "Journal d'erreurs du HoldemMaster GTO Trainer", "Log error HoldemMaster GTO Trainer", "Log ralat HoldemMaster GTO Trainer", "HoldemMaster GTO Trainer त्रुटि रिकॉर्ड", "HoldemMaster GTO Trainer hata kaydı", "Nhật ký lỗi HoldemMaster Trainer GTO", "Журнал ошибок — HoldemMaster GTO-тренажёр", "سجل أخطاء مدرّب GTO من HoldemMaster", "Registro errori di HoldemMaster GTO Trainer", "Dziennik błędów HoldemMaster GTO Trainer"),
+    `${pick("빌드", "Build", "ビルド", "Build", "Build", "Build", "Build", "Build", "Build", "Build", "Build", "बिल्ड", "Sürüm", "Bản dựng", "Сборка", "الإصدار", "Build", "Wersja")} ${diagnosticValue(__BUILD_ID__)} · ${diagnosticValue(shortBrowser())} · ${pick("화면", "Screen", "画面", "Pantalla", "Tela", "Bildschirm", "屏幕", "螢幕", "Écran", "Layar", "Skrin", "स्क्रीन", "Ekran", "Màn hình", "Экран", "الشاشة", "Schermata", "Ekran")} ${diagnosticValue(`${window.innerWidth}x${window.innerHeight}`)}`,
+    `${pick("설치 실행", "Installed app", "インストール版", "App instalada", "App instalado", "Installierte App", "已安装的应用", "已安裝的應用程式", "App installée", "Aplikasi terinstal", "Aplikasi dipasang", "इंस्टॉल किया गया ऐप", "Yüklü uygulama", "Ứng dụng đã cài", "Установленное приложение", "التطبيق المثبّت", "App installata", "Zainstalowana aplikacja")}: ${standalone ? pick("예", "yes", "はい", "sí", "sim", "ja", "是", "是", "oui", "ya", "ya", "हाँ", "evet", "có", "да", "نعم", "sì", "tak") : pick("아니오", "no", "いいえ", "no", "não", "nein", "否", "否", "non", "tidak", "tidak", "नहीं", "hayır", "không", "нет", "لا", "no", "nie")}`,
+    "",
+  ].join("\n");
+  const body = records
+    .slice()
+    .reverse()
+    .map((item, index) => {
+      const time = new Date(item.t).toLocaleString(pick("ko-KR", "en-US", "ja-JP", "es-MX", "pt-BR", "de-DE", "zh-CN", "zh-TW", "fr-FR", "id-ID", "ms-MY", "hi-IN", "tr-TR", "vi-VN", "ru-RU", "en-US", "it-IT", "pl-PL"), i18n.locale === "pl" ? { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false } : undefined);
+      if (i18n.locale === "ar")
+        return `${ltrIso(`[${index + 1}] ${time} (${item.where})`)}\n${autoIso(item.msg)}\n${autoIso(item.stack)}`;
+      return `[${index + 1}] ${time} (${item.where})\n${item.msg}\n${item.stack}`;
+    })
+    .join("\n\n");
+  return head + body;
+};
+
+export const clearErrors = () => {
+  try {
+    localStorage.removeItem(KEY);
+  } catch {
+    /* 무시 */
+  }
+  errorState.count = 0;
+  errorState.toast = false;
+  clearSolverRetry();
+};
+
+export const dismissErrorToast = () => {
+  errorState.toast = false;
+  clearSolverRetry();
+};
+
+export const setupErrorCapture = () => {
+  errorState.count = read().length;
+
+  window.addEventListener("error", (event) => {
+    const target = event.target as (HTMLElement & { src?: string; href?: string }) | null;
+    if (event.error) {
+      record(String(event.message || event.error), String(event.error.stack || ""));
+    } else if (target && target.tagName) {
+      // 이미지·스크립트 로딩 실패는 error 객체가 없다
+      record(
+        `${target.tagName} ${pick("로딩 실패", "failed to load", "読み込み失敗", "no se pudo cargar", "não foi possível carregar", "konnte nicht geladen werden", "加载失败", "載入失敗", "n'a pas pu être chargé", "gagal dimuat", "gagal dimuatkan", "लोड नहीं हुआ", "yüklenemedi", "không tải được", "— ошибка загрузки", "تعذّر التحميل", "caricamento non riuscito", "— nie udało się wczytać")}`,
+        String(target.src || target.href || "")
+      );
+    } else if (event.message) {
+      // 다른 출처의 스크립트에서 난 오류는 브라우저가 내용을 가린다("Script error.").
+      // 스택은 못 받지만 «어디서 몇 번째 줄» 정도는 남겨야 단서가 된다.
+      record(
+        String(event.message),
+        [event.filename, event.lineno && `${event.lineno}:${event.colno}`]
+          .filter(Boolean)
+          .join(" ")
+      );
+    }
+    // preventDefault를 하지 않는다 — 브라우저 콘솔에도 그대로 남아야 한다
+  });
+
+  window.addEventListener("unhandledrejection", (event) => {
+    const reason = event.reason;
+    record(
+      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ", "Erro não tratado: ", "Unbehandelter Fehler: ", "未处理的错误：", "未處理的錯誤：", "Erreur non gérée : ", "Error tidak tertangani: ", "Ralat tidak dikendalikan: ", "हैंडल नहीं की गई त्रुटि: ", "İşlenmemiş hata: ", "Lỗi chưa được xử lý: ", "Необработанное отклонение промиса: ", "خطأ غير معالج: ", "Errore non gestito: ", "Nieobsłużony błąd: ") + String(reason?.message ?? reason),
+      String(reason?.stack ?? "")
+    );
+  });
+};

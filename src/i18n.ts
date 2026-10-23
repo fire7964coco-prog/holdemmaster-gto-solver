@@ -1,0 +1,497 @@
+/*
+ * 언어 전환 (한국어/영어) — 2026-08-17, 글로벌 앱 등록 준비.
+ *
+ * 구조 원칙:
+ * - 주소는 하나. 언어별 URL을 만들지 않는다(앱은 noindex — 검색 노출은 본체 랜딩 담당).
+ * - 언어 결정 순서: ?lang= 파라미터(광고·공유 링크용) → 저장된 선택 → 브라우저 언어.
+ *   한국어 브라우저만 한국어, 나머지는 전부 영어(포커 공용어).
+ * - 문구 사전은 «각 컴포넌트 파일 안»에 둔다(const M = { ko, en }). 파일 하나에 모으면
+ *   화면 작업마다 두 파일을 오가야 하고, 병렬 작업 시 충돌한다.
+ *   컴포넌트에서: const L = computed(() => M[i18n.locale]);
+ * - E2E 스크립트는 한국어 문구를 검사하므로 페이지 생성 시
+ *   localStorage.setItem("solver.locale", "ko")를 미리 심는다 (헤드리스 크롬은 영어 브라우저다).
+ */
+import { reactive } from "vue";
+import { directionForLocale } from "./document-direction";
+import { VARIANT_TEXT } from "./variant";
+
+// ⚠ "zh"(간체)와 "zh-hant"(번체)는 «별개 언어»다 — 용어 자체가 다르므로 기계 변환 금지
+// (德州扑克/德州撲克 · 求解器/解算器 · 概率/機率 · 弃牌/蓋牌).
+export type Locale = "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar" | "it" | "pl";
+
+/* 🔴 2026-08-27에 키를 갈았다 — «solver.locale» → «solver.locale.pegged».
+ *
+ * 왜: 언어 셀렉터를 없애고 본진 언어에 페깅하면서, 예전 셀렉터로 고른 값이
+ * localStorage에 그대로 남아 **브라우저 언어보다 세게 이겨 버렸다.** 셀렉터가 없으니 되돌릴
+ * 길도 같이 사라졌다 — 사용자가 실제로 여기 걸렸다(영어 브라우저인데 좌측 상단이 한글).
+ *
+ * 셀렉터 시대의 저장값은 이제 «사용자가 고른 언어»가 아니라 **찌꺼기**다. 키를 갈면 그 값들이
+ * 한 번에 무시되고, 각자 브라우저 언어(또는 본진이 보내는 ?lang=)로 정상 복귀한다.
+ * 새 키에 쓰이는 값은 **오직 ?lang=**뿐이다 — 즉 저장값 = 본진이 정한 언어다. 뜻이 일관된다.
+ *
+ * ⚠ 옛 키는 읽지 않고 지운다(마이그레이션하지 않는다). 옮겨 오면 고치려던 그 찌꺼기를
+ *   그대로 물려받는다. */
+const KEY = "solver.locale.pegged";
+const LEGACY_KEY = "solver.locale";
+
+const readStored = (): Locale | null => {
+  try {
+    // 셀렉터 시대의 찌꺼기를 한 번 걷어낸다 (위 KEY 주석 참조)
+    if (localStorage.getItem(LEGACY_KEY) !== null) localStorage.removeItem(LEGACY_KEY);
+    const value = localStorage.getItem(KEY);
+    return value === "ko" ||
+      value === "en" ||
+      value === "ja" ||
+      value === "es" ||
+      value === "pt" ||
+      value === "de" ||
+      value === "zh" ||
+      value === "zh-hant" ||
+      value === "fr" ||
+      value === "id" ||
+      value === "ms" ||
+      value === "hi" ||
+      value === "tr" ||
+      value === "vi" ||
+      value === "ru" ||
+      value === "ar" ||
+      value === "it" ||
+      value === "pl"
+      ? value
+      : null;
+  } catch {
+    return null;
+  }
+};
+
+const detect = (): Locale => {
+  // 광고·공유 링크(?lang=en)가 최우선 — 명시적 의도이므로 저장까지 한다
+  const fromUrl = new URLSearchParams(location.search).get("lang");
+  if (
+    fromUrl === "ko" ||
+    fromUrl === "en" ||
+    fromUrl === "ja" ||
+    fromUrl === "es" ||
+    fromUrl === "pt" ||
+    fromUrl === "de" ||
+    fromUrl === "zh" ||
+    fromUrl === "zh-hant" ||
+    fromUrl === "fr" ||
+    fromUrl === "id" ||
+    fromUrl === "ms" ||
+    fromUrl === "hi" ||
+    fromUrl === "tr" ||
+    fromUrl === "vi" ||
+    fromUrl === "ru" ||
+    fromUrl === "ar" ||
+    fromUrl === "it" ||
+    fromUrl === "pl"
+  ) {
+    try {
+      localStorage.setItem(KEY, fromUrl);
+    } catch {
+      /* 저장 불가 환경이면 이번 접속만 적용 */
+    }
+    return fromUrl;
+  }
+  const stored = readStored();
+  if (stored) return stored;
+  const lang = navigator.language?.toLowerCase() || "";
+  if (lang.startsWith("ko")) return "ko";
+  if (lang.startsWith("ja")) return "ja";
+  if (lang.startsWith("es")) return "es";
+  if (lang.startsWith("pt")) return "pt";
+  if (lang.startsWith("de")) return "de";
+  if (lang.startsWith("fr")) return "fr"; // 프랑스·벨기에·스위스·퀘벡·아프리카 프랑코폰 전부 fr
+  // 인도네시아어. ⚠ 구형 안드로이드·자바 계열은 옛 ISO 코드 «in»(in-ID)을 보낸다 — 둘 다 받는다.
+  //   «in»으로 시작하는 다른 언어 코드는 없다(BCP-47 기본 태그 기준)라 오탐이 없다.
+  if (lang.startsWith("id") || lang.startsWith("in")) return "id";
+  // 말레이어(ms-MY·ms-BN·ms-SG). 인니어와 어휘가 겹치지만 «별개 언어»다 — id로 보내지 않는다(리서치 §0).
+  if (lang.startsWith("ms")) return "ms";
+  if (lang === "hi" || lang.startsWith("hi-")) return "hi";
+  // 터키어(tr-TR·tr-CY). 확정표 §7-3
+  if (lang.startsWith("tr")) return "tr";
+  if (lang.startsWith("vi")) return "vi";
+  if (lang.startsWith("ru")) return "ru";
+  if (lang.startsWith("ar")) return "ar";
+  if (lang.startsWith("it")) return "it";
+  if (lang.startsWith("pl")) return "pl";
+  // ⚠ 중국어는 간체(zh-CN)와 번체(zh-hant)가 별개 언어다. **번체 판정이 «먼저» 와야 한다** —
+  //   startsWith("zh")를 앞에 두면 zh-TW·zh-HK가 전부 간체로 새어 나간다(2026-08-22까지 실제로 그랬다).
+  //   번체권 = 대만(zh-TW)·홍콩(zh-HK)·마카오(zh-MO), 그리고 명시적 문자표기 zh-Hant-*.
+  //   간체권 = 중국 대륙(zh-CN)·싱가포르(zh-SG)·zh-Hans-*, 그리고 지역 없는 「zh」.
+  if (lang.startsWith("zh")) {
+    if (/^zh-(tw|hk|mo)($|[-_])/.test(lang) || lang.includes("hant")) return "zh-hant";
+    return "zh";
+  }
+  return "en";
+};
+
+/* 문서 자체(탭 제목·메타 설명)도 언어를 따라간다 — index.html은 한국어로 배포되므로
+ * EN 진입 시 여기서 바꿔 준다 (탭에 한국어가 남아 있던 문제, 2026-08-19 사용자 발견).
+ * ko 값은 index.html의 <title>·description과 글자까지 같아야 한다.
+ * 간판 교체(2026-08-24, «트레이너») 반영 — ⚠ "GTO 솔버/GTO Solver" 키워드는 검색
+ * 자산이므로 제목·설명에서 빼면 안 된다 (작업계획.md 가드레일 G3). */
+const TRAINER_DOC_META: Record<Locale, { title: string; description: string }> = {
+  ko: {
+    title: "홀덤마스터 트레이너 — 무료 GTO 솔버·트레이너",
+    description:
+      "설치 없이 브라우저에서 실행하는 무료 GTO 솔버. 텍사스 홀덤 포스트플랍 전략을 레인지·보드·벳 사이즈별로 계산합니다. 홀덤마스터 커뮤니티 제공.",
+  },
+  en: {
+    title: "HoldemMaster GTO Trainer — Free GTO Solver & Trainer for Texas Hold'em",
+    description:
+      "Free GTO solver that runs right in your browser — nothing to install. Solve Texas Hold'em postflop strategy by range, board, and bet size. By HoldemMaster.",
+  },
+  ja: {
+    title: "HoldemMaster GTOトレーナー — 無料GTOソルバー・トレーナー",
+    description:
+      "インストール不要、ブラウザで動く無料GTOソルバー。テキサスホールデムのポストフロップ戦略をレンジ・ボード・ベットサイズ別に計算します。HoldemMaster提供。",
+  },
+  es: {
+    title: "HoldemMaster GTO Trainer — Solver y entrenador GTO gratis en el navegador",
+    description:
+      "Solver GTO gratis que funciona directamente en tu navegador, sin instalar nada. Calcula la estrategia postflop de Texas Hold'em por rango, board y tamaño de apuesta. De HoldemMaster.",
+  },
+  pt: {
+    title: "HoldemMaster GTO Trainer — Solver e treinador GTO grátis no navegador",
+    description:
+      "Solver GTO grátis que roda direto no seu navegador, sem instalar nada. Calcule a estratégia pós-flop de Texas Hold'em por range, board e tamanho de aposta. Da HoldemMaster.",
+  },
+  de: {
+    // 독일 조판은 Halbgeviertstrich «–» (본체 §7-10) — 다른 언어의 «—»와 일부러 다르다
+    title: "HoldemMaster GTO Trainer – Kostenloser GTO-Solver & Trainer für Texas Hold\u2019em",
+    description:
+      "Kostenloser GTO-Solver, der direkt im Browser läuft – ohne Installation. Berechne die Postflop-Strategie in Texas Hold’em nach Range, Board und Bet Size. Von HoldemMaster.",
+  },
+  // 중국어(간체). 문장부호는 전각(，。)이 중국어 표준이다 (본체 브리프 §6).
+  // 「求解器」=solver ·「翻后」=postflop ·「下注尺寸」=bet size ·「公共牌」=board 는
+  // 중국 德扑 매체(dpskill·中扑网)의 실사용어다 — 리서치 문서 §2에 출처를 적어 뒀다
+  zh: {
+    title: "HoldemMaster GTO 训练器 — 免费在线德州扑克 GTO Solver 与训练器",
+    description:
+      "免费 GTO 求解器，打开浏览器就能用，无需安装。按手牌范围、公共牌和下注尺寸计算德州扑克（德扑）翻后策略。由 HoldemMaster 提供。",
+  },
+  // 중국어(번체). ⚠ 간체를 글자만 바꾼 것이 아니다 — 용어 자체가 다르다.
+  // 「解算器」=solver(본체 브리프 §7-C · 본체 zh-hant 포스팅 42편에서 解算器 25회 / 求解器 0회) ·
+  // 「翻牌後」=postflop(§7-A) ·「範圍」=range ·「下注尺寸」=bet size ·「德撲」=고빈도 약칭(플랜 §3).
+  // 문장부호는 전각(，。)이 중국어 공통 표준이지만 인용부호는 대만·홍콩 관습인 「 」다(§8-4).
+  "zh-hant": {
+    title: "HoldemMaster GTO 訓練器 —— 免費線上德州撲克 GTO Solver 與訓練器",
+    description:
+      "免費 GTO 解算器，打開瀏覽器就能用，不用安裝。依手牌範圍、公共牌與下注尺寸計算德州撲克（德撲）翻牌後策略。由 HoldemMaster 提供。",
+  },
+  // 프랑스어. «solver»·«trainer»는 프랑스 포커 매체가 영어 그대로 쓴다(le solver·PA Trainer —
+  // 리서치 문서 §1-1·§1-2에 출처). 문체는 tu체(ton navigateur — es tú·de du와 일관).
+  fr: {
+    title: "HoldemMaster GTO Trainer — Solver et trainer GTO gratuits pour le Texas Hold'em",
+    description:
+      "Solver GTO gratuit qui tourne directement dans ton navigateur, rien à installer. Calcule la stratégie postflop du Texas Hold'em à partir de tes ranges, du board et des bet sizes. Par HoldemMaster.",
+  },
+  // 인도네시아어. «solver»·«trainer»·«range»·«board»는 본체 id 코퍼스(43편)가 영어 그대로 쓴다
+  // (solver 26회·range 215회·board 380회 — 리서치 §2). 문체는 Anda체(본체 브리프 확정 — es tú·fr tu와 다르다).
+  id: {
+    title: "HoldemMaster GTO Trainer — Solver & Trainer GTO Gratis untuk Texas Hold'em",
+    description:
+      "Solver GTO gratis yang langsung berjalan di browser Anda, tanpa instal apa pun. Hitung strategi postflop Texas Hold'em berdasarkan range, board, dan bet size. Dari HoldemMaster.",
+  },
+  // 말레이어. 말레이시아 포커 매체는 GTO 도구명·range·board·equity를 영어로 쓴다(리서치 §1-3·§1-4).
+  // 문체는 소문자 anda체(본체 브리프 — 인니 Anda 대문자와 다르다). 무료=percuma(인니 gratis 아님).
+  ms: {
+    title: "HoldemMaster GTO Trainer — Solver & Trainer GTO Percuma untuk Texas Hold'em",
+    description:
+      "Solver GTO percuma yang terus berjalan dalam pelayar anda, tiada apa yang perlu dipasang. Kira strategi postflop Texas Hold'em berdasarkan range, board dan bet size. Daripada HoldemMaster.",
+  },
+  hi: {
+    title: "HoldemMaster GTO Trainer — टेक्सस होल्डम के लिए मुफ़्त GTO सॉल्वर और ट्रेनर",
+    description: "बिना इंस्टॉल किए अपने ब्राउज़र में मुफ़्त GTO सॉल्वर चलाएँ। Range, board और bet size के आधार पर टेक्सस होल्डम की postflop रणनीति की गणना करें। HoldemMaster की पेशकश।",
+  },
+  tr: {
+    title: "HoldemMaster GTO Trainer — Texas Hold'em için ücretsiz GTO Solver ve Trainer",
+    description:
+      "Tarayıcında doğrudan çalışan ücretsiz GTO solver — kurulum gerekmez. Texas Hold'em postflop stratejisini range, board ve bet boyutuna göre hesapla. HoldemMaster tarafından.",
+  },
+  // 베트남어 — 어순 «Trainer GTO»·«Solver GTO miễn phí»(확정표 ② · 규칙 1-5), bet size = «cỡ cược»(⑧)
+  vi: {
+    title: "HoldemMaster Trainer GTO — Solver và trainer GTO miễn phí cho Texas Hold'em",
+    description:
+      "Solver GTO miễn phí chạy ngay trong trình duyệt — không cần cài đặt. Tính chiến lược postflop Texas Hold'em theo range, board và cỡ cược. Do HoldemMaster thực hiện.",
+  },
+  // 러시아어 — «GTO-тренажёр»·«GTO-солвер»(확정표 §1-6·§3-1), bet size = «сайзинг»(§4-⑤)
+  ru: {
+    title: "HoldemMaster GTO-тренажёр — бесплатный GTO-солвер и тренажёр для техасского холдема",
+    description:
+      "Бесплатный GTO-солвер, который работает прямо в браузере — ничего не нужно устанавливать. Считай постфлоп-стратегию в техасском холдеме по диапазону, борду и сайзингу. От HoldemMaster.",
+  },
+  // 아랍어 — «مدرّب GTO»·«سولفر GTO»(확정표 §1-6·§3-1 · ar 문자열 안 «GTO Trainer» 0 — §8 #24)
+  ar: {
+    title: "مدرّب GTO من HoldemMaster — سولفر GTO مجاني في المتصفح",
+    description:
+      "سولفر GTO مجاني يعمل مباشرة في متصفحك دون تثبيت. احسب استراتيجية ما بعد الفلوب في تكساس هولدم حسب النطاق والبورد وحجم الرهان. من HoldemMaster.",
+  },
+  it: {
+    title: "HoldemMaster GTO Trainer — Solver e trainer GTO gratuiti per Texas Hold’em",
+    description:
+      "Solver GTO gratuito nel browser, senza installazione. Calcola la strategia postflop del Texas Hold’em con range, board e dimensioni di puntata. Un progetto di HoldemMaster.",
+  },
+  pl: {
+    title: "HoldemMaster GTO Trainer — bezpłatny solver i trener GTO do Texas Hold’em",
+    description: "Bezpłatny solver GTO w przeglądarce, bez instalacji. Oblicz strategię postflop w Texas Hold’em, wybierając zakresy, board i sizingi. Projekt HoldemMaster.",
+  },
+};
+
+/* 다른 빌드는 탭 제목·메타를 통째로 바꾼다(src/variant.ts) */
+declare const __APP_TARGET__: "trainer" | "solo";
+const DOC_META = __APP_TARGET__ === "solo" ? VARIANT_TEXT!.docMeta : TRAINER_DOC_META;
+
+/* html lang= 값. ⚠ 중국어는 «문자»까지 밝혀야 브라우저가 글꼴을 제대로 고른다 —
+ * 번체와 간체는 같은 코드포인트를 쓰면서 자형이 다른 글자가 많아(直·骨·産 등),
+ * lang이 zh-Hant인지 zh-Hans인지에 따라 CJK 폴백 글꼴이 갈린다.
+ * (BCP-47은 대소문자를 안 가리지만 표준 표기가 zh-Hant이므로 그대로 적는다) */
+const DOC_LANG: Record<Locale, string> = {
+  ko: "ko",
+  en: "en",
+  ja: "ja",
+  es: "es",
+  pt: "pt",
+  de: "de",
+  zh: "zh-Hans",
+  "zh-hant": "zh-Hant",
+  fr: "fr",
+  id: "id",
+  ms: "ms",
+  hi: "hi",
+  // CSS uppercase가 터키어 규칙(i→İ)을 타게 한다 — 확정표 §7-1 (사이드바 uppercase는 끄지 않는다)
+  tr: "tr",
+  vi: "vi",
+  ru: "ru",
+  // 문서 언어 태그는 번역하지 않는다.
+  ar: "ar",
+  it: "it",
+  pl: "pl",
+};
+
+/* 설치된 앱의 이름(창 제목·홈 화면 라벨)은 «매니페스트»가 정한다 — 문서 제목이 아니다.
+ * 언어별 파일이 public/manifest-<locale>.webmanifest로 있고, 첫 로드는 index.html의
+ * 인라인 스크립트가, 이후 전환은 이 함수가 담당한다.
+ * ⚠ 9개 파일의 id가 전부 "/"라 브라우저는 «같은 앱»으로 본다(다르면 앱이 갈라진다).
+ * ⚠ 이미 설치된 사용자는 재설치 전까지 예전 이름을 유지한다 — 정상이다. */
+const applyManifestLocale = (locale: Locale) => {
+  const link = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
+  if (!link) return;
+  // 기본 파일(manifest.webmanifest)의 언어가 빌드마다 다르다 — 트레이너 빌드는 한국어
+  // (우리 커뮤니티가 출발점), 단독 빌드는 영어(글로벌 스토어 유통이 우선).
+  // 각 빌드의 index.html 인라인 스크립트와 짝을 이룬다.
+  const defaultLocale: Locale = __APP_TARGET__ === "solo" ? "en" : "ko";
+  const href =
+    locale === defaultLocale ? "/manifest.webmanifest" : `/manifest-${locale}.webmanifest`;
+  if (!link.href.endsWith(href)) link.href = href;
+};
+
+const applyDocumentLocale = (locale: Locale) => {
+  document.documentElement.lang = DOC_LANG[locale];
+  document.documentElement.dir = directionForLocale(locale);
+  applyManifestLocale(locale);
+  document.title = DOC_META[locale].title;
+  document
+    .querySelector('meta[name="description"]')
+    ?.setAttribute("content", DOC_META[locale].description);
+};
+
+export const i18n = reactive({ locale: detect() });
+
+/** 언어별 라벨 파일(.ts)의 사전 타입 — 18개 언어 블록이 전부 있어야 빌드가 통과한다. */
+export type LocaleDict<T> = Record<Locale, T>;
+applyDocumentLocale(i18n.locale);
+
+export const setLocale = (locale: Locale) => {
+  i18n.locale = locale;
+  applyDocumentLocale(locale);
+  try {
+    localStorage.setItem(KEY, locale);
+  } catch {
+    /* 무시 */
+  }
+};
+
+/** ar의 숫자·시각은 서양 숫자와 구분자. 기존 로캘 태그는 그대로 전달한다. */
+export const numberLocaleTag = (locale: string = i18n.locale): string =>
+  locale === "ar" ? "en-US" : locale === "it" ? "it-IT" : locale === "pl" ? "pl-PL" : locale;
+
+/** ar 문자열의 라틴 구절 / 방향을 모르는 사용자 문자열에만 사용한다. */
+export const ltrIso = (text: string): string => "\u2066" + text + "\u2069";
+export const autoIso = (text: string): string => "\u2068" + text + "\u2069";
+/** ar 라벨은 RTL 한 단위로, 뒤의 수치·단위는 LTR 한 단위로 유지한다. ar 분기에서만 호출. */
+export const arLabelIso = (label: string, value?: string): string =>
+  "\u2067" + label + (value === undefined ? "" : " " + ltrIso(value)) + "\u2069";
+
+/**
+ * 화면에 «찍히는» 수치의 소수점을 언어에 맞춘다 — 브라질·독일은 «,»가 소수점이다.
+ * 숫자 사이의 점만 바꾸므로 문장 끝 마침표·주소·버전(AGPL-3.0)은 건드리지 않는다.
+ *
+ * ⚠ 쓰면 안 되는 곳: CSV 내보내기(쉼표가 열 구분자) · style 문자열(width: 50,5%)
+ *   · 사용자가 그대로 입력해야 하는 벳 사이즈 문법(«2.5x»).
+ * ⚠ 중국어(zh·zh-hant)는 «영어와 같은» 마침표 소수점이다 — 여기에 넣으면 오히려 깨진다
+ *   (본체 브리프 §3: 1,326 · 0.003% · 2.7:1 · 천단위 콤마). pt·de·fr·id 전용이다.
+ * id(인도네시아)는 pt·de와 같은 계열(소수점 «,» · 천단위 «.») — % 앞 공백은 없다(«35,4%»).
+ *
+ * fr은 여기에 «% 앞 좁은 공백»(U+202F, 프랑스 조판 관습 35 %)이 더해진다.
+ * ⚠ 일부러 «문자열 안에 이미 %가 있는 경우»에만 걸리게 했다 — 조밀 UI(13×13 격자·액션
+ *   타일·결과 표 셀)는 %를 $n() 바깥 템플릿에 두므로 자동으로 제외된다. 이 제외는 결정이다:
+ *   조판 규칙보다 정보 잘림이 더 나쁘다 (프랑스어화_리서치 §1-3).
+ * 템플릿에서는 전역 속성 `$n(...)`으로 쓴다 (index.ts에서 등록).
+ */
+export const localizeNumber = (text: string) => {
+  // A complete display number can be grouped safely. Prose/input examples are
+  // not parsed as numbers; raw input/export paths never call this helper.
+  if (i18n.locale === "pl") {
+    const numeric = text.match(/^(-?\d+(?:\.(\d+))?)(bb|%)?$/);
+    if (numeric) return plNumberText(Number(numeric[1]), numeric[2]?.length ?? 0) + (numeric[3] ?? "");
+    return text.replace(/(\d)\.(\d)/g, "$1,$2");
+  }
+  // AR6: keep the complete numeric token (including %/comparison sign) LTR.
+  // Existing LTR isolates remain unchanged; Arabic label isolates may contain one.
+  if (i18n.locale === "ar")
+    return text.replace(/[≤≥<>]?\d+(?:[.,]\d+)*(?:[\/–-]\d+(?:[.,]\d+)*)*%/g, (token, offset) => {
+      const directions: string[] = [];
+      for (const ch of text.slice(0, offset)) {
+        if (/[\u2066-\u2068]/.test(ch)) directions.push(ch);
+        else if (ch === "\u2069") directions.pop();
+      }
+      return directions[directions.length - 1] === "\u2066" ? token : ltrIso(token);
+    });
+  // ⚠ 아래 fr 치환문의 "$1…%" 공백은 «U+202F 리터럴»이다 — 일반 공백으로 «고치면» 깨진다
+  if (i18n.locale === "fr")
+    return text.replace(/(\d)\.(\d)/g, "$1,$2").replace(/(\d)\s?%/g, "$1 %");
+  // tr(튀르키예어화 확정표 §2): 소수점 «,» + 퍼센트 기호를 «앞»으로(«%35,4» · 공백 없음).
+  //   이미 «%35» 꼴인 사전 문구는 «\d%»가 없어 다시 건드리지 않는다(이중 처리 없음).
+  //   천단위(4자리부터 «1.326»)는 이 함수가 아니라 사전 쪽 toLocaleString("tr-TR")이 맡는다.
+  if (i18n.locale === "tr")
+    return text.replace(/(\d)\.(\d)/g, "$1,$2").replace(/(\d+(?:,\d+)?)\s?%/g, "%$1");
+  return i18n.locale === "pt" || i18n.locale === "de" || i18n.locale === "id" || i18n.locale === "vi" || i18n.locale === "ru" || i18n.locale === "it"
+    ? text.replace(/(\d)\.(\d)/g, "$1,$2")
+    : text;
+};
+
+/**
+ * 화면에 찍히는 퍼센트 — tr만 «%35», 나머지 언어(vi 포함)는 «35%»
+ * (튀르키예어화 확정표 §2-2 ⓐ). 템플릿에서는 전역 속성 `$pct(...)`(index.ts에서 등록).
+ * ⚠ style 문자열(width: 50%)·벳 사이즈 입력 문법(«50%»)에는 쓰지 않는다.
+ */
+export const pctText = (s: string | number) =>
+  i18n.locale === "tr" ? "%" + s : i18n.locale === "ar" ? ltrIso(s + "%") : i18n.locale === "pl" ? localizeNumber(String(s)) + "%" : s + "%";
+
+/** 정수부·소수부를 나눠 그리는 화면(결과 표·13×13 격자)에서 쓰는 소수점 문자 */
+export const decimalMark = () =>
+  i18n.locale === "pt" ||
+  i18n.locale === "de" ||
+  i18n.locale === "fr" ||
+  i18n.locale === "id" ||
+  i18n.locale === "tr" ||
+  i18n.locale === "vi" ||
+  i18n.locale === "ru" ||
+  i18n.locale === "it" ||
+  i18n.locale === "pl"
+    ? ","
+    : ".";
+
+/** 언어별 값 중 현재 언어 것을 고른다 (문장 조립이 아닌 짧은 선택용).
+ * ja·es·pt·de·zh·zhHant·fr·id·ms를 생략하면 영어로 폴백한다 — 새 문구는 반드시 hi까지 채울 것.
+ * ⚠ zhHant를 비우면 «간체»가 아니라 «영어»로 떨어진다. 중국어끼리 폴백하지 않는 것은
+ *   일부러다 — 번체 화면에 간체가 섞이면 «틀린 언어»로 읽히기 때문이다.
+ * ⚠ fr이 Locale 유니온 순서(de 다음)가 아니라 «맨 끝»인 것도 일부러다 — 중간에 끼우면
+ *   기존 8인자 호출의 zh·zhHant가 한 칸씩 밀려 조용히 틀린 언어가 나온다.
+ *   id(2026-09-02)도 같은 이유로 fr 뒤 «맨 끝»이다 — 기존 9인자 호출 전수에 10번째 값을 붙였다.
+ *   hi(2026-09-06)는 12번째 인자로 마지막에 추가한다.
+ *   tr(2026-10-05)은 13번째 인자로 마지막에 추가한다 — 호출부 전수에 13번째 값을 붙였다
+ *   (번역 전에는 en 복사 + «TR-TODO» 주석).
+ *   ms(2026-09-03)도 같은 이유로 id 뒤 «맨 끝»이다 — 기존 10인자 호출 전수에 11번째 값을 붙였다.
+ *   vi(2026-10-07)는 tr 뒤 14번째 인자. 번역은 2026-10-07 6묶음.
+ *   ru(2026-10-08)는 vi 뒤 15번째 인자. 모든 호출에 ru 15번째 인자를 둔다.
+ *   it(2026-10-16)는 ar 뒤 17번째 필수 인자. 누락을 영어 폴백으로 숨기지 않는다.
+ *   pl(2026-10-17)는 it 뒤 18번째 필수 인자. */
+export const pick = <T>(
+  ko: T,
+  en: T,
+  ja: T = en,
+  es: T = en,
+  pt: T = en,
+  de: T = en,
+  zh: T = en,
+  zhHant: T = en,
+  fr: T = en,
+  id: T = en,
+  ms: T = en,
+  hi: T = en,
+  tr: T = en,
+  vi: T = en,
+  ru: T = en,
+  ar: T = en,
+  it: T,
+  pl: T
+): T =>
+  i18n.locale === "ko"
+    ? ko
+    : i18n.locale === "ja"
+    ? ja
+    : i18n.locale === "es"
+    ? es
+    : i18n.locale === "pt"
+    ? pt
+    : i18n.locale === "de"
+    ? de
+    : i18n.locale === "zh"
+    ? zh
+    : i18n.locale === "zh-hant"
+    ? zhHant
+    : i18n.locale === "fr"
+    ? fr
+    : i18n.locale === "id"
+    ? id
+    : i18n.locale === "ms"
+    ? ms
+    : i18n.locale === "hi"
+    ? hi
+    : i18n.locale === "tr"
+    ? tr
+    : i18n.locale === "vi"
+    ? vi
+    : i18n.locale === "ru"
+    ? ru
+    : i18n.locale === "ar"
+    ? ar
+    : i18n.locale === "it"
+    ? it
+    : i18n.locale === "pl"
+    ? pl
+    : en;
+
+/** Russian noun form only; callers format the number. Fractions use the few form. */
+export const ruPlural = (n: number, one: string, few: string, many: string): string => {
+  const value = Math.abs(n);
+  if (!Number.isInteger(value)) return few;
+  const last = value % 10;
+  const lastTwo = value % 100;
+  if (last === 1 && lastTwo !== 11) return one;
+  if (last >= 2 && last <= 4 && (lastTwo < 12 || lastTwo > 14)) return few;
+  return many;
+};
+
+/** Polish forms are selected from the displayed precision; never reuse ruPlural. */
+export const plPlural = (
+  n: number,
+  forms: { one: string; few: string; many: string; other: string },
+  formatOptions: Intl.PluralRulesOptions = {}
+): string => {
+  if (!Number.isFinite(n)) throw new RangeError("Polish plural count must be finite");
+  const category = new Intl.PluralRules("pl", formatOptions).select(Math.abs(n));
+  return forms[category as keyof typeof forms];
+};
+
+/** Polish display-only count; never call for range input, exports, or payloads. */
+export const plNumberText = (value: number, fractionDigits: number): string =>
+  Number(value.toFixed(fractionDigits)).toLocaleString("pl-PL", { useGrouping: true, minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
+
+/** Localize a visible Polish counter while preserving every other locale's value. */
+export const plCountText = (value: number): number | string =>
+  i18n.locale === "pl" ? localizeNumber(String(value)) : value;

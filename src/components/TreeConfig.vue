@@ -1,0 +1,2669 @@
+<template>
+  <div v-if="!isEditMode" class="tree-config text-sm tabular-nums">
+    <!-- ⚠ flex-wrap 필수 — 라벨이 긴 언어(es·pt)에서는 왼쪽 열이 넓어져
+         오른쪽 «저장된 설정» 패널이 화면 밖으로 잘려 나갔다 (2026-08-21 pt 눈검수).
+         자리가 모자라면 잘리는 대신 아래로 내려가게 한다. -->
+    <div class="flex flex-col md:flex-row md:flex-wrap gap-4">
+      <div class="tree-config-form shrink-0 max-w-full min-w-0">
+        <h3 class="mb-2 font-semibold" data-testid="tree-basic-heading">{{ L.basicSettings }}</h3>
+        <div class="mb-2 max-w-[36rem] text-[13px] text-neutral-400" data-testid="tree-chip-note">
+          {{ L.chipNote }}
+        </div>
+        <div class="flex flex-col sm:flex-row sm:flex-wrap my-1 gap-0 sm:gap-6">
+          <div>
+            <div class="my-1">
+              <label for="tree-startingPot" class="inline-block w-[7.5rem]">{{ L.startingPot }}</label>
+              <input dir="ltr"
+                id="tree-startingPot"
+                name="startingPot"
+                autocomplete="off"
+                :spellcheck="false"
+                v-model="config.startingPot"
+                type="number"
+                @input="onAmountEdit"
+                :class="
+                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
+                  (config.startingPot <= 0 ||
+                  config.startingPot > MAX_AMOUNT ||
+                  config.startingPot % 1 !== 0
+                    ? 'input-error'
+                    : '')
+                "
+                :disabled="hasEdit"
+                min="0"
+                :max="MAX_AMOUNT"
+              />
+            </div>
+
+            <div class="my-1">
+              <label for="tree-effectiveStack" class="inline-block w-[7.5rem]">{{ L.effectiveStack }}</label>
+              <input dir="ltr"
+                id="tree-effectiveStack"
+                name="effectiveStack"
+                autocomplete="off"
+                :spellcheck="false"
+                v-model="config.effectiveStack"
+                type="number"
+                @input="onAmountEdit"
+                :class="
+                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
+                  (config.effectiveStack <= 0 ||
+                  config.effectiveStack > MAX_AMOUNT ||
+                  config.effectiveStack % 1 !== 0
+                    ? 'input-error'
+                    : '')
+                "
+                :disabled="hasEdit"
+                min="0"
+                :max="MAX_AMOUNT"
+              />
+            </div>
+          </div>
+
+          <div class="ms-auto p-1">
+            <button class="button-base button-blue" @click="clearConfig">
+              {{ L.reset }}
+            </button>
+          </div>
+        </div>
+
+        <div
+          v-if="errorBasics.length > 0"
+          class="flex font-semibold text-red-400"
+        >
+          <div class="underline">{{ L.error }}</div>
+          <div class="ms-2">
+            <div v-for="error in errorBasics" :key="error">
+              {{ error }}
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span class="font-semibold shrink-0">{{ L.oopBetSizes }}</span>
+            <label class="inline-block shrink-0 ms-0 md:ms-2">
+              <input
+                v-model="config.donkOption"
+                type="checkbox"
+                class="me-1 align-middle rounded cursor-pointer peer"
+                :disabled="hasEdit"
+              />
+              <span class="cursor-pointer peer-disabled:cursor-not-allowed">
+                {{ L.donkOption }}
+              </span>
+            </label>
+            <div class="flex flex-grow justify-center">
+              <Tippy
+                class="inline-block cursor-help text-neutral-400"
+                max-width="500px"
+                trigger="mouseenter click"
+                placement="bottom"
+                :delay="[200, 0]"
+                :interactive="true"
+              >
+                <QuestionMarkCircleIcon class="inline w-5 h-5" />
+                <div class="inline-block ms-0.5 text-sm underline">
+                  {{ L.howToInput }}
+                </div>
+                <template #content>
+                  <div class="px-1 py-0.5 text-justify">
+                    {{ L.inputHelpIntro }}
+                    <ul class="ps-6 list-disc">
+                      <li class="mt-1">{{ L.inputHelpPercent }}</li>
+                      <li class="mt-1">{{ L.inputHelpMultiple }}</li>
+                      <li class="mt-1">{{ L.inputHelpAllin }}</li>
+                      <li class="mt-1">{{ L.inputHelpFixed }}</li>
+                      <li class="mt-1">{{ L.inputHelpGeometric }}</li>
+                    </ul>
+                  </div>
+                </template>
+              </Tippy>
+            </div>
+          </div>
+
+          <div class="flex gap-5 bet-grid">
+            <div>
+              <div class="my-1 underline">{{ L.flop }}</div>
+              <div class="my-1">
+                <label for="tree-oopFlopBet" class="inline-block w-14">{{ L.bet }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-oopFlopBet"
+                  :aria-label="[L.oopBetSizes, L.flop, L.bet].join(' · ')"
+                  name="oopFlopBet"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.oopFlopBet"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.oopFlopBetSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.oopFlopBetSanitized.valid &&
+                      (config.oopFlopBet = config.oopFlopBetSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+              <div class="my-1">
+                <label for="tree-oopFlopRaise" class="inline-block w-14">{{ L.raise }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-oopFlopRaise"
+                  :aria-label="[L.oopBetSizes, L.flop, L.raise].join(' · ')"
+                  name="oopFlopRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.oopFlopRaise"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.oopFlopRaiseSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.oopFlopRaiseSanitized.valid &&
+                      (config.oopFlopRaise = config.oopFlopRaiseSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="my-1 underline">{{ L.turn }}</div>
+              <div class="my-1">
+                <label for="tree-oopTurnBet" class="inline-block w-14">{{ L.bet }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-oopTurnBet"
+                  :aria-label="[L.oopBetSizes, L.turn, L.bet].join(' · ')"
+                  name="oopTurnBet"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.oopTurnBet"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.oopTurnBetSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.oopTurnBetSanitized.valid &&
+                      (config.oopTurnBet = config.oopTurnBetSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+              <div class="my-1">
+                <label for="tree-oopTurnRaise" class="inline-block w-14">{{ L.raise }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-oopTurnRaise"
+                  :aria-label="[L.oopBetSizes, L.turn, L.raise].join(' · ')"
+                  name="oopTurnRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.oopTurnRaise"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.oopTurnRaiseSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.oopTurnRaiseSanitized.valid &&
+                      (config.oopTurnRaise = config.oopTurnRaiseSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+              <div v-if="config.donkOption" class="my-1">
+                <label for="tree-oopTurnDonk" class="inline-block w-14">{{ L.donk }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-oopTurnDonk"
+                  :aria-label="[L.oopBetSizes, L.turn, L.donk].join(' · ')"
+                  name="oopTurnDonk"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.oopTurnDonk"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.oopTurnDonkSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.oopTurnDonkSanitized.valid &&
+                      (config.oopTurnDonk = config.oopTurnDonkSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="my-1 underline">{{ L.river }}</div>
+              <div class="my-1">
+                <label for="tree-oopRiverBet" class="inline-block w-14">{{ L.bet }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-oopRiverBet"
+                  :aria-label="[L.oopBetSizes, L.river, L.bet].join(' · ')"
+                  name="oopRiverBet"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.oopRiverBet"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.oopRiverBetSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.oopRiverBetSanitized.valid &&
+                      (config.oopRiverBet = config.oopRiverBetSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+              <div class="my-1">
+                <label for="tree-oopRiverRaise" class="inline-block w-14">{{ L.raise }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-oopRiverRaise"
+                  :aria-label="[L.oopBetSizes, L.river, L.raise].join(' · ')"
+                  name="oopRiverRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.oopRiverRaise"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.oopRiverRaiseSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.oopRiverRaiseSanitized.valid &&
+                      (config.oopRiverRaise = config.oopRiverRaiseSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+              <div v-if="config.donkOption" class="my-1">
+                <label for="tree-oopRiverDonk" class="inline-block w-14">{{ L.donk }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-oopRiverDonk"
+                  :aria-label="[L.oopBetSizes, L.river, L.donk].join(' · ')"
+                  name="oopRiverDonk"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.oopRiverDonk"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.oopRiverDonkSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.oopRiverDonkSanitized.valid &&
+                      (config.oopRiverDonk = config.oopRiverDonkSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex flex-wrap items-center gap-x-4">
+            <div class="mt-6 font-semibold shrink-0">{{ L.ipBetSizes }}</div>
+            <div class="flex flex-grow items-center justify-center gap-6">
+              <button
+                class="mt-3 button-base button-blue button-arrow"
+                :disabled="errorIp.length > 0 || hasEdit"
+                :aria-label="L.ipBetSizes + ' → ' + L.oopBetSizes"
+                @click="ipToOop"
+              >
+                ↑
+              </button>
+              <button
+                class="mt-3 button-base button-blue button-arrow"
+                :disabled="errorOop.length > 0 || hasEdit"
+                :aria-label="L.oopBetSizes + ' → ' + L.ipBetSizes"
+                @click="oopToIp"
+              >
+                ↓
+              </button>
+            </div>
+          </div>
+
+          <div class="flex gap-5 bet-grid">
+            <div>
+              <div class="my-1 underline">{{ L.flop }}</div>
+              <div class="my-1">
+                <label for="tree-ipFlopBet" class="inline-block w-14">{{ L.bet }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-ipFlopBet"
+                  :aria-label="[L.ipBetSizes, L.flop, L.bet].join(' · ')"
+                  name="ipFlopBet"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.ipFlopBet"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.ipFlopBetSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.ipFlopBetSanitized.valid &&
+                      (config.ipFlopBet = config.ipFlopBetSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+              <div class="my-1">
+                <label for="tree-ipFlopRaise" class="inline-block w-14">{{ L.raise }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-ipFlopRaise"
+                  :aria-label="[L.ipBetSizes, L.flop, L.raise].join(' · ')"
+                  name="ipFlopRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.ipFlopRaise"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.ipFlopRaiseSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.ipFlopRaiseSanitized.valid &&
+                      (config.ipFlopRaise = config.ipFlopRaiseSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="my-1 underline">{{ L.turn }}</div>
+              <div class="my-1">
+                <label for="tree-ipTurnBet" class="inline-block w-14">{{ L.bet }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-ipTurnBet"
+                  :aria-label="[L.ipBetSizes, L.turn, L.bet].join(' · ')"
+                  name="ipTurnBet"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.ipTurnBet"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.ipTurnBetSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.ipTurnBetSanitized.valid &&
+                      (config.ipTurnBet = config.ipTurnBetSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+              <div class="my-1">
+                <label for="tree-ipTurnRaise" class="inline-block w-14">{{ L.raise }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-ipTurnRaise"
+                  :aria-label="[L.ipBetSizes, L.turn, L.raise].join(' · ')"
+                  name="ipTurnRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.ipTurnRaise"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.ipTurnRaiseSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.ipTurnRaiseSanitized.valid &&
+                      (config.ipTurnRaise = config.ipTurnRaiseSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="my-1 underline">{{ L.river }}</div>
+              <div class="my-1">
+                <label for="tree-ipRiverBet" class="inline-block w-14">{{ L.bet }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-ipRiverBet"
+                  :aria-label="[L.ipBetSizes, L.river, L.bet].join(' · ')"
+                  name="ipRiverBet"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.ipRiverBet"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.ipRiverBetSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.ipRiverBetSanitized.valid &&
+                      (config.ipRiverBet = config.ipRiverBetSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+              <div class="my-1">
+                <label for="tree-ipRiverRaise" class="inline-block w-14">{{ L.raise }}</label>
+                <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                  id="tree-ipRiverRaise"
+                  :aria-label="[L.ipBetSizes, L.river, L.raise].join(' · ')"
+                  name="ipRiverRaise"
+                  autocomplete="off"
+                  :spellcheck="false"
+                  v-model="config.ipRiverRaise"
+                  type="text"
+                  :class="
+                    'w-24 px-2 py-1 rounded-lg text-sm ' +
+                    (!config.ipRiverRaiseSanitized.valid ? 'input-error' : '')
+                  "
+                  :disabled="hasEdit"
+                  @change="
+                    config.ipRiverRaiseSanitized.valid &&
+                      (config.ipRiverRaise = config.ipRiverRaiseSanitized.s)
+                  "
+                />
+                %</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          v-if="errorOop.length > 0 || errorIp.length > 0"
+          class="flex mt-1 font-semibold text-red-400"
+        >
+          <div class="underline">{{ L.error }}</div>
+          <div class="ms-2">
+            <div v-for="error in errorOop" :key="error">
+              {{ error }}
+            </div>
+            <div v-for="error in errorIp" :key="error">
+              {{ error }}
+            </div>
+          </div>
+        </div>
+
+        <details
+          class="tree-advanced mt-4 max-w-[36rem] border-t border-neutral-700 pt-3"
+          data-testid="tree-advanced"
+          :open="advancedOpen"
+          @toggle="onAdvancedToggle"
+        >
+          <summary
+            class="cursor-pointer list-none rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
+            data-testid="tree-advanced-summary"
+          >
+            <span class="font-semibold" data-testid="tree-advanced-label">{{ L.advancedSettings }}</span>
+            <span class="block md:inline md:ms-2 text-xs text-neutral-500" data-testid="tree-advanced-hint">{{ L.advancedHint }}</span>
+          </summary>
+          <div class="mt-3">
+            <div class="my-1">
+              <label for="tree-rakePercent" class="inline-block w-20">{{ L.rake }}</label>
+              <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                id="tree-rakePercent"
+                name="rakePercent"
+                autocomplete="off"
+                :spellcheck="false"
+                v-model="config.rakePercent"
+                type="number"
+                :class="
+                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
+                  (config.rakePercent < 0 || config.rakePercent > 100
+                    ? 'input-error'
+                    : '')
+                "
+                :disabled="hasEdit"
+                min="0"
+                max="100"
+                step="0.5"
+              />
+              %</span>
+            </div>
+
+            <div class="my-1">
+              <label for="tree-rakeCap" class="inline-block w-20">{{ L.rakeCap }}</label>
+              <input dir="ltr"
+                id="tree-rakeCap"
+                name="rakeCap"
+                autocomplete="off"
+                :spellcheck="false"
+                v-model="config.rakeCap"
+                type="number"
+                :class="
+                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
+                  (config.rakeCap < 0 || config.rakeCap > 3 * MAX_AMOUNT
+                    ? 'input-error'
+                    : '')
+                "
+                :disabled="hasEdit"
+                min="0"
+                :max="3 * MAX_AMOUNT"
+              />
+            </div>
+          </div>
+          <div class="mt-3">
+            <div class="my-1">
+              <div class="inline-block w-48">
+                <label for="tree-addAllInThreshold">{{ L.addAllInLabel }}</label>
+                <Tippy
+                  class="inline-block cursor-help"
+                  max-width="420px"
+                  trigger="mouseenter click"
+                  :delay="[200, 0]"
+                  :interactive="true"
+                >
+                  <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
+                  <template #content>
+                    <div class="px-1 py-0.5 text-justify">
+                      {{ L.addAllInHelp }}
+                    </div>
+                  </template>
+                </Tippy>
+              </div>
+              <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                id="tree-addAllInThreshold"
+                name="addAllInThreshold"
+                v-model="config.addAllInThreshold"
+                type="number"
+                :class="
+                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
+                  (config.addAllInThreshold < 0 ? 'input-error' : '')
+                "
+                :disabled="hasEdit"
+                min="0"
+                :max="MAX_AMOUNT * 100"
+              />
+              %</span>
+            </div>
+
+            <div class="my-1">
+              <div class="inline-block w-48">
+                <label for="tree-forceAllInThreshold">{{ L.forceAllInLabel }}</label>
+                <Tippy
+                  class="inline-block cursor-help"
+                  max-width="500px"
+                  trigger="mouseenter click"
+                  :delay="[200, 0]"
+                  :interactive="true"
+                >
+                  <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
+                  <template #content>
+                    <div class="px-1 py-0.5 text-justify">
+                      <div>
+                        {{ L.forceAllInHelp1 }}
+                      </div>
+                      <div class="mt-3">
+                        {{ L.forceAllInHelp2 }}
+                      </div>
+                      <div class="mt-3">
+                        {{ L.forceAllInHelp3 }}
+                      </div>
+                      <div class="mt-1 text-center">
+                        {{ L.forceAllInFormula }}
+                      </div>
+                    </div>
+                  </template>
+                </Tippy>
+              </div>
+              <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                id="tree-forceAllInThreshold"
+                name="forceAllInThreshold"
+                v-model="config.forceAllInThreshold"
+                type="number"
+                :class="
+                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
+                  (config.forceAllInThreshold < 0 ? 'input-error' : '')
+                "
+                :disabled="hasEdit"
+                min="0"
+                :max="MAX_AMOUNT * 100"
+              />
+              %</span>
+            </div>
+
+            <div class="my-1">
+              <div class="inline-block w-48">
+                <label for="tree-mergingThreshold">{{ L.mergingLabel }}</label>
+                <Tippy
+                  class="inline-block cursor-help"
+                  max-width="500px"
+                  trigger="mouseenter click"
+                  :delay="[200, 0]"
+                  :interactive="true"
+                >
+                  <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
+                  <template #content>
+                    <div class="px-1 py-0.5 text-justify">
+                      <div>
+                        {{ L.mergingHelp1 }}
+                      </div>
+                      <div class="mt-3">
+                        {{ L.mergingHelp2 }}
+                      </div>
+                      <div class="my-1 text-center">
+                        {{ L.mergingFormula }}
+                      </div>
+                      <div>
+                        {{ L.mergingHelp3 }}
+                      </div>
+                    </div>
+                  </template>
+                </Tippy>
+              </div>
+              <span dir="ltr" class="tree-percent-input"><input dir="ltr"
+                id="tree-mergingThreshold"
+                name="mergingThreshold"
+                v-model="config.mergingThreshold"
+                type="number"
+                :class="
+                  'w-24 px-2 py-1 rounded-lg text-sm text-center ' +
+                  (config.mergingThreshold < 0 ? 'input-error' : '')
+                "
+                :disabled="hasEdit"
+                min="0"
+                :max="MAX_AMOUNT * 100"
+              />
+              %</span>
+            </div>
+          </div>
+        </details>
+
+        <div class="mt-4">
+          <div class="flex justify-center flex-grow">
+            <div class="flex flex-col justify-center gap-3">
+              <button
+                class="button-base button-blue"
+                :disabled="!isInputValid"
+                @click="startEdit"
+              >
+                {{ L.treePreviewEdit }}
+              </button>
+
+              <button
+                v-if="hasEdit"
+                class="button-base button-red"
+                @click="clearEdit"
+              >
+                {{ L.clearEditUnlock }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          v-if="errorMisc.length > 0"
+          class="flex mt-1 font-semibold text-red-400"
+        >
+          <div class="underline">{{ L.error }}</div>
+          <div class="ms-2">
+            <div v-for="error in errorMisc" :key="error">
+              {{ error }}
+            </div>
+          </div>
+        </div>
+
+        <div
+          v-if="warningMisc.length > 0"
+          class="flex mt-1 font-semibold text-orange-400"
+        >
+          <div class="underline">{{ L.warning }}</div>
+          <div class="ms-2">
+            <div
+              v-for="warning in warningMisc"
+              :key="warning"
+              class="whitespace-pre-line"
+            >
+              {{ warning }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-grow min-w-0 w-full md:w-[15rem] max-w-full md:max-w-[18rem] mt-1">
+        <DbItemPicker
+          store-name="configurations"
+          :value="dbValue"
+          :allow-save="isInputValid"
+          @load-item="loadConfig"
+        />
+      </div>
+    </div>
+
+    <div
+      v-if="addedLinesArray.length > 0 || removedLinesArray.length > 0"
+      class="mt-5"
+    >
+      <div v-if="addedLinesArray.length > 0" class="flex">
+        <div class="font-semibold underline w-[7.75rem]">
+          {{ L.addedLines }}
+        </div>
+        <div dir="ltr" class="flex flex-col">
+          <div v-for="addedLine in addedLinesArray" :key="addedLine">
+            {{ addedLine }}
+          </div>
+        </div>
+      </div>
+
+      <div v-if="removedLinesArray.length > 0" class="flex mt-2">
+        <div class="font-semibold underline w-[7.75rem]">
+          {{ L.removedLines }}
+        </div>
+        <div dir="ltr" class="flex flex-col">
+          <div v-for="removedLine in removedLinesArray" :key="removedLine">
+            {{ removedLine }}
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="
+          config.board.length >= 3 &&
+          config.expectedBoardLength > 0 &&
+          config.board.length !== config.expectedBoardLength
+        "
+        class="flex mt-2 font-semibold text-orange-400"
+      >
+        <div class="underline">{{ L.warning }}</div>
+        <div class="ms-2">
+          {{ L.boardMismatch(config.expectedBoardLength, config.board.length) }}
+          <br />
+          {{ L.boardMismatchHint }}
+        </div>
+      </div>
+    </div>
+
+    <div
+      v-if="errorLines.length > 0"
+      class="flex mt-2 font-semibold text-red-400"
+    >
+      <div class="underline">{{ L.error }}</div>
+      <div class="ms-2">
+        <div v-for="error in errorLines" :key="error">
+          {{ error }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div v-else>
+    <TreeEditor @save="saveEdit" @cancel="cancelEdit" />
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, ref, watch } from "vue";
+import { useStore, useConfigStore } from "../store";
+import { validSharedLines } from "../spot-share";
+import {
+  MAX_AMOUNT,
+  sanitizeBetString,
+  ROOT_LINE_STRING,
+  INVALID_LINE_STRING,
+  readableLineString,
+} from "../utils";
+
+import DbItemPicker from "./DbItemPicker.vue";
+import TreeEditor from "./TreeEditor.vue";
+import { Tippy } from "vue-tippy";
+import { QuestionMarkCircleIcon } from "@heroicons/vue/20/solid";
+import { i18n, pick, localizeNumber, ruPlural, plPlural, autoIso } from "../i18n";
+import { VARIANT_TEXT } from "../variant";
+import { betErrorText } from "../bet-error-labels";
+
+const M = {
+  ko: {
+    advancedHint: "레이크 · 올인 · 병합 — 보통은 그대로 둬도 됩니다",
+    advancedSettings: "상세 설정 ▸",
+    basicSettings: "기본 설정",
+    chipNote:
+      "금액은 정수 칩으로 넣습니다. bb로 생각하려면 10칩 = 1bb로 넣으세요 (예: 팟 55 = 5.5bb, 스택 1000 = 100bb). 팟·스택을 직접 입력하거나 고친 뒤 계산한 결과는 칩 단위 그대로, 교육 예제를 불러와 팟·스택을 고치지 않고 계산한 결과는 bb로 환산해 표시합니다.",
+    startingPot: "스타팅 팟:",
+    effectiveStack: "유효 스택:",
+    rake: "레이크:",
+    rakeCap: "레이크 캡:",
+    reset: "초기화",
+    error: "오류:",
+    warning: "경고:",
+    oopBetSizes: "OOP 벳 사이즈",
+    donkOption: "덩크 벳에 다른 사이즈 사용",
+    howToInput: "입력 방법",
+    inputHelpIntro:
+      "여러 개의 벳 사이즈를 쉼표 또는 공백으로 구분하여 아래 형식 중 어느 것으로든 입력할 수 있습니다. 비워 두면 벳이나 레이즈를 하지 않습니다.",
+    inputHelpPercent:
+      '팟 대비 퍼센트를 나타내는 숫자 (예: "50"). 레이즈의 경우, 먼저 콜을 한 뒤 지정한 퍼센트만큼의 벳을 더하는 방식으로 사이즈가 계산됩니다. 예를 들어 벳 전 팟이 100이고 상대가 75를 벳했다면, 50% 레이즈는 75 + (100 + 75 + 75) * 50% = 200이 됩니다.',
+    inputHelpMultiple:
+      '이전 벳 사이즈의 배수 (예: "2.5x"). 레이즈에만 사용할 수 있습니다.',
+    inputHelpAllin: '올인 (예: "a").',
+    inputHelpFixed:
+      '고정 금액 추가 (예: "100c"). 레이즈의 경우 레이즈 횟수 상한도 지정할 수 있습니다 (예: "20c3r").',
+    inputHelpGeometric:
+      '지오메트릭 사이즈, 즉 남은 스택을 지정한 횟수의 동일 퍼센트 벳으로 나누는 방식 (예: "3e"). 예를 들어 현재 팟이 100이고 유효 스택이 400이면 "2e"는 100 벳이 됩니다. "e" 앞의 숫자를 생략하면 남은 스트리트 수가 사용됩니다 (플랍=3, 턴=2, 리버=1). 레이즈의 경우 지정한 숫자에서 이전 레이즈 횟수를 뺍니다. 예를 들어 "3e"는 리레이즈 시 "2e"로 바뀝니다. "e" 뒤에 숫자를 붙여 최대 퍼센트 한도를 지정할 수도 있습니다 (예: "2e200").',
+    flop: "플랍",
+    turn: "턴",
+    river: "리버",
+    bet: "벳:",
+    raise: "레이즈:",
+    donk: "덩크:",
+    ipBetSizes: "IP 벳 사이즈",
+    addAllInLabel: "올인 추가 임계값:",
+    addAllInHelp:
+      "가능한 최대 벳 사이즈와 팟의 비율이 이 임계값보다 작은 모든 지점에 올인 액션을 추가합니다.",
+    forceAllInLabel: "강제 올인 임계값:",
+    forceAllInHelp1:
+      "상대가 벳 액션을 콜한 후의 SPR (스택/팟 비율)이 이 임계값보다 낮으면 해당 벳 액션을 올인 액션으로 대체합니다. 권장 값은 15% - 20% 정도입니다.",
+    forceAllInHelp2:
+      '이 옵션은 PioSOLVER의 "all-in threshold"와 유사합니다. PioSOLVER는 초기 스택 대비 팟에 투입한 금액의 비율이 임계값을 초과하면 벳 액션을 올인으로 대체합니다.',
+    forceAllInHelp3:
+      "소수점 반올림을 무시할 때 변환 공식은 다음과 같습니다 (s = 초기 SPR, r = PioSOLVER의 임계값):",
+    forceAllInFormula: "임계값 = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "병합 임계값:",
+    mergingHelp1: "비슷한 사이즈의 벳 액션이 있으면 하나로 병합합니다.",
+    mergingHelp2:
+      "알고리즘은 PioSOLVER와 동일합니다. 즉, 가장 큰 벳 사이즈(= 팟의 X%)를 선택하고, 다음 부등식을 만족하는 사이즈(= 팟의 Y%)의 다른 벳 액션을 모두 제거합니다:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + 임계값.",
+    mergingHelp3: "남은 벳 중 다음으로 큰 벳 사이즈로 이 과정을 반복합니다.",
+    treePreviewEdit: "트리 미리보기 & 편집",
+    clearEditUnlock: "편집 초기화 & 잠금 해제",
+    addedLines: "추가된 라인:",
+    removedLines: "제거된 라인:",
+    boardMismatch: (expected: number, actual: number) =>
+      `편집된 트리는 ${expected}장의 보드를 가정하지만, 현재 보드는 ${actual}장으로 구성되어 있습니다.`,
+    boardMismatchHint:
+      '편집된 트리를 초기화하려면 "편집 초기화 & 잠금 해제" 버튼을 클릭하세요.',
+  },
+  en: {
+    advancedHint: "Rake · All-in · Merging — you can usually leave these unchanged",
+    advancedSettings: "Advanced settings ▸",
+    basicSettings: "Basic settings",
+    chipNote:
+      "Enter amounts in integer chips. To think in bb, use 10 chips = 1bb (e.g., pot 55 = 5.5bb, stack 1000 = 100bb). If you enter or edit the pot or stack yourself, results stay in your chip scale; if you load one of the Study Spots and solve without changing the pot or stack, results are converted to bb.",
+    startingPot: "Starting Pot:",
+    effectiveStack: "Effective Stack:",
+    rake: "Rake:",
+    rakeCap: "Rake Cap:",
+    reset: "Clear",
+    error: "Error:",
+    warning: "Warning:",
+    oopBetSizes: "OOP Bet Sizes",
+    donkOption: "Use different sizes for donk bets",
+    howToInput: "How to input",
+    inputHelpIntro:
+      "You can enter multiple bet sizes separated by commas or spaces, in any of the following formats. If left empty, no bet or raise is made.",
+    inputHelpPercent:
+      "A number representing the percentage of the pot (e.g., “50”). For raises, the size is computed by first calling and then adding the specified percentage of the resulting pot. For example, if the pot before the bet is 100 and the opponent bets 75, a 50% raise is 75 + (100 + 75 + 75) * 50% = 200.",
+    inputHelpMultiple:
+      "A multiple of the previous bet size (e.g., “2.5x”). Only available for raises.",
+    inputHelpAllin: "All-in (e.g., “a”).",
+    inputHelpFixed:
+      "Adding a fixed amount (e.g., “100c”). For raises, you can also cap the number of raises (e.g., “20c3r”).",
+    inputHelpGeometric:
+      "Geometric size, i.e., splitting the remaining stack into the specified number of equal-percentage bets (e.g., “3e”). For example, if the current pot is 100 and the effective stack is 400, “2e” is a bet of 100. If the number before “e” is omitted, the number of remaining streets is used (Flop=3, Turn=2, River=1). For raises, the number of previous raises is subtracted from the specified number; e.g., “3e” becomes “2e” when re-raising. You can also append a number after “e” to set a maximum percentage limit (e.g., “2e200”).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "IP Bet Sizes",
+    addAllInLabel: "Add All-In Threshold:",
+    addAllInHelp:
+      "Adds an all-in action to every node where the ratio of the maximum possible bet size to the pot is below this threshold.",
+    forceAllInLabel: "Force All-In Threshold:",
+    forceAllInHelp1:
+      "If the SPR (stack-to-pot ratio) after the opponent calls a bet action is below this threshold, that bet action is replaced with an all-in action. A recommended value is around 15–20%.",
+    forceAllInHelp2:
+      "This option is similar to PioSOLVER's “all-in threshold”. PioSOLVER replaces a bet action with an all-in when the ratio of the amount put into the pot to the initial stack exceeds the threshold.",
+    forceAllInHelp3:
+      "Ignoring rounding, the conversion formula is as follows (s = initial SPR, r = PioSOLVER's threshold):",
+    forceAllInFormula: "Threshold = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Merging Threshold:",
+    mergingHelp1: "Merges bet actions of similar sizes into one.",
+    mergingHelp2:
+      "The algorithm is the same as PioSOLVER's: pick the largest bet size (= X% of the pot) and remove every other bet action whose size (= Y% of the pot) satisfies the following inequality:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + threshold.",
+    mergingHelp3: "Repeat this process with the next largest remaining bet size.",
+    treePreviewEdit: "Tree Preview & Edit",
+    clearEditUnlock: "Clear Edits & Unlock",
+    addedLines: "Added lines:",
+    removedLines: "Removed lines:",
+    boardMismatch: (expected: number, actual: number) =>
+      `The edited tree assumes a ${expected}-card board, but the current board has ${actual} card${actual === 1 ? "" : "s"}.`,
+    boardMismatchHint:
+      "To discard the edited tree, click the “Clear Edits & Unlock” button.",
+  },
+  ja: {
+    advancedHint: "レーキ · オールイン · マージ — 通常はそのままで使えます",
+    advancedSettings: "詳細設定 ▸",
+    basicSettings: "基本設定",
+    chipNote:
+      "金額は整数チップで入力します。bbで考えるなら10チップ = 1bbにしてください（例：ポット55 = 5.5bb、スタック1000 = 100bb）。ポット・スタックを自分で入力または変更してから計算した結果はチップ単位のまま、学習スポットを読み込んでポット・スタックを変えずに計算した結果はbbに換算して表示します。",
+    startingPot: "スターティングポット:",
+    effectiveStack: "有効スタック:",
+    rake: "レーキ:",
+    rakeCap: "レーキキャップ:",
+    reset: "クリア",
+    error: "エラー:",
+    warning: "警告:",
+    oopBetSizes: "OOP ベットサイズ",
+    donkOption: "ドンクベットに別のサイズを使用",
+    howToInput: "入力方法",
+    inputHelpIntro:
+      "複数のベットサイズをカンマまたはスペースで区切って、以下のいずれの形式でも入力できます。空欄の場合、ベットやレイズは行いません。",
+    inputHelpPercent:
+      'ポットに対するパーセントを表す数値(例: "50")。レイズの場合、まずコールし、その後のポットに対して指定したパーセント分を上乗せしてサイズを計算します。たとえばベット前のポットが100で相手が75をベットした場合、50%レイズは 75 + (100 + 75 + 75) * 50% = 200 になります。',
+    inputHelpMultiple:
+      '直前のベットサイズの倍数(例: "2.5x")。レイズでのみ使用できます。',
+    inputHelpAllin: 'オールイン(例: "a")。',
+    inputHelpFixed:
+      '固定額の上乗せ(例: "100c")。レイズの場合はレイズ回数の上限も指定できます(例: "20c3r")。',
+    inputHelpGeometric:
+      'ジオメトリックサイズ、つまり残りスタックを指定した回数の同一パーセントのベットに分割する方式です(例: "3e")。たとえば現在のポットが100で有効スタックが400の場合、"2e"は100のベットになります。"e"の前の数字を省略すると、残りのストリート数が使われます(フロップ=3、ターン=2、リバー=1)。レイズの場合は指定した数字からそれまでのレイズ回数を引きます。たとえば"3e"はリレイズ時に"2e"になります。"e"の後ろに数字を付けて最大パーセントの上限を指定することもできます(例: "2e200")。',
+    flop: "フロップ",
+    turn: "ターン",
+    river: "リバー",
+    bet: "ベット:",
+    raise: "レイズ:",
+    donk: "ドンク:",
+    ipBetSizes: "IP ベットサイズ",
+    addAllInLabel: "オールイン追加しきい値:",
+    addAllInHelp:
+      "可能な最大ベットサイズとポットの比率がこのしきい値を下回るすべてのノードにオールインアクションを追加します。",
+    forceAllInLabel: "強制オールインしきい値:",
+    forceAllInHelp1:
+      "相手がベットアクションをコールした後のSPR(スタック/ポット比)がこのしきい値を下回る場合、そのベットアクションをオールインアクションに置き換えます。推奨値は15%〜20%程度です。",
+    forceAllInHelp2:
+      "このオプションはPioSOLVERの「all-in threshold」に似ています。PioSOLVERは、ポットに投入した金額と初期スタックの比率がしきい値を超えると、ベットアクションをオールインに置き換えます。",
+    forceAllInHelp3:
+      "端数の丸めを無視すると、変換式は次のとおりです(s = 初期SPR、r = PioSOLVERのしきい値):",
+    forceAllInFormula: "しきい値 = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "マージしきい値:",
+    mergingHelp1: "似たサイズのベットアクションを1つにマージします。",
+    mergingHelp2:
+      "アルゴリズムはPioSOLVERと同じです。つまり、最大のベットサイズ(= ポットのX%)を選び、次の不等式を満たすサイズ(= ポットのY%)の他のベットアクションをすべて削除します:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + しきい値.",
+    mergingHelp3:
+      "残ったベットのうち次に大きいベットサイズでこの処理を繰り返します。",
+    treePreviewEdit: "ツリーのプレビュー & 編集",
+    clearEditUnlock: "編集をクリア & ロック解除",
+    addedLines: "追加されたライン:",
+    removedLines: "削除されたライン:",
+    boardMismatch: (expected: number, actual: number) =>
+      `編集されたツリーは${expected}枚のボードを想定していますが、現在のボードは${actual}枚です。`,
+    boardMismatchHint:
+      "編集されたツリーを破棄するには「編集をクリア & ロック解除」ボタンをクリックしてください。",
+  },
+  es: {
+    advancedHint: "Rake · All-in · Fusión — normalmente puedes dejarlos como están",
+    advancedSettings: "Ajustes avanzados ▸",
+    basicSettings: "Ajustes básicos",
+    chipNote:
+      "Ingresa los montos en fichas enteras. Para pensar en bb, usa 10 fichas = 1bb (ej.: bote 55 = 5.5bb, stack 1000 = 100bb). Si ingresas o cambias tú mismo el bote o el stack, los resultados conservan tu escala de fichas; si cargas uno de los Spots de estudio y calculas sin cambiar el bote ni el stack, los resultados se convierten a bb.",
+    startingPot: "Bote inicial:",
+    effectiveStack: "Stack efectivo:",
+    rake: "Rake:",
+    rakeCap: "Tope de rake:",
+    reset: "Restablecer",
+    error: "Error:",
+    warning: "Atención:",
+    oopBetSizes: "Bet sizes de OOP",
+    donkOption: "Usar otros tamaños para donk bets",
+    howToInput: "Cómo ingresar los valores",
+    inputHelpIntro:
+      "Puedes ingresar varios bet sizes separados por comas o espacios, en cualquiera de los siguientes formatos. Si lo dejas vacío, no se hace bet ni raise.",
+    inputHelpPercent:
+      'Un número que representa el porcentaje del bote (ej. «50»). Para los raises, el tamaño se calcula pagando primero y sumando después el porcentaje indicado del bote resultante. Por ejemplo, si el bote antes del bet es 100 y el rival apuesta 75, un raise del 50% es 75 + (100 + 75 + 75) * 50% = 200.',
+    inputHelpMultiple:
+      'Un múltiplo del bet anterior (ej. «2.5x»). Solo disponible para raises.',
+    inputHelpAllin: 'All-in (ej. «a»).',
+    inputHelpFixed:
+      'Suma de un monto fijo (ej. «100c»). Para los raises también puedes limitar el número de raises (ej. «20c3r»).',
+    inputHelpGeometric:
+      'Tamaño geométrico, es decir, dividir el stack restante en el número indicado de bets del mismo porcentaje (ej. «3e»). Por ejemplo, con un bote de 100 y stack efectivo de 400, «2e» es un bet de 100. Si omites el número antes de la «e», se usa el número de calles restantes (flop=3, turn=2, river=1). Para los raises se resta el número de raises previos; ej. «3e» pasa a «2e» al re-raisear. También puedes añadir un número después de la «e» para fijar un porcentaje máximo (ej. «2e200»).',
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "Bet sizes de IP",
+    addAllInLabel: "Umbral para agregar all-in:",
+    addAllInHelp:
+      "Agrega una acción de all-in en cada nodo donde la relación entre el bet máximo posible y el bote queda por debajo de este umbral.",
+    forceAllInLabel: "Umbral de all-in forzado:",
+    forceAllInHelp1:
+      "Si el SPR (relación stack/bote) después de que el rival paga un bet queda por debajo de este umbral, ese bet se reemplaza por un all-in. Un valor recomendado ronda el 15% - 20%.",
+    forceAllInHelp2:
+      'Esta opción es similar al «all-in threshold» de PioSOLVER. PioSOLVER reemplaza un bet por un all-in cuando la relación entre lo invertido en el bote y el stack inicial supera el umbral.',
+    forceAllInHelp3:
+      "Ignorando el redondeo, la fórmula de conversión es la siguiente (s = SPR inicial, r = umbral de PioSOLVER):",
+    forceAllInFormula: "Umbral = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Umbral de fusión:",
+    mergingHelp1: "Fusiona en uno los bets de tamaños parecidos.",
+    mergingHelp2:
+      "El algoritmo es el mismo de PioSOLVER: se elige el bet más grande (= X% del bote) y se elimina cualquier otro bet cuyo tamaño (= Y% del bote) cumpla la siguiente desigualdad:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + umbral.",
+    mergingHelp3: "El proceso se repite con el siguiente bet más grande que quede.",
+    treePreviewEdit: "Vista previa y edición del árbol",
+    clearEditUnlock: "Borrar cambios y desbloquear",
+    addedLines: "Líneas agregadas:",
+    removedLines: "Líneas eliminadas:",
+    boardMismatch: (expected: number, actual: number) =>
+      `El árbol editado asume un board de ${expected} carta${expected === 1 ? "" : "s"}, pero el board actual tiene ${actual}.`,
+    boardMismatchHint:
+      'Para descartar el árbol editado, haz clic en el botón «Borrar cambios y desbloquear».',
+  },
+  pt: {
+    advancedHint: "Rake · All-in · Fusão — normalmente você pode deixar como está",
+    advancedSettings: "Configurações avançadas ▸",
+    basicSettings: "Configurações básicas",
+    chipNote:
+      "Informe os valores em fichas inteiras. Para pensar em bb, use 10 fichas = 1bb (ex.: pote 55 = 5,5bb, stack 1000 = 100bb). Se você informar ou alterar o pote ou o stack, os resultados mantêm sua escala de fichas; se carregar um dos Spots de estudo e calcular sem alterar o pote nem o stack, os resultados são convertidos para bb.",
+    startingPot: "Pote inicial:",
+    effectiveStack: "Stack efetivo:",
+    rake: "Rake:",
+    rakeCap: "Cap do rake:",
+    reset: "Limpar",
+    error: "Erro:",
+    warning: "Atenção:",
+    oopBetSizes: "Bet sizes do OOP",
+    donkOption: "Usar outros tamanhos para donk bets",
+    howToInput: "Como informar os valores",
+    inputHelpIntro:
+      "Você pode informar vários bet sizes separados por vírgulas ou espaços, em qualquer um dos formatos abaixo. Se deixar vazio, não há bet nem raise.",
+    inputHelpPercent:
+      'Um número que representa a porcentagem do pote (ex.: “50”). Para os raises, o tamanho é calculado pagando primeiro e somando depois a porcentagem indicada do pote resultante. Por exemplo, se o pote antes do bet é 100 e o vilão aposta 75, um raise de 50% é 75 + (100 + 75 + 75) * 50% = 200.',
+    inputHelpMultiple:
+      'Um múltiplo do bet anterior (ex.: “2.5x”). Disponível apenas para raises.',
+    inputHelpAllin: 'All-in (ex.: “a”).',
+    inputHelpFixed:
+      'Soma de um valor fixo (ex.: “100c”). Para os raises você também pode limitar o número de raises (ex.: “20c3r”).',
+    inputHelpGeometric:
+      'Tamanho geométrico, ou seja, dividir o stack restante no número indicado de bets da mesma porcentagem (ex.: “3e”). Por exemplo, com um pote de 100 e stack efetivo de 400, “2e” é um bet de 100. Se você omitir o número antes do “e”, é usado o número de streets restantes (Flop=3, Turn=2, River=1). Para os raises, subtrai-se o número de raises anteriores; ex.: “3e” vira “2e” ao dar re-raise. Você também pode acrescentar um número depois do “e” para fixar uma porcentagem máxima (ex.: “2e200”).',
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "Bet sizes do IP",
+    addAllInLabel: "Limiar para adicionar all-in:",
+    addAllInHelp:
+      "Adiciona uma ação de all-in em todo nó onde a relação entre o maior bet possível e o pote fica abaixo desse limiar.",
+    forceAllInLabel: "Limiar de all-in forçado:",
+    forceAllInHelp1:
+      "Se o SPR (relação stack/pote) depois de o vilão pagar um bet ficar abaixo desse limiar, esse bet é substituído por um all-in. Um valor recomendado fica em torno de 15% a 20%.",
+    forceAllInHelp2:
+      'Esta opção é parecida com o “all-in threshold” do PioSOLVER. O PioSOLVER substitui um bet por um all-in quando a relação entre o que já foi investido no pote e o stack inicial ultrapassa o limiar.',
+    forceAllInHelp3:
+      "Ignorando o arredondamento, a fórmula de conversão é a seguinte (s = SPR inicial, r = limiar do PioSOLVER):",
+    forceAllInFormula: "Limiar = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Limiar de fusão:",
+    mergingHelp1: "Funde em um só os bets de tamanhos parecidos.",
+    mergingHelp2:
+      "O algoritmo é o mesmo do PioSOLVER: escolhe-se o maior bet (= X% do pote) e elimina-se qualquer outro bet cujo tamanho (= Y% do pote) satisfaça a desigualdade a seguir:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + limiar.",
+    mergingHelp3: "O processo se repete com o próximo maior bet que sobrar.",
+    treePreviewEdit: "Prévia e edição da árvore",
+    clearEditUnlock: "Descartar alterações e desbloquear",
+    addedLines: "Linhas adicionadas:",
+    removedLines: "Linhas removidas:",
+    boardMismatch: (expected: number, actual: number) =>
+      `A árvore editada pressupõe um board de ${expected} carta${
+        expected === 1 ? "" : "s"
+      }, mas o board atual tem ${actual} carta${actual === 1 ? "" : "s"}.`,
+    boardMismatchHint:
+      'Para descartar a árvore editada, clique no botão “Descartar alterações e desbloquear”.',
+  },
+  de: {
+    advancedHint: "Rake · All-in · Zusammenfassen — meist kannst du diese Werte so lassen",
+    advancedSettings: "Erweiterte Einstellungen ▸",
+    basicSettings: "Grundeinstellungen",
+    chipNote:
+      "Gib die Beträge in ganzen Chips ein. Wenn du in bb denken willst, verwende 10 Chips = 1bb (z. B.: Pot 55 = 5,5bb, Stack 1000 = 100bb). Wenn du Pot oder Stack selbst eingibst oder änderst, bleiben die Ergebnisse in deiner Chip-Skala; wenn du einen der Lernspots lädst und ohne Änderung an Pot und Stack rechnest, werden die Ergebnisse in bb umgerechnet.",
+    startingPot: "Start-Pot:",
+    effectiveStack: "Effektiver Stack:",
+    rake: "Rake:",
+    rakeCap: "Rake-Cap:",
+    reset: "Alle Werte leeren",
+    error: "Fehler:",
+    warning: "Achtung:",
+    oopBetSizes: "Bet Sizes OOP",
+    donkOption: "Andere Sizes für Donk-Bets verwenden",
+    howToInput: "So gibst du die Werte ein",
+    inputHelpIntro:
+      "Du kannst mehrere Bet Sizes durch Kommas oder Leerzeichen getrennt in jedem der folgenden Formate eingeben. Lässt du das Feld leer, gibt es weder Bet noch Raise.",
+    // ⚠ 「2.5x」·「100c」·「2e200」은 사용자가 그대로 입력하는 «문법»이다 — 소수점을 콤마로 바꾸지 말 것
+    inputHelpPercent:
+      "Eine Zahl als Prozentsatz vom Pot (z. B. „50“). Bei Raises wird die Size so berechnet: erst callen, dann den angegebenen Prozentsatz des dadurch entstandenen Pots draufsetzen. Beispiel: Ist der Pot vor der Bet 100 und der Gegner bettet 75, dann ist ein Raise von 50% gleich 75 + (100 + 75 + 75) * 50% = 200.",
+    inputHelpMultiple:
+      "Ein Vielfaches der vorherigen Bet (z. B. „2.5x“). Nur bei Raises möglich.",
+    inputHelpAllin: "All-in (z. B. „a“).",
+    inputHelpFixed:
+      "Ein fester Betrag obendrauf (z. B. „100c“). Bei Raises kannst du zusätzlich die Zahl der Raises begrenzen (z. B. „20c3r“).",
+    inputHelpGeometric:
+      "Geometrische Size, also den verbleibenden Stack in die angegebene Zahl gleich großer prozentualer Bets aufteilen (z. B. „3e“). Beispiel: Bei einem Pot von 100 und einem effektiven Stack von 400 ist „2e“ eine Bet von 100. Lässt du die Zahl vor dem „e“ weg, wird die Zahl der verbleibenden Streets genommen (Flop=3, Turn=2, River=1). Bei Raises wird die Zahl der vorherigen Raises abgezogen; „3e“ wird beim Re-Raise also zu „2e“. Du kannst hinter dem „e“ auch eine Zahl anhängen, um eine maximale Prozentgrenze zu setzen (z. B. „2e200“).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "Bet Sizes IP",
+    addAllInLabel: "Schwelle für zusätzliches All-in:",
+    addAllInHelp:
+      "Fügt an jedem Knoten, an dem das Verhältnis der größtmöglichen Bet zum Pot unter dieser Schwelle liegt, eine All-in-Aktion hinzu.",
+    forceAllInLabel: "Schwelle für erzwungenes All-in:",
+    forceAllInHelp1:
+      "Liegt der SPR (Stack-zu-Pot-Verhältnis) nach einem Call des Gegners auf eine Bet unter dieser Schwelle, wird diese Bet durch ein All-in ersetzt. Empfohlen sind etwa 15% bis 20%.",
+    forceAllInHelp2:
+      "Diese Option ähnelt dem „all-in threshold“ von PioSOLVER. PioSOLVER ersetzt eine Bet durch ein All-in, sobald der Anteil des bereits investierten Betrags am Start-Stack die Schwelle überschreitet.",
+    forceAllInHelp3:
+      "Ohne Rundung lautet die Umrechnungsformel so (s = anfänglicher SPR, r = Schwelle von PioSOLVER):",
+    forceAllInFormula: "Schwelle = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Schwelle zum Zusammenfassen:",
+    mergingHelp1: "Bets mit ähnlicher Size werden zu einer zusammengefasst.",
+    mergingHelp2:
+      "Der Algorithmus ist derselbe wie bei PioSOLVER: Es wird die größte Bet (= X% vom Pot) gewählt und jede andere Bet entfernt, deren Size (= Y% vom Pot) die folgende Ungleichung erfüllt:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + Schwelle.",
+    mergingHelp3: "Das wiederholt sich mit der nächstgrößten verbleibenden Bet.",
+    treePreviewEdit: "Spielbaum – Vorschau & Bearbeiten",
+    clearEditUnlock: "Änderungen verwerfen & entsperren",
+    addedLines: "Hinzugefügte Lines:",
+    removedLines: "Entfernte Lines:",
+    boardMismatch: (expected: number, actual: number) =>
+      `Der bearbeitete Spielbaum setzt ein Board mit ${expected} Karte${expected === 1 ? "" : "n"} voraus, das aktuelle Board hat aber ${actual} Karte${actual === 1 ? "" : "n"}.`,
+    boardMismatchHint:
+      "Um den bearbeiteten Spielbaum zu verwerfen, klicke auf den Button „Änderungen verwerfen & entsperren“.",
+  },
+  zh: {
+    advancedHint: "抽水 · 全下 · 合并 — 通常保持原样就可以",
+    advancedSettings: "详细设置 ▸",
+    basicSettings: "基本设置",
+    chipNote:
+      "金额按整数筹码填写。想按 bb 来算，就按 10 筹码 = 1bb 输入（例：底池 55 = 5.5bb，筹码 1000 = 100bb）。自己输入或修改底池、筹码后计算的结果保留筹码单位；载入教学案例后不改底池和筹码就计算的结果会换算成 bb 显示。",
+    startingPot: "起始底池：",
+    effectiveStack: "有效筹码：",
+    // rake = 「抽水」(본체 브리프 §1C·§0.5-3). ⚠ 「台费」는 자리·시간당 고정요금이라 다른 말이다
+    rake: "抽水：",
+    rakeCap: "抽水上限：",
+    // clearConfig()는 底池·筹码·抽水·전 스트리트 벳 사이즈를 «전부» 비운다.
+    // 레인지·보드는 건드리지 않으므로 「重置」(초기화)가 아니라 «값을 비운다»가 정확하다
+    reset: "清空所有数值",
+    error: "错误：",
+    warning: "注意：",
+    oopBetSizes: "OOP 下注尺寸",
+    // donk bet = 「领打」. 中扑 매체 다수(摩十客·德扑技巧·德扑GOD)의 정착역 — 리서치 §2 출처.
+    // 첫 등장 자리라 영어 원词를 병기했다
+    donkOption: "领打（donk bet）用另一套尺寸",
+    howToInput: "怎么填",
+    inputHelpIntro:
+      "可以用逗号或空格隔开，一次填多个下注尺寸，下面几种写法都行。留空就表示不下注，也不加注。",
+    // ⚠ “2.5x”·“100c”·“2e200”은 사용자가 «그대로 입력»하는 문법이다.
+    //   중국어는 소수점이 «.»라 pt·de 같은 충돌이 없지만, 그래도 이 안의 숫자는 손대지 말 것.
+    //   따옴표는 대륙 표준 “ ”를 쓴다 (독일어의 „ “, 영어의 “ ”와 같은 자리)
+    inputHelpPercent:
+      "一个表示底池百分比的数字（例如“50”）。加注时的算法是：先跟注，再按跟注后形成的底池加上指定百分比。举例来说，下注前底池是 100，对手下注 75，那么 50% 的加注就是 75 + (100 + 75 + 75) * 50% = 200。",
+    inputHelpMultiple: "上一次下注额的倍数（例如“2.5x”）。只能用于加注。",
+    inputHelpAllin: "全下（例如“a”）。",
+    inputHelpFixed:
+      "在原有基础上加一个固定金额（例如“100c”）。加注时还可以限制加注次数（例如“20c3r”）。",
+    inputHelpGeometric:
+      "几何尺寸，也就是把剩下的筹码拆成指定次数、每次百分比相同的下注（例如“3e”）。举例来说，当前底池 100、有效筹码 400 时，“2e”就是下注 100。省略“e”前面的数字，就按剩余的街数来算（翻牌圈=3，转牌圈=2，河牌圈=1）。加注时会从指定的数字里减去之前的加注次数，所以“3e”再加注时会变成“2e”。还可以在“e”后面接一个数字来设定百分比上限（例如“2e200”）。",
+    flop: "翻牌",
+    turn: "转牌",
+    river: "河牌",
+    bet: "下注：",
+    raise: "加注：",
+    donk: "领打：",
+    ipBetSizes: "IP 下注尺寸",
+    addAllInLabel: "追加全下的阈值：",
+    addAllInHelp:
+      "如果某个节点上“最大可下注额占底池的比例”低于这个阈值，就在那个节点追加一个全下动作。",
+    forceAllInLabel: "强制全下的阈值：",
+    forceAllInHelp1:
+      "如果对手跟注某个下注之后的 SPR（筹码与底池之比）低于这个阈值，就把那个下注换成全下。建议值在 15%~20% 之间。",
+    forceAllInHelp2:
+      "这个选项和 PioSOLVER 的“all-in threshold”类似。PioSOLVER 的做法是：当已投入底池的金额占起始筹码的比例超过阈值时，把下注换成全下。",
+    forceAllInHelp3:
+      "不考虑小数舍入的话，换算公式如下（s = 起始 SPR，r = PioSOLVER 的阈值）：",
+    forceAllInFormula: "阈值 = s * (1 - r) / (1 + 2 * s * r)。",
+    mergingLabel: "合并阈值：",
+    mergingHelp1: "尺寸相近的下注会被合并成一个。",
+    mergingHelp2:
+      "算法和 PioSOLVER 相同：先挑出最大的下注尺寸（= 底池的 X%），再把所有满足下面这个不等式的下注（尺寸 = 底池的 Y%）删掉：",
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + 阈值。",
+    mergingHelp3: "然后对剩下的下注里第二大的那个，重复同样的过程。",
+    treePreviewEdit: "决策树——预览与编辑",
+    clearEditUnlock: "清除修改并解锁",
+    addedLines: "新增的线路：",
+    removedLines: "移除的线路：",
+    boardMismatch: (expected: number, actual: number) =>
+      `编辑过的决策树以 ${expected} 张公共牌为前提，但当前的公共牌是 ${actual} 张。`,
+    boardMismatchHint: "想丢掉编辑过的决策树，点“清除修改并解锁”按钮即可。",
+  },
+  "zh-hant": {
+    advancedHint: "抽水 · 全下 · 合併 — 通常保持原樣就可以",
+    advancedSettings: "詳細設定 ▸",
+    basicSettings: "基本設定",
+    chipNote:
+      "金額按整數籌碼填寫。想按 bb 來算，就按 10 籌碼 = 1bb 輸入（例：底池 55 = 5.5bb，籌碼 1000 = 100bb）。自己輸入或修改底池、籌碼後計算的結果保留籌碼單位；載入教學案例後不改底池和籌碼就計算的結果會換算成 bb 顯示。",
+    startingPot: "起始底池：",
+    effectiveStack: "有效籌碼：",
+    // rake = 「抽水」(본체 브리프 §7-C·§7-E). ⚠ 「台費」는 자리·시간당 고정요금이라 다른 말이다
+    rake: "抽水：",
+    rakeCap: "抽水上限：",
+    // clearConfig()는 底池·籌碼·抽水·전 스트리트 벳 사이즈를 «전부» 비운다.
+    // 레인지·보드는 건드리지 않으므로 「重設」(초기화)이 아니라 «값을 비운다»가 정확하다
+    reset: "全部清空",
+    error: "錯誤：",
+    warning: "注意：",
+    oopBetSizes: "OOP 下注尺寸",
+    // donk bet = 「領打」 (본체 브리프 §7-E 「領打(Donk bet)」). 첫 등장이라 영어 원어를 병기했다
+    donkOption: "領打（donk bet）用另一套尺寸",
+    // ⚠ 이 이름은 오류 메시지(pick 호출)가 그대로 인용한다 — 글자를 바꾸면 그쪽도 같이 고칠 것
+    howToInput: "怎麼填",
+    inputHelpIntro:
+      "可以用逗號或空格隔開，一次填多個下注尺寸，下面幾種寫法都行。留空就表示不下注，也不加注。",
+    // ⚠ 「2.5x」·「100c」·「2e200」은 사용자가 «그대로 입력»하는 문법이다.
+    //   중국어는 소수점이 «.»라 pt·de 같은 충돌이 없지만, 그래도 이 안의 숫자는 손대지 말 것.
+    //   ⚠ 인용부호는 대만·홍콩 관습인 「 」 — 간체판의 “ ”와 «반대»다 (본체 브리프 §8-4)
+    inputHelpPercent:
+      "一個表示底池百分比的數字（例如「50」）。加注時的計算方式是：先跟注，再按跟注後形成的底池加上指定百分比。舉例來說，下注前底池是 100，對手下注 75，那麼 50% 的加注就是 75 + (100 + 75 + 75) * 50% = 200。",
+    inputHelpMultiple: "上一次下注額的倍數（例如「2.5x」）。只能用於加注。",
+    inputHelpAllin: "全下（例如「a」）。",
+    inputHelpFixed:
+      "在原有基礎上加一個固定金額（例如「100c」）。加注時還可以限制加注次數（例如「20c3r」）。",
+    inputHelpGeometric:
+      "幾何尺寸，也就是把剩下的籌碼拆成指定次數、每次百分比相同的下注（例如「3e」）。舉例來說，目前底池 100、有效籌碼 400 時，「2e」就是下注 100。省略「e」前面的數字，就按剩餘的圈數來算（翻牌圈=3，轉牌圈=2，河牌圈=1）。加注時會從指定的數字裡減去之前的加注次數，所以「3e」再加注時會變成「2e」。還可以在「e」後面接一個數字來設定百分比上限（例如「2e200」）。",
+    flop: "翻牌",
+    turn: "轉牌",
+    river: "河牌",
+    bet: "下注：",
+    raise: "加注：",
+    donk: "領打：",
+    ipBetSizes: "IP 下注尺寸",
+    addAllInLabel: "追加全下的門檻：",
+    addAllInHelp:
+      "如果某個節點上「最大可下注額佔底池的比例」低於這個門檻，就在那個節點追加一個全下動作。",
+    forceAllInLabel: "強制全下的門檻：",
+    forceAllInHelp1:
+      "如果對手跟注某個下注之後的 SPR（籌碼與底池之比）低於這個門檻，就把那個下注換成全下。建議值在 15%～20% 之間。",
+    forceAllInHelp2:
+      "這個選項和 PioSOLVER 的「all-in threshold」類似。PioSOLVER 的做法是：當已投入底池的金額佔起始籌碼的比例超過門檻時，把下注換成全下。",
+    forceAllInHelp3:
+      "不考慮小數捨入的話，換算公式如下（s = 起始 SPR，r = PioSOLVER 的門檻）：",
+    forceAllInFormula: "門檻 = s * (1 - r) / (1 + 2 * s * r)。",
+    mergingLabel: "合併門檻：",
+    mergingHelp1: "尺寸相近的下注會被合併成一個。",
+    mergingHelp2:
+      "演演演算法和 PioSOLVER 相同：先挑出最大的下注尺寸（= 底池的 X%），再把所有滿足下面這個不等式的下注（尺寸 = 底池的 Y%）刪掉：",
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + 門檻。",
+    mergingHelp3: "然後對剩下的下注裡第二大的那個，重複同樣的過程。",
+    // ⚠ App.vue HEADERS의 treeEdit와 «글자까지» 같아야 한다
+    treePreviewEdit: "決策樹——預覽與編輯",
+    clearEditUnlock: "清除修改並解鎖",
+    addedLines: "新增的線路：",
+    removedLines: "移除的線路：",
+    boardMismatch: (expected: number, actual: number) =>
+      `編輯過的決策樹以 ${expected} 張公共牌為前提，但目前的公共牌是 ${actual} 張。`,
+    boardMismatchHint: "想丟掉編輯過的決策樹，按下「清除修改並解鎖」按鈕即可。",
+  },
+  fr: {
+    advancedHint: "Rake · All-in · Fusion — tu peux généralement les laisser tels quels",
+    advancedSettings: "Réglages avancés ▸",
+    basicSettings: "Réglages de base",
+    chipNote:
+      "Saisis les montants en jetons entiers. Pour raisonner en bb, utilise 10 jetons = 1bb (ex. : pot 55 = 5,5bb, stack 1000 = 100bb). Si tu saisis ou modifies toi-même le pot ou le stack, les résultats gardent ton échelle de jetons ; si tu charges un des Spots d'étude et calcules sans modifier le pot ni le stack, les résultats sont convertis en bb.",
+    startingPot: "Pot initial :",
+    effectiveStack: "Stack effectif :",
+    rake: "Rake :",
+    rakeCap: "Cap de rake :",
+    reset: "Tout effacer",
+    error: "Erreur :",
+    warning: "Attention :",
+    oopBetSizes: "Bet sizes OOP",
+    donkOption: "Utiliser d'autres sizes pour les donk bets",
+    // ⚠ 이 이름은 경고 메시지(pick 호출)가 «« Comment remplir »»로 그대로 인용한다
+    howToInput: "Comment remplir",
+    inputHelpIntro:
+      "Tu peux entrer plusieurs bet sizes séparées par des virgules ou des espaces, dans n'importe lequel des formats suivants. Laisse vide pour ne faire ni bet ni raise.",
+    // ⚠ «2.5x»·«100c»·«2e200»은 사용자가 «그대로 입력»하는 문법이다 — 이 안의 소수점을
+    //   쉼표로 바꾸지 말 것 (localizeNumber 금지 구역과 같은 이유). 산문의 %는 프랑스식(U+202F)
+    inputHelpPercent:
+      "Un nombre représentant le pourcentage du pot (ex. « 50 »). Pour un raise, la size se calcule comme si tu payais (call) d'abord la mise, puis en ajoutant le pourcentage indiqué du pot ainsi obtenu. Par exemple, si le pot avant la mise est de 100 et que l'adversaire mise 75, un raise de 50 % vaut 75 + (100 + 75 + 75) * 50 % = 200.",
+    inputHelpMultiple:
+      "Un multiple de la mise précédente (ex. « 2.5x »). Disponible seulement pour les raises.",
+    inputHelpAllin: "All-in (ex. « a »).",
+    inputHelpFixed:
+      "Ajout d'un montant fixe (ex. « 100c »). Pour les raises, tu peux aussi plafonner le nombre de raises (ex. « 20c3r »).",
+    inputHelpGeometric:
+      "Size géométrique : le stack restant est découpé en un nombre donné de mises au même pourcentage (ex. « 3e »). Par exemple, avec un pot de 100 et un stack effectif de 400, « 2e » correspond à une mise de 100. Si le nombre avant « e » est omis, c'est le nombre de streets restantes qui est utilisé (flop = 3, turn = 2, river = 1). Pour les raises, le nombre de raises déjà faits est soustrait du nombre indiqué ; par exemple « 3e » devient « 2e » en cas de re-raise. Tu peux aussi ajouter un nombre après « e » pour fixer un pourcentage maximum (ex. « 2e200 »).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet :",
+    raise: "Raise :",
+    donk: "Donk :",
+    ipBetSizes: "Bet sizes IP",
+    addAllInLabel: "Seuil d'ajout du all-in :",
+    addAllInHelp:
+      "Ajoute une action all-in à chaque nœud où le rapport entre la mise maximale possible et le pot est sous ce seuil.",
+    forceAllInLabel: "Seuil de all-in forcé :",
+    forceAllInHelp1:
+      "Si le SPR (rapport stack/pot) après que l'adversaire a payé une mise est sous ce seuil, cette mise est remplacée par un all-in. Une valeur recommandée se situe autour de 15–20 %.",
+    forceAllInHelp2:
+      "Cette option ressemble au « all-in threshold » de PioSOLVER. PioSOLVER remplace une mise par un all-in quand la part du stack initial déjà investie dans le pot dépasse le seuil.",
+    forceAllInHelp3:
+      "En ignorant les arrondis, la formule de conversion est la suivante (s = SPR initial, r = seuil de PioSOLVER) :",
+    forceAllInFormula: "Seuil = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Seuil de fusion :",
+    mergingHelp1: "Fusionne en une seule les mises de sizes proches.",
+    mergingHelp2:
+      "L'algorithme est le même que celui de PioSOLVER : on prend la plus grosse bet size (= X % du pot) et on supprime toute autre mise dont la size (= Y % du pot) vérifie l'inégalité suivante :",
+    // 수식의 소수점도 pt·de 선례대로 쉼표(1,0)
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + seuil.",
+    mergingHelp3: "On répète ensuite le même processus avec la plus grosse bet size restante.",
+    // ⚠ App.vue HEADERS의 treeEdit와 «글자까지» 같아야 한다
+    treePreviewEdit: "Aperçu et édition de l'arbre",
+    clearEditUnlock: "Effacer les modifications et déverrouiller",
+    addedLines: "Lignes ajoutées :",
+    removedLines: "Lignes retirées :",
+    boardMismatch: (expected: number, actual: number) =>
+      `L'arbre édité suppose un board de ${expected} cartes, mais le board actuel en a ${actual}.`,
+    boardMismatchHint:
+      "Pour abandonner l'arbre édité, clique sur « Effacer les modifications et déverrouiller ».",
+  },
+  // 인도네시아어 — bet size·pot·stack·street·all-in·raise·donk는 코퍼스대로 영어. 인용부호는 표준 라틴 “ ”.
+  id: {
+    advancedHint: "Rake · All-in · Penggabungan — biasanya bisa dibiarkan seperti ini",
+    advancedSettings: "Pengaturan lanjutan ▸",
+    basicSettings: "Pengaturan dasar",
+    chipNote:
+      "Masukkan jumlah dalam chip bilangan bulat. Untuk menghitung dalam bb, gunakan 10 chip = 1bb (contoh: pot 55 = 5,5bb, stack 1000 = 100bb). Jika Anda memasukkan atau mengubah sendiri pot atau stack, hasilnya tetap memakai skala chip Anda; jika Anda memuat Spot belajar lalu menghitung tanpa mengubah pot dan stack, hasilnya dikonversi ke bb.",
+    startingPot: "Pot awal:",
+    effectiveStack: "Stack efektif:",
+    rake: "Rake:",
+    rakeCap: "Rake cap:",
+    reset: "Bersihkan",
+    error: "Error:",
+    warning: "Peringatan:",
+    oopBetSizes: "Bet size OOP",
+    donkOption: "Pakai size berbeda untuk donk bet",
+    // ⚠ 이 이름은 경고 메시지(pick 호출)가 «“Cara mengisi”»로 그대로 인용한다
+    howToInput: "Cara mengisi",
+    inputHelpIntro:
+      "Anda bisa memasukkan beberapa bet size yang dipisahkan koma atau spasi, dalam salah satu format berikut. Kosongkan jika tidak ingin ada bet atau raise.",
+    // ⚠ «2.5x»·«100c»·«2e200»은 사용자가 «그대로 입력»하는 문법이다 — 이 안의 소수점을
+    //   쉼표로 바꾸지 말 것 (localizeNumber 금지 구역과 같은 이유)
+    inputHelpPercent:
+      "Angka yang menyatakan persentase pot (mis. “50”). Untuk raise, size dihitung seolah-olah Anda call dulu, lalu ditambah persentase tersebut dari pot yang terbentuk. Contoh: jika pot sebelum bet adalah 100 dan lawan bet 75, raise 50% = 75 + (100 + 75 + 75) * 50% = 200.",
+    inputHelpMultiple:
+      "Kelipatan dari bet sebelumnya (mis. “2.5x” — tulis desimal dengan titik, bukan koma). Hanya tersedia untuk raise.",
+    inputHelpAllin: "All-in (mis. “a”).",
+    inputHelpFixed:
+      "Menambah jumlah tetap (mis. “100c”). Untuk raise, Anda juga bisa membatasi jumlah raise (mis. “20c3r”).",
+    inputHelpGeometric:
+      "Size geometris, yaitu membagi sisa stack menjadi sejumlah bet dengan persentase yang sama (mis. “3e”). Contoh: jika pot saat ini 100 dan stack efektif 400, “2e” berarti bet 100. Jika angka sebelum “e” dihilangkan, dipakai jumlah street yang tersisa (flop = 3, turn = 2, river = 1). Untuk raise, jumlah raise sebelumnya dikurangkan dari angka yang ditentukan; mis. “3e” menjadi “2e” saat re-raise. Anda juga bisa menambahkan angka setelah “e” untuk menetapkan batas persentase maksimum (mis. “2e200”).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "Bet size IP",
+    addAllInLabel: "Ambang tambah all-in:",
+    addAllInHelp:
+      "Menambahkan aksi all-in di setiap node yang rasio bet maksimum terhadap pot-nya berada di bawah ambang ini.",
+    forceAllInLabel: "Ambang all-in paksa:",
+    forceAllInHelp1:
+      "Jika SPR (rasio stack terhadap pot) setelah lawan call sebuah bet berada di bawah ambang ini, bet tersebut diganti dengan all-in. Nilai yang disarankan sekitar 15–20%.",
+    forceAllInHelp2:
+      "Opsi ini mirip “all-in threshold” di PioSOLVER. PioSOLVER mengganti bet dengan all-in saat porsi stack awal yang sudah masuk ke pot melebihi ambang tersebut.",
+    forceAllInHelp3:
+      "Dengan mengabaikan pembulatan, rumus konversinya sebagai berikut (s = SPR awal, r = ambang PioSOLVER):",
+    forceAllInFormula: "Ambang = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Ambang penggabungan:",
+    mergingHelp1: "Menggabungkan bet dengan size yang berdekatan menjadi satu.",
+    mergingHelp2:
+      "Algoritmanya sama dengan PioSOLVER: ambil bet size terbesar (= X% pot) dan hapus setiap bet lain yang size-nya (= Y% pot) memenuhi pertidaksamaan berikut:",
+    // 수식의 소수점도 pt·de·fr 선례대로 쉼표(1,0)
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + ambang.",
+    mergingHelp3: "Proses yang sama diulang dengan bet size terbesar berikutnya yang tersisa.",
+    // ⚠ App.vue HEADERS의 treeEdit와 «글자까지» 같아야 한다
+    treePreviewEdit: "Pratinjau & Edit Tree",
+    clearEditUnlock: "Hapus Edit & Buka Kunci",
+    addedLines: "Line ditambahkan:",
+    removedLines: "Line dihapus:",
+    boardMismatch: (expected: number, actual: number) =>
+      `Tree yang diedit mengasumsikan board ${expected} kartu, tetapi board saat ini berisi ${actual} kartu.`,
+    boardMismatchHint:
+      "Untuk membuang tree yang diedit, klik “Hapus Edit & Buka Kunci”.",
+  },
+  // 말레이어 — bet size·pot·stack·street·all-in·raise·donk는 리서치 §2대로 영어. 인용부호는 “ ”.
+  // ⚠ 숫자는 «영어식»(소수점 «.», 천단위 «,») — id·fr·pt·de처럼 뒤집지 않는다 (리서치 §1-2)
+  ms: {
+    advancedHint: "Rake · All-in · Penggabungan — biasanya boleh dibiarkan seperti ini",
+    advancedSettings: "Tetapan lanjutan ▸",
+    basicSettings: "Tetapan asas",
+    chipNote:
+      "Masukkan jumlah cip dalam nombor bulat. Untuk mengira dalam bb, gunakan 10 cip = 1bb (contoh: pot 55 = 5.5bb, stack 1000 = 100bb). Jika anda memasukkan atau menukar sendiri pot atau stack, keputusan kekal menggunakan skala cip anda; jika anda memuatkan Spot belajar dan mengira tanpa menukar pot dan stack, keputusan ditukar kepada bb.",
+    startingPot: "Pot permulaan:",
+    effectiveStack: "Stack efektif:",
+    rake: "Rake:",
+    rakeCap: "Rake cap:",
+    reset: "Kosongkan",
+    error: "Ralat:",
+    warning: "Amaran:",
+    oopBetSizes: "Bet size OOP",
+    donkOption: "Guna saiz berbeza untuk donk bet",
+    // ⚠ 이 이름은 경고 메시지(pick 호출)가 «“Cara isi”»로 그대로 인용한다
+    howToInput: "Cara isi",
+    inputHelpIntro:
+      "Anda boleh memasukkan beberapa bet size yang dipisahkan dengan koma atau ruang, dalam mana-mana format berikut. Biarkan kosong jika tidak mahu ada bet atau raise.",
+    // ⚠ «2.5x»·«100c»·«2e200»은 사용자가 «그대로 입력»하는 문법이다 — 손대지 말 것
+    inputHelpPercent:
+      "Nombor yang mewakili peratusan pot (cth. “50”). Untuk raise, size dikira seolah-olah anda call dahulu, kemudian ditambah peratusan tersebut daripada pot yang terbentuk. Contoh: jika pot sebelum bet ialah 100 dan lawan bet 75, raise 50% = 75 + (100 + 75 + 75) * 50% = 200.",
+    inputHelpMultiple:
+      "Gandaan daripada bet sebelumnya (cth. “2.5x”). Hanya tersedia untuk raise.",
+    inputHelpAllin: "All-in (cth. “a”).",
+    inputHelpFixed:
+      "Menambah jumlah tetap (cth. “100c”). Untuk raise, anda juga boleh mengehadkan bilangan raise (cth. “20c3r”).",
+    inputHelpGeometric:
+      "Saiz geometri, iaitu membahagikan baki stack kepada beberapa bet dengan peratusan yang sama (cth. “3e”). Contoh: jika pot semasa 100 dan stack efektif 400, “2e” bermaksud bet 100. Jika nombor sebelum “e” ditinggalkan, bilangan street yang berbaki digunakan (flop = 3, turn = 2, river = 1). Untuk raise, bilangan raise sebelumnya ditolak daripada nombor yang ditetapkan; cth. “3e” menjadi “2e” semasa re-raise. Anda juga boleh menambah nombor selepas “e” untuk menetapkan had peratusan maksimum (cth. “2e200”).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "Bet size IP",
+    addAllInLabel: "Ambang tambah all-in:",
+    addAllInHelp:
+      "Menambah aksi all-in pada setiap node yang nisbah bet maksimum kepada potnya berada di bawah ambang ini.",
+    forceAllInLabel: "Ambang all-in paksa:",
+    forceAllInHelp1:
+      "Jika SPR (nisbah stack kepada pot) selepas lawan call sesuatu bet berada di bawah ambang ini, bet tersebut digantikan dengan all-in. Nilai yang disyorkan adalah sekitar 15–20%.",
+    forceAllInHelp2:
+      "Pilihan ini serupa dengan “all-in threshold” dalam PioSOLVER. PioSOLVER menggantikan bet dengan all-in apabila bahagian stack awal yang sudah masuk ke dalam pot melebihi ambang tersebut.",
+    forceAllInHelp3:
+      "Dengan mengabaikan pembundaran, formula penukarannya adalah seperti berikut (s = SPR awal, r = ambang PioSOLVER):",
+    forceAllInFormula: "Ambang = s * (1 - r) / (1 + 2 * s * r).",
+    mergingLabel: "Ambang penggabungan:",
+    mergingHelp1: "Menggabungkan bet yang saiznya hampir sama menjadi satu.",
+    mergingHelp2:
+      "Algoritmanya sama seperti PioSOLVER: ambil saiz bet terbesar (= X% pot) dan buang setiap bet lain yang saiznya (= Y% pot) memenuhi ketaksamaan berikut:",
+    // ⚠ 소수점은 «.» — 말레이시아 표기는 영어식이다 (pt·de·fr·id의 «1,0»과 반대)
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + ambang.",
+    mergingHelp3:
+      "Proses yang sama diulang dengan saiz bet terbesar berikutnya yang tinggal.",
+    // ⚠ App.vue HEADERS의 treeEdit와 «글자까지» 같아야 한다
+    treePreviewEdit: "Pratonton & Sunting Tree",
+    clearEditUnlock: "Kosongkan & Buka Kunci",
+    addedLines: "Line ditambah:",
+    removedLines: "Line dibuang:",
+    boardMismatch: (expected: number, actual: number) =>
+      `Tree yang disunting mengandaikan board dengan ${expected} kad, tetapi board semasa ada ${actual} kad.`,
+    boardMismatchHint:
+      "Untuk membuang tree yang disunting, klik “Kosongkan & Buka Kunci”.",
+  },
+  hi: {
+    advancedHint: "Rake · All-in · Bet मिलाना — आम तौर पर इन्हें ऐसे ही छोड़ सकते हैं",
+    advancedSettings: "विस्तृत सेटिंग ▸",
+    basicSettings: "बुनियादी सेटिंग",
+    chipNote:
+      "राशि chips में पूर्णांक मान के रूप में दर्ज करें। bb में हिसाब रखने के लिए 10 chips = 1bb रखें (उदाहरण: pot 55 = 5.5bb, stack 1000 = 100bb)। pot या stack खुद डालकर या बदलकर निकाले गए नतीजे आपकी chip scale में रहते हैं; अभ्यास स्पॉट खोलकर pot और stack बदले बिना निकाले गए नतीजे bb में बदलकर दिखते हैं।",
+    startingPot: "शुरुआती Pot:",
+    effectiveStack: "Effective Stack:",
+    rake: "Rake:",
+    rakeCap: "Rake की सीमा:",
+    reset: "साफ़ करें",
+    error: "त्रुटि:",
+    warning: "ध्यान दें:",
+    oopBetSizes: "OOP Bet size",
+    donkOption: "Donk bet के लिए अलग आकार रखें",
+    howToInput: "कैसे दर्ज करें",
+    inputHelpIntro:
+      "नीचे दिए किसी भी प्रारूप में कई bet size दर्ज कर सकते हैं। उन्हें कॉमा या स्पेस से अलग करें। खाली छोड़ने पर bet या raise का विकल्प नहीं बनेगा।",
+    inputHelpPercent:
+      "Pot का प्रतिशत बताने वाली संख्या (जैसे “50”)। Raise के लिए पहले call की राशि और फिर उसके बाद बने pot का चुना हुआ प्रतिशत जोड़ा जाता है। उदाहरण: bet से पहले pot 100 है और प्रतिद्वंद्वी 75 bet करता है, तो 50% raise होगा: 75 + (100 + 75 + 75) * 50% = 200।",
+    inputHelpMultiple:
+      "पिछले bet size का गुणक (जैसे “2.5x”)। यह केवल raise के लिए है।",
+    inputHelpAllin: "All-in (जैसे “a”)।",
+    inputHelpFixed:
+      "एक तय राशि जोड़ना (जैसे “100c”)। Raise के लिए उनकी अधिकतम संख्या भी तय कर सकते हैं (जैसे “20c3r”)।",
+    inputHelpGeometric:
+      "Geometric size: बचे हुए stack को तय संख्या के bets में बाँटें, जिनमें हर बार pot का समान प्रतिशत लगाया जाए (जैसे “3e”)। उदाहरण: अभी pot 100 और effective stack 400 है, तो “2e” का bet 100 होगा। “e” से पहले संख्या न देने पर बची हुई streets की संख्या ली जाती है (Flop=3, Turn=2, River=1)। Raise के लिए पहले हो चुके raises की संख्या घटाई जाती है; जैसे re-raise करते समय “3e” बदलकर “2e” हो जाता है। अधिकतम प्रतिशत तय करने के लिए “e” के बाद भी संख्या दे सकते हैं (जैसे “2e200”)।",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "IP Bet size",
+    addAllInLabel: "All-in जोड़ने की सीमा:",
+    addAllInHelp:
+      "जिस node पर अधिकतम संभव bet size और pot का अनुपात इस सीमा से कम हो, वहाँ all-in का विकल्प जोड़ता है।",
+    forceAllInLabel: "Bet को all-in बनाने की सीमा:",
+    forceAllInHelp1:
+      "प्रतिद्वंद्वी के आपके bet को call करने के बाद SPR (stack और pot का अनुपात) इस सीमा से कम रह जाए, तो उस bet को all-in से बदल दिया जाता है। लगभग 15–20% का मान सुझाया जाता है।",
+    forceAllInHelp2:
+      "यह विकल्प PioSOLVER के “all-in threshold” जैसा है। PioSOLVER में pot में लगाई गई राशि और शुरुआती stack का अनुपात सीमा से अधिक होने पर bet को all-in से बदल दिया जाता है।",
+    forceAllInHelp3:
+      "राउंडिंग को छोड़कर, रूपांतरण का सूत्र यह है (s = शुरुआती SPR, r = PioSOLVER की सीमा):",
+    forceAllInFormula: "सीमा = s * (1 - r) / (1 + 2 * s * r)।",
+    mergingLabel: "Bet मिलाने की सीमा:",
+    mergingHelp1: "मिलते-जुलते आकार के bets को एक विकल्प में मिलाता है।",
+    mergingHelp2:
+      "तरीका PioSOLVER जैसा ही है: सबसे बड़ा bet size (= pot का X%) चुनें। फिर हर दूसरे bet को हटाएँ जिसका आकार (= pot का Y%) नीचे दी शर्त पूरी करता हो:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1.0 + सीमा।",
+    mergingHelp3: "बचे हुए bets में अगले सबसे बड़े आकार के साथ यही प्रक्रिया दोहराएँ।",
+    treePreviewEdit: "Tree देखें और संपादित करें",
+    clearEditUnlock: "बदलाव मिटाएँ और अनलॉक करें",
+    addedLines: "जोड़ी गई lines:",
+    removedLines: "हटाई गई lines:",
+    boardMismatch: (expected: number, actual: number) => `संपादित tree ${expected} कार्ड वाले Board के लिए है, लेकिन अभी Board पर ${actual} कार्ड हैं।`,
+    boardMismatchHint:
+      "संपादित tree हटाने के लिए “बदलाव मिटाएँ और अनलॉक करें” दबाएँ।",
+  },
+  tr: {
+    advancedHint: "Rake · All-in · Birleştirme — bunları genelde olduğu gibi bırakabilirsin",
+    advancedSettings: "Gelişmiş ayarlar ▸",
+    basicSettings: "Temel ayarlar",
+    chipNote:
+      "Miktarları tam sayı çip olarak gir. bb ile düşünmek istersen 10 çip = 1bb kullan (ör. pot 55 = 5,5bb, stack 1000 = 100bb). Pot ya da stack'i kendin girer veya değiştirirsen sonuçlar senin çip ölçeğinde kalır; Örnek spotlar bölümünden bir spot yükleyip pot ve stack'i değiştirmeden çözersen sonuçlar bb'ye çevrilir.",
+    startingPot: "Başlangıç pot'u:",
+    effectiveStack: "Efektif stack:",
+    rake: "Rake:",
+    rakeCap: "Rake limiti:",
+    reset: "Temizle",
+    error: "Hata:",
+    warning: "Uyarı:",
+    oopBetSizes: "OOP bet boyutları",
+    donkOption: "Donk bet'ler için farklı boyut kullan",
+    howToInput: "Nasıl girilir",
+    inputHelpIntro:
+      "Birden fazla bet boyutunu virgül ya da boşlukla ayırarak aşağıdaki biçimlerden herhangi biriyle girebilirsin. Boş bırakırsan bet ya da raise yapılmaz.",
+    inputHelpPercent:
+      "Pot'un yüzdesini gösteren bir sayı (ör. “50”). Raise'lerde boyut, önce call edilip ardından oluşan pot'un belirtilen yüzdesi eklenerek hesaplanır. Örneğin bet'ten önce pot 100 ise ve rakip 75 bet yaparsa, %50 raise = 75 + (100 + 75 + 75) × %50 = 200 olur.",
+    inputHelpMultiple:
+      "Önceki bet boyutunun katı (ör. “2.5x”). Yalnızca raise'lerde kullanılabilir.",
+    inputHelpAllin: "All-in (ör. “a”).",
+    inputHelpFixed:
+      "Sabit bir miktar ekleme (ör. “100c”). Raise'lerde raise sayısına üst sınır da koyabilirsin (ör. “20c3r”).",
+    inputHelpGeometric:
+      "Geometrik boyut, yani kalan stack'i belirtilen sayıda eşit yüzdeli bet'e bölmek (ör. “3e”). Örneğin mevcut pot 100 ve efektif stack 400 ise “2e” 100'lük bir bet'tir. “e” harfinden önceki sayıyı yazmazsan kalan street sayısı kullanılır (Flop=3, Turn=2, River=1). Raise'lerde belirtilen sayıdan önceki raise sayısı çıkarılır; ör. re-raise yaparken “3e”, “2e” olur. Maksimum yüzde sınırı koymak için “e” harfinden sonra da bir sayı ekleyebilirsin (ör. “2e200”).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "IP bet boyutları",
+    addAllInLabel: "All-in ekleme eşiği:",
+    addAllInHelp:
+      "Mümkün olan en büyük bet boyutunun pot'a oranı bu eşiğin altında kalan her node'a bir all-in aksiyonu ekler.",
+    forceAllInLabel: "Zorunlu all-in eşiği:",
+    forceAllInHelp1:
+      "Rakip bir bet aksiyonunu call ettikten sonraki SPR (stack/pot oranı) bu eşiğin altındaysa, o bet aksiyonu all-in aksiyonuyla değiştirilir. Önerilen değer %15–20 civarıdır.",
+    forceAllInHelp2:
+      "Bu seçenek PioSOLVER'ın “all-in threshold” ayarına benzer. PioSOLVER, pot'a konan miktarın başlangıç stack'ine oranı eşiği aştığında bet aksiyonunu all-in ile değiştirir.",
+    forceAllInHelp3:
+      "Yuvarlamayı göz ardı edersek dönüşüm formülü şöyledir (s = başlangıç SPR'si, r = PioSOLVER'ın eşiği):",
+    forceAllInFormula: "Eşik = s × (1 − r) / (1 + 2 × s × r).",
+    mergingLabel: "Birleştirme eşiği:",
+    mergingHelp1: "Benzer boyuttaki bet aksiyonlarını tek bir aksiyonda birleştirir.",
+    mergingHelp2:
+      "Algoritma PioSOLVER'ınkiyle aynıdır: en büyük bet boyutunu (= pot'un %X'i) seç ve boyutu (= pot'un %Y'si) aşağıdaki eşitsizliği sağlayan diğer tüm bet aksiyonlarını kaldır:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + eşik.",
+    mergingHelp3: "Bu işlemi kalan bet'ler arasındaki bir sonraki en büyük boyutla tekrarla.",
+    treePreviewEdit: "Ağacı önizle ve düzenle",
+    clearEditUnlock: "Düzenlemeleri temizle ve kilidi aç",
+    addedLines: "Eklenen line'lar:",
+    removedLines: "Kaldırılan line'lar:",
+    boardMismatch: (expected: number, actual: number) =>
+      `Düzenlenen ağaç ${expected} kartlık bir board varsayıyor, ama mevcut board'daki kart sayısı: ${actual}.`,
+    boardMismatchHint:
+      "Düzenlenen ağacı silmek için “Düzenlemeleri temizle ve kilidi aç” düğmesine bas.",
+  },
+  vi: {
+    advancedHint: "Rake · All-in · Gộp — thường có thể để nguyên",
+    advancedSettings: "Cài đặt nâng cao ▸",
+    basicSettings: "Cài đặt cơ bản",
+    chipNote:
+      "Nhập số tiền bằng số chip nguyên. Nếu muốn tính theo bb, dùng 10 chip = 1bb (vd. pot 55 = 5,5bb, stack 1000 = 100bb). Nếu bạn tự nhập hoặc sửa pot hay stack, kết quả giữ theo đơn vị chip của bạn; nếu bạn tải một spot mẫu và giải mà không đổi pot hay stack, kết quả được quy đổi sang bb.",
+    startingPot: "Pot ban đầu:",
+    effectiveStack: "Stack hiệu dụng:",
+    rake: "Rake:",
+    rakeCap: "Rake cap:",
+    reset: "Xóa",
+    error: "Lỗi:",
+    warning: "Cảnh báo:",
+    oopBetSizes: "Cỡ cược OOP",
+    donkOption: "Dùng cỡ cược khác cho donk bet",
+    howToInput: "Cách nhập",
+    inputHelpIntro:
+      "Bạn có thể nhập nhiều cỡ cược, cách nhau bằng dấu phẩy hoặc dấu cách, theo bất kỳ dạng nào dưới đây. Nếu để trống, sẽ không có bet hay raise.",
+    inputHelpPercent:
+      "Một số thể hiện phần trăm pot (vd. “50”). Với raise, cỡ cược được tính bằng cách call trước rồi cộng thêm phần trăm đã nhập của pot sau khi call. Ví dụ, nếu pot trước khi bet là 100 và đối thủ bet 75, raise 50% là 75 + (100 + 75 + 75) × 50% = 200.",
+    inputHelpMultiple:
+      "Bội số của cỡ cược trước đó (vd. “2.5x”). Chỉ dùng cho raise.",
+    inputHelpAllin: "All-in (vd. “a”).",
+    inputHelpFixed:
+      "Cộng thêm một số tiền cố định (vd. “100c”). Với raise, bạn cũng có thể giới hạn số lần raise (vd. “20c3r”).",
+    inputHelpGeometric:
+      "Cỡ cược hình học, tức là chia stack còn lại thành số lần bet đã chỉ định với cùng tỷ lệ phần trăm pot (vd. “3e”). Ví dụ, nếu pot hiện tại là 100 và stack hiệu dụng là 400, “2e” là bet 100. Nếu bỏ số trước “e”, số street còn lại sẽ được dùng (Flop=3, Turn=2, River=1). Với raise, số lần raise trước đó được trừ khỏi số đã chỉ định; vd. “3e” thành “2e” khi re-raise. Bạn cũng có thể thêm một số sau “e” để đặt giới hạn phần trăm tối đa (vd. “2e200”).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Bet:",
+    raise: "Raise:",
+    donk: "Donk:",
+    ipBetSizes: "Cỡ cược IP",
+    addAllInLabel: "Ngưỡng thêm all-in:",
+    addAllInHelp:
+      "Thêm hành động all-in vào mọi node mà tỷ lệ giữa cỡ cược lớn nhất có thể và pot thấp hơn ngưỡng này.",
+    forceAllInLabel: "Ngưỡng buộc all-in:",
+    forceAllInHelp1:
+      "Nếu SPR (tỷ lệ stack trên pot) sau khi đối thủ call một hành động bet thấp hơn ngưỡng này, hành động bet đó được thay bằng all-in. Giá trị khuyến nghị khoảng 15–20%.",
+    forceAllInHelp2:
+      "Tùy chọn này tương tự “all-in threshold” của PioSOLVER. PioSOLVER thay một hành động bet bằng all-in khi tỷ lệ giữa số chip đã cho vào pot và stack ban đầu vượt quá ngưỡng.",
+    forceAllInHelp3:
+      "Bỏ qua phần làm tròn, công thức quy đổi như sau (s = SPR ban đầu, r = ngưỡng của PioSOLVER):",
+    forceAllInFormula: "Ngưỡng = s × (1 − r) / (1 + 2 × s × r).",
+    mergingLabel: "Ngưỡng gộp:",
+    mergingHelp1: "Gộp các hành động bet có cỡ gần nhau thành một.",
+    mergingHelp2:
+      "Thuật toán giống PioSOLVER: chọn cỡ cược lớn nhất (= X% pot) rồi bỏ mọi hành động bet khác có cỡ (= Y% pot) thỏa bất đẳng thức sau:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + ngưỡng.",
+    mergingHelp3: "Lặp lại quá trình này với cỡ cược lớn nhất tiếp theo còn lại.",
+    treePreviewEdit: "Xem trước và chỉnh sửa cây",
+    clearEditUnlock: "Xóa chỉnh sửa và mở khóa",
+    addedLines: "Line đã thêm:",
+    removedLines: "Line đã xóa:",
+    boardMismatch: (expected: number, actual: number) =>
+      `Cây đã chỉnh sửa giả định board có ${expected} lá, nhưng board hiện tại có ${actual} lá.`,
+    boardMismatchHint:
+      "Để bỏ cây đã chỉnh sửa, hãy nhấn nút “Xóa chỉnh sửa và mở khóa”.",
+  },
+  ru: {
+    advancedHint: "Рейк · олл-ин · слияние — обычно это можно не менять",
+    advancedSettings: "Дополнительно ▸",
+    basicSettings: "Основные настройки",
+    chipNote:
+      "Вводи суммы в целых фишках. Чтобы думать в bb, считай 10 фишек = 1bb (например, банк 55 = 5,5bb, стек 1000 = 100bb). Если ты вводишь или меняешь банк или стек вручную, результаты остаются в фишках; если загрузить спот из раздела «Учебные споты» и запустить расчёт, не меняя банк и стек, результаты пересчитываются в bb.",
+    startingPot: "Начальный банк:",
+    effectiveStack: "Эффективный стек:",
+    rake: "Рейк:",
+    rakeCap: "Кэп рейка:",
+    reset: "Очистить",
+    error: "Ошибка:",
+    warning: "Внимание:",
+    oopBetSizes: "Сайзинги OOP",
+    donkOption: "Отдельные сайзинги для донк-бетов",
+    howToInput: "Как вводить",
+    inputHelpIntro:
+      "Можно ввести несколько сайзингов через запятую или пробел в любом из форматов ниже. Если оставить поле пустым, бета или рейза не будет.",
+    inputHelpPercent:
+      "Число — процент от банка (напр. «50»). Для рейза размер считается так: сначала колл, затем добавляется указанный процент от получившегося банка. Например, если банк до бета 100 и соперник ставит 75, рейз 50% = 75 + (100 + 75 + 75) × 50% = 200.",
+    inputHelpMultiple:
+      "Кратное предыдущему бету (напр. «2.5x»). Только для рейзов.",
+    inputHelpAllin: "Олл-ин (напр. «a»).",
+    inputHelpFixed:
+      "Добавление фиксированной суммы (напр. «100c»). Для рейзов можно также ограничить число рейзов (напр. «20c3r»).",
+    inputHelpGeometric:
+      "Геометрический сайзинг: оставшийся стек делится на заданное число бетов с одинаковым процентом от банка (напр. «3e»). Например, если банк 100, а эффективный стек 400, «2e» — это бет 100. Если число перед «e» не указано, берётся число оставшихся улиц (флоп = 3, тёрн = 2, ривер = 1). Для рейзов из заданного числа вычитается число предыдущих рейзов: например, при ре-рейзе «3e» становится «2e». После «e» можно добавить число — максимальный процент от банка (напр. «2e200»).",
+    flop: "Флоп",
+    turn: "Тёрн",
+    river: "Ривер",
+    bet: "Бет:",
+    raise: "Рейз:",
+    donk: "Донк:",
+    ipBetSizes: "Сайзинги IP",
+    addAllInLabel: "Порог добавления олл-ина:",
+    addAllInHelp:
+      "Добавляет олл-ин в каждый узел, где отношение максимально возможного бета к банку ниже этого порога.",
+    forceAllInLabel: "Порог принудительного олл-ина:",
+    forceAllInHelp1:
+      "Если SPR (отношение стека к банку) после колла соперника на бет ниже этого порога, этот бет заменяется олл-ином. Рекомендуемое значение — около 15–20%.",
+    forceAllInHelp2:
+      "Эта опция похожа на «all-in threshold» в PioSOLVER. PioSOLVER заменяет бет олл-ином, когда отношение суммы, вложенной в банк, к начальному стеку превышает порог.",
+    forceAllInHelp3:
+      "Без учёта округления формула перевода такая (s = начальный SPR, r = порог PioSOLVER):",
+    forceAllInFormula: "Порог = s × (1 − r) / (1 + 2 × s × r).",
+    mergingLabel: "Порог слияния:",
+    mergingHelp1: "Объединяет беты близкого размера в один.",
+    mergingHelp2:
+      "Алгоритм тот же, что в PioSOLVER: берётся самый крупный бет (= X% банка) и удаляются все остальные беты, размер которых (= Y% банка) удовлетворяет неравенству:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + порог.",
+    mergingHelp3: "Затем то же повторяется со следующим по величине оставшимся бетом.",
+    treePreviewEdit: "Просмотр и правка дерева",
+    clearEditUnlock: "Сбросить правки и разблокировать",
+    addedLines: "Добавлено линий:",
+    removedLines: "Удалено линий:",
+    boardMismatch: (expected: number, actual: number) =>
+      `Отредактированное дерево рассчитано на борд из ${expected} карт, а сейчас на борде ${actual} ${ruPlural(actual, "карта", "карты", "карт")}.`,
+    boardMismatchHint:
+      "Чтобы отбросить отредактированное дерево, нажми кнопку «Сбросить правки и разблокировать».",
+  },
+  ar: {
+    advancedHint: "الريك · أول إن · الدمج — لا حاجة لتغييرها عادةً",
+    advancedSettings: "خيارات متقدمة ◂",
+    basicSettings: "الإعدادات الأساسية",
+    chipNote: "أدخل المبالغ بأعداد صحيحة من الرقائق. اعتبر 10 رقائق = 1bb إن أردت التفكير بوحدة bb (مثلًا: بوت 55 = 5.5bb · ستاك 1000 = 100bb). عند إدخال البوت أو الستاك أو تغييرهما يدويًا تبقى النتائج بالرقائق؛ وعند تحميل موقف من «مواقف تدريبية» وتشغيل الحساب دون تغيير البوت والستاك تُحوَّل النتائج إلى bb.",
+    startingPot: "البوت الابتدائي:",
+    effectiveStack: "الستاك الفعلي:",
+    rake: "الريك:",
+    rakeCap: "حد الريك:",
+    reset: "مسح",
+    error: "خطأ:",
+    warning: "تنبيه:",
+    oopBetSizes: "أحجام رهان OOP",
+    donkOption: "أحجام منفصلة لرهانات الدونك",
+    howToInput: "طريقة الإدخال",
+    inputHelpIntro: "يمكنك إدخال عدة أحجام رهان تفصل بينها فواصل أو مسافات، بأي صيغة من الصيغ أدناه. الحقل الفارغ = لا رهان ولا زيادة.",
+    inputHelpPercent: "عدد يمثل نسبة مئوية من البوت (مثلًا «\u206650\u2069»). في الزيادة يحسب الحجم هكذا: مجاراة أولًا، ثم إضافة النسبة المحددة من البوت الناتج. مثلًا: إذا كان البوت قبل الرهان 100 وراهن الخصم 75، فالزيادة \u206650%\u2069 = \u206675 + (100 + 75 + 75) × 50% = 200\u2069.",
+    inputHelpMultiple: "مضاعف لحجم الرهان السابق (مثلًا «\u20662.5x\u2069»). للزيادة فقط.",
+    inputHelpAllin: "أول إن (مثلًا «\u2066a\u2069»).",
+    inputHelpFixed: "إضافة مبلغ ثابت (مثلًا «\u2066100c\u2069»). وفي الزيادة يمكنك أيضًا وضع حد لعدد الزيادات (مثلًا «\u206620c3r\u2069»).",
+    inputHelpGeometric: "حجم هندسي: يقسم الستاك المتبقي على العدد المحدد من الرهانات بنسبة متساوية من البوت (مثلًا «\u20663e\u2069»). مثلًا: إذا كان البوت الحالي 100 والستاك الفعلي 400، فإن «\u20662e\u2069» رهان بحجم 100. إذا لم تكتب عددًا قبل «\u2066e\u2069» يستعمل عدد الجولات المتبقية (الفلوب = 3، التيرن = 2، الريفر = 1). وفي الزيادة يطرح عدد الزيادات السابقة من العدد المحدد؛ مثلًا «\u20663e\u2069» يصبح «\u20662e\u2069» عند إعادة الزيادة. ويمكنك أيضًا إضافة عدد بعد «\u2066e\u2069» ليكون حدًا أقصى للنسبة من البوت (مثلًا «\u20662e200\u2069»).",
+    flop: "الفلوب",
+    turn: "التيرن",
+    river: "الريفر",
+    bet: "رهان:",
+    raise: "رايز:",
+    donk: "دونك:",
+    ipBetSizes: "أحجام رهان IP",
+    addAllInLabel: "حد إضافة الأول إن:",
+    addAllInHelp: "يضيف خيار أول إن إلى كل نقطة قرار تكون فيها نسبة أكبر رهان ممكن إلى البوت أقل من هذا الحد.",
+    forceAllInLabel: "حد الأول إن الإجباري:",
+    forceAllInHelp1: "إذا كان SPR (نسبة الستاك إلى البوت) بعد مجاراة الخصم للرهان أقل من هذا الحد، يحل أول إن محل هذا الرهان. القيمة الموصى بها نحو \u206615–20%\u2069.",
+    forceAllInHelp2: "هذا الخيار يشبه «\u2066all-in threshold\u2069» في PioSOLVER. يستبدل PioSOLVER الرهان بأول إن عندما تتجاوز نسبة المبلغ الموضوع في البوت إلى الستاك الابتدائي هذا الحد.",
+    forceAllInHelp3: "مع إهمال التقريب، صيغة التحويل هي (s = SPR الابتدائي، r = حد PioSOLVER):",
+    forceAllInFormula: "\u2066الحد = s × (1 − r) / (1 + 2 × s × r)\u2069.",
+    mergingLabel: "حد الدمج:",
+    mergingHelp1: "يدمج الرهانات ذات الأحجام المتقاربة في رهان واحد.",
+    mergingHelp2: "الخوارزمية هي نفسها في PioSOLVER: نأخذ أكبر حجم رهان (= \u2066X%\u2069 من البوت) ونحذف كل رهان آخر يحقق حجمه (= \u2066Y%\u2069 من البوت) المتباينة التالية:",
+    mergingFormula: "\u2066(100 + X) / (100 + Y) < 1.0 + الحد\u2069.",
+    mergingHelp3: "ثم تتكرر العملية مع الحجم الأكبر التالي من الأحجام المتبقية.",
+    treePreviewEdit: "عرض الشجرة وتحريرها",
+    clearEditUnlock: "تجاهل التعديلات وإلغاء القفل",
+    addedLines: "الخطوط المضافة:",
+    removedLines: "الخطوط المحذوفة:",
+    // 확정표 §3-4의 «수 + أوراق» 꼴 대신 콜론형 — §8 #14(변수 바로 뒤 아랍 명사) 검사와 충돌하지 않게
+    boardMismatch: (expected: number, actual: number) =>
+      `الشجرة المعدَّلة محسوبة لبورد من ${expected} أوراق، وعدد أوراق البورد الآن: ${actual}.`,
+    boardMismatchHint:
+      "لتجاهل الشجرة المعدَّلة اضغط «تجاهل التعديلات وإلغاء القفل».",
+  },
+  it: {
+    advancedHint: "Rake · All-in · Unione — di solito puoi lasciare questi valori invariati",
+    advancedSettings: "Impostazioni avanzate ▸",
+    basicSettings: "Impostazioni di base",
+    chipNote:
+      "Inserisci gli importi in fiches intere. Per ragionare in bb, usa 10 fiches = 1bb (es. piatto 55 = 5,5bb, stack 1000 = 100bb). Se inserisci o modifichi il piatto o lo stack, i risultati restano nella tua scala di fiches; se carichi uno degli «Esempi» e calcoli senza modificare il piatto o lo stack, i risultati vengono convertiti in bb.",
+    startingPot: "Piatto iniziale:",
+    effectiveStack: "Stack effettivo:",
+    rake: "Rake:",
+    rakeCap: "Limite del rake:",
+    reset: "Svuota",
+    error: "Errore:",
+    warning: "Avviso:",
+    oopBetSizes: "Dimensioni di puntata OOP",
+    donkOption: "Usa dimensioni diverse per le donk bet",
+    howToInput: "Come inserire i valori",
+    inputHelpIntro:
+      "Puoi inserire più dimensioni di puntata, separate da virgole o spazi, nei formati indicati qui sotto. Se lasci il campo vuoto, non ci saranno né puntate né rilanci.",
+    inputHelpPercent:
+      "Un numero che indica la percentuale del piatto (es. «50»). Per i rilanci, si calcola prima il call e poi si aggiunge la percentuale indicata del piatto risultante. Per esempio, se il piatto prima della puntata è 100 e l’avversario punta 75, un rilancio del 50% è 75 + (100 + 75 + 75) × 50% = 200.",
+    inputHelpMultiple:
+      "Un multiplo della puntata precedente (es. «2.5x»). Disponibile solo per i rilanci.",
+    inputHelpAllin: "All-in (es. «a»).",
+    inputHelpFixed:
+      "Un importo fisso da aggiungere (es. «100c»). Per i rilanci puoi anche limitarne il numero (es. «20c3r»).",
+    inputHelpGeometric:
+      "Dimensione geometrica: divide lo stack rimanente nel numero indicato di puntate, ciascuna della stessa percentuale del piatto (es. «3e»). Per esempio, con un piatto di 100 e uno stack effettivo di 400, «2e» corrisponde a una puntata di 100. Se ometti il numero prima di «e», viene usato il numero di street rimanenti (Flop=3, Turn=2, River=1). Per i rilanci, si sottrae dal numero indicato il numero di rilanci precedenti: ad esempio, «3e» diventa «2e» in caso di controrilancio. Puoi anche aggiungere un numero dopo «e» per impostare un limite percentuale massimo (es. «2e200»).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Puntata:",
+    raise: "Rilancio:",
+    donk: "Donk bet:",
+    ipBetSizes: "Dimensioni di puntata IP",
+    addAllInLabel: "Soglia per aggiungere un all-in:",
+    addAllInHelp:
+      "Aggiunge un’azione all-in a ogni nodo in cui il rapporto tra la puntata massima possibile e il piatto è inferiore a questa soglia.",
+    forceAllInLabel: "Soglia per forzare l’all-in:",
+    forceAllInHelp1:
+      "Se lo SPR (rapporto tra stack e piatto) dopo il call dell’avversario è inferiore a questa soglia, la puntata viene sostituita da un all-in. Un valore consigliato è circa il 15–20%.",
+    forceAllInHelp2:
+      "Questa opzione è simile alla «all-in threshold» di PioSOLVER. PioSOLVER sostituisce una puntata con un all-in quando il rapporto tra l’importo messo nel piatto e lo stack iniziale supera la soglia.",
+    forceAllInHelp3:
+      "Senza considerare gli arrotondamenti, la formula di conversione è la seguente (s = SPR iniziale, r = soglia di PioSOLVER):",
+    forceAllInFormula: "Soglia = s × (1 − r) / (1 + 2 × s × r).",
+    mergingLabel: "Soglia di unione:",
+    mergingHelp1: "Unisce in una sola azione le puntate di dimensioni simili.",
+    mergingHelp2:
+      "L’algoritmo è lo stesso di PioSOLVER: sceglie la puntata più grande (= X% del piatto) ed elimina ogni altra puntata la cui dimensione (= Y% del piatto) soddisfa la seguente disuguaglianza:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + soglia.",
+    mergingHelp3: "Ripete il procedimento con la puntata più grande tra quelle rimaste.",
+    treePreviewEdit: "Anteprima e modifica dell’albero",
+    clearEditUnlock: "Elimina modifiche e sblocca",
+    addedLines: "Linee aggiunte:",
+    removedLines: "Linee rimosse:",
+    boardMismatch: (expected: number, actual: number) => `L’albero modificato prevede un board di ${expected} ${expected === 1 ? "carta" : "carte"}, ma quello attuale contiene ${actual} ${actual === 1 ? "carta" : "carte"}.`,
+    boardMismatchHint:
+      "Per eliminare l’albero modificato, premi «Elimina modifiche e sblocca».",
+  },
+  pl: {
+    advancedHint: "Rake · All-in · Łączenie sizingów — zwykle możesz zostawić te ustawienia bez zmian",
+    advancedSettings: "Ustawienia zaawansowane ▸",
+    basicSettings: "Ustawienia podstawowe",
+    chipNote:
+      "Podawaj kwoty w całych żetonach. Aby liczyć w bb, przyjmij 10 żetonów = 1bb (np. pula 55 = 5,5bb, stack 1 000 = 100bb). Jeśli samodzielnie wpiszesz lub zmienisz pulę albo stack, wyniki pozostaną w twojej skali żetonów. Jeśli wczytasz spot z menu „Przykłady” i obliczysz go bez zmiany puli ani stacka, wyniki zostaną przeliczone na bb.",
+    startingPot: "Pula początkowa:",
+    effectiveStack: "Efektywny stack:",
+    rake: "Rake:",
+    rakeCap: "Limit rake’u:",
+    reset: "Wyczyść",
+    error: "Błąd:",
+    warning: "Ostrzeżenie:",
+    oopBetSizes: "Sizingi OOP",
+    donkOption: "Użyj innych sizingów dla donk betów",
+    howToInput: "Jak wpisywać sizingi",
+    inputHelpIntro:
+      "Możesz wpisać kilka sizingów, oddzielając je przecinkami lub spacjami, w dowolnym z poniższych formatów. Puste pole oznacza brak zakładu lub przebicia.",
+    inputHelpPercent:
+      "Liczba oznaczająca procent puli (np. „50”). Przy przebiciu najpierw dolicza się kwotę sprawdzenia, a następnie podany procent powstałej puli. Na przykład: pula przed zakładem wynosi 100, a przeciwnik stawia 75. Przebicie o 50% puli to 75 + (100 + 75 + 75) × 50% = 200.",
+    inputHelpMultiple:
+      "Wielokrotność poprzedniego zakładu (np. „2.5x”). Tylko dla przebić.",
+    inputHelpAllin: "All-in (np. „a”).",
+    inputHelpFixed:
+      "Dodanie stałej kwoty (np. „100c”). Przy przebiciach możesz też ograniczyć ich liczbę (np. „20c3r”).",
+    inputHelpGeometric:
+      "Sizing geometryczny: podział pozostałego stacka na określoną liczbę zakładów o jednakowym procencie puli (np. „3e”). Jeśli pula wynosi 100, a efektywny stack 400, „2e” oznacza zakład za 100. Gdy pominiesz liczbę przed „e”, użyta zostanie liczba pozostałych streetów (Flop=3, Turn=2, River=1). Przy przebiciach od podanej liczby odejmuje się liczbę wcześniejszych przebić; np. „3e” zmienia się w „2e” przy ponownym przebiciu. Możesz też dopisać liczbę po „e”, aby ustawić maksymalny procent puli (np. „2e200”).",
+    flop: "Flop",
+    turn: "Turn",
+    river: "River",
+    bet: "Zakład:",
+    raise: "Przebicie:",
+    donk: "Donk bet:",
+    ipBetSizes: "Sizingi IP",
+    addAllInLabel: "Próg dodawania all-in:",
+    addAllInHelp:
+      "Dodaje akcję all-in w każdym węźle, w którym stosunek maksymalnego możliwego zakładu do puli jest niższy od tego progu.",
+    forceAllInLabel: "Próg wymuszania all-in:",
+    forceAllInHelp1:
+      "Jeśli po sprawdzeniu zakładu przez przeciwnika SPR (stosunek stacka do puli) jest niższy od tego progu, zakład zostaje zastąpiony akcją all-in. Zalecana wartość to około 15–20%.",
+    forceAllInHelp2:
+      "Ta opcja przypomina „all-in threshold” w PioSOLVER. PioSOLVER zastępuje zakład akcją all-in, gdy stosunek kwoty włożonej do puli do początkowego stacka przekracza próg.",
+    forceAllInHelp3:
+      "Pomijając zaokrąglenia, wzór przeliczenia wygląda tak (s = początkowy SPR, r = próg w PioSOLVER):",
+    forceAllInFormula: "Próg = s × (1 − r) / (1 + 2 × s × r).",
+    mergingLabel: "Próg łączenia sizingów:",
+    mergingHelp1: "Łączy zakłady o zbliżonych sizingach w jedną akcję.",
+    mergingHelp2:
+      "Algorytm jest taki sam jak w PioSOLVER: wybiera największy zakład (= X% puli) i usuwa pozostałe zakłady, których sizing (= Y% puli) spełnia nierówność:",
+    mergingFormula: "(100 + X) / (100 + Y) < 1,0 + próg.",
+    mergingHelp3: "Proces powtarza się dla kolejnego największego zakładu spośród pozostałych.",
+    treePreviewEdit: "Podgląd i edycja drzewa",
+    clearEditUnlock: "Wyczyść zmiany i odblokuj",
+    addedLines: "Dodane linie:",
+    removedLines: "Usunięte linie:",
+    boardMismatch: (expected: number, actual: number) =>
+      `Wymagana liczba kart na boardzie dla edytowanego drzewa: ${expected}. Obecnie: ${actual} ${plPlural(actual, { one: "karta", few: "karty", many: "kart", other: "karty" })}.`,
+    boardMismatchHint:
+      "Aby odrzucić edytowane drzewo, kliknij „Wyczyść zmiany i odblokuj”.",
+  },
+} as const;
+
+type ConfigValue = {
+  startingPot: number;
+  effectiveStack: number;
+  rakePercent: number;
+  rakeCap: number;
+  donkOption: number;
+  oopFlopBet: string;
+  oopFlopRaise: string;
+  oopTurnBet: string;
+  oopTurnRaise: string;
+  oopTurnDonk: string;
+  oopRiverBet: string;
+  oopRiverRaise: string;
+  oopRiverDonk: string;
+  ipFlopBet: string;
+  ipFlopRaise: string;
+  ipTurnBet: string;
+  ipTurnRaise: string;
+  ipRiverBet: string;
+  ipRiverRaise: string;
+  addAllInThreshold: number;
+  forceAllInThreshold: number;
+  mergingThreshold: number;
+  expectedBoardLength: number;
+  addedLines: string;
+  removedLines: string;
+};
+
+/* 다른 빌드의 chipNote 덮어쓰기(src/variant.ts) — 기본 빌드는 없음 */
+const N: Partial<Record<keyof typeof M, { chipNote: string }>> | null = VARIANT_TEXT?.treeConfig ?? null;
+
+export default defineComponent({
+  components: {
+    DbItemPicker,
+    TreeEditor,
+    Tippy,
+    QuestionMarkCircleIcon,
+  },
+
+  setup() {
+    const store = useStore();
+    const config = useConfigStore();
+    const L = computed(() => ({ ...M[i18n.locale], ...N?.[i18n.locale as keyof typeof M] }));
+
+    const isEditMode = ref(false);
+    const advancedOpen = ref(false);
+    const onAdvancedToggle = (event: Event) => {
+      advancedOpen.value = (event.target as HTMLDetailsElement).open;
+    };
+
+    // Keep invalid advanced inputs discoverable, including settings loaded from storage
+    // and a return from the run screen. Expansion is local UI state, never persisted.
+    watch(
+      () => [
+        config.rakePercent,
+        config.rakeCap,
+        config.addAllInThreshold,
+        config.forceAllInThreshold,
+        config.mergingThreshold,
+        store.sideView,
+      ],
+      () => {
+        if (
+          config.rakePercent < 0 || config.rakePercent > 100 ||
+          config.rakeCap < 0 || config.rakeCap > 3 * MAX_AMOUNT ||
+          config.addAllInThreshold < 0 || config.forceAllInThreshold < 0 ||
+          config.mergingThreshold < 0
+        ) advancedOpen.value = true;
+      },
+      { immediate: true }
+    );
+
+    const hasEdit = computed(
+      () => config.addedLines.length > 0 || config.removedLines.length > 0
+    );
+
+    const addedLinesArray = computed(() =>
+      config.addedLines === ""
+        ? []
+        : config.addedLines.split(",").map(readableLineString)
+    );
+
+    const removedLinesArray = computed(() =>
+      config.removedLines === ""
+        ? []
+        : config.removedLines.split(",").map(readableLineString)
+    );
+
+    const errorBasics = computed(() => {
+      const errors: string[] = [];
+      if (config.startingPot <= 0) {
+        errors.push(
+          pick("스타팅 팟은 양수여야 합니다", "Starting pot must be positive", "スターティングポットには正の数を入力してください", "El bote inicial debe ser positivo", "O pote inicial deve ser positivo", "Der Start-Pot muss größer als 0 sein", "起始底池必须是正数", "起始底池必須是正數", "Le pot initial doit être positif", "Pot awal harus lebih dari 0", "Pot permulaan mesti lebih daripada 0", "शुरुआती pot शून्य से अधिक होना चाहिए", "Başlangıç pot'u 0'dan büyük olmalı", "Pot ban đầu phải lớn hơn 0", "Начальный банк должен быть больше 0",
+    "يجب أن يكون البوت الابتدائي أكبر من 0",
+            "Il piatto iniziale deve essere positivo", "Pula początkowa musi być większa od zera")
+        );
+      }
+      if (config.startingPot > MAX_AMOUNT) {
+        errors.push(
+          pick(
+            `스타팅 팟은 ${MAX_AMOUNT} 이하여야 합니다`,
+            `Starting pot must not exceed ${MAX_AMOUNT}`,
+            `スターティングポットは${MAX_AMOUNT}以下で入力してください`,
+            `El bote inicial no debe exceder ${MAX_AMOUNT}`,
+            `O pote inicial não pode passar de ${MAX_AMOUNT}`,
+            `Der Start-Pot darf höchstens ${MAX_AMOUNT} sein`
+          ,
+            `起始底池不能超过 ${MAX_AMOUNT}`, `起始底池不能超過 ${MAX_AMOUNT}`,
+            `Le pot initial ne doit pas dépasser ${MAX_AMOUNT}`, `Pot awal tidak boleh melebihi ${MAX_AMOUNT}`,
+            `Pot permulaan tidak boleh melebihi ${MAX_AMOUNT}`, `शुरुआती pot ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Başlangıç pot'u en fazla ${MAX_AMOUNT} olabilir`, `Pot ban đầu không được vượt quá ${MAX_AMOUNT}`, `Начальный банк не может превышать ${MAX_AMOUNT}`,
+    `يجب ألا يتجاوز البوت الابتدائي ${MAX_AMOUNT}`,
+            `Il piatto iniziale non deve superare ${MAX_AMOUNT}`, `Pula początkowa nie może przekraczać ${localizeNumber(String(MAX_AMOUNT))}`)
+        );
+      }
+      if (config.startingPot % 1 !== 0) {
+        errors.push(
+          pick("스타팅 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier", "Pot awal harus bilangan bulat", "Pot permulaan mesti nombor bulat", "शुरुआती pot का मान पूर्णांक होना चाहिए", "Başlangıç pot'u tam sayı olmalı", "Pot ban đầu phải là số nguyên", "Начальный банк должен быть целым числом",
+    "يجب أن يكون البوت الابتدائي عددًا صحيحًا",
+            "Il piatto iniziale deve essere un numero intero", "Pula początkowa musi być liczbą całkowitą")
+        );
+      }
+      if (config.effectiveStack <= 0) {
+        errors.push(
+          pick(
+            "유효 스택은 양수여야 합니다",
+            "Effective stack must be positive",
+            "有効スタックには正の数を入力してください",
+            "El stack efectivo debe ser positivo",
+            "O stack efetivo deve ser positivo",
+            "Der effektive Stack muss größer als 0 sein"
+          ,
+            "有效筹码必须是正数", "有效籌碼必須是正數",
+            "Le stack effectif doit être positif", "Stack efektif harus lebih dari 0",
+            "Stack efektif mesti lebih daripada 0", "Effective stack शून्य से अधिक होना चाहिए", "Efektif stack 0'dan büyük olmalı", "Stack hiệu dụng phải lớn hơn 0", "Эффективный стек должен быть больше 0",
+    "يجب أن يكون الستاك الفعلي أكبر من 0",
+            "Lo stack effettivo deve essere positivo", "Efektywny stack musi być większy od zera")
+        );
+      }
+      if (config.effectiveStack > MAX_AMOUNT) {
+        errors.push(
+          pick(
+            `유효 스택은 ${MAX_AMOUNT} 이하여야 합니다`,
+            `Effective stack must not exceed ${MAX_AMOUNT}`,
+            `有効スタックは${MAX_AMOUNT}以下で入力してください`,
+            `El stack efectivo no debe exceder ${MAX_AMOUNT}`,
+            `O stack efetivo não pode passar de ${MAX_AMOUNT}`,
+            `Der effektive Stack darf höchstens ${MAX_AMOUNT} sein`
+          ,
+            `有效筹码不能超过 ${MAX_AMOUNT}`, `有效籌碼不能超過 ${MAX_AMOUNT}`,
+            `Le stack effectif ne doit pas dépasser ${MAX_AMOUNT}`, `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`,
+            `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`, `Effective stack ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Efektif stack en fazla ${MAX_AMOUNT} olabilir`, `Stack hiệu dụng không được vượt quá ${MAX_AMOUNT}`, `Эффективный стек не может превышать ${MAX_AMOUNT}`,
+    `يجب ألا يتجاوز الستاك الفعلي ${MAX_AMOUNT}`,
+            `Lo stack effettivo non deve superare ${MAX_AMOUNT}`, `Efektywny stack nie może przekraczać ${localizeNumber(String(MAX_AMOUNT))}`)
+        );
+      }
+      if (config.effectiveStack % 1 !== 0) {
+        errors.push(
+          pick(
+            "유효 스택은 정수여야 합니다",
+            "Effective stack must be an integer",
+            "有効スタックは整数で入力してください",
+            "El stack efectivo debe ser un entero",
+            "O stack efetivo deve ser um número inteiro",
+            "Der effektive Stack muss eine ganze Zahl sein"
+          ,
+            "有效筹码必须是整数", "有效籌碼必須是整數",
+            "Le stack effectif doit être un nombre entier", "Stack efektif harus bilangan bulat",
+            "Stack efektif mesti nombor bulat", "Effective stack का मान पूर्णांक होना चाहिए", "Efektif stack tam sayı olmalı", "Stack hiệu dụng phải là số nguyên", "Эффективный стек должен быть целым числом",
+    "يجب أن يكون الستاك الفعلي عددًا صحيحًا",
+            "Lo stack effettivo deve essere un numero intero", "Efektywny stack musi być liczbą całkowitą")
+        );
+      }
+      if (config.rakePercent < 0) {
+        errors.push(
+          pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo", "O rake não pode ser negativo", "Der Rake darf nicht negativ sein", "抽水不能是负数", "抽水不能是負數", "Le rake ne peut pas être négatif", "Rake tidak boleh negatif", "Rake tidak boleh negatif", "Rake ऋणात्मक नहीं हो सकता", "Rake negatif olamaz", "Rake không được âm", "Рейк не может быть отрицательным",
+    "لا يمكن أن يكون الريك سالبًا",
+            "Il rake non deve essere negativo", "Rake nie może być ujemny")
+        );
+      }
+      if (config.rakePercent > 100) {
+        errors.push(
+          pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%", "Der Rake darf 100% nicht überschreiten", "抽水不能超过 100%", "抽水不能超過 100%", "Le rake ne peut pas dépasser 100 %", "Rake tidak boleh melebihi 100%", "Rake tidak boleh melebihi 100%", "Rake 100% से अधिक नहीं हो सकता", "Rake %100'ü aşamaz", "Rake không được vượt quá 100%", "Рейк не может превышать 100%",
+    "لا يمكن أن يتجاوز الريك \u2066100%\u2069",
+            "Il rake non deve superare il 100%", "Rake nie może przekraczać 100%")
+        );
+      }
+      if (config.rakeCap < 0) {
+        errors.push(
+          pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo", "O teto do rake não pode ser negativo", "Das Rake-Cap darf nicht negativ sein", "抽水上限不能是负数", "抽水上限不能是負數", "Le cap de rake ne peut pas être négatif", "Rake cap tidak boleh negatif", "Rake cap tidak boleh negatif", "Rake की सीमा ऋणात्मक नहीं हो सकती", "Rake limiti negatif olamaz", "Rake cap không được âm", "Кэп рейка не может быть отрицательным",
+    "لا يمكن أن يكون حد الريك سالبًا",
+            "Il limite del rake non deve essere negativo", "Limit rake’u nie może być ujemny")
+        );
+      }
+      if (config.rakeCap > 3 * MAX_AMOUNT) {
+        errors.push(
+          pick<string>(
+            `레이크 캡은 ${3 * MAX_AMOUNT} 이하여야 합니다`,
+            `Rake cap must not exceed ${3 * MAX_AMOUNT}`,
+            `レーキキャップは${3 * MAX_AMOUNT}以下で入力してください`,
+            `El tope de rake no debe exceder ${3 * MAX_AMOUNT}`,
+            `O teto do rake não pode passar de ${3 * MAX_AMOUNT}`,
+            `Das Rake-Cap darf höchstens ${3 * MAX_AMOUNT} sein`
+          ,
+            `抽水上限不能超过 ${3 * MAX_AMOUNT}`, `抽水上限不能超過 ${3 * MAX_AMOUNT}`,
+            `Le cap de rake ne doit pas dépasser ${3 * MAX_AMOUNT}`,
+            `Rake cap tidak boleh melebihi ${3 * MAX_AMOUNT}`,
+            `Rake cap tidak boleh melebihi ${3 * MAX_AMOUNT}`, `Rake की सीमा ${3 * MAX_AMOUNT} से अधिक नहीं हो सकती`, `Rake limiti en fazla ${3 * MAX_AMOUNT} olabilir`, `Rake cap không được vượt quá ${3 * MAX_AMOUNT}`, `Кэп рейка не может превышать ${3 * MAX_AMOUNT}`,
+    `لا يمكن أن يتجاوز حد الريك ${3 * MAX_AMOUNT}`,
+            `Il limite del rake non deve superare ${3 * MAX_AMOUNT}`, `Limit rake’u nie może przekraczać ${localizeNumber(String(3 * MAX_AMOUNT))}`)
+        );
+      }
+      return errors;
+    });
+
+    const errorOop = computed(() => {
+      const errors: string[] = [];
+      const isDonk = true;
+      const betConfig = [
+        {
+          name: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP", "Bet flop OOP", "OOP flop bet", "OOP flop bet", "Bet flop OOP", "Бет OOP на флопе",
+    "رهان OOP على الفلوب",
+            "Puntata OOP al flop", "Zakład OOP na flopie"),
+          res: config.oopFlopBetSanitized,
+        },
+        {
+          name: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP", "Raise flop OOP", "OOP flop raise", "OOP flop raise", "Raise flop OOP", "Рейз OOP на флопе",
+    "رايز OOP على الفلوب",
+            "Rilancio OOP al flop", "Przebicie OOP na flopie"),
+          res: config.oopFlopRaiseSanitized,
+        },
+        {
+          name: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP", "Bet turn OOP", "OOP turn bet", "OOP turn bet", "Bet turn OOP", "Бет OOP на тёрне",
+    "رهان OOP على التيرن",
+            "Puntata OOP al turn", "Zakład OOP na turnie"),
+          res: config.oopTurnBetSanitized,
+        },
+        {
+          name: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP", "Raise turn OOP", "OOP turn raise", "OOP turn raise", "Raise turn OOP", "Рейз OOP на тёрне",
+    "رايز OOP على التيرن",
+            "Rilancio OOP al turn", "Przebicie OOP na turnie"),
+          res: config.oopTurnRaiseSanitized,
+        },
+        {
+          name: pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP", "Donk turn OOP", "OOP turn donk", "OOP turn donk", "Donk turn OOP", "Донк OOP на тёрне",
+    "دونك OOP على التيرن",
+            "Donk bet OOP al turn", "Donk bet OOP na turnie"),
+          res: config.oopTurnDonkSanitized,
+          isDonk,
+        },
+        {
+          name: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP", "Bet river OOP", "OOP river bet", "OOP river bet", "Bet river OOP", "Бет OOP на ривере",
+    "رهان OOP على الريفر",
+            "Puntata OOP al river", "Zakład OOP na riverze"),
+          res: config.oopRiverBetSanitized,
+        },
+        {
+          name: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP", "Raise river OOP", "OOP river raise", "OOP river raise", "Raise river OOP", "Рейз OOP на ривере",
+    "رايز OOP على الريفر",
+            "Rilancio OOP al river", "Przebicie OOP na riverze"),
+          res: config.oopRiverRaiseSanitized,
+        },
+        {
+          name: pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP", "Donk river OOP", "OOP river donk", "OOP river donk", "Donk river OOP", "Донк OOP на ривере",
+    "دونك OOP على الريفر",
+            "Donk bet OOP al river", "Donk bet OOP na riverze"),
+          res: config.oopRiverDonkSanitized,
+          isDonk,
+        },
+      ];
+      for (const { name, res, isDonk } of betConfig) {
+        if (!res.valid && (!isDonk || config.donkOption)) {
+          errors.push(`${name}: ${i18n.locale === "ar" ? autoIso(betErrorText(res)) : betErrorText(res)}`);
+        }
+      }
+      return errors;
+    });
+
+    const errorIp = computed(() => {
+      const errors: string[] = [];
+      const betConfig = [
+        {
+          name: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP", "Bet flop IP", "IP flop bet", "IP flop bet", "Bet flop IP", "Бет IP на флопе",
+    "رهان IP على الفلوب",
+            "Puntata IP al flop", "Zakład IP na flopie"),
+          res: config.ipFlopBetSanitized,
+        },
+        {
+          name: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP", "Raise flop IP", "IP flop raise", "IP flop raise", "Raise flop IP", "Рейз IP на флопе",
+    "رايز IP على الفلوب",
+            "Rilancio IP al flop", "Przebicie IP na flopie"),
+          res: config.ipFlopRaiseSanitized,
+        },
+        {
+          name: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP", "Bet turn IP", "IP turn bet", "IP turn bet", "Bet turn IP", "Бет IP на тёрне",
+    "رهان IP على التيرن",
+            "Puntata IP al turn", "Zakład IP na turnie"),
+          res: config.ipTurnBetSanitized,
+        },
+        {
+          name: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP", "Raise turn IP", "IP turn raise", "IP turn raise", "Raise turn IP", "Рейз IP на тёрне",
+    "رايز IP على التيرن",
+            "Rilancio IP al turn", "Przebicie IP na turnie"),
+          res: config.ipTurnRaiseSanitized,
+        },
+        {
+          name: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP", "Bet river IP", "IP river bet", "IP river bet", "Bet river IP", "Бет IP на ривере",
+    "رهان IP على الريفر",
+            "Puntata IP al river", "Zakład IP na riverze"),
+          res: config.ipRiverBetSanitized,
+        },
+        {
+          name: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP", "Raise river IP", "IP river raise", "IP river raise", "Raise river IP", "Рейз IP на ривере",
+    "رايز IP على الريفر",
+            "Rilancio IP al river", "Przebicie IP na riverze"),
+          res: config.ipRiverRaiseSanitized,
+        },
+      ];
+      for (const { name, res } of betConfig) {
+        if (!res.valid) {
+          errors.push(`${name}: ${i18n.locale === "ar" ? autoIso(betErrorText(res)) : betErrorText(res)}`);
+        }
+      }
+      return errors;
+    });
+
+    const errorMisc = computed(() => {
+      const errors: string[] = [];
+      if (config.addAllInThreshold < 0) {
+        errors.push(
+          pick(
+            "올인 추가 임계값은 음수일 수 없습니다",
+            "Add all-in threshold must not be negative",
+            "オールイン追加しきい値は負の値にできません",
+            "El umbral para agregar all-in no puede ser negativo",
+            "O limiar para adicionar all-in não pode ser negativo",
+            "Die Schwelle für zusätzliches All-in darf nicht negativ sein"
+          ,
+            "追加全下的阈值不能是负数", "追加全下的門檻不能是負數",
+            "Le seuil d'ajout du all-in ne peut pas être négatif", "Ambang tambah all-in tidak boleh negatif",
+            "Ambang tambah all-in tidak boleh negatif", "All-in जोड़ने की सीमा ऋणात्मक नहीं हो सकती", "All-in ekleme eşiği negatif olamaz", "Ngưỡng thêm all-in không được âm", "Порог добавления олл-ина не может быть отрицательным",
+    "لا يمكن أن يكون حد إضافة الأول إن سالبًا",
+            "La soglia per aggiungere un all-in non deve essere negativa", "Próg dodawania all-in nie może być ujemny")
+        );
+      }
+      if (config.forceAllInThreshold < 0) {
+        errors.push(
+          pick(
+            "강제 올인 임계값은 음수일 수 없습니다",
+            "Force all-in threshold must not be negative",
+            "強制オールインしきい値は負の値にできません",
+            "El umbral de all-in forzado no puede ser negativo",
+            "O limiar de all-in forçado não pode ser negativo",
+            "Die Schwelle für erzwungenes All-in darf nicht negativ sein"
+          ,
+            "强制全下的阈值不能是负数", "強制全下的門檻不能是負數",
+            "Le seuil de all-in forcé ne peut pas être négatif", "Ambang all-in paksa tidak boleh negatif",
+            "Ambang all-in paksa tidak boleh negatif", "Bet को all-in बनाने की सीमा ऋणात्मक नहीं हो सकती", "Zorunlu all-in eşiği negatif olamaz", "Ngưỡng buộc all-in không được âm", "Порог принудительного олл-ина не может быть отрицательным",
+    "لا يمكن أن يكون حد الأول إن الإجباري سالبًا",
+            "La soglia per forzare l’all-in non deve essere negativa", "Próg wymuszania all-in nie może być ujemny")
+        );
+      }
+      if (config.mergingThreshold < 0) {
+        errors.push(
+          pick(
+            "병합 임계값은 음수일 수 없습니다",
+            "Merging threshold must not be negative",
+            "マージしきい値は負の値にできません",
+            "El umbral de fusión no puede ser negativo",
+            "O limiar de fusão não pode ser negativo",
+            "Die Schwelle zum Zusammenfassen darf nicht negativ sein"
+          ,
+            "合并阈值不能是负数", "合併門檻不能是負數",
+            "Le seuil de fusion ne peut pas être négatif", "Ambang penggabungan tidak boleh negatif",
+            "Ambang penggabungan tidak boleh negatif", "Bet मिलाने की सीमा ऋणात्मक नहीं हो सकती", "Birleştirme eşiği negatif olamaz", "Ngưỡng gộp không được âm", "Порог слияния не может быть отрицательным",
+    "لا يمكن أن يكون حد الدمج سالبًا",
+            "La soglia di unione non deve essere negativa", "Próg łączenia sizingów nie może być ujemny")
+        );
+      }
+      return errors;
+    });
+
+    const warningMisc = computed(() => {
+      const warnings: string[] = [];
+      if (config.forceAllInThreshold > 30) {
+        warnings.push(
+          pick(
+            "강제 올인 임계값을 30%보다 높게 설정하는 것은 권장되지 않습니다.\n의미는 도움말을 참고해 주세요.",
+            "Setting the force all-in threshold higher than 30% is not recommended.\nSee the help text for what this setting does.",
+            "強制オールインのしきい値を30%より高く設定することは推奨されません。\n詳しくはヘルプをご覧ください。",
+            "No se recomienda fijar el umbral de all-in forzado por encima del 30%.\nConsulta la ayuda para ver qué significa.",
+            "Não é recomendado definir o limiar de all-in forçado acima de 30%.\nConsulte a ajuda para ver o que isso significa.",
+            "Es wird nicht empfohlen, die Schwelle für erzwungenes All-in auf über 30% zu setzen.\nWas die Einstellung bewirkt, steht unter „So gibst du die Werte ein“."
+          ,
+            "不建议把强制全下的阈值设到 30% 以上。\n想知道这个设置是做什么的，看上面的“怎么填”。", "不建議把強制全下的門檻設到 30% 以上。\n想知道這個設定是做什麼的，請看上面的「怎麼填」。",
+            "Régler le seuil de all-in forcé au-dessus de 30 % n'est pas recommandé.\nVa voir « Comment remplir » pour comprendre ce réglage.", "Menyetel ambang all-in paksa di atas 30% tidak disarankan.\nLihat teks bantuan di samping pengaturan ini untuk memahami pengaruhnya.",
+            "Menetapkan ambang all-in paksa melebihi 30% tidak disyorkan.\nLihat “Cara isi” di sebelah tetapan ini untuk memahami kesannya.", "Bet को all-in बनाने की सीमा 30% से अधिक रखना उचित नहीं है।\nयह सेटिंग कैसे काम करती है, इसके लिए मदद का टेक्स्ट देखें।", "Zorunlu all-in eşiğini %30'un üzerine ayarlaman önerilmez.\nBu ayarın ne işe yaradığını “Zorunlu all-in eşiği” yanındaki yardım metninde görebilirsin.", "Không nên đặt ngưỡng buộc all-in cao hơn 30%.\nXem phần giải thích bên cạnh “Ngưỡng buộc all-in” để biết cài đặt này hoạt động thế nào.", "Ставить порог принудительного олл-ина выше 30% не рекомендуется.\nЧто делает эта настройка, смотри в подсказке рядом с ней.",
+    "لا ننصح بضبط حد الأول إن الإجباري على أكثر من \u206630%\u2069.\nلمعرفة طريقة عمل هذا الإعداد راجع الشرح بجانبه.",
+            "Non è consigliabile impostare la soglia per forzare l’all-in sopra il 30%.\nLeggi la guida del campo per capire l’effetto di questa impostazione.", "Nie zalecamy ustawiania progu wymuszania all-in powyżej 30%.\nSprawdź opis tego ustawienia, aby dowiedzieć się, jak działa.")
+        );
+      }
+      return warnings;
+    });
+
+    const errorLines = computed(() => {
+      const errors: string[] = [];
+      if (
+        addedLinesArray.value.includes(ROOT_LINE_STRING) ||
+        addedLinesArray.value.includes(INVALID_LINE_STRING) ||
+        removedLinesArray.value.includes(ROOT_LINE_STRING) ||
+        removedLinesArray.value.includes(INVALID_LINE_STRING)
+      ) {
+        errors.push(
+          pick(
+            "잘못된 라인이 발견되었습니다 (손상된 설정을 불러왔나요?)",
+            "Invalid line found (loaded a broken configuration?)",
+            "無効なラインが見つかりました(破損した設定を読み込みましたか?)",
+            "Se encontró una línea inválida (¿cargaste una configuración dañada?)",
+            "Foi encontrada uma linha inválida (você carregou uma configuração corrompida?)",
+            "Ungültige Line gefunden (beschädigte Einstellung geladen?)"
+          ,
+            "发现了无效的线路（是不是加载了损坏的设置？）", "發現了無效的線路（是不是載入了損壞的設定？）",
+            "Ligne invalide trouvée (configuration corrompue chargée ?)", "Ditemukan line yang tidak valid (memuat konfigurasi yang rusak?)",
+            "Line tidak sah ditemui (memuatkan tetapan yang rosak?)", "अमान्य line मिली (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz line bulundu (bozuk bir ayar mı yüklendi?)", "Có line không hợp lệ (cấu hình đã tải bị hỏng?)", "Найдена недопустимая линия (загружена повреждённая конфигурация?)",
+    "خط غير صالح (هل التكوين المحمَّل تالف؟)",
+            "Trovata una linea non valida (hai caricato impostazioni danneggiate?)", "Znaleziono nieprawidłową linię (wczytane ustawienia mogą być uszkodzone).")
+        );
+      }
+      if (
+        ![0, 3, 4, 5].includes(config.expectedBoardLength) ||
+        (config.expectedBoardLength === 0 &&
+          (addedLinesArray.value.length > 0 ||
+            removedLinesArray.value.length > 0)) ||
+        (config.expectedBoardLength > 0 &&
+          addedLinesArray.value.length === 0 &&
+          removedLinesArray.value.length === 0)
+      ) {
+        errors.push(
+          pick(
+            "잘못된 설정입니다 (손상된 설정을 불러왔나요?)",
+            "Invalid configuration (loaded a broken configuration?)",
+            "無効な設定です(破損した設定を読み込みましたか?)",
+            "Configuración inválida (¿cargaste una configuración dañada?)",
+            "Configuração inválida (você carregou uma configuração corrompida?)",
+            "Ungültige Einstellung (beschädigte Einstellung geladen?)"
+          ,
+            "设置不正确（是不是加载了损坏的设置？）", "設定不正確（是不是載入了損壞的設定？）",
+            "Configuration invalide (configuration corrompue chargée ?)", "Konfigurasi tidak valid (memuat konfigurasi yang rusak?)",
+            "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayar (bozuk bir ayar mı yüklendi?)", "Cấu hình không hợp lệ (cấu hình đã tải bị hỏng?)", "Недопустимая конфигурация (загружена повреждённая конфигурация?)",
+    "تكوين غير صالح (هل التكوين المحمَّل تالف؟)",
+            "Impostazioni non valide (hai caricato impostazioni danneggiate?)", "Nieprawidłowe ustawienia (wczytane ustawienia mogą być uszkodzone).")
+        );
+      }
+      return errors;
+    });
+
+    const isInputValid = computed(
+      () =>
+        errorBasics.value.length === 0 &&
+        errorOop.value.length === 0 &&
+        errorIp.value.length === 0 &&
+        errorMisc.value.length === 0 &&
+        errorLines.value.length === 0
+    );
+
+    const clearConfig = () => {
+      config.startingPot = 0;
+      config.effectiveStack = 0;
+      config.rakePercent = 0;
+      config.rakeCap = 0;
+      config.donkOption = false;
+      config.oopFlopBet = "";
+      config.oopFlopRaise = "";
+      config.oopTurnBet = "";
+      config.oopTurnRaise = "";
+      config.oopTurnDonk = "";
+      config.oopRiverBet = "";
+      config.oopRiverRaise = "";
+      config.oopRiverDonk = "";
+      config.ipFlopBet = "";
+      config.ipFlopRaise = "";
+      config.ipTurnBet = "";
+      config.ipTurnRaise = "";
+      config.ipRiverBet = "";
+      config.ipRiverRaise = "";
+      config.addAllInThreshold = 0;
+      config.forceAllInThreshold = 0;
+      config.mergingThreshold = 0;
+      config.expectedBoardLength = 0;
+      config.addedLines = "";
+      config.removedLines = "";
+    };
+
+    const oopToIp = () => {
+      config.ipFlopBet = config.oopFlopBet;
+      config.ipFlopRaise = config.oopFlopRaise;
+      config.ipTurnBet = config.oopTurnBet;
+      config.ipTurnRaise = config.oopTurnRaise;
+      config.ipRiverBet = config.oopRiverBet;
+      config.ipRiverRaise = config.oopRiverRaise;
+    };
+
+    const ipToOop = () => {
+      config.oopFlopBet = config.ipFlopBet;
+      config.oopFlopRaise = config.ipFlopRaise;
+      config.oopTurnBet = config.ipTurnBet;
+      config.oopTurnRaise = config.ipTurnRaise;
+      config.oopRiverBet = config.ipRiverBet;
+      config.oopRiverRaise = config.ipRiverRaise;
+    };
+
+    const dbValue = computed(
+      (): ConfigValue => ({
+        startingPot: config.startingPot,
+        effectiveStack: config.effectiveStack,
+        rakePercent: config.rakePercent,
+        rakeCap: config.rakeCap,
+        donkOption: Number(config.donkOption),
+        oopFlopBet: config.oopFlopBet,
+        oopFlopRaise: config.oopFlopRaise,
+        oopTurnBet: config.oopTurnBet,
+        oopTurnRaise: config.oopTurnRaise,
+        oopTurnDonk: config.donkOption ? config.oopTurnDonk : "",
+        oopRiverBet: config.oopRiverBet,
+        oopRiverRaise: config.oopRiverRaise,
+        oopRiverDonk: config.donkOption ? config.oopRiverDonk : "",
+        ipFlopBet: config.ipFlopBet,
+        ipFlopRaise: config.ipFlopRaise,
+        ipTurnBet: config.ipTurnBet,
+        ipTurnRaise: config.ipTurnRaise,
+        ipRiverBet: config.ipRiverBet,
+        ipRiverRaise: config.ipRiverRaise,
+        addAllInThreshold: config.addAllInThreshold,
+        forceAllInThreshold: config.forceAllInThreshold,
+        mergingThreshold: config.mergingThreshold,
+        expectedBoardLength: config.expectedBoardLength,
+        addedLines: config.addedLines,
+        removedLines: config.removedLines,
+      })
+    );
+
+    const loadConfig = (value: unknown) => {
+      const configValue = value as ConfigValue;
+      config.startingPot = Number(configValue.startingPot);
+      config.effectiveStack = Number(configValue.effectiveStack);
+      config.rakePercent = Number(configValue.rakePercent);
+      config.rakeCap = Number(configValue.rakeCap);
+      config.donkOption = Boolean(configValue.donkOption);
+      config.addAllInThreshold = Number(configValue.addAllInThreshold);
+      config.forceAllInThreshold = Number(configValue.forceAllInThreshold);
+      config.mergingThreshold = Number(configValue.mergingThreshold);
+      config.expectedBoardLength = Number(configValue.expectedBoardLength);
+      // 가져온 파일의 줄 금액이 i32를 넘으면 Rust decode_action이 panic한다(MB-388 ④) —
+      // 공유 링크와 같은 검사로 걸러, 틀린 줄은 버린다
+      const lines = (v: unknown) => (validSharedLines(String(v ?? "")) ? String(v ?? "") : "");
+      config.addedLines = lines(configValue.addedLines);
+      config.removedLines = lines(configValue.removedLines);
+      if (config.addedLines === "" && config.removedLines === "") config.expectedBoardLength = 0;
+
+      const betMembers = [
+        "oopFlopBet",
+        "oopFlopRaise",
+        "oopTurnBet",
+        "oopTurnRaise",
+        "oopTurnDonk",
+        "oopRiverBet",
+        "oopRiverRaise",
+        "oopRiverDonk",
+        "ipFlopBet",
+        "ipFlopRaise",
+        "ipTurnBet",
+        "ipTurnRaise",
+        "ipRiverBet",
+        "ipRiverRaise",
+      ] as const;
+
+      for (const member of betMembers) {
+        const str = String(configValue[member]);
+        const sanitized = sanitizeBetString(str, member.endsWith("Raise"));
+        config[member] = sanitized.valid ? sanitized.s : str;
+      }
+    };
+
+    const startEdit = () => {
+      isEditMode.value = true;
+      if (config.expectedBoardLength === 0) {
+        config.expectedBoardLength = Math.max(config.board.length, 3);
+      }
+      store.treeEditOpen = true;
+    };
+
+    const clearEdit = () => {
+      config.expectedBoardLength = 0;
+      config.addedLines = "";
+      config.removedLines = "";
+    };
+
+    const saveEdit = (addedLines: string, removedLines: string) => {
+      isEditMode.value = false;
+      config.addedLines = addedLines;
+      config.removedLines = removedLines;
+      if (config.addedLines === "" && config.removedLines === "") {
+        config.expectedBoardLength = 0;
+      }
+      store.treeEditOpen = false;
+    };
+
+    const cancelEdit = () => {
+      isEditMode.value = false;
+      if (config.addedLines === "" && config.removedLines === "") {
+        config.expectedBoardLength = 0;
+      }
+      store.treeEditOpen = false;
+    };
+
+    // 팟·스택을 직접 고치면 더 이상 교육 프리셋 스팟이 아니므로 bb 환산을 끈다
+    // (프리셋 로드는 코드에서 값을 넣으므로 이 핸들러가 호출되지 않음)
+    const onAmountEdit = () => {
+      store.displayUnitScale = 1;
+    };
+
+    return {
+      MAX_AMOUNT,
+      config,
+      L,
+      onAmountEdit,
+      isEditMode,
+      advancedOpen,
+      onAdvancedToggle,
+      addedLinesArray,
+      removedLinesArray,
+      hasEdit,
+      errorBasics,
+      errorOop,
+      errorIp,
+      errorMisc,
+      warningMisc,
+      errorLines,
+      isInputValid,
+      clearConfig,
+      oopToIp,
+      ipToOop,
+      dbValue,
+      loadConfig,
+      startEdit,
+      clearEdit,
+      saveEdit,
+      cancelEdit,
+    };
+  },
+});
+</script>
+
+<style scoped>
+.tree-percent-input { display: contents; line-height: inherit; }
+:global(html[dir="rtl"] .tree-percent-input) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
+}
+input {
+  @apply disabled:cursor-not-allowed;
+}
+
+/*
+  벳 사이즈 입력: 데스크톱은 플랍·턴·리버 3단이지만, 390px에서는 한 칸이 110px로
+  눌려 입력칸이 손톱만해지고 «%»가 아래로 밀려 한 스트리트가 6줄을 먹었다.
+  모바일에서는 스트리트를 세로로 쌓고, 한 줄 안에 [스트리트] 벳 [__]% 레이즈 [__]% 를 넣는다.
+*/
+@media (max-width: 767px) {
+  .bet-grid {
+    display: block;
+  }
+  /* 스트리트 한 덩어리 */
+  .bet-grid > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    margin-top: 0.5rem;
+  }
+  /* 스트리트 이름 (플랍·턴·리버) */
+  .bet-grid > div > .underline {
+    width: 2.25rem;
+    flex: none;
+    margin: 0;
+  }
+  /* 벳·레이즈·덩크 한 칸 */
+  .bet-grid > div > .my-1:not(.underline) {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 1 1 8.5rem;
+    margin: 0;
+  }
+  .bet-grid > div > .my-1:not(.underline) > label {
+    width: auto;
+    flex: none;
+  }
+  .bet-grid > div > .my-1:not(.underline) > input,
+  .bet-grid > div > .my-1:not(.underline) > .tree-percent-input > input {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.button-arrow {
+  @apply px-2 py-1 text-lg;
+}
+.tree-advanced > summary::-webkit-details-marker {
+  display: none;
+}
+.tree-config-form {
+  @apply rounded-lg border border-neutral-700 bg-surface-1 p-3;
+}
+.tree-config .bet-grid {
+  column-gap: 1rem;
+}
+@media (min-width: 768px) {
+  .bet-grid > div {
+    @apply rounded-md bg-surface-2 px-2 py-1;
+  }
+}
+@media (max-width: 767px) {
+  .tree-config-form {
+    padding: 0.625rem;
+  }
+  .tree-config-form .bet-grid > div > .underline {
+    width: 2.25rem;
+  }
+  .tree-config-form .bet-grid > div > .my-1:not(.underline) {
+    flex-basis: 7.5rem;
+  }
+}
+</style>

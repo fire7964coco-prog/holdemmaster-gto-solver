@@ -1,0 +1,137 @@
+/**
+ * 본체 사이트로 나가는 링크에 유입 추적 파라미터를 붙인다(주소는 src/main-site.ts).
+ *
+ * 왜 필요한가: 솔버는 별도 하위 도메인이라, 파라미터가 없으면 본체 통계에서
+ * "솔버 덕분에 온 사람"을 구분할 수 없다. 어떤 화면의 어떤 버튼이 실제로
+ * 유입을 만드는지 알아야 개선 방향을 정할 수 있다.
+ *
+ * 본체 블로그·랜딩은 canonical 태그가 파라미터를 무시하고 원본 주소를 가리키므로
+ * (2026-08-13 확인) 중복 색인 문제는 생기지 않는다.
+ */
+
+import { i18n } from "./i18n";
+import { MAIN_SITE_CONFIG } from "./main-site";
+import { VARIANT_TEXT } from "./variant";
+
+/* 본체 통계에서 «어느 앱이 보낸 유입인지» 갈라 보여야 한다 — 값은 사이트 설정(다른 빌드는 src/variant.ts). */
+const SOURCE = VARIANT_TEXT?.utmSource ?? MAIN_SITE_CONFIG.utmSource;
+const MEDIUM = "referral";
+
+/** 링크가 놓인 위치 — 본체 통계에서 이 값으로 화면별 성과를 구분한다. */
+export type OutboundPlacement =
+  | "navbar" // 상단 네비바 커뮤니티 링크
+  | "about-credit" // 소개 화면 하단 크레딧
+  | "about-landing" // 소개 화면의 솔버 랜딩 안내
+  | "preset-card" // 교육 예제 목록 카드의 해설 보기
+  | "preset-preview" // 미리보기 화면의 해설 읽기
+  | "trainer-feedback" // 트레이너 채점 후 해설 읽기
+  | "daily-share"; // 오늘의 문제 결과를 커뮤니티에 올리러 갈 때
+
+const CAMPAIGN: Record<OutboundPlacement, string> = {
+  navbar: "community",
+  "about-credit": "community",
+  "about-landing": "landing",
+  "preset-card": "article",
+  "preset-preview": "article",
+  "trainer-feedback": "article",
+  "daily-share": "community",
+};
+
+/**
+ * 추적 파라미터를 붙인 주소를 돌려준다.
+ * 빈 문자열이 들어오면 그대로 빈 문자열 (링크 자체를 숨기는 쪽에서 판단).
+ */
+export const trackOutbound = (url: string, placement: OutboundPlacement) => {
+  if (!url) return "";
+  const separator = url.includes("?") ? "&" : "?";
+  const params = new URLSearchParams({
+    utm_source: SOURCE,
+    utm_medium: MEDIUM,
+    utm_campaign: CAMPAIGN[placement],
+    utm_content: placement,
+  });
+  return `${url}${separator}${params.toString()}`;
+};
+
+/** 본체 사이트 주소 (경로는 "/solver"처럼 슬래시로 시작). */
+export const MAIN_SITE = MAIN_SITE_CONFIG.origin;
+
+/*
+ * 본체는 언어별 URL(hreflang)을 따로 둔다 — 외국어 화면에서 나가는 링크는 그 언어
+ * 페이지로만. (2026-08-19 사용자 지적 + 본체 회신: /en/solver 오픈. /ja는 홈만 실재)
+ * 언어별로 «실재하는» 경로만 등재한다. 표에 없는 경로는 빈 문자열을 돌려주므로
+ * 화면 쪽에서 v-if로 링크 자체를 숨겨야 한다 (한국어 페이지나 404로 보내지 않는다).
+ *
+ * ── ✅ 실측 갱신 2026-08-27 (라이브 curl 25경로 · 상시 규칙 «언어 작업마다 다시 잰다») ──
+ *   · `/xx/solver` — **9개 언어 전부 200** (en·ja·es·pt·de·zh·zh-hant·fr + ko `/solver`)
+ *   · `/xx/community` — **9개 언어 전부 404** (그래서 어느 로케일에도 `"/community"`가 없다)
+ * ⚠ 08-27 이전에는 pt·de·zh·zh-hant·fr에 `"/solver"`가 빠져 있었다 — 본체가 랜딩을 늘리는 동안
+ *   이 표가 낡은 것이다. 그날 5줄을 채웠고, 각 언어 `*-verify.js`의 «랜딩 링크가 없어야 한다»
+ *   단언도 «그 언어 것이어야 한다»로 같이 뒤집었다(확정_결정 «검사도 낡는다»).
+ * 🔴 **다음에 언어를 건드리는 세션은 여기를 또 재라.** 본체가 `/xx/community`를 열면
+ *   이번과 똑같은 모양으로 이 표와 검사가 한꺼번에 낡는다.
+ */
+const LOCALE_PATHS: Record<string, Record<string, string>> = {
+  en: { "": "/en", "/solver": "/en/solver" },
+  // ✅ /ja/solver가 열렸다 (2026-08-22 실측 200). 2026-08-19에는 404였다 —
+  //    본체가 랜딩을 늘릴 때마다 여기가 낡는다. 언어 작업마다 한 번씩 다시 재 볼 것
+  ja: { "": "/ja", "/solver": "/ja/solver" }, // /ja/community는 아직 없다
+  // ✅ /es/solver 신설 (본체 회신 reply-to-solver-2026-08-22.md §4, 2026-08-22 실측 200)
+  es: { "": "/es", "/solver": "/es/solver" }, // /es/community는 아직 없다
+  // ✅ /pt/solver 200 (2026-08-27 실측 — 08-21에는 404였다). /pt/community는 여전히 404
+  pt: { "": "/pt", "/solver": "/pt/solver" },
+  // ✅ /de/solver 200 (2026-08-27 실측 — 08-21에는 404였다). /de/community는 여전히 404
+  de: { "": "/de", "/solver": "/de/solver" },
+  // ✅ /zh/solver 200 (2026-08-27 실측 — 08-21에는 404였다). /zh/community는 여전히 404
+  zh: { "": "/zh", "/solver": "/zh/solver" },
+  // ⚠ 본체 /zh/blog는 200이지만 GTO 13편의 «중국어판»은 없다(a-high-board-cbet = 404)
+  //   → 프리셋 해설 링크는 zh에서 숨긴다 (presets.ts articleSlug 쪽에서 판단)
+  //
+  // 번체: /zh-hant는 실재(200)이고 본체 app/zh-hant/page.tsx가 <CommunityClient pageLocale="zh-hant"/>를
+  // 렌더한다 — 피드도 번체 글로 걸러지고 블로그 티저 42편도 번체다(2026-08-22 본체 소스 확인).
+  // ✅ 본체가 `LABELS`에 zh-hant 한 벌(52키)을 넣었다 — 화면 라벨도 번체다
+  //   (회신 reply-to-solver-2026-08-22.md §1, 2026-08-22). 영어 폴백은 해소됐다.
+  //   → TrainerPage의 «[✏️ 發文]»은 본체 확정값이다(임시 영어 이름에서 바꿨다).
+  // ✅ /zh-hant/solver 200 (2026-08-27 실측 — 08-22에는 404였다). /zh-hant/community는 여전히 404
+  "zh-hant": { "": "/zh-hant", "/solver": "/zh-hant/solver" },
+  // ✅ /fr/solver 200 (2026-08-27 실측 — 08-24에는 404였다). /fr/community는 여전히 404
+  // ⚠ /fr/blog/a-high-board-cbet는 손대지 않았다 — 해설 링크는 별개 판단이다(08-24 실측 404)
+  // ⚠ 이 한 줄을 빼면 «숨김»이 아니라 «한국어 홈으로 연결»된다 — 맵 자체가 없으면
+  //   mainSiteUrl()이 경로를 그대로 통과시키기 때문 (착수지시서 §0)
+  fr: { "": "/fr", "/solver": "/fr/solver" },
+  // ✅ /id/solver 200 (2026-09-06 curl 실측, 본체 M-093 회신). 09-02에는 404였다.
+  // id-verify.js는 랜딩이 있으면 /id/solver인지 검사하므로 기존 단언을 유지한다.
+  // 커뮤니티·개별 해설 경로는 별개이며 이번 랜딩 연결에 포함하지 않는다.
+  id: { "": "/id", "/solver": "/id/solver" },
+  // ✅ /ms/solver·/hi/solver 200 (2026-10-10 curl 실측 · 본체 요청). 09-03·09-05에는 404였다.
+  //    커뮤니티·개별 해설 글은 여전히 등재하지 않는다(화면에서 숨김).
+  ms: { "": "/ms", "/solver": "/ms/solver" },
+  hi: { "": "/hi", "/solver": "/hi/solver" },
+  // ✅ /tr/solver 200 (2026-10-07 curl 실측 — 본체 MB-186 10-06 신설. 10-05에는 404였다). /tr/community는 여전히 404
+  tr: { "": "/tr", "/solver": "/tr/solver" },
+  // ✅ /vi/solver 200 (2026-10-10 curl 실측 · 본체 MB-211 10-09 신설). 10-07에는 404였다.
+  vi: { "": "/vi", "/solver": "/vi/solver" },
+  // ✅ /ru/solver 200 (2026-10-10 curl 실측 · 본체 MB-218 배포 3814bcfc). 10-08에는 404였다.
+  ru: { "": "/ru", "/solver": "/ru/solver" },
+  // AR2: 2026-10-14 지시서 실측 /ar 200 · /ar/solver 404. 랜딩은 아직 없음.
+  ar: { "": "/ar" },
+  // ✅ /it/solver 200 (2026-10-17 curl 실측 · 본체 MB-376 f2085849). 10-16에는 404였다. /it/community는 별개.
+  it: { "": "/it", "/solver": "/it/solver" },
+  // ✅ /pl/solver 200 (2026-10-18 curl 실측 · 본체 MB-384 790b13e0). 10-17에는 404였다. /pl/community는 별개.
+  pl: { "": "/pl", "/solver": "/pl/solver" },
+};
+
+export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {
+  // 첫 화면만 있는 사이트: 경로(커뮤니티·랜딩)와 상관없이 그 언어의 첫 화면 하나
+  if (MAIN_SITE_CONFIG.homeOnlyLinks) return trackOutbound(`${MAIN_SITE}${MAIN_SITE_CONFIG.localePaths[i18n.locale] ?? ""}`, placement);
+  const map = LOCALE_PATHS[i18n.locale];
+  const localized = map ? map[path] : path;
+  if (localized === undefined) return ""; // 이 언어에 등가 페이지 없음 → 링크 숨김
+  return trackOutbound(`${MAIN_SITE}${localized}`, placement);
+};
+
+/** F1 success link — the main-site landing's review section. */
+export const solverReviewsUrl = (locale: string) => {
+  const localized = locale === "ko" ? "/solver" : LOCALE_PATHS[locale]?.["/solver"] ?? "";
+  return localized ? `${trackOutbound(`${MAIN_SITE}${localized}`, "about-landing")}#solver-reviews` : "";
+};

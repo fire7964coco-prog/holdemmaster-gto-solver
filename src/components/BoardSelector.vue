@@ -1,0 +1,337 @@
+<template>
+  <!--
+    모바일에서는 카드 폭을 화면에 맞춰 13열이 한 화면에 들어오게 한다.
+    고정 40px일 때는 판이 624px라 옆으로 스크롤해야 했다(아래는 400px가 비어 있는데도).
+  -->
+  <div data-rtl-island="card-picker" dir="ltr" class="max-w-full md:overflow-x-auto">
+    <div v-for="suit in 4" :key="suit" class="flex md:min-w-max">
+      <BoardSelectorCard
+        v-for="rank in 13"
+        :key="rank"
+        class="m-0.5 md:m-1"
+        :width="cardWidth"
+        :font-size="cardFontSize"
+        :ratio="cardRatio"
+        :card-id="56 - 4 * rank - suit"
+        :is-selected="config.board.includes(56 - 4 * rank - suit)"
+        @click="toggleCard(56 - 4 * rank - suit)"
+      />
+    </div>
+  </div>
+
+  <div class="flex flex-wrap mt-4 mx-1 gap-3">
+    <input
+      data-rtl-island="board-input" id="board-text-input" dir="ltr"
+      data-testid="board-input"
+      v-model="boardText"
+      type="text"
+      name="board"
+      autocomplete="off"
+      :spellcheck="false"
+      :aria-label="L.placeholder"
+      :aria-invalid="boardTextError"
+      :aria-describedby="boardTextError ? 'board-input-error' : undefined"
+      :placeholder="L.placeholder"
+      class="w-40 px-2 py-1 rounded-lg text-sm"
+      :class="{ 'input-error': boardTextError }"
+      @focus="($event.target as HTMLInputElement).select()"
+      @change="onBoardTextChange"
+    />
+    <button class="button-base button-blue" @click="clearBoard">
+      {{ L.clear }}
+    </button>
+    <button class="button-base button-blue" @click="generateRandomBoard">
+      {{ L.randomFlop }}
+    </button>
+  </div>
+
+  <p v-if="boardTextError" id="board-input-error" data-testid="board-input-error" class="mt-2 mx-1 text-red-400 text-sm" role="alert">
+    {{ L.inputError }}
+  </p>
+
+  <div
+    v-if="
+      config.board.length >= 3 &&
+      config.expectedBoardLength > 0 &&
+      config.board.length !== config.expectedBoardLength
+    "
+    class="mt-5 text-orange-400 font-semibold"
+  >
+    <span class="underline">{{ L.warnLabel }}</span>
+    {{ L.warnBody(config.expectedBoardLength) }}
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, onUnmounted, ref } from "vue";
+import { useConfigStore } from "../store";
+import { cardText } from "../utils";
+import { parseBoardInput } from "../board-input";
+import { i18n } from "../i18n";
+
+import BoardSelectorCard from "./BoardSelectorCard.vue";
+
+const M = {
+  ko: {
+    inputError: "읽지 못했습니다. 카드는 AsKd7c 또는 As Kd 7c 처럼 3~5장을 적어 주세요. 이전 보드는 그대로 둡니다.",
+    placeholder: "예: AsKd7c",
+    clear: "초기화",
+    randomFlop: "랜덤 플랍",
+    warnLabel: "주의:",
+    warnBody: (n: number) =>
+      `편집된 트리는 보드 카드 ${n}장을 전제로 합니다.`,
+  },
+  en: {
+    inputError: "Could not read the cards. Enter 3–5 cards, such as AsKd7c or As Kd 7c. Your previous board is kept.",
+    placeholder: "e.g., AsKd7c",
+    clear: "Clear",
+    randomFlop: "Random Flop",
+    warnLabel: "Warning:",
+    warnBody: (n: number) =>
+      `The edited tree assumes a ${n}-card board.`,
+  },
+  ja: {
+    inputError: "読み取れませんでした。AsKd7c または As Kd 7c のように3〜5枚を入力してください。前のボードは変わりません。",
+    placeholder: "例: AsKd7c",
+    clear: "クリア",
+    randomFlop: "ランダムフロップ",
+    warnLabel: "注意:",
+    warnBody: (n: number) =>
+      `編集されたツリーはボードカード${n}枚を前提としています。`,
+  },
+  es: {
+    inputError: "No se pudieron leer las cartas. Escribe entre 3 y 5 cartas, como AsKd7c o As Kd 7c. Se conserva el board anterior.",
+    placeholder: "ej. AsKd7c",
+    clear: "Borrar",
+    randomFlop: "Flop aleatorio",
+    warnLabel: "Atención:",
+    warnBody: (n: number) =>
+      `El árbol editado asume un board de ${n} carta${n === 1 ? "" : "s"}.`,
+  },
+  pt: {
+    inputError: "Não foi possível ler as cartas. Digite de 3 a 5 cartas, como AsKd7c ou As Kd 7c. O board anterior é mantido.",
+    placeholder: "ex.: AsKd7c",
+    clear: "Limpar",
+    randomFlop: "Flop aleatório",
+    warnLabel: "Atenção:",
+    warnBody: (n: number) =>
+      `A árvore editada pressupõe um board de ${n} carta${n === 1 ? "" : "s"}.`,
+  },
+  de: {
+    inputError: "Die Karten konnten nicht gelesen werden. Gib 3–5 Karten ein, etwa AsKd7c oder As Kd 7c. Dein bisheriges Board bleibt erhalten.",
+    placeholder: "z. B. AsKd7c",
+    clear: "Leeren",
+    randomFlop: "Zufälliger Flop",
+    warnLabel: "Achtung:",
+    // 독일어 복수: 1 Karte / 2 Karten
+    warnBody: (n: number) =>
+      `Der bearbeitete Spielbaum setzt ein Board mit ${n} Karte${n === 1 ? "" : "n"} voraus.`,
+  },
+  zh: {
+    inputError: "无法读取。请输入 3–5 张牌，例如 AsKd7c 或 As Kd 7c。原来的公共牌保持不变。",
+    placeholder: "例：AsKd7c",
+    // clearBoard()는 config.board를 «통째로» 비운다 — 「重置」(초기값으로)가 아니라 「清空」이 맞다
+    // (독일어 검수에서 얻은 교훈: 라벨을 쓰기 전에 그 함수가 진짜 뭘 하는지 코드를 볼 것)
+    clear: "清空",
+    randomFlop: "随机翻牌",
+    warnLabel: "注意：",
+    // 중국어는 명사에 복수 변화가 없다 — ko·ja와 같이 ${n}만 갈아끼운다
+    warnBody: (n: number) => `编辑过的决策树以 ${n} 张公共牌为前提。`,
+  },
+  "zh-hant": {
+    inputError: "無法讀取。請輸入 3–5 張牌，例如 AsKd7c 或 As Kd 7c。原本的公共牌保持不變。",
+    placeholder: "例：AsKd7c",
+    // clearBoard()는 config.board를 «통째로» 비운다 — 「重設」(초기값으로)이 아니라 「清空」이 맞다
+    clear: "清空",
+    randomFlop: "隨機翻牌",
+    warnLabel: "注意：",
+    // 중국어는 명사에 복수 변화가 없다 — ko·ja와 같이 ${n}만 갈아끼운다
+    warnBody: (n: number) => `編輯過的決策樹以 ${n} 張公共牌為前提。`,
+  },
+  fr: {
+    inputError: "Impossible de lire les cartes. Saisis 3 à 5 cartes, comme AsKd7c ou As Kd 7c. Le board précédent est conservé.",
+    placeholder: "ex. AsKd7c",
+    clear: "Effacer",
+    randomFlop: "Flop aléatoire",
+    // 콜론 앞 공백 = 프랑스 조판 관습 (리서치 §1-3과 같은 결 — 평문이라 일반 공백)
+    warnLabel: "Attention :",
+    warnBody: (n: number) =>
+      `L'arbre édité suppose un board de ${n} carte${n === 1 ? "" : "s"}.`,
+  },
+  id: {
+    inputError: "Kartu tidak dapat dibaca. Masukkan 3–5 kartu, seperti AsKd7c atau As Kd 7c. Board sebelumnya tetap dipertahankan.",
+    placeholder: "mis. AsKd7c",
+    clear: "Bersihkan",
+    randomFlop: "Flop acak",
+    warnLabel: "Peringatan:",
+    // 인니어는 명사에 복수 변화가 없다 — ko·ja·zh와 같이 ${n}만 갈아끼운다
+    warnBody: (n: number) => `Tree yang diedit mengasumsikan board ${n} kartu.`,
+  },
+  ms: {
+    inputError: "Kad tidak dapat dibaca. Masukkan 3–5 kad, seperti AsKd7c atau As Kd 7c. Board sebelumnya dikekalkan.",
+    placeholder: "cth. AsKd7c",
+    clear: "Kosongkan",
+    randomFlop: "Flop rawak",
+    warnLabel: "Amaran:",
+    // 말레이어도 명사 복수 변화가 없다 — ko·ja·zh·id와 같이 ${n}만 갈아끼운다
+    warnBody: (n: number) => `Tree yang disunting mengandaikan board dengan ${n} kad.`,
+  },
+  hi: {
+    inputError: "कार्ड पढ़े नहीं जा सके। AsKd7c या As Kd 7c की तरह 3–5 कार्ड लिखें। पिछला Board वैसा ही रहेगा।",
+    placeholder: "जैसे, AsKd7c",
+    clear: "साफ़ करें",
+    randomFlop: "रैंडम Flop",
+    warnLabel: "ध्यान दें:",
+    warnBody: (n: number) => `संपादित tree ${n} कार्ड वाले Board के लिए है।`,
+  },
+  tr: {
+    inputError: "Kartlar okunamadı. AsKd7c veya As Kd 7c gibi 3–5 kart gir. Önceki board korunuyor.",
+    placeholder: "ör. AsKd7c",
+    clear: "Temizle",
+    randomFlop: "Rastgele flop",
+    warnLabel: "Uyarı:",
+    // 접미사는 변수 아닌 «kartlık»에 붙인다 (확정표 §6)
+    warnBody: (n: number) =>
+      `Düzenlenen ağaç ${n} kartlık bir board varsayıyor.`,
+  },
+  vi: {
+    inputError: "Không đọc được lá bài. Nhập 3–5 lá, ví dụ AsKd7c hoặc As Kd 7c. Board trước đó vẫn được giữ.",
+    placeholder: "vd. AsKd7c",
+    clear: "Xóa",
+    randomFlop: "Flop ngẫu nhiên",
+    warnLabel: "Cảnh báo:",
+    warnBody: (n: number) =>
+      `Cây đã chỉnh sửa giả định board có ${n} lá.`,
+  },
+  ru: {
+    inputError: "Не удалось распознать карты. Введи 3–5 карт, например AsKd7c или As Kd 7c. Прежний борд сохранён.",
+    placeholder: "напр. AsKd7c",
+    clear: "Очистить",
+    randomFlop: "Случайный флоп",
+    warnLabel: "Внимание:",
+    warnBody: (n: number) =>
+      `Отредактированное дерево рассчитано на борд из ${n} карт.`,
+  },
+  ar: {
+    inputError: "تعذّرت قراءة الأوراق. أدخل من 3 إلى 5 أوراق، مثل AsKd7c أو ⁦As Kd 7c⁩. يبقى البورد السابق كما هو.",
+    placeholder: "مثلًا AsKd7c",
+    clear: "مسح",
+    randomFlop: "فلوب عشوائي",
+    warnLabel: "تنبيه:",
+    // 확정표 §7-1 «بورد من N أوراق» 대신 콜론형 — §8 #14(변수 바로 뒤 아랍 명사) 검사와 충돌하지 않게
+    warnBody: (n: number) => `الشجرة المعدَّلة مبنية لبورد من ${n} أوراق.`,
+  },
+  it: {
+    inputError: "Impossibile leggere le carte. Inserisci da 3 a 5 carte, ad esempio AsKd7c o As Kd 7c. Il board precedente resta invariato.",
+    placeholder: "es. AsKd7c",
+    clear: "Svuota",
+    randomFlop: "Flop casuale",
+    warnLabel: "Avviso:",
+    warnBody: (n: number) => `L’albero modificato prevede un board di ${n} ${n === 1 ? "carta" : "carte"}.`,
+  },
+  pl: {
+    inputError: "Nie udało się odczytać kart. Wpisz od 3 do 5 kart, np. AsKd7c lub As Kd 7c. Poprzedni board pozostaje bez zmian.",
+    placeholder: "np. AsKd7c",
+    clear: "Wyczyść",
+    randomFlop: "Losowy flop",
+    warnLabel: "Ostrzeżenie:",
+    warnBody: (n: number) =>
+      `Wymagana liczba kart na boardzie dla edytowanego drzewa: ${n}.`,
+  },
+} as const;
+
+export default defineComponent({
+  components: {
+    BoardSelectorCard,
+  },
+
+  setup() {
+    const config = useConfigStore();
+    const boardText = ref("");
+    const boardTextError = ref(false);
+    const L = computed(() => M[i18n.locale]);
+
+    // 좁은 화면이면 13열이 폭에 맞게 줄어든다 (데스크톱은 기존 40px 그대로)
+    const isNarrow = ref(false);
+    const updateNarrow = () => {
+      isNarrow.value = window.innerWidth < 768;
+    };
+    updateNarrow();
+    window.addEventListener("resize", updateNarrow);
+    onUnmounted(() => window.removeEventListener("resize", updateNarrow));
+
+    const cardWidth = computed(() =>
+      isNarrow.value ? "calc((100vw - 2rem) / 13 - 0.25rem)" : "40px"
+    );
+    const cardFontSize = computed(() => (isNarrow.value ? "0.6rem" : "1rem"));
+    // 폭이 좁아진 만큼 세로로 늘려 손가락이 닿는 높이를 확보한다
+    const cardRatio = computed(() => (isNarrow.value ? 1.9 : 1.4));
+
+    const toggleCard = (cardId: number, updateText = true) => {
+      if (config.board.includes(cardId)) {
+        config.board = config.board.filter((card) => card !== cardId);
+      } else if (config.board.length < 5) {
+        config.board.push(cardId);
+        if (config.board.length <= 3) {
+          config.board.sort((a, b) => b - a);
+        }
+      }
+
+      if (updateText) {
+        setBoardTextFromButtons();
+      }
+    };
+
+    const setBoardTextFromButtons = () => {
+      boardTextError.value = false;
+      boardText.value = config.board
+        .map(cardText)
+        .map(({ rank, suitLetter }) => rank + suitLetter)
+        .join(", ");
+    };
+
+    const onBoardTextChange = () => {
+      const cardIds = parseBoardInput(boardText.value);
+      if (cardIds === null) {
+        boardTextError.value = true;
+        return;
+      }
+      config.board = cardIds;
+      setBoardTextFromButtons();
+    };
+
+    const clearBoard = () => {
+      config.board = [];
+      setBoardTextFromButtons();
+    };
+
+    const generateRandomBoard = () => {
+      config.board = [];
+
+      while (config.board.length < 3) {
+        const randomCard = Math.floor(Math.random() * 52);
+        if (!config.board.includes(randomCard)) {
+          config.board.push(randomCard);
+        }
+      }
+
+      config.board.sort((a, b) => b - a);
+      setBoardTextFromButtons();
+    };
+
+    return {
+      L,
+      config,
+      boardText,
+      boardTextError,
+      cardWidth,
+      cardFontSize,
+      cardRatio,
+      toggleCard,
+      onBoardTextChange,
+      clearBoard,
+      generateRandomBoard,
+    };
+  },
+});
+</script>
