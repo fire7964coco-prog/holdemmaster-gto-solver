@@ -8,8 +8,8 @@ import { HAND_REVIEW_DATA } from "./hand-review-data";
 import { TURN_PACK_LINES, TurnPackLine, turnPackDataId } from "./turn-pack-model";
 
 // 턴 팩(설계 참고자료/턴팩_설계안_2026-10-21.md §6-5) — 자료 = 복기와 같은 Worker의 `tp-<상황>/<정규 플랍>/<경로>.hmt`(회원 자료).
-// 출시 스위치: R2 업로드(10-27 뒤) 전에는 꺼 둔다. 꺼져 있으면 플랍 조회는 지금 문구 그대로다.
-export const TURN_PACK_LAUNCHED = false;
+// 출시 스위치: 10-26 켬(BTN·CO 턴 팩 R2 업로드 뒤). 끄면 플랍 조회는 옛 문구 그대로다.
+export const TURN_PACK_LAUNCHED = true;
 /** localhost 검사용: localStorage `solver.turnPack.test` = "1"이면 스위치가 꺼져 있어도 켠다 · `solver.turnPack.base` = 자료 주소 바꾸기. */
 const TEST_KEY = "solver.turnPack.test";
 const TEST_BASE_KEY = "solver.turnPack.base";

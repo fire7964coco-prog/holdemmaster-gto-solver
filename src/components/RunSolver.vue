@@ -504,7 +504,7 @@ const M = {
   },
   pt: {
     sharedSpotBanner:
-      "Spot compartilhado carregado — pressione [Criar árvore] → [Executar solver] para calcular.",
+      "Spot compartilhado carregado — toque em [Criar árvore] → [Executar solver] para calcular.",
     numThreadsLabel: "Número de threads:",
     buildTree: "Criar árvore",
     copied: "Copiado!",

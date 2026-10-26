@@ -27,7 +27,7 @@ export const HAND_REVIEW_LAUNCHED = true;
 // ?view=flop-study 직접 주소로도 열린다. 자료·캐시는 위 복기와 같이 쓴다.
 export const FLOP_STUDY_LAUNCHED = true;
 // 플랍 통계 사이드바 메뉴 스위치 (설계안 참고자료/플랍통계_설계안_2026-10-12.md · S-079·S-080 판정 OK · 사장님 ○ 10-12에 켬).
-// ?view=flop-report 직접 주소로는 열린다. 자료 = 앱 정적 파일 public/flop-reports (R2 아님).
+// ?view=flop-report 직접 주소로는 열린다. 자료 = 위 baseUrl의 flop-reports/<상황>.json(10-23 앱 정적 파일에서 옮김 · 오프라인 저장 대상 아님).
 export const FLOP_REPORT_LAUNCHED = true;
 const cache = new Map<string, Hmr1File>();
 

@@ -1127,7 +1127,7 @@ const M = {
         expected === 1 ? "" : "s"
       }, mas o board atual tem ${actual} carta${actual === 1 ? "" : "s"}.`,
     boardMismatchHint:
-      'Para descartar a árvore editada, clique no botão “Descartar alterações e desbloquear”.',
+      'Para descartar a árvore editada, toque no botão “Descartar alterações e desbloquear”.',
   },
   de: {
     advancedHint: "Rake · All-in · Zusammenfassen — meist kannst du diese Werte so lassen",

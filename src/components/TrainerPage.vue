@@ -1254,8 +1254,8 @@ const M = {
     syncMerged: (uploaded: number, merged: number) =>
       `${uploaded} guardadas · ${merged} traídas de otros dispositivos`,
     syncSaved: (uploaded: number) => `${uploaded} guardadas`,
-    syncFailed: (msg: string) => `Error de sincronización: ${msg} — tus resultados siguen guardados en este dispositivo. Pulsa “Sincronizar ahora” para reintentar.`,
-    signInFailed: (msg: string) => `Error al iniciar sesión: ${msg} — pulsa de nuevo el botón para iniciar sesión.`,
+    syncFailed: (msg: string) => `Error de sincronización: ${msg} — tus resultados siguen guardados en este dispositivo. Presiona “Sincronizar ahora” para reintentar.`,
+    signInFailed: (msg: string) => `Error al iniciar sesión: ${msg} — presiona de nuevo el botón para iniciar sesión.`,
   },
   pt: {
     loadFailed: "Não foi possível carregar os dados do Treinador:",

@@ -579,7 +579,7 @@ const M = {
       duplicate: "No puedes usar la misma carta dos veces.",
       "empty-range": "El rango del rival está vacío.",
       "no-combos": "No quedan combos para el rival después del card removal.",
-      unknown: "Ocurrió un error durante el cálculo. Pulsa Calcular para intentarlo de nuevo.",
+      unknown: "Ocurrió un error durante el cálculo. Presiona Calcular para intentarlo de nuevo.",
     } as Record<string, string>,
   },
   pt: {
@@ -609,7 +609,7 @@ const M = {
     clear: "Limpar tudo",
     resultTitle: "Resultado",
     resultEmpty:
-      "Escolha as suas duas cartas e um vilão (mão de 2 cartas ou range) e pressione [Calcular].",
+      "Escolha as suas duas cartas e um vilão (mão de 2 cartas ou range) e toque em [Calcular].",
     vsSide: (value: string) => `Vilão ${value}%`,
     win: "Vitória",
     tie: "Empate",

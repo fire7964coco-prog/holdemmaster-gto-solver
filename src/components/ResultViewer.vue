@@ -272,7 +272,7 @@ const M = {
   es: {
     startRange: "① Empezar por los rangos",
     viewPresets: "Ver spots de estudio",
-    notRun: "Aún no has calculado tus propios resultados.\nPuedes ver los resultados de los ejemplos directamente en el menú «Spots de estudio».\nPara calcular tu spot, completa ①~⑤ y pulsa «Calcular».",
+    notRun: "Aún no has calculado tus propios resultados.\nPuedes ver los resultados de los ejemplos directamente en el menú «Spots de estudio».\nPara calcular tu spot, completa ①~⑤ y presiona «Calcular».",
     running: "Ejecutando el solver…",
     finalizing: "Finalizando…",
     paused: "El solver está en pausa.",
@@ -280,7 +280,7 @@ const M = {
   pt: {
     startRange: "① Começar pelos ranges",
     viewPresets: "Ver spots de estudo",
-    notRun: "Você ainda não calculou seus próprios resultados.\nVocê pode ver os resultados dos exemplos diretamente no menu “Spots de estudo”.\nPara calcular seu spot, preencha ①~⑤ e clique em “Calcular”.",
+    notRun: "Você ainda não calculou seus próprios resultados.\nVocê pode ver os resultados dos exemplos diretamente no menu “Spots de estudo”.\nPara calcular seu spot, preencha ①~⑤ e toque em “Calcular”.",
     running: "Executando o solver…",
     finalizing: "Finalizando…",
     paused: "O solver está pausado.",

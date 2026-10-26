@@ -363,10 +363,8 @@ export default defineComponent({
             const action = spot.actions[actionIndex];
             let label = L.value.action(action.name);
             if (action.amount !== "0") {
-              label += i18n.locale === "pl" ? ` ${localizeNumber(formatAmount(Number(action.amount), store.displayUnitScale))}${store.displayUnitScale === 10 ? "bb" : ""}` : ` ${formatAmount(
-                Number(action.amount),
-                store.displayUnitScale
-              )}${store.displayUnitScale === 10 ? "bb" : ""}`;
+              // 쉼표 소수 언어 전부 — ResultNav.amountText와 같은 이유(본체 MB-437 ①)
+              label += ` ${localizeNumber(formatAmount(Number(action.amount), store.displayUnitScale))}${store.displayUnitScale === 10 ? "bb" : ""}`;
             }
             return {
               data: Array.from({ length: 13 }, (_, rank) => {

@@ -352,7 +352,7 @@ const boardLabels: LocaleDict<FlopBoardLabels> = {
     boardAll: "公共牌：全部",
     boardChip: "公共牌：{value}",
     boardHelp: "依最高牌、花色、對子、連張性篩選出題的翻牌，或固定為某一個翻牌。",
-    boardRule: "同一行內符合任意一項即可；翻牌須符合所有已選的行（未選的行不限）。",
+    boardRule: "同一列內符合任意一項即可；翻牌須符合所有已選的列（未選的列不限）。",
     specificFlop: "指定翻牌",
     pickCards: "選擇牌",
     boardReset: "恢復全部",

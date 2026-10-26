@@ -364,7 +364,7 @@ const ALL_SPOTS = [...SRP_SPOTS, ...THREE_BET_SPOTS, ...FOUR_BET_SPOTS, ...LIMP_
 const PAGE = 300;
 // 폰(767px 이하, FlopStudyPage와 같은 경계): 표는 «플랍 · 체크 % · 벳 % · EV» 4열 (설계 §3)
 const NARROW = "(max-width: 767px)";
-// 요약 파일은 앱 정적 파일 (public/flop-reports · 도구/flop-report-build.js). 한 번 받은 상황은 다시 받지 않는다.
+// 요약 파일 = 자료 서버(R2 v1/flop-reports/ · 도구/flop-report-build.js → upload.js · 10-23 앱 정적 파일에서 옮김). 한 번 받은 상황은 다시 받지 않는다.
 const cache = new Map<string, FlopReport>();
 
 export default defineComponent({
@@ -605,7 +605,10 @@ export default defineComponent({
       }
       loading.value = true;
       try {
-        const response = await fetch(`flop-reports/${id}.json`);
+        const response = await fetch(`${HAND_REVIEW_DATA.baseUrl.replace(/\/$/, "")}/flop-reports/${id}.json`, {
+          credentials: "omit",
+          mode: "cors",
+        });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const parsed = parseFlopReport(await response.json());
         cache.set(id, parsed);

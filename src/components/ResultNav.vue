@@ -794,7 +794,8 @@ export default defineComponent({
     });
 
     const amountText = (value: number) => {
-      const amount = i18n.locale === "pl" ? localizeNumber(formatAmount(value, store.displayUnitScale)) : formatAmount(value, store.displayUnitScale);
+      // 쉼표 소수 언어 전부(pt·de·fr·it·ru·tr·id·vi·pl) — pl에만 걸려 있어 «Pote 5.5bb»가 났다(본체 MB-437 ①)
+      const amount = localizeNumber(formatAmount(value, store.displayUnitScale));
       return store.displayUnitScale === 10 ? `${amount}bb` : amount;
     };
 

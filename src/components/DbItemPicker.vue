@@ -550,8 +550,8 @@ const M = {
     importFailed: "エラー: インポートに失敗しました。下の理由を確認してください — このリストの「JSONをエクスポート」で保存したファイルだけを読み込めます。",
   },
   es: {
-    noSavedRanges: "Aún no tienes rangos guardados. Pulsa “Guardar” y escribe un nombre para conservar aquí el rango actual. La próxima vez puedes recuperarlo con “Cargar”.",
-    noSavedConfigs: "Aún no tienes configuraciones guardadas. Pulsa “Guardar” y escribe un nombre para conservar aquí la configuración actual. La próxima vez puedes recuperarla con “Cargar”.",
+    noSavedRanges: "Aún no tienes rangos guardados. Presiona “Guardar” y escribe un nombre para conservar aquí el rango actual. La próxima vez puedes recuperarlo con “Cargar”.",
+    noSavedConfigs: "Aún no tienes configuraciones guardadas. Presiona “Guardar” y escribe un nombre para conservar aquí la configuración actual. La próxima vez puedes recuperarla con “Cargar”.",
     emptyGroup: "(Grupo vacío)",
     errorReload: "Ocurrió un error. Recarga la página.",
     load: "Cargar",
@@ -565,8 +565,8 @@ const M = {
     importFailed: "Error: la importación falló. Revisa el motivo de abajo: solo se pueden importar archivos guardados con “Exportar JSON” en esta lista.",
   },
   pt: {
-    noSavedRanges: "Você ainda não tem ranges salvos. Clique em “Salvar” e dê um nome para manter o range atual aqui. Da próxima vez, use “Carregar” para recuperá-lo.",
-    noSavedConfigs: "Você ainda não tem configurações salvas. Clique em “Salvar” e dê um nome para manter a configuração atual aqui. Da próxima vez, use “Carregar” para recuperá-la.",
+    noSavedRanges: "Você ainda não tem ranges salvos. Toque em “Salvar” e dê um nome para manter o range atual aqui. Da próxima vez, use “Carregar” para recuperá-lo.",
+    noSavedConfigs: "Você ainda não tem configurações salvas. Toque em “Salvar” e dê um nome para manter a configuração atual aqui. Da próxima vez, use “Carregar” para recuperá-la.",
     emptyGroup: "(Grupo vazio)",
     errorReload: "Ocorreu um erro. Recarregue a página.",
     load: "Carregar",

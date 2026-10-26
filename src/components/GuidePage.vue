@@ -983,9 +983,9 @@ const M = {
 
     lockTitle: "Estrategia fija (node lock) — ¿cómo cambia tu estrategia cuando el rival comete errores?",
     lockTerm1: "Dónde",
-    lockDef1: "En la pantalla de resultados, después de resolver un spot tú mismo. Elige un nodo en la línea de acciones de arriba y pulsa «Fijar la estrategia de este nodo». En los Spots de estudio, [Ver resultados] muestra la solución de inmediato, pero esos resultados no se pueden fijar — ejecuta primero [Resolver este spot tú mismo].",
+    lockDef1: "En la pantalla de resultados, después de resolver un spot tú mismo. Elige un nodo en la línea de acciones de arriba y presiona «Fijar la estrategia de este nodo». En los Spots de estudio, [Ver resultados] muestra la solución de inmediato, pero esos resultados no se pueden fijar — ejecuta primero [Resolver este spot tú mismo].",
     lockTerm2: "Cómo",
-    lockDef2: "El porcentaje (%) de cada acción parte de su valor en la estrategia actual. Cámbialos para que sumen 100 y pulsa «Fijar y recalcular». Por ejemplo: el rival nunca hace fold en el flop → fold 0, las demás acciones suman 100. Puedes fijar varios nodos.",
+    lockDef2: "El porcentaje (%) de cada acción parte de su valor en la estrategia actual. Cámbialos para que sumen 100 y presiona «Fijar y recalcular». Por ejemplo: el rival nunca hace fold en el flop → fold 0, las demás acciones suman 100. Puedes fijar varios nodos.",
     lockTerm3: "Leer los resultados",
     lockDef3: "Aparece una franja amarilla sobre los resultados. Es un resultado recalculado con parte de la estrategia fijada, no una estrategia de equilibrio (GTO). En «Comparación antes/después», dentro del panel, puedes ver cuánto han cambiado las frecuencias, el EV y la Exploitability.",
     lockTerm4: "Deshacer",
@@ -1020,7 +1020,7 @@ const M = {
       "Practica solo tus puntos débiles: single raised pots, botes de 3-bet o guerra de ciegas",
 
     myspotTerm: "Mis spots",
-    myspotDef: "Después de resolver un spot tú mismo, pulsa «Practicar este spot» en los resultados para crear ejercicios de ese spot y empezar a resolverlos de inmediato en la pestaña «Mis spots» del Entrenador. Se evalúan con los mismos criterios que los Spots de estudio.",
+    myspotDef: "Después de resolver un spot tú mismo, presiona «Practicar este spot» en los resultados para crear ejercicios de ese spot y empezar a resolverlos de inmediato en la pestaña «Mis spots» del Entrenador. Se evalúan con los mismos criterios que los Spots de estudio.",
     myspotHint: "Los ejercicios y el historial solo quedan en este dispositivo (20 spots más recientes · 500 intentos por spot). No se guardan en tu cuenta, así que no puedes continuar en otro dispositivo. Guardar de nuevo el mismo spot borra su historial anterior. Los ejercicios creados a partir de resultados calculados con una estrategia fijada llevan la indicación «Supone parte de la estrategia fijada».",
 
     installTitle: "Instálalo en tu pantalla de inicio y estudia offline",
@@ -1147,7 +1147,7 @@ const M = {
     copiedLabel: "Copiado!",
     copyLabel: "Copiar",
     step3Bold: "③ Board",
-    step3After: " — clique em três cartas de flop ou use “Flop aleatório”",
+    step3After: " — toque em três cartas de flop ou use “Flop aleatório”",
     step4Bold: "④ Bet sizes (ajustes da árvore)",
     step4After:
       " — no começo deixe os valores padrão. Confira apenas o pote inicial e o stack efetivo",
@@ -1155,7 +1155,7 @@ const M = {
       "Os valores do spot personalizado usam fichas inteiras arbitrárias. Para raciocinar em bb, use 10 fichas = 1bb (ex.: pote 55 = 5,5bb). Os Spots de estudo e o Treinador convertem com essa escala automaticamente.",
     step5Bold1: "⑤ Calcular",
     step5Mid:
-      " — pressione “Criar árvore” e depois “Executar solver”. Quando aparecer “Cálculo concluído!”, abra a aba ",
+      " — toque em “Criar árvore” e depois em “Executar solver”. Quando aparecer “Cálculo concluído!”, abra a aba ",
     step5Bold2: "[Resultados]",
     step5After: " de cima",
     step5Hint:
@@ -1164,7 +1164,7 @@ const M = {
     resultsTitle: "Como ler a tela de resultados",
     rTerm1: "Faixa superior",
     rDef1:
-      "Um seletor de cenas da linha de ação (flop → bet → call → turn…). Clique em um nó para ver a estratégia naquele ponto",
+      "Um seletor de cenas da linha de ação (flop → bet → call → turn…). Toque em um nó para ver a estratégia naquele ponto",
     rTerm2: "Matriz 13×13 (à esquerda)",
     rDef2:
       "Cada célula é uma mão; a divisão de cores mostra as frequências de ação. 🟥 bet/raise (mais escuro = bet maior) · 🟩 check/call · célula apagada = fora do range. O GTO joga a mesma mão como estratégia mista — distribui as ações por frequência para que ninguém leia o seu padrão",
@@ -1175,7 +1175,7 @@ const M = {
       "O quanto cada range conecta com o board (top pair, draws…) — uma leitura rápida de quem este board favorece",
     rTerm5: "Tabela (canto inferior direito)",
     rDef5:
-      "Peso, equity, EV e % de ação por mão — clique no cabeçalho de uma coluna para ordenar",
+      "Peso, equity, EV e % de ação por mão — toque no cabeçalho de uma coluna para ordenar",
 
     lockTitle: "Estratégia fixa (node lock) — como sua estratégia muda quando o adversário erra?",
     lockTerm1: "Onde",
