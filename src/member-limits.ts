@@ -156,5 +156,10 @@ const checkedLabels: LocaleDict<MemberLabels> = {
   importOver: "Ten import przekroczy limit 10 pozycji zapisanych na tym urządzeniu — zaloguj się, aby zaimportować całość",
   memberScenario: "Ta sytuacja jest dostępna po szybkim zalogowaniu",
 },
+  th: {
+  saveFull: "เข้าสู่ระบบเพื่อบันทึกได้มากกว่า 10 รายการ และเปิดรายการของคุณบนโทรศัพท์หรือคอมพิวเตอร์เครื่องใดก็ได้",
+  importOver: "การนำเข้าครั้งนี้จะทำให้มีข้อมูลที่บันทึกบนอุ⁠ป⁠ก⁠ร⁠ณ์เกิน 10 รายการ เข้าสู่ระบบเพื่อนำเข้าทั้งหมด",
+  memberScenario: "เข้าสู่ระบบอย่างรวดเร็วเพื่อใช้สถานการณ์นี้",
+},
 };
 export const memberLabels = (locale: Locale): MemberLabels => checkedLabels[locale];

@@ -307,6 +307,15 @@ const M = {
     parseError: (range: string) =>
       `Nie udało się odczytać zakresu: ${range || "(pusty tekst)"}`,
   },
+
+  th: {
+    mobileHint: "ตั้งน้ำหนักด้วยแถบเลื่อนใต้ตาราง แล้วแตะช่องเพื่อใช้น้ำหนักนั้น แตะช่องที่มีน้ำหนักเท่ากันอยู่แล้วเพื่อล้างค่า ชื่อมือและน้ำหนักที่แตะจะแสดงเป็นตัวอักษรขนาดใหญ่ด้านบน",
+    clear: "ล้าง",
+    errorPrefix: "ข้อผิดพลาด:",
+    weight: "น้ำหนัก:",
+    combos: "ค⁠อ⁠ม⁠โ⁠บ",
+    parseError: (range: string) => `อ่านเรนจ์ไม่สำเร็จ: ${range || "(ข้อความว่าง)"}`,
+  },
 } as const;
 
 import { C } from "../theme";

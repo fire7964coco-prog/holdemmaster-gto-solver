@@ -166,6 +166,8 @@ export default defineComponent({
       ? `${number(value.toFixed(3))}${bank.value?.unitScale === 10 ? "bb" : ` ${L.value.chips}`}`
       : i18n.locale === "pl"
       ? plAmount(value.toFixed(3), bank.value?.unitScale ?? 1)
+      : i18n.locale === "th"
+      ? `${number(value.toFixed(3))}${bank.value?.unitScale === 10 ? "bb" : ` ${L.value.chips}`}`
       : `${number(value.toFixed(3))} ${unit.value}`;
     const amount = (value: number) => i18n.locale === "ar"
       ? arAmount(formatAmount(value, bank.value?.unitScale ?? 1), bank.value?.unitScale ?? 1)
@@ -175,6 +177,8 @@ export default defineComponent({
       ? `${number(formatAmount(value, bank.value?.unitScale ?? 1))}${bank.value?.unitScale === 10 ? "bb" : ` ${L.value.chips}`}`
       : i18n.locale === "pl"
       ? plAmount(formatAmount(value, bank.value?.unitScale ?? 1), bank.value?.unitScale ?? 1)
+      : i18n.locale === "th"
+      ? `${number(formatAmount(value, bank.value?.unitScale ?? 1))}${bank.value?.unitScale === 10 ? "bb" : ` ${L.value.chips}`}`
       : `${number(formatAmount(value, bank.value?.unitScale ?? 1))} ${unit.value}`;
     const percent = (value: number) =>
       i18n.locale === "fr" ? `${number(value.toFixed(1))} %` : pctText(number(value.toFixed(1)));
@@ -250,6 +254,10 @@ export default defineComponent({
       }
       if (i18n.locale === "pl") {
         return `${board} · ${L.value.pot} ${plAmount(formatAmount(item.startingPot, item.unitScale), item.unitScale)} · ${L.value.stack} ${plAmount(formatAmount(item.effectiveStack, item.unitScale), item.unitScale)}`;
+      }
+      if (i18n.locale === "th") {
+        const suffix = item.unitScale === 10 ? "bb" : ` ${L.value.chips}`;
+        return `${board} · ${L.value.pot} ${number(formatAmount(item.startingPot, item.unitScale))}${suffix} · ${L.value.stack} ${number(formatAmount(item.effectiveStack, item.unitScale))}${suffix}`;
       }
       const unitName = item.unitScale === 10 ? "bb" : L.value.chips;
       return `${board} · ${L.value.pot} ${number(formatAmount(item.startingPot, item.unitScale))} ${unitName} · ${L.value.stack} ${number(formatAmount(item.effectiveStack, item.unitScale))} ${unitName}`;

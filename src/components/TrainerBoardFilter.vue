@@ -62,7 +62,7 @@
     </div>
     <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
       <span dir="auto" data-testid="trainer-board-count" :class="count ? 'text-neutral-300' : 'text-red-400'">
-        {{ count ? format(T.flopCount, { count: count.toLocaleString(numberLocaleTag(locale), (locale === "it" || locale === "pl") ? { useGrouping: true } : undefined) }) : B.boardEmpty }}
+        {{ count ? format(T.flopCount, { count: count.toLocaleString(numberLocaleTag(locale), (locale === "it" || locale === "pl" || locale === "th") ? { useGrouping: true } : undefined) }) : B.boardEmpty }}
       </span>
       <button v-if="active" type="button" class="link-like" data-testid="trainer-board-reset" @click="emit({})">
         {{ B.boardReset }}

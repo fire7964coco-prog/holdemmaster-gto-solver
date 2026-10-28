@@ -642,6 +642,25 @@ const M = {
     strategyCombos: "Strategia (Combo)",
     equity: "Equity",
   },
+
+  th: {
+    modeLabels: { basics: "ข้อมูลพื้นฐาน", graphs: "กราฟ", compare: "เปรียบเทียบ", turn: "เทิร์น", river: "ริเวอร์" } as Record<string, string>,
+    player: "ผู้เล่น:",
+    auto: (player: string) => `อัตโนมัติ (${player})`,
+    barHeight: "ความสูงแถบ:",
+    normalized: "ปรับสัดส่วน",
+    absolute: "ค่าสัมบูรณ์",
+    full: "เต็มความสูง",
+    suit: "ดอก:",
+    grouped: "รวมกลุ่ม",
+    individual: "แยกค⁠อ⁠ม⁠โ⁠บ",
+    display: "การแสดงผล:",
+    strategy: "กลยุทธ์",
+    weight: "น้ำหนัก",
+    chart: "กราฟ:",
+    strategyCombos: "กลยุทธ์ (ค⁠อ⁠ม⁠โ⁠บ)",
+    equity: "Equity",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

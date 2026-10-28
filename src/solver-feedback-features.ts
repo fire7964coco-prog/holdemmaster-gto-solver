@@ -21,7 +21,8 @@ const testSwitch = (name: string): boolean =>
 
 /** 본체 후기창 서버가 받지 않는 로케일 — 저장하면 locale 오류가 난다. 본체가 사전에 넣으면 뺀다
  *  (ru: 본체 회신 10-09 «/ru/solver 회차에서 사전에 넣고 다시 알림») */
-const FEEDBACK_UNSUPPORTED_LOCALES: readonly string[] = ["ar"]; // it 해제 10-17(MB-376) · pl 해제 10-18(MB-384 · 본체 사전·config·SQL 등재). ar 기존 정책 유지.
+const FEEDBACK_UNSUPPORTED_LOCALES: readonly string[] = ["ar", "th"]; // TH3: th is absent from the main-site review dictionary (2026-10-27).
+// it 해제 10-17(MB-376) · pl 해제 10-18(MB-384 · 본체 사전·config·SQL 등재). ar 기존 정책 유지.
 /* 후기 서버가 없는 사이트면 후기·공유·요약 모두 끔(MB-399 ③④). */
 const trainerHm = __APP_TARGET__ === "trainer" && MAIN_SITE_CONFIG.feedbackApi !== "";
 const feedbackOn = trainerHm && (LAUNCHED.feedback || testSwitch("feedback"));

@@ -243,7 +243,7 @@ import { decodeResults } from "../results-decode";
 import { computed, defineComponent, nextTick, toRefs, ref, watch } from "vue";
 import { useSavedConfigStore } from "../store";
 import { useStore } from "../store";
-import { i18n, ltrIso, arLabelIso, localizeNumber } from "../i18n";
+import { i18n, ltrIso, arLabelIso, localizeNumber, pctText } from "../i18n";
 import { cardText, average, colorString, formatAmount } from "../utils";
 import { handler } from "../global-worker";
 import {
@@ -698,6 +698,16 @@ const M = {
       ({ Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) =>
       `${label} ${formatted} (${localizeNumber(String(percent))}% puli)`,
+  },
+
+  th: {
+    pot: "พอต",
+    stack: "Stack",
+    equity: "Equity",
+    win: (player: string) => `${player} ชนะ`,
+    spotPlayer: (player: string): string => ({ flop: "ฟลอป", turn: "เทิร์น", river: "ริเวอร์", end: "จบ" } as Record<string, string>)[player] ?? player.toUpperCase(),
+    action: (name: string): string => ({ Fold: "การหมอบ", Check: "การเช็ค", Call: "การคอล", Bet: "การเ⁠ดิ⁠ม⁠พั⁠น", Raise: "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) => `${label} ${formatted} (${pctText(String(percent))} ของพอต)`,
   },
 } as const;
 

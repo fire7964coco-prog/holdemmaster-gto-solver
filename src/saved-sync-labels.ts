@@ -190,5 +190,15 @@ const checkedLabels: LocaleDict<SavedSyncLabels> = {
   pending: "Jeszcze nie przesłano — próba zostanie ponowiona przy otwarciu tego ekranu lub zapisie",
   limit: "Osiągnięto limit konta — zapis na tym urządzeniu nadal działa",
 },
+  th: {
+  invite: "เข้าสู่ระบบเพื่อเปิดรายการที่บันทึกไว้บนโทรศัพท์หรือคอมพิวเตอร์เครื่องใดก็ได้",
+  google: "ดำเนินการต่อด้วย Google",
+  kakao: "ดำเนินการต่อด้วย Kakao",
+  telegram: "ดำเนินการต่อด้วย Telegram",
+  syncing: "กำลังซิ⁠ง⁠ค์ข้อมูลกับบัญชีของคุณ…",
+  ok: "บันทึกไว้ในบัญชีแล้ว · ซิ⁠ง⁠ค์ข้อมูลล่าสุด {time}",
+  pending: "ยังไม่ได้อัปโหลด ระบบจะลองอีกครั้งเมื่อคุณเปิดหน้านี้หรือบันทึกครั้งถัดไป",
+  limit: "ถึงขีดจำกัดของบัญชีแล้ว ยังบันทึกบนอุ⁠ป⁠ก⁠ร⁠ณ์นี้ได้",
+},
 };
 export const savedSyncLabels = (locale: Locale): SavedSyncLabels => checkedLabels[locale];

@@ -84,6 +84,10 @@ const M = {
   pl: {
     combos: "Combo",
   },
+
+  th: {
+    combos: "ค⁠อ⁠ม⁠โ⁠บ",
+  },
 } as const;
 
 const actionLabel = (
@@ -222,13 +226,15 @@ const actionLabel = (
       Allin: "All-in",
       "All-in": "All-in",
     }
+  ,
+    { Fold: "การหมอบ", Check: "การเช็ค", Call: "การคอล", Bet: "การเ⁠ดิ⁠ม⁠พั⁠น", Raise: "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น" }
   );
   const label = map[name] ?? name;
   if (!amount || amount === "0") return label;
   const value = Number(amount);
-  const shown = `${i18n.locale === "pl" ? localizeNumber(formatAmount(value, unitScale)) : formatAmount(value, unitScale)}${unitScale === 10 ? "bb" : ""}`;
+  const shown = `${(i18n.locale === "pl" || i18n.locale === "th") ? localizeNumber(formatAmount(value, unitScale)) : formatAmount(value, unitScale)}${unitScale === 10 ? "bb" : ""}`;
   if (name === "Bet" && pot > 0) {
-    const pct = i18n.locale === "pl" ? localizeNumber(String(Math.round((value * 100) / pot))) : Math.round((value * 100) / pot);
+    const pct = (i18n.locale === "pl" || i18n.locale === "th") ? localizeNumber(String(Math.round((value * 100) / pot))) : Math.round((value * 100) / pot);
     // ⚠ 중국어는 «전각 괄호 + 底池的 N%» 어순이다 — ResultNav.betPot·trainer.ts·
     //   TreeEditor.potRate 셋과 «글자까지» 같아야 한다. 여기만 반각·역순이었다
     //   (2026-08-22 원어민 UX 검수에서 코드 대조로 발견)
@@ -252,6 +258,8 @@ const actionLabel = (
         "pot", "pot", "pot", "pot", "банка",
     "من البوت",
         "del piatto", "puli" // tr «(%35 pot)» — localizeNumber가 %를 앞으로
+      ,
+        "ของพอต"
       )})`
     );
   }

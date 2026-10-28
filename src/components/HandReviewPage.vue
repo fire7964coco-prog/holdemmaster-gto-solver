@@ -466,7 +466,7 @@ import {
   watch,
 } from "vue";
 import { i18n, localizeNumber, plCountText, arLabelIso, ltrIso } from "../i18n";
-import { M, IT_REVIEW_ACTION_BUTTONS, PL_REVIEW_ACTION_BUTTONS } from "../hand-review-labels";
+import { M, IT_REVIEW_ACTION_BUTTONS, PL_REVIEW_ACTION_BUTTONS, TH_REVIEW_ACTION_BUTTONS } from "../hand-review-labels";
 import {
   SRP_SPOTS,
   THREE_BET_SPOTS,
@@ -755,6 +755,9 @@ export default defineComponent({
       }
       if (i18n.locale === "pl" && role === "button") {
         return PL_REVIEW_ACTION_BUTTONS[key[a.kind]] + (a.amount === undefined ? "" : " " + bb(a.amount));
+      }
+      if (i18n.locale === "th" && role === "button") {
+        return TH_REVIEW_ACTION_BUTTONS[key[a.kind]] + (a.amount === undefined ? "" : " " + bb(a.amount));
       }
       return (
         L.value[key[a.kind]] +

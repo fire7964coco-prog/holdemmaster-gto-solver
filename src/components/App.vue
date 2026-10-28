@@ -449,6 +449,21 @@ export default defineComponent({
         "run-solver": "Uruchom solver",
         treeEdit: "Podgląd i edycja drzewa",
       },
+
+      th: {
+        about: "แนะนำ",
+        guide: "วิธีใช้",
+        presets: "ตัวอย่าง",
+        trainer: "ฝึก GTO",
+        preflop: "ตารางพรีฟลอป",
+        equity: "เครื่องคำนวณ Equity",
+        "oop-range": "เรนจ์ OOP",
+        "ip-range": "เรนจ์ IP",
+        board: "บอร์ด",
+        "tree-config": "ขนาดเ⁠ดิ⁠ม⁠พั⁠น",
+        "run-solver": "คำนวณด้วย Solver",
+        treeEdit: "แก้ไขทรี",
+      },
     } as const;
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];

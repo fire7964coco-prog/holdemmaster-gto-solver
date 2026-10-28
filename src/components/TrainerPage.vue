@@ -764,7 +764,7 @@ import {
   oopLabelOf,
   presetTitleById,
 } from "../presets";
-import { i18n, localizeNumber, plCountText, ruPlural, plPlural, numberLocaleTag, autoIso, ltrIso, arLabelIso } from "../i18n";
+import { i18n, localizeNumber, pctText, plCountText, ruPlural, plPlural, numberLocaleTag, autoIso, ltrIso, arLabelIso } from "../i18n";
 import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
 import {
@@ -2852,6 +2852,117 @@ const M = {
     syncFailed: (msg: string) => `Nie udało się zsynchronizować: ${msg}. Wyniki nadal są zapisane na tym urządzeniu. Naciśnij „Synchronizuj teraz”, aby spróbować ponownie.`,
     signInFailed: (msg: string) => `Nie udało się zalogować: ${msg}. Naciśnij ponownie przycisk logowania, aby spróbować jeszcze raz.`,
   },
+
+  th: {
+    versus: "เทียบกับ",
+    loadFailed: "โหลดข้อมูลแบบฝึกไม่สำเร็จ:",
+    loading: "กำลังโหลดแบบฝึก…",
+    review: (n: number) => `ทบทวน (${n.toLocaleString("th-TH-u-ca-gregory-nu-latn")})`,
+    daily: "โจทย์ประจำวัน",
+    dailyStreakLabel: "โจทย์ประจำวัน",
+    done: "เสร็จสิ้น",
+    solved: "ทำแล้ว",
+    dayStreakPrefix: "ทำต่อเนื่อง ",
+    dayStreakSuffix: " วัน",
+    bestPrefix: "/ สูงสุด",
+    streakLabel: "ผ่านติดต่อกัน",
+    totalLossLabel: "EV loss รวม",
+    avgLossLabel: "EV loss เฉลี่ย",
+    goodRateLabel: "สัดส่วนการตัดสินใจที่ดี",
+    weaknessTitle: "ค้นหาจุดอ่อน",
+    avgOfPot: (pct: string) => `เฉลี่ย ${pct}% ของพอต`,
+    handCount: (n: number) => `(${n.toLocaleString("th-TH-u-ca-gregory-nu-latn")} มือ)`,
+    notSolved: "ยังไม่ได้ลอง",
+    weakestBefore: "เสีย EV มากที่สุดใน ",
+    weakestAfter: " —",
+    practiceThis: "ฝึกสถานการณ์ประเภทนี้",
+    weaknessHint: "ทำอย่างน้อย 3 มือในแ⁠ต่⁠ล⁠ะประเภทเพื่อดูว่าจุดอ่อนอยู่ตรงไหน",
+    accountBefore: "บันทึกในบัญชีของ ",
+    accountAfter: " แล้ว",
+    syncingNow: "กำลังซิ⁠ง⁠ค์ข้อมูล…",
+    syncNow: "ซิ⁠ง⁠ค์ข้อมูลตอนนี้",
+    signOutLabel: "ออกจากระบบ",
+    localOnlyBefore: "ความคืบหน้าของคุณบันทึกไว้",
+    localOnlyBold: "บนอุ⁠ป⁠ก⁠ร⁠ณ์นี้เท่านั้น",
+    localOnlyAfter:
+      " เชื่อมต่อบัญชี HoldemMaster เพื่อฝึกต่อจากเดิมบนอุ⁠ป⁠ก⁠ร⁠ณ์อื่⁠นได้",
+    googleSignIn: "ดำเนินการต่อด้วย Google",
+    kakaoSignIn: "ดำเนินการต่อด้วย Kakao",
+    telegramSignIn: "ดำเนินการต่อด้วย Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `สถานการณ์สำหรับศึกษา ${SPOT_COUNT} สถานการณ์ · จุดตัดสินใจ ${nodes.toLocaleString("th-TH-u-ca-gregory-nu-latn")} จุด · exploitability เป้าหมาย ${pctText(String(pct))}`,
+    details: "รายละเอียด ↓",
+    toAct: "ถึงตาเล่น",
+    potLabel: "พอต",
+    stackLabel: "Stack",
+    lineLabel: "ลำดับการเล่น:",
+    boardLabel: "บอร์ด",
+    myHand: "ไพ่ของคุณ",
+    yourChoice: "แ⁠อ็⁠ก⁠ชั⁠นที่คุณเลือก",
+    prompt: "จะเล่นอ⁠ย่⁠า⁠ง⁠ไ⁠ร?",
+    bestEvTag: " · EV สูงสุด",
+    evLoss: "EV loss",
+    mobileDetailTitle: "ความถี่และ EV ของแ⁠ต่⁠ล⁠ะแ⁠อ็⁠ก⁠ชั⁠น",
+    mixedNote:
+      "กลยุทธ์ผสมไม่ได้ถือว่าผิด เกณฑ์ประเมินใช้ส่วนต่าง EV ระหว่างแ⁠อ็⁠ก⁠ชั⁠น",
+    dailyDone: "ทำโจทย์ประจำวันเสร็จแล้ว",
+    dailyDoneDesc:
+      "วันนี้ทุกคนได้โจทย์เดียวกัน โพสต์ผลของคุณเพื่อเปรียบเทียบกับผู้เล่นคนอื่⁠น",
+    makeCard: "สร้างการ์ดผลลัพธ์",
+    boardShow: "ดูตารางอันดับวันนี้",
+    boardHide: "ซ่อนตารางอันดับ",
+    boardLoading: "กำลังโหลด…",
+    boardCount: (n: number) => `วันนี้มีผู้เล่น ${n.toLocaleString("th-TH-u-ca-gregory-nu-latn")} คน`,
+    boardMyRank: (r: number) => `อันดับของฉัน #${r.toLocaleString("th-TH-u-ca-gregory-nu-latn")}`,
+    boardLoginHint:
+      "เข้าสู่ระบบเพื่อให้ชื่อของคุณปรากฏบนตารางอันดับ ทุกคนดูตารางได้โดยไม่ต้⁠อ⁠งเข้าสู่ระบบ",
+    boardUnavailable: "ตารางอันดับยังไม่พร้อมใช้งาน",
+    copied: "คัดลอกแล้ว",
+    copyResult: "คัดลอกข้อความผลลัพธ์",
+    openCommunity: "เปิดชุมชน →",
+    pasteHintBefore: "ในชุมชน ให้กด ",
+    pasteHintBold: "[✏️ เขียนโพสต์]",
+    pasteHintAfter: " แล้ววางข้อความ",
+    keepPracticing: "ฝึกต่อ",
+    nextHand: "มือถัดไป",
+    readArticle: "อ่านบทวิเคราะห์สถานการณ์ →",
+    viewFull: "ดูผลการคำนวณทั้งหมด",
+    resultTitle: "ผลลัพธ์",
+    resultHintBefore: "เมื่อเลือกแ⁠อ็⁠ก⁠ชั⁠นแล้ว จะแสดง",
+    resultHintBold: "ความถี่และ EV ของแ⁠ต่⁠ล⁠ะแ⁠อ็⁠ก⁠ชั⁠น",
+    resultHintAfter: " พร้อมบ⁠อ⁠กว่าแ⁠อ็⁠ก⁠ชั⁠นที่คุณเลือกเสีย EV ไปกี่ bb",
+    gtoNoteBefore:
+      "GTO ใช้หลายแ⁠อ็⁠ก⁠ชั⁠นผสมกันกับมือเดียวกัน การเลือกแ⁠อ็⁠ก⁠ชั⁠นที่มีความถี่ต่ำจึงไม่ได้ผิดเสมอไป เกณฑ์ที่ใช้คือ EV loss ",
+    gtoNoteBold: "เทียบกับพอต",
+    gtoNoteAfter: ": ≤0.35% การเล่นที่ดีที่สุด · ≤1% ยอมรับได้ · มากกว่านั้น ควรทบทวน",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `สำหรับสถานการณ์นี้ (พอต ${pot}bb) การเล่นที่ดีที่สุด ≤${best}bb · ยอมรับได้ ≤${good}bb`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `ประเมินเทียบกับพอตเริ่มต้นของสถานการณ์นี้ (${pot}bb): การเล่นที่ดีที่สุด ≤${best}bb · ยอมรับได้ ≤${good}bb`,
+    flopFooterLine: (spots: number, flops: string) =>
+      `ผลลัพธ์ที่คำนวณไว้ล่วงหน้า ${spots.toLocaleString("th-TH-u-ca-gregory-nu-latn")} สถานการณ์ · สุ่มอย่างเท่าเทียมจากฟลอปจริงทั้งหมด ${flops} แบบ`,
+    resetHistoryLabel: "ล้างประวัติ",
+    cardAlt: "การ์ดผลลัพธ์โจทย์ประจำวัน",
+    shareApps: "แชร์",
+    saveImage: "บันทึกภาพ",
+    close: "ปิด",
+    cardHintBefore:
+      "โพสต์การ์ดในแ⁠ช⁠ตกลุ่มหรือโซเชียลมีเดีย เพื่อให้คนที่เห็นได้ลองทำ",
+    cardHintBold: "โจทย์เดียวกัน",
+    cardHintAfter: "ของวันนี้ การ์ดไม่เปิดเผยคำตอบ",
+    verdictBest: "การเล่นที่ดีที่สุด",
+    verdictGood: "ยอมรับได้",
+    verdictMiss: "ควรทบทวน",
+    promptCopy: "คัดลอกข้อความด้านล่าง",
+    shareText:
+      "โจทย์ GTO ประจำวัน ลองทำด้วยตัวเอง: https://solver.holdemmaster.com/?view=trainer&lang=th",
+    confirmReset: "ล้างประวัติการฝึกทั้งหมดบนอุ⁠ป⁠ก⁠ร⁠ณ์นี้หรือไม่?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `บันทึกแล้ว ${uploaded.toLocaleString("th-TH-u-ca-gregory-nu-latn")} รายการ · ดึงจากอุ⁠ป⁠ก⁠ร⁠ณ์อื่⁠น ${merged.toLocaleString("th-TH-u-ca-gregory-nu-latn")} รายการ`,
+    syncSaved: (uploaded: number) => `บันทึกแล้ว ${uploaded.toLocaleString("th-TH-u-ca-gregory-nu-latn")} รายการ`,
+    syncFailed: (msg: string) => `ซิ⁠ง⁠ค์ข้อมูลไม่สำเร็จ: ${msg} — ผลของคุณยังบันทึกไว้บนอุ⁠ป⁠ก⁠ร⁠ณ์นี้ กด “ซิ⁠ง⁠ค์ข้อมูลตอนนี้” เพื่อลองอีกครั้ง`,
+    signInFailed: (msg: string) => `เข้าสู่ระบบไม่สำเร็จ: ${msg} — กดปุ่มเข้าสู่ระบบอีกครั้งเพื่อลองใหม่`,
+  },
 } as const;
 
 // «출제» 칩 · «가까운 결정만» — 기기에 기억 (RNG 칩과 같은 방식)
@@ -2907,6 +3018,8 @@ export default defineComponent({
       ? M.it.dayStreakSuffix(dailyState.streak)
       : i18n.locale === "pl"
       ? M.pl.dayStreakSuffix(dailyState.streak)
+      : i18n.locale === "th"
+      ? M.th.dayStreakSuffix
       : M[i18n.locale].dayStreakSuffix);
     const versusText = computed(() => "versus" in L.value ? L.value.versus : "vs");
     const autoText = (text: string | null) => i18n.locale === "ar" ? autoIso(text ?? "") : text;
@@ -2945,7 +3058,7 @@ export default defineComponent({
       if (!flopBoardActive.value) return BL.value.boardAll;
       const value = f.board
         ? ltrText(f.board.map((c) => "23456789TJQKA"[c >> 2] + "♣♦♥♠"[c & 3]).join(""))
-        : flopReportLabels(i18n.locale).flopCount.replace("{count}", flopBoardCount.value.toLocaleString(numberLocaleTag(), (i18n.locale === "it" || i18n.locale === "pl") ? { useGrouping: true } : undefined));
+        : flopReportLabels(i18n.locale).flopCount.replace("{count}", flopBoardCount.value.toLocaleString(numberLocaleTag(), (i18n.locale === "it" || i18n.locale === "pl" || i18n.locale === "th") ? { useGrouping: true } : undefined));
       return BL.value.boardChip.replace("{value}", value);
     });
     const categories = computed<TrainerCategory[]>(() =>
@@ -2967,7 +3080,7 @@ export default defineComponent({
     // «모든 플랍» 하단 줄: 지금 실제로 출제하는 풀 — 범주·회원 반영 상황 수 · 보드 고르기 반영 플랍 수(MA-531)
     const flopFooterSpots = computed(() => flopScenarioList().length);
     const flopFooterFlops = computed(() =>
-      (flopBoardActive.value ? flopBoardCount.value : REAL_FLOP_COUNT).toLocaleString(numberLocaleTag(), (i18n.locale === "it" || i18n.locale === "pl") ? { useGrouping: true } : undefined)
+      (flopBoardActive.value ? flopBoardCount.value : REAL_FLOP_COUNT).toLocaleString(numberLocaleTag(), (i18n.locale === "it" || i18n.locale === "pl" || i18n.locale === "th") ? { useGrouping: true } : undefined)
     );
     const decisionCount = computed(
       () => bank.value?.presets.reduce((sum, item) => sum + item.nodes.length, 0) ?? 0

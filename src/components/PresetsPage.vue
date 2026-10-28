@@ -392,6 +392,22 @@ const M = {
     solveYourself: "Oblicz samodzielnie",
     footnote: "Zakresy przybliżają standardową grę online przy stackach 100bb. Wczytaj spot, zmień zakresy i porównaj wyniki — to dobry sposób na naukę.",
   },
+
+  th: {
+    infoBtn1: "“⚡ ดูผลลัพธ์”",
+    infoText1:
+      " แสดงกลยุทธ์ที่คำนวณไว้ได้ทันที ใช้ ",
+    infoBtn2: "“คำนวณด้วยตัวเอง”",
+    infoText2:
+      " เฉพาะเมื่อต้⁠อ⁠งการปรับเรนจ์หรือศึกษาการเล่นบนเทิร์นและริเวอร์",
+    pot: "พอต",
+    stack: "Stack",
+    articleLink: "อ่านบทความ",
+    viewResults: "ดูผลลัพธ์",
+    solveYourself: "คำนวณด้วยตัวเอง",
+    footnote:
+      "เรนจ์เป็นค่าประมาณจากการเล่นอ⁠อ⁠น⁠ไ⁠ล⁠น์มาตรฐานที่ 100bb ลองเปิดสถานการณ์ ปรับเรนจ์ แล้วเปรียบเทียบผลเพื่อศึกษา",
+  },
 } as const;
 
 export default defineComponent({

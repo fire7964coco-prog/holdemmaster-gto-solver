@@ -196,6 +196,17 @@ export const RNG_M = {
       `Dopuszczalne — solver uwzględnia wybraną akcję w strategii mieszanej, ale tej liczbie odpowiada: ${action}.`,
     noteOther: (action: string) => `Akcja przypisana tej liczbie: ${action}.`,
   },
+  th: {
+    mode: { off: "RNG: ปิด", high: "RNG: ค่าสูง", low: "RNG: ค่าต่ำ" },
+    modeHelp:
+      "ฝึกด้วยเลขสุ่ม (1–100) แ⁠ต่⁠ล⁠ะมือจะมีตัวเลขให้เลือกแ⁠อ็⁠ก⁠ชั⁠นตามนั้น “RNG: ค่าสูง” หมายถึงตัวเลขสูงใช้แ⁠อ็⁠ก⁠ชั⁠นที่ดุดันกว่า ส่วน “RNG: ค่าต่ำ” หมายถึงตัวเลขต่ำใช้แ⁠อ็⁠ก⁠ชั⁠นที่ดุดันกว่า โหมดนี้ไม่ใช้กับ “โจทย์ประจำวัน”",
+    bandsTitle: "ช่วงตัวเลข RNG",
+    yourNumber: "ตัวเลขของคุณ",
+    noteBest: (action: string) => `คุณเลือกแ⁠อ็⁠ก⁠ชั⁠นที่ตรงกับตัวเลขนี้ (${action})`,
+    noteMixed: (action: string) =>
+      `ยอมรับได้ เ⁠พ⁠ร⁠า⁠ะ Solver ใช้แ⁠อ็⁠ก⁠ชั⁠นนี้ในกลยุทธ์ผสม แต่ตัวเลขนี้ตรงกับ ${action}`,
+    noteOther: (action: string) => `ตัวเลขนี้ตรงกับ ${action}`,
+  },
 } satisfies LocaleDict<{
   mode: Record<"off" | "high" | "low", string>;
   modeHelp: string;

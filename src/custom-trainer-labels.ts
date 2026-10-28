@@ -237,6 +237,19 @@ export const M = {
     prompt: "Jak zagrasz?", next: "Następne pytanie", review: "Powtórz błędy", practice: "Zwykły trening", attemptCount: "Liczba prób w tym spocie: {count}",
     verdictBest: "Najlepsze zagranie", verdictGood: "Dopuszczalne", verdictBad: "Do analizy", evLoss: "Strata EV", frequency: "Częstotliwość", actionEv: "EV akcji", chips: "żetony",
   },
+  th: {
+    entry: "ฝึกสถานการณ์นี้", busy: "กำลังบันทึกโจทย์ฝึก…", tab: "สถานการณ์ของฉัน", presetTab: "ฝึกจากตัวอย่าง",
+    empty: "เมื่อคำนวณสถานการณ์เสร็จแล้ว เลือก “ฝึกสถานการณ์นี้” ในหน้าผลลัพธ์เพื่อบันทึกโจทย์ไว้ที่นี่",
+    loading: "กำลังโหลดสถานการณ์ของคุณ…", storageNote: "อุ⁠ป⁠ก⁠ร⁠ณ์นี้เก็บสถานการณ์ล่าสุด 20 รายการ และประวัติการฝึกล่าสุด 500 ครั้งต่อสถานการณ์ โดยนับผลใน “สถานการณ์ของฉัน” แยกต่างห⁠า⁠ก ห⁠า⁠กบันทึกสถานการณ์เดิมอีกครั้ง ผลคำนวณใหม่จะเขียนทับผลเดิมและล้างประวัติการฝึกของสถานการณ์นั้น",
+    source: "ผลคำนวณโดยประมาณของคุณ · ค่าคลาดเคลื่อนเป้าหมาย {target}% · ค่าคลาดเคลื่อนที่ได้ {achieved}%", lockAssumption: "สมมติฐาน: กลยุทธ์บางส่วนคงที่",
+    reviewSource: "สถานการณ์จาก “ทบทวนมือ” · {method} · ค่าคลาดเคลื่อนเป้าหมาย {target}% · ค่าคลาดเคลื่อนที่ได้ {achieved}%", backToReview: "กลับไปทบทวนมือ",
+    chooseSpot: "สถานการณ์ที่บันทึกไว้", deleteSpot: "ลบสถานการณ์", deleteConfirm: "ลบสถานการณ์นี้และประวัติการฝึกออกจากอุ⁠ป⁠ก⁠ร⁠ณ์นี้หรือไม่?",
+    loadError: "ไม่สามารถโหลดสถานการณ์ที่บันทึกไว้ได้ โปรดเปิดหน้านี้อีกครั้ง", saveError: "ไม่สามารถบันทึกได้ โปรดลองอีกครั้ง",
+    captureError: "ไม่สามารถสร้างโจทย์ฝึกจากผลลัพธ์นี้ได้ ตรวจสอบว่าคำนวณเสร็จแล้ว",
+    noQuestion: "ไม่มีมือที่ใช้ฝึกได้ในสถานการณ์นี้", board: "บอร์ด", hand: "ไพ่ของคุณ", pot: "พอต", stack: "Stack", line: "ลำดับการเล่น",
+    prompt: "จะเล่นอ⁠ย่⁠า⁠ง⁠ไ⁠ร?", next: "โจทย์ถัดไป", review: "ทบทวนข้อผิดพลาด", practice: "ฝึกตามปกติ", attemptCount: "ฝึกสถานการณ์นี้แล้ว {count} ครั้ง",
+    verdictBest: "การเล่นที่ดีที่สุด", verdictGood: "ยอมรับได้", verdictBad: "ควรทบทวน", evLoss: "EV loss", frequency: "ความถี่", actionEv: "EV ของแ⁠อ็⁠ก⁠ชั⁠น", chips: "ชิป",
+  },
 } satisfies LocaleDict<Record<string, string>>;
 
 export type CustomTrainerLabelKey = keyof typeof M.ko;

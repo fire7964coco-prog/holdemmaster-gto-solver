@@ -657,6 +657,48 @@ export const DRAW_LABELS_PL: Record<DrawKey, string> = {
   no_draw: "Brak drawu",
 };
 
+// TH3: confirmed rank/category values from the terminology table §3-2.
+// Royal flush remains a name, not a new engine classification.
+export const TH_HAND_RANK_NAMES = {
+  royal_flush: "ร⁠อ⁠ยั⁠ล⁠ฟ⁠ลั⁠ช",
+  straight_flush: "ส⁠เ⁠ต⁠ร⁠ท⁠ฟ⁠ลั⁠ช",
+  quads: "โ⁠ฟ⁠ร์⁠ก⁠า⁠ร์⁠ด",
+  full_house: "ฟู⁠ล⁠เ⁠ฮ⁠า⁠ส์",
+  flush: "ฟ⁠ลั⁠ช",
+  straight: "ส⁠เ⁠ต⁠ร⁠ท",
+  trips: "ตอง",
+  two_pair: "สองคู่",
+  one_pair: "คู่",
+  high_card: "ไพ่สูง",
+} as const;
+
+export const MADE_LABELS_TH: Record<MadeKey, string> = {
+  straight_flush: "ส⁠เ⁠ต⁠ร⁠ท⁠ฟ⁠ลั⁠ช",
+  quads: "โ⁠ฟ⁠ร์⁠ก⁠า⁠ร์⁠ด",
+  full_house: "ฟู⁠ล⁠เ⁠ฮ⁠า⁠ส์",
+  flush: "ฟ⁠ลั⁠ช",
+  straight: "ส⁠เ⁠ต⁠ร⁠ท",
+  trips: "Set/Trips",
+  two_pair: "สองคู่",
+  overpair: "Overpair",
+  top_pair: "Top pair",
+  second_pair: "Second pair",
+  weak_pair: "Weak pair",
+  underpair: "Underpair",
+  ace_high: "A-high",
+  king_high: "K-high",
+  nothing: "ยังไม่มีไพ่ที่จัดเป็นชุด",
+};
+
+export const DRAW_LABELS_TH: Record<DrawKey, string> = {
+  combo_draw: "Combo draw",
+  flush_draw: "ฟ⁠ลั⁠ช⁠ด⁠ร⁠อ⁠ว์",
+  oesd: "OESD",
+  gutshot: "Gutshot",
+  backdoor_fd: "Backdoor FD",
+  no_draw: "ไม่มีด⁠ร⁠อ⁠ว์",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -693,6 +735,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_IT
     : i18n.locale === "pl"
     ? MADE_LABELS_PL
+    : i18n.locale === "th"
+    ? MADE_LABELS_TH
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -729,6 +773,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_IT
     : i18n.locale === "pl"
     ? DRAW_LABELS_PL
+    : i18n.locale === "th"
+    ? DRAW_LABELS_TH
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

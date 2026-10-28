@@ -159,7 +159,7 @@
       <div class="flex-grow min-w-0">
         <div class="flex flex-wrap gap-2 mb-4">
           <div v-for="s in active.stats" :key="s.label" class="stat-chip">
-            {{ s.label }} <b :data-testid="s.testid">{{ (isVi || isTr || isRu || isAr || isIt || isPl) && s.label === L.statCombos ? s.value : $n(s.value) }}</b>
+            {{ s.label }} <b :data-testid="s.testid">{{ (isVi || isTr || isRu || isAr || isIt || isPl || isTh) && s.label === L.statCombos ? s.value : $n(s.value) }}</b>
           </div>
         </div>
 
@@ -1728,6 +1728,77 @@ const M = {
       "Porównane źródła publiczne: nlh.poker · Preflop Wizard · HoldemPro · The Felt (about-poker.com) · BeyondGTO · ThinkGTO (obliczone częstotliwości BB vs SB) · GTO Gecko · RiverOdds (punkty odniesienia dla obrony) · blog GTO Wizard · FreeBetRange (zasady obrony IP i squeeze) · 888poker · Run It Once (częstotliwości przeciw 3-betom) + zakresy naszych przykładów (zebrane w sierpniu 2026)",
     phase2: "Będziemy dodawać kolejne zestawienia pozycji i sytuacje.",
   },
+
+  th: {
+    modeRfi: "เปิดด้วยการเพิ่มเ⁠ดิ⁠ม⁠พั⁠น (RFI)",
+    modeDefend: "รับมือการเปิด (ป้องกัน)",
+    mode3bet: "รับมือ 3-bet (หลังเปิด)",
+    mode4bet: "รับมือ 4-bet (หลัง 3-bet)",
+    intro4bet:
+      "วิธีรับมือเมื่อ 3-bet แล้วถูก 4-bet กลับมา สีแดงคือ 5-bet (อ⁠อ⁠ล⁠อิ⁠น) สีเขียวคือคอล ส่วนที่เหลือคือหมอบ ความถี่คิดเฉพาะกรณีที่ 3-bet มาแล้ว มือที่ไม่เคย 3-bet จึงแสดงเป็นช่องว่าง แคชเกม 6-max, 100bb ขนาด 4-bet: BB 3-bet 11bb → 24bb · SB 3-bet 10bb → 22bb · ตำแหน่งท้าย (CO·BTN) 3-bet 7.5bb → 19bb · BB รับมือการเปิดจาก SB โดย 3-bet 9bb → 22bb",
+    legend5bet: "5-bet (อ⁠อ⁠ล⁠อิ⁠น)",
+    legendCond4bet: "ช่องว่าง = ไม่เคย 3-bet ตั้งแต่แรก",
+    stat5bet: "5-bet %",
+    statContinue4bet: "เล่นต่อ % (จากเรนจ์ 3-bet)",
+    copy5bet: "คัดลอกเรนจ์ 5-bet",
+    note4bet:
+      "สถิติคิดเป็น % ของเรนจ์ 3-bet ที่ 100bb ขนาด 5-bet แทบจะมีเพียงอ⁠อ⁠ล⁠อิ⁠น โดยมือ value คือ AA·KK (บางครั้งคอลเพื่อดัก) ส่วน QQ·AK ผสม 5-bet เฉพาะเมื่อเจอ 4-bet จาก BTN·SB ที่มีบลัฟมาก และคอลเมื่อเจอเรนจ์ 4-bet แคบจาก CO·HJ·UTG (เมื่อเจอ 4-bet จาก UTG แม้แต่ KK ก็คอล) การคอลขึ้นอยู่กับ equity realization ไม่ใช่ pot odds: เมื่อได้เล่นทีหลัง (ผู้เล่นที่ 3-bet อยู่ BTN·CO) จะคอลกว้างขึ้นถึงมือระดับกลางอย่าง TT·AJs (เมื่อเจอ 4-bet จาก UTG เหลือเพียง JJ·TT) ส่วน BB ที่เจอ 4-bet จาก SB ซึ่งมีบลัฟมาก จะขยายถึง 99-66·ATs·KQs·AJo-ATo ผู้เล่นที่ 3-bet ที่ BB ซึ่งต้⁠อ⁠งเล่นก่อนจะคอลเพียง QQ·JJ·AK เมื่อเจอ 4-bet แคบจาก CO·HJ·UTG (แต่เมื่อเจอ 4-bet จาก BTN ที่มีบลัฟมาก จะขยายลงมาถึง TT-77·AJs-ATs·AQo) ต้⁠อ⁠งหมอบทุกมือหรือไม่? ไม่ใช่ เ⁠พ⁠ร⁠า⁠ะเรนจ์ 4-bet มีบลัฟอย่าง A5s-A4s ด้วย",
+    how4bet2:
+      "ห⁠า⁠กสีแดง + สีเขียวไม่เต็มช่อง ส่วนที่เหลือคือหมอบ ช่องที่มีทั้งสองสีจะผสม 5-bet กับคอล มือที่อยู่นอกเรนจ์ 3-bet จะไม่มาถึงสถานการณ์นี้ จึงแสดงเป็นช่องว่าง",
+    intro3bet:
+      "วิธีรับมือเมื่อเปิดด้วยการเพิ่มเ⁠ดิ⁠ม⁠พั⁠นแล้วถูก 3-bet สีแดงคือ 4-bet สีเขียวคือคอล ส่วนที่เหลือคือหมอบ ความถี่คิดเฉพาะกรณีที่เปิดมาแล้ว มือที่ไม่เคยเปิดจึงแสดงเป็นช่องว่าง แคชเกม 6-max, 100bb เปิด 2.5bb (SB เปิด 3bb); ขนาด 3-bet คือ 11bb จาก BB และ 10bb จาก SB (9bb เมื่อ BB เจอการเปิดจาก SB) และ 7.5bb จากตำแหน่งที่ได้เล่นหลังคุณ",
+    legend4bet: "4-bet",
+    legendCond: "ช่องว่าง = ไม่เคยเปิดตั้งแต่แรก",
+    stat4bet: "4-bet %",
+    statContinue: "เล่นต่อ % (จากเรนจ์เปิด)",
+    copy4bet: "คัดลอกเรนจ์ 4-bet",
+    note3bet:
+      "สถิติคิดจากเรนจ์เปิดของคุณ ไม่ใช่จากทุกมือ มือ value ที่ใช้ 4-bet เน้น QQ+/AK (เมื่อ UTG เปิดจะเป็น AA-KK โดย QQ คอลเป็นหลัก) และผสมบลัฟเล็กน้อยอย่าง A5s-A4s (มากขึ้นเมื่อ SB เปิด รวมถึง offsuit broadway อย่าง AJo และ KQo) เรนจ์คอลประกอบด้วยคู่และ suited broadway เป็นหลัก เมื่อต้⁠อ⁠งเล่นก่อน เรนจ์จะแคบกว่าการเปิดจากตำแหน่งเดียวกันแล้วได้เล่นทีหลัง เมื่อ UTG เปิด มักไม่คอลด้วย connectors (มี T9s บางส่วน และ 98s เล็กน้อยเมื่อเจอ 3-bet จาก BTN) แต่ตำแหน่งอื่⁠นจะผสมมือเหล่านี้ในเรนจ์คอลมากขึ้น",
+    squeezeNote:
+      "Squeeze คือ 3-bet เมื่อมีทั้งผู้เปิดและผู้คอลอยู่ในพอตแล้ว (ที่นี่ประมาณ 11–12bb) การมีผู้คอลอยู่ด้วยทำให้เรนจ์ป้องกันโดยรวมแคบกว่าการเล่น heads-up และทำให้ 3-bet เน้น value มากขึ้น ส่วน overcall จะเน้นมือ suited ที่เชื่อมโยงกันและมีโอกาสเป็นนัทเมื่อเล่น multiway",
+    how3bet2:
+      "ห⁠า⁠กสีแดง + สีเขียวไม่เต็มช่อง ส่วนที่เหลือคือหมอบ ช่องที่มีทั้งสองสีจะผสม 4-bet กับคอล มือที่อยู่นอกเรนจ์เปิดจะไม่มาถึงสถานการณ์นี้ จึงแสดงเป็นช่องว่าง",
+    intro: "เรนจ์เปิดตามตำแหน่ง (RFI) เมื่อทุกคนก่อนหน้าหมอบ ควรเพิ่มเ⁠ดิ⁠ม⁠พั⁠นด้วยมือใดบ้าง? อ้างอิงแคชเกม 6-max, 100bb เปิด 2.5bb ช่องที่เติมสีไม่เต็มคือมือก้ำกึ่งที่แหล่งข้อมูลสาธารณะให้คำแนะนำเรื่องการเปิดต่างกัน (ความสูงของสี = สัดส่วนแหล่งข้อมูลที่แนะนำให้เปิด)",
+    provenanceNote: "สังเคราะห์จากแหล่งข้อมูลสาธารณะและอนุมานเพิ่มเติมภายใน ไม่ใช่ผลคำนวณจาก Solver ดู “ตารางนี้สร้างขึ้นอ⁠ย่⁠า⁠ง⁠ไ⁠ร?” ด้านล่าง",
+    introDefend:
+      "วิธีรับมือเมื่อมีผู้เปิดด้วยการเพิ่มเ⁠ดิ⁠ม⁠พั⁠นก่อนคุณ ในคู่ตำแหน่งที่พบบ่อย สีแดงคือ 3-bet สีเขียวคือคอล และความสูงของสีรวมกันคือความถี่ป้องกันทั้งหมด แคชเกม 6-max, 100bb เปิด 2.5bb (SB เปิด 3bb)",
+    legendOpen: "เปิดด้วยการเพิ่มเ⁠ดิ⁠ม⁠พั⁠น (100%)",
+    legendMixed: "มือก้ำกึ่ง (สี = สัดส่วนแหล่งข้อมูลที่แนะนำให้เปิด)",
+    legendFold: "การหมอบ",
+    legend3bet: "3-bet",
+    legendCall: "การคอล",
+    legendMixedDefend: "ความสูงของสี = ความถี่ (ช่องสองสีใช้กลยุทธ์ผสม)",
+    stat3bet: "3-bet %",
+    statCall: "การคอล %",
+    statTotal: "ป้องกันรวม",
+    copy3bet: "คัดลอกเรนจ์ 3-bet",
+    copyCall: "คัดลอกเรนจ์คอล",
+    sbNote:
+      "เมื่ออยู่ SB แล้วเจอ BTN เปิด โดยหลักจะเลือก 3-bet หรือหมอบ เ⁠พ⁠ร⁠า⁠ะคุณต้⁠อ⁠งเล่นก่อนและยังมี BB รอเล่นอยู่ การคอลจึงทำให้เสียเปรียบทั้งสองด้านพร้อมกัน",
+    ipNote:
+      "แม้ได้เล่นทีหลัง เรนจ์เปิดจากตำแหน่งต้นก็ยังแข็งแกร่ง และการคอลเสี่ยงเจอ squeeze จากบ⁠ล⁠า⁠ย⁠ด์ที่ยังไม่ได้เล่น เรนจ์ป้องกันเมื่อได้เล่นทีหลังจึงแคบและเน้น 3-bet โดยส่วนใหญ่จะคอลเฉพาะคู่และมือ suited ชั้นนำ",
+    statPercent: "เปิด %",
+    statCombos: "ค⁠อ⁠ม⁠โ⁠บที่เปิด",
+    statHands: "ชนิดมือที่เปิด",
+    statMixed: "มือก้ำกึ่ง",
+    copy: "คัดลอกข้อความเรนจ์",
+    copied: "✓ คัดลอกแล้ว",
+    sendOop: "① ส่งไปยังเรนจ์ OOP",
+    sendIp: "② ส่งไปยังเรนจ์ IP",
+    howTitle: "วิธีอ่านตาราง",
+    how1: "แนวทแยงจากมุมซ้ายบนไปขวาล่างคือคู่ ช่องด้านบน (ขวา) คือ suited และด้านล่าง (ซ้าย) คือ offsuit",
+    how2: "ช่องที่เติมสีไม่เต็มคือมือก้ำกึ่งที่แหล่งข้อมูลให้คำแนะนำเรื่องการเปิดต่างกัน ความสูงของสีแสดงสัดส่วนแหล่งข้อมูลที่แนะนำให้เปิด ไม่ใช่ผลคำนวณจาก Solver",
+    how3: "ปุ่ม “① ส่งไปยังเรนจ์ OOP” และ “② ส่งไปยังเรนจ์ IP” จะนำเรนจ์นี้ไปใส่ในตัวแก้ไขเรนจ์ของ “Spot กำหนดเอง” ลองคำนวณการเล่นหลังฟลอปด้วยตัวเองได้",
+    howDefend2:
+      "ห⁠า⁠กสีแดง + สีเขียวไม่เต็มช่อง ส่วนที่เหลือคือหมอบ ช่องที่มีทั้งสองสีจะผสม 3-bet กับคอลตามสัดส่วนนั้น",
+    howDefend3:
+      "วางเรนจ์ที่คัดลอกลงในช่องเรนจ์ (① / ②) ของ “Spot กำหนดเอง” เพื่อคำนวณการเล่นหลังฟลอปด้วยเรนจ์ป้องกันนี้",
+    sourceTitle: "ตารางนี้สร้างขึ้นอ⁠ย่⁠า⁠ง⁠ไ⁠ร?",
+    sourceBody: "เราเทียบแหล่งข้อมูล GTO ที่เผยแพร่ฟรีหลายแห่งทีละมือ เพื่อสังเคราะห์เรนจ์จากข้อสรุปร่วม มือก้ำกึ่งที่แ⁠ต่⁠ล⁠ะแหล่งเห็นต่างกันจะแสดงสัดส่วนแหล่งข้อมูลที่แนะนำให้เปิด (75/50/25%) สำหรับ BTN และ SB ยังได้เทียบกับเรนจ์ที่ตรวจสอบด้วย Solver ซึ่งใช้ในสถานการณ์สำหรับศึกษาของแอปนี้ด้วย",
+    sourceList:
+      "แหล่งข้อมูลสาธารณะที่ใช้เทียบ: nlh.poker · Preflop Wizard · HoldemPro · The Felt (about-poker.com) · BeyondGTO · ThinkGTO (ความถี่ที่คำนวณไว้สำหรับ BB เทียบ SB) · GTO Gecko · RiverOdds (หลักอ้างอิงเรนจ์ป้องกัน) · GTO Wizard blog · FreeBetRange (หลักการป้องกันเมื่ออยู่ IP และ squeeze) · 888poker · Run It Once (ความถี่รับมือ 3-bet) + เรนจ์สถานการณ์สำหรับศึกษาของเราเอง (รวบรวมเมื่อ 08/2026)",
+    phase2: "เราจะเพิ่มคู่ตำแหน่งและสถานการณ์อื่⁠น ๆ ต่อไป",
+  },
 } as const;
 
 type ModeKey = "rfi" | "defend" | "vs3bet" | "vs4bet";
@@ -1779,6 +1850,7 @@ export default defineComponent({
     const isAr = computed(() => i18n.locale === "ar");
     const isIt = computed(() => i18n.locale === "it");
     const isPl = computed(() => i18n.locale === "pl");
+    const isTh = computed(() => i18n.locale === "th");
 
     // 단독 빌드의 설치 배너 «써봤다» 조건 (트레이너 빌드에서는 아무 일도 안 한다)
     noteToolUsed();
@@ -1910,7 +1982,7 @@ export default defineComponent({
               testid: "preflop-percent",
             },
             // tr만 천 단위 마침표(확정표 §2 — 1.326) · 다른 언어 출력은 그대로
-            { label: t.statCombos, value: `${i18n.locale === "ru" ? Math.round(s.combos).toLocaleString("ru-RU") : i18n.locale === "ar" ? Math.round(s.combos).toLocaleString("en-US") : i18n.locale === "pl" ? Math.round(s.combos).toLocaleString("pl-PL", { useGrouping: true }) : i18n.locale === "it" ? Math.round(s.combos).toLocaleString("it-IT", { useGrouping: true }) : Math.round(s.combos)} / ${i18n.locale === "ru" || i18n.locale === "pl" ? "1\u00a0326" : i18n.locale === "ar" ? "1,326" : i18n.locale === "tr" || i18n.locale === "vi" || i18n.locale === "it" ? "1.326" : "1326"}` },
+            { label: t.statCombos, value: `${i18n.locale === "ru" ? Math.round(s.combos).toLocaleString("ru-RU") : i18n.locale === "ar" ? Math.round(s.combos).toLocaleString("en-US") : i18n.locale === "pl" ? Math.round(s.combos).toLocaleString("pl-PL", { useGrouping: true }) : i18n.locale === "it" ? Math.round(s.combos).toLocaleString("it-IT", { useGrouping: true }) : i18n.locale === "th" ? Math.round(s.combos).toLocaleString("th-TH-u-ca-gregory-nu-latn") : Math.round(s.combos)} / ${i18n.locale === "ru" || i18n.locale === "pl" ? "1\u00a0326" : i18n.locale === "ar" || i18n.locale === "th" ? "1,326" : i18n.locale === "tr" || i18n.locale === "vi" || i18n.locale === "it" ? "1.326" : "1326"}` },
             { label: t.statHands, value: `${s.hands} / 169` },
             { label: t.statMixed, value: String(s.mixedHands) },
           ],
@@ -2137,6 +2209,7 @@ export default defineComponent({
       cellLabel,
       isIt,
       isPl,
+      isTh,
       isVi,
       isTr,
       isRu,

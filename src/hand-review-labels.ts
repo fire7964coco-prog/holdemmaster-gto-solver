@@ -489,6 +489,33 @@ export const M = {
     unanalysed: "Nie przeanalizowano", scopeTitle: "Założenia analizy",
     practiceSpot: "Ćwicz ten spot", practiceBusy: "Tworzenie pytań…", practiceUnavailable: "Nie można utworzyć pytań: żadna ręka z twojego zakresu nie dociera do tego spotu, brakuje EV akcji lub dostępna jest tylko jedna akcja.", practiceReferenceNote: "Ten spot występuje zbyt rzadko, by uznać wartości za wiarygodne. Możesz ćwiczyć go poglądowo; nie trafi do powtórki błędów.", practiceError: "Nie udało się zapisać pytań. Spróbuj ponownie.",
   },
+  th: {
+    title: "ทบทวนมือ", situation: "สถานการณ์", hero: "ตำแหน่งของคุณ", opener: "ผู้เล่นที่เพิ่มเ⁠ดิ⁠ม⁠พั⁠นก่อน", caller: "ผู้คอล", threeBettor: "ผู้เล่นที่ 3-bet", preflop: "พรีฟลอป",
+    singleRaised: "พอตที่มีการเพิ่มเ⁠ดิ⁠ม⁠พั⁠นครั้งเดียว", threeBet: "พอต 3-bet", fourBet: "พอต 4-bet", limp: "พอต limp", limpNote: "SB limp → BB เช็ค · อยู่นอกตาราง GTO · เรนจ์โดยประมาณจากการเล่นจริง", memberBadge: "สำหรับสมาชิก", multiway: "ผู้เล่น 3 คนขึ้นไป", notSupported: "ไม่สามารถทบทวนได้",
+    unavailableScenario: "ข้อมูลสำหรับสถานการณ์นี้ยังไม่พร้อม", fileMissing: "ไม่มีไฟล์ผลลัพธ์สำหรับฟลอปนี้",
+    loadFailed: "ไม่สามารถโหลดไฟล์ผลลัพธ์ได้", invalidData: "ไม่สามารถอ่านไฟล์ผลลัพธ์ได้",
+    unsupportedAction: "ไม่สามารถวิเคราะห์แ⁠อ็⁠ก⁠ชั⁠นนี้ได้", unsupportedSize: "ไม่สามารถวิเคราะห์ขนาดนี้ได้",
+    evMissing: "ไม่มีค่า EV", referenceOnly: "ใช้ประกอบการศึกษาเท่านั้น", mixedAction: "Solver ใช้แ⁠อ็⁠ก⁠ชั⁠นนี้",
+    precomputed: "ผลลัพธ์ที่คำนวณไว้ล่วงหน้า", onDevice: "คำนวณบนอุ⁠ป⁠ก⁠ร⁠ณ์ของคุณ", flop: "ฟลอป", turn: "เทิร์น", river: "ริเวอร์",
+    chooseHand: "ไพ่ในมือของคุณ 2 ใบ", chooseFlop: "ไพ่ฟลอป 3 ใบ", chooseTurn: "ไพ่เทิร์น", chooseRiver: "ไพ่ริเวอร์",
+    result: "ผลลัพธ์", totalLoss: "EV loss รวม",
+    best: "การเล่นที่ดีที่สุด", good: "ยอมรับได้", mistake: "ควรทบทวน",
+    noResults: "เลือกไพ่และก⁠ร⁠อ⁠กแ⁠อ็⁠ก⁠ชั⁠นเพื่อดูผลลัพธ์", chooseAction: "เลือกแ⁠อ็⁠ก⁠ชั⁠นที่เล่นจริง",
+    opponentResponse: "คู่ต่อสู้ตอบสนองต่อการเล่นของคุณอ⁠ย่⁠า⁠ง⁠ไ⁠ร", foldingHands: "มือที่หมอบ",
+    handGrid: "ตารางมือ", matchedSize: "ใช้ขนาดใกล้เคียง {actual} → {used}",
+    undo: "เลิกทำ", newHand: "เริ่มทบทวนมือถัดไป", loading: "กำลังโหลดข้อมูล…", solving: "กำลังคำนวณ…",
+    solveFailed: "คำนวณ street นี้ไม่สำเร็จ", retry: "ลองอีกครั้ง", complete: "มือนี้จบแล้ว",
+    check: "การเช็ค", fold: "การหมอบ", call: "การคอล", bet: "การเ⁠ดิ⁠ม⁠พั⁠น", raise: "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠น", allin: "อ⁠อ⁠ล⁠อิ⁠น",
+    scopeNote: "ฟรี · แคชเกมอ⁠อ⁠น⁠ไ⁠ล⁠น์ 6-max, 100bb ผลลัพธ์อาจไม่เหมาะกับเกมในผับหรือทัวร์นาเมนต์ ทบทวนพอต 3-bet และ 4-bet ได้ 11 คู่ตำแหน่ง (ยังไม่รองรับ SB 3-bet เมื่อ UTG, HJ หรือ CO เปิดด้วยการเพิ่มเ⁠ดิ⁠ม⁠พั⁠น และ HJ 3-bet เมื่อ UTG เปิดด้วยการเพิ่มเ⁠ดิ⁠ม⁠พั⁠น) ไม่รองรับการทบทวนพอต multiway",
+    referenceNote: "สถานการณ์ที่ผลคูณของสัดส่วนการเข้าถึงต่ำกว่า {threshold} จะไม่นับรวมในจำ⁠น⁠ว⁠นข้อผิดพลาดและ EV loss รวม",
+    evMissingNote: "ไม่มีค่า EV สำหรับประเมินความสูญเสีย จึงแสดงเฉพาะความถี่", reach: "ผลคูณของสัดส่วนการเข้าถึง",
+    pot: "พอต", heroOutsideRange: "มือนี้อยู่นอกเรนจ์เริ่มต้นของตำแหน่งที่เลือก",
+    hand: "ไพ่ของคุณ",
+    navTitle: "ทบทวนมือ", cancel: "ยกเลิก",
+    noCompatibleHands: "ไม่มีมือของคู่ต่อสู้ในสถานการณ์นี้ที่ไม่ซ้ำกับไพ่ของคุณ", otherSize: "ขนาดอื่⁠น",
+    unanalysed: "ยังไม่ได้วิเคราะห์", scopeTitle: "สมมติฐานในการทบทวน",
+    practiceSpot: "ฝึกสถานการณ์นี้", practiceBusy: "กำลังสร้างโจทย์ฝึก…", practiceUnavailable: "ไม่สามารถสร้างโจทย์ฝึกได้ เ⁠พ⁠ร⁠า⁠ะไม่มีมือในเรนจ์ของคุณมาถึงจุดนี้ ไม่มีค่า EV ของแ⁠อ็⁠ก⁠ชั⁠น หรือมีแ⁠อ็⁠ก⁠ชั⁠นให้เลือกเพียงอย่างเดียว", practiceReferenceNote: "สถานการณ์นี้เกิดขึ้นน้อยเกินกว่าจะใช้ค่าต่าง ๆ ได้อย่างน่าเชื่อถือ ใช้ประกอบการศึกษาเท่านั้น และจะไม่เพิ่มในรายการทบทวนข้อผิดพลาด", practiceError: "ไม่สามารถบันทึกโจทย์ฝึกได้ โปรดลองอีกครั้ง",
+  },
 } as const;
 
 export type HandReviewLabelKey = keyof typeof M.en;
@@ -510,4 +537,9 @@ export const IT_REVIEW_ACTION_BUTTONS = {
 // Polish action buttons are separate from history/legend nouns.
 export const PL_REVIEW_ACTION_BUTTONS = {
   fold: "Spasuj", check: "Czekaj", call: "Sprawdź", bet: "Postaw", raise: "Przebij", allin: "All-in",
+} as const;
+
+// Thai action buttons are separate from history/legend nouns.
+export const TH_REVIEW_ACTION_BUTTONS = {
+  fold: "หมอบ", check: "เช็ค", call: "คอล", bet: "เ⁠ดิ⁠ม⁠พั⁠น", raise: "เพิ่มเ⁠ดิ⁠ม⁠พั⁠น", allin: "อ⁠อ⁠ล⁠อิ⁠น",
 } as const;

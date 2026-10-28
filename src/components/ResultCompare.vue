@@ -197,6 +197,11 @@ const M = {
     combos: "Combo",
     equity: "Equity",
   },
+
+  th: {
+    combos: "ค⁠อ⁠ม⁠โ⁠บ",
+    equity: "Equity",
+  },
 } as const;
 
 const EPS = 2e-6;

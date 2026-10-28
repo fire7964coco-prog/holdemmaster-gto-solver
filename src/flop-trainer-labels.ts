@@ -268,6 +268,20 @@ const checkedLabels: LocaleDict<FlopTrainerLabels> = {
     useBasic: "Ćwicz na podstawowych pytaniach",
     again: "Powtórz tę rękę",
   },
+  th: {
+    sourceBasic: "แหล่งโจทย์: พื้นฐาน",
+    sourceFlop: "แหล่งโจทย์: ฟลอปทั้งหมด",
+    sourceHelp:
+      "“แหล่งโจทย์: ฟลอปทั้งหมด” ใช้โจทย์จากสถานการณ์และฟลอปที่คำนวณไว้บนเซิร์ฟเวอร์ของเรา (ต้⁠อ⁠งเชื่อมต่ออิ⁠น⁠เ⁠ท⁠อ⁠ร์⁠เ⁠น็⁠ต) ส่วน “แหล่งโจทย์: พื้นฐาน” ใช้จุดตัดสินใจจากสถานการณ์สำหรับศึกษา (ใช้แบบอ⁠อ⁠ฟ⁠ไ⁠ล⁠น์ได้)",
+    closeOnly: "เฉพาะสถานการณ์ที่ EV ใกล้กัน",
+    closeHelp: "สุ่มเฉพาะมือที่ EV ของแ⁠อ็⁠ก⁠ชั⁠นที่ดีที่สุดกับอันดับสองต่างกันไม่เกินเกณฑ์ “ยอมรับได้”",
+    loading: "กำลังโหลดฟลอป…",
+    offline: "ต้⁠อ⁠งเชื่อมต่ออิ⁠น⁠เ⁠ท⁠อ⁠ร์⁠เ⁠น็⁠ต",
+    failed: "ไม่สามารถโหลดโจทย์ได้",
+    retry: "ลองอีกครั้ง",
+    useBasic: "ฝึกโจทย์พื้นฐาน",
+    again: "ฝึกมือเดิมอีกครั้ง",
+  },
 };
 
 export const flopTrainerLabels = (locale: Locale): FlopTrainerLabels => checkedLabels[locale];
@@ -457,6 +471,16 @@ const boardLabels: LocaleDict<FlopBoardLabels> = {
     pickCards: "Wybierz karty",
     boardReset: "Przywróć wszystkie",
     boardEmpty: "Żaden flop nie spełnia tych warunków.",
+  },
+  th: {
+    boardAll: "บอร์ด: ทั้งหมด",
+    boardChip: "บอร์ด: {value}",
+    boardHelp: "กรองฟลอปของโจทย์ตามไพ่สูงสุด ดอก การจับคู่ และความเชื่อมโยง หรือกำหนดฟลอปที่ต้⁠อ⁠งการเพียงแบบเดียว",
+    boardRule: "ภายในแถวเดียวกัน ตรงกับตัวเลือกใดตัวเลือกหนึ่งก็ได้ แต่ฟลอปต้⁠อ⁠งตรงกับทุกแถวที่เลือกไว้ (แถวที่ไม่ได้เลือกยอมรับทุกแบบ)",
+    specificFlop: "ฟลอปที่ระบุ",
+    pickCards: "เลือกไพ่",
+    boardReset: "กลับไปเลือกทั้งหมด",
+    boardEmpty: "ไม่มีฟลอปที่ตรงกับเงื่อนไขชุดนี้",
   },
 };
 export const flopBoardLabels = (locale: Locale): FlopBoardLabels => boardLabels[locale];

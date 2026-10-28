@@ -224,6 +224,17 @@ const CARD_TEXT = {
       `Strata EV ${bb}bb${streak > 0 ? ` · ${localizeNumber(String(streak))}${plPlural(streak, { one: " dzień z rzędu", few: " dni z rzędu", many: " dni z rzędu", other: " dnia z rzędu" })}` : ""}`,
     invite: "Rozwiąż dzisiejsze zadanie",
   },
+  th: {
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "วันละหนึ่งโจทย์ · ทุกคนได้โจทย์เดียวกัน",
+    heading: "โจทย์ GTO ประจำวัน",
+    board: "บอร์ด",
+    hand: "ไพ่ของฉัน",
+    result: (verdict: string) => `ผลของฉัน: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `EV loss ${bb}bb${streak > 1 ? ` · ทำต่อเนื่อง ${localizeNumber(String(streak))} วัน` : ""}`,
+    invite: "ลองทำโจทย์วันนี้",
+  },
 } as const;
 
 export type DailyCardInput = {
@@ -263,6 +274,8 @@ const RTL_FONT =
 // PL6: use each platform's Latin font for Polish diacritics (no web font fetch).
 const PL_FONT =
   "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Noto Sans', 'Helvetica Neue', 'Arial', sans-serif";
+// TH3: retain the current stack/OS fallback; measure Thai canvas text after TH4.
+const TH_FONT = FONT;
 
 // 아이콘·인사 화면과 같은 스페이드 도안 (원본 viewBox 0 0 180 180)
 const SPADE_PATH =
@@ -356,7 +369,7 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   const ctx = canvas.getContext("2d");
   if (!ctx) return canvas;
   const rtl = document.documentElement.dir === "rtl";
-  const font = rtl ? RTL_FONT : i18n.locale === "pl" ? PL_FONT : FONT;
+  const font = rtl ? RTL_FONT : i18n.locale === "pl" ? PL_FONT : i18n.locale === "th" ? TH_FONT : FONT;
   const textX = (x: number) => rtl ? WIDTH - x : x;
   ctx.direction = rtl ? "rtl" : "ltr";
 

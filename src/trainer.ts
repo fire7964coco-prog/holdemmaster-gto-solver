@@ -164,6 +164,13 @@ const actionLabelsPl: Record<string, string> = {
 const actionButtonLabelsPl: Record<string, string> = {
   Fold: "Spasuj", Check: "Czekaj", Call: "Sprawdź", Bet: "Postaw", Raise: "Przebij", Allin: "All-in", "All-in": "All-in",
 };
+// Thai action history uses nouns; buttons use bare action verbs.
+const actionLabelsTh: Record<string, string> = {
+  Fold: "การหมอบ", Check: "การเช็ค", Call: "การคอล", Bet: "การเ⁠ดิ⁠ม⁠พั⁠น", Raise: "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น",
+};
+const actionButtonLabelsTh: Record<string, string> = {
+  Fold: "หมอบ", Check: "เช็ค", Call: "คอล", Bet: "เ⁠ดิ⁠ม⁠พั⁠น", Raise: "เพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น",
+};
 const actionName = (name: string, role: "label" | "button" = "label") =>
   i18n.locale === "ko"
     ? actionLabelsKo[name] ?? name
@@ -188,6 +195,8 @@ const actionName = (name: string, role: "label" | "button" = "label") =>
     ? (role === "button" ? actionButtonLabelsIt : actionLabelsIt)[name] ?? name
     : i18n.locale === "pl"
     ? (role === "button" ? actionButtonLabelsPl : actionLabelsPl)[name] ?? name
+    : i18n.locale === "th"
+    ? (role === "button" ? actionButtonLabelsTh : actionLabelsTh)[name] ?? name
     : actionLabelsEn[name] ?? name;
 
 export const trainerCategory = (
@@ -200,7 +209,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar" | "it" | "pl",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar" | "it" | "pl" | "th",
     Record<Exclude<TrainerCategory, "4bp">, string>
   > = {
     ko: {
@@ -315,6 +324,12 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "Pula 3-bet",
       blind: "Blind przeciw blind",
     },
+    th: {
+      all: "ทั้งหมด",
+      srp: "พอตที่มีการเพิ่มเ⁠ดิ⁠ม⁠พั⁠นครั้งเดียว",
+      "3bp": "พอต 3-bet",
+      blind: "บ⁠ล⁠า⁠ย⁠ด์เทียบกับบ⁠ล⁠า⁠ย⁠ด์",
+    },
   };
   // 4벳 팟 = 그 언어 3벳 팟 이름의 숫자만 바꾼다 — 칩 줄에서 «3벳팟»·«4벳 팟»처럼 표기가 갈리지 않게
   // (15언어 모두 «3»이 한 번만 들어 있다 · 3단계 검수장 판정 대상)
@@ -368,6 +383,8 @@ export const trainerActionLabel = (
       ? `${label} ${amount} (${pct}% del piatto)`
       : i18n.locale === "pl"
       ? `${label} ${amount} (${pctText(localizeNumber(String(pct)))} puli)`
+      : i18n.locale === "th"
+      ? `${label} ${amount} (${pctText(pct)} ของพอต)`
       : `${label} ${amount} (${pct}% pot)`;
   }
   return i18n.locale === "ar" ? arLabelIso(label, amount) : `${label} ${amount}`;

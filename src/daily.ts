@@ -168,6 +168,8 @@ export const recordDaily = async (lossBb: number) => {
  */
 export const dailyCardDate = () => {
   const key = todayKey();
+  // TH3: the date key is already Gregorian/KST; change display order only, retaining Latin digits.
+  if (i18n.locale === "th") return key.split("-").reverse().join("/");
   if (i18n.locale === "de" || i18n.locale === "tr" || i18n.locale === "ru" || i18n.locale === "pl") return key.split("-").reverse().join(".");
   // hi: DD/MM/YYYY with Latin digits, same in the image and copied text.
   if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi" || i18n.locale === "vi" || i18n.locale === "ar" || i18n.locale === "it")
@@ -398,6 +400,18 @@ export const dailyShareText = (verdict: string) => {
       "Rozwiąż to samo zadanie → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=pl",
       "(HoldemMaster GTO Solver · jedno zadanie dziennie)",
     ].filter(Boolean).join("\n");
+  }
+  if (i18n.locale === "th") {
+    return [
+      `[โจทย์ GTO ประจำวัน · ${dailyCardDate()}]`,
+      `ผลของฉัน: ${verdict} (EV loss ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 1 ? `ทำต่อเนื่อง ${localizeNumber(String(dailyState.streak))} วัน` : "",
+      "",
+      "ลองทำโจทย์เดียวกัน → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=th",
+      "(HoldemMaster GTO Solver · วันละหนึ่งโจทย์)",
+    ]
+      .filter(Boolean)
+      .join("\n");
   }
   if (i18n.locale === "en") {
     return [

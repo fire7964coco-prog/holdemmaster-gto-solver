@@ -9,7 +9,7 @@ import { MAIN_SITE_CONFIG } from "./main-site";
 const API = MAIN_SITE_CONFIG.feedbackApi; // 빈 값이면 기능도 꺼짐
 export const FEEDBACK_DRAFT_KEY = "solver.feedback.draft.v1";
 export const FEEDBACK_SOLVES_KEY = "solver.feedback.solves.v1";
-const LOCALES: readonly string[] = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr", "vi", "ru", "ar", "it", "pl"];
+const LOCALES: readonly string[] = ["ko", "en", "ja", "es", "pt", "de", "zh", "zh-hant", "fr", "id", "ms", "hi", "tr", "vi", "ru", "ar", "it", "pl", "th"];
 export type FeedbackDraft = {
   locale: Locale;
   body: string;

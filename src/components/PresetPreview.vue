@@ -371,6 +371,19 @@ const M = {
     playerLabel: "Gracz:",
     oopHint: "To strategia gracza, który działa jako pierwszy (OOP). Aby zobaczyć strategię przeciwnika (IP), wybierz IP w polu „Gracz:” powyżej.",
   },
+
+  th: {
+    backToList: "← ย้อนกลับ",
+    pot: "พอต",
+    stack: "Stack",
+    flopOnlyNote: "มีกลยุทธ์เฉพาะฟลอป ต้⁠อ⁠งการคลิกดูการเล่นต่อบนเทิร์นและริเวอร์หรือไม่? →",
+    solveThisSpot: "คำนวณสถานการณ์นี้ด้วยตัวเอง",
+    readArticle: "อ่านบทความ",
+    loadError: (e: string) => `โหลดผลลัพธ์ที่คำนวณไว้ล่วงหน้าไม่สำเร็จ: ${e}`,
+    loading: "กำลังโหลดผลลัพธ์…",
+    playerLabel: "ผู้เล่น:",
+    oopHint: "นี่คือกลยุทธ์ของผู้เล่นที่ออกแ⁠อ็⁠ก⁠ชั⁠นก่อน (OOP) ห⁠า⁠กต้⁠อ⁠งการดูกลยุทธ์คู่ต่อสู้ (IP) ให้ตั้ง “ผู้เล่น:” ด้านบนเป็น IP",
+  },
 } as const;
 
 type PreviewData = {

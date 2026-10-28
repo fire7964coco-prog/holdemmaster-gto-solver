@@ -97,6 +97,7 @@
           <option value="ar">العربية</option>
           <option value="it">Italiano</option>
             <option value="pl">Polski</option>
+            <option value="th">ภาษาไทย</option>
         </select>
         </span>
         <a
@@ -275,6 +276,14 @@ const M = {
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "Wybierz język",
   },
+
+  th: {
+    resultsDisabledHint: "เปิดได้เมื่อขั้นตอน “⑤ คำนวณ” เสร็จแล้ว",
+    solver: "Solver",
+    community: "ชุมชน",
+    communitySuffix: " HoldemMaster",
+    langSwitchLabel: "เลือกภาษา",
+  },
 } as const;
 
 export default defineComponent({
@@ -311,7 +320,8 @@ export default defineComponent({
         value === "ru" ||
         value === "ar" ||
         value === "it" ||
-        value === "pl"
+        value === "pl" ||
+        value === "th"
       )
         setLocale(value);
     };

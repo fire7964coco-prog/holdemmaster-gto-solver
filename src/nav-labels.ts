@@ -32,4 +32,5 @@ export const navResults: Record<Locale, string> = {
   ar: "النتائج",
   it: "Risultati",
   pl: "Wyniki",
+  th: "ผลลัพธ์",
 };

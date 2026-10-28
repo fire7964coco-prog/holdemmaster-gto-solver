@@ -326,6 +326,23 @@ export const NODE_LOCK_MESSAGES: LocaleDict<NodeLockMessages> = {
     banner: "Część strategii jest ustalona. Ten wynik nie jest strategią równowagi (GTO). Liczba zablokowanych węzłów: {count}",
     noReach: "Waga dotarcia do tego węzła wynosi 0, więc początkowe częstotliwości są niedostępne.",
   },
+  th: {
+    title: "ล็อกกลยุทธ์ของ Node นี้",
+    apply: "ล็อกและคำนวณใหม่",
+    clearAll: "ปลดล็อกทั้งหมดและคำนวณใหม่",
+    remove: "ปลดล็อกและคำนวณใหม่",
+    before: "ก่อนล็อก",
+    after: "หลังล็อก",
+    frequency: "ความถี่",
+    comparison: "เปรียบเทียบก่อนและหลัง",
+    exploitability: "Exploitability",
+    sumError: "ก⁠ร⁠อ⁠กจำ⁠น⁠ว⁠นเต็มตั้งแต่ 0 ถึง 100 สำหรับแ⁠ต่⁠ล⁠ะแ⁠อ็⁠ก⁠ชั⁠น โดยผลรวมต้⁠อ⁠งเท่ากับ 100",
+    skippedChance: "ไม่สามารถล็อกลำดับที่ยังไม่ได้เลือกไพ่ได้ โปรดเลือกไพ่ก่อน",
+    engineError: "ไม่สามารถล็อกกลยุทธ์ได้ ตรวจสอบค่าที่ก⁠ร⁠อ⁠กแล้วคำนวณใหม่",
+    assumption: "ค่าภายใต้สมมติฐานกลยุทธ์คงที่",
+    banner: "ผลคำนวณโดยกำหนดให้กลยุทธ์บางส่วนคงที่ ไม่ใช่กลยุทธ์สมดุล (GTO) · ล็อกไว้ {count} node",
+    noReach: "น้ำหนักการเข้าถึง node นี้เป็น 0 จึงไม่มีความถี่เริ่มต้น",
+  },
 };
 
 export const nodeLockLabels = () => NODE_LOCK_MESSAGES[i18n.locale];

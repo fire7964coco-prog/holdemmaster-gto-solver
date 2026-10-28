@@ -435,3 +435,50 @@ html:lang(pl) .tree-config label[for="tree-forceAllInThreshold"] + *,
 html:lang(pl) .tree-config label[for="tree-mergingThreshold"] + * {
   margin-inline-start: 0.25rem;
 }
+
+/* TH3: use dictionary line breaking; measure Thai copy and marks after TH4. */
+html:lang(th) body,
+html:lang(th) .button-base,
+html:lang(th) .app-section-heading,
+html:lang(th) .action-summary-label,
+html:lang(th) .mobile-menu-groups button,
+html:lang(th) .guide-table td,
+html:lang(th) .site-notice {
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+/* TH4: keep the complete raise label together in desktop sizing columns. */
+html:lang(th) .equity-page > p:first-child {
+  text-wrap: pretty;
+}
+html:lang(th) .th-guide-keep-word {
+  white-space: nowrap;
+}
+html:lang(th) .side-bar-label {
+  text-transform: none;
+  letter-spacing: normal;
+}
+html:lang(th) .study-mobile-pot {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: normal;
+}
+html:lang(th) .report-bar-row {
+  grid-template-columns: minmax(84px, 1.1fr) 46px minmax(90px, 2fr) max-content;
+}
+@media (max-width: 767px) {
+  html:lang(th) .report-bar-row {
+    grid-template-columns: minmax(0, 1fr) 40px minmax(40px, 1.3fr) max-content;
+  }
+}
+@media (min-width: 768px) {
+  html:lang(th) .tree-config .bet-grid label {
+    width: 5rem;
+    white-space: nowrap;
+  }
+  html:lang(th) .tree-config .bet-grid {
+    flex-wrap: wrap;
+  }
+}

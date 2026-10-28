@@ -32,7 +32,7 @@
         <div
           class="px-1.5 pt-1 pb-0.5 font-semibold group-hover:opacity-100 opacity-70"
         >
-          {{ spot.player.toUpperCase() }}
+          {{ isTh ? displayThSpotPlayer(spot.player) : spot.player.toUpperCase() }}
         </div>
         <div
           class="flex flex-col flex-grow px-3 items-center justify-evenly font-semibold"
@@ -52,7 +52,7 @@
             (spot.index === selectedSpotIndex ? '' : 'opacity-70')
           "
         >
-          {{ spot.player.toUpperCase() }}
+          {{ isTh ? displayThSpotPlayer(spot.player) : spot.player.toUpperCase() }}
         </div>
         <div class="flex-grow overflow-y-auto">
           <button
@@ -101,7 +101,7 @@
             (spot.index === selectedSpotIndex ? '' : 'opacity-70')
           "
         >
-          {{ spot.player.toUpperCase() }}
+          {{ isTh ? displayThSpotPlayer(spot.player) : spot.player.toUpperCase() }}
         </div>
         <div
           :class="
@@ -260,11 +260,13 @@ import { TreeManager } from "../../pkg/tree/tree";
 
 import { CheckIcon } from "@heroicons/vue/20/solid";
 import { TrashIcon } from "@heroicons/vue/24/outline";
-import { i18n, ltrIso, localizeNumber } from "../i18n";
+import { i18n, ltrIso, localizeNumber, pctText } from "../i18n";
 
 const actionNamesIt: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" };
 const actionNamesPl: Record<string, string> = { Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" };
-const displayActionName = (name: string) => i18n.locale === "it" ? actionNamesIt[name] ?? name : i18n.locale === "pl" ? actionNamesPl[name] ?? name : name;
+const actionNamesTh: Record<string, string> = { Fold: "หมอบ", Check: "เช็ค", Call: "คอล", Bet: "เ⁠ดิ⁠ม⁠พั⁠น", Raise: "เพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น" };
+const displayThSpotPlayer = (player: string) => ({ flop: "ฟลอป", turn: "เทิร์น", river: "ริเวอร์", end: "จบ" } as Record<string, string>)[player] ?? player.toUpperCase();
+const displayActionName = (name: string) => i18n.locale === "it" ? actionNamesIt[name] ?? name : i18n.locale === "pl" ? actionNamesPl[name] ?? name : i18n.locale === "th" ? actionNamesTh[name] ?? name : name;
 
 const M = {
   ko: {
@@ -567,6 +569,23 @@ const M = {
     cancelEdits: "Anuluj zmiany",
     addedLines: "Dodane linie:",
     removedLines: "Usunięte linie:",
+  },
+
+  th: {
+    treeError: "ข้อผิดพลาด: สร้างทรีไม่สำเร็จ (ทรีที่เปิดมาอาจเสียหาย)",
+    pot: "พอต",
+    stack: "Stack",
+    noActions: "(ไม่มีแ⁠อ็⁠ก⁠ชั⁠น)",
+    wins: "ชนะ",
+    invalidTerminals: "Node ปลายทางที่ไม่ถูกต้⁠อ⁠ง:",
+    addBetAction: "เพิ่มแ⁠อ็⁠ก⁠ชั⁠นเ⁠ดิ⁠ม⁠พั⁠น",
+    removeNode: "ลบ Node ที่เลือก",
+    betAmount: "จำ⁠น⁠ว⁠นเงินเ⁠ดิ⁠ม⁠พั⁠น:",
+    potRate: (pct: string) => `(${pctText(pct)} ของพอต)`,
+    saveEdits: "บันทึกการแก้ไข",
+    cancelEdits: "ยกเลิกการแก้ไข",
+    addedLines: "ลำดับที่เพิ่ม:",
+    removedLines: "ลำดับที่ลบ:",
   },
 } as const;
 
@@ -992,6 +1011,8 @@ export default defineComponent({
       navDiv,
       L,
       displayActionName,
+      displayThSpotPlayer,
+      isTh: computed(() => i18n.locale === "th"),
       isAr: computed(() => i18n.locale === "ar"),
       isTreeError,
       spots,

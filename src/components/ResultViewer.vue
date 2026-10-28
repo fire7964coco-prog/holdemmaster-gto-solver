@@ -389,6 +389,15 @@ const M = {
     finalizing: "Kończenie obliczeń…",
     paused: "Obliczenia wstrzymane.",
   },
+
+  th: {
+    startRange: "① เริ่มจากเรนจ์",
+    viewPresets: "ดูตัวอย่าง",
+    notRun: "ยังไม่ได้คำนวณผลลัพธ์ของคุณเอง\nดูผลลัพธ์ตัวอย่างได้โดยตรงในเมนู “ตัวอย่าง”\nห⁠า⁠กต้⁠อ⁠งการคำนวณสถานการณ์ของคุณเอง ให้ทำขั้นตอน ①–⑤ แล้วกด “เริ่มคำนวณ”",
+    running: "กำลังคำนวณด้วย Solver…",
+    finalizing: "กำลังสรุปผล…",
+    paused: "หยุดพักการคำนวณแล้ว",
+  },
 } as const;
 
 export default defineComponent({
@@ -415,6 +424,7 @@ export default defineComponent({
       const value = lockStore.currentExploitability;
       if (value === null || !Number.isFinite(value)) return "—";
       const scale = store.displayUnitScale;
+      if (i18n.locale === "th") return Number((value / scale).toPrecision(4)).toLocaleString("th-TH-u-ca-gregory-nu-latn", { useGrouping: true, minimumSignificantDigits: 4, maximumSignificantDigits: 4 }) + (scale > 1 ? "bb" : "");
       if (i18n.locale === "pl") return Number((value / scale).toPrecision(4)).toLocaleString("pl-PL", { useGrouping: true, minimumSignificantDigits: 4, maximumSignificantDigits: 4 }) + (scale > 1 ? "bb" : "");
       return localizeNumber((value / scale).toPrecision(4) + (scale > 1 ? "bb" : ""));
     });

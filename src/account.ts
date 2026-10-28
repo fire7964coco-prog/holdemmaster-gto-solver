@@ -223,7 +223,8 @@ const toUser = (session: Session | null): AccountUser | null => {
       (meta.name as string) ||
       session.user.email?.split("@")[0] ||
       pick("회원", "Player", "プレイヤー", "jugador", "Jogador", "Spieler", "玩家", "玩家", "Joueur", "Pemain", "Pemain", "खिलाड़ी", "Oyuncu", "Người chơi", "Игрок",
-        "لاعب", "Giocatore", "Gracz"),
+        "لاعب", "Giocatore", "Gracz",
+        "ผู้เล่น"),
   };
 };
 
@@ -351,7 +352,8 @@ export const signIn = async (provider: LoginProvider, purpose?: "feedback") => {
   nextReturnState = null;
   const supabase = await getClient();
   if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能", "Les comptes sont désactivés dans cette version", "Fitur akun dinonaktifkan di versi ini", "Ciri akaun tidak tersedia dalam versi ini", "इस संस्करण में खाते की सुविधा उपलब्ध नहीं है", "Bu sürümde hesap özelliği kapalı", "Tính năng tài khoản đã bị tắt trong phiên bản này", "Аккаунты в этой версии отключены",
-    "ميزة الحساب غير متاحة في هذا الإصدار", "La funzione account non è disponibile in questa build", "Funkcja konta jest niedostępna w tej wersji"));
+    "ميزة الحساب غير متاحة في هذا الإصدار", "La funzione account non è disponibile in questa build", "Funkcja konta jest niedostępna w tej wersji",
+    "รุ่นนี้ไม่เปิดใช้งานบัญชีผู้ใช้"));
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
@@ -475,11 +477,13 @@ export const syncAttempts = async (
 ): Promise<{ result: SyncResult; missingLocally: TrainerAttempt[] }> => {
   const supabase = await getClient();
   if (!supabase) throw new Error(pick("계정 기능이 꺼져 있습니다", "Accounts are disabled in this build", "アカウント機能は無効になっています", "Las cuentas están desactivadas en esta versión", "As contas estão desativadas nesta versão", "Konten sind in dieser Version deaktiviert", "此版本已关闭账号功能", "此版本已關閉帳號功能", "Les comptes sont désactivés dans cette version", "Fitur akun dinonaktifkan di versi ini", "Ciri akaun tidak tersedia dalam versi ini", "इस संस्करण में खाते की सुविधा उपलब्ध नहीं है", "Bu sürümde hesap özelliği kapalı", "Tính năng tài khoản đã bị tắt trong phiên bản này", "Аккаунты в этой версии отключены",
-    "ميزة الحساب غير متاحة في هذا الإصدار", "La funzione account non è disponibile in questa build", "Funkcja konta jest niedostępna w tej wersji"));
+    "ميزة الحساب غير متاحة في هذا الإصدار", "La funzione account non è disponibile in questa build", "Funkcja konta jest niedostępna w tej wersji",
+    "รุ่นนี้ไม่เปิดใช้งานบัญชีผู้ใช้"));
   const { data: sessionData } = await supabase.auth.getSession();
   const userId = sessionData.session?.user.id;
   if (!userId) throw new Error(pick("로그인이 필요합니다", "Please sign in first", "ログインが必要です", "Primero inicia sesión", "Faça login primeiro", "Melde dich zuerst an", "请先登录", "請先登入", "Connecte-toi d'abord", "Silakan login dulu", "Sila log masuk dahulu", "पहले लॉग इन करें", "Önce giriş yap", "Hãy đăng nhập trước", "Сначала войди в аккаунт",
-    "سجّل الدخول أولًا", "Accedi prima di continuare", "Najpierw się zaloguj"));
+    "سجّل الدخول أولًا", "Accedi prima di continuare", "Najpierw się zaloguj",
+    "โปรดเข้าสู่ระบบก่อน"));
   // 기기 기록의 주인(ownerId)과 지금 세션이 다르면 올리지 않는다 — 본체에서 다른 계정으로 로그인하면
   // 화면은 옛 계정인데 쿠키는 새 계정일 수 있다(MB-388 ① · 판정 2026-10-18)
   if (userId !== ownerId) throw new AccountChangedError();

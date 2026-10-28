@@ -645,7 +645,7 @@ export default defineComponent({
     const S = computed(() => flopStudyLabels(i18n.locale));
     const T = computed(() => turnPackLabels(i18n.locale));
     const R = computed(() => M[i18n.locale]);
-    const versus = computed(() => (i18n.locale === "ar" ? "ضد" : i18n.locale === "pl" ? "vs" : i18n.locale === "it" ? "contro" : "vs"));
+    const versus = computed(() => (i18n.locale === "ar" ? "ضد" : i18n.locale === "pl" ? "vs" : i18n.locale === "th" ? "เทียบกับ" : i18n.locale === "it" ? "contro" : "vs"));
 
     const store = useStore();
     const config = useConfigStore();

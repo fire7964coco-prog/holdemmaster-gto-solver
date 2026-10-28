@@ -182,6 +182,13 @@ const M = {
     draws: "Drawy",
     noDraws: "Brak informacji o drawach",
   },
+
+  th: {
+    hands: "มือ",
+    noHands: "ไม่มีมือให้แสดง",
+    draws: "ด⁠ร⁠อ⁠ว์",
+    noDraws: "ไม่มีข้อมูลด⁠ร⁠อ⁠ว์",
+  },
 } as const;
 
 // GTO Wizard 풍 카테고리 바 팔레트 (강한 핸드 → 약한 핸드)

@@ -308,6 +308,17 @@ const M = {
       `Pola sizingów były puste, więc wpisano też wartości domyślne — Flop ${flop} · Turn/River ${later} · Przebicie ${raise}`,
     next: "Następny krok: ③ Board",
   },
+
+  th: {
+    title: "เติมเรนจ์ตามตำแหน่ง",
+    note: "เลือกผู้เล่นที่เพิ่มเ⁠ดิ⁠ม⁠พั⁠นก่อนและผู้คอล แล้วกดปุ่มด้านล่างเพื่อเติมเรนจ์ทั้งสองฝั่ง พอต และ Stack พร้อมกัน ใช้เรนจ์เดียวกับ “ตารางพรีฟลอป” (แคชเกม 6-max, 100bb)",
+    opener: "เปิดด้วยการเพิ่มเ⁠ดิ⁠ม⁠พั⁠น",
+    caller: "คอล",
+    apply: "เติมเรนจ์ทั้งสองฝั่ง",
+    applied: (oop: string, ip: string, pot: string, stack: string) => `เติมเรนจ์ ${oop} (OOP) · ${ip} (IP) แล้ว พอต ${pot}bb · Stack ${stack}bb`,
+    betsFilled: (flop: string, later: string, raise: string) => `ขนาดเ⁠ดิ⁠ม⁠พั⁠นยังว่าง จึงเติมค่าเริ่มต้นให้ด้วย — ฟลอป ${flop} · เทิร์น/ริเวอร์ ${later} · เพิ่มเ⁠ดิ⁠ม⁠พั⁠น ${raise}`,
+    next: "ถัดไป: ③ บอร์ด",
+  },
 } as const;
 
 const BET_FIELDS = [

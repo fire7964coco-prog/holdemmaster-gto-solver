@@ -73,13 +73,19 @@ const shortBrowser = () => {
         "Samsung Internet ",
         "Samsung Internet ",
         "三星浏览器 "
-      , "三星瀏覽器 ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ") + RegExp.$1
+      , "三星瀏覽器 ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ", "Samsung Internet ",
+        "Samsung Internet ") + RegExp.$1
     );
-  if (/Edg\/([\d.]+)/.test(ua)) return pick("엣지 ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ") + RegExp.$1;
-  if (/Chrome\/([\d.]+)/.test(ua)) return pick("크롬 ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ") + RegExp.$1;
-  if (/Firefox\/([\d.]+)/.test(ua)) return pick("파이어폭스 ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ") + RegExp.$1;
-  if (/Version\/([\d.]+).*Safari/.test(ua)) return pick("사파리 ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ") + RegExp.$1;
-  return pick("기타 브라우저", "Other browser", "その他のブラウザ", "Otro navegador", "Outro navegador", "Anderer Browser", "其他浏览器", "其他瀏覽器", "Autre navigateur", "Browser lain", "Pelayar lain", "अन्य ब्राउज़र", "Diğer tarayıcı", "Trình duyệt khác", "Другой браузер", "متصفح آخر", "Altro browser", "Inna przeglądarka");
+  if (/Edg\/([\d.]+)/.test(ua)) return pick("엣지 ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ", "Edge ",
+    "Edge ") + RegExp.$1;
+  if (/Chrome\/([\d.]+)/.test(ua)) return pick("크롬 ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ", "Chrome ",
+    "Chrome ") + RegExp.$1;
+  if (/Firefox\/([\d.]+)/.test(ua)) return pick("파이어폭스 ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ", "Firefox ",
+    "Firefox ") + RegExp.$1;
+  if (/Version\/([\d.]+).*Safari/.test(ua)) return pick("사파리 ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ", "Safari ",
+    "Safari ") + RegExp.$1;
+  return pick("기타 브라우저", "Other browser", "その他のブラウザ", "Otro navegador", "Outro navegador", "Anderer Browser", "其他浏览器", "其他瀏覽器", "Autre navigateur", "Browser lain", "Pelayar lain", "अन्य ब्राउज़र", "Diğer tarayıcı", "Trình duyệt khác", "Другой браузер", "متصفح آخر", "Altro browser", "Inna przeglądarka",
+    "เ⁠บ⁠ร⁠า⁠ว์⁠เ⁠ซ⁠อ⁠ร์อื่⁠น");
 };
 
 const record = (msg: string, stack: string) => {
@@ -130,16 +136,24 @@ export const errorReportText = () => {
     // 다른 빌드는 상표만 바꾼 제목을 쓴다(src/variant.ts)
     __APP_TARGET__ === "solo"
       ? pick(...VARIANT_TEXT!.errorLogTitle)
-      : pick("홀덤마스터 트레이너 오류 기록", "HoldemMaster GTO Trainer error log", "HoldemMaster GTOトレーナー エラーログ", "Registro de errores de HoldemMaster GTO Trainer", "Registro de erros do HoldemMaster GTO Trainer", "Fehlerprotokoll des HoldemMaster GTO Trainers", "HoldemMaster GTO 训练器错误日志", "HoldemMaster GTO 訓練器錯誤紀錄", "Journal d'erreurs du HoldemMaster GTO Trainer", "Log error HoldemMaster GTO Trainer", "Log ralat HoldemMaster GTO Trainer", "HoldemMaster GTO Trainer त्रुटि रिकॉर्ड", "HoldemMaster GTO Trainer hata kaydı", "Nhật ký lỗi HoldemMaster Trainer GTO", "Журнал ошибок — HoldemMaster GTO-тренажёр", "سجل أخطاء مدرّب GTO من HoldemMaster", "Registro errori di HoldemMaster GTO Trainer", "Dziennik błędów HoldemMaster GTO Trainer"),
-    `${pick("빌드", "Build", "ビルド", "Build", "Build", "Build", "Build", "Build", "Build", "Build", "Build", "बिल्ड", "Sürüm", "Bản dựng", "Сборка", "الإصدار", "Build", "Wersja")} ${diagnosticValue(__BUILD_ID__)} · ${diagnosticValue(shortBrowser())} · ${pick("화면", "Screen", "画面", "Pantalla", "Tela", "Bildschirm", "屏幕", "螢幕", "Écran", "Layar", "Skrin", "स्क्रीन", "Ekran", "Màn hình", "Экран", "الشاشة", "Schermata", "Ekran")} ${diagnosticValue(`${window.innerWidth}x${window.innerHeight}`)}`,
-    `${pick("설치 실행", "Installed app", "インストール版", "App instalada", "App instalado", "Installierte App", "已安装的应用", "已安裝的應用程式", "App installée", "Aplikasi terinstal", "Aplikasi dipasang", "इंस्टॉल किया गया ऐप", "Yüklü uygulama", "Ứng dụng đã cài", "Установленное приложение", "التطبيق المثبّت", "App installata", "Zainstalowana aplikacja")}: ${standalone ? pick("예", "yes", "はい", "sí", "sim", "ja", "是", "是", "oui", "ya", "ya", "हाँ", "evet", "có", "да", "نعم", "sì", "tak") : pick("아니오", "no", "いいえ", "no", "não", "nein", "否", "否", "non", "tidak", "tidak", "नहीं", "hayır", "không", "нет", "لا", "no", "nie")}`,
+      : pick("홀덤마스터 트레이너 오류 기록", "HoldemMaster GTO Trainer error log", "HoldemMaster GTOトレーナー エラーログ", "Registro de errores de HoldemMaster GTO Trainer", "Registro de erros do HoldemMaster GTO Trainer", "Fehlerprotokoll des HoldemMaster GTO Trainers", "HoldemMaster GTO 训练器错误日志", "HoldemMaster GTO 訓練器錯誤紀錄", "Journal d'erreurs du HoldemMaster GTO Trainer", "Log error HoldemMaster GTO Trainer", "Log ralat HoldemMaster GTO Trainer", "HoldemMaster GTO Trainer त्रुटि रिकॉर्ड", "HoldemMaster GTO Trainer hata kaydı", "Nhật ký lỗi HoldemMaster Trainer GTO", "Журнал ошибок — HoldemMaster GTO-тренажёр", "سجل أخطاء مدرّب GTO من HoldemMaster", "Registro errori di HoldemMaster GTO Trainer", "Dziennik błędów HoldemMaster GTO Trainer",
+        "บันทึกข้อผิดพลาดของ HoldemMaster GTO Trainer"),
+    `${pick("빌드", "Build", "ビルド", "Build", "Build", "Build", "Build", "Build", "Build", "Build", "Build", "बिल्ड", "Sürüm", "Bản dựng", "Сборка", "الإصدار", "Build", "Wersja",
+      "รุ่น")} ${diagnosticValue(__BUILD_ID__)} · ${diagnosticValue(shortBrowser())} · ${pick("화면", "Screen", "画面", "Pantalla", "Tela", "Bildschirm", "屏幕", "螢幕", "Écran", "Layar", "Skrin", "स्क्रीन", "Ekran", "Màn hình", "Экран", "الشاشة", "Schermata", "Ekran",
+      "หน้าจอ")} ${diagnosticValue(`${window.innerWidth}x${window.innerHeight}`)}`,
+    `${pick("설치 실행", "Installed app", "インストール版", "App instalada", "App instalado", "Installierte App", "已安装的应用", "已安裝的應用程式", "App installée", "Aplikasi terinstal", "Aplikasi dipasang", "इंस्टॉल किया गया ऐप", "Yüklü uygulama", "Ứng dụng đã cài", "Установленное приложение", "التطبيق المثبّت", "App installata", "Zainstalowana aplikacja",
+      "เปิดจากแอปที่ติดตั้ง")}: ${standalone ? pick("예", "yes", "はい", "sí", "sim", "ja", "是", "是", "oui", "ya", "ya", "हाँ", "evet", "có", "да", "نعم", "sì", "tak",
+      "ใช่") : pick("아니오", "no", "いいえ", "no", "não", "nein", "否", "否", "non", "tidak", "tidak", "नहीं", "hayır", "không", "нет", "لا", "no", "nie",
+      "ไม่ใช่")}`,
     "",
   ].join("\n");
   const body = records
     .slice()
     .reverse()
     .map((item, index) => {
-      const time = new Date(item.t).toLocaleString(pick("ko-KR", "en-US", "ja-JP", "es-MX", "pt-BR", "de-DE", "zh-CN", "zh-TW", "fr-FR", "id-ID", "ms-MY", "hi-IN", "tr-TR", "vi-VN", "ru-RU", "en-US", "it-IT", "pl-PL"), i18n.locale === "pl" ? { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false } : undefined);
+      const time = new Date(item.t).toLocaleString(pick("ko-KR", "en-US", "ja-JP", "es-MX", "pt-BR", "de-DE", "zh-CN", "zh-TW", "fr-FR", "id-ID", "ms-MY", "hi-IN", "tr-TR", "vi-VN", "ru-RU", "en-US", "it-IT", "pl-PL",
+        // TH3: Gregorian calendar and Latin digits; timestamp/time zone unchanged.
+        "th-TH-u-ca-gregory-nu-latn"), (i18n.locale === "pl" || i18n.locale === "th") ? { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false } : undefined);
       if (i18n.locale === "ar")
         return `${ltrIso(`[${index + 1}] ${time} (${item.where})`)}\n${autoIso(item.msg)}\n${autoIso(item.stack)}`;
       return `[${index + 1}] ${time} (${item.where})\n${item.msg}\n${item.stack}`;
@@ -174,7 +188,8 @@ export const setupErrorCapture = () => {
     } else if (target && target.tagName) {
       // 이미지·스크립트 로딩 실패는 error 객체가 없다
       record(
-        `${target.tagName} ${pick("로딩 실패", "failed to load", "読み込み失敗", "no se pudo cargar", "não foi possível carregar", "konnte nicht geladen werden", "加载失败", "載入失敗", "n'a pas pu être chargé", "gagal dimuat", "gagal dimuatkan", "लोड नहीं हुआ", "yüklenemedi", "không tải được", "— ошибка загрузки", "تعذّر التحميل", "caricamento non riuscito", "— nie udało się wczytać")}`,
+        `${target.tagName} ${pick("로딩 실패", "failed to load", "読み込み失敗", "no se pudo cargar", "não foi possível carregar", "konnte nicht geladen werden", "加载失败", "載入失敗", "n'a pas pu être chargé", "gagal dimuat", "gagal dimuatkan", "लोड नहीं हुआ", "yüklenemedi", "không tải được", "— ошибка загрузки", "تعذّر التحميل", "caricamento non riuscito", "— nie udało się wczytać",
+          "โหลดไม่สำเร็จ")}`,
         String(target.src || target.href || "")
       );
     } else if (event.message) {
@@ -193,7 +208,8 @@ export const setupErrorCapture = () => {
   window.addEventListener("unhandledrejection", (event) => {
     const reason = event.reason;
     record(
-      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ", "Erro não tratado: ", "Unbehandelter Fehler: ", "未处理的错误：", "未處理的錯誤：", "Erreur non gérée : ", "Error tidak tertangani: ", "Ralat tidak dikendalikan: ", "हैंडल नहीं की गई त्रुटि: ", "İşlenmemiş hata: ", "Lỗi chưa được xử lý: ", "Необработанное отклонение промиса: ", "خطأ غير معالج: ", "Errore non gestito: ", "Nieobsłużony błąd: ") + String(reason?.message ?? reason),
+      pick("처리되지 않은 오류: ", "Unhandled rejection: ", "未処理のエラー: ", "Error no controlado: ", "Erro não tratado: ", "Unbehandelter Fehler: ", "未处理的错误：", "未處理的錯誤：", "Erreur non gérée : ", "Error tidak tertangani: ", "Ralat tidak dikendalikan: ", "हैंडल नहीं की गई त्रुटि: ", "İşlenmemiş hata: ", "Lỗi chưa được xử lý: ", "Необработанное отклонение промиса: ", "خطأ غير معالج: ", "Errore non gestito: ", "Nieobsłużony błąd: ",
+        "ข้อผิดพลาดที่ไม่ได้จัดการ: ") + String(reason?.message ?? reason),
       String(reason?.stack ?? "")
     );
   });

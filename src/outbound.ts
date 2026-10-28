@@ -119,6 +119,8 @@ const LOCALE_PATHS: Record<string, Record<string, string>> = {
   it: { "": "/it", "/solver": "/it/solver" },
   // ✅ /pl/solver 200 (2026-10-18 curl 실측 · 본체 MB-384 790b13e0). 10-17에는 404였다. /pl/community는 별개.
   pl: { "": "/pl", "/solver": "/pl/solver" },
+  // TH3: /th 200; /th/solver and /th/community 404 (2026-10-27 task measurement).
+  th: { "": "/th" },
 };
 
 export const mainSiteUrl = (path: string, placement: OutboundPlacement) => {

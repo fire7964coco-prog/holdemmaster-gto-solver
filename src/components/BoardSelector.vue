@@ -238,6 +238,15 @@ const M = {
     warnBody: (n: number) =>
       `Wymagana liczba kart na boardzie dla edytowanego drzewa: ${n}.`,
   },
+
+  th: {
+    inputError: "อ่านไพ่ไม่สำเร็จ ก⁠ร⁠อ⁠กไพ่ 3–5 ใบ เช่น AsKd7c หรือ As Kd 7c บอร์ดเดิมยังคงอยู่",
+    placeholder: "เช่น AsKd7c",
+    clear: "ล้าง",
+    randomFlop: "สุ่มฟลอป",
+    warnLabel: "คำเตือน:",
+    warnBody: (n: number) => `ทรีที่แก้ไขไว้ใช้บอร์ดที่มีไพ่ ${n.toLocaleString("th-TH-u-ca-gregory-nu-latn")} ใบ`,
+  },
 } as const;
 
 export default defineComponent({

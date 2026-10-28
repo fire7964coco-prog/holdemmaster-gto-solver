@@ -156,11 +156,17 @@ import { useStore } from "../store";
 
 const actionNamesIt: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" };
 const actionNamesPl: Record<string, string> = { Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" };
+const actionNamesTh: Record<string, string> = { Fold: "การหมอบ", Check: "การเช็ค", Call: "การคอล", Bet: "การเ⁠ดิ⁠ม⁠พั⁠น", Raise: "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น" };
 const displayActionName = (name: string) => {
   if (i18n.locale === "pl") {
     const separator = name.indexOf(":");
     const kind = separator < 0 ? name : name.slice(0, separator);
     return (actionNamesPl[kind] ?? kind) + (separator < 0 ? "" : name.slice(separator));
+  }
+  if (i18n.locale === "th") {
+    const separator = name.indexOf(":");
+    const kind = separator < 0 ? name : name.slice(0, separator);
+    return (actionNamesTh[kind] ?? kind) + (separator < 0 ? "" : name.slice(separator));
   }
   if (i18n.locale !== "it") return name;
   // Comparison snapshots keep the engine's combined "Bet:50" token.

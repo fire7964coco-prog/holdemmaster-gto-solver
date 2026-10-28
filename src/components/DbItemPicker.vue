@@ -777,6 +777,22 @@ const M = {
     exportJsonLabel: "Eksportuj JSON",
     importFailed: "Błąd: nie udało się zaimportować danych. Sprawdź przyczynę poniżej. Możesz importować tylko pliki zapisane przyciskiem „Eksportuj JSON” na tej liście.",
   },
+
+  th: {
+    noSavedRanges: "ยังไม่มีเรนจ์ที่บันทึกไว้ กด “บันทึก” แล้วตั้งชื่อเพื่อเก็บเรนจ์ปัจจุบันไว้ที่นี่ ครั้งถัดไปใช้ “เปิดข้อมูลที่บันทึกไว้” เพื่อเรียกกลับมา",
+    noSavedConfigs: "ยังไม่มีการตั้งค่าที่บันทึกไว้ กด “บันทึก” แล้วตั้งชื่อเพื่อเก็บการตั้งค่าปัจจุบันไว้ที่นี่ ครั้งถัดไปใช้ “เปิดข้อมูลที่บันทึกไว้” เพื่อเรียกกลับมา",
+    emptyGroup: "(กลุ่มว่าง)",
+    errorReload: "เกิดข้อผิดพลาด โปรดโหลดหน้านี้ใหม่",
+    load: "เปิดข้อมูลที่บันทึกไว้",
+    overwrite: "เขียนทับ",
+    save: "บันทึก",
+    rename: "เปลี่ยนชื่อ",
+    addGroup: "เพิ่มกลุ่ม",
+    deleteLabel: "ลบ",
+    importJsonLabel: "นำเข้า JSON",
+    exportJsonLabel: "ส่งออก JSON",
+    importFailed: "ข้อผิดพลาด: นำเข้าไม่สำเร็จ ดูสาเหตุด้านล่าง นำเข้าได้เฉพาะไฟล์ที่บันทึกด้วย “ส่งออก JSON” ในรายการนี้เท่านั้น",
+  },
 } as const;
 
 type Item = {
@@ -1278,14 +1294,20 @@ export default defineComponent({
       const defaultName = item.isGroup
         ? pick("새 그룹", "New group", "新しいグループ", "Nuevo grupo", "Novo grupo", "Neue Gruppe", "新建分组", "新增群組", "Nouveau groupe", "Grup baru", "Kumpulan baharu", "नया समूह", "Yeni grup", "Nhóm mới", "Новая группа",
     "مجموعة جديدة",
-          "Nuovo gruppo", "Nowa grupa")
+          "Nuovo gruppo", "Nowa grupa",
+          "กลุ่มใหม่"
+        )
         : props.storeName === "ranges"
         ? pick("새 레인지", "New range", "新しいレンジ", "Nuevo rango", "Novo range", "Neue Range", "新建范围", "新增範圍", "Nouvelle range", "Range baru", "Range baharu", "नई range", "Yeni range", "Range mới", "Новый диапазон",
     "نطاق جديد",
-          "Nuovo range", "Nowy zakres")
+          "Nuovo range", "Nowy zakres",
+          "เรนจ์ใหม่"
+        )
         : pick("새 설정", "New configuration", "新しい設定", "Nueva configuración", "Nova configuração", "Neue Einstellung", "新建设置", "新增設定", "Nouvelle configuration", "Konfigurasi baru", "Tetapan baharu", "नई सेटिंग", "Yeni ayar", "Cấu hình mới", "Новая конфигурация",
     "تكوين جديد",
-          "Nuove impostazioni", "Nowe ustawienia");
+          "Nuove impostazioni", "Nowe ustawienia",
+          "การตั้งค่าใหม่"
+        );
       if (editingName.value === "") {
         let i = 2;
         let newName = defaultName;
@@ -1652,7 +1674,9 @@ export default defineComponent({
           "Kesalahan pembacaan (format JSON tidak valid)",
           "Ralat pembacaan (format JSON tidak sah)", "पार्स नहीं हो सका (JSON प्रारूप अमान्य है)", "Okuma hatası (geçersiz JSON biçimi)", "Lỗi đọc dữ liệu (định dạng JSON không hợp lệ)", "Ошибка чтения (неверный формат JSON)",
     "خطأ في القراءة (صيغة JSON غير صالحة)",
-          "Errore di lettura (formato JSON non valido)", "Błąd odczytu (nieprawidłowy format JSON)");
+          "Errore di lettura (formato JSON non valido)", "Błąd odczytu (nieprawidłowy format JSON)",
+          "อ่านข้อมูลไม่สำเร็จ (รูปแบบ JSON ไม่ถูกต้⁠อ⁠ง)"
+        );
         return;
       }
 
@@ -1670,7 +1694,9 @@ export default defineComponent({
           "Tipe data tidak cocok",
           "Jenis data tidak sepadan", "डेटा का प्रकार मेल नहीं खाता", "Veri türü uyuşmuyor", "Kiểu dữ liệu không khớp", "Тип данных не совпадает",
     "نوع البيانات غير مطابق",
-          "Tipo di dati incompatibile", "Niezgodny typ danych");
+          "Tipo di dati incompatibile", "Niezgodny typ danych",
+          "ชนิดข้อมูลไม่ตรงกัน"
+        );
         return;
       }
 
@@ -1688,14 +1714,18 @@ export default defineComponent({
           "Versi tidak cocok",
           "Versi tidak sepadan", "वर्ज़न मेल नहीं खाता", "Sürüm uyuşmuyor", "Phiên bản không khớp", "Версия не совпадает",
     "الإصدار غير مطابق",
-          "Versione incompatibile", "Niezgodna wersja");
+          "Versione incompatibile", "Niezgodna wersja",
+          "เวอร์ชันไม่ตรงกัน"
+        );
         return;
       }
 
       if (!checkJson(obj.data)) {
         importError.value = pick("잘못된 데이터입니다", "Invalid data", "無効なデータです", "Datos inválidos", "Dados inválidos", "Ungültige Daten", "无效的数据", "無效的資料", "Données invalides", "Data tidak valid", "Data tidak sah", "अमान्य डेटा", "Geçersiz veri", "Dữ liệu không hợp lệ", "Неверные данные",
     "بيانات غير صالحة",
-          "Dati non validi", "Nieprawidłowe dane");
+          "Dati non validi", "Nieprawidłowe dane",
+          "ข้อมูลไม่ถูกต้⁠อ⁠ง"
+        );
         return;
       }
 
@@ -1714,7 +1744,9 @@ export default defineComponent({
           `Tidak bisa membuat grup “${itemsToAdd}”: sudah ada item dengan nama yang sama`,
           `Kumpulan “${itemsToAdd}” tidak dapat dibuat kerana sudah ada item dengan nama yang sama`, `"${itemsToAdd}" समूह नहीं बना सकते, क्योंकि इस नाम का आइटम पहले से मौजूद है`, `“${itemsToAdd}” grubu oluşturulamıyor: aynı adda bir öğe zaten var`, `Không thể tạo nhóm “${itemsToAdd}” vì đã có mục cùng tên`, `Нельзя создать группу «${itemsToAdd}»: элемент с таким названием уже есть`,
     `تعذّر إنشاء المجموعة «${autoIso(itemsToAdd)}» لأن عنصرًا بالاسم نفسه موجود بالفعل`,
-          `Impossibile creare il gruppo «${itemsToAdd}»: esiste già un elemento con questo nome`, `Nie można utworzyć grupy „${itemsToAdd}”, ponieważ istnieje już element o tej nazwie`);
+          `Impossibile creare il gruppo «${itemsToAdd}»: esiste già un elemento con questo nome`, `Nie można utworzyć grupy „${itemsToAdd}”, ponieważ istnieje już element o tej nazwie`,
+          `สร้างกลุ่ม “${itemsToAdd}” ไม่ได้ เ⁠พ⁠ร⁠า⁠ะมีรายการชื่อนี้อยู่แล้ว`
+        );
         return;
       }
 
