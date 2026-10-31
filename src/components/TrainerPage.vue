@@ -732,6 +732,7 @@ import {
   todayKey,
 } from "../daily";
 import { canShareCard, drawDailyCard, saveCard, shareCard } from "../share-card";
+import { trackShare } from "../usage-analytics";
 import { fetchLeaderboard, submitDailyResult, Leaderboard } from "../leaderboard";
 import {
   claimLocalData,
@@ -2127,7 +2128,7 @@ const M = {
     prompt: "Apa keputusan anda?",
     bestEvTag: " · EV tertinggi",
     evLoss: "Kerugian EV",
-    mobileDetailTitle: "Frekuensi & EV setiap aksi",
+    mobileDetailTitle: "Kekerapan & EV setiap aksi",
     mixedNote:
       "Strategi campuran tidak dikira salah — penilaian berdasarkan perbezaan EV antara aksi.",
     dailyDone: "Cabaran Harian selesai",
@@ -2155,10 +2156,10 @@ const M = {
     viewFull: "Lihat penyelesaian penuh",
     resultTitle: "Hasil",
     resultHintBefore: "Pilih satu aksi dan anda akan melihat ",
-    resultHintBold: "frekuensi dan EV setiap aksi",
+    resultHintBold: "kekerapan dan EV setiap aksi",
     resultHintAfter: ", serta berapa bb yang hilang daripada pilihan anda.",
     gtoNoteBefore:
-      "GTO mencampurkan aksi dengan tangan yang sama — pilihan berfrekuensi rendah tidak semestinya salah. Ukurannya ialah kerugian EV ",
+      "GTO mencampurkan aksi dengan tangan yang sama — pilihan berkekerapan rendah tidak semestinya salah. Ukurannya ialah kerugian EV ",
     gtoNoteBold: "berbanding pot",
     // ⚠ 아래 세 판정명은 verdictBest·verdictGood·verdictMiss와 «글자까지» 같아야 한다.
     //   숫자는 영어식 — 소수점은 «.»다(리서치 §1-2. id의 «0,35%»와 «일부러» 다르다)
@@ -3480,6 +3481,7 @@ export default defineComponent({
       } catch {
         window.prompt(L.value.promptCopy, text);
       }
+      trackShare("trainer");
     };
 
     /* 성적 카드 — 오늘의 문제 결과를 이미지로 (단톡방·SNS 공유용) */
@@ -3510,7 +3512,7 @@ export default defineComponent({
     };
     const shareCardNow = async () => {
       if (!cardCanvas) return;
-      await shareCard(cardCanvas, cardFileName(), L.value.shareText);
+      if (await shareCard(cardCanvas, cardFileName(), L.value.shareText)) trackShare("trainer");
     };
     const saveCardNow = async () => {
       if (cardCanvas) await saveCard(cardCanvas, cardFileName());

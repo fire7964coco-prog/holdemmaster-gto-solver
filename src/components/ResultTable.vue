@@ -57,7 +57,10 @@
 
     <div
       ref="tableDiv"
-      class="result-table-scroll flex-grow overflow-y-scroll will-change-scroll"
+      :class="
+        'result-table-scroll flex-grow overflow-y-scroll will-change-scroll' +
+        (scrolledX ? ' scrolled-x' : '')
+      "
       @scroll.passive="onTableScroll"
     >
       <table class="w-full h-full text-sm text-center align-middle">
@@ -71,7 +74,7 @@
               :class="
                 'whitespace-nowrap select-none ' +
                 (column.type === 'card'
-                  ? 'sticky left-0 z-40 bg-neutral-800 '
+                  ? 'sticky-card sticky left-0 z-40 bg-neutral-800 '
                   : '') +
                 (column.type !== 'bar' ? 'cursor-pointer ' : '') +
                 (tableMode === 'chance' ? 'header-divider' : '')
@@ -112,7 +115,7 @@
               :class="
                 'header-divider ' +
                 (column.type === 'card'
-                  ? 'sticky left-0 z-40 underline bg-neutral-800 '
+                  ? 'sticky-card sticky left-0 z-40 underline bg-neutral-800 '
                   : 'relative ') +
                 (column.type === 'bar'
                   ? 'pt-[0.3125rem] pb-1 px-1'
@@ -245,7 +248,7 @@
               :class="
                 'row-divider ' +
                 (column.type === 'card'
-                  ? 'sticky left-0 z-10 ' +
+                  ? 'sticky-card sticky left-0 z-10 ' +
                     (item[0] === scrollTarget
                       ? 'bg-yellow-900 '
                       : 'bg-neutral-900 ')
@@ -1123,6 +1126,7 @@ export default defineComponent({
 
     const tableDiv = ref<HTMLDivElement | null>(null);
     const tableHeight = ref(0);
+    const scrolledX = ref(false);
 
     const assignTableHeight = () => {
       if (tableDiv.value) {
@@ -1464,7 +1468,8 @@ export default defineComponent({
         ticking = false;
         if (!tableDiv.value) return;
 
-        const { scrollTop } = tableDiv.value;
+        const { scrollTop, scrollLeft } = tableDiv.value;
+        scrolledX.value = scrollLeft > 0;
         const topIndex = Math.max(scrollTop / rowHeight, 0);
         if (topIndex < emptyBufferTop.value + bufferUnit) {
           emptyBufferTop.value =
@@ -1683,6 +1688,7 @@ export default defineComponent({
       displayOptions,
       updateDisplayOptions,
       tableDiv,
+      scrolledX,
       pairText,
       sortKey,
       sortBy,
@@ -1729,6 +1735,19 @@ export default defineComponent({
 .header-divider::before {
   content: "";
   @apply absolute left-0 -bottom-px w-full border-b border-neutral-700;
+}
+
+/* 가로로 밀렸을 때만 고정 첫 열 오른쪽에 경계 — 옆 열 글자가 잘려 이어 읽히지 않게(MB-475) */
+.scrolled-x .sticky-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -1px;
+  width: 1px;
+  background: rgb(82 82 82);
+  box-shadow: 3px 0 6px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
 }
 
 .row-divider::before {

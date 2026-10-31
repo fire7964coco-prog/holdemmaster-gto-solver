@@ -79,6 +79,8 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(req.url);
   // 다른 출처(Supabase 로그인·동기화 등)는 건드리지 않는다.
   if (url.origin !== self.location.origin) return;
+  // Vercel 플랫폼 경로는 저장하지 않는다 — 아래 «캐시 우선»에 걸리면 옛 스크립트를 계속 주게 된다.
+  if (url.pathname.startsWith("/_vercel/")) return;
 
   // ① 문서 요청: 네트워크 우선 → 실패 시 캐시된 셸
   if (req.mode === "navigate") {

@@ -4,8 +4,12 @@ import { localizeNumber, decimalMark, pctText } from "./i18n";
 import App from "./components/App.vue";
 import { setupPwa } from "./pwa";
 import { setupErrorCapture } from "./errors";
+import { setupAnalytics } from "./usage-analytics";
 import "./index.css";
 import "tippy.js/dist/tippy.css";
+
+// 이용 계측 — 오류 수집보다 먼저(자기 스크립트의 로딩 실패를 오류로 남기지 않게) · 주소를 정리하는 마운트보다 먼저
+setupAnalytics();
 
 // 오류 수집을 가장 먼저 붙인다 — 마운트 도중 나는 오류도 잡아야 한다
 setupErrorCapture();

@@ -1186,7 +1186,7 @@ const M = {
     mode4bet: "vs 4-bet (selepas 3-bet)",
     // 산문의 소수는 영어식 2.5bb (리서치 §1-2). % 앞 공백 없음
     intro4bet:
-      "Cara bertindak balas apabila 3-bet anda di-4-bet — merah = 5-bet (all-in), hijau = call, selebihnya fold. Frekuensinya dikira hanya daripada tangan yang memang anda 3-bet, jadi tangan yang tidak pernah anda 3-bet dibiarkan kosong. Cash game 6-max, 100bb. Saiz 4-bet: BB 3-bet 11bb → 24bb · SB 3-bet 10bb → 22bb · posisi selepasnya (CO·BTN) 3-bet 7.5bb → 19bb · BB menentang open SB 3-bet 9bb → 22bb.",
+      "Cara bertindak balas apabila 3-bet anda di-4-bet — merah = 5-bet (all-in), hijau = call, selebihnya fold. Kekerapannya dikira hanya daripada tangan yang memang anda 3-bet, jadi tangan yang tidak pernah anda 3-bet dibiarkan kosong. Cash game 6-max, 100bb. Saiz 4-bet: BB 3-bet 11bb → 24bb · SB 3-bet 10bb → 22bb · posisi selepasnya (CO·BTN) 3-bet 7.5bb → 19bb · BB menentang open SB 3-bet 9bb → 22bb.",
     legend5bet: "5-bet (all-in)",
     legendCond4bet: "Kosong = tidak pernah 3-bet dari awal",
     stat5bet: "% 5-bet",
@@ -1198,7 +1198,7 @@ const M = {
       "Jika merah + hijau tidak memenuhi kotak, selebihnya di-fold. Kotak dua warna mencampurkan " +
       "5-bet dengan call. Tangan di luar range 3-bet tidak pernah sampai ke spot ini, jadi ia kekal kosong.",
     intro3bet:
-      "Cara bertindak balas apabila open anda di-3-bet — merah = 4-bet, hijau = call, selebihnya fold. Frekuensinya dikira hanya daripada tangan yang memang anda open, jadi tangan yang tidak pernah anda open dibiarkan kosong. Cash game 6-max, 100bb, open 2.5bb (3bb untuk open dari SB), 3-bet 11bb dari BB dan 10bb dari SB (BB menentang open SB: 9bb) dan 7.5bb dari posisi selepas anda.",
+      "Cara bertindak balas apabila open anda di-3-bet — merah = 4-bet, hijau = call, selebihnya fold. Kekerapannya dikira hanya daripada tangan yang memang anda open, jadi tangan yang tidak pernah anda open dibiarkan kosong. Cash game 6-max, 100bb, open 2.5bb (3bb untuk open dari SB), 3-bet 11bb dari BB dan 10bb dari SB (BB menentang open SB: 9bb) dan 7.5bb dari posisi selepas anda.",
     legend4bet: "4-bet",
     legendCond: "Kosong = tidak pernah open dari awal",
     stat4bet: "% 4-bet",
@@ -1218,14 +1218,14 @@ const M = {
     provenanceNote: "Konsensus sumber awam + terbitan dalaman — bukan hasil pengiraan solver. Lihat “Bagaimana carta ini dibina?” di bawah.",
     introDefend:
       "Cara bertindak balas apabila ada yang open sebelum anda — matchup yang paling kerap berlaku. " +
-      "Merah = 3-bet, hijau = call, dan tinggi isian kotak (merah + hijau) ialah jumlah frekuensi defend anda. " +
+      "Merah = 3-bet, hijau = call, dan tinggi isian kotak (merah + hijau) ialah jumlah kekerapan defend anda. " +
       "Cash game 6-max, 100bb, open 2.5bb (3bb untuk open dari SB).",
     legendOpen: "Open (100%)",
     legendMixed: "Tangan marginal (tinggi = bahagian sumber yang menyokong open)",
     legendFold: "Fold",
     legend3bet: "3-bet",
     legendCall: "Call",
-    legendMixedDefend: "Tinggi = frekuensi (kotak dua warna = campuran)",
+    legendMixedDefend: "Tinggi = kekerapan (kotak dua warna = campuran)",
     stat3bet: "% 3-bet",
     statCall: "% call",
     statTotal: "Jumlah defend",
@@ -1261,9 +1261,9 @@ const M = {
     // 날짜도 언어다 — ms는 DD/MM/YYYY 계열이라 여기서는 MM/YYYY (리서치 §1-2)
     sourceList:
       "Sumber awam yang dibandingkan: nlh.poker · Preflop Wizard · HoldemPro · " +
-      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (frekuensi solved BB vs SB) · " +
+      "The Felt (about-poker.com) · BeyondGTO · ThinkGTO (kekerapan solved BB vs SB) · " +
       "GTO Gecko · RiverOdds (rujukan defend) · blog GTO Wizard · FreeBetRange " +
-      "(defend IP & prinsip squeeze) · 888poker · Run It Once (frekuensi vs 3-bet) " +
+      "(defend IP & prinsip squeeze) · 888poker · Run It Once (kekerapan vs 3-bet) " +
       "+ range Spot belajar kami sendiri (dikumpulkan 08/2026)",
     phase2: "Matchup dan senario lain akan ditambah secara berperingkat.",
   },

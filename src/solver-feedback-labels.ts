@@ -818,7 +818,7 @@ export const feedbackLabels: LocaleDict<FeedbackLabels> = {
     nicknameEmailWarn: "ตอนนี้ชื่อของคุณเป็นส่วนแรกของอีเมล โปรดเลือกชื่อก่อนแสดงต่อสาธารณะ",
     submit: "โพสต์",
     submitEdit: "อัปเดต",
-    loginTitle: "เข้าสู่ระบบเพื่อโพสต์ข้อความตามที่คุณเขียน",
+    loginTitle: "เข้าสู่ระบบเพื่อโพสต์ข้อความที่เขียนไว้",
     loginGoogle: "ดำเนินการต่อด้วย Google",
     loginKakao: "ดำเนินการต่อด้วย Kakao",
     loginTelegram: "ดำเนินการต่อด้วย Telegram",

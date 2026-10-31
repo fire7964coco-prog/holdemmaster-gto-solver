@@ -496,6 +496,7 @@
 </template>
 
 <script lang="ts">
+import { trackSave } from "../usage-analytics";
 import { computed, defineComponent, nextTick, ref } from "vue";
 import * as Db from "../db";
 import { i18n, pick, autoIso } from "../i18n";
@@ -951,6 +952,7 @@ export default defineComponent({
     });
 
     const errorOccured = ref(false);
+    const saveKind = () => (props.storeName === "ranges" ? "range" as const : "config" as const);
 
     // load data from DB
     const loadData = async () => {
@@ -1232,6 +1234,7 @@ export default defineComponent({
             props.storeName,
             itemToDbItem(selectedItem.value.item)
           ));
+          if (!errorOccured.value) trackSave(saveKind());
           notify({
             type: "overwriteItem",
             path: [...selectedItem.value.item.path],
@@ -1415,6 +1418,7 @@ export default defineComponent({
               props.storeName,
               itemToDbItem(item)
             ));
+            if (!errorOccured.value) trackSave(saveKind());
             notify({
               type: "addItem",
               path: [...item.path],

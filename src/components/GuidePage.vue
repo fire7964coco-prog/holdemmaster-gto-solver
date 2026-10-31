@@ -2357,15 +2357,15 @@ const M = {
       "Pemilih node di sepanjang laluan aksi (flop → bet → call → turn…). Klik satu node untuk melihat strategi pada titik itu",
     rTerm2: "Grid 13×13 (kiri)",
     rDef2:
-      "Setiap kotak ialah satu tangan; pembahagian warna di dalamnya menunjukkan frekuensi aksi. 🟥 bet/raise (makin gelap = makin besar pertaruhannya) · 🟩 check/call · kotak malap = di luar range. GTO memainkan tangan yang sama dengan strategi campuran — aksinya dibahagikan mengikut frekuensi supaya corak permainan anda susah dibaca",
+      "Setiap kotak ialah satu tangan; pembahagian warna di dalamnya menunjukkan kekerapan aksi. 🟥 bet/raise (makin gelap = makin besar pertaruhannya) · 🟩 check/call · kotak malap = di luar range. GTO memainkan tangan yang sama dengan strategi campuran — aksinya dibahagikan mengikut kekerapan supaya corak permainan anda susah dibaca",
     rTerm3: "Kotak ringkasan (kanan atas)",
-    rDef3: "Frekuensi aksi (%) dan bilangan combo untuk keseluruhan range",
+    rDef3: "Kekerapan aksi (%) dan bilangan combo untuk keseluruhan range",
     rTerm4: "Kategori tangan (kanan tengah)",
     rDef4:
       "Cara setiap range berinteraksi dengan board (top pair, draw, dan seterusnya) — untuk melihat sekali pandang siapa yang diuntungkan oleh board ini",
     rTerm5: "Jadual (kanan bawah)",
     rDef5:
-      "Berat, equity, EV dan % aksi bagi setiap tangan — klik tajuk lajur untuk mengisih",
+      "Wajaran, equity, EV dan % aksi bagi setiap tangan — klik tajuk lajur untuk mengisih",
 
     lockTitle: "Node lock — bagaimana strategi anda berubah apabila lawan membuat kesilapan?",
     lockTerm1: "Di mana",
@@ -2387,7 +2387,7 @@ const M = {
     gradBefore: "Anda tidak dinilai betul atau salah, sebaliknya berdasarkan ",
     gradBold: "kerugian EV (bb)",
     gradAfter:
-      ". GTO mencampurkan beberapa aksi dengan tangan yang sama, jadi aksi berfrekuensi rendah belum tentu satu kesilapan — yang penting ialah berapa banyak EV yang dilepaskan",
+      ". GTO mencampurkan beberapa aksi dengan tangan yang sama, jadi aksi berkekerapan rendah belum tentu satu kesilapan — yang penting ialah berapa banyak EV yang dilepaskan",
     verdictTerm: "Ambang penilaian",
     verdictBefore: "Diukur ",
     verdictBold: "berbanding pot",

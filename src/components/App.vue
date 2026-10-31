@@ -102,6 +102,7 @@ import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import { useStore, useConfigStore, SideView } from "../store";
 import { applySpotFromUrl } from "../spot-share";
 import { viewFromUrl } from "../pwa";
+import { trackFeatureOpen } from "../usage-analytics";
 // 빌드 분기 — 트레이너 없는 단독 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
 import { TrainerPage, PresetsPage, bootstrapAccount, takeLoginReturnView } from "@features";
 import { HandReviewPage, handReviewLabels, FEATURE_TRAINER } from "@features"; // R2_REVIEW_ONLY
@@ -502,6 +503,7 @@ export default defineComponent({
         history.replaceState(null, "", location.pathname);
       }
     }
+    watch(() => store.sideView, (view) => trackFeatureOpen(view), { immediate: true });
 
     const clientHeight = ref(0);
 

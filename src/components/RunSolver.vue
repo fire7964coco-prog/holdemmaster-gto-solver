@@ -273,6 +273,7 @@ import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { init, handler, onWorkerFailure, terminate } from "../global-worker";
 import { clearSolverRetry, reportSolverError } from "../errors";
 import { encodeSpotUrl, InvalidSpotLinesError } from "../spot-share";
+import { trackCalcStart, trackCalcDone, trackCalcFail, trackShare } from "../usage-analytics";
 import { beginFeedbackSolve, recordFeedbackSolve } from "../solver-feedback"; // F1_FEEDBACK_ONLY
 import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 import { shareSpotThroughMain } from "../solver-feedback-share"; // F1_FEEDBACK_ONLY
@@ -1730,6 +1731,14 @@ export default defineComponent({
     let exploitabilityUpdated = false;
     let solveEpoch = lockStore.epoch;
     let comparisonTargets: NodeLock[] | null = null;
+    // 이용 계측: 시작한 계산이 아직 끝 이벤트로 닫히지 않았는가 — 계산 하나에 끝 이벤트는 1개
+    let calcOpen = false;
+    const closeCalcFailed = (reason: string) => {
+      if (calcOpen) trackCalcFail("custom", reason);
+      calcOpen = false;
+    };
+    // 계산 도중 잠금 초기화(레인지 교체·재빌드·복구)로 버려진 경우
+    watch(() => lockStore.epoch, () => closeCalcFailed("interrupted"), { flush: "sync" });
 
     const treeStatus = computed(() => {
       const state = treeStatusState.value;
@@ -1958,6 +1967,9 @@ export default defineComponent({
         }
       } else if (!canRun.value) return;
       beginFeedbackSolve(); // F1_FEEDBACK_ONLY
+      closeCalcFailed("interrupted");
+      trackCalcStart("custom");
+      calcOpen = true;
       clearSolverRetry();
       const epoch = lockStore.epoch;
       solveEpoch = epoch;
@@ -2023,10 +2035,14 @@ export default defineComponent({
       } catch (error) {
         if (epoch !== lockStore.epoch) return;
         if (error instanceof NodeLockError) {
+          closeCalcFailed("lock_error");
           lockStore.error = error.code;
           lockStore.resultLockCount = lockStore.appliedLocks.length;
           startTime = 0;
-        } else recoverFromFailure(error);
+        } else {
+          closeCalcFailed("worker_error");
+          recoverFromFailure(error);
+        }
       } finally {
         if (epoch === lockStore.epoch) {
           store.isSolverRunning = false;
@@ -2111,14 +2127,24 @@ export default defineComponent({
         const end = performance.now();
         elapsedTimeMs.value += end - startTime;
         startTime = 0;
+        // «중지»도 결과를 내며 끝나지만 사용자가 멈춘 것이라 완료로 세지 않는다
+        if (terminateFlag.value) closeCalcFailed("user_stop");
+        else if (calcOpen) {
+          trackCalcDone("custom", elapsedTimeMs.value);
+          calcOpen = false;
+        }
       } catch (error) {
         if (epoch !== lockStore.epoch) return;
         if (error instanceof NodeLockError) {
           // finalize succeeded; only the optional comparison snapshot failed.
+          closeCalcFailed("lock_error");
           lockStore.error = error.code;
           store.isSolverFinished = true;
           recordFeedbackSolve(); // F1_FEEDBACK_ONLY
-        } else recoverFromFailure(error);
+        } else {
+          closeCalcFailed("worker_error");
+          recoverFromFailure(error);
+        }
       } finally {
         if (epoch === lockStore.epoch) {
           store.isSolverRunning = false;
@@ -2197,6 +2223,7 @@ export default defineComponent({
         document.execCommand("copy");
         document.body.removeChild(ta);
       }
+      trackShare("custom");
       shareCopied.value = true;
       setTimeout(() => (shareCopied.value = false), 1500);
     };

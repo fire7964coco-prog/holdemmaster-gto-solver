@@ -144,7 +144,7 @@ export const M = {
     captureError: "Soalan latihan tidak dapat dihasilkan daripada keputusan ini. Pastikan pengiraan telah selesai.",
     noQuestion: "Tiada tangan yang boleh dilatih dalam spot ini.", board: "Board", hand: "Tangan anda", pot: "Pot", stack: "Stack", line: "Line",
     prompt: "Apa keputusan anda?", next: "Soalan seterusnya", review: "Ulang kaji kesilapan", practice: "Latihan biasa", attemptCount: "Cubaan untuk spot ini: {count}",
-    verdictBest: "Pilihan terbaik", verdictGood: "Boleh diterima", verdictBad: "Perlu disemak", evLoss: "Kerugian EV", frequency: "Kekerapan", actionEv: "EV tindakan", chips: "cip",
+    verdictBest: "Pilihan terbaik", verdictGood: "Boleh diterima", verdictBad: "Perlu disemak", evLoss: "Kerugian EV", frequency: "Kekerapan", actionEv: "EV aksi", chips: "cip",
   },
   hi: {
     entry: "इस स्पॉट का अभ्यास करें", busy: "अभ्यास के सवाल सहेजे जा रहे हैं…", tab: "मेरे स्पॉट", presetTab: "प्रीसेट अभ्यास",

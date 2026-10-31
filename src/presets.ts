@@ -1145,7 +1145,7 @@ export const PRESETS: Preset[] = [
       "Di blind vs blind, range-nya lebar, jadi kedua range sama-sama lemah. Bandingkan frekuensinya dengan spot Board kering K-high di BTN vs BB.",
     titleMs: "Board K-high dengan T",
     lessonMs:
-      "Dalam blind vs blind, range kedua-dua pemain luas, jadi kedua-duanya sampai ke flop dalam keadaan lemah. Bandingkan frekuensinya dengan spot Board kering K-high di BTN vs BB.",
+      "Dalam blind vs blind, range kedua-dua pemain luas, jadi kedua-duanya sampai ke flop dalam keadaan lemah. Bandingkan kekerapannya dengan spot Board kering K-high di BTN vs BB.",
   },
   {
     titleHi: "जुड़ा हुआ low board, two-tone",

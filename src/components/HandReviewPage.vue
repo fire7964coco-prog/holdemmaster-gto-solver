@@ -490,6 +490,7 @@ import {
 import { ActualAction, ActionMatch, parseAction } from "../review/flop-line";
 import { buildTurnInput } from "../review/turn-input";
 import { ReviewError } from "../review/errors";
+import { trackCalcStart, trackCalcDone, trackCalcFail } from "../usage-analytics";
 import {
   BEST_LOSS_RATIO,
   GOOD_LOSS_RATIO,
@@ -947,6 +948,9 @@ export default defineComponent({
       disposeStreet(next);
       const engine = createHandReviewSolver();
       solvers[next] = engine;
+      trackCalcStart("hand_review");
+      const calcStartedAt = performance.now();
+      let calcClosed = false;
       try {
         const continuation =
           next === "river"
@@ -975,14 +979,20 @@ export default defineComponent({
         solveResults[next] = result;
         solveResult.value = result;
         currentNode.value = rootNode;
+        trackCalcDone("hand_review", performance.now() - calcStartedAt);
+        calcClosed = true;
       } catch (error) {
         if (token === epoch) {
+          trackCalcFail("hand_review", error instanceof ReviewError ? error.code.toLowerCase() : "solve_failed");
+          calcClosed = true;
           errorCode.value = "SOLVE_FAILED";
           solveError.value = true;
           solveResult.value = null;
           currentNode.value = null;
         }
       } finally {
+        // 계산 도중 다른 판·거리로 넘어가 버려진 경우
+        if (!calcClosed) trackCalcFail("hand_review", "interrupted");
         if (token === epoch) solving.value = false;
       }
     }
