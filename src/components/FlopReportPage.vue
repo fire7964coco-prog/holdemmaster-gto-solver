@@ -338,8 +338,7 @@ import {
   SrpSpot,
 } from "../preflop-spots";
 import { HAND_REVIEW_DATA } from "../hand-review-data";
-import { flopStudyEntry, parseFlopStudyLink } from "../flop-study-model";
-import { STUDY_APP_LAUNCHED, openStudyApp } from "../study-handoff";
+import { openStudyApp } from "../study-handoff";
 import {
   averageRows,
   columnValues,
@@ -363,7 +362,7 @@ import { actionColors } from "../action-colors";
 type GroupLabelKey = Extract<keyof FlopReportLabels, `group_${string}`>;
 const ALL_SPOTS = [...SRP_SPOTS, ...THREE_BET_SPOTS, ...FOUR_BET_SPOTS, ...LIMP_SPOTS];
 const PAGE = 300;
-// 폰(767px 이하, FlopStudyPage와 같은 경계): 표는 «플랍 · 체크 % · 벳 % · EV» 4열 (설계 §3)
+// 폰(767px 이하): 표는 «플랍 · 체크 % · 벳 % · EV» 4열 (설계 §3)
 const NARROW = "(max-width: 767px)";
 // 요약 파일 = 자료 서버(R2 v1/flop-reports/ · 도구/flop-report-build.js → upload.js · 10-23 앱 정적 파일에서 옮김). 한 번 받은 상황은 다시 받지 않는다.
 const cache = new Map<string, FlopReport>();
@@ -534,11 +533,8 @@ export default defineComponent({
 
     const rowLink = (row: FlopReportRow) =>
       report.value ? reportRowLink(report.value, row, nodeIndex.value) : "";
-    // 플랍 조회는 v-if로 새로 열리며 flopStudyEntry를 한 번 읽는다 (App.vue의 ?view=flop-study와 같은 길)
     function openRow(row: FlopReportRow) {
-      if (STUDY_APP_LAUNCHED) return openStudyApp(rowLink(row));
-      flopStudyEntry.link = parseFlopStudyLink(rowLink(row));
-      store.sideView = "flop-study";
+      openStudyApp(rowLink(row));
     }
 
     const potTypes = computed(() => [

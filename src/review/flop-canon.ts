@@ -84,52 +84,6 @@ export interface CanonicalFlop {
   readonly inversePerm: SuitPermutation;
 }
 
-/** Suit permutations that leave the canonical flop unchanged (lexicographic, identity first). */
-export function flopStabilizer(canonical: Flop): SuitPermutation[] {
-  assertDistinctCards(canonical, 3);
-  const key = [...canonical].sort((a, b) => a - b).join(",");
-  return PERMUTATIONS.filter(perm =>
-    canonical.map(card => (card & ~3) | perm[card & 3]).sort((a, b) => a - b).join(",") === key);
-}
-
-export interface CanonicalTurn extends CanonicalFlop {
-  /** Representative turn in the file's suit space (HMT1 stores only these). */
-  readonly turn: number;
-}
-
-/**
- * Flop + turn → HMT1 key. `perm` = flop mapping followed by the flop-preserving permutation that
- * makes the turn its smallest image. Use THIS perm for turn/river hands; it can differ from
- * canonicalizeFlop(...).perm, which stays valid for the HMR1 flop file (same canonical flop).
- */
-export function canonicalizeTurn(board: readonly number[]): CanonicalTurn {
-  assertDistinctCards(board, 4);
-  const flop = canonicalizeFlop(board.slice(0, 3));
-  const mapped = applyPerm(board[3], flop.perm);
-  let turn = 52;
-  let chosen: SuitPermutation = PERMUTATIONS[0];
-  for (const perm of flopStabilizer(flop.canonical)) {
-    const image = applyPerm(mapped, perm);
-    if (image < turn) {
-      turn = image;
-      chosen = perm;
-    }
-  }
-  const perm: SuitPermutation = [0, 1, 2, 3].map(suit => chosen[flop.perm[suit]]) as unknown as SuitPermutation;
-  return { canonical: flop.canonical, fileName: flop.fileName, perm, inversePerm: invertPerm(perm), turn };
-}
-
-/** Representative turns of a canonical flop, ascending — the complete HMT1 «all» turn set. */
-export function representativeTurns(canonical: Flop): number[] {
-  const stabilizer = flopStabilizer(canonical);
-  const result: number[] = [];
-  for (let card = 0; card < 52; card++) {
-    if (canonical.includes(card)) continue;
-    if (stabilizer.every(perm => applyPerm(card, perm) >= card)) result.push(card);
-  }
-  return result;
-}
-
 export function canonicalizeFlop(cards: readonly number[]): CanonicalFlop {
   assertDistinctCards(cards, 3);
   let canonical: [number, number, number] = [52, 52, 52];

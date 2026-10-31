@@ -40,9 +40,6 @@
           <TrainerPage />
         </div>
         <!-- R2_REVIEW_ONLY_START -->
-        <div v-if="isFlopStudy" class="flex-1 min-h-0">
-          <FlopStudyPage />
-        </div>
         <div v-if="isFlopReport" class="flex-1 min-h-0">
           <FlopReportPage />
         </div>
@@ -106,10 +103,8 @@ import { trackFeatureOpen } from "../usage-analytics";
 // 빌드 분기 — 트레이너 없는 단독 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
 import { TrainerPage, PresetsPage, bootstrapAccount, takeLoginReturnView } from "@features";
 import { HandReviewPage, handReviewLabels, FEATURE_TRAINER } from "@features"; // R2_REVIEW_ONLY
-import { FlopStudyPage, flopStudyLabels } from "@features"; // R2_REVIEW_ONLY
 import { FlopReportPage, flopReportLabels } from "@features"; // R2_REVIEW_ONLY
-import { flopStudyEntry, parseFlopStudyLink } from "../flop-study-model"; // R2_REVIEW_ONLY
-import { STUDY_APP_LAUNCHED, isStudyLoginReturn, receiveStudyHandoff } from "@features";
+import { isOldStudyLink, isStudyLoginReturn, receiveStudyHandoff } from "@features";
 import { i18n } from "../i18n";
 
 import NavBar from "./NavBar.vue";
@@ -140,7 +135,6 @@ export default defineComponent({
     GuidePage,
     PresetsPage,
     TrainerPage,
-    FlopStudyPage, // R2_REVIEW_ONLY
     FlopReportPage, // R2_REVIEW_ONLY
     HandReviewPage, // R2_REVIEW_ONLY
     PreflopChartPage,
@@ -161,7 +155,6 @@ export default defineComponent({
     const store = useStore();
     if (__F1_TEST_BUILD__) void import("../solver-feedback-test").then(m => m.installFeedbackTestHooks(store)); // F1_FEEDBACK_ONLY
     const isHandReview = computed(() => FEATURE_TRAINER && store.sideView === "hand-review"); // R2_REVIEW_ONLY
-    const isFlopStudy = computed(() => FEATURE_TRAINER && store.sideView === "flop-study"); // R2_REVIEW_ONLY
     const isFlopReport = computed(() => FEATURE_TRAINER && store.sideView === "flop-report"); // R2_REVIEW_ONLY
     // 복기 → 연습 → 돌아오기에서 입력한 판이 지워지지 않게, 한 번 연 복기 화면은 숨기기만 한다. // R2_REVIEW_ONLY
     const reviewMounted = ref(false); // R2_REVIEW_ONLY
@@ -470,7 +463,6 @@ export default defineComponent({
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];
       if (store.sideView === "hand-review") return FEATURE_TRAINER ? handReviewLabels(i18n.locale).title : ""; // R2_REVIEW_ONLY
-      if (store.sideView === "flop-study") return FEATURE_TRAINER ? flopStudyLabels(i18n.locale).title : ""; // R2_REVIEW_ONLY
       if (store.sideView === "flop-report") return FEATURE_TRAINER ? flopReportLabels(i18n.locale).title : ""; // R2_REVIEW_ONLY
       const base = messages[store.sideView];
       return store.sideView === "tree-config" && store.treeEditOpen
@@ -500,12 +492,11 @@ export default defineComponent({
       // 홈 화면 아이콘·바로가기(?view=trainer 등)로 들어온 경우 그 화면부터 연다.
       // 공유 링크가 우선이므로 없을 때만 본다.
       const view = viewFromUrl();
-      if (view === "flop-study" && STUDY_APP_LAUNCHED) {
+      if (isOldStudyLink()) {
         // 옛 링크 = 주소 그대로 /study/ 앱으로
         location.replace(`/study/${location.search}`);
       } else if (view) {
         const handoff = new URLSearchParams(location.search).get("handoff");
-        if (view === "flop-study") flopStudyEntry.link = parseFlopStudyLink(location.search); // R2_REVIEW_ONLY
         store.sideView = view;
         // 넘겨받는 길은 다 받은 뒤에 주소를 지운다(study-handoff.ts)
         if (handoff) void receiveStudyHandoff(handoff);
@@ -533,7 +524,6 @@ export default defineComponent({
       store,
       feedbackFeatures, feedbackOpen, // F1_FEEDBACK_ONLY
       isHandReview, // R2_REVIEW_ONLY
-      isFlopStudy, // R2_REVIEW_ONLY
       isFlopReport, // R2_REVIEW_ONLY
       reviewMounted, // R2_REVIEW_ONLY
       header,

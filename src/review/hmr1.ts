@@ -98,7 +98,7 @@ export function getNode(file: Hmr1File, path: readonly number[]): Hmr1Node {
   return node;
 }
 
-/** One street's decision headers (HMR1 flop, HMT1 turn). `stack` = that street's effective stack. */
+/** One street's decision headers (HMR1 flop). `stack` = that street's effective stack. */
 export function parseNodeHeaders(rawNodes: unknown, stack: number): Hmr1NodeHeader[] {
   if (!Array.isArray(rawNodes) || rawNodes.length === 0) invalid("No decision nodes");
   const seen = new Map<string, Hmr1NodeHeader>();
@@ -177,7 +177,7 @@ function parseHeader(value: unknown): Hmr1Header {
 }
 
 /**
- * Shared HMR1/HMT1 body layout starting at `bodyStart`: two players (u16 count, card pairs, f32 weights),
+ * HMR1 body layout starting at `bodyStart`: two players (u16 count, card pairs, f32 weights),
  * then each node's u8 strategy and i16 EV, action-major. Node offsets are relative to `bodyStart`.
  * `board` = the street's public cards; v2 semantics = explicit EV sentinel. Returns the end position.
  */

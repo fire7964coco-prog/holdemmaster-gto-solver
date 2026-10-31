@@ -13,12 +13,12 @@ import { customTrainerState } from "./custom-trainer";
 import type { CustomTrainerBank, CustomTrainerStudy } from "./custom-trainer";
 import { saveCustomTrainerBank } from "./custom-trainer-db";
 import { isLocalDataOpen } from "./db";
-import { buildFlopStudyLink } from "./flop-study-model";
+import { buildFlopStudyLink, FLOP_STUDY_VIEW } from "./flop-study-model";
 import { M as reviewLabels } from "./hand-review-labels";
 import { SPOT_BET_SIZES } from "./preflop-spots";
 
-/** 켜면 메뉴·옛 링크·연습 돌아가기가 /study/ 앱으로 간다. 끄면 지금까지처럼 이 앱 안 화면을 쓴다. */
-export const STUDY_APP_LAUNCHED = true;
+/** 플랍 조회가 이 앱에 있던 때의 주소(?view=flop-study&…) */
+export const isOldStudyLink = () => new URLSearchParams(location.search).get("view") === FLOP_STUDY_VIEW;
 
 const BET_FIELDS = [
   "oopFlopBet",
@@ -74,19 +74,6 @@ export const openStudyApp = (search = "") => {
   if (solverInUse()) window.open(url, "_blank");
   else location.assign(url);
 };
-
-// /study/ 앱이 연습 갔다 돌아올 자리를 이 탭에 맡겨 둔 표시
-const PRACTICE_RETURN_KEY = "study.practiceReturn";
-const cameFromStudyApp = () => {
-  try {
-    return sessionStorage.getItem(PRACTICE_RETURN_KEY) !== null;
-  } catch {
-    return false;
-  }
-};
-
-/** 연습 화면의 «돌아가기»가 /study/ 앱으로 가야 하는가 */
-export const practiceBackGoesToStudyApp = () => STUDY_APP_LAUNCHED || cameFromStudyApp();
 
 /** 같은 묶음이면 /study/ 앱이 화면 상태까지 되살리고, 아니면 주소의 자리로 연다 */
 const practiceBackSearch = (study: CustomTrainerStudy, bankId: string) =>

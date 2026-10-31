@@ -17,9 +17,7 @@ export { default as TrainerPage } from "../components/TrainerPage.vue";
 export { default as HandReviewPage } from "../components/HandReviewPage.vue";
 export { handReviewLabels } from "../hand-review-labels";
 export { HAND_REVIEW_LAUNCHED } from "../hand-review-data";
-export { default as FlopStudyPage } from "../components/FlopStudyPage.vue";
 export { flopStudyLabels } from "../flop-study-labels";
-export { FLOP_STUDY_LAUNCHED } from "../hand-review-data";
 export { default as FlopReportPage } from "../components/FlopReportPage.vue";
 export { flopReportLabels } from "../flop-report-labels";
 export { FLOP_REPORT_LAUNCHED } from "../hand-review-data";
@@ -27,7 +25,7 @@ export { default as CustomTrainerEntry } from "../components/CustomTrainerEntry.
 export { createCustomTrainerCapture } from "../custom-trainer-capture";
 export { default as PresetsPage } from "../components/PresetsPage.vue";
 export { bootstrapAccount, takeLoginReturnView, isStudyLoginReturn } from "../account";
-export { STUDY_APP_LAUNCHED, openStudyApp, receiveStudyHandoff } from "../study-handoff";
+export { isOldStudyLink, openStudyApp, receiveStudyHandoff } from "../study-handoff";
 // 계정 빌드: 기기 자료는 «이 탭의 DB가 지금 계정 것»이 확인된 뒤에 연다(MB-388 ① · 5차 N1)
 import { verifyLocalOwner } from "../account";
 import { setLocalDataGate } from "../db";

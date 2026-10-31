@@ -72,15 +72,3 @@ the public API without native solves or app/wasm builds, preserving the original
 checks generated v2 files and injected missing/zero/version/saturation cases. R1b evidence is under
 `참고자료/사전계산_도구_2026-09-28/precompute3/verification/reader-*`.
 
-## HMT1 turn packs (2026-10-18 · not wired into the app yet)
-
-`hmt1.ts` reads one canonical flop × one completed flop line × its turn cards (format in the file's
-head comment; producer `참고자료/사전계산_도구_2026-09-28/turnpack`). `parseHmt1` checks the header
-and blob layout; `getTurn(pack, turn)` parses one turn lazily and returns it in the HMR1 shape, so
-`flopLine` / `rangeAt` / `evaluateFlopDecision` apply to turn decisions unchanged (pot/stack = turn
-start). Key a real board with `canonicalizeTurn(board4)`: only representative turns are stored, and
-its `perm` (flop mapping + flop-preserving suit swap) is the one to use for turn/river hands.
-`assertPackMatchesFlop(pack, hmr1)` ties a pack to its flop file and path. Shared HMR1/HMT1 parsing
-lives in `parseNodeHeaders` / `parseDecisionBody`.
-Check: `node 도구/e2e/hmt1-verify.js <pack dir> <same flop HMR1 .bin> [HMR1 dir]` (also compares
-the split `hmr1.ts` with the committed one on normal and corrupted files).

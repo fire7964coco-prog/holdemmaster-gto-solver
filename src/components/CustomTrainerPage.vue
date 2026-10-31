@@ -121,8 +121,8 @@ import { classifyRngAnswer, nextRngMode, readRngMode, rngAction, rngBands, rollR
 import type { RngMode } from "../trainer-rng";
 import { RNG_M } from "../trainer-rng-labels";
 import { M as REVIEW_LABELS } from "../hand-review-labels";
-import { turnPackLabels } from "../turn-pack-labels"; // R2_REVIEW_ONLY
-import { openStudyAppFromPractice, practiceBackGoesToStudyApp } from "../study-handoff"; // R2_REVIEW_ONLY
+import { flopStudyLabels } from "../flop-study-labels"; // R2_REVIEW_ONLY
+import { openStudyAppFromPractice } from "../study-handoff"; // R2_REVIEW_ONLY
 import { useStore } from "../store";
 import { i18n, localizeNumber, pctText, ltrIso, arLabelIso } from "../i18n";
 import { cardText, formatAmount } from "../utils";
@@ -131,7 +131,7 @@ export default defineComponent({
   setup() {
     const L = computed(() => M[i18n.locale]);
     const R = computed(() => REVIEW_LABELS[i18n.locale]);
-    const TP = computed(() => turnPackLabels(i18n.locale)); // R2_REVIEW_ONLY
+    const S = computed(() => flopStudyLabels(i18n.locale)); // R2_REVIEW_ONLY
     const store = useStore();
     const banks = ref<CustomTrainerBank[]>([]);
     const bank = computed(() => banks.value.find(item => item.id === customTrainerState.selectedBankId) ?? null);
@@ -229,9 +229,9 @@ export default defineComponent({
     });
     const verdictKind = computed(() => answer.value.kind);
     const verdict = computed(() => verdictKind.value === "best" ? L.value.verdictBest : verdictKind.value === "good" ? L.value.verdictGood : L.value.verdictBad);
-    // 턴 팩(플랍 조회 턴 카드 비교)에서 만든 자리는 출처를 따로 적는다 — 기기 계산 복기로 보이지 않게
+    // /study/ 앱(턴 카드 비교)에서 넘어온 자리는 출처를 따로 적는다 — 기기 계산 복기로 보이지 않게
     const originSource = (origin: NonNullable<CustomTrainerBank["origin"]>) => {
-      if (origin.study) return TP.value.practiceSource.replace("{method}", R.value.precomputed); // R2_REVIEW_ONLY
+      if (origin.study) return S.value.practiceSource.replace("{method}", R.value.precomputed); // R2_REVIEW_ONLY
       return L.value.reviewSource.replace("{method}", origin.street === "flop" ? R.value.precomputed : R.value.onDevice);
     };
     const source = computed(() => bank.value ? (bank.value.origin
@@ -379,13 +379,12 @@ export default defineComponent({
     const leave = () => { customTrainerState.active = false; };
     const backLabel = computed(() => {
       const study = bank.value?.origin?.study; // R2_REVIEW_ONLY
-      if (study) return study.turnView ? TP.value.backToTurnView : TP.value.backToStudy; // R2_REVIEW_ONLY
+      if (study) return study.turnView ? S.value.backToTurnView : S.value.backToStudy; // R2_REVIEW_ONLY
       return L.value.backToReview;
     });
     const backToReview = () => {
       const study = bank.value?.origin?.study; // R2_REVIEW_ONLY
-      if (study && bank.value && practiceBackGoesToStudyApp()) { openStudyAppFromPractice(study, bank.value.id); return; } // R2_REVIEW_ONLY
-      if (study && bank.value) { customTrainerState.studyReturn = { ...study, bankId: bank.value.id }; store.sideView = "flop-study"; return; } // R2_REVIEW_ONLY
+      if (study && bank.value) { openStudyAppFromPractice(study, bank.value.id); return; } // R2_REVIEW_ONLY
       store.sideView = "hand-review";
     };
     const seatName = (player: "oop" | "ip") => bank.value?.origin?.seats[player === "oop" ? 0 : 1] ?? player.toUpperCase();

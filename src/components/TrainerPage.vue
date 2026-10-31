@@ -783,8 +783,8 @@ import { cardText, formatBb } from "../utils";
 import { HAND_REVIEW_DATA, loadReviewFlop } from "../hand-review-data";
 import { isMemberScenario } from "../member-limits";
 import { flopBoardLabels, flopTrainerLabels } from "../flop-trainer-labels";
-import { buildFlopStudyLink, flopStudyEntry, REAL_FLOP_COUNT } from "../flop-study-model";
-import { STUDY_APP_LAUNCHED, openStudyApp } from "../study-handoff";
+import { buildFlopStudyLink, REAL_FLOP_COUNT } from "../flop-study-model";
+import { openStudyApp } from "../study-handoff";
 import { GROUP_AXES, GROUP_KEYS } from "../flop-report-model";
 import { flopReportLabels } from "../flop-report-labels";
 import ProviderIcon from "./ProviderIcon.vue";
@@ -3678,15 +3678,13 @@ export default defineComponent({
       // «모든 플랍» 문제 = 플랍 조회의 그 상황·플랍·라인으로
       const flopQuestion = asFlopQuestion(question.value);
       if (flopQuestion) {
-        const link = {
-          spot: flopQuestion.presetId,
-          flop: [...flopQuestion.flop],
-          line: [...flopQuestion.path],
-        };
-        if (STUDY_APP_LAUNCHED) return openStudyApp(buildFlopStudyLink(link));
-        flopStudyEntry.link = link;
-        store.sideView = "flop-study";
-        return;
+        return openStudyApp(
+          buildFlopStudyLink({
+            spot: flopQuestion.presetId,
+            flop: [...flopQuestion.flop],
+            line: [...flopQuestion.path],
+          })
+        );
       }
       store.pendingPresetPreview = question.value.presetId;
       store.sideView = "presets";

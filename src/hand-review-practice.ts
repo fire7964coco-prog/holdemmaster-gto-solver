@@ -1,4 +1,4 @@
-import type { CustomTrainerBank, CustomTrainerStudy } from "./custom-trainer";
+import type { CustomTrainerBank } from "./custom-trainer";
 import type { TrainerDecision, TrainerHistoryAction } from "./trainer";
 import type { ReviewNode } from "./hand-review-model";
 import { applyPerm, SuitPermutation } from "./review/flop-canon";
@@ -28,8 +28,6 @@ export type ReviewPracticeSource = {
   frequencyFloor: number;
   referenceOnly?: boolean;
   seats: [string, string];
-  /** 턴 팩(플랍 조회)에서 만들 때만 — 출처 «턴 카드 비교»·돌아가기 자리. */
-  study?: CustomTrainerStudy;
 };
 
 const sideName = (p: 0 | 1) => (p === 0 ? "oop" : "ip");
@@ -124,9 +122,7 @@ export function reviewNodeDecision(src: ReviewDecisionSource, weights = practice
 export async function createReviewPracticeBank(src: ReviewPracticeSource): Promise<CustomTrainerBank | null> {
   const decision = reviewNodeDecision(src);
   if (!decision) return null;
-  // 턴 팩 자리는 같은 손 복기(기기 계산)와 다른 묶음 — 복기 묶음의 id는 그대로 둔다
-  const identity = JSON.stringify({ review: src.spotId, hero: src.heroPlayer, board: src.board, line: src.line,
-    ...(src.study ? { source: "turn-pack" } : {}) });
+  const identity = JSON.stringify({ review: src.spotId, hero: src.heroPlayer, board: src.board, line: src.line });
   const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(identity));
   const hash12 = Array.from(new Uint8Array(hash), byte => byte.toString(16).padStart(2, "0")).join("").slice(0, 12);
   return {
@@ -143,7 +139,6 @@ export async function createReviewPracticeBank(src: ReviewPracticeSource): Promi
     locks: [],
     nodes: [decision],
     origin: { kind: "review", street: src.street, frequencyFloor: src.frequencyFloor, seats: [...src.seats],
-      ...(src.referenceOnly ? { referenceOnly: true as const } : {}),
-      ...(src.study ? { study: src.study } : {}) },
+      ...(src.referenceOnly ? { referenceOnly: true as const } : {}) },
   };
 }

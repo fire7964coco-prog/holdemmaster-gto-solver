@@ -290,10 +290,10 @@ export const takeLoginPurpose = (): "feedback" | null => {
 
 /** 로그인에서 돌아와 열 화면 (저장 목록 동기화 · 없으면 App이 트레이너로 연다). 다음 signIn 한 번에만 쓰인다. */
 const LOGIN_RETURN_KEY = "solver.login.returnView.v1";
-// hand-review·flop-study = 회원 전용 상황 한 줄에서 시작한 로그인(member-limits.ts)
-const RETURN_VIEWS = ["oop-range", "ip-range", "tree-config", "hand-review", "flop-study"];
+// hand-review = 회원 전용 상황 한 줄에서 시작한 로그인(member-limits.ts)
+const RETURN_VIEWS = ["oop-range", "ip-range", "tree-config", "hand-review"];
 let nextReturnView: string | null = null;
-// 그 화면에서 고르던 것(회원 상황 한 줄 → 복기·플랍 조회의 상황·카드). 돌아온 화면이 한 번 꺼내 쓴다
+// 그 화면에서 고르던 것(회원 상황 한 줄 → 복기의 상황·카드). 돌아온 화면이 한 번 꺼내 쓴다
 let nextReturnState: unknown = null;
 let returnedState: { view: string; state: unknown } | null = null;
 const returnWaiters = new Map<string, (state: unknown) => void>();
@@ -318,10 +318,16 @@ export const onLoginReturnState = (view: string, apply: (state: unknown) => void
     if (returnWaiters.get(view) === apply) returnWaiters.delete(view);
   };
 };
-/** 이번 로그인을 /study/ 앱에서 시작했는가 (복귀 표시를 꺼내지 않고 본다 · 꺼내는 쪽은 그 앱) */
+/**
+ * 이번 로그인을 /study/ 앱에서 시작했는가 (복귀 표시를 꺼내지 않고 본다 · 꺼내는 쪽은 그 앱).
+ * 플랍 조회가 이 앱에 있던 때 열어 둔 탭은 app 없이 view만 남긴다 — 같은 모양이라 그 앱이 되살린다.
+ */
 export const isStudyLoginReturn = () => {
   try {
-    return JSON.parse(sessionStorage.getItem(LOGIN_RETURN_KEY) ?? "null")?.app === "study";
+    const d = JSON.parse(sessionStorage.getItem(LOGIN_RETURN_KEY) ?? "null");
+    if (d?.app === "study") return true;
+    return d?.view === "flop-study" && Number.isFinite(d.at) &&
+      Date.now() - d.at >= 0 && Date.now() - d.at <= LOGIN_PURPOSE_TTL_MS;
   } catch {
     return false;
   }

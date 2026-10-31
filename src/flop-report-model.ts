@@ -85,7 +85,7 @@ export function parseFlopReport(json: unknown): FlopReport {
 }
 
 /** 행동자 평균 EV (bb) = Σ 도달 비중 × Σ 빈도·EV / Σ 도달 비중.
- *  모든 액션에 EV가 있는 핸드만 센다(nodeSummary 와 같은 도달 비중 · 블로커 없음). */
+ *  모든 액션에 EV가 있는 핸드만 센다(도달 비중 · 블로커 없음). */
 export function nodeAverageEv(node: ReviewNode): number | null {
   const p = node.player;
   if (p === null || node.kind !== "decision") return null;

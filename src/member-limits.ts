@@ -34,15 +34,10 @@ export const memberLimitsEnabled = () => {
 /** 비회원이 이 기기에 저장할 수 있는 레인지·벳 설정 수(각각 · 폴더는 세지 않는다). 이미 넘은 항목은 지우지 않는다. */
 export const SAVE_LIMIT = 10;
 
-/** 회원 전용 상황 — Worker `MEMBER_PREFIXES`(`limp-` · 턴 팩 `tp-`)와 같게. 맛보기 파일은 Worker `FREE_SAMPLES`가 토큰 없이 준다. */
-const MEMBER_PREFIXES = ["limp-", "tp-"];
-/** 턴 팩 맛보기 = BTN–BB K♠7♦2♣(정규 파일 Kh7d2c · 사장님 ○ 10-21)의 세 경로. */
-export const TURN_PACK_SAMPLE = { spot: "srp-btn-bb", flop: "Ks7d2c" } as const;
+/** 회원 전용 상황 — Worker `MEMBER_PREFIXES`와 같게. 맛보기 파일은 Worker `FREE_SAMPLES`가 토큰 없이 준다. */
+const MEMBER_PREFIXES = ["limp-"];
 const MEMBER_FREE_SAMPLES = [
   "limp-sb-bb/QdTd7c.bin",
-  "tp-srp-btn-bb/Kh7d2c/xx.hmt",
-  "tp-srp-btn-bb/Kh7d2c/xb33c.hmt",
-  "tp-srp-btn-bb/Kh7d2c/xb75c.hmt",
 ];
 
 export const isMemberScenario = (scenario: string) => {

@@ -13,10 +13,9 @@ export const customTrainerState = reactive({
   active: false,
   selectedBankId: null as string | null,
   /** «턴 카드 비교로 돌아가기»가 맡긴 자리 — 플랍 조회가 열릴 때 한 번 읽고 비운다. */
-  studyReturn: null as (CustomTrainerStudy & { bankId: string }) | null,
 });
 
-/** 턴 팩(플랍 조회의 턴 카드 비교)에서 만든 연습의 자리 — 출처 표시·돌아가기용. */
+/** /study/ 앱에서 넘어온 연습의 자리 — 출처 표시·돌아가기용. */
 export type CustomTrainerStudy = {
   spot: string;
   flop: number[];
@@ -73,7 +72,7 @@ export type CustomTrainerOrigin = {
   seats: [string, string];
   /** Review «reference only» spot (reach product < 5%): shown as reference, never counted as a mistake. */
   referenceOnly?: true;
-  /** Saved from the turn pack (flop study), not a hand review. */
+  /** Came from the /study/ app (study-handoff.ts), not a hand review. */
   study?: CustomTrainerStudy;
 };
 

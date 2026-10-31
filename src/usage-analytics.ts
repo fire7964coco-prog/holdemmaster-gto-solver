@@ -11,7 +11,6 @@ import { i18n } from "./i18n";
 
 export type UsageFeature =
   | "custom"
-  | "flop_study"
   | "flop_report"
   | "hand_review"
   | "trainer"
@@ -26,7 +25,6 @@ const FEATURE_OF_VIEW: Partial<Record<string, UsageFeature>> = {
   board: "custom",
   "tree-config": "custom",
   "run-solver": "custom",
-  "flop-study": "flop_study",
   "flop-report": "flop_report",
   "hand-review": "hand_review",
   trainer: "trainer",
