@@ -504,11 +504,12 @@ export default defineComponent({
         // 옛 링크 = 주소 그대로 /study/ 앱으로
         location.replace(`/study/${location.search}`);
       } else if (view) {
-        const handoff = new URLSearchParams(location.search).has("handoff");
+        const handoff = new URLSearchParams(location.search).get("handoff");
         if (view === "flop-study") flopStudyEntry.link = parseFlopStudyLink(location.search); // R2_REVIEW_ONLY
         store.sideView = view;
-        history.replaceState(null, "", location.pathname);
-        if (handoff) void receiveStudyHandoff();
+        // 넘겨받는 길은 다 받은 뒤에 주소를 지운다(study-handoff.ts)
+        if (handoff) void receiveStudyHandoff(handoff);
+        else history.replaceState(null, "", location.pathname);
       } else if (new URLSearchParams(location.search).has("lang")) {
         // ?lang=은 i18n.ts가 이미 읽어 저장했다 — 주소만 정리
         history.replaceState(null, "", location.pathname);

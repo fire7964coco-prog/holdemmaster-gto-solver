@@ -1,8 +1,8 @@
 /*
  * 같은 주소의 /study/ 앱과 이어지는 곳. 두 앱은 코드를 나눠 쓰지 않는다 — 아래 형식(version 1)만 맞춘다.
  *
- * 흐름: /study/ 앱이 짐을 IndexedDB `study-handoff`에 맡기고 `/?view=…&handoff=1`로 이동 →
- *       여기서 한 번 꺼내 지우고 자기 화면에 채운다.
+ * 흐름: /study/ 앱이 짐을 IndexedDB `study-handoff`에 짐마다 다른 id로 맡기고 `/?view=…&handoff=<id>`로 이동 →
+ *       여기서 그 id의 짐만 꺼내 화면에 채운 뒤 지운다(여러 탭이 동시에 보내도 섞이지 않는다).
  * 이 페이지는 막 새로 열린 것이라 설정이 기본값이다 — 덮어쓰기 확인이 필요 없다.
  * 사용자가 하던 계산은 openStudyApp이 새 탭으로 열어 지킨다.
  */
@@ -12,6 +12,7 @@ import { i18n } from "./i18n";
 import { customTrainerState } from "./custom-trainer";
 import type { CustomTrainerBank, CustomTrainerStudy } from "./custom-trainer";
 import { saveCustomTrainerBank } from "./custom-trainer-db";
+import { isLocalDataOpen } from "./db";
 import { buildFlopStudyLink } from "./flop-study-model";
 import { M as reviewLabels } from "./hand-review-labels";
 import { SPOT_BET_SIZES } from "./preflop-spots";
@@ -42,7 +43,7 @@ const betSizeDefault = (field: typeof BET_FIELDS[number]) =>
     : SPOT_BET_SIZES.laterBet;
 
 // 페이지를 옮기면 메모리의 설정·계산 결과가 사라진다 — 쓰던 것이 있는지 본다
-// (20·100 = store.ts 기본값)
+// (숫자 = store.ts 기본값)
 const solverInUse = () => {
   const store = useStore();
   const config = useConfigStore();
@@ -53,6 +54,11 @@ const solverInUse = () => {
     config.board.length > 0 ||
     config.startingPot !== 20 ||
     config.effectiveStack !== 100 ||
+    config.rakePercent !== 0 ||
+    config.rakeCap !== 0 ||
+    config.addAllInThreshold !== 150 ||
+    config.forceAllInThreshold !== 20 ||
+    config.mergingThreshold !== 10 ||
     config.addedLines !== "" ||
     config.removedLines !== "" ||
     config.donkOption ||
@@ -109,24 +115,23 @@ const PARCEL_DB = "study-handoff";
 const PARCEL_STORE = "parcels";
 const PARCEL_MAX_AGE_MS = 10 * 60 * 1000;
 
-/** 맡긴 짐을 한 번 꺼내고 지운다 — 새로고침으로 두 번 받지 않게 */
-const takeParcel = () =>
-  new Promise<Parcel | null>((resolve, reject) => {
+const withParcels = <T>(mode: IDBTransactionMode, run: (parcels: IDBObjectStore) => IDBRequest<T>) =>
+  new Promise<T>((resolve, reject) => {
     const open = indexedDB.open(PARCEL_DB, 1);
     open.onupgradeneeded = () => open.result.createObjectStore(PARCEL_STORE);
     open.onerror = () => reject(open.error);
     open.onsuccess = () => {
-      const tx = open.result.transaction(PARCEL_STORE, "readwrite");
-      const parcels = tx.objectStore(PARCEL_STORE);
-      const get = parcels.get("next");
-      parcels.delete("next");
+      const tx = open.result.transaction(PARCEL_STORE, mode);
+      const request = run(tx.objectStore(PARCEL_STORE));
       tx.oncomplete = () => {
         open.result.close();
-        resolve((get.result as Parcel | undefined) ?? null);
+        resolve(request.result);
       };
       tx.onerror = () => reject(tx.error);
     };
   });
+const readParcel = (key: string) => withParcels<Parcel | undefined>("readonly", (parcels) => parcels.get(key));
+const removeParcel = (key: string) => withParcels<undefined>("readwrite", (parcels) => parcels.delete(key));
 
 const parcelIsFresh = (parcel: Parcel | null): parcel is Parcel => {
   if (parcel?.version !== 1 || !Number.isFinite(parcel.at)) return false;
@@ -160,15 +165,17 @@ const applySolverSetup = (setup: SolverSetup) => {
   store.pendingRangeText = [...setup.ranges];
 };
 
-const startPractice = async (bank: CustomTrainerBank) => {
+/** @returns 연습을 시작했으면 true · 저장에 실패해 /study/로 되돌아가면 false */
+const startPractice = async (bank: CustomTrainerBank, key: string) => {
   const store = useStore();
   try {
     await saveCustomTrainerBank(bank);
   } catch {
     window.alert(reviewLabels[i18n.locale].practiceError);
     const study = bank.origin?.study;
+    await removeParcel(key).catch(() => undefined);
     location.replace(`/study/${study ? practiceBackSearch(study, bank.id) : ""}`);
-    return;
+    return false;
   }
   // 복기의 «그 자리 연습»과 같은 넘김: 연습 화면을 이 묶음으로 다시 연다
   customTrainerState.active = false;
@@ -177,17 +184,31 @@ const startPractice = async (bank: CustomTrainerBank) => {
   customTrainerState.active = true;
   store.navView = "solver";
   store.sideView = "trainer";
+  return true;
 };
 
-/** `?handoff=1`로 들어왔을 때 App이 한 번 부른다. 짐이 없거나 낡았으면 그 화면을 그대로 둔다. */
-export const receiveStudyHandoff = async () => {
+const clearAddress = () => history.replaceState(null, "", location.pathname);
+
+/**
+ * `?handoff=<id>`로 들어왔을 때 App이 한 번 부른다. 짐이 없거나 낡았으면 그 화면을 그대로 둔다.
+ * 계정 확인이 DB를 바꾸면 관문을 기다리는 동안 페이지가 새로고침된다 — 그래도 받을 수 있게
+ * 주소와 짐은 다 받은 뒤에 지운다(주소가 남아 있어 새 페이지가 다시 부른다).
+ * 설정은 기다리기 전에 채운다 — 기다리는 사이 사용자가 입력한 값을 덮지 않게.
+ */
+export const receiveStudyHandoff = async (id: string) => {
+  // 예전 /study/ 페이지가 열려 있던 탭은 `handoff=1`과 공용 칸 next로 보낸다
+  const key = id === "1" ? "next" : id;
   let parcel: Parcel | null = null;
   try {
-    parcel = await takeParcel();
+    parcel = (await readParcel(key)) ?? null;
   } catch {
-    return; // 저장소가 막혔으면 빈 화면으로 시작한다
+    clearAddress(); // 저장소가 막혔으면 빈 화면으로 시작한다
+    return;
   }
-  if (!parcelIsFresh(parcel)) return;
-  if (parcel.kind === "solver-setup") applySolverSetup(parcel);
-  else if (parcel.kind === "practice") await startPractice(parcel.bank);
+  const fresh = parcelIsFresh(parcel) ? parcel : null;
+  if (fresh?.kind === "solver-setup") applySolverSetup(fresh);
+  await isLocalDataOpen();
+  if (fresh?.kind === "practice" && !(await startPractice(fresh.bank, key))) return;
+  await removeParcel(key).catch(() => undefined);
+  clearAddress();
 };
