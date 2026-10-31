@@ -318,6 +318,14 @@ export const onLoginReturnState = (view: string, apply: (state: unknown) => void
     if (returnWaiters.get(view) === apply) returnWaiters.delete(view);
   };
 };
+/** 이번 로그인을 /study/ 앱에서 시작했는가 (복귀 표시를 꺼내지 않고 본다 · 꺼내는 쪽은 그 앱) */
+export const isStudyLoginReturn = () => {
+  try {
+    return JSON.parse(sessionStorage.getItem(LOGIN_RETURN_KEY) ?? "null")?.app === "study";
+  } catch {
+    return false;
+  }
+};
 export const takeLoginReturnView = (): string | null => {
   try {
     const raw = sessionStorage.getItem(LOGIN_RETURN_KEY);

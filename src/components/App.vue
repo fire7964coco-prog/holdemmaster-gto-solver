@@ -109,6 +109,7 @@ import { HandReviewPage, handReviewLabels, FEATURE_TRAINER } from "@features"; /
 import { FlopStudyPage, flopStudyLabels } from "@features"; // R2_REVIEW_ONLY
 import { FlopReportPage, flopReportLabels } from "@features"; // R2_REVIEW_ONLY
 import { flopStudyEntry, parseFlopStudyLink } from "../flop-study-model"; // R2_REVIEW_ONLY
+import { STUDY_APP_LAUNCHED, isStudyLoginReturn, receiveStudyHandoff } from "@features";
 import { i18n } from "../i18n";
 
 import NavBar from "./NavBar.vue";
@@ -481,6 +482,11 @@ export default defineComponent({
     // (앱 진입 화면은 소개라, 트레이너 화면에서만 처리하면 인증 코드를 놓친다)
     void bootstrapAccount().then((returned) => {
       // 저장 목록 화면에서 로그인했으면 그 화면으로, 아니면 트레이너로
+      // /study/ 앱에서 시작한 로그인 — 복귀 표시는 그 앱이 꺼낸다
+      if (returned && isStudyLoginReturn()) {
+        location.replace("/study/?login=1");
+        return;
+      }
       if (returned) store.sideView = (takeLoginReturnView() as SideView | null) ?? "trainer";
       if (returned && feedbackFeatures.feedback) void resumeFeedbackDraft(); // F1_FEEDBACK_ONLY
     });
@@ -494,10 +500,15 @@ export default defineComponent({
       // 홈 화면 아이콘·바로가기(?view=trainer 등)로 들어온 경우 그 화면부터 연다.
       // 공유 링크가 우선이므로 없을 때만 본다.
       const view = viewFromUrl();
-      if (view) {
+      if (view === "flop-study" && STUDY_APP_LAUNCHED) {
+        // 옛 링크 = 주소 그대로 /study/ 앱으로
+        location.replace(`/study/${location.search}`);
+      } else if (view) {
+        const handoff = new URLSearchParams(location.search).has("handoff");
         if (view === "flop-study") flopStudyEntry.link = parseFlopStudyLink(location.search); // R2_REVIEW_ONLY
         store.sideView = view;
         history.replaceState(null, "", location.pathname);
+        if (handoff) void receiveStudyHandoff();
       } else if (new URLSearchParams(location.search).has("lang")) {
         // ?lang=은 i18n.ts가 이미 읽어 저장했다 — 주소만 정리
         history.replaceState(null, "", location.pathname);

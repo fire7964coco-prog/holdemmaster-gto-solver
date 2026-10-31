@@ -122,6 +122,7 @@ import type { RngMode } from "../trainer-rng";
 import { RNG_M } from "../trainer-rng-labels";
 import { M as REVIEW_LABELS } from "../hand-review-labels";
 import { turnPackLabels } from "../turn-pack-labels"; // R2_REVIEW_ONLY
+import { openStudyAppFromPractice, practiceBackGoesToStudyApp } from "../study-handoff"; // R2_REVIEW_ONLY
 import { useStore } from "../store";
 import { i18n, localizeNumber, pctText, ltrIso, arLabelIso } from "../i18n";
 import { cardText, formatAmount } from "../utils";
@@ -383,6 +384,7 @@ export default defineComponent({
     });
     const backToReview = () => {
       const study = bank.value?.origin?.study; // R2_REVIEW_ONLY
+      if (study && bank.value && practiceBackGoesToStudyApp()) { openStudyAppFromPractice(study, bank.value.id); return; } // R2_REVIEW_ONLY
       if (study && bank.value) { customTrainerState.studyReturn = { ...study, bankId: bank.value.id }; store.sideView = "flop-study"; return; } // R2_REVIEW_ONLY
       store.sideView = "hand-review";
     };

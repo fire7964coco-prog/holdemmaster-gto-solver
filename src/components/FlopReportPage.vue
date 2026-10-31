@@ -339,6 +339,7 @@ import {
 } from "../preflop-spots";
 import { HAND_REVIEW_DATA } from "../hand-review-data";
 import { flopStudyEntry, parseFlopStudyLink } from "../flop-study-model";
+import { STUDY_APP_LAUNCHED, openStudyApp } from "../study-handoff";
 import {
   averageRows,
   columnValues,
@@ -535,6 +536,7 @@ export default defineComponent({
       report.value ? reportRowLink(report.value, row, nodeIndex.value) : "";
     // 플랍 조회는 v-if로 새로 열리며 flopStudyEntry를 한 번 읽는다 (App.vue의 ?view=flop-study와 같은 길)
     function openRow(row: FlopReportRow) {
+      if (STUDY_APP_LAUNCHED) return openStudyApp(rowLink(row));
       flopStudyEntry.link = parseFlopStudyLink(rowLink(row));
       store.sideView = "flop-study";
     }
