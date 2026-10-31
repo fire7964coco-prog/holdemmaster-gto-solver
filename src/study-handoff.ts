@@ -17,8 +17,11 @@ import { buildFlopStudyLink, FLOP_STUDY_VIEW } from "./flop-study-model";
 import { M as reviewLabels } from "./hand-review-labels";
 import { SPOT_BET_SIZES } from "./preflop-spots";
 
-/** 플랍 조회가 이 앱에 있던 때의 주소(?view=flop-study&…) */
-export const isOldStudyLink = () => new URLSearchParams(location.search).get("view") === FLOP_STUDY_VIEW;
+/** 플랍 조회·통계가 이 앱에 있던 때의 주소(?view=flop-study&…) */
+export const isOldStudyLink = () => {
+  const view = new URLSearchParams(location.search).get("view");
+  return view === FLOP_STUDY_VIEW || view === "flop-report";
+};
 
 const BET_FIELDS = [
   "oopFlopBet",
