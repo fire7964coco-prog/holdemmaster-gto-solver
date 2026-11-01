@@ -405,7 +405,7 @@ import { applyPerm, handIndex } from "../review/cards";
 import { ActualAction, ActionMatch, parseAction } from "../review/actions";
 import { buildRiverInput } from "../review/river-input";
 import { ReviewError } from "../review/errors";
-import { trackCalcStart, trackCalcDone, trackCalcFail } from "../usage-analytics";
+import { trackCalcStart, trackCalcDone, trackCalcFail, trackCalcStall } from "../usage-analytics";
 import {
   BEST_LOSS_RATIO,
   GOOD_LOSS_RATIO,
@@ -437,13 +437,6 @@ import { saveCustomTrainerBank } from "../custom-trainer-db";
 import { useStore } from "../store";
 import { openStudyApp } from "../study-handoff";
 import { reviewSession } from "../hand-review-session";
-
-const pageSettled = () =>
-  new Promise<void>((resolve) => {
-    const after = () => setTimeout(resolve, 1000);
-    if (document.readyState === "complete") after();
-    else window.addEventListener("load", after, { once: true });
-  });
 
 // 플랍은 /study/ 앱에서 복기한다 — 턴 카드를 고르면 그 판이 짐으로 넘어온다(hand-review-session.ts)
 type Street = "flop" | "turn" | "river";
@@ -724,9 +717,8 @@ code === "EV_MISSING"
         records.value = seat.records;
         selected.value = seat.records.map((row) => !!row.verdict).lastIndexOf(true);
         currentNode.value = null;
-        // 페이지가 막 열린 순간에 스레드를 띄우면 초기화가 더 자주 멈춘다(hand-review-solver.ts) — 첫 화면이 뜬 뒤에 시작한다
         solving.value = true;
-        void pageSettled().then(() => {
+        void nextTick(() => {
           if (session.value === seat) void solveStreet();
         });
       },
@@ -802,6 +794,7 @@ code === "EV_MISSING"
           onProgress: (p) => {
             if (token === epoch) progress.value = p;
           },
+          onStall: () => trackCalcStall("hand_review"),
         });
         if (token !== epoch) return;
         const rootNode = toNode(await engine.snapshot([]));

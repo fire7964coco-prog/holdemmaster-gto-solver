@@ -13,8 +13,9 @@ export const HAND_REVIEW_HERO_EPSILON = 1e-8;
 const MAX_THREADS = 4;
 const MAX_MEMORY_BYTES = 512 * 1024 * 1024;
 const MAX_ITERATIONS = 10_000;
-// 스레드 초기화가 드물게 멈춘다(원인 미상 · 새로 띄우면 된다) — 페이지가 막 열렸을 때 더 잦다(2/12 · 11-01 실측).
-// 멈췄으면 60초를 기다리지 않고 한 번 새로 띄운다. 느린 망에서 자료를 받는 경우가 있어 합계는 전과 같은 60초.
+// 초기화가 멈추면 60초를 기다리지 않고 한 번 새로 띄운다 — 다시 띄울 때는 단일 스레드로(느려도 답은 나온다).
+// 느린 망에서 자료를 받는 경우가 있어 합계는 전과 같은 60초.
+// 시험 도구의 요청 가로채기가 켜져 있으면 워커의 wasm 요청이 멈춰 여기 걸린다(12/130 · 끄면 0/60 · 11-01 실측).
 const WORKER_INIT_ATTEMPTS_MS = [15_000, 45_000];
 
 /** Built by the /study/ app for the turn (its turn-input.ts) · buildRiverInput for the river. Cards are in the flop's canonical suit space. */
@@ -56,6 +57,8 @@ export type ReviewSolveOptions = {
   mobile?: boolean;
   forceSingleThread?: boolean;
   onProgress?: (progress: ReviewSolveProgress) => void;
+  /** Worker init stalled and is being restarted single-threaded. */
+  onStall?: () => void;
 };
 export type ReviewEpsilonEvidence = {
   originalWeight: number;
@@ -224,9 +227,9 @@ export function createHandReviewSolver() {
       return created;
     };
     const requestedThreads = Math.max(1, Math.min(MAX_THREADS, navigator.hardwareConcurrency || 1));
-    const initWithin = (limitMs: number) => new Promise<Comlink.Remote<Handler>>((resolve, reject) => {
+    const initWithin = (limitMs: number, singleThread?: boolean) => new Promise<Comlink.Remote<Handler>>((resolve, reject) => {
       const timer = setTimeout(() => reject(new ReviewError("REVIEW_WORKER_TIMEOUT", "Worker initialization timed out")), limitMs);
-      guard(api!.initHandler(requestedThreads, options.forceSingleThread) as unknown as PromiseLike<Comlink.Remote<Handler>>).then(
+      guard(api!.initHandler(requestedThreads, singleThread) as unknown as PromiseLike<Comlink.Remote<Handler>>).then(
         value => { clearTimeout(timer); resolve(value); },
         error => { clearTimeout(timer); reject(error); },
       );
@@ -236,12 +239,13 @@ export function createHandReviewSolver() {
       for (let attempt = 0; !handler; attempt++) {
         const created = startWorker();
         try {
-          handler = await initWithin(WORKER_INIT_ATTEMPTS_MS[attempt]);
+          handler = await initWithin(WORKER_INIT_ATTEMPTS_MS[attempt], options.forceSingleThread || attempt > 0);
         } catch (error) {
           const stalled = error instanceof ReviewError && error.code === "REVIEW_WORKER_TIMEOUT";
           if (!stalled || attempt + 1 >= WORKER_INIT_ATTEMPTS_MS.length) throw error;
           worker = null; api = null;
           created.terminate();
+          options.onStall?.();
         }
       }
       remote = handler;

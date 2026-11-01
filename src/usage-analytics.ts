@@ -130,6 +130,11 @@ export const trackCalcFail = (feature: UsageFeature, reason: string) => {
   send("calc_fail", { feature, reason: REASON_VALUE.test(reason) ? reason : "other" });
 };
 
+/** 계산 준비가 멈춰 다시 띄웠다 — 사용자는 실패를 안 봤어도 몇 번이나 나는지 알아야 한다 */
+export const trackCalcStall = (feature: UsageFeature) => {
+  send("calc_stall", { feature });
+};
+
 export const trackShare = (feature: UsageFeature) => {
   send("result_share", { feature, locale: i18n.locale });
 };
