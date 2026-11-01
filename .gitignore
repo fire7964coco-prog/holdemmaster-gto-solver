@@ -1,0 +1,12 @@
+/dist/
+/dist-feedback-test/
+/node_modules/
+/pkg/
+/public/google*.html
+/rust/**/target/
+/.vercel/
+.vercel
+
+# 로컬 전용 환경변수 (Supabase 키) — 저장소에 올리지 않음
+.env.local
+.env

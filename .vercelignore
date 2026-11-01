@@ -1,0 +1,18 @@
+# 배포에는 로컬 빌드된 dist/와 vercel.json만 필요
+# (.vercelignore가 있으면 .gitignore 대신 이 파일이 적용되어 dist/가 포함됨)
+node_modules
+pkg
+rust
+src
+public
+.github
+.vscode
+*.md
+index.html
+package.json
+package-lock.json
+postcss.config.js
+tailwind.config.js
+tsconfig.json
+webpack.config.js
+server.js

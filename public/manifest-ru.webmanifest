@@ -1,0 +1,64 @@
+{
+  "name": "HoldemMaster GTO Trainer",
+  "short_name": "GTO Trainer",
+  "description": "Бесплатный GTO-солвер и тренажёр. Все 13 учебных спотов открываются сразу, даже офлайн.",
+  "lang": "ru",
+  "dir": "ltr",
+  "start_url": "/?view=trainer&lang=ru",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "GTO-тренажёр",
+      "short_name": "Тренажёр",
+      "description": "Разыгрывай раздачи из реальных диапазонов и получай оценку по потере EV",
+      "url": "/?view=trainer&lang=ru",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "13 учебных спотов",
+      "short_name": "Учебные споты",
+      "description": "Смотри GTO-стратегию для 13 спотов без ожидания",
+      "url": "/?view=presets&lang=ru",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "name": "HoldemMaster GTO Trainer",
+  "short_name": "GTO Trainer",
+  "description": "GTO Solver และเครื่องมือฝึกฟรี เปิดสถานการณ์สำหรับศึกษาทั้ง 13 สถานการณ์ได้ทันที แม้ออฟไลน์",
+  "lang": "th",
+  "dir": "ltr",
+  "start_url": "/?view=trainer&lang=th",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DFAC2A",
+  "theme_color": "#262626",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "ฝึก GTO",
+      "short_name": "ฝึก GTO",
+      "description": "ฝึกตัดสินใจด้วยมือที่แจกจากเรนจ์จริง และรับผลประเมินจาก EV loss",
+      "url": "/?view=trainer&lang=th",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "13 สถานการณ์สำหรับศึกษา",
+      "short_name": "ตัวอย่าง",
+      "description": "ดูกลยุทธ์ GTO ของ 13 สถานการณ์ได้ทันที",
+      "url": "/?view=presets&lang=th",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
