@@ -319,6 +319,16 @@ const M = {
     betsFilled: (flop: string, later: string, raise: string) => `ขนาดเ⁠ดิ⁠ม⁠พั⁠นยังว่าง จึงเติมค่าเริ่มต้นให้ด้วย — ฟลอป ${flop} · เทิร์น/ริเวอร์ ${later} · เพิ่มเ⁠ดิ⁠ม⁠พั⁠น ${raise}`,
     next: "ถัดไป: ③ บอร์ด",
   },
+  uk: {
+    title: "Заповнити діапазони за позиціями",
+    note: "Обери, хто відкрився рейзом і хто зрівняв ставку, та натисни кнопку нижче — обидва діапазони, банк і стек заповняться разом. Діапазони такі самі, як у розділі «Чарти префлопу» (кеш-гра 6-max, 100bb).",
+    opener: "Рейз",
+    caller: "Кол",
+    apply: "Заповнити обидва діапазони",
+    applied: (oop: string, ip: string, pot: string, stack: string) => `Заповнено діапазони: ${oop} (OOP) · ${ip} (IP). Банк ${localizeNumber(pot)}bb · Стек ${localizeNumber(stack)}bb`,
+    betsFilled: (flop: string, later: string, raise: string) => `Розміри ставок були порожні, тож додано стандартні — Флоп ${flop} · Терн/Рівер ${later} · Рейз ${raise}`,
+    next: "Далі: ③ Борд",
+  },
 } as const;
 
 const BET_FIELDS = [

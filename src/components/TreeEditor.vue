@@ -32,7 +32,7 @@
         <div
           class="px-1.5 pt-1 pb-0.5 font-semibold group-hover:opacity-100 opacity-70"
         >
-          {{ isTh ? displayThSpotPlayer(spot.player) : spot.player.toUpperCase() }}
+          {{ isTh ? displayThSpotPlayer(spot.player) : isUk ? displayUkSpotPlayer(spot.player) : spot.player.toUpperCase() }}
         </div>
         <div
           class="flex flex-col flex-grow px-3 items-center justify-evenly font-semibold"
@@ -52,7 +52,7 @@
             (spot.index === selectedSpotIndex ? '' : 'opacity-70')
           "
         >
-          {{ isTh ? displayThSpotPlayer(spot.player) : spot.player.toUpperCase() }}
+          {{ isTh ? displayThSpotPlayer(spot.player) : isUk ? displayUkSpotPlayer(spot.player) : spot.player.toUpperCase() }}
         </div>
         <div class="flex-grow overflow-y-auto">
           <button
@@ -101,7 +101,7 @@
             (spot.index === selectedSpotIndex ? '' : 'opacity-70')
           "
         >
-          {{ isTh ? displayThSpotPlayer(spot.player) : spot.player.toUpperCase() }}
+          {{ isTh ? displayThSpotPlayer(spot.player) : isUk ? displayUkSpotPlayer(spot.player) : spot.player.toUpperCase() }}
         </div>
         <div
           :class="
@@ -264,9 +264,11 @@ import { i18n, ltrIso, localizeNumber, pctText } from "../i18n";
 
 const actionNamesIt: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" };
 const actionNamesPl: Record<string, string> = { Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" };
+const actionNamesUk: Record<string, string> = { Fold: "Фолд", Check: "Чек", Call: "Кол", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ін", "All-in": "Олл-ін" };
 const actionNamesTh: Record<string, string> = { Fold: "หมอบ", Check: "เช็ค", Call: "คอล", Bet: "เ⁠ดิ⁠ม⁠พั⁠น", Raise: "เพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น" };
 const displayThSpotPlayer = (player: string) => ({ flop: "ฟลอป", turn: "เทิร์น", river: "ริเวอร์", end: "จบ" } as Record<string, string>)[player] ?? player.toUpperCase();
-const displayActionName = (name: string) => i18n.locale === "it" ? actionNamesIt[name] ?? name : i18n.locale === "pl" ? actionNamesPl[name] ?? name : i18n.locale === "th" ? actionNamesTh[name] ?? name : name;
+const displayUkSpotPlayer = (player: string) => ({ flop: "Флоп", turn: "Терн", river: "Рівер", end: "Кінець" } as Record<string, string>)[player] ?? player.toUpperCase();
+const displayActionName = (name: string) => i18n.locale === "it" ? actionNamesIt[name] ?? name : i18n.locale === "pl" ? actionNamesPl[name] ?? name : i18n.locale === "th" ? actionNamesTh[name] ?? name : i18n.locale === "uk" ? actionNamesUk[name] ?? name : name;
 
 const M = {
   ko: {
@@ -586,6 +588,22 @@ const M = {
     cancelEdits: "ยกเลิกการแก้ไข",
     addedLines: "ลำดับที่เพิ่ม:",
     removedLines: "ลำดับที่ลบ:",
+  },
+  uk: {
+    treeError: "Помилка: не вдалося побудувати дерево (можливо, завантажено пошкоджене дерево).",
+    pot: "Банк",
+    stack: "Стек",
+    noActions: "(Немає дій)",
+    wins: "перемагає",
+    invalidTerminals: "Некоректні кінцеві вузли:",
+    addBetAction: "Додати ставку",
+    removeNode: "Видалити вузол",
+    betAmount: "Сума ставки:",
+    potRate: (pct: string) => `(${pctText(pct)} банку)`,
+    saveEdits: "Зберегти зміни",
+    cancelEdits: "Скасувати зміни",
+    addedLines: "Додані лінії:",
+    removedLines: "Вилучені лінії:",
   },
 } as const;
 
@@ -1013,6 +1031,8 @@ export default defineComponent({
       displayActionName,
       displayThSpotPlayer,
       isTh: computed(() => i18n.locale === "th"),
+      isUk: computed(() => i18n.locale === "uk"),
+      displayUkSpotPlayer,
       isAr: computed(() => i18n.locale === "ar"),
       isTreeError,
       spots,

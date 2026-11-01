@@ -1026,6 +1026,29 @@ const M = {
     noResults: "ไม่มีผลลัพธ์",
     action: (name: string): string => ({ Fold: "การหมอบ", Check: "การเช็ค", Call: "การคอล", Bet: "การเ⁠ดิ⁠ม⁠พั⁠น", Raise: "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น" } as Record<string, string>)[name] ?? name,
   },
+  uk: {
+    summary: "Підсумок",
+    barWidth: "Ширина смуг:",
+    normalized: "Нормалізована",
+    absolute: "Абсолютна",
+    full: "Повна",
+    display: "Показувати:",
+    actionPct: "Частота дії",
+    actionEv: "EV дії",
+    exportCsv: "Експортувати підсумок у файл CSV",
+    all: "Усі",
+    hand: "Рука",
+    strategy: "Стратегія",
+    weightBar: "Вага (смуга)",
+    weight: "Вага",
+    turn: "Терн",
+    river: "Рівер",
+    comboBar: "Комбо (смуга)",
+    combos: "Комбо",
+    noReport: (chanceType: string) => `Немає даних про гру ${chanceType === "turn" ? "на терні" : "на рівері"}`,
+    noResults: "Немає результатів",
+    action: (name: string): string => ({ Allin: "Олл-ін", Fold: "Фолд", Check: "Чек", Call: "Кол", Bet: "Бет", Raise: "Рейз" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({
@@ -1266,7 +1289,7 @@ export default defineComponent({
             const label =
               action.amount === "0"
                 ? L.value.action(action.name)
-                : i18n.locale === "pl" || i18n.locale === "th"
+                : i18n.locale === "pl" || i18n.locale === "th" || i18n.locale === "uk"
                 ? `${action.name[0]} ${localizeNumber(formatAmount(Number(action.amount), evScale.value))}${evScale.value === 10 ? "bb" : ""}`
                 : localizeNumber(
                     `${action.name[0]} ${formatAmount(
@@ -1304,7 +1327,7 @@ export default defineComponent({
             const label =
               action.amount === "0"
                 ? L.value.action(action.name)
-                : i18n.locale === "pl" || i18n.locale === "th"
+                : i18n.locale === "pl" || i18n.locale === "th" || i18n.locale === "uk"
                 ? `${action.name[0]} ${localizeNumber(formatAmount(Number(action.amount), evScale.value))}${evScale.value === 10 ? "bb" : ""}`
                 : localizeNumber(
                     `${action.name[0]} ${formatAmount(

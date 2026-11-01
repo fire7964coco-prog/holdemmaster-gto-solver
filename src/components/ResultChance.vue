@@ -295,6 +295,12 @@ const M = {
     equity: "Equity",
     action: (name: string): string => ({ Fold: "การหมอบ", Check: "การเช็ค", Call: "การคอล", Bet: "การเ⁠ดิ⁠ม⁠พั⁠น", Raise: "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น" } as Record<string, string>)[name] ?? name,
   },
+  uk: {
+    strategyCombos: "Стратегія (комбо)",
+    strategy: "Стратегія",
+    equity: "Еквіті",
+    action: (name: string): string => ({ Allin: "Олл-ін", Fold: "Фолд", Check: "Чек", Call: "Кол", Bet: "Бет", Raise: "Рейз" } as Record<string, string>)[name] ?? name,
+  },
 } as const;
 
 export default defineComponent({
@@ -440,7 +446,7 @@ export default defineComponent({
         }[option];
 
       return {
-        ...(i18n.locale === "ar" ? { locale: "en-US" } : i18n.locale === "it" ? { locale: "it-IT" } : i18n.locale === "pl" ? { locale: "pl-PL" } : i18n.locale === "th" ? { locale: "th-TH-u-ca-gregory-nu-latn" } : {}),
+        ...(i18n.locale === "ar" ? { locale: "en-US" } : i18n.locale === "it" ? { locale: "it-IT" } : i18n.locale === "pl" ? { locale: "pl-PL" } : i18n.locale === "th" ? { locale: "th-TH-u-ca-gregory-nu-latn" } : i18n.locale === "uk" ? { locale: "uk-UA" } : {}),
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
@@ -454,7 +460,7 @@ export default defineComponent({
             stacked: true,
             min: ["ev", "eqr"].includes(option) ? undefined : 0,
             max: option === "strategy" ? 1 : undefined,
-            ticks: { format: (i18n.locale === "pl" || i18n.locale === "th") ? { ...format, useGrouping: true } : format, color: C.chartTick },
+            ticks: { format: (i18n.locale === "pl" || i18n.locale === "th" || i18n.locale === "uk") ? { ...format, useGrouping: true } : format, color: C.chartTick },
             grid: { color: C.chartGrid },
             afterFit(axis) {
               axis.width = 52;
@@ -484,9 +490,9 @@ export default defineComponent({
                 let label = context.dataset.label ?? "";
                 if (label) label += ": ";
                 if (["strategy-combos", "ev"].includes(option)) {
-                  return (i18n.locale === "pl" || i18n.locale === "th") ? ` ${label}${localizeNumber(toFixedAdaptive(value))}` : localizeNumber(` ${label}${toFixedAdaptive(value)}`);
+                  return (i18n.locale === "pl" || i18n.locale === "th" || i18n.locale === "uk") ? ` ${label}${localizeNumber(toFixedAdaptive(value))}` : localizeNumber(` ${label}${toFixedAdaptive(value)}`);
                 } else {
-                  if (i18n.locale === "th") return ` ${label}${pctText(toFixed1(value * 100))}`;
+                  if (i18n.locale === "th" || i18n.locale === "uk") return ` ${label}${pctText(toFixed1(value * 100))}`;
                   return localizeNumber(` ${label}${toFixed1(value * 100)}%`);
                 }
               },

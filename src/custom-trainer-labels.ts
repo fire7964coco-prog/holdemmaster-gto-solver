@@ -1,5 +1,5 @@
 import type { LocaleDict } from "./i18n";
-import { ruPlural, plPlural } from "./i18n";
+import { ruPlural, plPlural, ukPlural } from "./i18n";
 
 // B1 전표 정본. 두 화면이 함께 쓰며 @features 안에서만 가져온다.
 export const M = {
@@ -250,6 +250,19 @@ export const M = {
     prompt: "จะเล่นอ⁠ย่⁠า⁠ง⁠ไ⁠ร?", next: "โจทย์ถัดไป", review: "ทบทวนข้อผิดพลาด", practice: "ฝึกตามปกติ", attemptCount: "ฝึกสถานการณ์นี้แล้ว {count} ครั้ง",
     verdictBest: "การเล่นที่ดีที่สุด", verdictGood: "ยอมรับได้", verdictBad: "ควรทบทวน", evLoss: "EV loss", frequency: "ความถี่", actionEv: "EV ของแ⁠อ็⁠ก⁠ชั⁠น", chips: "ชิป",
   },
+  uk: {
+    entry: "Тренувати цей спот", busy: "Збереження завдань для тренування…", tab: "Мої споти", presetTab: "Тренування на прикладах",
+    empty: "Обчисли спот і натисни «Тренувати цей спот» на екрані результатів — тут з’являться завдання.",
+    loading: "Завантаження твоїх спотів…", storageNote: "На цьому пристрої зберігаються 20 останніх спотів і 500 останніх спроб для кожного. Результати з розділу «Мої споти» враховуються окремо. Якщо зберегти той самий спот знову, новий розрахунок замінить попередній, а історію тренувань буде очищено.",
+    source: "Твій наближений розрахунок · Цільова похибка: {target}% · Досягнута похибка: {achieved}%", lockAssumption: "Припущення: частину стратегії зафіксовано",
+    reviewSource: "Спот із розбору твоєї роздачі · {method} · Цільова похибка: {target}% · Досягнута похибка: {achieved}%", backToReview: "Повернутися до розбору роздачі",
+    chooseSpot: "Збережені споти", deleteSpot: "Видалити спот", deleteConfirm: "Видалити цей спот та історію його тренувань із цього пристрою?",
+    loadError: "Не вдалося завантажити збережені споти. Відкрий цей екран ще раз.", saveError: "Не вдалося зберегти. Спробуй ще раз.",
+    captureError: "Не вдалося створити завдання за цими результатами. Перевір, чи завершено розрахунок.",
+    noQuestion: "У цьому споті немає рук для тренування.", board: "Борд", hand: "Твоя рука", pot: "Банк", stack: "Стек", line: "Лінія дій",
+    prompt: "Як зіграєш?", next: "Наступне завдання", review: "Повторити завдання з помилками", practice: "Звичайне тренування", attemptCount: "Спроб у цьому споті: {count}",
+    verdictBest: "Найкраще рішення", verdictGood: "Прийнятне рішення", verdictBad: "Варто повторити", evLoss: "Втрата EV", frequency: "Частота дії", actionEv: "EV дії", chips: "фішки",
+  },
 } satisfies LocaleDict<Record<string, string>>;
 
 export type CustomTrainerLabelKey = keyof typeof M.ko;
@@ -262,4 +275,7 @@ export const ruChipLabel = (n: number, shownAsDecimal = false): string =>
 // Four forms include the displayed decimal precision (1.000 is other).
 export const plChipLabel = (n: number, fractionDigits = 0): string =>
   plPlural(n, { one: "żeton", few: "żetony", many: "żetonów", other: "żetona" },
+    { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
+export const ukChipLabel = (n: number, fractionDigits = 0): string =>
+  ukPlural(n, { one: "фішка", few: "фішки", many: "фішок", other: "фішки" },
     { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });

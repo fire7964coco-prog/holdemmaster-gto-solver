@@ -156,12 +156,18 @@ import { useStore } from "../store";
 
 const actionNamesIt: Record<string, string> = { Fold: "Fold", Check: "Check", Call: "Call", Bet: "Puntata", Raise: "Rilancio", Allin: "All-in", "All-in": "All-in" };
 const actionNamesPl: Record<string, string> = { Fold: "Pas", Check: "Czek", Call: "Sprawdzenie", Bet: "Zakład", Raise: "Przebicie", Allin: "All-in", "All-in": "All-in" };
+const actionNamesUk: Record<string, string> = { Fold: "Фолд", Check: "Чек", Call: "Кол", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ін", "All-in": "Олл-ін" };
 const actionNamesTh: Record<string, string> = { Fold: "การหมอบ", Check: "การเช็ค", Call: "การคอล", Bet: "การเ⁠ดิ⁠ม⁠พั⁠น", Raise: "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น" };
 const displayActionName = (name: string) => {
   if (i18n.locale === "pl") {
     const separator = name.indexOf(":");
     const kind = separator < 0 ? name : name.slice(0, separator);
     return (actionNamesPl[kind] ?? kind) + (separator < 0 ? "" : name.slice(separator));
+  }
+  if (i18n.locale === "uk") {
+    const separator = name.indexOf(":");
+    const kind = separator < 0 ? name : name.slice(0, separator);
+    return (actionNamesUk[kind] ?? kind) + (separator < 0 ? "" : name.slice(separator));
   }
   if (i18n.locale === "th") {
     const separator = name.indexOf(":");

@@ -468,3 +468,46 @@ html:lang(th) .study-mobile-pot {
     flex-wrap: wrap;
   }
 }
+
+/* UK3: sidebar width fixed by the Ukrainian terminology premeasurement §5-2. */
+@media (min-width: 768px) {
+  html:lang(uk) .app-sidebar { width: 15.5rem; }
+}
+
+/* UK4: keep the saved-item action Перейменувати intact in narrow panels. */
+html:lang(uk) .db-item-list ~ .flex .button-overrides {
+  overflow-wrap: normal;
+}
+html:lang(uk) .db-item-list ~ .flex > .grid-cols-3 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+html:lang(uk) .db-item-list ~ .flex > .grid-cols-3 > :last-child {
+  grid-column: 1 / -1;
+}
+
+/* UK6: keep complete Ukrainian labels visible and wrap only between words. */
+html:lang(uk) .flex:has(> .tree-bet-amount) > .button-base {
+  overflow-wrap: normal;
+}
+html:lang(uk) .guide-table td {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+html:lang(uk) .review-badge {
+  display: inline-block;
+  white-space: nowrap;
+  margin-inline-start: 0;
+}
+@media (max-width: 767px) {
+  html:lang(uk) .study-mobile-bar {
+    flex-wrap: wrap;
+  }
+  html:lang(uk) .study-mobile-pot {
+    flex: 1 0 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+}

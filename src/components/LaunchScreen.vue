@@ -172,6 +172,12 @@ const M = {
     titleLine2: "ฝึก GTO",
     footer: "GTO Solver ฟรี · ใช้งานอ⁠อ⁠ฟ⁠ไ⁠ล⁠น์ได้",
   },
+  uk: {
+    greeting: "Вітаємо!",
+    titleLine1: "HoldemMaster",
+    titleLine2: "Тренажер GTO.",
+    footer: "Безкоштовний солвер GTO · Працює офлайн",
+  },
 } as const;
 
 /* 다른 빌드는 첫 줄 상표만 바꾼다(src/variant.ts) — 기본 빌드는 없음 */

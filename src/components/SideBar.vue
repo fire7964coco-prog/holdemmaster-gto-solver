@@ -788,6 +788,39 @@ const M = {
     betSizeSub: "ตั้งค่าทรี",
     run: "คำนวณ",
   },
+  uk: {
+    stepDefaults: "Стандартні налаштування",
+    stepNeeded: "Потрібно ввести дані",
+    stepComplete: "Дані введено",
+    stepRunNeeded: "Запустити солвер",
+    stepRunComplete: "Розрахунок завершено",
+    stepLegend: "✓ Готово · ○ Ще не виконано · Жовта крапка = наступний крок",
+    exploreLabel: "Навчання",
+    exploreLabelSuffix: "",
+    about: "Про програму",
+    guide: "Як користуватися",
+    presets: "Навчальні споти",
+    presetsBadge: "Одразу",
+    trainer: "Тренажер GTO",
+    trainerBadge: "Оцінка EV",
+    preflop: "Чарти префлопу",
+    // 뱃지까지 한 줄에 들어와야 한다 — 「Open·Defend」는 1280×720에서 두 줄로 접혔다
+    preflopBadge: "Діапазони",
+    equity: "Калькулятор еквіті",
+    // 뱃지는 «무엇을 내주는가»를 한 마디로 — 라벨과 같은 말(Equity)을 반복하면 오작동처럼 보인다.
+    // ko 승률 · ja 勝率 · es % victoria 와 같은 자리다. «Win %»는 퍼센트 기호가 있어
+    // bb/100을 뜻하는 «win rate»와 혼동되지 않는다 (2026-08-20 눈검수).
+    equityBadge: "%",
+    customLabel: "Власний розрахунок",
+    // ⚠ 이 라벨이 두 줄로 접히면 1280×720에서 ⑤가 화면 밖으로 밀린다 (한 줄로 유지할 것)
+    customLabelSuffix: "",
+    oopRange: "Діапазон OOP",
+    ipRange: "Діапазон IP",
+    board: "Борд",
+    betSize: "Розміри ставок",
+    betSizeSub: "Дерево гри",
+    run: "Розрахунок",
+  },
 } as const;
 
 export default defineComponent({

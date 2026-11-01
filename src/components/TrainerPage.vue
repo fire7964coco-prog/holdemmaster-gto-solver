@@ -697,7 +697,7 @@ import {
   oopLabelOf,
   presetTitleById,
 } from "../presets";
-import { i18n, localizeNumber, pctText, plCountText, ruPlural, plPlural, autoIso, ltrIso, arLabelIso } from "../i18n";
+import { i18n, localizeNumber, pctText, plCountText, ruPlural, plPlural, autoIso, ltrIso, arLabelIso, ukNumberText, ukPlural } from "../i18n";
 import { trackOutbound, mainSiteUrl } from "../outbound";
 import { useStore } from "../store";
 import {
@@ -2839,6 +2839,114 @@ const M = {
     syncFailed: (msg: string) => `ซิ⁠ง⁠ค์ข้อมูลไม่สำเร็จ: ${msg} — ผลของคุณยังบันทึกไว้บนอุ⁠ป⁠ก⁠ร⁠ณ์นี้ กด “ซิ⁠ง⁠ค์ข้อมูลตอนนี้” เพื่อลองอีกครั้ง`,
     signInFailed: (msg: string) => `เข้าสู่ระบบไม่สำเร็จ: ${msg} — กดปุ่มเข้าสู่ระบบอีกครั้งเพื่อลองใหม่`,
   },
+  uk: {
+    dayStreakPrefix: "",
+    versus: "проти",
+    loadFailed: "Не вдалося завантажити дані тренажера:",
+    loading: "Завантаження тренажера…",
+    review: (n: number) => `Повторити завдання з помилками (${ukNumberText(n, 0)})`,
+    daily: "Завдання дня",
+    dailyStreakLabel: "Завдання дня:",
+    done: "Готово",
+    solved: "Розв’язано",
+    dayStreakSuffix: (n: number) => ukPlural(n, { one: " день поспіль", few: " дні поспіль", many: " днів поспіль", other: " дня поспіль" }, { minimumFractionDigits: 0, maximumFractionDigits: 0 }),
+    bestPrefix: "/ рекорд",
+    streakLabel: "Вдалих рішень поспіль:",
+    totalLossLabel: "Загальна втрата EV",
+    avgLossLabel: "Середня втрата EV",
+    goodRateLabel: "Частка вдалих рішень",
+    weaknessTitle: "Пошук слабких місць",
+    avgOfPot: (pct: string) => `у середньому ${pctText(pct)} банку`,
+    handCount: (n: number) => `(Кількість роздач: ${ukNumberText(n, 0)})`,
+    notSolved: "Ще немає спроб",
+    weakestBefore: "Найбільша втрата EV — категорія: ",
+    weakestAfter: " —",
+    practiceThis: "Тренувати цей тип спотів",
+    weaknessHint: "Розіграй щонайменше 3 роздачі в кожній категорії, щоб побачити свої слабкі місця.",
+    accountBefore: "Збережено в обліковому записі: ",
+    accountAfter: "",
+    syncingNow: "Синхронізація…",
+    syncNow: "Синхронізувати зараз",
+    signOutLabel: "Вийти",
+    localOnlyBefore: "Твій прогрес зберігається ",
+    localOnlyBold: "лише на цьому пристрої",
+    localOnlyAfter:
+      ". Під’єднай обліковий запис HoldemMaster, щоб продовжити з того самого місця на іншому пристрої.",
+    googleSignIn: "Продовжити з Google",
+    kakaoSignIn: "Продовжити з Kakao",
+    telegramSignIn: "Продовжити з Telegram",
+    footerLine: (nodes: number, pct: number) =>
+      `${ukNumberText(SPOT_COUNT, 0)} ${ukPlural(SPOT_COUNT, { one: "навчальний спот", few: "навчальні споти", many: "навчальних спотів", other: "навчального споту" }, { minimumFractionDigits: 0, maximumFractionDigits: 0 })} · ${ukNumberText(nodes, 0)} ${ukPlural(nodes, { one: "вузол рішення", few: "вузли рішень", many: "вузлів рішень", other: "вузла рішення" }, { minimumFractionDigits: 0, maximumFractionDigits: 0 })} · цільова похибка (exploitability): ${pctText(pct)}`,
+    details: "Деталі ↓",
+    toAct: "діє",
+    potLabel: "Банк",
+    stackLabel: "Стек",
+    lineLabel: "Лінія дій:",
+    boardLabel: "Борд",
+    myHand: "Твоя рука",
+    yourChoice: "Твій вибір",
+    prompt: "Як зіграєш?",
+    bestEvTag: " · Найвище EV",
+    evLoss: "Втрата EV",
+    mobileDetailTitle: "Частота й EV кожної дії",
+    mixedNote:
+      "Змішані стратегії не вважаються помилкою — оцінка залежить від різниці EV між діями.",
+    dailyDone: "Завдання дня виконано",
+    dailyDoneDesc:
+      "Сьогодні завдання однакове для всіх. Опублікуй результат, щоб порівняти його з результатами інших гравців.",
+    makeCard: "Створити картку результату",
+    boardShow: "Переглянути таблицю лідерів дня",
+    boardHide: "Сховати таблицю лідерів",
+    boardLoading: "Завантаження…",
+    boardCount: (n: number) => `Гравців сьогодні: ${ukNumberText(n, 0)}`,
+    boardMyRank: (r: number) => `Моє місце: #${ukNumberText(r, 0)}`,
+    boardLoginHint:
+      "Увійди, щоб додати своє ім’я до таблиці. Переглядати її можуть усі.",
+    boardUnavailable: "Таблиця лідерів поки недоступна.",
+    copied: "Скопійовано",
+    copyResult: "Копіювати текст результату",
+    openCommunity: "Відкрити спільноту →",
+    pasteHintBefore: "У спільноті ",
+    pasteHintBold: "створи допис",
+    pasteHintAfter: " і встав текст.",
+    keepPracticing: "Продовжити тренування",
+    nextHand: "Наступна роздача",
+    readArticle: "Прочитати розбір споту →",
+    viewFull: "Переглянути повний розв’язок",
+    resultTitle: "Результати",
+    resultHintBefore: "Обери дію, щоб побачити ",
+    resultHintBold: "частоту й EV кожної дії",
+    resultHintAfter: ", а також скільки bb коштував твій вибір.",
+    gtoNoteBefore:
+      "Стратегія GTO поєднує різні дії з тією самою рукою, тому рідкісна дія не обов’язково є помилкою. Критерій — втрата EV ",
+    gtoNoteBold: "відносно банку",
+    gtoNoteAfter: ": ≤0,35% — «Найкраще рішення» · ≤1% — «Прийнятне рішення» · більше — «Варто повторити».",
+    spotLimits: (pot: string, best: string, good: string) =>
+      `Для цього споту (банк ${localizeNumber(pot)}bb): «Найкраще рішення» ≤${localizeNumber(best)}bb · «Прийнятне рішення» ≤${localizeNumber(good)}bb.`,
+    judgeBasis: (pot: string, best: string, good: string) =>
+      `Оцінка відносно початкового банку цього споту (${localizeNumber(pot)}bb): «Найкраще рішення» ≤${localizeNumber(best)}bb · «Прийнятне рішення» ≤${localizeNumber(good)}bb.`,
+    resetHistoryLabel: "Очистити історію",
+    cardAlt: "Картка результату завдання дня",
+    shareApps: "Поширити",
+    saveImage: "Зберегти зображення",
+    close: "Закрити",
+    cardHintBefore:
+      "Пошир картку в груповому чаті чи соцмережах — сьогодні всі отримують ",
+    cardHintBold: "те саме завдання",
+    cardHintAfter: ". Картка не розкриває відповідь.",
+    verdictBest: "Найкраще рішення",
+    verdictGood: "Прийнятне рішення",
+    verdictMiss: "Варто повторити",
+    promptCopy: "Скопіюй текст нижче",
+    shareText:
+      "Завдання дня з GTO — спробуй розв’язати: https://solver.holdemmaster.com/?view=trainer&lang=uk",
+    confirmReset: "Очистити всю історію тренажера на цьому пристрої?",
+    syncMerged: (uploaded: number, merged: number) =>
+      `Збережено: ${ukNumberText(uploaded, 0)} · Отримано з інших пристроїв: ${ukNumberText(merged, 0)}`,
+    syncSaved: (uploaded: number) => `Збережено: ${ukNumberText(uploaded, 0)}`,
+    syncFailed: (msg: string) => `Не вдалося синхронізувати: ${msg}. Результати залишаються на цьому пристрої. Натисни «Синхронізувати зараз», щоб спробувати ще раз.`,
+    signInFailed: (msg: string) => `Не вдалося ввійти: ${msg}. Натисни кнопку входу ще раз.`,
+  },
 } as const;
 
 export default defineComponent({
@@ -2852,6 +2960,8 @@ export default defineComponent({
       ? M.pl.dayStreakSuffix(dailyState.streak)
       : i18n.locale === "th"
       ? M.th.dayStreakSuffix
+      : i18n.locale === "uk"
+      ? M.uk.dayStreakSuffix(dailyState.streak)
       : M[i18n.locale].dayStreakSuffix);
     const versusText = computed(() => "versus" in L.value ? L.value.versus : "vs");
     const autoText = (text: string | null) => i18n.locale === "ar" ? autoIso(text ?? "") : text;

@@ -453,6 +453,20 @@ export default defineComponent({
         "run-solver": "คำนวณด้วย Solver",
         treeEdit: "แก้ไขทรี",
       },
+      uk: {
+        about: "Про програму",
+        guide: "Як користуватися — крок за кроком",
+        presets: "Навчальні споти — приклади в один клік",
+        trainer: "Тренажер GTO — EV кожного рішення",
+        preflop: "Чарти префлопу — діапазони відкриття й захисту",
+        equity: "Калькулятор еквіті — еквіті рук і діапазонів",
+        "oop-range": "Діапазон OOP",
+        "ip-range": "Діапазон IP",
+        board: "Борд",
+        "tree-config": "Налаштування дерева гри",
+        "run-solver": "Запустити солвер",
+        treeEdit: "Перегляд і редагування дерева",
+      },
     } as const;
     const header = computed(() => {
       const messages = HEADERS[i18n.locale];

@@ -202,6 +202,10 @@ const M = {
     combos: "ค⁠อ⁠ม⁠โ⁠บ",
     equity: "Equity",
   },
+  uk: {
+    combos: "Комбо",
+    equity: "Еквіті",
+  },
 } as const;
 
 const EPS = 2e-6;

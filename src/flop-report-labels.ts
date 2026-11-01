@@ -60,6 +60,9 @@ const M = {
   th: {
     navTitle: "สถิติฟลอป",
   },
+  uk: {
+    navTitle: "Статистика флопів",
+  },
 };
 
 export type FlopReportLabels = Record<keyof typeof M.ko, string>;

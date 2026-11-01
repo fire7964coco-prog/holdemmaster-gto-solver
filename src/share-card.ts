@@ -10,7 +10,7 @@
  */
 import { cardText } from "./utils";
 import { C } from "./theme";
-import { i18n, localizeNumber, ruPlural, plPlural } from "./i18n";
+import { i18n, localizeNumber, ruPlural, plPlural, ukPlural, ukNumberText } from "./i18n";
 
 // 카드에 그려 넣는 고정 문구 — 카드 언어는 현재 화면 언어를 따른다
 const CARD_TEXT = {
@@ -235,6 +235,17 @@ const CARD_TEXT = {
       `EV loss ${bb}bb${streak > 1 ? ` · ทำต่อเนื่อง ${localizeNumber(String(streak))} วัน` : ""}`,
     invite: "ลองทำโจทย์วันนี้",
   },
+  uk: {
+    brand: "HoldemMaster GTO Trainer",
+    tagline: "Одне завдання на день · однакове для всіх",
+    heading: "Завдання дня",
+    board: "Борд",
+    hand: "Моя рука",
+    result: (verdict: string) => `Мій результат: ${verdict}`,
+    evLine: (bb: string, streak: number) =>
+      `Втрата EV: ${bb}bb${streak > 1 ? ` · ${ukNumberText(streak, 0)}${ukPlural(streak, { one: " день поспіль", few: " дні поспіль", many: " днів поспіль", other: " дня поспіль" }, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` : ""}`,
+    invite: "Спробуй розв’язати завдання дня",
+  },
 } as const;
 
 export type DailyCardInput = {
@@ -369,7 +380,7 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   const ctx = canvas.getContext("2d");
   if (!ctx) return canvas;
   const rtl = document.documentElement.dir === "rtl";
-  const font = rtl ? RTL_FONT : i18n.locale === "pl" ? PL_FONT : i18n.locale === "th" ? TH_FONT : FONT;
+  const font = rtl ? RTL_FONT : i18n.locale === "pl" ? PL_FONT : i18n.locale === "uk" ? "'Segoe UI', 'Roboto', 'Noto Sans', 'Helvetica Neue', 'Arial', sans-serif" : i18n.locale === "th" ? TH_FONT : FONT;
   const textX = (x: number) => rtl ? WIDTH - x : x;
   ctx.direction = rtl ? "rtl" : "ltr";
 
@@ -416,6 +427,13 @@ export const drawDailyCard = (input: DailyCardInput): HTMLCanvasElement => {
   ctx.textAlign = "center";
   ctx.fillStyle = TEXT;
   ctx.font = `700 42px ${font}`;
+  if (i18n.locale === "uk") {
+    let titleSize = 42;
+    while (ctx.measureText(input.spotTitle).width > WIDTH - 192 && titleSize > 28) {
+      titleSize -= 1;
+      ctx.font = `700 ${titleSize}px ${font}`;
+    }
+  }
   ctx.fillText(input.spotTitle, WIDTH / 2, panelY + 76);
   ctx.fillStyle = TEXT_FAINT;
   ctx.font = `400 30px ${font}`;

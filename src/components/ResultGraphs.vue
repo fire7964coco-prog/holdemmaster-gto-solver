@@ -182,6 +182,10 @@ const M = {
     noGraph: "ไม่มีกราฟให้แสดง",
     equity: "Equity",
   },
+  uk: {
+    noGraph: "Графік недоступний",
+    equity: "Еквіті",
+  },
 } as const;
 
 export default defineComponent({
@@ -369,12 +373,12 @@ export default defineComponent({
       const formatX = { style: "percent", minimumFractionDigits: 0 };
       const formatY = {
         style: styleY,
-        useGrouping: i18n.locale === "pl" || i18n.locale === "th",
+        useGrouping: i18n.locale === "pl" || i18n.locale === "th" || i18n.locale === "uk",
         minimumFractionDigits: 0,
       };
 
       return {
-        ...(i18n.locale === "ar" ? { locale: "en-US" } : i18n.locale === "it" ? { locale: "it-IT" } : i18n.locale === "pl" ? { locale: "pl-PL" } : i18n.locale === "th" ? { locale: "th-TH-u-ca-gregory-nu-latn" } : {}),
+        ...(i18n.locale === "ar" ? { locale: "en-US" } : i18n.locale === "it" ? { locale: "it-IT" } : i18n.locale === "pl" ? { locale: "pl-PL" } : i18n.locale === "th" ? { locale: "th-TH-u-ca-gregory-nu-latn" } : i18n.locale === "uk" ? { locale: "uk-UA" } : {}),
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
@@ -435,9 +439,9 @@ export default defineComponent({
                 const c2 = cardText(cardPair >>> 8);
                 const label = `${c2.rank}${c2.suit}${c1.rank}${c1.suit}`;
                 if (content === "ev") {
-                  return (i18n.locale === "pl" || i18n.locale === "th") ? ` ${label}: ${localizeNumber(toFixedAdaptive(value))}` : localizeNumber(` ${label}: ${toFixedAdaptive(value)}`);
+                  return (i18n.locale === "pl" || i18n.locale === "th" || i18n.locale === "uk") ? ` ${label}: ${localizeNumber(toFixedAdaptive(value))}` : localizeNumber(` ${label}: ${toFixedAdaptive(value)}`);
                 } else {
-                  if (i18n.locale === "th") return ` ${label}: ${pctText(toFixed1(value * 100))}`;
+                  if (i18n.locale === "th" || i18n.locale === "uk") return ` ${label}: ${pctText(toFixed1(value * 100))}`;
                   return localizeNumber(` ${label}: ${toFixed1(value * 100)}%`);
                 }
               },

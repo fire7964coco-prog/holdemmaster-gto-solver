@@ -117,6 +117,12 @@ const M = {
     backToStudy: "กลับไปเปรียบเทียบไพ่เทิร์น",
     backToTurnView: "กลับไปดูกลยุทธ์ของเทิร์นนี้",
   },
+  uk: {
+    navTitle: "Перегляд флопу",
+    practiceSource: "Спот із порівняння карт терну · {method} · Цільова похибка: {target}% · Досягнута похибка: {achieved}%",
+    backToStudy: "Повернутися до порівняння карт терну",
+    backToTurnView: "Повернутися до стратегії цього терну",
+  },
 };
 export type FlopStudyLabels = Record<keyof typeof M.ko, string>;
 // This assignment checks both the locale set and every required key at build time.

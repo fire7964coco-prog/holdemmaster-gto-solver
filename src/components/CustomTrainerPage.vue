@@ -116,7 +116,7 @@ import type { CustomTrainerBank, CustomTrainerQuestion, CustomTrainerAttempt } f
 import { listCustomTrainerBanks, deleteCustomTrainerBank, getCustomTrainerAttempts, addCustomTrainerAttempt } from "../custom-trainer-db";
 import { evaluateTrainerAction, trainerActionLabel, trainerCardPair } from "../trainer";
 import type { TrainerEvaluation } from "../trainer";
-import { M, ruChipLabel, plChipLabel } from "../custom-trainer-labels";
+import { M, ruChipLabel, plChipLabel, ukChipLabel } from "../custom-trainer-labels";
 import { classifyRngAnswer, nextRngMode, readRngMode, rngAction, rngBands, rollRng, trainerRngEnabled } from "../trainer-rng";
 import type { RngMode } from "../trainer-rng";
 import { RNG_M } from "../trainer-rng-labels";
@@ -125,7 +125,7 @@ import { flopStudyLabels } from "../flop-study-labels"; // R2_REVIEW_ONLY
 import { openStudyApp, openStudyAppFromPractice } from "../study-handoff"; // R2_REVIEW_ONLY
 import { hasReviewSession } from "../hand-review-session"; // R2_REVIEW_ONLY
 import { useStore } from "../store";
-import { i18n, localizeNumber, pctText, ltrIso, arLabelIso } from "../i18n";
+import { i18n, localizeNumber, pctText, ltrIso, arLabelIso, ukNumberText } from "../i18n";
 import { cardText, formatAmount } from "../utils";
 
 export default defineComponent({
@@ -160,6 +160,12 @@ export default defineComponent({
       const display = count.toLocaleString("pl-PL", { useGrouping: true, minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
       return `${display}${scale === 10 ? "bb" : ` ${plChipLabel(count, fractionDigits)}`}`;
     };
+    // Input is the raw formatter output, never a localized string.
+    const ukAmount = (value: string, scale: number) => {
+      const fractionDigits = value.split(".")[1]?.length ?? 0;
+      const count = Number(value);
+      return `${ukNumberText(count, fractionDigits)}${scale === 10 ? "bb" : ` ${ukChipLabel(count, fractionDigits)}`}`;
+    };
     const displayValue = (value: number) => i18n.locale === "ar"
       ? arAmount(value.toFixed(3), bank.value?.unitScale ?? 1)
       : i18n.locale === "ru"
@@ -170,6 +176,8 @@ export default defineComponent({
       ? plAmount(value.toFixed(3), bank.value?.unitScale ?? 1)
       : i18n.locale === "th"
       ? `${number(value.toFixed(3))}${bank.value?.unitScale === 10 ? "bb" : ` ${L.value.chips}`}`
+      : i18n.locale === "uk"
+      ? ukAmount(value.toFixed(3), bank.value?.unitScale ?? 1)
       : `${number(value.toFixed(3))} ${unit.value}`;
     const amount = (value: number) => i18n.locale === "ar"
       ? arAmount(formatAmount(value, bank.value?.unitScale ?? 1), bank.value?.unitScale ?? 1)
@@ -181,6 +189,8 @@ export default defineComponent({
       ? plAmount(formatAmount(value, bank.value?.unitScale ?? 1), bank.value?.unitScale ?? 1)
       : i18n.locale === "th"
       ? `${number(formatAmount(value, bank.value?.unitScale ?? 1))}${bank.value?.unitScale === 10 ? "bb" : ` ${L.value.chips}`}`
+      : i18n.locale === "uk"
+      ? ukAmount(formatAmount(value, bank.value?.unitScale ?? 1), bank.value?.unitScale ?? 1)
       : `${number(formatAmount(value, bank.value?.unitScale ?? 1))} ${unit.value}`;
     const percent = (value: number) =>
       i18n.locale === "fr" ? `${number(value.toFixed(1))} %` : pctText(number(value.toFixed(1)));
@@ -260,6 +270,9 @@ export default defineComponent({
       if (i18n.locale === "th") {
         const suffix = item.unitScale === 10 ? "bb" : ` ${L.value.chips}`;
         return `${board} · ${L.value.pot} ${number(formatAmount(item.startingPot, item.unitScale))}${suffix} · ${L.value.stack} ${number(formatAmount(item.effectiveStack, item.unitScale))}${suffix}`;
+      }
+      if (i18n.locale === "uk") {
+        return `${board} · ${L.value.pot} ${ukAmount(formatAmount(item.startingPot, item.unitScale), item.unitScale)} · ${L.value.stack} ${ukAmount(formatAmount(item.effectiveStack, item.unitScale), item.unitScale)}`;
       }
       const unitName = item.unitScale === 10 ? "bb" : L.value.chips;
       return `${board} · ${L.value.pot} ${number(formatAmount(item.startingPot, item.unitScale))} ${unitName} · ${L.value.stack} ${number(formatAmount(item.effectiveStack, item.unitScale))} ${unitName}`;

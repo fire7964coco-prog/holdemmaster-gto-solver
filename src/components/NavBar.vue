@@ -98,6 +98,7 @@
           <option value="it">Italiano</option>
             <option value="pl">Polski</option>
             <option value="th">ภาษาไทย</option>
+            <option value="uk">Українська</option>
         </select>
         </span>
         <a
@@ -284,6 +285,13 @@ const M = {
     communitySuffix: " HoldemMaster",
     langSwitchLabel: "เลือกภาษา",
   },
+  uk: {
+    resultsDisabledHint: "Стане доступно після завершення кроку ⑤ «Розрахунок»",
+    solver: "Солвер",
+    community: "Спільнота",
+    communitySuffix: " HoldemMaster",
+    langSwitchLabel: "Обрати мову",
+  },
 } as const;
 
 export default defineComponent({
@@ -321,7 +329,8 @@ export default defineComponent({
         value === "ar" ||
         value === "it" ||
         value === "pl" ||
-        value === "th"
+        value === "th" ||
+        value === "uk"
       )
         setLocale(value);
     };

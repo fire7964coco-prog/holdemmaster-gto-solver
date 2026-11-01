@@ -9,7 +9,7 @@
  * 데이터는 새로 만들지 않는다. 기존 문제 은행에 날짜 기반 난수를 넣을 뿐이다.
  */
 import { reactive } from "vue";
-import { i18n, localizeNumber, ltrIso, ruPlural, plPlural } from "./i18n";
+import { i18n, localizeNumber, ltrIso, ruPlural, plPlural, ukPlural, ukNumberText } from "./i18n";
 import { makeTrainerQuestion, TrainerBank, TrainerQuestion } from "./trainer";
 import { accountScopedDbName, isLocalDataOpen } from "./db";
 
@@ -170,6 +170,7 @@ export const dailyCardDate = () => {
   const key = todayKey();
   // TH3: the date key is already Gregorian/KST; change display order only, retaining Latin digits.
   if (i18n.locale === "th") return key.split("-").reverse().join("/");
+  if (i18n.locale === "uk") return key.split("-").reverse().join(".");
   if (i18n.locale === "de" || i18n.locale === "tr" || i18n.locale === "ru" || i18n.locale === "pl") return key.split("-").reverse().join(".");
   // hi: DD/MM/YYYY with Latin digits, same in the image and copied text.
   if (i18n.locale === "fr" || i18n.locale === "id" || i18n.locale === "ms" || i18n.locale === "hi" || i18n.locale === "vi" || i18n.locale === "ar" || i18n.locale === "it")
@@ -412,6 +413,16 @@ export const dailyShareText = (verdict: string) => {
     ]
       .filter(Boolean)
       .join("\n");
+  }
+  if (i18n.locale === "uk") {
+    return [
+      `[Завдання дня · ${dailyCardDate()}]`,
+      `Мій результат: ${verdict} (втрата EV: ${localizeNumber(dailyState.lossBb.toFixed(3))}bb)`,
+      dailyState.streak > 1 ? `${ukNumberText(dailyState.streak, 0)}${ukPlural(dailyState.streak, { one: " день поспіль", few: " дні поспіль", many: " днів поспіль", other: " дня поспіль" }, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` : "",
+      "",
+      "Спробуй розв’язати це завдання → https://solver.holdemmaster.com/?view=trainer&daily=1&lang=uk",
+      "(Солвер GTO HoldemMaster · одне завдання на день)",
+    ].filter(Boolean).join("\n");
   }
   if (i18n.locale === "en") {
     return [

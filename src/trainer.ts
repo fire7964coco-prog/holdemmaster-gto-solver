@@ -171,6 +171,12 @@ const actionLabelsTh: Record<string, string> = {
 const actionButtonLabelsTh: Record<string, string> = {
   Fold: "หมอบ", Check: "เช็ค", Call: "คอล", Bet: "เ⁠ดิ⁠ม⁠พั⁠น", Raise: "เพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น",
 };
+const actionLabelsUk: Record<string, string> = {
+  Fold: "Фолд", Check: "Чек", Call: "Кол", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ін", "All-in": "Олл-ін",
+};
+const actionButtonLabelsUk: Record<string, string> = {
+  Fold: "Фолд", Check: "Чек", Call: "Кол", Bet: "Бет", Raise: "Рейз", Allin: "Олл-ін", "All-in": "Олл-ін",
+};
 const actionName = (name: string, role: "label" | "button" = "label") =>
   i18n.locale === "ko"
     ? actionLabelsKo[name] ?? name
@@ -197,6 +203,8 @@ const actionName = (name: string, role: "label" | "button" = "label") =>
     ? (role === "button" ? actionButtonLabelsPl : actionLabelsPl)[name] ?? name
     : i18n.locale === "th"
     ? (role === "button" ? actionButtonLabelsTh : actionLabelsTh)[name] ?? name
+    : i18n.locale === "uk"
+    ? (role === "button" ? actionButtonLabelsUk : actionLabelsUk)[name] ?? name
     : actionLabelsEn[name] ?? name;
 
 export const trainerCategory = (
@@ -209,7 +217,7 @@ export const trainerCategory = (
 
 export const trainerCategoryLabel = (category: TrainerCategory) => {
   const labels: Record<
-    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar" | "it" | "pl" | "th",
+    "ko" | "en" | "ja" | "es" | "pt" | "de" | "zh" | "zh-hant" | "fr" | "id" | "ms" | "hi" | "tr" | "vi" | "ru" | "ar" | "it" | "pl" | "th" | "uk",
     Record<Exclude<TrainerCategory, "4bp">, string>
   > = {
     ko: {
@@ -330,6 +338,12 @@ export const trainerCategoryLabel = (category: TrainerCategory) => {
       "3bp": "พอต 3-bet",
       blind: "บ⁠ล⁠า⁠ย⁠ด์เทียบกับบ⁠ล⁠า⁠ย⁠ด์",
     },
+    uk: {
+      all: "Усі",
+      srp: "Банк з одним рейзом",
+      "3bp": "3-бет-банк",
+      blind: "Блайнд проти блайнда",
+    },
   };
   // 4벳 팟 = 그 언어 3벳 팟 이름의 숫자만 바꾼다 — 칩 줄에서 «3벳팟»·«4벳 팟»처럼 표기가 갈리지 않게
   // (15언어 모두 «3»이 한 번만 들어 있다 · 3단계 검수장 판정 대상)
@@ -383,6 +397,8 @@ export const trainerActionLabel = (
       ? `${label} ${amount} (${pct}% del piatto)`
       : i18n.locale === "pl"
       ? `${label} ${amount} (${pctText(localizeNumber(String(pct)))} puli)`
+      : i18n.locale === "uk"
+      ? `${label} ${amount} (${pctText(pct)} банку)`
       : i18n.locale === "th"
       ? `${label} ${amount} (${pctText(pct)} ของพอต)`
       : `${label} ${amount} (${pct}% pot)`;

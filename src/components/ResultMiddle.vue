@@ -661,6 +661,24 @@ const M = {
     strategyCombos: "กลยุทธ์ (ค⁠อ⁠ม⁠โ⁠บ)",
     equity: "Equity",
   },
+  uk: {
+    modeLabels: {basics:"Основне",graphs:"Графіки",compare:"Порівняння",turn:"Терн",river:"Рівер"} as Record<string, string>,
+    player: "Гравець:",
+    auto: (player: string) => `Авто (${player})`,
+    barHeight: "Висота смуг:",
+    normalized: "Нормалізована",
+    absolute: "Абсолютна",
+    full: "Повна",
+    suit: "Масть:",
+    grouped: "Згруповані",
+    individual: "Окремі",
+    display: "Показувати:",
+    strategy: "Стратегія",
+    weight: "Вага",
+    chart: "Діаграма:",
+    strategyCombos: "Стратегія (комбо)",
+    equity: "Еквіті",
+  },
 } as const;
 
 // import { Tippy } from "vue-tippy";

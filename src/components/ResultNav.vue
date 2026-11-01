@@ -709,6 +709,15 @@ const M = {
     action: (name: string): string => ({ Fold: "การหมอบ", Check: "การเช็ค", Call: "การคอล", Bet: "การเ⁠ดิ⁠ม⁠พั⁠น", Raise: "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠น", Allin: "อ⁠อ⁠ล⁠อิ⁠น", "All-in": "อ⁠อ⁠ล⁠อิ⁠น" } as Record<string, string>)[name] ?? name,
     betPot: (label: string, formatted: string, percent: number) => `${label} ${formatted} (${pctText(String(percent))} ของพอต)`,
   },
+  uk: {
+    pot: "Банк",
+    stack: "Стек",
+    equity: "Еквіті",
+    win: (player: string) => `Переможець: ${player}`,
+    spotPlayer: (player: string): string => ({ flop: "Флоп", turn: "Терн", river: "Рівер", end: "Кінець" } as Record<string, string>)[player] ?? player.toUpperCase(),
+    action: (name: string): string => ({ Allin: "Олл-ін", Fold: "Фолд", Check: "Чек", Call: "Кол", Bet: "Бет", Raise: "Рейз" } as Record<string, string>)[name] ?? name,
+    betPot: (label: string, formatted: string, percent: number) => `${label} ${formatted} (${pctText(percent)} банку)`,
+  },
 } as const;
 
 export default defineComponent({

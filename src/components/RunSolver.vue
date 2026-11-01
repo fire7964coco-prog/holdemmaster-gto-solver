@@ -277,7 +277,7 @@ import { trackCalcStart, trackCalcDone, trackCalcFail, trackShare } from "../usa
 import { beginFeedbackSolve, recordFeedbackSolve } from "../solver-feedback"; // F1_FEEDBACK_ONLY
 import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 import { shareSpotThroughMain } from "../solver-feedback-share"; // F1_FEEDBACK_ONLY
-import { i18n, pick, localizeNumber, ruPlural, plPlural, ltrIso, autoIso } from "../i18n";
+import { i18n, pick, localizeNumber, ruPlural, plPlural, ltrIso, autoIso, ukNumberText, ukPlural } from "../i18n";
 import { betErrorText } from "../bet-error-labels";
 import { navResults } from "../nav-labels";
 import { captureSnapshot, NodeLockError, sameHistory, useNodeLockStore } from "../node-lock";
@@ -1267,6 +1267,54 @@ const M = {
     exploitabilityLine: (value: string, percent: string) => `Exploitability: ${value} (${percent})`,
     timeLine: (seconds: string) => `เวลาที่ใช้: ${seconds} s`,
   },
+  uk: {
+    sharedSpotBanner:
+      "Спот за посиланням завантажено — натисни «Побудувати дерево» → «Запустити солвер», щоб почати розрахунок.",
+    numThreadsLabel: "Кількість потоків:",
+    buildTree: "Побудувати дерево",
+    copied: "Скопійовано",
+    shareSpot: "🔗 Поширити спот",
+    statusLabel: "Стан:",
+    statusNotLoaded: "Модуль не завантажено",
+    statusBuilding: "Побудова дерева…",
+    statusError: (message: string) => `Помилка: ${message}`,
+    statusBuilt: (threads: number) => `Дерево побудовано (${ukNumberText(threads, 0)} ${ukPlural(threads, { one: "потік", few: "потоки", many: "потоків", other: "потоку" }, { minimumFractionDigits: 0, maximumFractionDigits: 0 })})`,
+    precisionMode: "Режим точності:",
+    precisionTipIntro:
+      "Режим точності насамперед впливає на використання пам’яті. Є й кілька інших відмінностей.",
+    precisionTipFp:
+      "32-бітні числа з рухомою комою (FP): рекомендовано, якщо використання пам’яті не перевищує ліміт (3,9 GB). Приблизно 7 значущих цифр і вища швидкодія.",
+    precisionTipInt:
+      "16-бітні цілі числа: альтернатива, коли 32-бітний режим FP перевищує ліміт пам’яті. Приблизно 4 значущі цифри, тож режим не підходить для цільової похибки нижче 0,1% і працює повільніше за 32-бітний FP.",
+    fp32Label: "32-бітні числа з рухомою комою:",
+    int16Label: "16-бітні цілі числа:",
+    ramNeeded: (size: string) => `потрібно ${size} оперативної пам’яті`,
+    limitExceeded: "(ліміт перевищено)",
+    ramLimit: "Ліміт пам’яті: 3,9 GB (= ліміт Wasm 4 GB − запас 0,1 GB)",
+    targetLabel: "Цільова похибка (exploitability):",
+    exploitTipIntro:
+      "Задає допустиме відхилення від рівноваги Неша. Менше значення дає точніший результат, але розрахунок триває довше.",
+    exploitTipDetailLabel: "Докладніше:",
+    exploitTipDetail:
+      "У рівновазі Неша стратегії обох гравців є MES (Maximally Exploitative Strategies) одна проти одної. На основі цієї властивості визначаємо відхилення отриманої стратегії від рівноваги Неша так:",
+    exploitTipFormula: "Різниця EV = (EV суперника за стратегією MES) − (фактичне EV суперника)",
+    exploitTipOutro:
+      "Ця різниця завжди невід’ємна й дорівнює нулю лише тоді, коли отримана стратегія є складовою рівноваги Неша. Exploitability — це середня різниця EV для обох гравців.",
+    maxIterationsLabel: "Максимальна кількість ітерацій:",
+    runSolver: "Запустити солвер",
+    stop: "Зупинити",
+    pause: "Призупинити",
+    resume: "Відновити",
+    solving: "Обчислення…",
+    finalizing: "Завершення…",
+    pausedStatus: "Призупинено.",
+    finished: "Розрахунок завершено!",
+    stoppedEarly: "Зупинено до досягнення цільової похибки.",
+    allocatingMemory: "Виділення пам’яті…",
+    iterations: (count: number) => `Кількість ітерацій: ${ukNumberText(count, 0)}`,
+    exploitabilityLine: (value: string, percent: string) => `Exploitability: ${value} (${percent})`,
+    timeLine: (seconds: string) => `Минуло часу: ${seconds} s`,
+  },
 } as const;
 
 const maxMemoryUsage = 3.9 * 1024 * 1024 * 1024; // 3.9 GB
@@ -1290,7 +1338,8 @@ const invalidLineMessage = () => pick(
     "خط غير صالح (هل التكوين المحمَّل تالف؟)",
   "Trovata una linea non valida (hai caricato impostazioni danneggiate?)", "Znaleziono nieprawidłową linię (wczytane ustawienia mogą być uszkodzone)."
 ,
-  "พบลำดับที่ไม่ถูกต้⁠อ⁠ง (การตั้งค่าที่เปิดมาอาจเสียหาย)"
+  "พบลำดับที่ไม่ถูกต้⁠อ⁠ง (การตั้งค่าที่เปิดมาอาจเสียหาย)",
+  "Знайдено некоректну лінію (можливо, завантажено пошкоджені налаштування)."
 );
 
 const checkConfig = (
@@ -1310,7 +1359,8 @@ const checkConfig = (
       "Board mesti mengandungi sekurang-kurangnya 3 kad", "Board में कम से कम 3 कार्ड होने चाहिए", "Board'da en az 3 kart olmalı", "Board phải có ít nhất 3 lá", "На борде должно быть не меньше 3 карт",
     "يجب أن يحوي البورد 3 أوراق على الأقل",
       "Il board deve contenere almeno 3 carte", "Na boardzie muszą być co najmniej 3 karty",
-      "บอร์ดต้⁠อ⁠งมีไพ่อย่างน้อย 3 ใบ"
+      "บอร์ดต้⁠อ⁠งมีไพ่อย่างน้อย 3 ใบ",
+      "На борді має бути щонайменше 3 карти"
     );
   }
 
@@ -1328,7 +1378,8 @@ const checkConfig = (
       "Pot permulaan mesti lebih daripada 0", "शुरुआती pot शून्य से अधिक होना चाहिए", "Başlangıç pot'u 0'dan büyük olmalı", "Pot ban đầu phải lớn hơn 0", "Начальный банк должен быть больше 0",
     "يجب أن يكون البوت الابتدائي أكبر من 0",
       "Il piatto iniziale deve essere positivo", "Pula początkowa musi być większa od zera",
-      "พอตเริ่มต้นต้⁠อ⁠งมากกว่า 0"
+      "พอตเริ่มต้นต้⁠อ⁠งมากกว่า 0",
+      "Початковий банк має бути додатним"
     );
   }
 
@@ -1346,7 +1397,8 @@ const checkConfig = (
       `Pot permulaan tidak boleh melebihi ${MAX_AMOUNT}`, `शुरुआती pot ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Başlangıç pot'u en fazla ${MAX_AMOUNT} olabilir`, `Pot ban đầu không được vượt quá ${MAX_AMOUNT}`, `Начальный банк не может превышать ${MAX_AMOUNT}`,
     `يجب ألا يتجاوز البوت الابتدائي ${MAX_AMOUNT}`,
       `Il piatto iniziale non deve superare ${MAX_AMOUNT}`, `Pula początkowa nie może przekraczać ${localizeNumber(String(MAX_AMOUNT))}`,
-      `พอตเริ่มต้นต้⁠อ⁠งไม่เกิน ${MAX_AMOUNT.toLocaleString("th-TH-u-ca-gregory-nu-latn")}`
+      `พอตเริ่มต้นต้⁠อ⁠งไม่เกิน ${MAX_AMOUNT.toLocaleString("th-TH-u-ca-gregory-nu-latn")}`,
+      `Початковий банк не має перевищувати ${ukNumberText(MAX_AMOUNT, 0)}`
     );
   }
 
@@ -1354,7 +1406,8 @@ const checkConfig = (
     return pick("시작 팟은 정수여야 합니다", "Starting pot must be an integer", "スターティングポットは整数で入力してください", "El bote inicial debe ser un entero", "O pote inicial deve ser um número inteiro", "Der Start-Pot muss eine ganze Zahl sein", "起始底池必须是整数", "起始底池必須是整數", "Le pot initial doit être un nombre entier", "Pot awal harus bilangan bulat", "Pot permulaan mesti nombor bulat", "शुरुआती pot का मान पूर्णांक होना चाहिए", "Başlangıç pot'u tam sayı olmalı", "Pot ban đầu phải là số nguyên", "Начальный банк должен быть целым числом",
     "يجب أن يكون البوت الابتدائي عددًا صحيحًا",
       "Il piatto iniziale deve essere un numero intero", "Pula początkowa musi być liczbą całkowitą",
-      "พอตเริ่มต้นต้⁠อ⁠งเป็นจำ⁠น⁠ว⁠นเต็ม"
+      "พอตเริ่มต้นต้⁠อ⁠งเป็นจำ⁠น⁠ว⁠นเต็ม",
+      "Початковий банк має бути цілим числом"
     );
   }
 
@@ -1372,7 +1425,8 @@ const checkConfig = (
       "Stack efektif mesti lebih daripada 0", "Effective stack शून्य से अधिक होना चाहिए", "Efektif stack 0'dan büyük olmalı", "Stack hiệu dụng phải lớn hơn 0", "Эффективный стек должен быть больше 0",
     "يجب أن يكون الستاك الفعلي أكبر من 0",
       "Lo stack effettivo deve essere positivo", "Efektywny stack musi być większy od zera",
-      "Effective stack ต้⁠อ⁠งมากกว่า 0"
+      "Effective stack ต้⁠อ⁠งมากกว่า 0",
+      "Ефективний стек має бути додатним"
     );
   }
 
@@ -1390,7 +1444,8 @@ const checkConfig = (
       `Stack efektif tidak boleh melebihi ${MAX_AMOUNT}`, `Effective stack ${MAX_AMOUNT} से अधिक नहीं हो सकता`, `Efektif stack en fazla ${MAX_AMOUNT} olabilir`, `Stack hiệu dụng không được vượt quá ${MAX_AMOUNT}`, `Эффективный стек не может превышать ${MAX_AMOUNT}`,
     `يجب ألا يتجاوز الستاك الفعلي ${MAX_AMOUNT}`,
       `Lo stack effettivo non deve superare ${MAX_AMOUNT}`, `Efektywny stack nie może przekraczać ${localizeNumber(String(MAX_AMOUNT))}`,
-      `Effective stack ต้⁠อ⁠งไม่เกิน ${MAX_AMOUNT.toLocaleString("th-TH-u-ca-gregory-nu-latn")}`
+      `Effective stack ต้⁠อ⁠งไม่เกิน ${MAX_AMOUNT.toLocaleString("th-TH-u-ca-gregory-nu-latn")}`,
+      `Ефективний стек не має перевищувати ${ukNumberText(MAX_AMOUNT, 0)}`
     );
   }
 
@@ -1408,7 +1463,8 @@ const checkConfig = (
       "Stack efektif mesti nombor bulat", "Effective stack का मान पूर्णांक होना चाहिए", "Efektif stack tam sayı olmalı", "Stack hiệu dụng phải là số nguyên", "Эффективный стек должен быть целым числом",
     "يجب أن يكون الستاك الفعلي عددًا صحيحًا",
       "Lo stack effettivo deve essere un numero intero", "Efektywny stack musi być liczbą całkowitą",
-      "Effective stack ต้⁠อ⁠งเป็นจำ⁠น⁠ว⁠นเต็ม"
+      "Effective stack ต้⁠อ⁠งเป็นจำ⁠น⁠ว⁠นเต็ม",
+      "Ефективний стек має бути цілим числом"
     );
   }
 
@@ -1418,7 +1474,8 @@ const checkConfig = (
     return pick("레이크는 음수일 수 없습니다", "Rake must not be negative", "レーキは負の値にできません", "El rake no puede ser negativo", "O rake não pode ser negativo", "Der Rake darf nicht negativ sein", "抽水不能是负数", "抽水不能是負數", "Le rake ne peut pas être négatif", "Rake tidak boleh negatif", "Rake tidak boleh negatif", "Rake ऋणात्मक नहीं हो सकता", "Rake negatif olamaz", "Rake không được âm", "Рейк не может быть отрицательным",
     "لا يمكن أن يكون الريك سالبًا",
       "Il rake non deve essere negativo", "Rake nie może być ujemny",
-      "Rake ต้⁠อ⁠งไม่ติดลบ"
+      "Rake ต้⁠อ⁠งไม่ติดลบ",
+      "Рейк не може бути від’ємним"
     );
   }
 
@@ -1426,7 +1483,8 @@ const checkConfig = (
     return pick("레이크는 100%를 초과할 수 없습니다", "Rake must not exceed 100%", "レーキは100%を超えることはできません", "El rake no puede exceder el 100%", "O rake não pode passar de 100%", "Der Rake darf 100% nicht überschreiten", "抽水不能超过 100%", "抽水不能超過 100%", "Le rake ne peut pas dépasser 100 %", "Rake tidak boleh melebihi 100%", "Rake tidak boleh melebihi 100%", "Rake 100% से अधिक नहीं हो सकता", "Rake %100'ü aşamaz", "Rake không được vượt quá 100%", "Рейк не может превышать 100%",
     "لا يمكن أن يتجاوز الريك ⁦100%⁩",
       "Il rake non deve superare il 100%", "Rake nie może przekraczać 100%",
-      "Rake ต้⁠อ⁠งไม่เกิน 100%"
+      "Rake ต้⁠อ⁠งไม่เกิน 100%",
+      "Рейк не має перевищувати 100%"
     );
   }
 
@@ -1434,7 +1492,8 @@ const checkConfig = (
     return pick("레이크 캡은 음수일 수 없습니다", "Rake cap must not be negative", "レーキキャップは負の値にできません", "El tope de rake no puede ser negativo", "O teto do rake não pode ser negativo", "Das Rake-Cap darf nicht negativ sein", "抽水上限不能是负数", "抽水上限不能是負數", "Le cap de rake ne peut pas être négatif", "Rake cap tidak boleh negatif", "Rake cap tidak boleh negatif", "Rake की सीमा ऋणात्मक नहीं हो सकती", "Rake limiti negatif olamaz", "Rake cap không được âm", "Кэп рейка не может быть отрицательным",
     "لا يمكن أن يكون حد الريك سالبًا",
       "Il limite del rake non deve essere negativo", "Limit rake’u nie może być ujemny",
-      "เพดาน Rake ต้⁠อ⁠งไม่ติดลบ"
+      "เพดาน Rake ต้⁠อ⁠งไม่ติดลบ",
+      "Максимальний рейк не може бути від’ємним"
     );
   }
 
@@ -1444,7 +1503,8 @@ const checkConfig = (
       kind: pick("OOP 플랍 벳", "OOP flop bet", "OOP フロップベット", "Bet de flop OOP", "Bet de flop OOP", "OOP Flop-Bet", "OOP 翻牌下注", "OOP 翻牌下注", "Bet de flop OOP", "Bet flop OOP", "Bet flop OOP", "OOP flop bet", "OOP flop bet", "Bet flop OOP", "Бет OOP на флопе",
     "رهان OOP على الفلوب",
         "Puntata OOP al flop", "Zakład OOP na flopie",
-        "การเ⁠ดิ⁠ม⁠พั⁠นบนฟลอปของ OOP"
+        "การเ⁠ดิ⁠ม⁠พั⁠นบนฟลอปของ OOP",
+        "Бет OOP на флопі"
       ),
     },
     {
@@ -1452,7 +1512,8 @@ const checkConfig = (
       kind: pick("OOP 플랍 레이즈", "OOP flop raise", "OOP フロップレイズ", "Raise de flop OOP", "Raise de flop OOP", "OOP Flop-Raise", "OOP 翻牌加注", "OOP 翻牌加注", "Raise de flop OOP", "Raise flop OOP", "Raise flop OOP", "OOP flop raise", "OOP flop raise", "Raise flop OOP", "Рейз OOP на флопе",
     "رايز OOP على الفلوب",
         "Rilancio OOP al flop", "Przebicie OOP na flopie",
-        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนฟลอปของ OOP"
+        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนฟลอปของ OOP",
+        "Рейз OOP на флопі"
       ),
     },
     {
@@ -1460,7 +1521,8 @@ const checkConfig = (
       kind: pick("OOP 턴 벳", "OOP turn bet", "OOP ターンベット", "Bet de turn OOP", "Bet de turn OOP", "OOP Turn-Bet", "OOP 转牌下注", "OOP 轉牌下注", "Bet de turn OOP", "Bet turn OOP", "Bet turn OOP", "OOP turn bet", "OOP turn bet", "Bet turn OOP", "Бет OOP на тёрне",
     "رهان OOP على التيرن",
         "Puntata OOP al turn", "Zakład OOP na turnie",
-        "การเ⁠ดิ⁠ม⁠พั⁠นบนเทิร์นของ OOP"
+        "การเ⁠ดิ⁠ม⁠พั⁠นบนเทิร์นของ OOP",
+        "Бет OOP на терні"
       ),
     },
     {
@@ -1468,7 +1530,8 @@ const checkConfig = (
       kind: pick("OOP 턴 레이즈", "OOP turn raise", "OOP ターンレイズ", "Raise de turn OOP", "Raise de turn OOP", "OOP Turn-Raise", "OOP 转牌加注", "OOP 轉牌加注", "Raise de turn OOP", "Raise turn OOP", "Raise turn OOP", "OOP turn raise", "OOP turn raise", "Raise turn OOP", "Рейз OOP на тёрне",
     "رايز OOP على التيرن",
         "Rilancio OOP al turn", "Przebicie OOP na turnie",
-        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนเทิร์นของ OOP"
+        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนเทิร์นของ OOP",
+        "Рейз OOP на терні"
       ),
     },
     {
@@ -1476,7 +1539,8 @@ const checkConfig = (
       kind: pick("OOP 리버 벳", "OOP river bet", "OOP リバーベット", "Bet de river OOP", "Bet de river OOP", "OOP River-Bet", "OOP 河牌下注", "OOP 河牌下注", "Bet de river OOP", "Bet river OOP", "Bet river OOP", "OOP river bet", "OOP river bet", "Bet river OOP", "Бет OOP на ривере",
     "رهان OOP على الريفر",
         "Puntata OOP al river", "Zakład OOP na riverze",
-        "การเ⁠ดิ⁠ม⁠พั⁠นบนริเวอร์ของ OOP"
+        "การเ⁠ดิ⁠ม⁠พั⁠นบนริเวอร์ของ OOP",
+        "Бет OOP на рівері"
       ),
     },
     {
@@ -1484,7 +1548,8 @@ const checkConfig = (
       kind: pick("OOP 리버 레이즈", "OOP river raise", "OOP リバーレイズ", "Raise de river OOP", "Raise de river OOP", "OOP River-Raise", "OOP 河牌加注", "OOP 河牌加注", "Raise de river OOP", "Raise river OOP", "Raise river OOP", "OOP river raise", "OOP river raise", "Raise river OOP", "Рейз OOP на ривере",
     "رايز OOP على الريفر",
         "Rilancio OOP al river", "Przebicie OOP na riverze",
-        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนริเวอร์ของ OOP"
+        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนริเวอร์ของ OOP",
+        "Рейз OOP на рівері"
       ),
     },
     {
@@ -1492,7 +1557,8 @@ const checkConfig = (
       kind: pick("IP 플랍 벳", "IP flop bet", "IP フロップベット", "Bet de flop IP", "Bet de flop IP", "IP Flop-Bet", "IP 翻牌下注", "IP 翻牌下注", "Bet de flop IP", "Bet flop IP", "Bet flop IP", "IP flop bet", "IP flop bet", "Bet flop IP", "Бет IP на флопе",
     "رهان IP على الفلوب",
         "Puntata IP al flop", "Zakład IP na flopie",
-        "การเ⁠ดิ⁠ม⁠พั⁠นบนฟลอปของ IP"
+        "การเ⁠ดิ⁠ม⁠พั⁠นบนฟลอปของ IP",
+        "Бет IP на флопі"
       ),
     },
     {
@@ -1500,7 +1566,8 @@ const checkConfig = (
       kind: pick("IP 플랍 레이즈", "IP flop raise", "IP フロップレイズ", "Raise de flop IP", "Raise de flop IP", "IP Flop-Raise", "IP 翻牌加注", "IP 翻牌加注", "Raise de flop IP", "Raise flop IP", "Raise flop IP", "IP flop raise", "IP flop raise", "Raise flop IP", "Рейз IP на флопе",
     "رايز IP على الفلوب",
         "Rilancio IP al flop", "Przebicie IP na flopie",
-        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนฟลอปของ IP"
+        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนฟลอปของ IP",
+        "Рейз IP на флопі"
       ),
     },
     {
@@ -1508,7 +1575,8 @@ const checkConfig = (
       kind: pick("IP 턴 벳", "IP turn bet", "IP ターンベット", "Bet de turn IP", "Bet de turn IP", "IP Turn-Bet", "IP 转牌下注", "IP 轉牌下注", "Bet de turn IP", "Bet turn IP", "Bet turn IP", "IP turn bet", "IP turn bet", "Bet turn IP", "Бет IP на тёрне",
     "رهان IP على التيرن",
         "Puntata IP al turn", "Zakład IP na turnie",
-        "การเ⁠ดิ⁠ม⁠พั⁠นบนเทิร์นของ IP"
+        "การเ⁠ดิ⁠ม⁠พั⁠นบนเทิร์นของ IP",
+        "Бет IP на терні"
       ),
     },
     {
@@ -1516,7 +1584,8 @@ const checkConfig = (
       kind: pick("IP 턴 레이즈", "IP turn raise", "IP ターンレイズ", "Raise de turn IP", "Raise de turn IP", "IP Turn-Raise", "IP 转牌加注", "IP 轉牌加注", "Raise de turn IP", "Raise turn IP", "Raise turn IP", "IP turn raise", "IP turn raise", "Raise turn IP", "Рейз IP на тёрне",
     "رايز IP على التيرن",
         "Rilancio IP al turn", "Przebicie IP na turnie",
-        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนเทิร์นของ IP"
+        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนเทิร์นของ IP",
+        "Рейз IP на терні"
       ),
     },
     {
@@ -1524,7 +1593,8 @@ const checkConfig = (
       kind: pick("IP 리버 벳", "IP river bet", "IP リバーベット", "Bet de river IP", "Bet de river IP", "IP River-Bet", "IP 河牌下注", "IP 河牌下注", "Bet de river IP", "Bet river IP", "Bet river IP", "IP river bet", "IP river bet", "Bet river IP", "Бет IP на ривере",
     "رهان IP على الريفر",
         "Puntata IP al river", "Zakład IP na riverze",
-        "การเ⁠ดิ⁠ม⁠พั⁠นบนริเวอร์ของ IP"
+        "การเ⁠ดิ⁠ม⁠พั⁠นบนริเวอร์ของ IP",
+        "Бет IP на рівері"
       ),
     },
     {
@@ -1532,7 +1602,8 @@ const checkConfig = (
       kind: pick("IP 리버 레이즈", "IP river raise", "IP リバーレイズ", "Raise de river IP", "Raise de river IP", "IP River-Raise", "IP 河牌加注", "IP 河牌加注", "Raise de river IP", "Raise river IP", "Raise river IP", "IP river raise", "IP river raise", "Raise river IP", "Рейз IP на ривере",
     "رايز IP على الريفر",
         "Rilancio IP al river", "Przebicie IP na riverze",
-        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนริเวอร์ของ IP"
+        "การเพิ่มเ⁠ดิ⁠ม⁠พั⁠นบนริเวอร์ของ IP",
+        "Рейз IP на рівері"
       ),
     },
   ];
@@ -1548,7 +1619,8 @@ const checkConfig = (
       return `${pick("OOP 턴 덩크", "OOP turn donk", "OOP ターンドンク", "Donk de turn OOP", "Donk de turn OOP", "OOP Turn-Donk", "OOP 转牌领打", "OOP 轉牌領打", "Donk de turn OOP", "Donk turn OOP", "Donk turn OOP", "OOP turn donk", "OOP turn donk", "Donk turn OOP", "Донк OOP на тёрне",
     "دونك OOP على التيرن",
         "Donk bet OOP al turn", "Donk bet OOP na turnie",
-        "Donk bet บนเทิร์นของ OOP"
+        "Donk bet บนเทิร์นของ OOP",
+        "Донк-бет OOP на терні"
       )}: ${
         i18n.locale === "ar" ? autoIso(betErrorText(config.oopTurnDonkSanitized)) : betErrorText(config.oopTurnDonkSanitized)
       }`;
@@ -1557,7 +1629,8 @@ const checkConfig = (
       return `${pick("OOP 리버 덩크", "OOP river donk", "OOP リバードンク", "Donk de river OOP", "Donk de river OOP", "OOP River-Donk", "OOP 河牌领打", "OOP 河牌領打", "Donk de river OOP", "Donk river OOP", "Donk river OOP", "OOP river donk", "OOP river donk", "Donk river OOP", "Донк OOP на ривере",
     "دونك OOP على الريفر",
         "Donk bet OOP al river", "Donk bet OOP na riverze",
-        "Donk bet บนริเวอร์ของ OOP"
+        "Donk bet บนริเวอร์ของ OOP",
+        "Донк-бет OOP на рівері"
       )}: ${
         i18n.locale === "ar" ? autoIso(betErrorText(config.oopRiverDonkSanitized)) : betErrorText(config.oopRiverDonkSanitized)
       }`;
@@ -1578,7 +1651,8 @@ const checkConfig = (
       "Ambang tambah all-in tidak sah", "All-in जोड़ने की सीमा अमान्य है", "Geçersiz all-in ekleme eşiği", "Ngưỡng thêm all-in không hợp lệ", "Недопустимый порог добавления олл-ина",
     "حد إضافة الأول إن غير صالح",
       "Soglia per aggiungere un all-in non valida", "Nieprawidłowy próg dodawania all-in",
-      "เกณฑ์เพิ่มอ⁠อ⁠ล⁠อิ⁠นไม่ถูกต้⁠อ⁠ง"
+      "เกณฑ์เพิ่มอ⁠อ⁠ล⁠อิ⁠นไม่ถูกต้⁠อ⁠ง",
+      "Некоректний поріг додавання олл-іну"
     );
   }
 
@@ -1596,7 +1670,8 @@ const checkConfig = (
       "Ambang all-in paksa tidak sah", "Bet को all-in बनाने की सीमा अमान्य है", "Geçersiz zorunlu all-in eşiği", "Ngưỡng buộc all-in không hợp lệ", "Недопустимый порог принудительного олл-ина",
     "حد الأول إن الإجباري غير صالح",
       "Soglia per forzare l’all-in non valida", "Nieprawidłowy próg wymuszania all-in",
-      "เกณฑ์บังคับอ⁠อ⁠ล⁠อิ⁠นไม่ถูกต้⁠อ⁠ง"
+      "เกณฑ์บังคับอ⁠อ⁠ล⁠อิ⁠นไม่ถูกต้⁠อ⁠ง",
+      "Некоректний поріг примусового олл-іну"
     );
   }
 
@@ -1614,7 +1689,8 @@ const checkConfig = (
       "Ambang penggabungan tidak sah", "Bet मिलाने की सीमा अमान्य है", "Geçersiz birleştirme eşiği", "Ngưỡng gộp không hợp lệ", "Недопустимый порог слияния",
     "حد الدمج غير صالح",
       "Soglia di unione non valida", "Nieprawidłowy próg łączenia sizingów",
-      "เกณฑ์รวมขนาดเ⁠ดิ⁠ม⁠พั⁠นไม่ถูกต้⁠อ⁠ง"
+      "เกณฑ์รวมขนาดเ⁠ดิ⁠ม⁠พั⁠นไม่ถูกต้⁠อ⁠ง",
+      "Некоректний поріг об’єднання розмірів"
     );
   }
 
@@ -1635,7 +1711,8 @@ const checkConfig = (
       `Board tidak sah (perlu ${config.expectedBoardLength} kad)`, `अमान्य Board (${config.expectedBoardLength} कार्ड चाहिए)`, `Geçersiz board (${config.expectedBoardLength} kart gerekli)`, `Board không hợp lệ (cần ${config.expectedBoardLength} lá)`, `Недопустимый борд (нужно ${config.expectedBoardLength} ${ruPlural(config.expectedBoardLength, "карта", "карты", "карт")})`,
     `البورد غير صالح (عدد الأوراق المطلوب: ${config.expectedBoardLength})`,
       `Board non valido (carte richieste: ${config.expectedBoardLength})`, `Nieprawidłowy board (wymagana liczba kart: ${config.expectedBoardLength})`,
-      `บอร์ดไม่ถูกต้⁠อ⁠ง (ต้⁠อ⁠งมีไพ่ ${config.expectedBoardLength} ใบ)`
+      `บอร์ดไม่ถูกต้⁠อ⁠ง (ต้⁠อ⁠งมีไพ่ ${config.expectedBoardLength} ใบ)`,
+      `Некоректний борд (потрібна кількість карт: ${ukNumberText(config.expectedBoardLength, 0)})`
     );
   }
 
@@ -1679,7 +1756,8 @@ const checkConfig = (
       "Tetapan tidak sah (memuatkan tetapan yang rosak?)", "सेटिंग अमान्य है (क्या लोड की गई सेटिंग खराब है?)", "Geçersiz ayarlar (bozuk bir ayar mı yüklendi?)", "Cấu hình không hợp lệ (cấu hình đã tải bị hỏng?)", "Недопустимая конфигурация (загружена повреждённая конфигурация?)",
     "تكوين غير صالح (هل التكوين المحمَّل تالف؟)",
       "Impostazioni non valide (hai caricato impostazioni danneggiate?)", "Nieprawidłowe ustawienia (wczytane ustawienia mogą być uszkodzone).",
-      "การตั้งค่าไม่ถูกต้⁠อ⁠ง (การตั้งค่าที่เปิดมาอาจเสียหาย)"
+      "การตั้งค่าไม่ถูกต้⁠อ⁠ง (การตั้งค่าที่เปิดมาอาจเสียหาย)",
+      "Некоректні налаштування (можливо, завантажено пошкоджені налаштування)."
     );
   }
 
@@ -2187,7 +2265,8 @@ export default defineComponent({
           "Untuk berkongsi spot, isi dahulu range OOP dan IP serta sekurang-kurangnya 3 kad board.", "स्पॉट शेयर करने से पहले OOP और IP की range तथा Board के कम से कम 3 कार्ड दर्ज करें।", "Spot paylaşmak için önce OOP ve IP range'lerini ve en az 3 board kartını gir.", "Để chia sẻ spot, trước hết hãy nhập range OOP, range IP và ít nhất 3 lá board.", "Чтобы поделиться спотом, сначала введи диапазоны OOP и IP и не меньше 3 карт борда.",
     "لمشاركة موقف، أدخل أولًا نطاقي OOP وIP و3 أوراق على الأقل في البورد.",
           "Per condividere uno spot, inserisci prima i range OOP e IP e almeno 3 carte del board.", "Aby udostępnić spot, najpierw wpisz zakresy OOP i IP oraz co najmniej 3 karty boardu.",
-          "ก่อนแชร์สถานการณ์ ให้ก⁠ร⁠อ⁠กเรนจ์ OOP และ IP พร้อมเลือกไพ่บนบอร์ดอย่างน้อย 3 ใบ"
+          "ก่อนแชร์สถานการณ์ ให้ก⁠ร⁠อ⁠กเรนจ์ OOP และ IP พร้อมเลือกไพ่บนบอร์ดอย่างน้อย 3 ใบ",
+          "Щоб поширити спот, спочатку введи діапазони OOP та IP і щонайменше 3 карти борду."
         );
         return;
       }
@@ -2208,7 +2287,8 @@ export default defineComponent({
     "رابط المشاركة طويل جدًا — بسّط إعدادات الشجرة أو صدّرها كملف تكوين.",
           "Il collegamento di condivisione è troppo lungo: semplifica le impostazioni dell’albero oppure esportale in un file.", "Link do udostępnienia jest za długi. Uprość ustawienia drzewa lub wyeksportuj je do pliku."
         ,
-          "ลิงก์แชร์ยาวเกินไป ให้ลดความซับซ้อนของการตั้งค่าทรี หรือส่งออกเป็นไฟล์การตั้งค่า"
+          "ลิงก์แชร์ยาวเกินไป ให้ลดความซับซ้อนของการตั้งค่าทรี หรือส่งออกเป็นไฟล์การตั้งค่า",
+          "Посилання для поширення задовге — спрости налаштування дерева або експортуй їх у файл налаштувань."
         );
         return;
       }
@@ -2236,6 +2316,7 @@ export default defineComponent({
         : i18n.locale === "ar" ? { gb: " GB", mb: " MB" } // ar: 라틴 단위 · 사용처에서 ltrIso 격리(확정표 §2-1)
         : i18n.locale === "it" ? { gb: "\u00a0GB", mb: "\u00a0MB" }
         : i18n.locale === "pl" ? { gb: "\u00a0GB", mb: "\u00a0MB" }
+        : i18n.locale === "uk" ? { gb: " GB", mb: " MB" }
         : i18n.locale === "th" ? { gb: " GB", mb: " MB" }
         : { gb: " GB", mb: " MB" }
     );

@@ -177,6 +177,8 @@ export default defineComponent({
     const time = (t: number) =>
       i18n.locale === "ar"
         ? new Date(t).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false })
+        : i18n.locale === "uk"
+        ? new Date(t).toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit", hour12: false })
         : i18n.locale === "th"
         ? new Date(t).toLocaleTimeString("th-TH-u-ca-gregory-nu-latn", { hour: "2-digit", minute: "2-digit", hour12: false })
         : i18n.locale === "pl"

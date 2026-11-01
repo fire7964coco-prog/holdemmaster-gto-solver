@@ -67,7 +67,7 @@ import { computed, defineComponent, onUnmounted, ref } from "vue";
 import { useConfigStore } from "../store";
 import { cardText } from "../utils";
 import { parseBoardInput } from "../board-input";
-import { i18n } from "../i18n";
+import { i18n, ukNumberText, ukPlural } from "../i18n";
 
 import BoardSelectorCard from "./BoardSelectorCard.vue";
 
@@ -246,6 +246,14 @@ const M = {
     randomFlop: "สุ่มฟลอป",
     warnLabel: "คำเตือน:",
     warnBody: (n: number) => `ทรีที่แก้ไขไว้ใช้บอร์ดที่มีไพ่ ${n.toLocaleString("th-TH-u-ca-gregory-nu-latn")} ใบ`,
+  },
+  uk: {
+    inputError: "Не вдалося розпізнати карти. Введи 3–5 карт, наприклад AsKd7c або As Kd 7c. Попередній борд збережено.",
+    placeholder: "Наприклад, AsKd7c",
+    clear: "Очистити",
+    randomFlop: "Випадковий флоп",
+    warnLabel: "Увага:",
+    warnBody: (n: number) => `Для відредагованого дерева потрібен борд: ${ukNumberText(n, 0)} ${ukPlural(n, { one: "карта", few: "карти", many: "карт", other: "карти" }, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}.`,
   },
 } as const;
 

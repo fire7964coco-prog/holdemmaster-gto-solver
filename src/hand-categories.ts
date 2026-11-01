@@ -699,6 +699,47 @@ export const DRAW_LABELS_TH: Record<DrawKey, string> = {
   no_draw: "ไม่มีด⁠ร⁠อ⁠ว์",
 };
 
+// UK3: terminology table §3-2; names do not add engine categories.
+export const UK_HAND_RANK_NAMES = {
+  royal_flush: "Роял-флеш",
+  straight_flush: "Стріт-флеш",
+  quads: "Каре",
+  full_house: "Фул-хаус",
+  flush: "Флеш",
+  straight: "Стріт",
+  trips: "Трійка",
+  two_pair: "Дві пари",
+  one_pair: "Пара",
+  high_card: "Старша карта",
+} as const;
+
+export const MADE_LABELS_UK: Record<MadeKey, string> = {
+  straight_flush: "Стріт-флеш",
+  quads: "Каре",
+  full_house: "Фул-хаус",
+  flush: "Флеш",
+  straight: "Стріт",
+  trips: "Трійка",
+  two_pair: "Дві пари",
+  overpair: "Оверпара",
+  top_pair: "Топ-пара",
+  second_pair: "Друга пара",
+  weak_pair: "Слабка пара",
+  underpair: "Нижча кишенькова пара",
+  ace_high: "Туз-хай",
+  king_high: "Король-хай",
+  nothing: "Без готової комбінації",
+};
+
+export const DRAW_LABELS_UK: Record<DrawKey, string> = {
+  combo_draw: "Комбо-дро",
+  flush_draw: "Флеш-дро",
+  oesd: "OESD",
+  gutshot: "Гатшот",
+  backdoor_fd: "Бекдорне флеш-дро",
+  no_draw: "Без дро",
+};
+
 /* 현재 언어의 라벨 — 화면에서는 상수 대신 이걸 쓸 것 */
 export const madeLabels = () =>
   i18n.locale === "ko"
@@ -737,6 +778,8 @@ export const madeLabels = () =>
     ? MADE_LABELS_PL
     : i18n.locale === "th"
     ? MADE_LABELS_TH
+    : i18n.locale === "uk"
+    ? MADE_LABELS_UK
     : MADE_LABELS_EN;
 export const drawLabels = () =>
   i18n.locale === "ko"
@@ -775,6 +818,8 @@ export const drawLabels = () =>
     ? DRAW_LABELS_PL
     : i18n.locale === "th"
     ? DRAW_LABELS_TH
+    : i18n.locale === "uk"
+    ? DRAW_LABELS_UK
     : DRAW_LABELS_EN;
 
 export const MADE_ORDER: MadeKey[] = [

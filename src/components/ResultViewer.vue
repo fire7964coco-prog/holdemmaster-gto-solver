@@ -398,6 +398,14 @@ const M = {
     finalizing: "กำลังสรุปผล…",
     paused: "หยุดพักการคำนวณแล้ว",
   },
+  uk: {
+    startRange: "① Почати з діапазонів",
+    viewPresets: "Переглянути навчальні споти",
+    notRun: "Ти ще не маєш власних результатів розрахунку.\nГотові приклади можна переглянути в меню «Навчальні споти».\nЩоб обчислити власний спот, виконай кроки ①–⑤ і натисни «Запустити солвер».",
+    running: "Солвер працює…",
+    finalizing: "Завершення…",
+    paused: "Солвер призупинено.",
+  },
 } as const;
 
 export default defineComponent({
@@ -424,6 +432,7 @@ export default defineComponent({
       const value = lockStore.currentExploitability;
       if (value === null || !Number.isFinite(value)) return "—";
       const scale = store.displayUnitScale;
+      if (i18n.locale === "uk") return Number((value / scale).toPrecision(4)).toLocaleString("uk-UA", { useGrouping: true, minimumSignificantDigits: 4, maximumSignificantDigits: 4 }) + (scale > 1 ? "bb" : "");
       if (i18n.locale === "th") return Number((value / scale).toPrecision(4)).toLocaleString("th-TH-u-ca-gregory-nu-latn", { useGrouping: true, minimumSignificantDigits: 4, maximumSignificantDigits: 4 }) + (scale > 1 ? "bb" : "");
       if (i18n.locale === "pl") return Number((value / scale).toPrecision(4)).toLocaleString("pl-PL", { useGrouping: true, minimumSignificantDigits: 4, maximumSignificantDigits: 4 }) + (scale > 1 ? "bb" : "");
       return localizeNumber((value / scale).toPrecision(4) + (scale > 1 ? "bb" : ""));
