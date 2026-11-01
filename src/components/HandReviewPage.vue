@@ -750,8 +750,8 @@ code === "EV_MISSING"
       };
     }
     function laterProbability(node: ReviewNode) {
-      // 이 줄을 택하는 핸드가 없어 직전 레인지로 계산한 리버 — 실제 도달 비중은 0이다
-      if (street.value === "river" && riverOffPath) return 0;
+      // 이 줄을 택하는 핸드가 없어 직전 레인지로 계산한 턴·리버 — 실제 도달 비중은 0이다
+      if (street.value === "river" ? riverOffPath : session.value!.input.offPathRange) return 0;
       return [0, 1]
         .map(
           (p) =>

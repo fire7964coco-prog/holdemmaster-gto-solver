@@ -74,7 +74,7 @@ export function buildRiverInput(
   const reached = (player: 0 | 1) => [continuation.ranges, ...continuation.earlierRanges]
     .find((pair) => hasLiveHand(pair[player], board))?.[player] ?? continuation.ranges[player];
   const chosen: [Float32Array, Float32Array] = [reached(0), reached(1)];
-  const offPathRange = chosen[0] !== continuation.ranges[0] || chosen[1] !== continuation.ranges[1];
+  const offPathRange = !!turn.offPathRange || chosen[0] !== continuation.ranges[0] || chosen[1] !== continuation.ranges[1];
   const ranges = checkedRanges(chosen, board);
   for (const player of [0, 1] as const) {
     if (ranges[player].some((weight, h) => weight > turn.ranges[player][h])) {

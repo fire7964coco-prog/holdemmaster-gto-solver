@@ -43,7 +43,7 @@ export type HandReviewSolverInput = {
   rakeRate: number;
   rakeCap: number;
   targetExploitabilityPct: number;
-  /** River only: buildRiverInput replaced a player's empty reach. */
+  /** A player's empty reach was replaced on this street or the one before it. */
   offPathRange?: boolean;
 };
 export type ReviewPrivateCards = [Array<readonly [number, number]>, Array<readonly [number, number]>];
