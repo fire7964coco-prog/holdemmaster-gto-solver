@@ -43,6 +43,8 @@ export type HandReviewSolverInput = {
   rakeRate: number;
   rakeCap: number;
   targetExploitabilityPct: number;
+  /** River only: buildRiverInput replaced a player's empty reach. */
+  offPathRange?: boolean;
 };
 export type ReviewPrivateCards = [Array<readonly [number, number]>, Array<readonly [number, number]>];
 export type ReviewSolveProgress = {
@@ -394,8 +396,12 @@ export function createHandReviewSolver() {
     if (flopPath && (flopPath.length !== sourcePath.length || flopPath.some((value, index) => value !== sourcePath[index]))) {
       throw new ReviewError("TURN_RESULT_MISMATCH", "Turn uses another flop path");
     }
+    const earlierRanges: ReachPair[] = [];
+    for (let length = history.length - 1; length >= 0; length--) {
+      earlierRanges.push(copyRanges((await snapshot(history.slice(0, length))).reachedRanges));
+    }
     return { board: [...input.board] as [number, number, number, number], flopPath: [...sourcePath],
-      ranges: copyRanges(node.reachedRanges), pot: node.pot, effectiveStack: node.effectiveStack };
+      ranges: copyRanges(node.reachedRanges), earlierRanges, pot: node.pot, effectiveStack: node.effectiveStack };
   };
 
   return { solve, snapshot, riverContinuation, dispose };

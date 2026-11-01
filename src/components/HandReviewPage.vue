@@ -750,6 +750,8 @@ code === "EV_MISSING"
       };
     }
     function laterProbability(node: ReviewNode) {
+      // 이 줄을 택하는 핸드가 없어 직전 레인지로 계산한 리버 — 실제 도달 비중은 0이다
+      if (street.value === "river" && riverOffPath) return 0;
       return [0, 1]
         .map(
           (p) =>
@@ -758,6 +760,7 @@ code === "EV_MISSING"
         )
         .reduce((a, b) => a * b, 1);
     }
+    let riverOffPath = false;
     async function solveStreet() {
       const token = ++epoch;
       const next: Street = board.value.length === 4 ? "turn" : "river";
@@ -787,6 +790,7 @@ code === "EV_MISSING"
                 )
               )
             : seat.input;
+        if (next === "river") riverOffPath = !!input.offPathRange;
         const result = await engine.solve(input, {
           heroPlayer: heroPlayer.value,
           canonicalHero: canonicalHero.value,

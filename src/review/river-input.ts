@@ -9,6 +9,8 @@ export type RiverContinuation = {
   board: readonly [number, number, number, number];
   flopPath: readonly number[];
   ranges: readonly [Float32Array, Float32Array];
+  /** The same line's reach before each turn action, latest first. */
+  earlierRanges: ReadonlyArray<readonly [Float32Array, Float32Array]>;
   pot: number;
   effectiveStack: number;
 };
@@ -41,8 +43,17 @@ function checkedRanges(ranges: readonly [Float32Array, Float32Array], board: rea
   return result;
 }
 
+function hasLiveHand(range: Float32Array, board: readonly number[]) {
+  for (let a = 0; a < 52; a++) for (let b = a + 1; b < 52; b++) {
+    if (!board.includes(a) && !board.includes(b) && range[handIndex(a, b)] > 0) return true;
+  }
+  return false;
+}
+
 /** River request from the turn request it continues. Appending a river to turn-root reach
  * would silently erase every turn decision, so the solved turn's reached ranges are mandatory.
+ * The one exception is a line no hand of a player takes: its reach is empty, so that player keeps
+ * their last non-empty range and offPathRange marks every result on this river as reference only.
  * actualRiver is in the user's suit space.
  */
 export function buildRiverInput(
@@ -60,12 +71,16 @@ export function buildRiverInput(
     continuation.pot + 2 * continuation.effectiveStack !== turn.startingPot + 2 * turn.effectiveStack) {
     throw new ReviewError("INVALID_TURN_STATE", "Turn must end with equal positive stacks and conserved chips");
   }
-  const ranges = checkedRanges(continuation.ranges, board);
+  const reached = (player: 0 | 1) => [continuation.ranges, ...continuation.earlierRanges]
+    .find((pair) => hasLiveHand(pair[player], board))?.[player] ?? continuation.ranges[player];
+  const chosen: [Float32Array, Float32Array] = [reached(0), reached(1)];
+  const offPathRange = chosen[0] !== continuation.ranges[0] || chosen[1] !== continuation.ranges[1];
+  const ranges = checkedRanges(chosen, board);
   for (const player of [0, 1] as const) {
     if (ranges[player].some((weight, h) => weight > turn.ranges[player][h])) {
       throw new ReviewError("INVALID_TURN_RANGE", "Turn reach cannot exceed the turn's starting reach", { player });
     }
   }
-  return { ...turn, initialState: "river", board, ranges,
+  return { ...turn, initialState: "river", board, ranges, offPathRange,
     startingPot: continuation.pot, effectiveStack: continuation.effectiveStack };
 }
