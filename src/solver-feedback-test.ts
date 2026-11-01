@@ -5,5 +5,5 @@ import type { useStore } from "./store";
 import { pwa } from "./pwa";
 export function installFeedbackTestHooks(store: ReturnType<typeof useStore>) {
   if (!isFeedbackTestHost()) return;
-  (window as any).__F1_TEST__ = { store, pwa, beginSolve: beginFeedbackSolve, recordSolve: recordFeedbackSolve };
+  (window as unknown as { __F1_TEST__: unknown }).__F1_TEST__ = { store, pwa, beginSolve: beginFeedbackSolve, recordSolve: recordFeedbackSolve };
 }

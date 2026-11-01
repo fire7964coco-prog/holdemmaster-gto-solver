@@ -76,7 +76,11 @@ async function accessToken(): Promise<string | null> {
 }
 export async function getFeedbackSession(): Promise<boolean> { return !!(await accessToken()); }
 
-async function request(token: string, locale: Locale, input?: FeedbackInput): Promise<any> {
+type FeedbackResponse = FeedbackResult & {
+  nickname?: unknown; nicknameNeedsConfirm?: unknown; nicknameLooksLikeEmail?: unknown;
+  myReview?: { body?: unknown; downside?: unknown; rating: number } | null;
+};
+async function request(token: string, locale: Locale, input?: FeedbackInput): Promise<FeedbackResponse> {
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), 8000);
   try {

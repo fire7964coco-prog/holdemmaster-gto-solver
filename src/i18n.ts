@@ -370,7 +370,7 @@ export const localizeNumber = (text: string) => {
   // AR6: keep the complete numeric token (including %/comparison sign) LTR.
   // Existing LTR isolates remain unchanged; Arabic label isolates may contain one.
   if (i18n.locale === "ar")
-    return text.replace(/[≤≥<>]?\d+(?:[.,]\d+)*(?:[\/–-]\d+(?:[.,]\d+)*)*%/g, (token, offset) => {
+    return text.replace(/[≤≥<>]?\d+(?:[.,]\d+)*(?:[/–-]\d+(?:[.,]\d+)*)*%/g, (token, offset) => {
       const directions: string[] = [];
       for (const ch of text.slice(0, offset)) {
         if (/[\u2066-\u2068]/.test(ch)) directions.push(ch);
