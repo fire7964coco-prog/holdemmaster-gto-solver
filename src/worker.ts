@@ -81,7 +81,12 @@ const createHandler = (mod: Mod, mode: SolverMode) => {
     },
 
     allocateMemory(enableCompression: boolean) {
-      this.game.allocate_memory(enableCompression);
+      try {
+        this.game.allocate_memory(enableCompression);
+      } catch (error) {
+        // 할당에서 멈추면 메모리를 못 얻은 것이다(엔진은 «unreachable»로만 죽는다) — 종류를 붙여 넘긴다
+        throw new Error(`SOLVER_OUT_OF_MEMORY: ${error instanceof Error ? error.message : String(error)}`);
+      }
     },
 
     iterate(iteration: number) {

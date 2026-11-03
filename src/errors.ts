@@ -40,6 +40,8 @@ export const errorState = reactive({
   toast: false,
   /** 현재 계산 실패만 재시도한다. 입력·콜백은 오류 기록에 저장하지 않는다. */
   solverRetry: null as SolverRetry | null,
+  /** 메모리를 못 얻은 계산 실패 — 같은 설정으로 다시 해도 또 실패하므로 안내가 다르다(MB-518) */
+  memoryFailure: false,
 });
 
 const read = (): ErrorRecord[] => {
@@ -107,6 +109,7 @@ const record = (msg: string, stack: string) => {
   });
   write(records);
   errorState.count = Math.min(records.length, MAX_RECORDS);
+  errorState.memoryFailure = false;
   errorState.toast = true;
 };
 
@@ -114,8 +117,18 @@ const record = (msg: string, stack: string) => {
 export const reportSolverError = (error: unknown, retry: SolverRetry) => {
   const reason = error as { message?: unknown; stack?: unknown } | null;
   record(String(reason?.message ?? error), String(reason?.stack ?? ""));
+  errorState.memoryFailure = false;
   errorState.solverRetry = retry;
   // 같은 오류가 10초 안에 재발해 기록이 생략돼도 재시도 안내는 다시 보여준다.
+  errorState.toast = true;
+};
+
+/** 메모리 부족 실패 — retry는 16비트 정수로 다시 계산(그것도 한도를 넘으면 null · 나무를 줄이라고만 안내) */
+export const reportMemoryFailure = (error: unknown, retry: SolverRetry | null) => {
+  const reason = error as { message?: unknown; stack?: unknown } | null;
+  record(String(reason?.message ?? error), String(reason?.stack ?? ""));
+  errorState.memoryFailure = true;
+  errorState.solverRetry = retry;
   errorState.toast = true;
 };
 

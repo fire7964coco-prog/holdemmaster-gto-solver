@@ -271,9 +271,11 @@
 <script lang="ts">
 import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { init, handler, onWorkerFailure, terminate } from "../global-worker";
-import { clearSolverRetry, reportSolverError } from "../errors";
+import { clearSolverRetry, reportMemoryFailure, reportSolverError } from "../errors";
 import { encodeSpotUrl, InvalidSpotLinesError } from "../spot-share";
 import { trackCalcStart, trackCalcDone, trackCalcFail, trackShare } from "../usage-analytics";
+import { failureKind, failureReason } from "../solver-failure";
+import { MEMORY_FAILURE_LABELS } from "../solver-failure-labels";
 import { beginFeedbackSolve, recordFeedbackSolve } from "../solver-feedback"; // F1_FEEDBACK_ONLY
 import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 import { shareSpotThroughMain } from "../solver-feedback-share"; // F1_FEEDBACK_ONLY
@@ -1767,7 +1769,7 @@ const checkConfig = (
 type TreeStatusState =
   | { type: "notLoaded" }
   | { type: "building" }
-  | { type: "failed" }
+  | { type: "failed"; memory?: boolean }
   | { type: "error"; message: string }
   | { type: "built"; threads: number };
 
@@ -1823,7 +1825,9 @@ export default defineComponent({
       const l = L.value;
       if (state.type === "notLoaded") return l.statusNotLoaded;
       if (state.type === "building") return l.statusBuilding;
-      if (state.type === "failed") return l.statusError(l.statusNotLoaded);
+      if (state.type === "failed") {
+        return l.statusError(state.memory ? (MEMORY_FAILURE_LABELS[i18n.locale] ?? MEMORY_FAILURE_LABELS.en).title : l.statusNotLoaded);
+      }
       if (state.type === "error") return l.statusError(state.message);
       return l.statusBuilt(state.threads);
     });
@@ -1894,6 +1898,18 @@ export default defineComponent({
       pauseFlag.value = false;
       startTime = 0;
       treeStatusState.value = { type: "failed" };
+      // 메모리를 못 얻었으면 단일 스레드로 다시 해도 또 실패한다 — 16비트 정수로 다시, 그것도 넘으면 나무를 줄이라고만
+      if (failureKind(error) === "memory") {
+        treeStatusState.value = { type: "failed", memory: true };
+        const compressFits = !isCompressionEnabled.value && memoryUsageCompressed.value <= maxMemoryUsage;
+        reportMemoryFailure(error, compressFits ? async () => {
+          isCompressionEnabled.value = true;
+          store.navView = "solver";
+          store.sideView = "run-solver";
+          if (await buildTree()) await runSolver();
+        } : null);
+        return;
+      }
       // The editor stores are untouched. A failed/terminated engine must be rebuilt.
       reportSolverError(error, async () => {
         isSingleThread.value = true;
@@ -2118,7 +2134,7 @@ export default defineComponent({
           lockStore.resultLockCount = lockStore.appliedLocks.length;
           startTime = 0;
         } else {
-          closeCalcFailed("worker_error");
+          closeCalcFailed(failureReason("solve", error, memoryUsageSelected.value, isSingleThread.value));
           recoverFromFailure(error);
         }
       } finally {
@@ -2220,7 +2236,7 @@ export default defineComponent({
           store.isSolverFinished = true;
           recordFeedbackSolve(); // F1_FEEDBACK_ONLY
         } else {
-          closeCalcFailed("worker_error");
+          closeCalcFailed(failureReason("finalize", error, memoryUsageSelected.value, isSingleThread.value));
           recoverFromFailure(error);
         }
       } finally {

@@ -15,11 +15,19 @@
     <div class="flex items-start gap-3">
       <span class="text-orange-300 text-lg leading-none mt-0.5" aria-hidden="true">!</span>
       <div class="flex-grow min-w-0">
-        <div class="font-semibold text-neutral-100">{{ L.title }}</div>
-        <p class="mt-1 text-neutral-400 leading-relaxed">
-          {{ L.body1 }}<b class="text-neutral-200">{{ L.bodyB1 }}</b
-          >{{ L.body2 }}
-        </p>
+        <template v-if="errorState.memoryFailure">
+          <div class="font-semibold text-neutral-100" data-testid="memory-failure">{{ ML.title }}</div>
+          <p class="mt-1 text-neutral-400 leading-relaxed">
+            {{ errorState.solverRetry ? ML.compress : ML.reduce }}
+          </p>
+        </template>
+        <template v-else>
+          <div class="font-semibold text-neutral-100">{{ L.title }}</div>
+          <p class="mt-1 text-neutral-400 leading-relaxed">
+            {{ L.body1 }}<b class="text-neutral-200">{{ L.bodyB1 }}</b
+            >{{ L.body2 }}
+          </p>
+        </template>
         <div class="mt-2.5 flex gap-2 flex-wrap">
           <button
             v-if="errorState.solverRetry"
@@ -27,7 +35,7 @@
             class="button-base button-blue max-w-full whitespace-normal break-words px-3 py-1"
             @click="retrySolverSingleThread"
           >
-            {{ retrySingleThreadLabel }}
+            {{ errorState.memoryFailure ? ML.retryCompress : retrySingleThreadLabel }}
           </button>
           <button class="button-blue px-3 py-1" @click="copy">
             {{ copied ? L.copied : L.copyButton }}
@@ -53,6 +61,7 @@ import {
   retrySolverSingleThread,
 } from "../errors";
 import { i18n, pick } from "../i18n";
+import { MEMORY_FAILURE_LABELS } from "../solver-failure-labels";
 
 const M = {
   ko: {
@@ -318,6 +327,7 @@ const M = {
 export default defineComponent({
   setup() {
     const L = computed(() => M[i18n.locale]);
+    const ML = computed(() => MEMORY_FAILURE_LABELS[i18n.locale] ?? MEMORY_FAILURE_LABELS.en);
     const retrySingleThreadLabel = computed(() =>
       // i18n.ts pick() 순서: ko, en, ja, es, pt, de, zh, zh-hant, fr, id, ms, hi, tr, vi, ru, ar, it.
       pick(
@@ -360,6 +370,7 @@ export default defineComponent({
       retrySolverSingleThread,
       retrySingleThreadLabel,
       L,
+      ML,
     };
   },
 });

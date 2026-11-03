@@ -406,6 +406,7 @@ import { ActualAction, ActionMatch, parseAction } from "../review/actions";
 import { buildRiverInput } from "../review/river-input";
 import { ReviewError } from "../review/errors";
 import { trackCalcStart, trackCalcDone, trackCalcFail, trackCalcStall } from "../usage-analytics";
+import { failureKind } from "../solver-failure";
 import {
   BEST_LOSS_RATIO,
   GOOD_LOSS_RATIO,
@@ -810,7 +811,7 @@ code === "EV_MISSING"
         calcClosed = true;
       } catch (error) {
         if (token === epoch) {
-          trackCalcFail("hand_review", error instanceof ReviewError ? error.code.toLowerCase() : "solve_failed");
+          trackCalcFail("hand_review", error instanceof ReviewError ? error.code.toLowerCase() : `solve_${failureKind(error)}`);
           calcClosed = true;
           errorCode.value = "SOLVE_FAILED";
           solveError.value = true;
