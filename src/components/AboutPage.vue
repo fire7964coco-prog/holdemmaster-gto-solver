@@ -239,7 +239,7 @@ const M = {
     creditBefore: "이 프로그램은",
     creditMid1: " (Wataru Inariba 작, AGPL-3.0)을 기반으로",
     creditBrand: "홀덤마스터",
-    creditMid2: "가 한국어화·개선한 버전이며, 수정된 전체 소스코드는",
+    creditMid2: "가 한국어화·개선한 버전이며, 수정된 소스코드는",
     creditAfter: "에 동일한 라이선스로 공개되어 있습니다.",
   },
   en: {
@@ -283,7 +283,7 @@ const M = {
     creditBefore: "This app is based on",
     creditMid1: " (by Wataru Inariba, AGPL-3.0), localized and enhanced by",
     creditBrand: "HoldemMaster",
-    creditMid2: ". The full modified source code is published on",
+    creditMid2: ". The modified source code is published on",
     creditAfter: " under the same license.",
   },
   ja: {
@@ -326,7 +326,7 @@ const M = {
     creditBefore: "本アプリは",
     creditMid1: "（Wataru Inariba作、AGPL-3.0）をベースに",
     creditBrand: "HoldemMaster",
-    creditMid2: "がローカライズ・改良したバージョンで、修正した全ソースコードは",
+    creditMid2: "がローカライズ・改良したバージョンで、修正したソースコードは",
     creditAfter: "に同じライセンスで公開されています。",
   },
   es: {
@@ -370,7 +370,7 @@ const M = {
     creditBefore: "Esta app está basada en",
     creditMid1: " (de Wataru Inariba, AGPL-3.0), localizada y mejorada por",
     creditBrand: "HoldemMaster",
-    creditMid2: ". El código fuente modificado completo está publicado en",
+    creditMid2: ". El código fuente modificado está publicado en",
     creditAfter: " bajo la misma licencia.",
   },
   pt: {
@@ -414,7 +414,7 @@ const M = {
     creditBefore: "Este app é baseado no",
     creditMid1: " (de Wataru Inariba, AGPL-3.0), localizado e aprimorado pela",
     creditBrand: "HoldemMaster",
-    creditMid2: ". Todo o código-fonte modificado está publicado no",
+    creditMid2: ". O código-fonte modificado está publicado no",
     creditAfter: " sob a mesma licença.",
   },
   de: {
@@ -463,7 +463,7 @@ const M = {
     creditBefore: "Diese App basiert auf",
     creditMid1: " (von Wataru Inariba, AGPL-3.0), lokalisiert und erweitert von",
     creditBrand: "HoldemMaster",
-    creditMid2: ". Der vollständige geänderte Quellcode ist auf",
+    creditMid2: ". Der geänderte Quellcode ist auf",
     creditAfter: " unter derselben Lizenz veröffentlicht.",
   },
   // 중국어 인용부호는 대륙 표준인 “ ”를 쓴다 — 「 」는 대만·홍콩·일본 관습이라
@@ -513,7 +513,7 @@ const M = {
     creditBrand: "HoldemMaster",
     // 앞의 공백은 «필요»하다 — 템플릿에서 </a> 바로 뒤에 붙어 「HoldemMaster本地化」가 되어 버린다.
     // 중국어 조판은 한자와 라틴문자 사이를 띄운다
-    creditMid2: " 本地化并改进。修改后的完整源代码发布在",
+    creditMid2: " 本地化并改进。修改后的源代码发布在",
     creditAfter: "，采用相同的开源许可协议。",
   },
   // ⚠ 台灣 소프트웨어 표기는 대륙과 «단어 자체»가 다르다:
@@ -565,7 +565,7 @@ const M = {
     creditBrand: "HoldemMaster",
     // 앞의 공백은 «필요»하다 — 템플릿에서 </a> 바로 뒤에 붙어 「HoldemMaster在地化」가 되어 버린다.
     // 중국어 조판은 한자와 라틴문자 사이를 띄운다
-    creditMid2: " 在地化並改進。修改後的完整原始碼發布在",
+    creditMid2: " 在地化並改進。修改後的原始碼發布在",
     creditAfter: "，採用相同的開源授權條款。",
   },
   fr: {
@@ -612,7 +612,7 @@ const M = {
     creditBefore: "Cette app est basée sur",
     creditMid1: " (de Wataru Inariba, AGPL-3.0), localisée et enrichie par",
     creditBrand: "HoldemMaster",
-    creditMid2: ". Le code source modifié complet est publié sur",
+    creditMid2: ". Le code source modifié est publié sur",
     creditAfter: " sous la même licence.",
   },
   // 인도네시아어 — Anda체(본체 브리프 확정). solver·range·board·Trainer는 본체 id 코퍼스가 영어 그대로 쓴다
@@ -662,7 +662,7 @@ const M = {
     creditBefore: "Aplikasi ini dibangun di atas",
     creditMid1: " (karya Wataru Inariba, AGPL-3.0), dilokalkan dan diperluas oleh",
     creditBrand: "HoldemMaster",
-    creditMid2: ". Kode sumber lengkap hasil modifikasi dipublikasikan di",
+    creditMid2: ". Kode sumber hasil modifikasi dipublikasikan di",
     creditAfter: " dengan lisensi yang sama.",
   },
   ms: {
@@ -710,7 +710,7 @@ const M = {
     creditBefore: "Aplikasi ini dibina berasaskan",
     creditMid1: " (karya Wataru Inariba, AGPL-3.0), diterjemah dan ditambah baik oleh",
     creditBrand: "HoldemMaster",
-    creditMid2: ". Keseluruhan kod sumber yang diubah suai diterbitkan di",
+    creditMid2: ". Kod sumber yang diubah suai diterbitkan di",
     creditAfter: " di bawah lesen yang sama.",
   },
   hi: {
@@ -750,10 +750,10 @@ const M = {
     landingLink: "HoldemMaster की सॉल्वर गाइड",
     landingAfter: "।",
     notes: "iOS और Safari में ब्राउज़र की सीमाओं के कारण गणना एक ही थ्रेड पर चलती है और धीमी होती है। macOS पर Chrome इस्तेमाल कर सकते हैं। WebAssembly की सीमा के कारण उपलब्ध मेमोरी अधिकतम 4GB है। बड़े स्पॉट की गणना PC पर अधिक सुविधाजनक है।",
-    creditBefore: "यह ऐप आधारित है ",
-    creditMid1: " पर (Wataru Inariba, AGPL-3.0)। इसका अनुवाद और विस्तार ",
+    creditBefore: "यह ऐप ",
+    creditMid1: " (Wataru Inariba, AGPL-3.0) पर आधारित है। इसका अनुवाद और विस्तार ",
     creditBrand: "HoldemMaster",
-    creditMid2: " ने किया है। संशोधित सोर्स कोड पूरा का पूरा ",
+    creditMid2: " ने किया है। संशोधित सोर्स कोड ",
     creditAfter: " पर उसी लाइसेंस के तहत उपलब्ध है।",
   },
   tr: {
@@ -797,7 +797,7 @@ const M = {
     creditBefore: "Bu uygulama,",
     creditMid1: " (Wataru Inariba, AGPL-3.0) temel alınarak",
     creditBrand: "HoldemMaster",
-    creditMid2: " tarafından yerelleştirilip geliştirildi. Değiştirilmiş kaynak kodun tamamı aynı lisansla",
+    creditMid2: " tarafından yerelleştirilip geliştirildi. Değiştirilmiş kaynak kod aynı lisansla",
     creditAfter: " üzerinde yayımlandı.",
   },
   vi: {
@@ -841,7 +841,7 @@ const M = {
     creditBefore: "Ứng dụng này dựa trên",
     creditMid1: " (của Wataru Inariba, AGPL-3.0), được",
     creditBrand: "HoldemMaster",
-    creditMid2: " bản địa hóa và cải tiến. Toàn bộ mã nguồn đã sửa được công bố trên",
+    creditMid2: " bản địa hóa và cải tiến. Mã nguồn đã sửa được công bố trên",
     creditAfter: " theo cùng giấy phép.",
   },
   ru: {
@@ -885,7 +885,7 @@ const M = {
     creditBefore: "Это приложение основано на",
     creditMid1: " (автор — Wataru Inariba, AGPL-3.0), локализация и доработка —",
     creditBrand: "HoldemMaster",
-    creditMid2: ". Весь изменённый исходный код опубликован на",
+    creditMid2: ". Изменённый исходный код опубликован на",
     creditAfter: " под той же лицензией.",
   },
   ar: {
@@ -929,7 +929,7 @@ const M = {
     creditBefore: "يعتمد هذا التطبيق على",
     creditMid1: " (من تطوير \u2066Wataru Inariba\u2069، \u2066AGPL-3.0\u2069)، وقد ترجمه وطوّره",
     creditBrand: "HoldemMaster",
-    creditMid2: ". الشيفرة المصدرية المعدَّلة كاملةً منشورة على",
+    creditMid2: ". الشيفرة المصدرية المعدَّلة منشورة على",
     creditAfter: " بالترخيص نفسه.",
   },
   it: {
@@ -973,7 +973,7 @@ const M = {
     creditBefore: "Questa app si basa su",
     creditMid1: " (di Wataru Inariba, AGPL-3.0), localizzato e arricchito da",
     creditBrand: "HoldemMaster",
-    creditMid2: ". Il codice sorgente completo, incluse le modifiche, è pubblicato su",
+    creditMid2: ". Il codice sorgente modificato è pubblicato su",
     creditAfter: " con la stessa licenza.",
   },
   pl: {
@@ -1014,7 +1014,7 @@ const M = {
     creditBefore: "Aplikacja powstała na bazie projektu",
     creditMid1: " (autor: Wataru Inariba, licencja AGPL-3.0). Tłumaczenia i dodatkowe funkcje przygotował zespół",
     creditBrand: "HoldemMaster",
-    creditMid2: ". Pełny kod źródłowy zmodyfikowanej wersji jest dostępny w serwisie",
+    creditMid2: ". Kod źródłowy zmodyfikowanej wersji jest dostępny w serwisie",
     creditAfter: " na tej samej licencji.",
   },
 
@@ -1059,7 +1059,7 @@ const M = {
     creditBefore: "แอปนี้พัฒนาต่อยอดจาก",
     creditMid1: " (โดย Wataru Inariba, AGPL-3.0) แปลภาษาและเพิ่มความสามารถโดย",
     creditBrand: "HoldemMaster",
-    creditMid2: " ซอร์สโค้ดฉบับปรับปรุงทั้งหมดเผยแพร่บน",
+    creditMid2: " ซอร์สโค้ดฉบับปรับปรุงเผยแพร่บน",
     creditAfter: " ภายใต้สัญญาอนุญาตเดียวกัน",
   },
   uk: {
@@ -1099,11 +1099,11 @@ const M = {
     landingLink: "посібник із солвера HoldemMaster",
     landingAfter: ".",
     notes:
-      "На iOS і в Safari обмеження браузера дозволяють розрахунок лише в одному потоці, тому він повільніший. На macOS радимо Chrome. Доступна пам’ять обмежена 4 GB через WebAssembly, тож великі споти зручніше обчислювати на ПК.",
+      "На iOS і в Safari обмеження браузера дозволяють розрахунок лише в одному потоці, тому він повільніший. На macOS радимо Chrome. Доступна пам’ять обмежена 4 ГБ через WebAssembly, тож великі споти зручніше обчислювати на ПК.",
     creditBefore: "В основі застосунку —",
     creditMid1: " (автор Wataru Inariba, AGPL-3.0). Локалізація й удосконалення —",
     creditBrand: "HoldemMaster",
-    creditMid2: ". Повний змінений вихідний код опубліковано на",
+    creditMid2: ". Змінений вихідний код опубліковано на",
     creditAfter: " за тією самою ліцензією.",
   },
 } as const;

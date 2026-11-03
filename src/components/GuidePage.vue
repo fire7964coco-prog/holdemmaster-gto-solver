@@ -198,9 +198,6 @@
     <p class="text-sm text-neutral-400 leading-relaxed">
       {{ L.install1 }}<b class="text-neutral-200">{{ L.installBold1 }}</b>{{ L.install2 }}<b class="text-neutral-200">{{ L.installBold2 }}</b>{{ L.install3 }}<b class="text-neutral-200">{{ L.installBold3 }}</b>{{ L.install4 }}
     </p>
-    <p class="mt-1.5 text-xs text-neutral-500 leading-relaxed">
-      {{ L.samsung1 }}<b class="text-neutral-300">{{ L.samsungBold }}</b>{{ L.samsung2 }}
-    </p>
     <!-- 오프라인 «학습 데이터»는 트레이너 빌드 전용 (단독 빌드는 앱 자체가 통째로 캐시된다) -->
     <div
       v-if="FEATURE_TRAINER"
@@ -391,7 +388,7 @@ const M = {
       "액션 흐름(플랍→벳→콜→턴...)의 장면 선택기. 클릭한 시점의 전략을 보여줌",
     rTerm2: "왼쪽 13×13 매트릭스",
     rDef2:
-      '칸=핸드, 칸 속 색 비율=액션 비율. 🟥 벳/레이즈(진할수록 큰 벳) · 🟩 체크/콜 · 꺼진 칸=레인지에 없음. GTO는 같은 핸드도 액션을 "비율로 섞습니다" — 패턴을 읽히지 않기 위해서예요',
+      '칸=핸드, 칸 속 색 비율=액션 비율. 🟧→🟪 벳/레이즈(클수록 보라 쪽) · 🟩 체크/콜 · 🟦 폴드 · 꺼진 칸=레인지에 없음. GTO는 같은 핸드도 액션을 "비율로 섞습니다" — 패턴을 읽히지 않기 위해서예요',
     rTerm3: "오른쪽 위 타일",
     rDef3: "레인지 전체 기준 액션 빈도(%)와 콤보 수",
     rTerm4: "오른쪽 중간 분류",
@@ -449,11 +446,6 @@ const M = {
       `입니다. 설치하면 교육 예제 ${SPOT_COUNT}종과 트레이너 문제가 기기에 저장돼 `,
     installBold3: "인터넷이 없는 지하철에서도",
     install4: " 그대로 풀 수 있습니다.",
-    samsung1:
-      "※ 삼성 인터넷에서 설치하면 「안전하지 않은 앱 차단됨」 경고가 뜹니다. 이 브라우저가 만드는 설치 파일을 구글이 신뢰하지 않아 생기는 문제로, 앱과는 무관합니다. ",
-    samsungBold: "크롬으로 열면",
-    samsung2:
-      " 경고 없이 설치되고, 그대로 설치하려면 경고창의 [세부정보 더보기] → [무시하고 설치]를 누르면 됩니다.",
     offlineDataLabel: "오프라인 학습 데이터",
     offlineSaved: "저장 완료 — 인터넷 없이도 교육 예제·트레이너 사용 가능",
     offlineSaving: "저장 중…",
@@ -484,7 +476,7 @@ const M = {
     removeDef:
       "다른 앱처럼 길게 눌러 삭제하면 끝입니다. 배경에서 도는 것도, 남는 것도 없습니다",
     samsungNote2:
-      "※ 삼성 인터넷에서 뜨는 「안전하지 않은 앱 차단됨」 경고는 악성코드 탐지가 아니라, 그 브라우저가 만드는 설치 파일을 구글이 아직 신뢰 목록에 넣지 않아 생기는 문제입니다. 크롬으로 열면 뜨지 않습니다.",
+      "※ 삼성 인터넷으로 설치할 때 Google Play 프로텍트의 「안전하지 않은 앱 차단됨」 경고가 뜬 기록이 있습니다. 제목만으로는 막힌 이유를 알 수 없으니 크롬으로 먼저 설치해 보세요.",
 
     studyTitle: "추천 공부법",
     study1: `교육 예제 ${SPOT_COUNT}개를 순서대로 — 시리즈로 이어지는 커리큘럼입니다`,
@@ -577,7 +569,7 @@ const M = {
       "A scene picker for the action line (flop → bet → call → turn…). Click a node to see the strategy at that point",
     rTerm2: "13×13 matrix (left)",
     rDef2:
-      "Each cell is a hand; the color split inside it shows action frequencies. 🟥 bet/raise (darker = bigger bet) · 🟩 check/call · dimmed cell = not in the range. GTO plays the same hand as a mixed strategy — splitting actions by frequency so your pattern can't be read",
+      "Each cell is a hand; the color split inside it shows action frequencies. 🟧→🟪 bet/raise (toward violet as it gets bigger) · 🟩 check/call · 🟦 fold · dimmed cell = not in the range. GTO can mix different actions for the same hand, assigning each a frequency so your pattern can't be read",
     rTerm3: "Tiles (top right)",
     rDef3: "Action frequencies (%) and combo counts across the whole range",
     rTerm4: "Hand categories (middle right)",
@@ -639,11 +631,6 @@ const M = {
       `. Once installed, the ${SPOT_COUNT} Study Spots and the Trainer drills are stored on your device, so you can keep studying `,
     installBold3: "even on the subway with no internet",
     install4: ".",
-    samsung1:
-      "* When you install from Samsung Internet, the browser or your device may block it for security reasons. That check comes from the browser, not from this app. ",
-    samsungBold: "Open the site in Chrome",
-    samsung2:
-      " and it installs without the block; if you'd rather continue here, follow the prompts in the dialog.",
     offlineDataLabel: "Offline study data",
     offlineSaved: "Saved — Study Spots and Trainer work without internet",
     offlineSaving: "Saving…",
@@ -675,7 +662,7 @@ const M = {
     removeDef:
       "Long-press and delete like any other app, and it's gone. Nothing runs in the background, nothing is left behind",
     samsungNote2:
-      "* A security block in Samsung Internet is not malware detection — the browser simply doesn't recognize this kind of install package yet. It doesn't appear when you install from Chrome.",
+      "* We have a record of a Google Play Protect warning during a Samsung Internet install. The title alone doesn't say why it was blocked, so try installing from Chrome first.",
 
     studyTitle: "Suggested study plan",
     study1:
@@ -772,7 +759,7 @@ const M = {
       "アクションの流れ（フロップ→ベット→コール→ターン…）のシーン選択。クリックした時点の戦略を表示します",
     rTerm2: "左の13×13マトリクス",
     rDef2:
-      "マス=ハンド、マスの中の色の比率=アクションの割合。🟥 ベット/レイズ（濃いほど大きなベット）・🟩 チェック/コール・暗いマス=レンジにない。GTOは同じハンドでもアクションを「頻度で混ぜます」— パターンを読まれないためです",
+      "マス=ハンド、マスの中の色の比率=アクションの割合。🟧→🟪 ベット/レイズ（大きいほど紫寄り）・🟩 チェック/コール・🟦 フォールド・暗いマス=レンジにない。GTOは同じハンドでもアクションを「頻度で混ぜます」— パターンを読まれないためです",
     rTerm3: "右上のタイル",
     rDef3: "レンジ全体でのアクション頻度(%)とコンボ数",
     rTerm4: "右中央の分類パネル",
@@ -833,11 +820,6 @@ const M = {
       ` です。インストールすると${SPOT_COUNT}種の学習スポットとトレーナーの問題が端末に保存され、`,
     installBold3: "インターネットのない地下鉄でも",
     install4: " そのまま解けます。",
-    samsung1:
-      "※ Samsung Internetからインストールすると、ブラウザや端末がセキュリティ上の理由でインストールをブロックすることがあります。ブラウザ側の確認であり、アプリ自体の問題ではありません。",
-    samsungBold: "Chromeで開けば",
-    samsung2:
-      " 警告なしでインストールできます。そのまま進める場合は、警告画面の[詳細] → [無視してインストール]を押してください。",
     offlineDataLabel: "オフライン学習データ",
     offlineSaved: "保存完了 — インターネットなしでも学習スポット・トレーナーが使えます",
     offlineSaving: "保存中…",
@@ -869,7 +851,7 @@ const M = {
     removeDef:
       "他のアプリと同じく長押しして削除すれば終わりです。バックグラウンドで動くものも、残るものもありません",
     samsungNote2:
-      "※ Samsung Internetで出る「安全でないアプリをブロックしました」警告はマルウェア検知ではなく、そのブラウザが作るインストールパッケージをGoogleがまだ信頼リストに入れていないために起きる問題です。Chromeからインストールすれば表示されません。",
+      "※ Samsung Internetでのインストール中にGoogle Playプロテクトの警告が出た記録があります。見出しだけでは理由がわからないため、まずChromeからインストールしてみてください。",
 
     studyTitle: "おすすめの学習法",
     study1:
@@ -966,7 +948,7 @@ const M = {
       "Un selector de escenas de la línea de acción (flop → bet → call → turn…). Haz clic en un nodo para ver la estrategia en ese punto",
     rTerm2: "Matriz 13×13 (izquierda)",
     rDef2:
-      "Cada celda es una mano; la división de colores muestra las frecuencias de acción. 🟥 bet/raise (más oscuro = bet más grande) · 🟩 check/call · celda apagada = fuera del rango. El GTO juega la misma mano como estrategia mixta — reparte las acciones por frecuencia para que no puedan leer tu patrón",
+      "Cada celda es una mano; la división de colores muestra las frecuencias de acción. 🟧→🟪 bet/raise (cuanto mayor, más violeta) · 🟩 check/call · 🟦 fold · celda apagada = fuera del rango. Una estrategia GTO puede combinar distintas acciones para una misma mano, cada una con su frecuencia, para que no puedan leer tu patrón",
     rTerm3: "Mosaicos (arriba a la derecha)",
     rDef3: "Frecuencias de acción (%) y número de combos de todo el rango",
     rTerm4: "Clasificación (centro derecha)",
@@ -1028,11 +1010,6 @@ const M = {
       `. Una vez instalado, los ${SPOT_COUNT} Spots de estudio y los retos del Entrenador quedan guardados en tu dispositivo, para que puedas seguir estudiando `,
     installBold3: "incluso en el metro sin internet",
     install4: ".",
-    samsung1:
-      "* Al instalar desde Samsung Internet, el navegador o tu dispositivo pueden bloquear la instalación por seguridad. Es una comprobación del navegador, no un problema de esta app. ",
-    samsungBold: "Abre el sitio en Chrome",
-    samsung2:
-      " y se instala sin advertencia; o, para continuar de todos modos, toca [Más detalles] → [Instalar de todos modos] en el cuadro de advertencia.",
     offlineDataLabel: "Datos de estudio offline",
     offlineSaved: "Guardado — los Spots de estudio y el Entrenador funcionan sin internet",
     offlineSaving: "Guardando…",
@@ -1064,7 +1041,7 @@ const M = {
     removeDef:
       "Mantén presionado y elimina como cualquier otra app, y listo. Nada corre en segundo plano, nada queda atrás",
     samsungNote2:
-      "* La advertencia de aplicación no segura de Samsung Internet no es detección de malware — Google simplemente aún no agregó los paquetes de instalación de ese navegador a su lista de confianza. No aparece al instalar desde Chrome.",
+      "* Tenemos constancia de un aviso de Google Play Protect al instalar desde Samsung Internet. El título no explica por qué se bloqueó, así que prueba primero a instalar desde Chrome.",
 
     studyTitle: "Plan de estudio sugerido",
     study1:
@@ -1162,7 +1139,7 @@ const M = {
       "Um seletor de cenas da linha de ação (flop → bet → call → turn…). Toque em um nó para ver a estratégia naquele ponto",
     rTerm2: "Matriz 13×13 (à esquerda)",
     rDef2:
-      "Cada célula é uma mão; a divisão de cores mostra as frequências de ação. 🟥 bet/raise (mais escuro = bet maior) · 🟩 check/call · célula apagada = fora do range. O GTO joga a mesma mão como estratégia mista — distribui as ações por frequência para que ninguém leia o seu padrão",
+      "Cada célula é uma mão; a divisão de cores mostra as frequências de ação. 🟧→🟪 bet/raise (quanto maior, mais violeta) · 🟩 check/call · 🟦 fold · célula apagada = fora do range. Uma estratégia GTO pode combinar ações diferentes com a mesma mão, cada uma com sua frequência, para que ninguém leia o seu padrão",
     rTerm3: "Mosaicos (canto superior direito)",
     rDef3: "Frequências de ação (%) e número de combos do range inteiro",
     rTerm4: "Mãos / Draws (centro à direita)",
@@ -1224,11 +1201,6 @@ const M = {
       `. Depois de instalado, os ${SPOT_COUNT} Spots de estudo e os desafios do Treinador ficam salvos no seu dispositivo, para você continuar estudando `,
     installBold3: "até no metrô sem internet",
     install4: ".",
-    samsung1:
-      "* Ao instalar pelo Samsung Internet, o navegador ou o seu dispositivo podem bloquear a instalação por segurança. É uma verificação do navegador, não um problema deste app. ",
-    samsungBold: "Abra o site no Chrome",
-    samsung2:
-      " e a instalação acontece sem aviso; ou, se preferir continuar aqui, siga as instruções da própria caixa de aviso.",
     offlineDataLabel: "Dados de estudo offline",
     offlineSaved: "Salvo — os Spots de estudo e o Treinador funcionam sem internet",
     offlineSaving: "Salvando…",
@@ -1260,7 +1232,7 @@ const M = {
     removeDef:
       "Mantenha pressionado e remova como qualquer outro app, e pronto. Nada roda em segundo plano, nada fica para trás",
     samsungNote2:
-      "* O aviso de aplicativo não seguro do Samsung Internet não é detecção de malware — o navegador simplesmente ainda não reconhece esse tipo de pacote de instalação. Ele não aparece quando você instala pelo Chrome.",
+      "* Temos registro de um aviso do Google Play Protect ao instalar pelo Samsung Internet. O título não explica por que foi bloqueado, então tente instalar primeiro pelo Chrome.",
 
     studyTitle: "Plano de estudo sugerido",
     study1:
@@ -1359,7 +1331,7 @@ const M = {
       "Eine Auswahlleiste für die Action-Line (Flop → Bet → Call → Turn …). Klicke einen Knoten an, um die Strategie an dieser Stelle zu sehen",
     rTerm2: "13×13-Matrix (links)",
     rDef2:
-      "Jede Zelle ist eine Hand; die Farbaufteilung zeigt die Aktionsfrequenzen. 🟥 Bet/Raise (dunkler = größere Bet) · 🟩 Check/Call · blasse Zelle = außerhalb der Range. GTO spielt dieselbe Hand als gemischte Strategie – die Aktionen werden nach Frequenz verteilt, damit niemand dein Muster liest",
+      "Jede Zelle ist eine Hand; die Farbaufteilung zeigt die Aktionsfrequenzen. 🟧→🟪 Bet/Raise (je größer, desto violetter) · 🟩 Check/Call · 🟦 Fold · blasse Zelle = außerhalb der Range. GTO spielt dieselbe Hand mit einer gemischten Strategie – die Aktionen werden nach Frequenz verteilt, damit niemand dein Muster liest",
     rTerm3: "Kacheln (oben rechts)",
     rDef3: "Aktionsfrequenzen (%) und Anzahl der Combos der gesamten Range",
     rTerm4: "Hände / Draws (Mitte rechts)",
@@ -1421,11 +1393,6 @@ const M = {
       `. Nach der Installation liegen die ${SPOT_COUNT} Lernspots und die Trainer-Aufgaben auf deinem Gerät, sodass du `,
     installBold3: "auch in der U-Bahn ohne Netz",
     install4: " weiterlernen kannst.",
-    samsung1:
-      "* Beim Installieren über Samsung Internet kann der Browser oder dein Gerät die Installation aus Sicherheitsgründen blockieren. Das ist eine Sicherheitsabfrage des Browsers, kein Problem dieser App. ",
-    samsungBold: "Öffne die Seite in Chrome",
-    samsung2:
-      ", dann läuft die Installation ohne Warnung; oder folge den Hinweisen im Warnfenster, wenn du hier bleiben willst.",
     offlineDataLabel: "Offline-Lerndaten",
     offlineSaved: "Gespeichert – Lernspots und Trainer laufen ohne Internet",
     offlineSaving: "Wird gespeichert…",
@@ -1457,7 +1424,7 @@ const M = {
     removeDef:
       "Halte das Icon lange gedrückt und entferne es wie jede andere App – fertig. Nichts läuft im Hintergrund, nichts bleibt zurück",
     samsungNote2:
-      "* Die Warnung „unsichere App“ von Samsung Internet ist keine Malware-Erkennung – der Browser kennt diese Art Installationspaket schlicht noch nicht. Beim Installieren über Chrome erscheint sie nicht.",
+      "* Wir haben einen Beleg für eine Warnung von Google Play Protect bei der Installation über Samsung Internet. Der Titel allein nennt den Grund nicht – versuche es deshalb zuerst über Chrome.",
 
     studyTitle: "Vorschlag für deinen Lernplan",
     study1:
@@ -1555,7 +1522,7 @@ const M = {
       "整条动作流程（翻牌→下注→跟注→转牌……）的场景选择器。点哪一步，就显示那一刻的策略",
     rTerm2: "左边 13×13 表格",
     rDef2:
-      "一格就是一手牌，格子里的颜色比例就是各个动作的比例。🟥 下注/加注 bet·raise（越深表示下得越大）· 🟩 过牌/跟注 check·call · 灰掉的格子表示不在范围里。GTO 对同一手牌也会“按比例混着打”——就是为了不让人看出规律",
+      "一格就是一手牌，格子里的颜色比例就是各个动作的比例。🟧→🟪 下注/加注 bet·raise（下得越大越偏紫） · 🟩 过牌/跟注 check·call · 🟦 弃牌 fold · 灰掉的格子表示不在范围里。GTO 对同一手牌也会“按比例混着打”——就是为了不让人看出规律",
     rTerm3: "右上角的方块",
     rDef3: "以整个范围为分母的动作频率（%）和组合数",
     rTerm4: "右侧中间的分类",
@@ -1615,15 +1582,6 @@ const M = {
       `。装好之后，${SPOT_COUNT} 个教学案例和训练器的题目都会存到设备里，`,
     installBold3: "在没信号的地铁上",
     install4: "也照样能做。",
-    // 三星浏览器 = Samsung Internet의 중국어 정식 명칭
-    // ⚠ 창 제목·버튼 이름을 «단정하지 않는다» — 기기와 안드로이드 버전마다 다르다
-    //   (Play 保护机制의 「已屏蔽不安全的应用」· 삼성 OneUI 6.0+의 「自动拦截程序」…).
-    //   en·de·pt도 같은 이유로 뭉뚱그렸다. 출처 없는 버튼 이름을 대면 없는 버튼을 누르라는 셈이다
-    samsung1:
-      "※ 用三星浏览器安装时，浏览器或系统可能会以安全为由拦截安装。这是浏览器那边的安全机制，跟应用本身无关。",
-    samsungBold: "改用 Chrome 打开",
-    samsung2:
-      "就不会被拦；想直接在这里装的话，按提示框里的指引选择允许即可。",
     offlineDataLabel: "离线学习数据",
     offlineSaved: "已保存——没网也能用教学案例和训练器",
     offlineSaving: "保存中…",
@@ -1652,7 +1610,7 @@ const M = {
     removeTerm: "删得干干净净",
     removeDef: "跟别的应用一样长按删掉就行。不会在后台跑，也不会留下什么",
     samsungNote2:
-      "※ 三星浏览器那条拦截提示并不代表查出了恶意代码，只是因为 Google 还没把这个浏览器生成的安装包列入信任名单。用 Chrome 打开就不会出现。",
+      "※ 我们记录到用三星浏览器安装时出现过 Google Play 保护机制的警告。仅凭标题看不出被拦截的原因，建议先用 Chrome 安装试试。",
 
     studyTitle: "推荐的学习路线",
     study1: `把 ${SPOT_COUNT} 个教学案例按顺序过一遍——它们是连成一套的课程`,
@@ -1750,7 +1708,7 @@ const M = {
       "整條動作流程（翻牌→下注→跟注→轉牌……）的場景選擇器。按哪一步，就顯示那一刻的策略",
     rTerm2: "左邊 13×13 表格",
     rDef2:
-      "一格就是一手牌，格子裡的顏色比例就是各個動作的頻率。🟥 下注/加注 bet·raise（越深表示下得越大）· 🟩 過牌/跟注 check·call · 灰掉的格子表示不在範圍裡。GTO 對同一手牌也會「按比例混著打」——就是為了不讓人看出規律",
+      "一格就是一手牌，格子裡的顏色比例就是各個動作的頻率。🟧→🟪 下注/加注 bet·raise（下得越大越偏紫） · 🟩 過牌/跟注 check·call · 🟦 蓋牌 fold · 灰掉的格子表示不在範圍裡。GTO 對同一手牌也會「按比例混著打」——就是為了不讓人看出規律",
     rTerm3: "右上角的方塊",
     rDef3: "以整個範圍為分母的動作頻率（%）和組合數",
     rTerm4: "右側中間的分類",
@@ -1815,11 +1773,6 @@ const M = {
     install4: "也照樣能做。",
     // ⚠ 창 제목·버튼 이름을 «단정하지 않는다» — 기기와 Android 버전마다 다르고 실기 캡처가 없다
     //   (핸드오프 2부 규칙 ②. en·de·pt도 같은 이유로 뭉뚱그렸다)
-    samsung1:
-      "※ 用三星瀏覽器安裝時，瀏覽器或系統可能會以安全為由攔截安裝。這是瀏覽器那邊的安全機制，跟應用程式本身無關。",
-    samsungBold: "改用 Chrome 開啟",
-    samsung2:
-      "就不會被攔；想直接在這裡裝的話，照提示視窗裡的指引選擇允許即可。",
     offlineDataLabel: "離線學習資料",
     offlineSaved: "已儲存——沒網路也能用教學案例和訓練器",
     offlineSaving: "儲存中…",
@@ -1848,7 +1801,7 @@ const M = {
     removeTerm: "刪得乾乾淨淨",
     removeDef: "跟別的應用程式一樣長按刪掉就行。不會在背景執行，也不會留下什麼",
     samsungNote2:
-      "※ 三星瀏覽器那條攔截提示並不代表查出了惡意程式碼，只是因為 Google 還沒把這個瀏覽器產生的安裝檔列入信任名單。用 Chrome 開啟就不會出現。",
+      "※ 我們記錄到用三星瀏覽器安裝時出現過 Google Play 安全防護的警告。僅憑標題看不出被攔截的原因，建議先用 Chrome 安裝試試。",
 
     studyTitle: "推薦的學習路線",
     study1: `把 ${SPOT_COUNT} 個教學案例按順序過一遍——它們是連成一套的課程`,
@@ -1947,7 +1900,7 @@ const M = {
       "Un sélecteur de nœud sur la ligne d'action (flop → bet → call → turn…). Clique sur un nœud pour voir la stratégie à ce point",
     rTerm2: "Matrice 13×13 (à gauche)",
     rDef2:
-      "Chaque case est une main ; le découpage de couleurs montre les fréquences d'action. 🟥 bet/raise (plus foncé = plus grosse mise) · 🟩 check/call · case éteinte = hors de la range. La GTO joue la même main en stratégie mixte — les actions se répartissent par fréquence pour que ton jeu reste illisible",
+      "Chaque case est une main ; le découpage de couleurs montre les fréquences d'action. 🟧→🟪 bet/raise (plus c'est gros, plus c'est violet) · 🟩 check/call · 🟦 fold · case éteinte = hors de la range. La GTO joue la même main en stratégie mixte — les actions se répartissent par fréquence pour que ton jeu reste illisible",
     rTerm3: "Tuiles (en haut à droite)",
     rDef3: "Fréquences d'action (%) et nombres de combos sur toute la range",
     rTerm4: "Catégories de mains (au milieu à droite)",
@@ -2012,11 +1965,6 @@ const M = {
       `. Une fois installé, les ${SPOT_COUNT} Spots d'étude et les exercices du Trainer sont stockés sur ton appareil, pour continuer à étudier `,
     installBold3: "même dans le métro sans internet",
     install4: ".",
-    samsung1:
-      "* À l'installation depuis Samsung Internet, le navigateur ou l'appareil peut bloquer l'installation pour des raisons de sécurité. Ce contrôle vient du navigateur, pas de cette app. ",
-    samsungBold: "Ouvre le site dans Chrome",
-    samsung2:
-      " et il s'installe sans blocage ; si tu préfères rester ici, suis les indications de la boîte de dialogue.",
     offlineDataLabel: "Données d'étude hors ligne",
     offlineSaved: "Enregistrées — les Spots d'étude et le Trainer fonctionnent sans internet",
     offlineSaving: "Enregistrement…",
@@ -2048,7 +1996,7 @@ const M = {
     removeDef:
       "Appuie longuement sur l'icône puis supprime, comme n'importe quelle app, et c'est fini. Rien ne tourne en arrière-plan, rien ne reste",
     samsungNote2:
-      "* Un blocage de sécurité dans Samsung Internet n'est pas une détection de malware — le navigateur ne reconnaît simplement pas encore ce type de paquet d'installation. Il n'apparaît pas quand tu installes depuis Chrome.",
+      "* Nous avons constaté un avertissement de Google Play Protect lors d'une installation depuis Samsung Internet. Le titre seul n'explique pas le blocage : essaie d'abord d'installer depuis Chrome.",
 
     studyTitle: "Plan d'étude suggéré",
     study1:
@@ -2153,7 +2101,7 @@ const M = {
       "Pemilih node di sepanjang jalur aksi (flop → bet → call → turn…). Klik sebuah node untuk melihat strategi di titik itu",
     rTerm2: "Grid 13×13 (kiri)",
     rDef2:
-      "Setiap kotak adalah satu hand; pembagian warnanya menunjukkan frekuensi aksi. 🟥 bet/raise (makin gelap = makin besar taruhannya) · 🟩 check/call · kotak redup = di luar range. GTO memainkan hand yang sama dengan strategi campuran — aksinya dibagi menurut frekuensi supaya permainan Anda sulit dibaca",
+      "Setiap kotak adalah satu hand; pembagian warnanya menunjukkan frekuensi aksi. 🟧→🟪 bet/raise (makin besar makin ungu) · 🟩 check/call · 🟦 fold · kotak redup = di luar range. GTO memainkan hand yang sama dengan strategi campuran — aksinya dibagi menurut frekuensi supaya permainan Anda sulit dibaca",
     rTerm3: "Kotak ringkasan (kanan atas)",
     rDef3: "Frekuensi aksi (%) dan jumlah combo untuk seluruh range",
     rTerm4: "Kategori hand (kanan tengah)",
@@ -2218,11 +2166,6 @@ const M = {
       `. Setelah terpasang, ${SPOT_COUNT} Spot belajar dan soal-soal Trainer tersimpan di perangkat Anda, jadi Anda tetap bisa belajar `,
     installBold3: "bahkan di kereta tanpa internet",
     install4: ".",
-    samsung1:
-      "* Saat memasang dari Samsung Internet, browser atau perangkat mungkin memblokir pemasangan karena alasan keamanan. Pemeriksaan ini berasal dari browser, bukan dari aplikasi ini. ",
-    samsungBold: "Buka situs ini di Chrome",
-    samsung2:
-      " dan pemasangan berjalan tanpa blokir; kalau ingin tetap di sini, ikuti petunjuk di kotak dialognya.",
     offlineDataLabel: "Data belajar offline",
     offlineSaved: "Tersimpan — Spot belajar dan Trainer berfungsi tanpa internet",
     offlineSaving: "Menyimpan…",
@@ -2254,7 +2197,7 @@ const M = {
     removeDef:
       "Tekan lama ikonnya lalu hapus, seperti aplikasi lain, dan selesai. Tidak ada yang berjalan di latar belakang, tidak ada yang tertinggal",
     samsungNote2:
-      "* Blokir keamanan di Samsung Internet bukan deteksi malware — browser hanya belum mengenali jenis paket pemasangan ini. Blokir itu tidak muncul kalau Anda memasang dari Chrome.",
+      "* Kami punya catatan peringatan Google Play Protect saat memasang lewat Samsung Internet. Judulnya saja tidak menjelaskan alasan pemblokiran, jadi coba pasang dari Chrome dulu.",
 
     studyTitle: "Saran urutan belajar",
     study1:
@@ -2357,7 +2300,7 @@ const M = {
       "Pemilih node di sepanjang laluan aksi (flop → bet → call → turn…). Klik satu node untuk melihat strategi pada titik itu",
     rTerm2: "Grid 13×13 (kiri)",
     rDef2:
-      "Setiap kotak ialah satu tangan; pembahagian warna di dalamnya menunjukkan kekerapan aksi. 🟥 bet/raise (makin gelap = makin besar pertaruhannya) · 🟩 check/call · kotak malap = di luar range. GTO memainkan tangan yang sama dengan strategi campuran — aksinya dibahagikan mengikut kekerapan supaya corak permainan anda susah dibaca",
+      "Setiap kotak ialah satu tangan; pembahagian warna di dalamnya menunjukkan kekerapan aksi. 🟧→🟪 bet/raise (makin besar makin ungu) · 🟩 check/call · 🟦 fold · kotak malap = di luar range. GTO memainkan tangan yang sama dengan strategi campuran — aksinya dibahagikan mengikut kekerapan supaya corak permainan anda susah dibaca",
     rTerm3: "Kotak ringkasan (kanan atas)",
     rDef3: "Kekerapan aksi (%) dan bilangan combo untuk keseluruhan range",
     rTerm4: "Kategori tangan (kanan tengah)",
@@ -2422,11 +2365,6 @@ const M = {
       `. Selepas dipasang, ${SPOT_COUNT} Spot belajar dan soalan Trainer GTO tersimpan pada peranti anda, jadi anda boleh terus belajar `,
     installBold3: "walaupun dalam LRT tanpa internet",
     install4: ".",
-    samsung1:
-      "* Apabila anda memasang daripada Samsung Internet, pelayar atau peranti anda mungkin menyekatnya atas sebab keselamatan. Pemeriksaan itu datang daripada pelayar, bukan daripada aplikasi ini. ",
-    samsungBold: "Buka laman ini dalam Chrome",
-    samsung2:
-      " dan pemasangan berjalan tanpa sekatan; kalau anda mahu teruskan di sini, ikut arahan dalam kotak dialog itu.",
     offlineDataLabel: "Data belajar luar talian",
     offlineSaved: "Tersimpan — Spot belajar dan Trainer GTO berfungsi tanpa internet",
     offlineSaving: "Sedang menyimpan…",
@@ -2458,7 +2396,7 @@ const M = {
     removeDef:
       "Tekan lama ikonnya lalu padam, seperti aplikasi lain, dan selesai. Tiada apa-apa yang berjalan di latar belakang, tiada apa-apa yang tertinggal",
     samsungNote2:
-      "* Sekatan keselamatan dalam Samsung Internet bukan pengesanan malware — pelayar itu cuma belum mengenali jenis pakej pemasangan ini. Sekatan itu tidak muncul kalau anda memasang daripada Chrome.",
+      "* Kami ada rekod amaran Google Play Protect semasa memasang melalui Samsung Internet. Tajuknya sahaja tidak menerangkan sebab sekatan, jadi cuba pasang daripada Chrome dahulu.",
 
     studyTitle: "Cadangan cara belajar",
     study1:
@@ -2542,7 +2480,7 @@ const M = {
     rTerm1: "ऊपर की एक्शन पट्टी",
     rDef1: "अपने स्पॉट की गणना के बाद, एक्शन क्रम में कोई node चुनकर उसकी रणनीति देखें (flop → bet → call → turn…)। अभ्यास स्पॉट का preview केवल flop की पहली बारी दिखाता है।",
     rTerm2: "13×13 ग्रिड (बाईं ओर)",
-    rDef2: "हर खाने में एक हैंड है। रंगों का बँटवारा एक्शन की आवृत्ति दिखाता है। 🟥 bet/raise (गहरा रंग = बड़ा bet) · 🟩 check/call · धुंधला खाना = range में नहीं है। GTO में एक ही हैंड से अलग-अलग आवृत्ति पर अलग एक्शन किए जा सकते हैं। इसे mixed strategy कहते हैं।",
+    rDef2: "हर खाने में एक हैंड है। रंगों का बँटवारा एक्शन की आवृत्ति दिखाता है। 🟧→🟪 bet/raise (size जितना बड़ा, रंग उतना बैंगनी) · 🟩 check/call · 🟦 fold · धुंधला खाना = range में नहीं है। GTO में एक ही हैंड से अलग-अलग आवृत्ति पर अलग एक्शन किए जा सकते हैं। इसे mixed strategy कहते हैं।",
     rTerm3: "सारांश बॉक्स (ऊपर दाईं ओर)",
     rDef3: "पूरी range में एक्शन की आवृत्ति (%) और combo की संख्या।",
     rTerm4: "हैंड की श्रेणियाँ (बीच में दाईं ओर)",
@@ -2590,9 +2528,6 @@ const M = {
     install3: ` चुनें। इंस्टॉल होने पर ${SPOT_COUNT} अभ्यास स्पॉट और ट्रेनर का डेटा डिवाइस पर सेव हो जाता है। आप `,
     installBold3: "बिना इंटरनेट, मेट्रो में भी",
     install4: " अभ्यास कर सकते हैं।",
-    samsung1: "* Samsung Internet या आपका डिवाइस सुरक्षा कारणों से इंस्टॉल रोक सकता है। यह जाँच ब्राउज़र या डिवाइस करता है। ",
-    samsungBold: "साइट Chrome में खोलकर",
-    samsung2: " इंस्टॉल करने की कोशिश करें। इसी ब्राउज़र में जारी रखना चाहें तो स्क्रीन पर दिए गए विकल्प पढ़कर आगे बढ़ें।",
     offlineDataLabel: "ऑफ़लाइन अभ्यास का डेटा",
     offlineSaved: "सेव है — अभ्यास स्पॉट और ट्रेनर बिना इंटरनेट चलेंगे",
     offlineSaving: "सेव हो रहा है…",
@@ -2616,7 +2551,7 @@ const M = {
     openAfter: ")।",
     removeTerm: "आसानी से हटा सकते हैं",
     removeDef: "दूसरे ऐप की तरह आइकन को देर तक दबाकर हटाएँ। सेव किया गया साइट डेटा हटाना हो तो ब्राउज़र की सेटिंग भी देखें।",
-    samsungNote2: "* Samsung Internet में इंस्टॉल रुकने का कारण ब्राउज़र या डिवाइस की सुरक्षा जाँच हो सकता है। संदेश ध्यान से पढ़ें। ज़रूरत हो तो साइट Chrome में खोलकर कोशिश करें।",
+    samsungNote2: "* Samsung Internet से इंस्टॉल करते समय Google Play Protect की चेतावनी आने का रिकॉर्ड हमारे पास है। शीर्षक से रुकने का कारण पता नहीं चलता, इसलिए पहले Chrome से इंस्टॉल करके देखें।",
     studyTitle: "अभ्यास का सुझाया क्रम",
     study1: `${SPOT_COUNT} अभ्यास स्पॉट क्रम से देखें — ये एक-दूसरे से जुड़ी स्थितियों को समझने में मदद करते हैं`,
     study2: "सोच रहे हैं कि “इस हैंड से कभी check क्यों होता है?” विवरण टेबल में हर एक्शन के EV की तुलना करें।",
@@ -2704,7 +2639,7 @@ const M = {
       "Aksiyon sırası boyunca node seçici (flop → bet → call → turn…). O andaki stratejiyi görmek için bir node'a tıkla",
     rTerm2: "13×13 matris (sol)",
     rDef2:
-      "Her hücre bir eldir; içindeki renk dağılımı aksiyon sıklıklarını gösterir. 🟥 bet/raise (koyu = büyük bet) · 🟩 check/call · soluk hücre = range'de yok. GTO (Oyun Teorisi Optimali) aynı eli karma stratejiyle oynar — aksiyonları sıklığa göre böler, böylece oyun tarzın okunamaz",
+      "Her hücre bir eldir; içindeki renk dağılımı aksiyon sıklıklarını gösterir. 🟧→🟪 bet/raise (büyüdükçe mora kayar) · 🟩 check/call · 🟦 fold · soluk hücre = range'de yok. GTO (Oyun Teorisi Optimali) aynı eli karma stratejiyle oynar — aksiyonları sıklığa göre böler, böylece oyun tarzın okunamaz",
     rTerm3: "Kutucuklar (sağ üst)",
     rDef3: "Tüm range genelinde aksiyon sıklıkları (%) ve combo sayıları",
     rTerm4: "El kategorileri (sağ orta)",
@@ -2766,11 +2701,6 @@ const M = {
       ` seçeneğine dokun. Yüklendikten sonra ${SPOT_COUNT} örnek spot ve GTO Trainer alıştırmaları cihazına kaydedilir, böylece `,
     installBold3: "internetin olmadığı metroda bile",
     install4: " çalışmaya devam edebilirsin.",
-    samsung1:
-      "* Samsung Internet'ten yüklediğinde tarayıcı ya da cihazın güvenlik nedeniyle yüklemeyi engelleyebilir. Bu kontrol bu uygulamadan değil, tarayıcıdan gelir. ",
-    samsungBold: "Siteyi Chrome'da açarsan",
-    samsung2:
-      " engel olmadan yüklenir; burada devam etmek istersen penceredeki adımları izle.",
     offlineDataLabel: "Çevrimdışı çalışma verisi",
     offlineSaved: "Kaydedildi — Örnek spotlar ve GTO Trainer internetsiz çalışır",
     offlineSaving: "Kaydediliyor…",
@@ -2802,7 +2732,7 @@ const M = {
     removeDef:
       "Diğer uygulamalar gibi basılı tutup sil, gider. Arka planda hiçbir şey çalışmaz, geride hiçbir şey kalmaz",
     samsungNote2:
-      "* Samsung Internet'teki güvenlik engeli bir kötü amaçlı yazılım tespiti değildir — tarayıcı bu tür yükleme paketini henüz tanımıyor. Chrome'dan yüklediğinde görünmez.",
+      "* Samsung Internet üzerinden yükleme sırasında Google Play Protect uyarısı çıktığına dair kaydımız var. Başlık tek başına engelin nedenini söylemez; önce Chrome'dan yüklemeyi dene.",
 
     studyTitle: "Önerilen çalışma planı",
     study1:
@@ -2899,7 +2829,7 @@ const M = {
       "Chọn node trong diễn biến hành động (flop → bet → call → turn…). Nhấn vào một node để xem chiến lược tại thời điểm đó",
     rTerm2: "Ma trận 13×13 (bên trái)",
     rDef2:
-      "Mỗi ô là một tay bài; các mảng màu trong ô cho biết tần suất từng hành động. 🟥 bet/raise (tố — càng đậm cược càng lớn) · 🟩 check/call (call = theo) · ô mờ = không có trong range. GTO (chiến lược tối ưu theo lý thuyết trò chơi) chơi cùng một tay bài bằng chiến lược hỗn hợp — chia hành động theo tần suất để đối thủ không đọc được lối chơi của bạn",
+      "Mỗi ô là một tay bài; các mảng màu trong ô cho biết tần suất từng hành động. 🟧→🟪 bet/raise (tố — cược càng lớn càng ngả tím) · 🟩 check/call (call = theo) · 🟦 fold (bỏ bài) · ô mờ = không có trong range. GTO (chiến lược tối ưu theo lý thuyết trò chơi) chơi cùng một tay bài bằng chiến lược hỗn hợp — chia hành động theo tần suất để đối thủ không đọc được lối chơi của bạn",
     rTerm3: "Khung (trên bên phải)",
     rDef3: "Tần suất hành động (%) và số combo trên toàn bộ range",
     rTerm4: "Nhóm tay bài (giữa bên phải)",
@@ -2961,11 +2891,6 @@ const M = {
       `. Sau khi cài, ${SPOT_COUNT} spot mẫu và bài luyện Trainer GTO được lưu trên thiết bị, nên bạn vẫn học tiếp được `,
     installBold3: "ngay cả trên tàu điện ngầm không có mạng",
     install4: ".",
-    samsung1:
-      "* Khi cài từ Samsung Internet, trình duyệt hoặc thiết bị có thể chặn vì lý do bảo mật. Việc chặn này do trình duyệt, không phải do ứng dụng này. ",
-    samsungBold: "Mở trong Chrome",
-    samsung2:
-      " để cài mà không bị chặn; nếu muốn tiếp tục tại đây, hãy làm theo hướng dẫn trong hộp thoại.",
     offlineDataLabel: "Dữ liệu học ngoại tuyến",
     offlineSaved: "Đã lưu — Spot mẫu và Trainer GTO dùng được khi không có mạng",
     offlineSaving: "Đang lưu…",
@@ -2997,7 +2922,7 @@ const M = {
     removeDef:
       "Nhấn giữ rồi xóa như mọi ứng dụng khác là xong. Không có gì chạy ngầm, không để lại gì",
     samsungNote2:
-      "* Việc Samsung Internet chặn vì bảo mật không phải là phát hiện mã độc — chỉ là trình duyệt chưa nhận diện loại gói cài đặt này. Khi cài từ Chrome sẽ không gặp.",
+      "* Chúng tôi có ghi nhận cảnh báo của Google Play Protect khi cài qua Samsung Internet. Chỉ riêng tiêu đề không cho biết vì sao bị chặn, nên hãy thử cài từ Chrome trước.",
 
     studyTitle: "Lộ trình học gợi ý",
     study1:
@@ -3094,7 +3019,7 @@ const M = {
       "Выбор точки в линии розыгрыша (флоп → бет → колл → тёрн…). Нажми на узел, чтобы увидеть стратегию в этой точке",
     rTerm2: "Матрица 13×13 (слева)",
     rDef2:
-      "Каждая ячейка — рука; цветные доли внутри показывают частоты действий. 🟥 бет/рейз (темнее = крупнее бет) · 🟩 чек/колл · тусклая ячейка = рука не входит в диапазон. GTO играет одну и ту же руку смешанной стратегией — делит действия по частотам, чтобы твою игру нельзя было прочитать",
+      "Каждая ячейка — рука; цветные доли внутри показывают частоты действий. 🟧→🟪 бет/рейз (чем крупнее, тем ближе к фиолетовому) · 🟩 чек/колл · 🟦 фолд · тусклая ячейка = рука не входит в диапазон. GTO играет одну и ту же руку смешанной стратегией — делит действия по частотам, чтобы твою игру нельзя было прочитать",
     rTerm3: "Плитки (справа вверху)",
     rDef3: "Частоты действий (%) и число комбо (комбо — одна конкретная комбинация двух карт, всего 1 326) по всему диапазону",
     rTerm4: "Категории рук (справа в центре)",
@@ -3156,11 +3081,6 @@ const M = {
       `. После установки ${ruSpotsNom()} и раздачи GTO-тренажёра хранятся на устройстве, так что заниматься можно `,
     installBold3: "даже в метро без интернета",
     install4: ".",
-    samsung1:
-      "* При установке из Samsung Internet браузер или устройство могут запретить её из соображений безопасности. Эта проверка — от браузера, а не от приложения. ",
-    samsungBold: "Открой сайт в Chrome",
-    samsung2:
-      " — там установка пройдёт без запрета; если хочешь продолжить здесь, следуй подсказкам в окне.",
     offlineDataLabel: "Данные для занятий офлайн",
     offlineSaved: "Сохранено — учебные споты и тренажёр работают без интернета",
     offlineSaving: "Сохранение…",
@@ -3192,7 +3112,7 @@ const M = {
     removeDef:
       "Удерживай значок и удали, как любое приложение, — и его нет. В фоне ничего не работает, ничего не остаётся",
     samsungNote2:
-      "* Запрет в Samsung Internet — не обнаружение вредоносной программы: браузер просто пока не распознаёт такой тип установочного пакета. При установке из Chrome такого запрета нет.",
+      "* У нас есть запись о предупреждении Google Play Защиты при установке из Samsung Internet. Заголовок не объясняет причину блокировки, поэтому сначала попробуй установить из Chrome.",
 
     studyTitle: "Как заниматься",
     study1:
@@ -3289,7 +3209,7 @@ const M = {
       "اختيار نقطة قرار على مسار اللعب (الفلوب ← رهان ← كول ← التيرن…). اضغط نقطة القرار (عقدة في شجرة اللعب — Node) لترى الاستراتيجية عندها",
     rTerm2: "مصفوفة 13×13 (اليمين)",
     rDef2:
-      "كل خلية يد، وتقسيم الألوان داخلها يُظهر تكرار كل قرار. 🟥 الرهان أو الزيادة (رايز) — الأغمق = رهان أكبر · 🟩 التمرير (تشيك) أو المجاراة (كول) · خلية باهتة = يد خارج النطاق. يلعب GTO اليد نفسها باستراتيجية مختلطة — يوزّع القرارات بتكرارات محددة كي لا يُقرأ أسلوبك",
+      "كل خلية يد، وتقسيم الألوان داخلها يُظهر تكرار كل قرار. 🟧→🟪 الرهان أو الزيادة (رايز) — كلما كبر الرهان اقترب اللون من البنفسجي · 🟩 التمرير (تشيك) أو المجاراة (كول) · 🟦 الانسحاب (فولد) · خلية باهتة = يد خارج النطاق. يلعب GTO اليد نفسها باستراتيجية مختلطة — يوزّع القرارات بتكرارات محددة كي لا يُقرأ أسلوبك",
     rTerm3: "المربعات (أعلى اليسار)",
     rDef3: "تكرار كل قرار (%) وعدد التركيبات في النطاق كله (تركيبة = ورقتان محددتان — المجموع 1,326)",
     rTerm4: "تصنيفات الأيدي (يسار الوسط)",
@@ -3351,11 +3271,6 @@ const M = {
       `. بعد التثبيت تُحفظ المواقف التدريبية (${SPOT_COUNT}) وأسئلة «مدرّب GTO» على جهازك، فتواصل التدرّب `,
     installBold3: "حتى في المترو دون إنترنت",
     install4: ".",
-    samsung1:
-      "* عند التثبيت من \u2066Samsung Internet\u2069 قد يمنعه المتصفح أو جهازك لأسباب أمنية. هذا المنع يأتي من المتصفح، لا من هذا التطبيق. ",
-    samsungBold: "افتح الموقع في Chrome",
-    samsung2:
-      " فيُثبَّت دون منع؛ وإن أردت المتابعة هنا فاتبع الإرشادات في النافذة.",
     offlineDataLabel: "بيانات التدريب دون اتصال",
     offlineSaved: "محفوظة — «مواقف تدريبية» و«مدرّب GTO» يعملان دون إنترنت",
     offlineSaving: "جارٍ الحفظ…",
@@ -3387,7 +3302,7 @@ const M = {
     removeDef:
       "اضغط مطوّلًا واحذفه كأي تطبيق آخر فيختفي. لا شيء يعمل في الخلفية، ولا يبقى شيء",
     samsungNote2:
-      "* الحظر الأمني في \u2066Samsung Internet\u2069 ليس اكتشافًا لبرنامج ضار — المتصفح لا يتعرّف بعد على هذا النوع من حزم التثبيت فحسب. لا يظهر عند التثبيت من Chrome.",
+      "* لدينا سجل لتحذير من \u2066Google Play Protect\u2069 أثناء التثبيت عبر \u2066Samsung Internet\u2069. لا يوضّح العنوان وحده سبب الحظر، لذا جرّب التثبيت من \u2066Chrome\u2069 أولًا.",
 
     studyTitle: "خطة تعلّم مقترحة",
     study1:
@@ -3484,7 +3399,7 @@ const M = {
       "Ti permette di spostarti lungo la linea di gioco (flop → puntata → call → turn…). Premi un nodo per vedere la strategia in quel punto",
     rTerm2: "Griglia 13×13 (a sinistra)",
     rDef2:
-      "Ogni cella rappresenta una mano; le proporzioni dei colori indicano la frequenza delle azioni. 🟥 puntata/rilancio (più scuro = importo maggiore) · 🟩 check/call · cella attenuata = mano fuori dal range. La strategia GTO è mista: con la stessa mano alterna le azioni secondo determinate frequenze, per non diventare prevedibile",
+      "Ogni cella rappresenta una mano; le proporzioni dei colori indicano la frequenza delle azioni. 🟧→🟪 puntata/rilancio (più è grande, più tende al viola) · 🟩 check/call · 🟦 fold · cella attenuata = mano fuori dal range. La strategia GTO è mista: con la stessa mano alterna le azioni secondo determinate frequenze, per non diventare prevedibile",
     rTerm3: "Riquadri (in alto a destra)",
     rDef3: "Frequenze delle azioni (%) e numero di combo dell’intero range",
     rTerm4: "Categorie di mani (al centro a destra)",
@@ -3546,11 +3461,6 @@ const M = {
       `. Dopo l’installazione, i ${SPOT_COUNT} esempi e gli esercizi del Trainer GTO restano sul dispositivo, così puoi studiare `,
     installBold3: "anche in metropolitana senza internet",
     install4: ".",
-    samsung1:
-      "* Se installi da Samsung Internet, il browser o il dispositivo può bloccare l’installazione per motivi di sicurezza. Il controllo proviene dal browser, non da questa app. ",
-    samsungBold: "Apri il sito in Chrome",
-    samsung2:
-      " per installarlo senza questo blocco; se preferisci continuare qui, segui le indicazioni della finestra.",
     offlineDataLabel: "Dati per lo studio offline",
     offlineSaved: "Salvati — Esempi e Trainer GTO funzionano senza internet",
     offlineSaving: "Salvataggio…",
@@ -3582,7 +3492,7 @@ const M = {
     removeDef:
       "Tieni premuta l’icona ed elimina l’app, come qualsiasi altra. Nulla resta in esecuzione in background e non rimangono residui",
     samsungNote2:
-      "* Il blocco di sicurezza in Samsung Internet non indica il rilevamento di malware: il browser non riconosce ancora questo tipo di pacchetto di installazione. Il blocco non appare installando da Chrome.",
+      "* Abbiamo registrato un avviso di Google Play Protect durante un’installazione da Samsung Internet. Il titolo da solo non spiega il blocco: prova prima a installare da Chrome.",
 
     studyTitle: "Percorso di studio consigliato",
     study1:
@@ -3664,7 +3574,7 @@ const M = {
     rTerm1: "Górny pasek",
     rDef1: "Pozwala wybrać punkt w linii gry (flop → zakład → sprawdzenie → turn…). Kliknij węzeł, aby zobaczyć strategię w tym miejscu",
     rTerm2: "Macierz 13×13 (po lewej)",
-    rDef2: "Każde pole to ręka, a podział kolorów pokazuje częstotliwości akcji. 🟥 zakład/przebicie (ciemniej = większy zakład) · 🟩 czek/sprawdzenie · przygaszone pole = ręka poza zakresem. W GTO ta sama ręka może korzystać ze strategii mieszanej — akcje są rozłożone według częstotliwości, aby przeciwnik nie mógł odczytać twojego schematu gry",
+    rDef2: "Każde pole to ręka, a podział kolorów pokazuje częstotliwości akcji. 🟧→🟪 zakład/przebicie (im większe, tym bliżej fioletu) · 🟩 czek/sprawdzenie · 🟦 pas · przygaszone pole = ręka poza zakresem. W GTO ta sama ręka może korzystać ze strategii mieszanej — akcje są rozłożone według częstotliwości, aby przeciwnik nie mógł odczytać twojego schematu gry",
     rTerm3: "Kafelki (u góry po prawej)",
     rDef3: "Częstotliwości akcji (%) i liczby kombinacji w całym zakresie",
     rTerm4: "Układy i drawy (po prawej, w środku)",
@@ -3710,9 +3620,6 @@ const M = {
     install3: `. Po instalacji wszystkie przykłady (${SPOT_COUNT}) i ćwiczenia trenera zostają zapisane na urządzeniu, więc możesz się uczyć `,
     installBold3: "nawet w metrze bez internetu",
     install4: ".",
-    samsung1: "* Podczas instalacji w przeglądarce Samsung Internet przeglądarka lub urządzenie może ją zablokować ze względów bezpieczeństwa. Ta kontrola pochodzi z przeglądarki, a nie z tej aplikacji. ",
-    samsungBold: "Otwórz stronę w Chrome",
-    samsung2: ", aby zainstalować ją bez blokady. Jeśli wolisz zostać tutaj, postępuj zgodnie ze wskazówkami w oknie dialogowym.",
     offlineDataLabel: "Materiały do nauki offline",
     offlineSaved: "Zapisano — przykłady i Trener GTO działają bez internetu",
     offlineSaving: "Zapisywanie…",
@@ -3736,7 +3643,7 @@ const M = {
     openAfter: ")",
     removeTerm: "Całkowite odinstalowanie",
     removeDef: "Przytrzymaj ikonę i usuń aplikację tak jak każdą inną. Nic nie działa w tle i nic po niej nie zostaje",
-    samsungNote2: "* Blokada bezpieczeństwa w Samsung Internet nie oznacza wykrycia złośliwego oprogramowania — przeglądarka po prostu nie rozpoznaje jeszcze tego rodzaju pakietu instalacyjnego. Przy instalacji przez Chrome blokada się nie pojawia.",
+    samsungNote2: "* Mamy zapis ostrzeżenia Google Play Protect przy instalacji przez Samsung Internet. Sam tytuł nie mówi, dlaczego instalacja została zablokowana, więc najpierw spróbuj przez Chrome.",
     studyTitle: "Proponowany plan nauki",
     study1: `Przejdź kolejno wszystkie przykłady (${SPOT_COUNT}) — tworzą serię, w której kolejne lekcje rozwijają poprzednie`,
     study2: "Zastanawiasz się, dlaczego ta ręka czasem czeka? Porównaj EV poszczególnych akcji w tabeli szczegółowej",
@@ -3825,7 +3732,7 @@ const M = {
       "เลือกจุดในลำดับการเล่น เช่น ฟลอป → เ⁠ดิ⁠ม⁠พั⁠น → คอล → เทิร์น… คลิก Node เพื่อดูกลยุทธ์ ณ จุดนั้น",
     rTerm2: "ตาราง 13×13 (ซ้าย)",
     rDef2:
-      "แ⁠ต่⁠ล⁠ะช่องแทนมือหนึ่งชนิด สัดส่วนสีในช่องแสดงความถี่ของแ⁠อ็⁠ก⁠ชั⁠น 🟥 เ⁠ดิ⁠ม⁠พั⁠น/เพิ่มเ⁠ดิ⁠ม⁠พั⁠น (สีเข้มขึ้น = ขนาดเ⁠ดิ⁠ม⁠พั⁠นใหญ่ขึ้น) · 🟩 เช็ค/คอล · ช่องสีจาง = ไม่อยู่ในเรนจ์ · GTO ใช้กลยุทธ์ผสมกับมือเดียวกัน โดยแบ่งความถี่ของแ⁠ต่⁠ล⁠ะแ⁠อ็⁠ก⁠ชั⁠นเพื่อไม่ให้อีกฝ่ายอ่านรูปแบบการเล่นได้",
+      "แ⁠ต่⁠ล⁠ะช่องแทนมือหนึ่งชนิด สัดส่วนสีในช่องแสดงความถี่ของแ⁠อ็⁠ก⁠ชั⁠น 🟧→🟪 เ⁠ดิ⁠ม⁠พั⁠น/เพิ่มเ⁠ดิ⁠ม⁠พั⁠น (ยิ่งขนาดใหญ่ยิ่งออกม่วง) · 🟩 เช็ค/คอล · 🟦 การหมอบ · ช่องสีจาง = ไม่อยู่ในเรนจ์ · GTO ใช้กลยุทธ์ผสมกับมือเดียวกัน โดยแบ่งความถี่ของแ⁠ต่⁠ล⁠ะแ⁠อ็⁠ก⁠ชั⁠นเพื่อไม่ให้อีกฝ่ายอ่านรูปแบบการเล่นได้",
     rTerm3: "ช่องแ⁠อ็⁠ก⁠ชั⁠น (ขวาบน)",
     rDef3: "ความถี่ของแ⁠อ็⁠ก⁠ชั⁠น (%) และจำ⁠น⁠ว⁠นค⁠อ⁠ม⁠โ⁠บของทั้งเรนจ์",
     rTerm4: "ประเภทมือ (ขวากลาง)",
@@ -3887,11 +3794,6 @@ const M = {
       ` เมื่อติดตั้งแล้ว สถานการณ์สำหรับศึกษา ${SPOT_COUNT} สถานการณ์และแบบฝึกจะเก็บไว้บนอุ⁠ป⁠ก⁠ร⁠ณ์ จึงศึกษาต่อได้ `,
     installBold3: "แม้อยู่บนรถไฟใต้ดินที่ไม่มีอิ⁠น⁠เ⁠ท⁠อ⁠ร์⁠เ⁠น็⁠ต",
     install4: "",
-    samsung1:
-      "* เมื่อติดตั้งผ่าน Samsung Internet การติดตั้งอาจถูกเ⁠บ⁠ร⁠า⁠ว์⁠เ⁠ซ⁠อ⁠ร์หรืออุ⁠ป⁠ก⁠ร⁠ณ์บล็อกด้วยเหตุผลด้านความปลอดภัย การตรวจสอบนี้มาจากเ⁠บ⁠ร⁠า⁠ว์⁠เ⁠ซ⁠อ⁠ร์ ไม่ใช่แอปนี้ ",
-    samsungBold: "เปิดเว็บไซต์ใน Chrome",
-    samsung2:
-      " เพื่อติดตั้งโดยไม่เจอการบล็อกนี้ ห⁠า⁠กต้⁠อ⁠งการใช้เ⁠บ⁠ร⁠า⁠ว์⁠เ⁠ซ⁠อ⁠ร์เดิม ให้ทำตามคำแนะนำในกล่องโต้ตอบ",
     offlineDataLabel: "ข้อมูลสำหรับศึกษาแบบอ⁠อ⁠ฟ⁠ไ⁠ล⁠น์",
     offlineSaved: "บันทึกแล้ว — สถานการณ์สำหรับศึกษาและแบบฝึกใช้ได้โดยไม่ต้⁠อ⁠งมีอิ⁠น⁠เ⁠ท⁠อ⁠ร์⁠เ⁠น็⁠ต",
     offlineSaving: "กำลังบันทึก…",
@@ -3923,7 +3825,7 @@ const M = {
     removeDef:
       "กดค้างแล้วลบเหมือนแอปทั่วไปก็เอาออกได้ทั้งหมด ไม่มีอะไรทำงานเบื้องหลังหรือหลงเหลืออยู่",
     samsungNote2:
-      "* การบล็อกเพื่อความปลอดภัยใน Samsung Internet ไม่ใช่การตรวจพบมัลแวร์ แต่เป็นเ⁠พ⁠ร⁠า⁠ะเ⁠บ⁠ร⁠า⁠ว์⁠เ⁠ซ⁠อ⁠ร์ยังไม่รู้จักแ⁠พ็⁠ก⁠เ⁠ก⁠จติดตั้งชนิดนี้ ห⁠า⁠กติดตั้งผ่าน Chrome จะไม่พบการบล็อกนี้",
+      "* เรามีบันทึกคำเตือนจาก Google Play Protect ระหว่างติดตั้งผ่าน Samsung Internet หัวข้ออย่างเดียวไม่ได้บ⁠อ⁠กว่าทำไมจึงถูกบล็อก จึงควรลองติดตั้งจาก Chrome ก่อน",
 
     studyTitle: "แนวทางการศึกษา",
     study1:
@@ -4020,7 +3922,7 @@ const M = {
       "Лінія дій у роздачі: флоп → бет → кол → терн… Натисни на вузол, щоб переглянути стратегію в цій точці",
     rTerm2: "Сітка 13×13 ліворуч",
     rDef2:
-      "Кожна клітинка — рука, а частки кольорів у ній показують частоти дій. 🟥 бет/рейз (темніше — більша ставка) · 🟩 чек/кол · затемнена клітинка — рука поза діапазоном. Стратегія GTO змішує дії з тією самою рукою з певними частотами, щоб суперник не міг передбачити твій вибір",
+      "Кожна клітинка — рука, а частки кольорів у ній показують частоти дій. 🟧→🟪 бет/рейз (що більший, то ближче до фіолетового) · 🟩 чек/кол · 🟦 фолд · затемнена клітинка — рука поза діапазоном. Стратегія GTO змішує дії з тією самою рукою з певними частотами, щоб суперник не міг передбачити твій вибір",
     rTerm3: "Плитки праворуч угорі",
     rDef3: "Частоти дій (%) і кількість комбо для всього діапазону",
     rTerm4: "Категорії рук праворуч посередині",
@@ -4082,16 +3984,11 @@ const M = {
       `. Після встановлення на пристрої зберігаються ${ukNumberText(SPOT_COUNT, 0)} ${ukPlural(SPOT_COUNT, { one: "навчальний спот", few: "навчальні споти", many: "навчальних спотів", other: "навчального споту" }, { minimumFractionDigits: 0, maximumFractionDigits: 0 })} і завдання тренажера, тож можна навчатися `,
     installBold3: "навіть у метро без інтернету",
     install4: ".",
-    samsung1:
-      "* Під час установлення через Samsung Internet браузер або пристрій може заблокувати його з міркувань безпеки. Це перевірка браузера, а не цього застосунку. ",
-    samsungBold: "Відкрий сайт у Chrome",
-    samsung2:
-      " — там установлення проходить без цього блокування. Якщо хочеш продовжити тут, дотримуйся підказок у вікні.",
     offlineDataLabel: "Дані для навчання офлайн",
     offlineSaved: "Збережено — навчальні споти й тренажер працюють без інтернету",
     offlineSaving: "Збереження…",
     offlineNotSaved: "Не збережено",
-    offlineSaveBtn: "Зберегти зараз (~2,3 MB)",
+    offlineSaveBtn: "Зберегти зараз (~2,3 МБ)",
     offlineFootnote:
       "Власний розрахунок працює офлайн лише після хоча б одного запуску з інтернетом: рушій солвера завантажується під час першого використання.",
 
@@ -4118,7 +4015,7 @@ const M = {
     removeDef:
       "Натисни й утримуй значок, а потім видали його, як будь-який застосунок. Нічого не залишається й не працює у фоні",
     samsungNote2:
-      "* Блокування в Samsung Internet не означає, що виявлено шкідливе ПЗ: браузер просто ще не розпізнає такий тип інсталяційного пакета. Під час установлення з Chrome цього блокування немає.",
+      "* У нас є запис про попередження Google Play Захисту під час установлення із Samsung Internet. Сам заголовок не пояснює причину блокування, тож спершу спробуй установити з Chrome.",
 
     studyTitle: "Як побудувати навчання",
     study1:

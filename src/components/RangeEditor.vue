@@ -339,6 +339,30 @@ const rangeRegex = new RegExp(
 
 type DraggingMode = "none" | "enabling" | "disabling";
 
+// 엔진(Rust)이 영어로 돌려주는 레인지 의미 오류 → [순서, 수트 표기, 비중] 언어별 문구. 엔진이 돌려준 토큰을 뒤에 붙인다(비중은 숫자로 정리된다: AA:1.50 → 1.5)
+const SEMANTIC_ERRORS: Record<keyof typeof M, readonly [string, string, string]> = {
+  ko: ["레인지는 높은 쪽부터 낮은 쪽 순서로 적어야 합니다: ", "구간 양쪽의 수트 표기(s/o 또는 구체적인 수트)가 같아야 합니다: ", "비중은 0에서 1 사이여야 합니다: "],
+  en: ["Range must go from high to low: ", "Both ends must use the same suit notation (s/o or specific suits): ", "Weight must be between 0 and 1: "],
+  ja: ["レンジは高い方から低い方の順に書いてください: ", "範囲の両端でスートの表記（s/o または具体的なスート）を揃えてください: ", "ウェイトは 0〜1 で入力してください: "],
+  es: ["El rango debe ir de mayor a menor: ", "Ambos extremos deben usar la misma notación de palo (s/o o palos concretos): ", "El peso debe estar entre 0 y 1: "],
+  pt: ["O range deve ir do maior para o menor: ", "As duas pontas devem usar a mesma notação de naipe (s/o ou naipes específicos): ", "O peso deve ficar entre 0 e 1: "],
+  de: ["Die Range muss in absteigender Reihenfolge angegeben werden: ", "Beide Enden müssen dieselbe Farbangabe verwenden (s/o oder konkrete Farben): ", "Das Gewicht muss zwischen 0 und 1 liegen: "],
+  zh: ["范围必须按从高到低的顺序填写：", "两端的花色标记（s/o 或具体花色）必须相同：", "权重必须在 0 到 1 之间："],
+  "zh-hant": ["範圍必須依由高到低的順序填寫：", "兩端的花色標記（s/o 或具體花色）必須相同：", "權重必須介於 0 到 1 之間："],
+  fr: ["La range doit aller du plus haut au plus bas : ", "Les deux bornes doivent utiliser la même notation de couleur (s/o ou couleurs précises) : ", "Le poids doit être compris entre 0 et 1 : "],
+  id: ["Range harus ditulis dari tinggi ke rendah: ", "Kedua ujung harus memakai penulisan suit yang sama (s/o atau suit tertentu): ", "Bobot harus antara 0 dan 1: "],
+  ms: ["Range mesti ditulis daripada tinggi ke rendah: ", "Kedua-dua hujung mesti guna penulisan suit yang sama (s/o atau suit tertentu): ", "Wajaran mesti antara 0 dan 1: "],
+  hi: ["Range ऊँचे से नीचे के क्रम में होनी चाहिए: ", "दोनों सिरों पर Suit लिखने का तरीका एक जैसा होना चाहिए (s/o या तय Suit): ", "वज़न 0 और 1 के बीच होना चाहिए: "],
+  tr: ["Range yüksekten düşüğe yazılmalı: ", "İki uçta da aynı renk gösterimi kullanılmalı (s/o veya belirli renkler): ", "Ağırlık 0 ile 1 arasında olmalı: "],
+  vi: ["Range phải viết từ cao xuống thấp: ", "Hai đầu phải dùng cùng cách ghi chất (s/o hoặc chất cụ thể): ", "Trọng số phải nằm trong khoảng 0 đến 1: "],
+  ru: ["Диапазон нужно писать от старшей руки к младшей: ", "На обоих концах масть должна быть указана одинаково (s/o или конкретные масти): ", "Вес должен быть от 0 до 1: "],
+  ar: ["يجب كتابة النطاق من الأعلى إلى الأدنى: ", "يجب كتابة النقش بالطريقة نفسها في الطرفين (\u2066s/o\u2069 أو نقوش محددة): ", "يجب أن يكون الوزن بين \u20660\u2069 و\u20661\u2069: "],
+  it: ["Il range va scritto dal più alto al più basso: ", "I due estremi devono usare la stessa notazione dei semi (s/o o semi specifici): ", "Il peso deve essere compreso tra 0 e 1: "],
+  pl: ["Zakres trzeba zapisać od najwyższego do najniższego: ", "Oba końce muszą mieć taki sam zapis koloru (s/o lub konkretne kolory): ", "Waga musi mieścić się między 0 a 1: "],
+  th: ["ต้⁠อ⁠งเขียนเรนจ์จากสูงไปต่ำ: ", "ทั้งสองฝั่งต้⁠อ⁠งระบุดอกแบบเดียวกัน (s/o หรือดอกที่เจาะจง): ", "น้ำหนักต้⁠อ⁠งอยู่ระหว่าง 0 ถึง 1: "],
+  uk: ["Діапазон треба записувати від старшої руки до молодшої: ", "На обох кінцях масть має бути вказана однаково (s/o або конкретні масті): ", "Вага має бути від 0 до 1: "],
+};
+
 export default defineComponent({
   components: {
     DbItemPicker,
@@ -396,6 +420,17 @@ export default defineComponent({
       onUpdate();
     };
 
+    const localizeEngineError = (message: string) => {
+      const token = message.slice(message.lastIndexOf(": ") + 2);
+      const [order, suit, weight] = SEMANTIC_ERRORS[i18n.locale];
+      const text = /^Range must be in descending order/.test(message) ? order
+        : /^Suitedness does not match/.test(message) ? suit
+        : /^Invalid weight/.test(message) ? weight
+        : null;
+      if (text === null) return L.value.parseError(token);
+      return text + (i18n.locale === "ar" ? ltrIso(token) : token);
+    };
+
     const onRangeTextChange = () => {
       const trimmed = rangeText.value.replace(trimRegex, "$1").trim();
       const ranges = trimmed.split(",");
@@ -414,7 +449,7 @@ export default defineComponent({
       const errorString = range.from_string(trimmed);
 
       if (errorString) {
-        rangeTextError.value = errorString;
+        rangeTextError.value = localizeEngineError(errorString);
       } else {
         const weights = range.get_weights();
         for (let i = 0; i < 13 * 13; ++i) {

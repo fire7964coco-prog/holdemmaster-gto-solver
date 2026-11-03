@@ -126,6 +126,8 @@ type SolverSetup = {
   /** 턴부터 다시 푸는 길만 온다(미리 계산과 같은 나무) */
   thresholds?: { addAllIn: number; forceAllIn: number; merging: number };
   noRake?: boolean;
+  /** 레이크 조건 판에서 열 때만 온다 · cap = 칩 단위 */
+  rake?: { percent: number; cap: number };
 };
 type PracticeBank = { kind: "practice"; bank: CustomTrainerBank };
 type ReviewTurn = { kind: "review-turn" } & ReviewTurnSeat;
@@ -170,6 +172,10 @@ const applySolverSetup = (setup: SolverSetup) => {
   if (setup.noRake) {
     config.rakePercent = 0;
     config.rakeCap = 0;
+  }
+  if (setup.rake) {
+    config.rakePercent = setup.rake.percent;
+    config.rakeCap = setup.rake.cap;
   }
   config.addedLines = "";
   config.removedLines = "";

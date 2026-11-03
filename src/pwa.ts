@@ -40,7 +40,7 @@ export const pwa = reactive({
   canInstall: false,
   /** iOS 사파리 — 설치 버튼이 없어 «공유 → 홈 화면에 추가» 안내가 필요 */
   isIOS: false,
-  /** 삼성 인터넷 — 설치는 되지만 Play 프로텍트 경고가 뜬다(브라우저 쪽 문제) */
+  /** 삼성 인터넷 — 설치 중 Play 프로텍트 경고가 뜬 기록이 있다(2026-08-15 실기기 1회) */
   isSamsung: false,
   /** 배너 노출 여부 */
   showBanner: false,
@@ -77,10 +77,10 @@ const detectStandalone = () =>
 
 /**
  * 삼성 인터넷 감지.
- * 이 브라우저가 만드는 WebAPK를 Google Play 프로텍트가 신뢰하지 않아
- * 설치할 때 「안전하지 않은 앱 차단됨」 경고가 뜬다 (2026-08-15 실기기 확인).
- * 우리 앱·manifest 문제가 아니고 고칠 방법도 없어서, 크롬으로 열도록 안내한다.
- * 한국은 갤럭시 기본 브라우저라 그냥 두면 설치 시도가 그대로 막힌다.
+ * 2026-08-15 실기기에서 설치 중 Google Play 프로텍트 「안전하지 않은 앱 차단됨」 경고를 봤다.
+ * 경고 전문·분류 사유는 기록이 없어 원인을 단정하지 않는다. 크롬 무경고 시험 기록도 없다.
+ * 그래서 크롬으로 먼저 시도하도록 안내만 한다(MB-507).
+ * 한국은 갤럭시 기본 브라우저라 이 경고를 만나는 사람이 있을 수 있다.
  */
 const detectSamsungInternet = () => /SamsungBrowser/i.test(navigator.userAgent);
 
