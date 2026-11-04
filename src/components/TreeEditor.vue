@@ -254,7 +254,7 @@
 <script lang="ts">
 import { computed, defineComponent, nextTick, ref } from "vue";
 import { useConfigStore } from "../store";
-import { convertBetString, readableLineString } from "../utils";
+import { convertBetString, normalizeBetString, readableLineString } from "../utils";
 import { Spot, SpotRoot, SpotChance, SpotPlayer } from "../result-types";
 import { TreeManager } from "../../pkg/tree/tree";
 
@@ -630,20 +630,20 @@ export default defineComponent({
       config.startingPot,
       config.effectiveStack,
       config.donkOption,
-      convertBetString(config.oopFlopBet),
-      convertBetString(config.oopFlopRaise),
-      convertBetString(config.oopTurnBet),
-      convertBetString(config.oopTurnRaise),
-      config.donkOption ? convertBetString(config.oopTurnDonk) : "",
-      convertBetString(config.oopRiverBet),
-      convertBetString(config.oopRiverRaise),
-      config.donkOption ? convertBetString(config.oopRiverDonk) : "",
-      convertBetString(config.ipFlopBet),
-      convertBetString(config.ipFlopRaise),
-      convertBetString(config.ipTurnBet),
-      convertBetString(config.ipTurnRaise),
-      convertBetString(config.ipRiverBet),
-      convertBetString(config.ipRiverRaise),
+      convertBetString(normalizeBetString(config.oopFlopBet, false)),
+      convertBetString(normalizeBetString(config.oopFlopRaise, true)),
+      convertBetString(normalizeBetString(config.oopTurnBet, false)),
+      convertBetString(normalizeBetString(config.oopTurnRaise, true)),
+      config.donkOption ? convertBetString(normalizeBetString(config.oopTurnDonk, false)) : "",
+      convertBetString(normalizeBetString(config.oopRiverBet, false)),
+      convertBetString(normalizeBetString(config.oopRiverRaise, true)),
+      config.donkOption ? convertBetString(normalizeBetString(config.oopRiverDonk, false)) : "",
+      convertBetString(normalizeBetString(config.ipFlopBet, false)),
+      convertBetString(normalizeBetString(config.ipFlopRaise, true)),
+      convertBetString(normalizeBetString(config.ipTurnBet, false)),
+      convertBetString(normalizeBetString(config.ipTurnRaise, true)),
+      convertBetString(normalizeBetString(config.ipRiverBet, false)),
+      convertBetString(normalizeBetString(config.ipRiverRaise, true)),
       config.addAllInThreshold / 100,
       config.forceAllInThreshold / 100,
       config.mergingThreshold / 100,

@@ -41,7 +41,9 @@ const authCookieOptions = () => {
     path: "/",
     sameSite: "lax" as const,
     maxAge: 400 * 24 * 60 * 60, // @supabase/ssr 기본값과 같다
-    ...(shared ? { domain: SHARED_DOMAIN, secure: true } : {}),
+    ...(shared ? { domain: SHARED_DOMAIN } : {}),
+    // 쿠키를 공유하지 않는 판도 https면 Secure — 로그인 쿠키가 http로 새지 않게(11-04 보안 검토)
+    secure: window.location.protocol === "https:",
   };
 };
 

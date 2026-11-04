@@ -21,7 +21,7 @@ export const MEMORY_FAILURE_LABELS: Record<string, MemoryFailureLabels> = {
   ja: {
     title: "メモリ不足のため計算できませんでした",
     compress: "この端末では計算に必要なメモリを確保できませんでした。「16ビット整数」に切り替えると、必要なメモリがほぼ半分になります。",
-    reduce: "この端末では計算に必要なメモリを確保できませんでした。同じ設定でやり直しても同じ結果になります。ベットサイズの数やレンジを減らして必要なメモリを下げてから、もう一度計算してください。",
+    reduce: "この端末では計算に必要なメモリを確保できませんでした。同じ設定でやり直しても同じ結果になります。ベットサイズの数やレンジを減らして必要なメモリ量を下げてから、もう一度計算してください。",
     retryCompress: "16ビット整数で再計算",
   },
   es: {
@@ -58,7 +58,7 @@ export const MEMORY_FAILURE_LABELS: Record<string, MemoryFailureLabels> = {
     title: "Mémoire insuffisante pour calculer",
     compress: "Cet appareil n'a pas pu fournir la mémoire nécessaire à ce calcul. En passant à « Entier 16 bits », la mémoire nécessaire baisse de près de moitié.",
     reduce: "Cet appareil n'a pas pu fournir la mémoire nécessaire à ce calcul. Un nouvel essai avec les mêmes réglages échouera de la même façon. Utilise moins de tailles de mise ou des ranges plus étroites pour réduire la mémoire nécessaire, puis relance le calcul.",
-    retryCompress: "Recalculer en entier 16 bits",
+    retryCompress: "Recalculer en mode « Entier 16 bits »",
   },
   id: {
     title: "Memori tidak cukup untuk menghitung",
@@ -69,13 +69,13 @@ export const MEMORY_FAILURE_LABELS: Record<string, MemoryFailureLabels> = {
   ms: {
     title: "Memori tidak mencukupi untuk mengira",
     compress: "Peranti ini tidak dapat menyediakan memori yang diperlukan oleh pengiraan ini. Tukar kepada «Integer 16-bit» untuk mengurangkan memori yang diperlukan hampir separuh.",
-    reduce: "Peranti ini tidak dapat menyediakan memori yang diperlukan oleh pengiraan ini. Cuba semula dengan tetapan yang sama akan gagal dengan cara yang sama. Kurangkan bilangan saiz pertaruhan atau sempitkan range untuk mengurangkan memori yang diperlukan, kemudian kira semula.",
+    reduce: "Peranti ini tidak dapat menyediakan memori yang diperlukan oleh pengiraan ini. Jika anda mencuba semula dengan tetapan yang sama, pengiraan itu tetap akan gagal. Kurangkan bilangan saiz pertaruhan atau sempitkan range untuk mengurangkan memori yang diperlukan, kemudian kira semula.",
     retryCompress: "Kira semula dengan integer 16-bit",
   },
   hi: {
     title: "गणना के लिए पर्याप्त मेमोरी नहीं है",
     compress: "यह डिवाइस इस गणना के लिए ज़रूरी मेमोरी नहीं दे सका। «16-bit integer» पर बदलने से ज़रूरी मेमोरी लगभग आधी हो जाती है।",
-    reduce: "यह डिवाइस इस गणना के लिए ज़रूरी मेमोरी नहीं दे सका। उन्हीं सेटिंग्स से दोबारा कोशिश करने पर भी यही होगा। बेट साइज़ कम करें या रेंज छोटी करें ताकि ज़रूरी मेमोरी घटे, फिर दोबारा गणना करें।",
+    reduce: "यह डिवाइस इस गणना के लिए ज़रूरी मेमोरी नहीं दे सका। उन्हीं सेटिंग्स से दोबारा कोशिश करने पर भी यही होगा। बेट साइज़ की संख्या कम करें या रेंज छोटी करें ताकि ज़रूरी मेमोरी घटे, फिर दोबारा गणना करें।",
     retryCompress: "16-bit integer से फिर गणना करें",
   },
   tr: {
@@ -93,14 +93,14 @@ export const MEMORY_FAILURE_LABELS: Record<string, MemoryFailureLabels> = {
   ru: {
     title: "Не хватает памяти для расчёта",
     compress: "Это устройство не смогло выделить память, нужную для этого расчёта. Если переключиться на «16-бит целое», нужной памяти станет почти вдвое меньше.",
-    reduce: "Это устройство не смогло выделить память, нужную для этого расчёта. Повтор с теми же настройками закончится так же. Уменьши число сайзингов ставок или сузь диапазоны, чтобы снизить нужную память, и запусти расчёт снова.",
-    retryCompress: "Пересчитать в 16-бит целых",
+    reduce: "Это устройство не смогло выделить память, нужную для этого расчёта. Повтор с теми же настройками закончится так же. Уменьши число сайзингов или сузь диапазоны, чтобы уменьшить требуемый объём памяти, и запусти расчёт снова.",
+    retryCompress: "Пересчитать в режиме «16-бит целое»",
   },
   ar: {
     title: "لا توجد ذاكرة كافية للحساب",
     compress: `تعذّر على هذا الجهاز توفير الذاكرة التي يحتاجها هذا الحساب. التبديل إلى «${ltrIso("16-bit")} صحيح» يخفّض الذاكرة المطلوبة إلى النصف تقريبًا.`,
     reduce: "تعذّر على هذا الجهاز توفير الذاكرة التي يحتاجها هذا الحساب. إعادة المحاولة بالإعدادات نفسها ستفشل بالطريقة نفسها. قلّل عدد أحجام الرهان أو ضيّق النطاقات لخفض الذاكرة المطلوبة، ثم أعد الحساب.",
-    retryCompress: `إعادة الحساب بـ ${ltrIso("16-bit")} صحيح`,
+    retryCompress: `إعادة الحساب بخيار «${ltrIso("16-bit")} صحيح»`,
   },
   it: {
     title: "Memoria insufficiente per il calcolo",
@@ -111,8 +111,8 @@ export const MEMORY_FAILURE_LABELS: Record<string, MemoryFailureLabels> = {
   pl: {
     title: "Za mało pamięci do obliczeń",
     compress: "To urządzenie nie mogło przydzielić pamięci potrzebnej do tych obliczeń. Po przełączeniu na „16-bit int” potrzeba prawie o połowę mniej pamięci.",
-    reduce: "To urządzenie nie mogło przydzielić pamięci potrzebnej do tych obliczeń. Ponowna próba z tymi samymi ustawieniami skończy się tak samo. Użyj mniej rozmiarów zakładów albo węższych range'ów, żeby zmniejszyć potrzebną pamięć, i policz ponownie.",
-    retryCompress: "Policz ponownie z 16-bit int",
+    reduce: "To urządzenie nie mogło przydzielić pamięci potrzebnej do tych obliczeń. Ponowna próba z tymi samymi ustawieniami skończy się tak samo. Użyj mniej rozmiarów zakładów albo węższych zakresów, żeby zmniejszyć potrzebną pamięć, i policz ponownie.",
+    retryCompress: "Oblicz ponownie w trybie „16-bit int”",
   },
   th: {
     title: "หน่วยความจำไม่พอสำหรับการคำนวณ",
@@ -123,7 +123,7 @@ export const MEMORY_FAILURE_LABELS: Record<string, MemoryFailureLabels> = {
   uk: {
     title: "Не вистачає пам’яті для розрахунку",
     compress: "Цей пристрій не зміг виділити пам’ять, потрібну для цього розрахунку. Якщо перемкнутися на «16-бітні цілі числа», потрібної пам’яті стане майже вдвічі менше.",
-    reduce: "Цей пристрій не зміг виділити пам’ять, потрібну для цього розрахунку. Повтор із тими самими налаштуваннями завершиться так само. Зменш кількість розмірів ставок або звузь діапазони, щоб знизити потрібну пам’ять, і запусти розрахунок знову.",
+    reduce: "Цей пристрій не зміг виділити пам’ять, потрібну для цього розрахунку. Повтор із тими самими налаштуваннями завершиться так само. Зменш кількість розмірів ставок або звузь діапазони, щоб зменшити потрібний обсяг пам’яті, і запусти розрахунок знову.",
     retryCompress: "Перерахувати з 16-бітними цілими числами",
   },
 };

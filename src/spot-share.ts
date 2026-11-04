@@ -3,6 +3,7 @@
 import { useStore, useConfigStore } from "./store";
 import {
   cardText,
+  normalizeBetString,
   parseCardString,
   readableLineString,
   INVALID_LINE_STRING,
@@ -169,7 +170,8 @@ export const applySpotFromUrl = (): boolean => {
       rakePercent: Number(spot.rp) || 0,
       rakeCap: Number(spot.rc) || 0,
       donkOption: !!spot.d,
-      bets: betFields.map((_, idx) => String(spot.bt?.[idx] ?? "")),
+      // 파일 불러오기와 같이 정리된 꼴로 — 띄어쓰기·대문자·끝 쉼표가 그대로 엔진에 갔다
+      bets: betFields.map((f, idx) => normalizeBetString(String(spot.bt?.[idx] ?? ""), f.endsWith("Raise"))),
       addAllInThreshold: Number(spot.th?.[0] ?? 150),
       forceAllInThreshold: Number(spot.th?.[1] ?? 20),
       mergingThreshold: Number(spot.th?.[2] ?? 10),

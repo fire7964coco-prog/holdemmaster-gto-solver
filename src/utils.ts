@@ -317,6 +317,12 @@ export const sanitizeBetString = (
   return { s: sanitized, valid: true };
 };
 
+/** 엔진·트리에 넘길 꼴 — 정리되면 정리된 문자열, 아니면 원문(설정 검사가 오류로 막는다) */
+export const normalizeBetString = (s: string, is_raise: boolean): string => {
+  const sanitized = sanitizeBetString(s, is_raise);
+  return sanitized.valid ? sanitized.s : s;
+};
+
 export const convertBetString = (s: string): string => {
   if (s === "") return s;
   return s

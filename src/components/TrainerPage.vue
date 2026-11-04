@@ -69,6 +69,7 @@
           type="button"
           data-testid="trainer-rng-mode"
           :title="R.modeHelp"
+          :disabled="!!evaluation"
           :class="
             'button-base filter-btn ms-0 md:ms-2 ' +
             (rngMode === 'off' ? 'bg-neutral-700 hover:bg-neutral-600' : 'button-blue')
@@ -657,8 +658,10 @@ import {
   dailyState,
   dailyCardDate,
   dailyShareText,
+  dropStaleDaily,
   loadDailyState,
   makeDailyQuestion,
+  readDailyResult,
   recordDaily,
   takeDailyStartRequest,
   todayKey,
@@ -3045,7 +3048,9 @@ export default defineComponent({
           !isAcceptable(item) &&
           // «모든 플랍» 기록은 /study/ 앱의 복습에서 푼다(자료가 그쪽에 있다)
           !isFlopAttempt(item) &&
-          (category.value === "all" || item.category === category.value)
+          (category.value === "all" || item.category === category.value) &&
+          // 지금 문제 은행으로 되살릴 수 없는 기록은 뺀다 — 복습에서 빈 문제 칸이 떴다
+          restoreQuestion(item) !== null
         );
       });
     });
@@ -3078,6 +3083,8 @@ export default defineComponent({
     const rngMode = ref<RngMode>(rngEnabled ? readRngMode() : "off");
     const rngRoll = ref(rollRng());
     const cycleRngMode = () => {
+      // 채점 뒤에 바꾸면 같은 답의 판정이 뒤집혔다 — 다음 문제부터 바꾼다
+      if (evaluation.value) return;
       rngMode.value = nextRngMode(rngMode.value);
     };
     const rngActive = computed(
@@ -3143,6 +3150,7 @@ export default defineComponent({
       rngRoll.value = rollRng();
       if (!bank.value) return;
       if (dailyMode.value) {
+        dropStaleDaily();
         question.value = makeDailyQuestion(bank.value);
       } else if (reviewMode.value && reviewAttempts.value.length) {
         const attempt = reviewAttempts.value[reviewIndex % reviewAttempts.value.length];
@@ -3206,15 +3214,18 @@ export default defineComponent({
         return;
       }
       if (!(await isLocalDataOpen())) return;
+      // 저장된 결과가 «오늘» 것일 때만, 그 날짜로 — 자정을 넘긴 탭이 어제 손실을 오늘 순위로 올렸다
+      const stored = readDailyResult();
+      if (!stored || stored.date !== todayKey()) return;
       // 오늘의 문제 스팟은 날짜로 정해지므로 여기서 되찾는다 (팟 대비 % 계산용)
       const dailyQuestion = makeDailyQuestion(bank.value);
       if (!dailyQuestion) return;
       const ok = await submitDailyResult(
-        todayKey(),
-        dailyState.lossBb,
+        stored.date,
+        stored.lossBb,
         lossPercentOfPot({
           presetId: dailyQuestion.presetId,
-          evLossBb: dailyState.lossBb,
+          evLossBb: stored.lossBb,
         }),
         user.id
       );
@@ -3232,6 +3243,7 @@ export default defineComponent({
 
     // 하단 바와 데스크톱 버튼이 같이 쓴다. 오늘의 문제를 끝냈으면 일반 연습으로 돌아간다.
     const goNext = () => {
+      dropStaleDaily();
       if (dailyMode.value && dailyState.done) toggleDaily();
       else nextQuestion();
       scrollToId("trainer-top");

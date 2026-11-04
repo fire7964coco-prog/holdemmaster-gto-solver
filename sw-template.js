@@ -69,6 +69,9 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+// webpack 출력 이름 [contenthash].js·.css·.wasm(.module.wasm) — 20자리 16진수
+const HASHED = /\/[0-9a-f]{20}(?:\.module)?\.(?:js|css|wasm)$/;
+
 const isCacheable = (res) =>
   res && res.ok && (res.type === "basic" || res.type === "default") && res.status === 200;
 
@@ -81,6 +84,9 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
   // Vercel 플랫폼 경로는 저장하지 않는다 — 아래 «캐시 우선»에 걸리면 옛 스크립트를 계속 주게 된다.
   if (url.pathname.startsWith("/_vercel/")) return;
+  // 앱이 «새로 받아라»(no-store·reload)로 부른 요청은 저장본을 주지 않는다 — 새 앱의 /review-turn-ready.json·셸 고치기의 "/"가
+  // 다음 배포까지 옛 값으로 남던 것(11-04 보안 검토). 나중에 같은 출처 /api/가 생겨도 사용자별 응답을 저장하지 않는다.
+  if (req.cache === "no-store" || req.cache === "reload" || url.pathname.startsWith("/api/")) return;
 
   // ① 문서 요청: 네트워크 우선 → 실패 시 캐시된 셸
   if (req.mode === "navigate") {
@@ -105,17 +111,39 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // ② 그 외 같은 출처 자원: 캐시 우선 (파일명에 해시가 박혀 있어 안전)
+  // ② 파일명에 내용 해시가 박힌 번들([contenthash].js 등): 캐시 우선 (내용이 바뀌면 이름이 바뀐다)
+  if (HASHED.test(url.pathname)) {
+    event.respondWith(
+      (async () => {
+        const cached = await caches.match(req);
+        if (cached) return cached;
+        const res = await fetch(req);
+        if (isCacheable(res)) {
+          const cache = await caches.open(CACHE);
+          cache.put(req, res.clone());
+        }
+        return res;
+      })()
+    );
+    return;
+  }
+
+  // ③ 그 밖(trainer-decisions.json·preset-results·manifest·아이콘 등 이름이 고정된 파일): 네트워크 우선 → 실패 시 캐시
+  // 캐시 우선이면 같은 이름으로 새로 배포한 자료가 캐시 이름이 바뀌기 전까지 옛 것으로 남았다
   event.respondWith(
     (async () => {
-      const cached = await caches.match(req);
-      if (cached) return cached;
-      const res = await fetch(req);
-      if (isCacheable(res)) {
-        const cache = await caches.open(CACHE);
-        cache.put(req, res.clone());
+      try {
+        const res = await fetch(req);
+        if (isCacheable(res)) {
+          const cache = await caches.open(CACHE);
+          cache.put(req, res.clone());
+        }
+        return res;
+      } catch (e) {
+        const cached = await caches.match(req);
+        if (cached) return cached;
+        throw e;
       }
-      return res;
     })()
   );
 });

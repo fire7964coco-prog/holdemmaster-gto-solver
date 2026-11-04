@@ -3,7 +3,7 @@
     <div class="flex flex-wrap items-center gap-2">
       <h2 class="text-base font-semibold text-brand">{{ L.tab }}</h2>
       <!-- RNG 연습: GTO 트레이너와 같은 칩·같은 기억값 (끔 → High → Low) -->
-      <button v-if="rngEnabled" type="button" data-testid="custom-trainer-rng-mode" :title="G.modeHelp" :class="['custom-button', rngMode === 'off' ? 'bg-neutral-700' : 'button-blue']" @click="cycleRngMode">
+      <button v-if="rngEnabled" type="button" data-testid="custom-trainer-rng-mode" :title="G.modeHelp" :disabled="!!evaluation" :class="['custom-button disabled:opacity-40', rngMode === 'off' ? 'bg-neutral-700' : 'button-blue']" @click="cycleRngMode">
         {{ G.mode[rngMode] }}
       </button>
       <button v-if="bank?.origin" type="button" data-testid="custom-trainer-back-review" class="custom-button ms-auto bg-neutral-700" @click="backToReview">
@@ -202,7 +202,8 @@ export default defineComponent({
     const rngEnabled = trainerRngEnabled();
     const rngMode = ref<RngMode>(rngEnabled ? readRngMode() : "off");
     const rngRoll = ref(rollRng());
-    const cycleRngMode = () => { rngMode.value = nextRngMode(rngMode.value); };
+    // 채점 뒤에 바꾸면 같은 답의 판정이 뒤집혔다 — 다음 문제부터 바꾼다
+    const cycleRngMode = () => { if (evaluation.value) return; rngMode.value = nextRngMode(rngMode.value); };
     const rngActive = computed(() => rngMode.value !== "off" && !!question.value);
     const rngBandList = computed(() => {
       const mode = rngMode.value;

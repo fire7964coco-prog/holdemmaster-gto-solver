@@ -19,7 +19,7 @@ export const failureKind = (error: unknown): FailureKind => {
   if (/SOLVER_WORKER_INIT_TIMEOUT/.test(text)) return "init_timeout";
   if (/SOLVER_OUT_OF_MEMORY/.test(text)) return "memory";
   // 메모리를 못 얻었다(기기·브라우저 사정) — 같은 계산을 다시 해도 또 난다
-  if (/out of memory|allocation failed|could not allocate|cannot allocate|failed to grow|unable to grow|Memory\.grow|maximum memory|Array buffer allocation|OOM/i.test(text)) return "memory";
+  if (/out of memory|allocation failed|could not allocate|cannot allocate|failed to grow|unable to grow|Memory\.grow|maximum memory|Array buffer allocation/i.test(text) || /\bOOM\b/.test(text)) return "memory";
   // 엔진이 잘못된 칸을 읽었다 — 앱 쪽 결함
   if (/memory access out of bounds/i.test(text)) return "oob";
   if (/unreachable|panicked|RuntimeError/i.test(text)) return "crash";

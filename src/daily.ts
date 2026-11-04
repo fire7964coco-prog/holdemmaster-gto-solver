@@ -91,6 +91,25 @@ const writeValue = (key: string, value: string) => {
   }
 };
 
+/** 기록된 오늘의 문제 결과 — 날짜가 붙어 있어 «어제 것»을 가려낼 수 있다 */
+export const readDailyResult = (): { date: string; lossBb: number } | null => {
+  try {
+    const raw = localStorage.getItem(KEY_RESULT);
+    const result = raw ? JSON.parse(raw) : null;
+    return result && typeof result.date === "string" ? result : null;
+  } catch {
+    return null;
+  }
+};
+
+/** 자정을 넘긴 탭 — 화면의 «풀었음»이 어제 것이면 내린다(올리지는 않는다 · 관문은 loadDailyState 몫) */
+export const dropStaleDaily = () => {
+  if (dailyState.done && readDailyResult()?.date !== todayKey()) {
+    dailyState.done = false;
+    dailyState.lossBb = 0;
+  }
+};
+
 /** 오늘의 문제 — 날짜가 같으면 누구에게나 같은 문제가 나온다 */
 export const makeDailyQuestion = (bank: TrainerBank): TrainerQuestion | null =>
   makeTrainerQuestion(bank, "all", seededRandom(seedFrom(todayKey())));
@@ -99,13 +118,7 @@ export const makeDailyQuestion = (bank: TrainerBank): TrainerQuestion | null =>
 export const loadDailyState = async () => {
   if (!(await isLocalDataOpen())) return;
   const today = todayKey();
-  let result: { date: string; lossBb: number } | null = null;
-  try {
-    const raw = localStorage.getItem(KEY_RESULT);
-    result = raw ? JSON.parse(raw) : null;
-  } catch {
-    result = null;
-  }
+  const result = readDailyResult();
   dailyState.done = result?.date === today;
   dailyState.lossBb = dailyState.done ? result?.lossBb ?? 0 : 0;
   dailyState.streak = readNumber(KEY_STREAK);
@@ -132,7 +145,13 @@ export const loadDailyState = async () => {
 export const recordDaily = async (lossBb: number) => {
   if (!(await isLocalDataOpen())) return;
   const today = todayKey();
-  if (dailyState.done) return;
+  // 화면 상태가 아니라 저장된 결과의 날짜로 — 자정을 넘긴 탭은 어제 «풀었음»이 남아 오늘 기록이 막혔다
+  const stored = readDailyResult();
+  if (stored?.date === today) {
+    dailyState.done = true;
+    dailyState.lossBb = stored.lossBb;
+    return;
+  }
 
   const last = (() => {
     try {

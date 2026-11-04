@@ -33,7 +33,8 @@ export const MAIN_SITE_CONFIG: MainSite = {
   // `Holdem_Project/lib/supabase/cookie-name.ts`와 반드시 같게.
   authCookie: "sb-holdemmaster-auth-token",
   sharedCookieDomain: ".holdemmaster.com",
-  noticeHrefHosts: [],
+  // 공지 링크는 본체·솔버 주소만(11-04 보안 검토 — 자료 서버가 털려도 공지로 낚시 링크를 달 수 없게)
+  noticeHrefHosts: ["www.holdemmaster.com", "holdemmaster.com", "solver.holdemmaster.com"],
   noticeBlockedWords: [],
   community: true,
   languagePicker: false, // 본체가 언어별 랜딩에서 «?lang=xx»를 붙여 보낸다 — 그 언어에 페깅(NavBar)

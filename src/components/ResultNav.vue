@@ -923,6 +923,23 @@ export default defineComponent({
 
       // start processing
       context.emit("update:is-locked", true);
+      try {
+        await selectSpotLocked(spotIndex, needSplice, fromDeal);
+      } catch (error) {
+        // 실패해도 잠금은 푼다 — 안 풀면 결과 화면 이동이 영영 막혔다 (성공 때는 trigger-update가 푼다)
+        context.emit("update:is-locked", false);
+        // 새 트리로 worker를 바꾼 정상 취소는 알리지 않는다(ResultViewer와 같은 기준) · 그 밖은 오류 기록으로
+        if ((error as Error)?.message === "SOLVER_WORKER_REPLACED") return;
+        throw error;
+      }
+    };
+
+    const selectSpotLocked = async (
+      spotIndex: number,
+      needSplice: boolean,
+      fromDeal: boolean
+    ) => {
+      if (!handler) throw new Error("null handler");
 
       // avoid unnecessary update of refs
       selectedSpotIndexTmp = selectedSpotIndex.value;

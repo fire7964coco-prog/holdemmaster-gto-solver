@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { sanitizeBetString } from "./utils";
+import { normalizeBetString, sanitizeBetString } from "./utils";
 import { SPOT_BET_SIZES } from "./preflop-spots";
 
 export type NavView = "solver" | "results";
@@ -32,20 +32,20 @@ export const saveConfigTmp = () => {
     rakePercent: config.rakePercent,
     rakeCap: config.rakeCap,
     donkOption: config.donkOption,
-    oopFlopBet: config.oopFlopBet,
-    oopFlopRaise: config.oopFlopRaise,
-    oopTurnBet: config.oopTurnBet,
-    oopTurnRaise: config.oopTurnRaise,
-    oopTurnDonk: config.oopTurnDonk,
-    oopRiverBet: config.oopRiverBet,
-    oopRiverRaise: config.oopRiverRaise,
-    oopRiverDonk: config.oopRiverDonk,
-    ipFlopBet: config.ipFlopBet,
-    ipFlopRaise: config.ipFlopRaise,
-    ipTurnBet: config.ipTurnBet,
-    ipTurnRaise: config.ipTurnRaise,
-    ipRiverBet: config.ipRiverBet,
-    ipRiverRaise: config.ipRiverRaise,
+    oopFlopBet: normalizeBetString(config.oopFlopBet, false),
+    oopFlopRaise: normalizeBetString(config.oopFlopRaise, true),
+    oopTurnBet: normalizeBetString(config.oopTurnBet, false),
+    oopTurnRaise: normalizeBetString(config.oopTurnRaise, true),
+    oopTurnDonk: normalizeBetString(config.oopTurnDonk, false),
+    oopRiverBet: normalizeBetString(config.oopRiverBet, false),
+    oopRiverRaise: normalizeBetString(config.oopRiverRaise, true),
+    oopRiverDonk: normalizeBetString(config.oopRiverDonk, false),
+    ipFlopBet: normalizeBetString(config.ipFlopBet, false),
+    ipFlopRaise: normalizeBetString(config.ipFlopRaise, true),
+    ipTurnBet: normalizeBetString(config.ipTurnBet, false),
+    ipTurnRaise: normalizeBetString(config.ipTurnRaise, true),
+    ipRiverBet: normalizeBetString(config.ipRiverBet, false),
+    ipRiverRaise: normalizeBetString(config.ipRiverRaise, true),
     addAllInThreshold: config.addAllInThreshold,
     forceAllInThreshold: config.forceAllInThreshold,
     mergingThreshold: config.mergingThreshold,
