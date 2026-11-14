@@ -29,7 +29,7 @@
           {{ reviewMeta }}
         </p>
         <div class="review-settings" v-if="spot">
-          <p v-if="spot.id.startsWith('limp-')" class="review-limp-note" data-testid="review-limp-note">
+          <p v-if="spot.id.startsWith('limp-') && limpNoteShown" class="review-limp-note" data-testid="review-limp-note">
             {{ L.limpNote }}
           </p>
           <div class="review-group">
@@ -400,7 +400,7 @@ import {
 } from "vue";
 import { i18n, localizeNumber, plCountText, arLabelIso, ltrIso } from "../i18n";
 import { M, IT_REVIEW_ACTION_BUTTONS, PL_REVIEW_ACTION_BUTTONS, TH_REVIEW_ACTION_BUTTONS } from "../hand-review-labels";
-import { SPOT_UNIT_SCALE } from "../preflop-spots";
+import { SPOT_UNIT_SCALE, limpHrcEnabled } from "../preflop-spots";
 import { applyPerm, handIndex } from "../review/cards";
 import { ActualAction, ActionMatch, parseAction } from "../review/actions";
 import { buildRiverInput } from "../review/river-input";
@@ -1004,6 +1004,8 @@ code === "EV_MISSING"
       delete (window as Window & { __review?: typeof exposed }).__review;
     });
     return {
+      // 림프 HRC 판이 켜지면 «근사 레인지» 안내 줄을 뺀다(새 앱과 같은 스위치 · 같이 켤 것)
+      limpNoteShown: !limpHrcEnabled(),
       plCountText,
       isAr: computed(() => i18n.locale === "ar"),
       reviewMeta,

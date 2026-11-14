@@ -96,7 +96,7 @@ import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import { useStore, useConfigStore, SideView } from "../store";
 import { applySpotFromUrl } from "../spot-share";
 import { viewFromUrl } from "../pwa";
-import { trackFeatureOpen } from "../usage-analytics";
+import { trackFeatureOpen, trackCount } from "../usage-analytics";
 // 빌드 분기 — 트레이너 없는 단독 빌드에서는 스텁이 들어온다 (webpack alias, src/features/ 참조)
 import { TrainerPage, PresetsPage, bootstrapAccount, takeLoginReturnView } from "@features";
 import { HandReviewPage, handReviewLabels, FEATURE_TRAINER } from "@features"; // R2_REVIEW_ONLY
@@ -482,6 +482,7 @@ export default defineComponent({
     void bootstrapAccount().then((returned) => {
       // 저장 목록 화면에서 로그인했으면 그 화면으로, 아니면 트레이너로
       // /study/ 앱에서 시작한 로그인 — 복귀 표시는 그 앱이 꺼낸다
+      if (returned) trackCount("login"); // /study/에서 시작한 로그인도 인증 코드는 여기서 받는다
       if (returned && isStudyLoginReturn()) {
         location.replace("/study/?login=1");
         return;

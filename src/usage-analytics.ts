@@ -8,6 +8,7 @@
  */
 import { inject, track } from "@vercel/analytics";
 import { i18n } from "./i18n";
+import { countUsage, setupUsageDb } from "./usage-db";
 
 export type UsageFeature =
   | "custom"
@@ -44,6 +45,7 @@ const cleanUrl = (raw: string, entryView: string | null) => {
 };
 
 export const setupAnalytics = () => {
+  setupUsageDb();
   try {
     // App.vue가 마운트하며 주소에서 ?view=를 지우므로, 첫 페이지뷰에 쓸 값을 먼저 잡아 둔다
     let entryView = new URLSearchParams(location.search).get("view");
@@ -79,6 +81,8 @@ export const setupAnalytics = () => {
 };
 
 const send = (name: string, data: Record<string, string>) => {
+  // 우리 DB에는 «이벤트:기능» 횟수만(usage-db.ts) — Vercel과 같은 이름이라 두 통계를 대조할 수 있다
+  countUsage(data.feature ? `${name}:${data.feature}` : name);
   try {
     track(name, data);
   } catch {
@@ -107,6 +111,19 @@ export const trackFeatureOpen = (view: string) => {
   const feature = FEATURE_OF_VIEW[view];
   if (!feature || alreadyOpened(feature)) return;
   send("feature_open", { feature, locale: i18n.locale });
+};
+
+/** 기능 화면 안의 갈래(오늘의 문제·내 스팟) — 우리 DB에만 적는다(Vercel 이벤트 값은 그대로) · 세션당 1회 */
+const subOpened = new Set<string>();
+export const trackSubFeatureOpen = (feature: "daily" | "my_spots") => {
+  if (subOpened.has(feature)) return;
+  subOpened.add(feature);
+  countUsage(`feature_open:${feature}`);
+};
+
+/** 횟수만 세는 것 — 우리 DB에만 적는다. 내용(문제·정답·계정)은 보내지 않는다 */
+export const trackCount = (name: "trainer_answer" | "login") => {
+  countUsage(name);
 };
 
 export const trackCalcStart = (feature: UsageFeature) => {
