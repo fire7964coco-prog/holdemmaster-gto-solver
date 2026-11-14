@@ -15,6 +15,7 @@ import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { claimLocalData, TrainerAttempt } from "./db";
 import { i18n, pick } from "./i18n";
 import { MAIN_SITE_CONFIG } from "./main-site";
+import { trackLoginStart } from "./usage-analytics";
 
 declare const __SUPABASE_URL__: string;
 declare const __SUPABASE_ANON_KEY__: string;
@@ -371,6 +372,7 @@ export const signIn = async (provider: LoginProvider, purpose?: "feedback") => {
     "ميزة الحساب غير متاحة في هذا الإصدار", "La funzione account non è disponibile in questa build", "Funkcja konta jest niedostępna w tej wersji",
     "รุ่นนี้ไม่เปิดใช้งานบัญชีผู้ใช้",
     "У цій версії облікові записи вимкнено"));
+  trackLoginStart(provider); // 이용 기록: 방식만(돌아와서 login:<방식>으로 짝짓는다)
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {

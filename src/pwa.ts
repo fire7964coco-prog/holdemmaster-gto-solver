@@ -11,6 +11,7 @@
  */
 import { reactive } from "vue";
 import type { SideView } from "./store";
+import { trackInstall } from "./usage-analytics";
 
 /* 빌드 분기 — 단독 빌드에는 교육예제·트레이너가 없다.
  * ⚠ @features를 import하지 않고 전역 상수를 직접 읽는 이유: @features(트레이너 빌드)가
@@ -147,6 +148,13 @@ export const promptInstall = async () => {
   deferredPrompt = null;
   pwa.canInstall = false;
   pwa.showBanner = false;
+  trackInstall("prompt");
+  // 설치 창의 결과는 기다리지 않고 받아 적기만 한다(appinstalled와 겹치면 한 번만 센다)
+  Promise.resolve(event.userChoice)
+    .then((choice) => {
+      if ((choice as { outcome?: string } | null)?.outcome === "accepted") trackInstall("accept");
+    })
+    .catch(() => undefined);
   await event.prompt();
 };
 
@@ -259,6 +267,7 @@ export const setupPwa = () => {
   });
 
   window.addEventListener("appinstalled", () => {
+    trackInstall("accept");
     writeValue(KEY_INSTALLED, "1");
     pwa.showBanner = false;
     pwa.canInstall = false;

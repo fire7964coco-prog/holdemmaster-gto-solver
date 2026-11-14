@@ -101,6 +101,7 @@
                 placement="bottom"
                 :delay="[200, 0]"
                 :interactive="true"
+                :on-shown="helpShown('bet_size')"
               >
                 <QuestionMarkCircleIcon class="inline w-5 h-5" />
                 <div class="inline-block ms-0.5 text-sm underline">
@@ -566,6 +567,7 @@
                   trigger="mouseenter click"
                   :delay="[200, 0]"
                   :interactive="true"
+                  :on-shown="helpShown('add_allin')"
                 >
                   <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
                   <template #content>
@@ -600,6 +602,7 @@
                   trigger="mouseenter click"
                   :delay="[200, 0]"
                   :interactive="true"
+                  :on-shown="helpShown('force_allin')"
                 >
                   <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
                   <template #content>
@@ -645,6 +648,7 @@
                   trigger="mouseenter click"
                   :delay="[200, 0]"
                   :interactive="true"
+                  :on-shown="helpShown('merging')"
                 >
                   <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
                   <template #content>
@@ -824,6 +828,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/20/solid";
 import { i18n, pick, localizeNumber, ruPlural, plPlural, autoIso, ukNumberText, ukPlural } from "../i18n";
 import { VARIANT_TEXT } from "../variant";
 import { betErrorText } from "../bet-error-labels";
+import { trackHelpOpen, trackInputError } from "../usage-analytics";
 
 const M = {
   ko: {
@@ -2595,6 +2600,17 @@ export default defineComponent({
       return errors;
     });
 
+    // 이용 기록: 오류 안내가 새로 뜬 순간만(타이핑마다가 아니라 없다 → 있다로 바뀔 때) · 칸 종류 이름만
+    const watchInputError = (bad: () => boolean, field: () => string) =>
+      watch(bad, (isBad) => { if (isBad) trackInputError(field()); }, { immediate: true });
+    watchInputError(() => errorBasics.value.length > 0, () =>
+      config.rakePercent < 0 || config.rakePercent > 100 || config.rakeCap < 0 || config.rakeCap > 3 * MAX_AMOUNT ? "rake" : "pot_stack");
+    watchInputError(() => errorOop.value.length > 0 || errorIp.value.length > 0, () => "bet_size");
+    watchInputError(() => errorMisc.value.length > 0, () => "threshold");
+    watchInputError(() => errorLines.value.length > 0, () => "tree_lines");
+    // 물음표 풀이를 연 순간(주제 이름만 · 탭 세션 1회)
+    const helpShown = (topic: string) => () => trackHelpOpen(topic);
+
     const isInputValid = computed(
       () =>
         errorBasics.value.length === 0 &&
@@ -2778,6 +2794,7 @@ export default defineComponent({
       warningMisc,
       errorLines,
       isInputValid,
+      helpShown,
       clearConfig,
       oopToIp,
       ipToOop,

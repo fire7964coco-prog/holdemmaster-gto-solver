@@ -144,6 +144,7 @@ import { RangeManager } from "../../pkg/range/range";
 import { i18n, ltrIso, arLabelIso, numberLocaleTag, plNumberText } from "../i18n";
 
 import DbItemPicker from "./DbItemPicker.vue";
+import { trackInputError } from "../usage-analytics";
 
 const M = {
   ko: {
@@ -385,6 +386,8 @@ export default defineComponent({
     const rangeStoreRaw = config.rangeRaw[props.player];
     const rangeText = ref("");
     const rangeTextError = ref("");
+    // 이용 기록: 레인지 글자 오류 안내가 새로 뜬 순간만(문구·입력 글자는 보내지 않는다)
+    watch(() => rangeTextError.value !== "", (bad) => { if (bad) trackInputError("range"); });
     const weight = ref(100);
     const numCombos = ref(0);
     const activeCell = ref<{ row: number; col: number } | null>(null);

@@ -69,6 +69,7 @@
         trigger="mouseenter click"
         :delay="[200, 0]"
         :interactive="true"
+        :on-shown="helpShown('precision')"
       >
         <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
         <template #content>
@@ -133,6 +134,7 @@
         trigger="mouseenter click"
         :delay="[200, 0]"
         :interactive="true"
+        :on-shown="helpShown('target')"
       >
         <QuestionMarkCircleIcon class="w-5 h-5 text-neutral-400" />
         <template #content>
@@ -273,7 +275,7 @@ import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { init, handler, onWorkerFailure, terminate } from "../global-worker";
 import { clearSolverRetry, reportMemoryFailure, reportSolverError } from "../errors";
 import { encodeSpotUrl, InvalidSpotLinesError } from "../spot-share";
-import { trackCalcStart, trackCalcDone, trackCalcFail, trackShare } from "../usage-analytics";
+import { trackCalcConfigStart, trackCalcStart, trackCalcDone, trackCalcFail, trackHelpOpen, trackInputError, trackShare } from "../usage-analytics";
 import { failureKind, failureReason } from "../solver-failure";
 import { MEMORY_FAILURE_LABELS } from "../solver-failure-labels";
 import { beginFeedbackSolve, recordFeedbackSolve } from "../solver-feedback"; // F1_FEEDBACK_ONLY
@@ -1766,6 +1768,42 @@ const checkConfig = (
   return null;
 };
 
+/*
+ * 이용 기록용 — 값은 밖으로 보내지 않고 usage-analytics가 구간 이름으로 바꾼다.
+ * configErrorField = checkConfig가 막은 칸의 종류(같은 순서로 본다) · 문구는 쓰지 않는다.
+ */
+const configErrorField = (config: ReturnType<typeof useConfigStore>) => {
+  if (config.board.length < 3) return "board";
+  if (!(config.startingPot > 0 && config.startingPot <= MAX_AMOUNT && config.startingPot % 1 === 0) ||
+    !(config.effectiveStack > 0 && config.effectiveStack <= MAX_AMOUNT && config.effectiveStack % 1 === 0)) return "pot_stack";
+  if (config.rakePercent < 0 || config.rakePercent > 100 || config.rakeCap < 0) return "rake";
+  const bets = [
+    config.oopFlopBetSanitized, config.oopFlopRaiseSanitized, config.oopTurnBetSanitized, config.oopTurnRaiseSanitized,
+    config.oopRiverBetSanitized, config.oopRiverRaiseSanitized, config.ipFlopBetSanitized, config.ipFlopRaiseSanitized,
+    config.ipTurnBetSanitized, config.ipTurnRaiseSanitized, config.ipRiverBetSanitized, config.ipRiverRaiseSanitized,
+    ...(config.donkOption ? [config.oopTurnDonkSanitized, config.oopRiverDonkSanitized] : []),
+  ];
+  if (bets.some((bet) => !bet.valid)) return "bet_size";
+  if (config.addAllInThreshold < 0 || config.forceAllInThreshold < 0 || config.mergingThreshold < 0) return "threshold";
+  if (config.expectedBoardLength > 0 && config.board.length !== config.expectedBoardLength) return "board";
+  return "tree_lines";
+};
+/** 레인지의 콤보 비중 합 ÷ 1326 (%) */
+const rangeWeightPct = (raw: Float32Array) => {
+  let sum = 0;
+  for (let i = 0; i < raw.length; i++) sum += raw[i];
+  return raw.length ? (sum / raw.length) * 100 : NaN;
+};
+/** 베팅 사이즈 칸에 적힌 크기 개수 합(덩크는 켰을 때만) */
+const countBetSizes = (saved: ReturnType<typeof useSavedConfigStore>) => {
+  const fields = [
+    saved.oopFlopBet, saved.oopFlopRaise, saved.oopTurnBet, saved.oopTurnRaise, saved.oopRiverBet, saved.oopRiverRaise,
+    saved.ipFlopBet, saved.ipFlopRaise, saved.ipTurnBet, saved.ipTurnRaise, saved.ipRiverBet, saved.ipRiverRaise,
+    ...(saved.donkOption ? [saved.oopTurnDonk, saved.oopRiverDonk] : []),
+  ];
+  return fields.reduce((n, s) => n + s.split(/[\s,]+/).filter(Boolean).length, 0);
+};
+
 type TreeStatusState =
   | { type: "notLoaded" }
   | { type: "building" }
@@ -1970,6 +2008,7 @@ export default defineComponent({
 
       const configError = checkConfig(config);
       if (configError !== null) {
+        trackInputError(configErrorField(config));
         treeStatusState.value = { type: "error", message: configError };
         if (config.board.length < 3) emit("board-required", configError);
         return false;
@@ -2062,6 +2101,17 @@ export default defineComponent({
       } else if (!canRun.value) return;
       beginFeedbackSolve(); // F1_FEEDBACK_ONLY
       closeCalcFailed("interrupted");
+      // 설정 구간(이용 기록) — 값은 구간 이름으로만 · 완료·실패 때 같은 값으로 다시 적는다
+      trackCalcConfigStart(() => ({
+        boardCards: savedConfig.board.length,
+        effectiveStack: savedConfig.effectiveStack,
+        startingPot: savedConfig.startingPot,
+        memoryBytes: memoryUsageSelected.value,
+        rangePct: (rangeWeightPct(savedConfig.rangeRaw[0]) + rangeWeightPct(savedConfig.rangeRaw[1])) / 2,
+        targetPct: targetExploitability.value,
+        singleThread: isSingleThread.value,
+        betSizes: countBetSizes(savedConfig),
+      }));
       trackCalcStart("custom");
       calcOpen = true;
       clearSolverRetry();
@@ -2354,6 +2404,7 @@ export default defineComponent({
       store,
       lockStore,
       lockLabels,
+      helpShown: (topic: string) => () => trackHelpOpen(topic), // 물음표 풀이를 연 순간(이용 기록 · 주제 이름만)
       L,
       isAr: computed(() => i18n.locale === "ar"),
       UNITS,

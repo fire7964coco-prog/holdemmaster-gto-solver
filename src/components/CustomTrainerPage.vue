@@ -115,7 +115,7 @@ import { customTrainerState, customLossLimits, classifyCustomTrainerAnswer, make
 import type { CustomTrainerBank, CustomTrainerQuestion, CustomTrainerAttempt } from "../custom-trainer";
 import { listCustomTrainerBanks, deleteCustomTrainerBank, getCustomTrainerAttempts, addCustomTrainerAttempt } from "../custom-trainer-db";
 import { evaluateTrainerAction, trainerActionLabel, trainerCardPair } from "../trainer";
-import { trackSubFeatureOpen, trackCount } from "../usage-analytics";
+import { trackSubFeatureOpen, trackTrainerAnswer } from "../usage-analytics";
 import type { TrainerEvaluation } from "../trainer";
 import { M, ruChipLabel, plChipLabel, ukChipLabel } from "../custom-trainer-labels";
 import { classifyRngAnswer, nextRngMode, readRngMode, rngAction, rngBands, rollRng, trainerRngEnabled } from "../trainer-rng";
@@ -355,7 +355,7 @@ export default defineComponent({
       const selected = bank.value;
       const result = evaluateTrainerAction(current, selectedAction);
       evaluation.value = result;
-      trackCount("trainer_answer");
+      trackTrainerAnswer(verdictKind.value === "best" ? "best" : verdictKind.value === "good" ? "good" : "miss", "my_spots");
       saving.value = true;
       error.value = "";
       try {

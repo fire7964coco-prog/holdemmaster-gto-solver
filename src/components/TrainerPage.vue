@@ -667,7 +667,7 @@ import {
   todayKey,
 } from "../daily";
 import { canShareCard, drawDailyCard, saveCard, shareCard } from "../share-card";
-import { trackShare, trackSubFeatureOpen, trackCount } from "../usage-analytics";
+import { trackShare, trackSharedOpen, trackSubFeatureOpen, trackTrainerAnswer } from "../usage-analytics";
 import { fetchLeaderboard, submitDailyResult, Leaderboard } from "../leaderboard";
 import {
   claimLocalData,
@@ -3175,7 +3175,13 @@ export default defineComponent({
       // 답을 고른 순간의 모드로 기록한다 — 저장을 기다리는 사이 오늘의 문제로 넘어가면
       // 일반 문제 답이 오늘의 첫 기록으로 남았다(Q2-03)
       const answeredDaily = dailyMode.value;
-      trackCount("trainer_answer");
+      const rng = rngResult.value;
+      trackTrainerAnswer(
+        rng
+          ? rng.verdict === "best" ? "best" : rng.verdict === "good" ? "good" : "miss"
+          : result.evLossBb <= limits.value.bestBb ? "best" : result.evLossBb <= limits.value.goodBb ? "good" : "miss",
+        answeredDaily ? "daily" : question.value.category
+      );
       await addTrainerAttempt({
         clientId: newClientId(),
         timestamp: Date.now(),
@@ -3417,6 +3423,7 @@ export default defineComponent({
         attempts.value = await getTrainerAttempts();
         if (startDaily) dailyMode.value = true;
         if (startDaily) trackSubFeatureOpen("daily");
+        if (startDaily) trackSharedOpen("trainer"); // 첫 주소가 공유 문구 링크(?daily=1)였을 때만 센다
         nextQuestion();
       } catch (error) {
         loadError.value = error instanceof Error ? error.message : String(error);

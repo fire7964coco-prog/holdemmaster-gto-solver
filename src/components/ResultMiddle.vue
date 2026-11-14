@@ -197,6 +197,7 @@ import { computed, defineComponent, reactive, ref, toRefs, watch } from "vue";
 import { capitalize } from "../utils";
 import * as Types from "../result-types";
 import { i18n, ltrIso } from "../i18n";
+import { trackResultTab } from "../usage-analytics";
 
 // display-only label maps (internal mode values remain in English)
 const M = {
@@ -786,7 +787,9 @@ export default defineComponent({
       context.emit("update:display-options", displayOptions);
     }
 
+    // 사용자가 보기 단추를 눌렀을 때만(자동 전환은 위 watch) — 이용 기록은 보기 이름만
     const updateDisplayMode = (displayMode: Types.DisplayMode) => {
+      trackResultTab(displayMode);
       if (displayMode !== "chance") {
         displayModeOld = displayMode;
       }

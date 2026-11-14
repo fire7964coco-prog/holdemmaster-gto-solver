@@ -124,6 +124,7 @@ import { mainSiteUrl } from "../outbound";
 import { BRAND_NAME, IS_SOLO } from "../brand";
 import { MAIN_SITE_CONFIG } from "../main-site";
 import { i18n, setLocale } from "../i18n";
+import { trackLocaleSwitch } from "../usage-analytics";
 import { navResults } from "../nav-labels";
 import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 import { openFeedback } from "../solver-feedback"; // F1_FEEDBACK_ONLY
@@ -331,8 +332,10 @@ export default defineComponent({
         value === "pl" ||
         value === "th" ||
         value === "uk"
-      )
+      ) {
+        if (value !== i18n.locale) trackLocaleSwitch(value);
         setLocale(value);
+      }
     };
     return {
       store: useStore(),

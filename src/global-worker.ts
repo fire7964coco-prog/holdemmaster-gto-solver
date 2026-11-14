@@ -1,5 +1,6 @@
 import * as Comlink from "comlink";
 import type { WorkerApi, Handler, SolverMode } from "./worker";
+import { trackEngineLoad } from "./usage-analytics";
 
 const INIT_TIMEOUT_MS = 30_000;
 
@@ -24,6 +25,7 @@ export const terminate = () => {
 export const init = async (numThreads: number, forceSingleThread = false): Promise<SolverMode> => {
   terminate();
 
+  const startedAt = performance.now(); // 이용 기록: 엔진 준비 시간(구간만)
   const worker = new Worker(new URL("./worker.ts", import.meta.url), {
     type: "module",
   });
@@ -88,6 +90,7 @@ export const init = async (numThreads: number, forceSingleThread = false): Promi
   try {
     const remote = await guard(proxy.initHandler(numThreads, forceSingleThread));
     const mode = await guard(remote.mode);
+    trackEngineLoad(performance.now() - startedAt);
     // The Comlink handler lives on a MessagePort: worker errors alone do not reject
     // its pending calls. Guard every call, without any calculation time limit.
     handler = new Proxy(remote, {

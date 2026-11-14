@@ -4,7 +4,7 @@ import { localizeNumber, decimalMark, pctText } from "./i18n";
 import App from "./components/App.vue";
 import { setupPwa } from "./pwa";
 import { setupErrorCapture } from "./errors";
-import { setupAnalytics } from "./usage-analytics";
+import { setupAnalytics, trackAppLoad } from "./usage-analytics";
 import "./index.css";
 import "tippy.js/dist/tippy.css";
 
@@ -21,6 +21,7 @@ app.config.globalProperties.$d = decimalMark;
 // 퍼센트 표기 — tr만 «%35», 나머지는 «35%» 그대로 (튀르키예어화 확정표 §2-2)
 app.config.globalProperties.$pct = pctText;
 app.use(createPinia()).mount("#app");
+trackAppLoad(); // 첫 화면까지 걸린 시간(탭 세션 1회)
 
 // 서비스워커 등록 + 설치 배너 조건 감시 (앱 마운트 뒤에 붙인다)
 setupPwa();
