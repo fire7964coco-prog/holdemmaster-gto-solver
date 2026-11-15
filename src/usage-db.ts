@@ -234,9 +234,24 @@ const screenKey = () => {
  * 경로가 보일 때만 blog · solver_landing · tool로 나눈다. 경로 원문은 저장하지 않는다.
  */
 const MAIN_SITE_HOST = /(^|\.)holdemmaster\.com$/;
+/**
+ * 링크에 붙인 출처 꼬리표 ?from=<값>(본체 MB-593) — 허용 목록만 · 목록 밖은 tagged_other(원문은 버린다).
+ * 앱이 주소를 정리하기 전에 읽어 둔다. 메신저·유튜브처럼 referrer가 지워지는 길을 direct와 구분하려는 것.
+ */
+const FROM_TAGS = ["yt", "kakao", "telegram", "discord", "x", "reddit", "blog", "solver_landing", "tool"];
+const fromTag = (() => {
+  try {
+    const raw = new URLSearchParams(location.search).get("from");
+    if (raw === null) return null;
+    return FROM_TAGS.includes(raw) ? raw : "tagged_other";
+  } catch {
+    return null;
+  }
+})();
 const entryFromKey = () => {
   const params = new URLSearchParams(location.search);
   if (params.has("spot") || params.get("daily") === "1") return "entry_from:shared";
+  if (fromTag) return `entry_from:${fromTag}`;
   if (!refHost) return "entry_from:direct";
   if (!MAIN_SITE_HOST.test(refHost)) return "entry_from:external";
   const segments = new URL(document.referrer).pathname.split("/").filter(Boolean);

@@ -234,6 +234,8 @@ export const trackLoginStart = (provider: string) => {
       // 저장소를 못 쓰면 돌아와서 unknown으로 센다
     }
     countUsage(`login_start:${method}`);
+    // 로그인을 누른 그 순간의 화면(본체 MB-592 ①) — 탭 세션 1회
+    if (underSessionCap("login_from")) countUsage(`login_from:${lastView}`);
   } catch {
     // 수집 실패는 앱과 무관하다
   }

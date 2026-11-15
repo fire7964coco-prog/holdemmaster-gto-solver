@@ -214,7 +214,11 @@ export const sanitizeBetString = (
   const trimmed = s.trim();
   if (trimmed === "") return { s: "", valid: true };
 
-  const split = trimmed.split(",").flatMap((s) => s.trim().split(" "));
+  // 흔한 변형은 그대로 받는다(본체 MB-592 ③): «33%»·«33 %» · 전각 쉼표·세미콜론 · 여러 칸 띄어쓰기·탭
+  const split = trimmed
+    .replace(/\s*[%％]/g, "")
+    .split(/[,，、;；]/)
+    .flatMap((s) => s.trim().split(/\s+/));
   const elements = split.map((s) => s.toLowerCase());
 
   if (elements[elements.length - 1] === "") {

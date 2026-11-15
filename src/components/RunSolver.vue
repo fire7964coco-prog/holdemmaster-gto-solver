@@ -1786,7 +1786,9 @@ const configErrorField = (config: ReturnType<typeof useConfigStore>) => {
   if (bets.some((bet) => !bet.valid)) return "bet_size";
   if (config.addAllInThreshold < 0 || config.forceAllInThreshold < 0 || config.mergingThreshold < 0) return "threshold";
   if (config.expectedBoardLength > 0 && config.board.length !== config.expectedBoardLength) return "board";
-  return "tree_lines";
+  // 여기까지 온 것은 checkConfig의 마지막 두 갈래뿐이다 — 잘못된 라인 / 그 밖의 손상된 설정(본체 MB-592 ②)
+  const lines = `${config.addedLines},${config.removedLines}`.split(",").filter(Boolean).map(readableLineString);
+  return lines.includes(ROOT_LINE_STRING) || lines.includes(INVALID_LINE_STRING) ? "tree_lines" : "config_broken";
 };
 /** 레인지의 콤보 비중 합 ÷ 1326 (%) */
 const rangeWeightPct = (raw: Float32Array) => {
@@ -2057,6 +2059,7 @@ export default defineComponent({
         );
 
         if (errorString) {
+          trackInputError("tree_build"); // 입력 검사는 통과했는데 엔진이 나무를 못 만든 경우
           treeStatusState.value = { type: "error", message: errorString };
           terminate();
           return false;

@@ -511,8 +511,8 @@ export default defineComponent({
         // 넘겨받는 길은 다 받은 뒤에 주소를 지운다(study-handoff.ts)
         if (handoff) void receiveStudyHandoff(handoff);
         else history.replaceState(null, "", location.pathname);
-      } else if (new URLSearchParams(location.search).has("lang")) {
-        // ?lang=은 i18n.ts가 이미 읽어 저장했다 — 주소만 정리
+      } else if (["lang", "from"].some((name) => new URLSearchParams(location.search).has(name))) {
+        // ?lang=은 i18n.ts가, ?from=(출처 꼬리표)은 usage-db.ts가 이미 읽었다 — 주소만 정리(즐겨찾기·공유에 꼬리표가 남지 않게)
         history.replaceState(null, "", location.pathname);
       }
     }

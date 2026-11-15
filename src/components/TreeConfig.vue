@@ -2602,12 +2602,19 @@ export default defineComponent({
 
     // 이용 기록: 오류 안내가 새로 뜬 순간만(타이핑마다가 아니라 없다 → 있다로 바뀔 때) · 칸 종류 이름만
     const watchInputError = (bad: () => boolean, field: () => string) =>
-      watch(bad, (isBad) => { if (isBad) trackInputError(field()); }, { immediate: true });
+      watch(bad, (isBad, _was, onCleanup) => {
+        if (!isBad) return;
+        // 칸을 비우고 다시 적는 순간의 깜빡임은 세지 않는다 — 2초 넘게 남은 오류만(본체 MB-592 ③)
+        const timer = setTimeout(() => { if (bad()) trackInputError(field()); }, 2000);
+        onCleanup(() => clearTimeout(timer));
+      }, { immediate: true });
     watchInputError(() => errorBasics.value.length > 0, () =>
       config.rakePercent < 0 || config.rakePercent > 100 || config.rakeCap < 0 || config.rakeCap > 3 * MAX_AMOUNT ? "rake" : "pot_stack");
     watchInputError(() => errorOop.value.length > 0 || errorIp.value.length > 0, () => "bet_size");
     watchInputError(() => errorMisc.value.length > 0, () => "threshold");
-    watchInputError(() => errorLines.value.length > 0, () => "tree_lines");
+    watchInputError(() => errorLines.value.length > 0, () =>
+      [...addedLinesArray.value, ...removedLinesArray.value].some((line) => line === ROOT_LINE_STRING || line === INVALID_LINE_STRING)
+        ? "tree_lines" : "config_broken");
     // 물음표 풀이를 연 순간(주제 이름만 · 탭 세션 1회)
     const helpShown = (topic: string) => () => trackHelpOpen(topic);
 
