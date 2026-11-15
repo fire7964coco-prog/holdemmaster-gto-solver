@@ -102,10 +102,22 @@
     <div class="panel mt-4" data-w2="features">
       <!-- 본문 폭이 48rem이라 4열은 «데스크톱 솔 / 버 수준»처럼 어색하게 끊긴다 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-        <div v-for="f in L.features" :key="f.title">
+        <!-- 첫 카드(«무료»)에만 안내 한 줄 + 강조색 얇은 테두리 — 문구가 없는 언어·판은 예전 그대로 -->
+        <div
+          v-for="(f, i) in L.features"
+          :key="f.title"
+          :class="i === 0 && freeNote ? 'free-card sm:col-span-2' : ''"
+          :data-w2="i === 0 && freeNote ? 'free-card' : undefined"
+        >
           <div class="text-sm font-semibold text-neutral-100">{{ f.title }}</div>
           <div class="mt-1 text-[0.8125rem] leading-relaxed text-neutral-500">
             {{ f.desc }}
+          </div>
+          <div
+            v-if="i === 0 && freeNote"
+            class="mt-1.5 text-[0.8125rem] leading-relaxed text-neutral-300"
+          >
+            {{ freeNote }}
           </div>
         </div>
         <div data-w2="lock-feature">
@@ -196,6 +208,7 @@ import { useStore } from "../store";
 import { mainSiteUrl } from "../outbound";
 import { i18n } from "../i18n";
 import { VARIANT_TEXT } from "../variant";
+import { supportNote } from "../support-note";
 
 const M = {
   ko: {
@@ -1135,6 +1148,7 @@ export default defineComponent({
 
     return {
       isAr: computed(() => i18n.locale === "ar"), sentenceGap,
+      freeNote: computed(() => supportNote("card")),
       store,
       openDaily,
       dailyState,
@@ -1153,6 +1167,11 @@ export default defineComponent({
 <style scoped>
 .home-intro {
   @apply rounded-lg border border-neutral-700 bg-surface-1 p-4 md:p-5;
+}
+/* «무료» 카드 — 앱 강조색의 얇은 테두리 한 줄(깜빡임·배경색 없음) */
+.free-card {
+  @apply rounded-md px-3 py-2.5;
+  border: 1px solid rgb(var(--c-brand) / 0.55);
 }
 .app-home h1 {
   text-wrap: balance;

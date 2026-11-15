@@ -53,6 +53,15 @@
     </button>
   </div>
 
+  <!-- 계산이 끝난 뒤에만 · 작은 글씨 한 줄 · 테두리 없음 -->
+  <div
+    v-if="store.isSolverFinished && shareNote"
+    class="my-1 text-[0.8125rem] text-neutral-300"
+    data-testid="share-support-note"
+  >
+    {{ shareNote }}
+  </div>
+
   <div v-if="shareError" class="my-1 text-sm text-orange-400">
     {{ shareError }}
   </div>
@@ -275,6 +284,7 @@ import { computed, defineComponent, onUnmounted, ref, watch } from "vue";
 import { init, handler, onWorkerFailure, terminate } from "../global-worker";
 import { clearSolverRetry, reportMemoryFailure, reportSolverError } from "../errors";
 import { encodeSpotUrl, InvalidSpotLinesError } from "../spot-share";
+import { supportNote } from "../support-note";
 import { trackCalcConfigStart, trackCalcStart, trackCalcDone, trackCalcFail, trackHelpOpen, trackInputError, trackShare } from "../usage-analytics";
 import { failureKind, failureReason } from "../solver-failure";
 import { MEMORY_FAILURE_LABELS } from "../solver-failure-labels";
@@ -2418,6 +2428,7 @@ export default defineComponent({
       targetExploitability,
       shareCopied,
       shareError,
+      shareNote: computed(() => supportNote("share")),
       copySpotUrl,
       maxIterations,
       isTreeBuilding,

@@ -37,6 +37,7 @@
               <button type="button" class="feedback-text-button" :disabled="busy" @click="cancelLogin">{{ L.nicknameCancel }}</button>
             </div>
             <template v-else>
+              <p v-if="togetherNote" data-feedback-together class="feedback-together">{{ togetherNote }}</p>
               <fieldset class="feedback-rating">
                 <legend>{{ L.ratingLabel }}</legend>
                 <div class="feedback-stars">
@@ -119,6 +120,7 @@ import {
   getFeedbackContext, postFeedback, loadFeedbackDraft, saveFeedbackDraft,
   clearFeedbackDraft, feedbackLandingUrl, type FeedbackDraft,
 } from "../solver-feedback";
+import { supportNote } from "../support-note";
 
 // Verbatim value from the main-site review config (LINK_PATTERN)
 // (same value in lib/participation-config.ts). Final validation belongs to the API.
@@ -458,7 +460,7 @@ export default defineComponent({
     onBeforeUnmount(() => { generation++; unlockDocument(); });
 
     return {
-      feedbackOpen, locale, L, A, body, downside, rating, nickname, nicknameEdit,
+      togetherNote: computed(() => supportNote("form")), feedbackOpen, locale, L, A, body, downside, rating, nickname, nicknameEdit,
       nicknameEditing, nicknameRequired, emailNameNeedsChange, editing, authenticated, contextReady,
       loginStage, downsideOpen, busy, loading, saved, error, errorText, panel,
       bodyInput, nicknameInput, bodyCount, downsideCount, hasLink,
@@ -476,6 +478,7 @@ export default defineComponent({
 .feedback-header h2 { flex: 1; min-width: 0; margin: 0; font-size: 17px; font-weight: 650; line-height: 1.4; }
 .feedback-close { flex: 0 0 44px; width: 44px; height: 44px; font-size: 27px; color: rgb(var(--c-text-secondary)); border-radius: 8px; }
 .feedback-content { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 14px 18px 12px; }
+.feedback-together { margin: 0 0 12px; font-size: 13px; line-height: 1.55; color: rgb(var(--c-text-primary)); }
 .feedback-rating { margin: 0 0 8px; padding: 0; border: 0; }
 .feedback-rating legend { font-size: 13px; color: rgb(var(--c-text-secondary)); }
 .feedback-stars { display: flex; gap: 4px; }
