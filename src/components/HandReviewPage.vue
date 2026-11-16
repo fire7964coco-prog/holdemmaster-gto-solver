@@ -680,16 +680,26 @@ code === "EV_MISSING"
       const p = node.player,
         facing = node.committed[p ^ 1] - node.committed[p],
         kind = facing > 0 ? "Raise" : "Bet";
-      return [25, 50, 100].map((size) => ({
-        pct: size,
-        action: {
-          kind,
-          amount:
-            kind === "Bet"
-              ? (node.pot * size) / 100
-              : node.committed[p ^ 1] + ((node.pot + facing) * size) / 100,
-        } as ActualAction,
-      }));
+      // 계산된 크기 범위 밖이면 누르는 즉시 «이 크기는 분석할 수 없습니다»가 뜬다 → 통하는 크기만 보인다
+      return [25, 50, 100]
+        .map((size) => ({
+          pct: size,
+          action: {
+            kind,
+            amount:
+              kind === "Bet"
+                ? (node.pot * size) / 100
+                : node.committed[p ^ 1] + ((node.pot + facing) * size) / 100,
+          } as ActualAction,
+        }))
+        .filter((s) => {
+          try {
+            matchLaterAction(node, s.action);
+            return true;
+          } catch {
+            return false;
+          }
+        });
     });
 
     function disposeStreet(s: Street) {

@@ -142,6 +142,13 @@
     <div v-if="memoryUsage > maxMemoryUsage" class="mt-1.5">
       {{ L.ramLimit }}
     </div>
+    <div
+      v-if="isTreeBuilt && memoryUsageCompressed > maxMemoryUsage"
+      class="mt-1.5 text-orange-400"
+      data-testid="memory-limit-tip"
+    >
+      {{ memoryTip.term }}: {{ memoryTip.def }}
+    </div>
 
     <div class="mt-4" :class="{ 'ar-target-row': isAr }">
       {{ L.targetLabel }}
@@ -297,6 +304,7 @@ import { supportNote } from "../support-note";
 import { trackCalcConfigStart, trackCalcStart, trackCalcDone, trackCalcFail, trackHelpOpen, trackInputError, trackShare } from "../usage-analytics";
 import { failureKind, failureReason } from "../solver-failure";
 import { MEMORY_FAILURE_LABELS } from "../solver-failure-labels";
+import { MEMORY_LIMIT_TIP } from "../memory-limit-tip";
 import { beginFeedbackSolve, recordFeedbackSolve } from "../solver-feedback"; // F1_FEEDBACK_ONLY
 import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 import { shareSpotThroughMain } from "../solver-feedback-share"; // F1_FEEDBACK_ONLY
@@ -1848,6 +1856,7 @@ export default defineComponent({
     const lockStore = useNodeLockStore();
     const lockLabels = computed(nodeLockLabels);
     const L = computed(() => M[i18n.locale]);
+    const memoryTip = computed(() => MEMORY_LIMIT_TIP[i18n.locale] ?? MEMORY_LIMIT_TIP.en);
 
     const isSingleThread = ref(Boolean(isSafari) ||
       typeof SharedArrayBuffer === "undefined" || !globalThis.crossOriginIsolated);
@@ -2465,6 +2474,7 @@ export default defineComponent({
       maxMemoryUsage,
       memoryUsage,
       memoryUsageCompressed,
+      memoryTip,
       isCompressionEnabled,
       terminateFlag,
       pauseFlag,
