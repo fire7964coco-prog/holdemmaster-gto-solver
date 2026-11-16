@@ -432,6 +432,11 @@ export const trackShare = (feature: UsageFeature) => {
   send("result_share", { feature, locale: i18n.locale });
 };
 
+/** 「게시판에 묻기」를 눌렀다 */
+export const trackBoardAsk = (feature: "custom" | "hand_review") => {
+  send("board_ask", { feature, locale: i18n.locale });
+};
+
 export const trackSave = (kind: "range" | "config") => {
   send("item_save", { kind, locale: i18n.locale });
 };

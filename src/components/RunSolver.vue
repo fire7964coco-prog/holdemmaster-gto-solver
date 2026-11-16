@@ -51,6 +51,15 @@
     >
       {{ shareCopied ? L.copied : L.shareSpot }}
     </button>
+
+    <button
+      v-if="boardAskShown && store.isSolverFinished"
+      class="ms-2 button-base button-green"
+      data-testid="board-ask"
+      @click="askBoard"
+    >
+      {{ boardAskLabel }}
+    </button>
   </div>
 
   <!-- 계산이 끝난 뒤에만 · 작은 글씨 한 줄 · 테두리 없음 -->
@@ -291,6 +300,7 @@ import { MEMORY_FAILURE_LABELS } from "../solver-failure-labels";
 import { beginFeedbackSolve, recordFeedbackSolve } from "../solver-feedback"; // F1_FEEDBACK_ONLY
 import { feedbackFeatures } from "../solver-feedback-features"; // F1_FEEDBACK_ONLY
 import { shareSpotThroughMain } from "../solver-feedback-share"; // F1_FEEDBACK_ONLY
+import { BOARD_ASK_LABELS, boardAskOn, openBoardAsk } from "../board-ask";
 import { i18n, pick, localizeNumber, ruPlural, plPlural, ltrIso, autoIso, ukNumberText, ukPlural } from "../i18n";
 import { betErrorText } from "../bet-error-labels";
 import { navResults } from "../nav-labels";
@@ -2319,16 +2329,16 @@ export default defineComponent({
     const shareCopied = ref(false);
     const shareError = ref("");
 
-    const copySpotUrl = async () => {
+    /** 공유할 수 있는 스팟 주소 — 못 만들면 안내 문구를 띄우고 null */
+    const validSpotUrl = (): string | null => {
       shareError.value = "";
-      shareCopied.value = false;
       let url: string | null;
       try {
         url = encodeSpotUrl();
       } catch (error) {
         if (!(error instanceof InvalidSpotLinesError)) throw error;
         shareError.value = invalidLineMessage();
-        return;
+        return null;
       }
       if (!url) {
         shareError.value = pick(
@@ -2347,7 +2357,7 @@ export default defineComponent({
           "ก่อนแชร์สถานการณ์ ให้ก⁠ร⁠อ⁠กเรนจ์ OOP และ IP พร้อมเลือกไพ่บนบอร์ดอย่างน้อย 3 ใบ",
           "Щоб поширити спот, спочатку введи діапазони OOP та IP і щонайменше 3 карти борду."
         );
-        return;
+        return null;
       }
       if (url.length > 8192) {
         shareError.value = pick(
@@ -2369,8 +2379,15 @@ export default defineComponent({
           "ลิงก์แชร์ยาวเกินไป ให้ลดความซับซ้อนของการตั้งค่าทรี หรือส่งออกเป็นไฟล์การตั้งค่า",
           "Посилання для поширення задовге — спрости налаштування дерева або експортуй їх у файл налаштувань."
         );
-        return;
+        return null;
       }
+      return url;
+    };
+
+    const copySpotUrl = async () => {
+      shareCopied.value = false;
+      let url = validSpotUrl();
+      if (!url) return;
       try {
         if (feedbackFeatures.share) url = await shareSpotThroughMain(url); // F1_FEEDBACK_ONLY
         await navigator.clipboard.writeText(url);
@@ -2385,6 +2402,14 @@ export default defineComponent({
       trackShare("custom");
       shareCopied.value = true;
       setTimeout(() => (shareCopied.value = false), 1500);
+    };
+
+    /* 게시판에 묻기 — 공유와 같은 짧은 주소를 붙여 글쓰기 창을 연다 */
+    const askBoard = () => {
+      const url = validSpotUrl();
+      if (!url) return;
+      const cards = config.board.map((c: number) => "23456789TJQKA"[c >> 2] + "♣♦♥♠"[c & 3]).join(" ");
+      void openBoardAsk("custom", cards, () => shareSpotThroughMain(url));
     };
 
     // 용량 단위 — 프랑스어권은 Go/Mo가 표준 표기 (원어민 검수 3인 일치, 2026-08-24).
@@ -2430,6 +2455,9 @@ export default defineComponent({
       shareError,
       shareNote: computed(() => supportNote("share")),
       copySpotUrl,
+      askBoard,
+      boardAskShown: boardAskOn(),
+      boardAskLabel: computed(() => BOARD_ASK_LABELS[i18n.locale].ask),
       maxIterations,
       isTreeBuilding,
       isTreeBuilt,

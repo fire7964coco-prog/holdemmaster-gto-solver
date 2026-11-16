@@ -253,6 +253,14 @@
             ><span>{{ L.mistake }} {{ plCountText(totals.bad) }}</span>
           </p>
           <p v-else class="review-muted">{{ records.some(row => row.verdict) ? (totals.reference ? L.referenceOnly : L.unanalysed) : L.noResults }}</p>
+          <button
+            v-if="boardAskShown && complete && records.length"
+            class="review-board-ask"
+            data-testid="review-board-ask"
+            @click="postHand"
+          >
+            {{ boardAskLabel }}
+          </button>
         </div>
         <div class="review-details" v-if="selectedRow?.verdict">
           <h3>
@@ -399,6 +407,7 @@ import {
   watch,
 } from "vue";
 import { i18n, localizeNumber, plCountText, arLabelIso, ltrIso } from "../i18n";
+import { BOARD_ASK_LABELS, boardAskOn, openBoardAsk } from "../board-ask";
 import { M, IT_REVIEW_ACTION_BUTTONS, PL_REVIEW_ACTION_BUTTONS, TH_REVIEW_ACTION_BUTTONS } from "../hand-review-labels";
 import { SPOT_UNIT_SCALE, limpHrcEnabled } from "../preflop-spots";
 import { applyPerm, handIndex } from "../review/cards";
@@ -577,6 +586,15 @@ code === "EV_MISSING"
     const format = (template: string, values: Record<string, string>) =>
       template.replace(/\{(\w+)\}/g, (_, k) => values[k] ?? "");
     const card = (c: number) => "23456789TJQKA"[c >> 2] + "♣♦♥♠"[c & 3];
+    /* 이 판 올리기 — 자리·내 카드·보드 한 줄을 채워 글쓰기 창을 연다(복기에는 공유 주소가 없다) */
+    const postHand = () => {
+      const line = [
+        `${seat(1)} vs ${seat(0)}`,
+        `${seat(heroPlayer.value)} ${heroCards.value.map(card).join("")}`,
+        board.value.map(card).join(" "),
+      ].filter((part) => part.trim()).join(" · ");
+      void openBoardAsk("hand_review", line);
+    };
     const suitClass = (c: number) =>
       ["clubs", "diamonds", "hearts", "spades"][c & 3];
     const seat = (p: number) => (p === 0 ? spot.value?.oop : spot.value?.ip) ?? "";
@@ -1049,6 +1067,9 @@ code === "EV_MISSING"
       loss,
       format,
       card,
+      postHand,
+      boardAskShown: boardAskOn(),
+      boardAskLabel: computed(() => BOARD_ASK_LABELS[i18n.locale].post),
       suitClass,
       seat,
       actionText,
@@ -1289,6 +1310,9 @@ p {
 }
 .review-grade.bad {
   color: #f47d83;
+}
+.review-board-ask {
+  margin-top: 8px;
 }
 .review-practice {
   margin: 8px 0;
