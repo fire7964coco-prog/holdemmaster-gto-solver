@@ -1749,7 +1749,7 @@ const M = {
       "同樣是 0.08bb，在小底池裡是大失誤，在大底池裡只是小差別。用絕對 bb 來量的話，3bet 底池會顯得比實際更糟，所以改成了按佔底池的比例（2026-08-15）。這兩條線各有一個下限：0.02bb 和 0.05bb。計算只收斂到目標可剝削度 0.5%，比這更小的差別已經和計算雜訊分不開了。",
     reviewTerm: "複習",
     reviewBefore: "虧得多的題會透過[複習]按鈕再出現一次。紀錄預設",
-    // ⚠ ErrorToast.bodyB1·TrainerPage.localOnlyBold·errBold와 «글자까지» 같아야 한다
+    // ⚠ ErrorToast.bodyB1·errBold와 «글자까지» 같아야 한다
     reviewBold: "只儲存在這台裝置上",
     reviewAfter:
       "。用 HoldemMaster 帳號登入，紀錄就會存到帳號裡，換台裝置也能接著做——登入是選用的，除跛入底池（會員專用）外，所有功能不登入也能用",
@@ -1825,7 +1825,7 @@ const M = {
 
     errTitle: "如果你發現了需要修的問題",
     err1: "畫面出錯或者計算卡住時，錯誤內容會自動記在這台裝置上。",
-    // ⚠ ErrorToast.bodyB1·TrainerPage.localOnlyBold·reviewBold와 같은 약속이다
+    // ⚠ ErrorToast.bodyB1·reviewBold와 같은 약속이다
     errBold: "這些紀錄不會離開這台裝置",
     err2:
       "——你在下面複製出來發到社群，我們才看得到。裡面有錯誤訊息，以及時間、頁面網址、瀏覽器、螢幕尺寸等診斷資訊，分享前請先檢查一下內容。",
@@ -1942,7 +1942,7 @@ const M = {
     reviewTerm: "Révision",
     reviewBefore:
       "Les mains où tu as perdu le plus d'EV reviennent via le bouton [Révision]. Par défaut, ton historique est stocké ",
-    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1와 «글자까지» 같아야 한다
     reviewBold: "uniquement sur cet appareil",
     reviewAfter:
       ". Connecte-toi avec un compte HoldemMaster pour le garder sur ton compte et continuer sur d'autres appareils — la connexion est optionnelle, tout fonctionne sans, sauf les pots limpés (réservés aux membres)",
@@ -2024,7 +2024,7 @@ const M = {
 
     errTitle: "Tu as trouvé quelque chose à corriger ?",
     err1: "Si quelque chose s'affiche mal ou qu'un calcul se fige, les détails de l'erreur sont enregistrés automatiquement sur cet appareil. ",
-    // ⚠ ErrorToast.bodyB1·TrainerPage.localOnlyBold·reviewBold와 같은 약속이다
+    // ⚠ ErrorToast.bodyB1·reviewBold와 같은 약속이다
     errBold: "Ces journaux ne quittent jamais ton appareil",
     err2:
       " — on ne les voit que si tu les copies ci-dessous et les postes dans la communauté. Ils contiennent le message d'erreur et des infos de diagnostic comme l'heure, l'adresse de la page, le navigateur et la taille d'écran. Vérifie le contenu avant de les partager.",
@@ -2143,7 +2143,7 @@ const M = {
     reviewTerm: "Tinjau ulang",
     reviewBefore:
       "Hand yang paling banyak membuang EV Anda muncul kembali lewat tombol [Tinjau ulang]. Secara default, riwayat Anda disimpan ",
-    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1와 «글자까지» 같아야 한다
     reviewBold: "hanya di perangkat ini",
     reviewAfter:
       ". Login dengan akun HoldemMaster untuk menyimpannya di akun Anda dan melanjutkan di perangkat lain — login bersifat opsional, semuanya tetap berfungsi tanpa login kecuali pot limp (khusus anggota)",
@@ -2225,7 +2225,7 @@ const M = {
 
     errTitle: "Menemukan sesuatu yang perlu diperbaiki?",
     err1: "Kalau tampilan rusak atau perhitungan macet, detail error-nya otomatis dicatat di perangkat ini. ",
-    // ⚠ ErrorToast.bodyB1·TrainerPage.localOnlyBold·reviewBold와 같은 약속이다
+    // ⚠ ErrorToast.bodyB1·reviewBold와 같은 약속이다
     errBold: "Catatan ini tidak pernah keluar dari perangkat Anda",
     err2:
       " — kami hanya melihatnya kalau Anda menyalinnya di bawah dan mempostingnya di komunitas. Isinya pesan error dan info diagnostik seperti waktu, alamat halaman, browser, dan ukuran layar. Periksa isinya sebelum membagikannya.",
@@ -2342,7 +2342,7 @@ const M = {
     reviewTerm: "Semak semula",
     reviewBefore:
       "Tangan yang paling banyak membuang EV anda akan muncul semula melalui butang [Semak semula]. Secara lalai, rekod anda disimpan ",
-    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1와 «글자까지» 같아야 한다
     reviewBold: "hanya pada peranti ini",
     reviewAfter:
       ". Log masuk dengan akaun HoldemMaster untuk menyimpannya dalam akaun anda dan menyambung semula pada peranti lain — log masuk tidak diwajibkan, semuanya tetap berfungsi tanpa log masuk kecuali pot limp (khas untuk ahli)",
@@ -2424,7 +2424,7 @@ const M = {
 
     errTitle: "Jumpa sesuatu yang perlu kami baiki?",
     err1: "Kalau paparan rosak atau pengiraan tersekat, butiran ralatnya dicatat secara automatik pada peranti ini. ",
-    // ⚠ ErrorToast.bodyB1·TrainerPage.localOnlyBold·reviewBold와 같은 약속이다
+    // ⚠ ErrorToast.bodyB1·reviewBold와 같은 약속이다
     errBold: "Rekod ini tidak pernah keluar daripada peranti anda",
     err2:
       " — kami hanya melihatnya kalau anda menyalinnya di bawah dan menyiarkannya di komuniti. Isinya mesej ralat dan maklumat diagnostik seperti masa, alamat halaman, pelayar dan saiz skrin. Semak kandungannya sebelum berkongsi.",

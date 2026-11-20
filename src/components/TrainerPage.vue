@@ -172,7 +172,7 @@
         </template>
         <template v-else>
           <span class="text-neutral-400">
-            {{ L.localOnlyBefore }}<b class="text-neutral-200">{{ L.localOnlyBold }}</b>{{ L.localOnlyAfter }}
+            {{ L.accountHint }}
           </span>
           <span class="ms-auto flex items-center gap-2">
             <button class="button-base bg-neutral-700 hover:bg-neutral-600 !py-1" @click="doSignIn('google')">
@@ -769,10 +769,7 @@ const M = {
     syncingNow: "동기화 중...",
     syncNow: "지금 동기화",
     signOutLabel: "로그아웃",
-    localOnlyBefore: "학습 기록이 ",
-    localOnlyBold: "이 기기에만",
-    localOnlyAfter:
-      " 저장됩니다. 홀덤마스터 계정에 보관하면 다른 기기에서도 이어서 풀 수 있어요.",
+    accountHint: "홀덤마스터 계정에 보관하면 다른 기기에서도 이어서 풀 수 있어요.",
     googleSignIn: "구글로 계속하기",
     kakaoSignIn: "카카오",
     telegramSignIn: "텔레그램",
@@ -873,10 +870,7 @@ const M = {
     syncingNow: "Syncing…",
     syncNow: "Sync now",
     signOutLabel: "Sign out",
-    localOnlyBefore: "Your progress is saved ",
-    localOnlyBold: "on this device only",
-    localOnlyAfter:
-      ". Link a HoldemMaster account to pick up where you left off on any device.",
+    accountHint: "Link a HoldemMaster account to pick up where you left off on any device.",
     googleSignIn: "Continue with Google",
     kakaoSignIn: "Continue with Kakao",
     telegramSignIn: "Continue with Telegram",
@@ -981,10 +975,7 @@ const M = {
     syncingNow: "同期中…",
     syncNow: "今すぐ同期",
     signOutLabel: "ログアウト",
-    localOnlyBefore: "学習記録は",
-    localOnlyBold: "この端末にのみ",
-    localOnlyAfter:
-      "保存されます。HoldemMasterアカウントに保存すると、他の端末でも続きから解けます。",
+    accountHint: "HoldemMasterアカウントに保存すると、他の端末でも続きから解けます。",
     googleSignIn: "Googleで続ける",
     kakaoSignIn: "カカオトークで続ける",
     telegramSignIn: "Telegramで続ける",
@@ -1087,10 +1078,7 @@ const M = {
     syncingNow: "Sincronizando…",
     syncNow: "Sincronizar ahora",
     signOutLabel: "Cerrar sesión",
-    localOnlyBefore: "Tu progreso se guarda ",
-    localOnlyBold: "solo en este dispositivo",
-    localOnlyAfter:
-      ". Vincula una cuenta de HoldemMaster para continuar donde te quedaste en cualquier dispositivo.",
+    accountHint: "Vincula una cuenta de HoldemMaster para continuar donde te quedaste en cualquier dispositivo.",
     googleSignIn: "Continuar con Google",
     kakaoSignIn: "Kakao",
     telegramSignIn: "Telegram",
@@ -1193,10 +1181,7 @@ const M = {
     syncingNow: "Sincronizando…",
     syncNow: "Sincronizar agora",
     signOutLabel: "Sair",
-    localOnlyBefore: "O seu progresso é salvo ",
-    localOnlyBold: "somente neste dispositivo",
-    localOnlyAfter:
-      ". Vincule uma conta HoldemMaster para continuar de onde parou em qualquer dispositivo.",
+    accountHint: "Vincule uma conta HoldemMaster para continuar de onde parou em qualquer dispositivo.",
     googleSignIn: "Continuar com o Google",
     kakaoSignIn: "Continuar com o Kakao",
     telegramSignIn: "Continuar com o Telegram",
@@ -1305,10 +1290,7 @@ const M = {
     syncingNow: "Wird synchronisiert…",
     syncNow: "Jetzt synchronisieren",
     signOutLabel: "Abmelden",
-    localOnlyBefore: "Dein Fortschritt wird ",
-    localOnlyBold: "nur auf diesem Gerät",
-    localOnlyAfter:
-      " gespeichert. Verknüpf ein HoldemMaster-Konto, um auf jedem Gerät dort weiterzumachen, wo du aufgehört hast.",
+    accountHint: "Verknüpf ein HoldemMaster-Konto, um auf jedem Gerät dort weiterzumachen, wo du aufgehört hast.",
     googleSignIn: "Weiter mit Google",
     kakaoSignIn: "Weiter mit Kakao",
     telegramSignIn: "Weiter mit Telegram",
@@ -1429,10 +1411,7 @@ const M = {
     syncingNow: "同步中…",
     syncNow: "立即同步",
     signOutLabel: "退出登录",
-    localOnlyBefore: "你的学习记录",
-    localOnlyBold: "只保存在这台设备上",
-    localOnlyAfter:
-      "。绑定 HoldemMaster 账号，换台设备也能接着做。",
+    accountHint: "绑定 HoldemMaster 账号，换台设备也能接着做。",
     googleSignIn: "用 Google 继续",
     kakaoSignIn: "用 Kakao 继续",
     telegramSignIn: "用 Telegram 继续",
@@ -1558,11 +1537,7 @@ const M = {
     syncingNow: "同步中…",
     syncNow: "立刻同步",
     signOutLabel: "登出",
-    localOnlyBefore: "你的學習紀錄",
-    // ⚠ ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
-    localOnlyBold: "只儲存在這台裝置上",
-    localOnlyAfter:
-      "。綁定 HoldemMaster 帳號，換台裝置也能接著做。",
+    accountHint: "綁定 HoldemMaster 帳號，換台裝置也能接著做。",
     googleSignIn: "用 Google 繼續",
     kakaoSignIn: "用 Kakao 繼續",
     telegramSignIn: "用 Telegram 繼續",
@@ -1677,11 +1652,7 @@ const M = {
     syncingNow: "Synchronisation…",
     syncNow: "Synchroniser",
     signOutLabel: "Se déconnecter",
-    localOnlyBefore: "Ta progression est enregistrée ",
-    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
-    localOnlyBold: "uniquement sur cet appareil",
-    localOnlyAfter:
-      ". Associe un compte HoldemMaster pour reprendre où tu en étais sur n'importe quel appareil.",
+    accountHint: "Associe un compte HoldemMaster pour reprendre où tu en étais sur n'importe quel appareil.",
     googleSignIn: "Continuer avec Google",
     kakaoSignIn: "Continuer avec Kakao",
     telegramSignIn: "Continuer avec Telegram",
@@ -1792,11 +1763,7 @@ const M = {
     syncingNow: "Menyinkronkan…",
     syncNow: "Sinkronkan",
     signOutLabel: "Logout",
-    localOnlyBefore: "Progres Anda tersimpan ",
-    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
-    localOnlyBold: "hanya di perangkat ini",
-    localOnlyAfter:
-      ". Tautkan akun HoldemMaster untuk melanjutkan dari perangkat mana pun.",
+    accountHint: "Tautkan akun HoldemMaster untuk melanjutkan dari perangkat mana pun.",
     googleSignIn: "Lanjutkan dengan Google",
     kakaoSignIn: "Lanjutkan dengan Kakao",
     telegramSignIn: "Lanjutkan dengan Telegram",
@@ -1904,9 +1871,7 @@ const M = {
     syncingNow: "सिंक हो रहा है…",
     syncNow: "अभी सिंक करें",
     signOutLabel: "लॉग आउट करें",
-    localOnlyBefore: "आपकी प्रगति ",
-    localOnlyBold: "सिर्फ़ इस डिवाइस पर",
-    localOnlyAfter: " सेव होती है। HoldemMaster खाते से जुड़कर किसी भी डिवाइस पर यहीं से आगे बढ़ सकते हैं।",
+    accountHint: "HoldemMaster खाते से जुड़कर किसी भी डिवाइस पर यहीं से आगे बढ़ सकते हैं।",
     googleSignIn: "Google से जारी रखें",
     kakaoSignIn: "Kakao से जारी रखें",
     telegramSignIn: "Telegram से जारी रखें",
@@ -2001,11 +1966,7 @@ const M = {
     syncingNow: "Sedang menyegerakkan…",
     syncNow: "Segerakkan",
     signOutLabel: "Log keluar",
-    localOnlyBefore: "Kemajuan anda disimpan ",
-    // ⚠ 앱의 «신뢰 약속» — ErrorToast.bodyB1·GuidePage.reviewBold·errBold와 «글자까지» 같아야 한다
-    localOnlyBold: "hanya pada peranti ini",
-    localOnlyAfter:
-      ". Pautkan akaun HoldemMaster untuk menyambung semula pada mana-mana peranti.",
+    accountHint: "Pautkan akaun HoldemMaster untuk menyambung semula pada mana-mana peranti.",
     googleSignIn: "Teruskan dengan Google",
     kakaoSignIn: "Teruskan dengan Kakao",
     telegramSignIn: "Teruskan dengan Telegram",
@@ -2115,10 +2076,7 @@ const M = {
     syncingNow: "Eşitleniyor…",
     syncNow: "Şimdi eşitle",
     signOutLabel: "Çıkış yap",
-    localOnlyBefore: "İlerlemen ",
-    localOnlyBold: "yalnızca bu cihazda",
-    localOnlyAfter:
-      " kayıtlı. Bir HoldemMaster hesabı bağlarsan her cihazda kaldığın yerden devam edebilirsin.",
+    accountHint: "Bir HoldemMaster hesabı bağlarsan her cihazda kaldığın yerden devam edebilirsin.",
     googleSignIn: "Google ile devam et",
     kakaoSignIn: "Kakao ile devam et",
     telegramSignIn: "Telegram ile devam et",
@@ -2222,10 +2180,7 @@ const M = {
     syncingNow: "Đang đồng bộ…",
     syncNow: "Đồng bộ ngay",
     signOutLabel: "Đăng xuất",
-    localOnlyBefore: "Tiến độ của bạn chỉ được lưu ",
-    localOnlyBold: "trên thiết bị này",
-    localOnlyAfter:
-      ". Liên kết tài khoản HoldemMaster để tiếp tục từ chỗ đang dở trên mọi thiết bị.",
+    accountHint: "Liên kết tài khoản HoldemMaster để tiếp tục từ chỗ đang dở trên mọi thiết bị.",
     googleSignIn: "Tiếp tục với Google",
     kakaoSignIn: "Tiếp tục với Kakao",
     telegramSignIn: "Tiếp tục với Telegram",
@@ -2331,10 +2286,7 @@ const M = {
     syncingNow: "Синхронизация…",
     syncNow: "Синхронизировать",
     signOutLabel: "Выйти",
-    localOnlyBefore: "Прогресс сохраняется ",
-    localOnlyBold: "только на этом устройстве",
-    localOnlyAfter:
-      ". Войди в аккаунт HoldemMaster, чтобы продолжать с того же места на любом устройстве.",
+    accountHint: "Войди в аккаунт HoldemMaster, чтобы продолжать с того же места на любом устройстве.",
     googleSignIn: "Войти через Google",
     kakaoSignIn: "Войти через Kakao",
     telegramSignIn: "Войти через Telegram",
@@ -2440,10 +2392,7 @@ const M = {
     syncingNow: "تجري المزامنة…",
     syncNow: "مزامنة الآن",
     signOutLabel: "تسجيل الخروج",
-    localOnlyBefore: "يُحفظ تقدّمك ",
-    localOnlyBold: "على هذا الجهاز فقط",
-    localOnlyAfter:
-      ". سجّل الدخول بحساب HoldemMaster لتتابع من النقطة نفسها على أي جهاز.",
+    accountHint: "سجّل الدخول بحساب HoldemMaster لتتابع من النقطة نفسها على أي جهاز.",
     googleSignIn: "تسجيل الدخول عبر Google",
     kakaoSignIn: "تسجيل الدخول عبر Kakao",
     telegramSignIn: "تسجيل الدخول عبر Telegram",
@@ -2548,10 +2497,7 @@ const M = {
     syncingNow: "Sincronizzazione…",
     syncNow: "Sincronizza ora",
     signOutLabel: "Esci",
-    localOnlyBefore: "I tuoi progressi vengono salvati ",
-    localOnlyBold: "solo su questo dispositivo",
-    localOnlyAfter:
-      ". Collega un account HoldemMaster per riprendere da dove hai lasciato su qualsiasi dispositivo.",
+    accountHint: "Collega un account HoldemMaster per riprendere da dove hai lasciato su qualsiasi dispositivo.",
     googleSignIn: "Continua con Google",
     kakaoSignIn: "Continua con Kakao",
     telegramSignIn: "Continua con Telegram",
@@ -2654,10 +2600,7 @@ const M = {
     syncingNow: "Synchronizacja…",
     syncNow: "Synchronizuj teraz",
     signOutLabel: "Wyloguj się",
-    localOnlyBefore: "Twoje postępy są zapisywane ",
-    localOnlyBold: "tylko na tym urządzeniu",
-    localOnlyAfter:
-      ". Zaloguj się na konto HoldemMaster, aby kontynuować naukę na dowolnym urządzeniu.",
+    accountHint: "Zaloguj się na konto HoldemMaster, aby kontynuować naukę na dowolnym urządzeniu.",
     googleSignIn: "Kontynuuj przez Google",
     kakaoSignIn: "Kontynuuj przez Kakao",
     telegramSignIn: "Kontynuuj przez Telegram",
@@ -2763,10 +2706,7 @@ const M = {
     syncingNow: "กำลังซิ⁠ง⁠ค์ข้อมูล…",
     syncNow: "ซิ⁠ง⁠ค์ข้อมูลตอนนี้",
     signOutLabel: "ออกจากระบบ",
-    localOnlyBefore: "ความคืบหน้าของคุณบันทึกไว้",
-    localOnlyBold: "บนอุ⁠ป⁠ก⁠ร⁠ณ์นี้เท่านั้น",
-    localOnlyAfter:
-      " เชื่อมต่อบัญชี HoldemMaster เพื่อฝึกต่อจากเดิมบนอุ⁠ป⁠ก⁠ร⁠ณ์อื่⁠นได้",
+    accountHint: "เชื่อมต่อบัญชี HoldemMaster เพื่อฝึกต่อจากเดิมบนอุ⁠ป⁠ก⁠ร⁠ณ์อื่⁠นได้",
     googleSignIn: "ดำเนินการต่อด้วย Google",
     kakaoSignIn: "ดำเนินการต่อด้วย Kakao",
     telegramSignIn: "ดำเนินการต่อด้วย Telegram",
@@ -2871,10 +2811,7 @@ const M = {
     syncingNow: "Синхронізація…",
     syncNow: "Синхронізувати зараз",
     signOutLabel: "Вийти",
-    localOnlyBefore: "Твій прогрес зберігається ",
-    localOnlyBold: "лише на цьому пристрої",
-    localOnlyAfter:
-      ". Під’єднай обліковий запис HoldemMaster, щоб продовжити з того самого місця на іншому пристрої.",
+    accountHint: "Під’єднай обліковий запис HoldemMaster, щоб продовжити з того самого місця на іншому пристрої.",
     googleSignIn: "Продовжити з Google",
     kakaoSignIn: "Продовжити з Kakao",
     telegramSignIn: "Продовжити з Telegram",

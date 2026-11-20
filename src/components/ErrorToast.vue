@@ -141,8 +141,8 @@ const M = {
     // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백·문장부호 위치 주의.
     // 중국어는 단어 사이를 띄우지 않으므로 ko와 같이 끝 공백을 두지 않는다
     body1: "如果画面看起来不对，欢迎告诉我们。这些内容",
-    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
-    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다 (검수에서 4가지로 갈려 있었다)
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold와
+    //   «글자까지» 같아야 한다 (검수에서 4가지로 갈려 있었다)
     bodyB1: "只保存在这台设备上",
     body2: "，要不要发送完全由你决定。",
     copied: "已复制",
@@ -157,8 +157,8 @@ const M = {
     // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백·문장부호 위치 주의.
     // 중국어는 단어 사이를 띄우지 않으므로 ko와 같이 끝 공백을 두지 않는다
     body1: "如果畫面看起來不對，歡迎告訴我們。這些內容",
-    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
-    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다.
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold와
+    //   «글자까지» 같아야 한다.
     //   「裝置」= 台灣 표기(대륙 「设备」)
     bodyB1: "只儲存在這台裝置上",
     body2: "，要不要傳送完全由你決定。",
@@ -173,8 +173,8 @@ const M = {
     title: "Une erreur a été enregistrée",
     // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백 주의
     body1: "Si quelque chose semblait anormal, dis-le-nous. Les détails sont stockés ",
-    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
-    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold와
+    //   «글자까지» 같아야 한다
     bodyB1: "uniquement sur cet appareil",
     body2: " — les partager ne dépend que de toi.",
     copied: "Copié",
@@ -188,8 +188,8 @@ const M = {
     title: "Ada error yang tercatat",
     // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백 주의
     body1: "Jika ada yang terasa tidak beres, beri tahu kami. Detailnya tersimpan ",
-    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
-    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold와
+    //   «글자까지» 같아야 한다
     bodyB1: "hanya di perangkat ini",
     body2: " — membagikannya sepenuhnya keputusan Anda.",
     copied: "Tersalin",
@@ -203,8 +203,8 @@ const M = {
     title: "Ralat telah direkodkan",
     // body1 + «굵은» bodyB1 + body2 로 이어 붙는 한 문장이다 — 앞뒤 공백 주의
     body1: "Jika ada yang kelihatan tidak kena, beritahu kami. Butirannya disimpan ",
-    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold,
-    //   TrainerPage.localOnlyBold와 «글자까지» 같아야 한다
+    // ⚠ 이 문구는 앱의 «신뢰 약속»이다 — GuidePage.reviewBold·errBold와
+    //   «글자까지» 같아야 한다
     bodyB1: "hanya pada peranti ini",
     body2: " — mahu berkongsi atau tidak, terpulang kepada anda.",
     copied: "Disalin",
