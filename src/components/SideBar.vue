@@ -147,6 +147,10 @@
     </button>
     </div>
     <SiteNotice v-if="FEATURE_TRAINER" />
+    <!-- 개인정보처리방침 — PC 사이드바 맨 아래 작은 글씨(MB-608) · 폰은 소개 페이지 아래 -->
+    <a v-if="privacyHref" :href="privacyHref" target="_blank" rel="noopener" :hreflang="privacyLang" data-testid="privacy-link"
+      class="hidden md:block mt-auto pt-4 pb-1 px-3 text-xs text-neutral-500 hover:text-neutral-300 hover:underline"
+      >{{ privacyText }}</a>
   </aside>
 </template>
 
@@ -155,6 +159,7 @@ import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import { SideView, useStore, useConfigStore } from "../store";
 import { cardText } from "../utils";
 import { i18n } from "../i18n";
+import { privacyHreflang, privacyLabel, privacyUrl } from "../privacy-link";
 import { FEATURE_TRAINER } from "@features";
 import { handReviewLabels, HAND_REVIEW_LAUNCHED, hasReviewSession } from "@features"; // R2_REVIEW_ONLY
 import { flopStudyLabels, openStudyApp } from "@features"; // R2_REVIEW_ONLY
@@ -892,6 +897,8 @@ export default defineComponent({
     });
 
     return {
+      privacyHref: computed(() => privacyUrl()), privacyLang: computed(() => privacyHreflang()),
+      privacyText: computed(() => privacyLabel()),
       store,
       boardTexts,
       L,

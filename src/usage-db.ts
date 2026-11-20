@@ -239,11 +239,15 @@ const MAIN_SITE_HOST = /(^|\.)holdemmaster\.com$/;
  * 앱이 주소를 정리하기 전에 읽어 둔다. 메신저·유튜브처럼 referrer가 지워지는 길을 direct와 구분하려는 것.
  */
 const FROM_TAGS = ["yt", "kakao", "telegram", "discord", "x", "reddit", "blog", "solver_landing", "tool"];
+/** 유튜브 채널별 꼬리표 yt_<언어>(본체 MB-603) — 열쇠 식에 하이픈이 없어 yt_zh-hant는 yt_zh_hant로 센다 */
+const YT_CHANNEL_TAG = /^yt_[a-z]{2}(-[a-z]{1,8})?$/;
 const fromTag = (() => {
   try {
     const raw = new URLSearchParams(location.search).get("from");
     if (raw === null) return null;
-    return FROM_TAGS.includes(raw) ? raw : "tagged_other";
+    if (FROM_TAGS.includes(raw)) return raw;
+    const lower = raw.toLowerCase();
+    return YT_CHANNEL_TAG.test(lower) ? lower.replace("-", "_") : "tagged_other";
   } catch {
     return null;
   }

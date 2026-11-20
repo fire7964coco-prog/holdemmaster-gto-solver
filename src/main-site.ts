@@ -40,4 +40,5 @@ export const MAIN_SITE_CONFIG: MainSite = {
   languagePicker: false, // 본체가 언어별 랜딩에서 «?lang=xx»를 붙여 보낸다 — 그 언어에 페깅(NavBar)
   homeOnlyLinks: false,
   utmSource: "solver", // 본체 통계의 연속성 — 바꾸지 않는다
+  privacyUrl: "https://www.holdemmaster.com/privacy", // ko 그대로 · 나머지 19언어는 #en(privacy-link.ts · MB-624)
 };

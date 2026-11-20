@@ -26,4 +26,6 @@ export type MainSite = {
   homeOnlyLinks: boolean;
   /** 바깥 링크의 utm_source */
   utmSource: string;
+  /** 개인정보처리방침 주소 — 빈 값이면 링크를 숨긴다(MB-608) */
+  privacyUrl: string;
 };

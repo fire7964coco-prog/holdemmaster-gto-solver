@@ -195,6 +195,11 @@
           >GitHub</a
         >{{ L.creditAfter }}
       </p>
+      <p v-if="privacyHref" class="mt-3">
+        <a :href="privacyHref" target="_blank" rel="noopener" :hreflang="privacyLang" data-testid="privacy-link-about"
+          class="text-neutral-400 underline decoration-neutral-600 underline-offset-2 hover:text-neutral-200"
+          >{{ privacyText }}</a>
+      </p>
     </div>
   </div>
 </template>
@@ -209,6 +214,7 @@ import { mainSiteUrl } from "../outbound";
 import { i18n } from "../i18n";
 import { VARIANT_TEXT } from "../variant";
 import { supportNote } from "../support-note";
+import { privacyHreflang, privacyLabel, privacyUrl } from "../privacy-link";
 
 const M = {
   ko: {
@@ -1148,6 +1154,8 @@ export default defineComponent({
 
     return {
       isAr: computed(() => i18n.locale === "ar"), sentenceGap,
+      privacyHref: computed(() => privacyUrl()), privacyLang: computed(() => privacyHreflang()),
+      privacyText: computed(() => privacyLabel()),
       freeNote: computed(() => supportNote("card")),
       store,
       openDaily,
